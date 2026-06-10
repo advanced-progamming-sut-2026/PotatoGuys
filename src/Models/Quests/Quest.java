@@ -4,20 +4,21 @@ import java.util.List;
 
 public class Quest {
     private String id;
-    private String name;
+    private String title;
+    private String description;
     private QuestCategory category;
     private QuestPriority priority;
     private List<Reward> rewards;
     private boolean active;
 
-    public Quest(String id, String name, QuestCategory category, QuestPriority priority, List<Reward> rewards) {
+    public Quest(String id, String title, QuestCategory category, QuestPriority priority, List<Reward> rewards) {
     }
 
     public String getId() {
         return null;
     }
 
-    public String getName() {
+    public String getTitle() {
         return null;
     }
 
