@@ -6,11 +6,11 @@ import Models.Plants.Strategy;
 import Models.Plants.Enums.PlantCategory;
 import Models.Plants.Enums.PlantTag;
 import Models.Plants.Enums.PlantType;
-import Models.Plants.Shooters.BulletType;
+import Models.Plants.Shooters;
 
 import java.util.List;
 
-public class Shooters extends Strategy {
+public class Shooters implements Strategy {
     protected PlantType type;
     protected BulletType defaultBulletType;
     protected int bulletsInWave;

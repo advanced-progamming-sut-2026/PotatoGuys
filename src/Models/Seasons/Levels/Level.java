@@ -21,6 +21,10 @@ public abstract class Level {
         return initialSun;
     }
 
+    public int getCurrentSun() {
+        return currentSun;
+    }
+
     public List<WaveConfig> getWaves() {
         return waves;
     }

@@ -8,4 +8,7 @@ public class Sun implements TickAware{
     private Vector2 position;
     private Vector2 velocity;
     private int timeRemainingToDespawn;
+
+    public void onFirstTick(){}
+    public void onTick(){}
 }

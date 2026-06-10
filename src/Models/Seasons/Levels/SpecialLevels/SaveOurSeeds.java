@@ -1,4 +1,4 @@
-spackage Models.Seasons.Levels.SpecialLevels;
+package Models.Seasons.Levels.SpecialLevels;
 
 import Models.DataTypes.Vector2;
 import Models.Seasons.Levels.SpecialLevel;

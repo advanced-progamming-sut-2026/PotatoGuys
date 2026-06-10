@@ -1,3 +1,5 @@
+package Models.GreenHouse;
+
 import Models.GreenHouse.GreenHousePlant;
 
 public class GreenHousePot {

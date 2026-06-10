@@ -1,3 +1,4 @@
+package Models.GreenHouse;
 
 public class GreenHouse {
     private Pot[][] pots;

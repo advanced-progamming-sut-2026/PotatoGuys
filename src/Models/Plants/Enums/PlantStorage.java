@@ -8,7 +8,7 @@ import Models.Plants.SunProducers.SunType;
 
 public enum PlantStorage {
 
-    Sunflower(PlantType.Sunflower , PlantCategory.SUN_PRODUCER , PlantTag.DAY , 50 , 300 , 0 , 24 , 5 , new SunProducers())
+    Sunflower(PlantType.Sunflower , PlantCategory.SUN_PRODUCER , PlantTag.DAY , 50 , 300 , 0 , 24 , 5 , new SunProducers(SunType.NORMAL , 10));
 
     
     private PlantType type;
