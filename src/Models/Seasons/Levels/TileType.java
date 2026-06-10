@@ -1,4 +1,4 @@
-package Models.Engine;
+package Models.Seasons.Levels;
 
 public enum TileType {
     NORMAL,

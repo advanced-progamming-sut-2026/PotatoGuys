@@ -1,6 +1,5 @@
 package Models.Seasons.Levels;
 
-import Models.Engine.TileType;
 import Models.Plants.Plant;
 import Models.Zombies.Zombie;
 
