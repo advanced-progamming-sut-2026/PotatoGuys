@@ -1,8 +1,6 @@
-package Models.User;
+package Models.Seasons;
 
 import java.util.Map;
-
-import Models.Seasons.Season;
 
 public class SeasonProgress {
     private Season season;

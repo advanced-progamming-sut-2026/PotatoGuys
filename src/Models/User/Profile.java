@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import Models.Plants.Plant;
 import Models.Plants.PlantType;
+import Models.Seasons.SeasonProgress;
 
 public class Profile {
     private int gamePlayed;

@@ -3,8 +3,6 @@ package Models.Seasons;
 import java.util.List;
 import java.util.Map;
 
-import Models.User.SeasonProgress;
-
 public class SeasonManager {
     private List<Season> allSeasons;
     private Map<String,SeasonProgress> userProgress;

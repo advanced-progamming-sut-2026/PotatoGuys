@@ -9,6 +9,7 @@ public class User {
     private Profile myProfile;
     private Setting mySetting;
     private News myNews;
+    private Score myScore;
 
     public boolean checkPassword(String password){return true;}
 }

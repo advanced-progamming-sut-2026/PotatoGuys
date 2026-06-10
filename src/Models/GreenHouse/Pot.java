@@ -1,5 +1,6 @@
-public class Pot {
+import Models.Plants.Plant;
 
+public class Pot {
     private int x;
     private int y;
     private boolean locked;
@@ -9,6 +10,13 @@ public class Pot {
         this.x = x;
         this.y = y;
         this.locked = locked;
+    }
+
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
     }
 
     public boolean isEmpty() {
