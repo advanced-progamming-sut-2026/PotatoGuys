@@ -4,8 +4,9 @@ import java.time.LocalDateTime;
 
 public abstract class GreenHousePlant {
 
-    protected LocalDateTime plantedTime;
-    protected int growthHours;
+    private LocalDateTime plantedTime;
+    private int growthHours;
+    private LocalDateTime harvestTime;
 
     public GreenHousePlant(int growthHours) {
         this.growthHours = growthHours;
@@ -13,12 +14,24 @@ public abstract class GreenHousePlant {
     }
 
     public boolean isReady() {
-        LocalDateTime finish = plantedTime.plusHours(growthHours);
+        LocalDateTime finish = getPlantedTime().plusHours(getGrowthHours());
         return LocalDateTime.now().isAfter(finish);
     }
 
     public long remainingHours() {
-        LocalDateTime finish = plantedTime.plusHours(growthHours);
+        LocalDateTime finish = getPlantedTime().plusHours(getGrowthHours());
         return java.time.Duration.between(LocalDateTime.now(), finish).toHours();
+    }
+
+    public LocalDateTime getPlantedTime() {
+        return plantedTime;
+    }
+
+    public int getGrowthHours() {
+        return growthHours;
+    }
+
+    public LocalDateTime getHarvestTime() {
+        return harvestTime;
     }
 }

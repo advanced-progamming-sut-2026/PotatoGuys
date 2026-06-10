@@ -1,7 +1,5 @@
 package Models.GreenHouse;
 
-import Models.GreenHouse.GreenHousePlant;
-
 public class GreenHousePot {
 
     private int x;
@@ -16,7 +14,7 @@ public class GreenHousePot {
     }
 
     public boolean isEmpty() {
-        return greenHousePlant == null;
+        return getGreenHousePlant() == null;
     }
 
     public void setPlant(GreenHousePlant greenHousePlant) {
@@ -24,7 +22,7 @@ public class GreenHousePot {
     }
 
     public GreenHousePlant getPlant() {
-        return greenHousePlant;
+        return getGreenHousePlant();
     }
 
     public boolean isLocked() {
@@ -33,5 +31,17 @@ public class GreenHousePot {
 
     public void unlock() {
         locked = false;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public GreenHousePlant getGreenHousePlant() {
+        return greenHousePlant;
     }
 }

@@ -1,19 +1,13 @@
 package Models.Plants.Strategies;
 
-import Models.DataTypes.Vector2;
-import Models.Plants.Plant;
 import Models.Plants.Strategy;
-import Models.Plants.Enums.PlantCategory;
-import Models.Plants.Enums.PlantTag;
 import Models.Plants.Enums.PlantType;
 
-import java.util.List;
-
 public class Shooters implements Strategy {
-    protected PlantType type;
-    protected BulletType defaultBulletType;
-    protected int bulletsInWave;
-    protected int delayBetweenWaves;
+    private PlantType type;
+    private BulletType defaultBulletType;
+    private int bulletsInWave;
+    private int delayBetweenWaves;
 
     public Shooters(PlantType type , BulletType defaultBulletType, int bulletsInWave,
             int delayBetweenWaves) {
@@ -27,5 +21,21 @@ public class Shooters implements Strategy {
     }
     public void boostApply(){
 
+    }
+
+    public PlantType getType() {
+        return type;
+    }
+
+    public BulletType getDefaultBulletType() {
+        return defaultBulletType;
+    }
+
+    public int getBulletsInWave() {
+        return bulletsInWave;
+    }
+
+    public int getDelayBetweenWaves() {
+        return delayBetweenWaves;
     }
 }

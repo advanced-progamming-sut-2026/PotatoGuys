@@ -1,3 +1,5 @@
+package Models.GreenHouse;
+
 import Models.Plants.Plant;
 
 public class Pot {
@@ -20,7 +22,7 @@ public class Pot {
     }
 
     public boolean isEmpty() {
-        return plant == null;
+        return getPlant() == null;
     }
 
     public void setPlant(Plant plant) {

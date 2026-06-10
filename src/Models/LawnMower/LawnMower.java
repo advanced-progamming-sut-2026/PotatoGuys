@@ -1,9 +1,12 @@
 package Models.LawnMower;
 
+import Models.DataTypes.Vector2;
 import Models.Engine.TickAware;
 import Models.Zombies.Zombie;
 
 public class LawnMower implements TickAware{
+    private Vector2 position;
+    private Vector2 velocity;
     private int row;
     private boolean available;
     private int killedZombiesCount;
@@ -28,5 +31,23 @@ public class LawnMower implements TickAware{
 
     public int getKilledZombiesCount() {
         return killedZombiesCount;
+    }
+
+    @Override
+    public void onFirstTick() {
+
+    }
+
+    @Override
+    public void onTick() {
+
+    }
+
+    public Vector2 getPosition() {
+        return position;
+    }
+
+    public Vector2 getVelocity() {
+        return velocity;
     }
 }

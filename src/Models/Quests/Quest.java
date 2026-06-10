@@ -9,6 +9,7 @@ public class Quest {
     private QuestCategory category;
     private QuestPriority priority;
     private List<Reward> rewards;
+    private Progress progress;
     private boolean active;
 
     public Quest(String id, String title, QuestCategory category, QuestPriority priority, List<Reward> rewards) {

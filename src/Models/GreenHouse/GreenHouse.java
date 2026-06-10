@@ -1,10 +1,11 @@
 package Models.GreenHouse;
 
-import Models.Engine.TickAware;
-
 public class GreenHouse {
     private Pot[][] pots;
     public GreenHouse() {}
-    public Pot getPot(int x,int y){ return pots[0][0];}
+    public Pot getPot(int x,int y){ return getPots()[0][0];}
 
+    public Pot[][] getPots() {
+        return pots;
+    }
 }

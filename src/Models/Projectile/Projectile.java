@@ -1,27 +1,27 @@
 package Models.Projectile;
 
-import javax.swing.text.Position;
+import Models.DataTypes.Vector2;
 
 public abstract class Projectile {
     private int damage;
-    private Position currentPosition;
-    private int movementSpeed;
+    private Vector2 currentPosition;
+    private Vector2 velocity;
     private ProjectileType projectileType;
 
-    public Projectile(int damage , Position currentPosition , int movementSpeed , ProjectileType projectileType) {
+    public Projectile(int damage , Vector2 currentPosition , Vector2 velocity , ProjectileType projectileType) {
         this.damage = damage;
         this.currentPosition = currentPosition;
-        this.movementSpeed = movementSpeed;
+        this.velocity=velocity;
         this.projectileType = projectileType;
     }
     public int getDamage(){
         return damage;
     }
-    public Position getCurrentPosition(){
+    public Vector2 getCurrentPosition(){
         return currentPosition;
     }
-    public int getMovementSpeed(){
-        return movementSpeed;
+    public Vector2 getVelocity(){
+        return velocity;
     }
 
     public ProjectileType getProjectileType() {
