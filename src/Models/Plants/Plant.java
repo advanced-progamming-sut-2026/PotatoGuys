@@ -19,6 +19,7 @@ public abstract class Plant {
     private int level;
     private boolean isBoosted;
 
+
     public Plant(Vector2 position, PlantType type, PlantCategory category, List<PlantTag> tags, int baseHealth
             , int sunCost, int cooldown) {
         this.position = position;

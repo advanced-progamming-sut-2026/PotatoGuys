@@ -1,10 +1,6 @@
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import Models.User.User;
 
 public class LeaderBoard {
-
-    private List<PlayerScore> players = new ArrayList<>();
-
-    public void sortByScore(){}
+    public ArrayList<User> sortByScore(String sortType){return null;}
 }
