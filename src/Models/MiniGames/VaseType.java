@@ -1,4 +1,4 @@
-package Models.MiniGame;
+package Models.MiniGames;
 
 public enum VaseType {
     NORMAL,

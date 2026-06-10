@@ -1,11 +1,6 @@
-package Models.MiniGame;
+package Models.MiniGames;
 
-import java.lang.classfile.instruction.ArrayLoadInstruction;
-import java.util.ArrayList;
+import Models.Seasons.Levels.Level;
 
-import Models.Zombies.Zombie;
-
-public class IZombie extends MiniGame{
-    public void onFirstTick();
-    public void onTick();
+public class IZombie extends Level {
 }

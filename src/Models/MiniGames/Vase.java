@@ -1,4 +1,4 @@
-package Models.MiniGame;
+package Models.MiniGames;
 
 import Models.Plants.Plant;
 import Models.Zombies.Zombie;
