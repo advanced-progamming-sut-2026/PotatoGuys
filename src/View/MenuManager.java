@@ -1,4 +1,4 @@
-package Models.Menus;
+package View;
 
 public class MenuManager {
     private Menu currentMenu;

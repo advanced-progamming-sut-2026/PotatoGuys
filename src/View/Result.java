@@ -1,6 +1,4 @@
-package Models;
-
-import Models.Menus.Menu;
+package View;
 
 public class Result {
     private String message;

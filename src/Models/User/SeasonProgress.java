@@ -1,18 +1,15 @@
-package Models.Seasons;
+package Models.User;
 
 import java.util.Map;
 
+import Models.Seasons.Season;
+
 public class SeasonProgress {
-    private String userName;
     private Season season;
     private Map<Integer,Boolean> unlockedLevels;
 
     public boolean isLevelUnlocked(int levelNumber){
         return true;
-    }
-
-    public String getUserName() {
-        return userName;
     }
 
     public Season getSeason() {
