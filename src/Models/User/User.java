@@ -10,7 +10,5 @@ public class User {
     private Setting mySetting;
     private News myNews;
 
-    public boolean checkPassword(String password){
-        return true;
-    }
+    public boolean checkPassword(String password){return true;}
 }
