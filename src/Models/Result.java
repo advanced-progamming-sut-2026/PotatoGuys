@@ -1,5 +1,7 @@
 package Models;
 
+import Models.Menus.Menu;
+
 public class Result {
     private String message;
     private Menu nextMenu;

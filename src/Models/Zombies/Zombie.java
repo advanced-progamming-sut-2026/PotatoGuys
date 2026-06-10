@@ -1,8 +1,6 @@
 package Models.Zombies;
 
 import Models.DataTypes.Vector2;
-import Models.Enums.ZombieArmor;
-import Models.Enums.ZombieEffect;
 
 import java.util.List;
 

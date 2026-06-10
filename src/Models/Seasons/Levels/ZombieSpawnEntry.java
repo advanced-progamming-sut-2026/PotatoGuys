@@ -1,6 +1,6 @@
 package Models.Seasons.Levels;
 
-import Models.Enums.ZombieType;
+import Models.Zombies.ZombieType;
 
 public class ZombieSpawnEntry {
     private ZombieType type;

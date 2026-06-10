@@ -1,7 +1,7 @@
 package Models.Seasons;
 
 import Models.Enums.TileType;
-import Models.Enums.ZombieType;
+import Models.Zombies.ZombieType;
 import Models.Seasons.Levels.Level;
 import Models.Seasons.SeasonEffects.SeasonEffect;
 

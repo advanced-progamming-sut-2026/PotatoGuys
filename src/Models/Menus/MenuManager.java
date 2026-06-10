@@ -1,4 +1,4 @@
-package Models;
+package Models.Menus;
 
 public class MenuManager {
     private Menu currentMenu;

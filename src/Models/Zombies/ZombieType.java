@@ -1,4 +1,4 @@
-package Models.Enums;
+package Models.Zombies;
 
 public enum ZombieType {
     BASIC,
