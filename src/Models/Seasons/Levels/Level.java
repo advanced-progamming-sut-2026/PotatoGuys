@@ -1,13 +1,12 @@
 package Models.Seasons.Levels;
 
-import Models.Enums.LevelType;
-
 import java.util.List;
 
 public abstract class Level {
     private int levelNumber;
     private LevelType type;
     private int initialSun;
+    private int currentSun;
     private List<WaveConfig> waves;
 
     public int getLevelNumber() {

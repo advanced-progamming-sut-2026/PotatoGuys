@@ -1,6 +1,6 @@
 package Models.Seasons.Levels;
 
-import Models.Enums.SpecialLevelType;
+import Models.Seasons.Levels.SpecialLevels.SpecialLevelType;
 
 public abstract class SpecialLevel extends Level {
     private SpecialLevelType specialType;

@@ -3,13 +3,12 @@ package Models.Plants;
 import java.util.List;
 
 import Models.DataTypes.Vector2;
-import Models.Enums.PlantCategory;
-import Models.Enums.PlantTag;
 
 public abstract class Plant {
     private Vector2 position;
+    private Vector2 speed;
 
-    private final String name;
+    private final PlantType type;
     private final PlantCategory category;
     private final List<PlantTag> tags;
     private final int baseHealth;
