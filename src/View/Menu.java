@@ -1,5 +1,5 @@
-package Models;
+package View;
 
 public interface Menu {
-    Result handleInput();
+    Result handleInput(String input);
 }

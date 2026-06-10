@@ -1,5 +1,5 @@
-package Models;
+package View;
 
 public class RegisterMenu implements Menu{
-    public Result handleInput(){return null;}
+    public Result handleInput(String input){return null;}
 }

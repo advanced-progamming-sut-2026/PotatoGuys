@@ -1,5 +1,5 @@
-package Models;
+package View;
 
 public class ProfileMenu implements Menu{
-    public Result handleInput(){return null;}
+    public Result handleInput(String input){return null;}
 }
