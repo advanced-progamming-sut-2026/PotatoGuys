@@ -19,9 +19,11 @@ public abstract class Plant {
     private int level;
     private boolean isBoosted;
 
-    public Plant(Vector2 position, String name, PlantCategory category, List<PlantTag> tags, int baseHealth, int sunCost, int cooldown) {
+
+    public Plant(Vector2 position, PlantType type, PlantCategory category, List<PlantTag> tags, int baseHealth
+            , int sunCost, int cooldown) {
         this.position = position;
-        this.name = name;
+        this.type = type;
         this.category = category;
         this.tags = tags;
         this.baseHealth = baseHealth;
@@ -36,8 +38,8 @@ public abstract class Plant {
 
     }
 
-    public String getName(){
-        return name;
+    public PlantType gettype(){
+        return type;
     }
 
     public Vector2 getPosition() {

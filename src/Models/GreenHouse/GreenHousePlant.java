@@ -1,11 +1,13 @@
+package Models.GreenHouse;
+
 import java.time.LocalDateTime;
 
-public abstract class Plant {
+public abstract class GreenHousePlant {
 
     protected LocalDateTime plantedTime;
     protected int growthHours;
 
-    public Plant(int growthHours) {
+    public GreenHousePlant(int growthHours) {
         this.growthHours = growthHours;
         this.plantedTime = LocalDateTime.now();
     }

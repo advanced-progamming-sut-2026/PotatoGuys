@@ -1,5 +1,7 @@
 package Models.LawnMower;
 
+import Models.Zombies.Zombie;
+
 public class LawnMower {
     private int row;
     private boolean available;
@@ -9,6 +11,10 @@ public class LawnMower {
         this.row = row;
         this.available = true;
         this.killedZombiesCount = 0;
+    }
+
+    public void onZombieContact(Zombie zombie){
+
     }
 
     public int getRow() {

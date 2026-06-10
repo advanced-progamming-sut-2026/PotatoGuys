@@ -1,6 +1,6 @@
-public class PotItem extends Item {
+public class PotShopItem extends Item {
 
-    public PotItem() {
+    public PotShopItem() {
         this.priceCoin = 2000;
     }
 
