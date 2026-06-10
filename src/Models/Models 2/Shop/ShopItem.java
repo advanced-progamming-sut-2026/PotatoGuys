@@ -1,4 +1,4 @@
-public abstract class Item {
+public abstract class ShopItem {
 
     protected int id;
     protected int priceCoin;

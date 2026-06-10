@@ -1,4 +1,6 @@
-public class UnlockedPlant extends Plant {
+package Models.GreenHouse;
+
+public class UnlockedPlant extends GreenHousePlant {
 
     private String plantType;
 

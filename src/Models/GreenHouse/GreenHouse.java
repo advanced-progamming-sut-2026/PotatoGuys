@@ -3,7 +3,7 @@ import java.util.List;
 
 public class GreenHouse {
 
-    private List<Pot> pots = new ArrayList<>();
+    private List<GreenHousePot> greenHousePots = new ArrayList<>();
 
     public Greenhouse() {
 
@@ -12,16 +12,16 @@ public class GreenHouse {
 
                 boolean locked = column >= 2; 
 
-                pots.add(new Pot(x,y,locked));
+                greenHousePots.add(new GreenHousePot(x,y,locked));
             }
         }
     }
 
-    public Pot getPot(int x,int y){
+    public GreenHousePot getPot(int x, int y){
 
-        for(Pot pot : pots){
-            if(pot.getX()==x && pot.getY()==y)
-                return pot;
+        for(GreenHousePot greenHousePot : greenHousePots){
+            if(greenHousePot.getX()==x && greenHousePot.getY()==y)
+                return greenHousePot;
         }
 
         return null;
