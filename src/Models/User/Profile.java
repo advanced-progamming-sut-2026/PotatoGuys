@@ -8,9 +8,8 @@ public class Profile {
     private int gamePlayed;
     private int coins;
     private int diamonds;
-
     private ArrayList<PlantType> myPlants;
-    private Map<> mycChapters;
+    private ArrayList<SeasonProgress> seasonProgresses;
     private int maxMiopoint;
 
     public Profile(int gamePlayed, int coins, int diamonds, ArrayList<Plant> myPlants, ArrayList<Chapter> mycChapters,
@@ -58,5 +57,8 @@ public class Profile {
     }
     public void setMaxMiopoint(int maxMiopoint) {
         this.maxMiopoint = maxMiopoint;
+    }
+        public ArrayList<SeasonProgress> getSeasonProgresses() {
+        return seasonProgresses;
     }
 }
