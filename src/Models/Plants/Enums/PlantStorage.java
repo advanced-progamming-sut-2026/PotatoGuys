@@ -5,7 +5,7 @@ import java.util.List;
 import Models.Plants.Plant;
 import Models.Plants.Strategy;
 import Models.Plants.Strategies.SunProducers;
-import Models.Plants.SunProducers.SunType;
+import Models.Sun.SunType;
 
 public enum PlantStorage {
 
@@ -17,7 +17,7 @@ public enum PlantStorage {
     private List<PlantTag> tags;
     private int sunCost;
     private int baseHP;
-    private int damage;
+    private int z;
     private int baseActionInterval;
     private int baseRecharge;
     private Strategy strategy;

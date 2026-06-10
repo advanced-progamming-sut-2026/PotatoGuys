@@ -29,4 +29,7 @@ public class LawnMower implements TickAware{
     public int getKilledZombiesCount() {
         return killedZombiesCount;
     }
+
+    public void onFirstTick(){}
+    public void onTick(){}
 }

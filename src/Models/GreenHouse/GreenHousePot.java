@@ -1,11 +1,10 @@
 package Models.GreenHouse;
 
-import Models.GreenHouse.GreenHousePlant;
-
 public class GreenHousePot {
 
     private int x;
     private int y;
+
     private boolean locked;
     private GreenHousePlant greenHousePlant;
 
@@ -13,6 +12,13 @@ public class GreenHousePot {
         this.x = x;
         this.y = y;
         this.locked = locked;
+    }
+
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
     }
 
     public boolean isEmpty() {
