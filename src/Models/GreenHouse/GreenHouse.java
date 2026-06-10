@@ -5,7 +5,7 @@ public class GreenHouse {
 
     private List<Pot> pots = new ArrayList<>();
 
-    public Greenhouse() {
+    public GreenHouse() {
 
         for(int y=1;y<=4;y++){
             for(int x=1;x<=5;x++){
