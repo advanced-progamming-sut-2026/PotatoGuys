@@ -3,7 +3,7 @@ package Models.User;
 import java.util.ArrayList;
 
 import Models.Plants.Plant;
-import Models.Plants.PlantType;
+import Models.Plants.Enums.PlantType;
 import Models.Seasons.SeasonProgress;
 
 public class Profile {

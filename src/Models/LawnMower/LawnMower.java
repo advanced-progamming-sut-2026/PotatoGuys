@@ -1,8 +1,9 @@
 package Models.LawnMower;
 
+import Models.Engine.TickAware;
 import Models.Zombies.Zombie;
 
-public class LawnMower {
+public class LawnMower implements TickAware{
     private int row;
     private boolean available;
     private int killedZombiesCount;

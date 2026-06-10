@@ -1,11 +1,10 @@
 package Models.Plants;
 
-import Models.Plants.Enums.PlantType;
-
-public class PlantFactory {
-    public Plant createPlant(PlantType type){
+public class StrategyFactory {
+    public Strategy createStrategy(String type){
         switch (type) {
-            case Threepeater:
+            case null:
+                
                 break;
         
             default:

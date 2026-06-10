@@ -1,6 +1,6 @@
 package Models.Shop;
 
-import Models.Plants.PlantType;
+import Models.Plants.Enums.PlantType;
 import Models.User.User;
 
 import java.util.List;

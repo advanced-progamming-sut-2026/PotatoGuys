@@ -1,4 +1,4 @@
-package Models.Plants;
+package Models.Plants.Enums;
 
 public enum PlantType {
     Sunflower,
