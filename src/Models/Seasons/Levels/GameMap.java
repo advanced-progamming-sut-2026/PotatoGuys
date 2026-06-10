@@ -1,6 +1,4 @@
-package Models.Engine;
-
-import Models.Seasons.Levels.Tile;
+package Models.Seasons.Levels;
 
 public class GameMap {
     private int rows;

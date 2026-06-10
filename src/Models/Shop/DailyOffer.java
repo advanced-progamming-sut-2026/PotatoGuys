@@ -11,6 +11,18 @@ public class DailyOffer extends ShopItem {
     private LocalDate offerDate;
     private boolean purchasedToday;
 
+    public PlantType getPlantType() {
+        return plantType;
+    }
+
+    public LocalDate getOfferDate() {
+        return offerDate;
+    }
+
+    public boolean isPurchasedToday() {
+        return purchasedToday;
+    }
+
     public DailyOffer(PlantType plantType, LocalDate date){
 
     }

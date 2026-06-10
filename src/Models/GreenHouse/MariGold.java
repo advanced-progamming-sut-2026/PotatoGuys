@@ -1,6 +1,5 @@
 package Models.GreenHouse;
 
-import Models.Plants.Plant;
 
 public class MariGold extends GreenHousePlant {
 

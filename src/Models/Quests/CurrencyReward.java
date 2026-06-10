@@ -9,11 +9,11 @@ public class CurrencyReward extends Reward {
     }
 
     public CurrencyKind getCurrencyKind() {
-        return null;
+        return currencyKind;
     }
 
     public int getAmount() {
-        return 0;
+        return amount;
     }
 
     @Override

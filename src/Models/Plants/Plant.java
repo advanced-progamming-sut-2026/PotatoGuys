@@ -10,7 +10,7 @@ import Models.Plants.Enums.PlantType;
 
 public abstract class Plant implements TickAware{
     private Vector2 position;
-    private Vector2 speed;
+    private Vector2 velocity;
 
     private final PlantType type;
     private final PlantCategory category;
@@ -21,11 +21,13 @@ public abstract class Plant implements TickAware{
     private int baseHP;
     private int baseRecharge;
     private int baseActionInterval;
+    private int baseDamage;
 
     private int Recharge;
     private int ActionInterval;
     private int HP;
     private int level;
+    private int damage;
     private boolean isBoosted;
 
     public Plant(Vector2 position, Vector2 speed, PlantType type, PlantCategory category, List<PlantTag> tags,

@@ -27,7 +27,7 @@ public class QuestLog {
     }
 
     public List<Quest> getActiveQuests() {
-        return null;
+        return quests;
     }
 
     public List<Quest> sortByPriority() {

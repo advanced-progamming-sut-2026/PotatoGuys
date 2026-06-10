@@ -9,6 +9,18 @@ public class Shooters implements Strategy {
     private int bulletsInWave;
     private int delayBetweenWaves;
 
+    public PlantType getType() {
+        return type;
+    }
+    public BulletType getDefaultBulletType() {
+        return defaultBulletType;
+    }
+    public int getBulletsInWave() {
+        return bulletsInWave;
+    }
+    public int getDelayBetweenWaves() {
+        return delayBetweenWaves;
+    }
     public Shooters(PlantType type , BulletType defaultBulletType, int bulletsInWave,
             int delayBetweenWaves) {
         this.type = type;
