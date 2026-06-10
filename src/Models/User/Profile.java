@@ -1,14 +1,16 @@
-package Models;
+package Models.User;
 
 import java.util.ArrayList;
+
+import Models.Enums.PlantType;
 
 public class Profile {
     private int gamePlayed;
     private int coins;
     private int diamonds;
 
-    private ArrayList<Plant> myPlants;
-    private ArrayList<Chapter> mycChapters;
+    private ArrayList<PlantType> myPlants;
+    private Map<> mycChapters;
     private int maxMiopoint;
 
     public Profile(int gamePlayed, int coins, int diamonds, ArrayList<Plant> myPlants, ArrayList<Chapter> mycChapters,
