@@ -1,3 +1,3 @@
-404105959-سید محمد مهدی سید شاکری
-سید حسین حسینی نژاد-404105756
-404105853-یوسف رحیم زاده
+Yousof Rahimzadeh : 404105853.
+Seyed Hossein Hosseini Nejad : 404105756.
+Seyed Mohammad Mahdi Seyed Shakeri : 404105959.
