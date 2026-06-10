@@ -1,4 +1,4 @@
-package Models.MiniGame;
+package Models.MiniGames;
 
 import Models.Seasons.Levels.Level;
 
