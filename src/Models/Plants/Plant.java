@@ -3,11 +3,12 @@ package Models.Plants;
 import java.util.List;
 
 import Models.DataTypes.Vector2;
+import Models.Engine.TickAware;
 import Models.Plants.Enums.PlantCategory;
 import Models.Plants.Enums.PlantTag;
 import Models.Plants.Enums.PlantType;
 
-public abstract class Plant {
+public abstract class Plant implements TickAware{
     private Vector2 position;
     private Vector2 speed;
 
@@ -92,6 +93,8 @@ public abstract class Plant {
         return isBoosted;
     }
     public void onFirstTick(){}
-    public void onTick(){}
+    public void onTick(){
+        strategy.defaultApply();
+    }
 
 }

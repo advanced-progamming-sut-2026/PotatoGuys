@@ -2,6 +2,7 @@ package Models.Plants.Enums;
 
 import java.util.List;
 
+import Models.Plants.Plant;
 import Models.Plants.Strategy;
 import Models.Plants.Strategies.SunProducers;
 import Models.Plants.SunProducers.SunType;
@@ -31,5 +32,9 @@ public enum PlantStorage {
         this.baseRecharge = baseRecharge;
         this.baseActionInterval = baseActionInterval;
         this.strategy = strategy;
+    }
+
+    public Plant getCopy(){
+        return null;
     }
 }

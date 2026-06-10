@@ -6,7 +6,6 @@ import Models.Plants.Strategy;
 import Models.Plants.Enums.PlantCategory;
 import Models.Plants.Enums.PlantTag;
 import Models.Plants.Enums.PlantType;
-import Models.Plants.Shooters;
 
 import java.util.List;
 
