@@ -41,14 +41,6 @@ public class GreenHousePot {
         locked = false;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     public GreenHousePlant getGreenHousePlant() {
         return greenHousePlant;
     }
