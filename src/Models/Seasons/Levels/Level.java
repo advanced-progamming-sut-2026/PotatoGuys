@@ -1,8 +1,11 @@
 package Models.Seasons.Levels;
 
+import Models.Engine.GameEngine;
+
 import java.util.List;
 
 public abstract class Level {
+    private GameEngine engine;
     private GameMap gameMap;
     private int levelNumber;
     private LevelType type;
@@ -31,5 +34,9 @@ public abstract class Level {
 
     public List<WaveConfig> getWaves() {
         return waves;
+    }
+
+    public GameEngine getEngine() {
+        return engine;
     }
 }

@@ -1,13 +1,17 @@
 package Models.Sun;
 
 import Models.DataTypes.Vector2;
+import Models.Engine.GameEngine;
 import Models.Engine.TickAware;
+import Models.Seasons.Levels.Level;
 
 public class Sun implements TickAware{
     private SunType type;
     private Vector2 position;
+    private Vector2 targetPosition;
     private Vector2 velocity;
-    private int timeRemainingToDespawn;
+    private Level level;
+    private float timeRemainingToDespawn;
 
     public SunType getType() {
         return type;
@@ -18,9 +22,24 @@ public class Sun implements TickAware{
     public Vector2 getVelocity() {
         return velocity;
     }
-    public int getTimeRemainingToDespawn() {
+    public float getTimeRemainingToDespawn() {
         return timeRemainingToDespawn;
     }
     public void onFirstTick(){}
-    public void onTick(){}
+    public void onTick(){
+        if (Vector2.calculateDistance(position,targetPosition)> velocity.magnitude()*1.2) {
+            position.x += velocity.x;
+            position.y += velocity.y;
+        }
+        timeRemainingToDespawn -= 0.1f;
+
+        //despawn sun
+        if (timeRemainingToDespawn<=0){
+            dispose();
+        }
+    }
+
+    public void dispose(){
+        level.getEngine().getToRemove().add(this);
+    }
 }
