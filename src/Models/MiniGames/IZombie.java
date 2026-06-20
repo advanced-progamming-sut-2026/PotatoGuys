@@ -1,6 +1,5 @@
 package Models.MiniGames;
 
-import java.lang.classfile.instruction.ArrayLoadInstruction;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -14,6 +13,11 @@ public class IZombie extends Level{
     private ArrayList<Zombie> availableZombies;
     private ArrayList<Brain> brains;
     private int redLine;
+
+    protected IZombie(String name, int value) {
+        super(name, value);
+    }
+
     public ArrayList<Plant> getPlacedPlants() {
         return placedPlants;
     }
@@ -27,7 +31,9 @@ public class IZombie extends Level{
         return redLine;
     }
     private void placeZombie(Tile tile , Zombie zombie){}
-    private boolean canPlaceZombie(Tile tile){}
+    private boolean canPlaceZombie(Tile tile){
+        return true;
+    }
     private void setupBoard(){}
     public void onFirstTick(){}
     public void onTick(){}

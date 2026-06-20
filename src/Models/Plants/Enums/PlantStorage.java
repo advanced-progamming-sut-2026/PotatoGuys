@@ -1,5 +1,7 @@
 package Models.Plants.Enums;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import Models.Plants.Plant;
@@ -9,7 +11,7 @@ import Models.Sun.SunType;
 
 public enum PlantStorage {
 
-    Sunflower(PlantType.Sunflower , PlantCategory.SUN_PRODUCER , PlantTag.DAY , 50 , 300 , 0 , 24 , 5 , new SunProducers(SunType.NORMAL , 10));
+    Sunflower(PlantType.Sunflower , PlantCategory.SUN_PRODUCER , new ArrayList<>(List.of(PlantTag.DAY)), 50 , 300 , 0 , 24 , new SunProducers(SunType.NORMAL , 10));
 
     
     private PlantType type;

@@ -6,6 +6,10 @@ public class UnlockableReward extends Reward {
     private UnlockState fromState;
     private UnlockState toState;
 
+    public UnlockableReward(RewardType type) {
+        super(type);
+    }
+
     public UnlockTargetType getTargetType() {
         return targetType;
     }

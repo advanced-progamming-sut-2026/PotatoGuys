@@ -16,4 +16,9 @@ public class Brain implements TickAware{
     }
     public void onFirstTick(){}
     public void onTick(){}
+
+    @Override
+    public void dispose() {
+
+    }
 }

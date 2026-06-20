@@ -1,7 +1,7 @@
 import View.MenuManager;
 
 public class Main {
-    public void main() {
+    public static void main(String[] args) {
         MenuManager menuManager = new MenuManager();
         menuManager.handleInput(null);
     }

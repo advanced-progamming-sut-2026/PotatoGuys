@@ -44,6 +44,11 @@ public class LawnMower implements TickAware{
 
     }
 
+    @Override
+    public void dispose() {
+
+    }
+
     public Vector2 getPosition() {
         return position;
     }

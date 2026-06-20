@@ -18,42 +18,44 @@ public abstract class Plant implements TickAware{
     private Strategy strategy;
     
     private int sunCost;
-    private int baseHP;
+    private int baseHp;
     private int baseRecharge;
     private int baseActionInterval;
     private int baseDamage;
 
     private int Recharge;
     private int ActionInterval;
-    private int HP;
+    private int hp;
     private int level;
     private int damage;
     private boolean isBoosted;
 
     public Plant(Vector2 position, Vector2 speed, PlantType type, PlantCategory category, List<PlantTag> tags,
-            Strategy strategy, int sunCost, int baseHP, int baseRecharge, int baseActionInterval, int recharge,
-            int actionInterval, int hP, int level, boolean isBoosted) {
+            Strategy strategy, int sunCost, int baseHp, int baseRecharge, int baseActionInterval, int recharge,
+            int actionInterval, int level, boolean isBoosted) {
         this.position = position;
-        this.speed = speed;
         this.type = type;
         this.category = category;
         this.tags = tags;
         this.strategy = strategy;
         this.sunCost = sunCost;
-        this.baseHP = baseHP;
+        this.baseHp = baseHp;
+        hp=baseHp;
         this.baseRecharge = baseRecharge;
         this.baseActionInterval = baseActionInterval;
         Recharge = recharge;
         ActionInterval = actionInterval;
-        HP = hP;
         this.level = level;
         this.isBoosted = isBoosted;
     }
+
+    public void onFirstTick(){}
+    public void onTick(){
+        strategy.defaultApply();
+    }
+
     public Vector2 getPosition() {
         return position;
-    }
-    public Vector2 getSpeed() {
-        return speed;
     }
     public PlantType getType() {
         return type;
@@ -71,7 +73,7 @@ public abstract class Plant implements TickAware{
         return sunCost;
     }
     public int getBaseHP() {
-        return baseHP;
+        return baseHp;
     }
     public int getBaseRecharge() {
         return baseRecharge;
@@ -86,17 +88,13 @@ public abstract class Plant implements TickAware{
         return ActionInterval;
     }
     public int getHP() {
-        return HP;
+        return hp;
     }
     public int getLevel() {
         return level;
     }
     public boolean isBoosted() {
         return isBoosted;
-    }
-    public void onFirstTick(){}
-    public void onTick(){
-        strategy.defaultApply();
     }
 
 }
