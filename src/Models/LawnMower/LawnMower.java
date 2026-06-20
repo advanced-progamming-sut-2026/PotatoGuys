@@ -31,6 +31,7 @@ public class LawnMower implements TickAware{
 
     public int getKilledZombiesCount() {
         return killedZombiesCount;
+
     }
 
     @Override
