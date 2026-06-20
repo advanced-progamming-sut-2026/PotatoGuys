@@ -1,0 +1,17 @@
+package Models.Commands;
+
+public enum NetworkMenuCommand implements MenuCommand {
+    CONNECT("(?i)connect\\s+(?<host>\\S+)\\s+(?<port>\\d+)\\s*$"),
+    BACK("(?i)back\\s*$");
+
+    private final String pattern;
+
+    NetworkMenuCommand(String pattern) {
+        this.pattern = pattern;
+    }
+
+    @Override
+    public String getPattern() {
+        return this.pattern;
+    }
+}

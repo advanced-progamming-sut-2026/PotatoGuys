@@ -1,7 +1,7 @@
 package Models.Seasons.SeasonEffects;
 
-import Models.Engine.GameMap;
 import Models.Plants.Plant;
+import Models.Seasons.Levels.GameMap;
 import Models.Seasons.Levels.Tile;
 import Models.Zombies.Zombie;
 

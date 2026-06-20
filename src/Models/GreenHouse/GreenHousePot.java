@@ -1,9 +1,9 @@
-import Models.GreenHouse;
+package Models.GreenHouse;
 
 public class GreenHousePot {
 
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private boolean locked;
     private GreenHousePlant greenHousePlant;
 

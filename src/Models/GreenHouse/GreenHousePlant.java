@@ -16,7 +16,7 @@ public abstract class GreenHousePlant {
     public boolean isReady() {
         LocalDateTime finish = plantedTime.plusHours(growthHours);
         return !LocalDateTime.now().isBefore(finish);
-    }
+    }   
 
     public int remainingHours() {
         LocalDateTime finish = plantedTime.plusHours(growthHours);
