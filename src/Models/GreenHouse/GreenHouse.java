@@ -6,45 +6,44 @@ import java.util.Random;
 
 public class GreenHouse {
 
-    public static final HEIGHT = 4 ;
-    public static final WIDTH = 5 ;
+    public static final int WIDTH = 5;
+    public static final int HEIGHT = 4;
 
-    private List<GreenHousePot> greenHousePots = new ArrayList<>();
+    private final List<GreenHousePot> greenHousePots = new ArrayList<>();
+    private final Random random = new Random();
 
     public GreenHouse() {
-
-        for(int y = 1; y<=HEIGHT ; y++){
-            for(int x=1 ; x<= WIDTH ;x++){
+        for (int y = 1; y <= HEIGHT; y++) {
+            for (int x = 1; x <= WIDTH; x++) {
                 boolean locked = y >= 2;
-                greenHousePots.add(new GreenHousePot(x,y,locked));
+                greenHousePots.add(new GreenHousePot(x, y, locked));
             }
         }
     }
 
-    public GreenHousePot getPot(int x, int y){
-        for(GreenHousePot greenHousePot : greenHousePots){
-            if(greenHousePot.getX()==x && greenHousePot.getY()==y)
+    public GreenHousePot getPot(int x, int y) {
+        for (GreenHousePot greenHousePot : greenHousePots) {
+            if (greenHousePot.getX() == x && greenHousePot.getY() == y) {
                 return greenHousePot;
+            }
         }
 
         return null;
     }
 
-}
-
     public List<GreenHousePot> getGreenHousePots() {
         return greenHousePots;
-}
+    }
 
     public boolean isValidCoordinate(int x, int y) {
         return x >= 1 && x <= WIDTH && y >= 1 && y <= HEIGHT;
-}
+    }
 
-    public boolean unlockPot(int x , int y) {
+    public boolean unlockPot(int x, int y) {
         GreenHousePot pot = getPot(x, y);
 
         if (pot == null || !pot.isLocked()) {
-
+            return false;
         }
 
         pot.unlock();
@@ -62,31 +61,38 @@ public class GreenHouse {
         return true;
     }
 
-    public boolean plantRandomPotAt(int x, int y, List<String>List<String> unlockedPlantTypesWithPlantFood)
-        GreenHousePlant plant =  createRandomPlant(unlockedPlantTypesWithPlantFood);
-        return plantPotAt(x , y, plant);
-        }
+    public boolean plantRandomPotAt(int x, int y, List<String> unlockedPlantTypesWithPlantFood) {
+        GreenHousePlant plant = createRandomPlant(unlockedPlantTypesWithPlantFood);
+        return plantPotAt(x, y, plant);
+    }
 
-    public GreenHousePlant collect(int x , int y){
-        GreenHousePot pot = getPot (x, y);
+    public GreenHousePlant collect(int x, int y) {
+        GreenHousePot pot = getPot(x, y);
 
-        if(pot == null || pot.isLocked() || pot.isEmpty()){
-            reutrn null;
+        if (pot == null || pot.isLocked() || pot.isEmpty()) {
+            return null;
         }
 
         GreenHousePlant plant = pot.getPlant();
 
         if (!plant.isReady()) {
-            return null
+            return null;
         }
+
         pot.clearPlant();
         return plant;
     }
 
-    public boolean grow (int x, int y){
+    public boolean grow(int x, int y) {
         GreenHousePot pot = getPot(x, y);
 
-        if ( pot == null || pot.isLocked() || pot.isEmpty()){
+        if (pot == null || pot.isLocked() || pot.isEmpty()) {
+            return false;
+        }
+
+        GreenHousePlant plant = pot.getPlant();
+
+        if (plant.isReady()) {
             return false;
         }
 
@@ -94,26 +100,24 @@ public class GreenHouse {
         return true;
     }
 
+    public int getGrowCost(int x, int y) {
+        GreenHousePot pot = getPot(x, y);
 
-        public int getGrowCost(int x, int y){
-            GreenHousePot pot == getPot (x, y);
-
-            if (pot == null || pot.isLocked() || pot.isEmpty()) {
-                return 0;
-            }
-            return pot.getPlant().remainingHours();
+        if (pot == null || pot.isLocked() || pot.isEmpty()) {
+            return 0;
         }
+
+        return pot.getPlant().remainingHours();
+    }
 
     private GreenHousePlant createRandomPlant(List<String> unlockedPlantTypesWithPlantFood) {
         boolean shouldPlantMariGold = random.nextBoolean();
 
-    if (shouldPlantMariGold || unlockedPlantTypesWithPlantFood == null || unlockedPlantTypesWithPlantFood.isEmpty()) {
-        return new MariGold();
+        if (shouldPlantMariGold || unlockedPlantTypesWithPlantFood == null || unlockedPlantTypesWithPlantFood.isEmpty()) {
+            return new MariGold();
         }
 
         int index = random.nextInt(unlockedPlantTypesWithPlantFood.size());
         return new UnlockedPlant(unlockedPlantTypesWithPlantFood.get(index));
     }
-
 }
-

@@ -9,33 +9,37 @@ public class Quest {
     private QuestCategory category;
     private QuestPriority priority;
     private List<Reward> rewards;
+    private Progress progress;
     private boolean active;
 
-    public Quest(String id, String title, QuestCategory category, QuestPriority priority, List<Reward> rewards) {
-    }
+    
 
     public String getId() {
-        return null;
+        return id;
     }
 
     public String getTitle() {
-        return null;
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public QuestCategory getCategory() {
-        return null;
+        return category;
     }
 
     public QuestPriority getPriority() {
-        return null;
+        return priority;
     }
 
     public List<Reward> getRewards() {
-        return null;
+        return rewards;
     }
 
     public boolean isActive() {
-        return false;
+        return active;
     }
 
     public void activate() {

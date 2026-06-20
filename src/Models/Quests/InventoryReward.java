@@ -4,18 +4,19 @@ public class InventoryReward extends Reward {
     private String itemId;
     private int quantity;
 
+    
     public InventoryReward(String itemId, int quantity) {
         super(null);
     }
-
+    
     public String getItemId() {
-        return null;
+        return itemId;
     }
 
     public int getQuantity() {
-        return 0;
+        return quantity;
     }
-
+    
     @Override
     public void grant() {
     }

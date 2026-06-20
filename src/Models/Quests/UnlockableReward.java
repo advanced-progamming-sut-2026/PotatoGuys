@@ -6,25 +6,29 @@ public class UnlockableReward extends Reward {
     private UnlockState fromState;
     private UnlockState toState;
 
-    public UnlockableReward(UnlockTargetType targetType, String targetId, UnlockState fromState, UnlockState toState) {
-        super(null);
+    public UnlockTargetType getTargetType() {
+        return targetType;
     }
 
-    public UnlockTargetType getTargetType() {
-        return null;
-    }
+
 
     public String getTargetId() {
-        return null;
+        return targetId;
     }
+
+
 
     public UnlockState getFromState() {
-        return null;
+        return fromState;
     }
 
+
+
     public UnlockState getToState() {
-        return null;
+        return toState;
     }
+
+
 
     @Override
     public void grant() {

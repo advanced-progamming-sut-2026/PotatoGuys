@@ -7,7 +7,7 @@ public abstract class Reward {
     }
 
     public RewardType getType() {
-        return null;
+        return type;
     }
 
     public abstract void grant();
