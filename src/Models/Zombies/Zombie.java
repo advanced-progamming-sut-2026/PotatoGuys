@@ -11,29 +11,36 @@ public abstract class Zombie {
 
     private final ZombieType type;
     private final int cost;
-    private final int baseHP;
-    private final int baseDamage;
+    private final float baseHp;
+    private final float baseDamage;
     private final float movementSpeed;
 
-    private int HP;
-    private int damage;
+    private float hp;
+    private float damage;
     private List<ZombieEffect> effects;
     private List<ZombieArmor> armors;
     
-    public Zombie(Vector2 position, Vector2 velocity, ZombieType type, int cost, int baseHP, int baseDamage,
-            float movementSpeed, int hP, int damage, List<ZombieEffect> effects, List<ZombieArmor> armors) {
+    public Zombie(Vector2 position, Vector2 velocity, ZombieType type, int cost, float baseHp, float baseDamage,
+            float movementSpeed, List<ZombieEffect> effects, List<ZombieArmor> armors) {
         this.position = position;
         this.velocity = velocity;
         this.type = type;
         this.cost = cost;
-        this.baseHP = baseHP;
+        this.baseHp = baseHp;
         this.baseDamage = baseDamage;
         this.movementSpeed = movementSpeed;
-        HP = hP;
         this.damage = damage;
         this.effects = effects;
         this.armors = armors;
     }
+
+    public void takeDamage(float amount){
+        hp-=amount;
+        if (hp<0){
+            hp=0;
+        }
+    }
+
     public Vector2 getPosition() {
         return position;
     }
@@ -46,19 +53,19 @@ public abstract class Zombie {
     public int getCost() {
         return cost;
     }
-    public int getBaseHP() {
-        return baseHP;
+    public float getBaseHP() {
+        return baseHp;
     }
-    public int getBaseDamage() {
+    public float getBaseDamage() {
         return baseDamage;
     }
     public float getMovementSpeed() {
         return movementSpeed;
     }
-    public int getHP() {
-        return HP;
+    public float getHP() {
+        return hp;
     }
-    public int getDamage() {
+    public float getDamage() {
         return damage;
     }
     public List<ZombieEffect> getEffects() {

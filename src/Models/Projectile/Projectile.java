@@ -1,29 +1,54 @@
 package Models.Projectile;
 
 import Models.DataTypes.Vector2;
+import Models.Engine.TickAware;
+import Models.Seasons.Levels.Level;
 
-public abstract class Projectile {
-    private int damage;
-    private Vector2 currentPosition;
-    private Vector2 velocity;
-    private ProjectileType projectileType;
+public abstract class Projectile implements TickAware {
+    Level level;
+    protected int damage;
+    protected Vector2 position;
+    protected Vector2 velocity;
+    protected ProjectileType projectileType;
+    protected boolean affectedByGravity;
 
-    public Projectile(int damage , Vector2 currentPosition , Vector2 velocity , ProjectileType projectileType) {
+    public Projectile(Level level, int damage , Vector2 currentPosition , Vector2 velocity
+            , ProjectileType projectileType, boolean affectedByGravity) {
+        this.level=level;
         this.damage = damage;
-        this.currentPosition = currentPosition;
+        this.position = currentPosition;
         this.velocity=velocity;
         this.projectileType = projectileType;
+        this.affectedByGravity=affectedByGravity;
     }
+
+    @Override
+    public void onFirstTick() {
+
+    }
+
+    @Override
+    public void onTick() {
+        position.x+=velocity.x;
+        position.y=velocity.y;
+    }
+
+    @Override
+    public void dispose() {
+        level.getEngine().getToRemove().add(this);
+    }
+
+    public abstract void onCollide(TickAware collidedObj);
+
     public int getDamage(){
         return damage;
     }
     public Vector2 getCurrentPosition(){
-        return currentPosition;
+        return position;
     }
     public Vector2 getVelocity(){
         return velocity;
     }
-
     public ProjectileType getProjectileType() {
         return projectileType;
     }
