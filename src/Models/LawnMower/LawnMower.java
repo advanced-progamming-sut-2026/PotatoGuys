@@ -13,9 +13,15 @@ public class LawnMower {
         this.killedZombiesCount = 0;
     }
 
-    public void onZombieContact(Zombie zombie){
-
+    public void onZombieContact(Zombie zombie) {
+        if (available) {
+            System.out.println("The lawn mower in the row " + row + " is triggered and killed these zombies:");
+            available = false;
+        } else {
+            System.out.println("The zombie ate your brain; LOSER!!!");
+        }
     }
+
 
     public int getRow() {
         return row;

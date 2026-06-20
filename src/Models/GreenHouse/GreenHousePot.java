@@ -1,4 +1,4 @@
-import Models.GreenHouse.GreenHousePlant;
+import Models.GreenHouse;
 
 public class GreenHousePot {
 
@@ -25,11 +25,23 @@ public class GreenHousePot {
         return greenHousePlant;
     }
 
+    public void clearPlant() {
+        greenHousePlant = null;
+    }
+
     public boolean isLocked() {
         return locked;
     }
 
     public void unlock() {
         locked = false;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }

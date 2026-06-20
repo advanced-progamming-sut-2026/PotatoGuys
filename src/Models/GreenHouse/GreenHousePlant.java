@@ -1,5 +1,6 @@
 package Models.GreenHouse;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public abstract class GreenHousePlant {
@@ -14,11 +15,29 @@ public abstract class GreenHousePlant {
 
     public boolean isReady() {
         LocalDateTime finish = plantedTime.plusHours(growthHours);
-        return LocalDateTime.now().isAfter(finish);
+        return !LocalDateTime.now().isBefore(finish);
     }
 
-    public long remainingHours() {
+    public int remainingHours() {
         LocalDateTime finish = plantedTime.plusHours(growthHours);
-        return java.time.Duration.between(LocalDateTime.now(), finish).toHours();
+        Duration duration = Duration.between(LocalDateTime.now(), finish);
+
+        if (duration.isNegative() || duration.isZero()) {
+            return 0;
+        }
+
+        return (int) Math.ceil(duration.getSeconds() / 3600.0);
+    }
+
+    public void makeReadyNow() {
+        plantedTime = LocalDateTime.now().minusHours(growthHours);
+    }
+
+    public LocalDateTime getPlantedTime() {
+        return plantedTime;
+    }
+
+    public int getGrowthHours() {
+        return growthHours;
     }
 }
