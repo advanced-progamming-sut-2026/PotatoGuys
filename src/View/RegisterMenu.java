@@ -17,4 +17,9 @@ public class RegisterMenu implements Menu {
         if ((matcher = RegisterMenuCommand.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
         return new Result("Invalid command in Register Menu.", this);
     }
+
+    @Override
+    public String getName(){
+        return "Register menu";
+    }
 }

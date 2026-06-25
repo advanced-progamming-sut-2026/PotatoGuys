@@ -27,4 +27,9 @@ public class BattleMenu implements Menu {
         if ((matcher = BattleMenuCommand.CHEAT_SPAWN_ZOMBIE.getMatcher(input)) != null) return controller.cheatSpawnZombie(matcher);
         return new Result("Invalid command in Battle.", this);
     }
+
+    @Override
+    public String getName(){
+        return "Battle menu";
+    }
 }

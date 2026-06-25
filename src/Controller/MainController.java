@@ -1,10 +1,45 @@
 package Controller;
 
-import View.Result;
 import java.util.regex.Matcher;
 
+import View.GameMenu;
+import View.MainMenu;
+import View.Menu;
+import View.NetworkMenu;
+import View.NewsMenu;
+import View.ProfileMenu;
+import View.Result;
+import View.SettingsMenu;
+
 public class MainController {
-    public Result enterMenu(Matcher matcher) { return null; }
+    public Result enterMenu(Matcher matcher) { 
+        String menuName = matcher.group("menuName");
+        menuName = menuName.replaceAll("  ", "");
+        Menu nextMenu = null;
+        switch (menuName.trim()) {
+            case "game":
+                nextMenu = new GameMenu();
+                break;
+            case "settings":
+                nextMenu = new SettingsMenu();
+                break;
+            case "network":
+                nextMenu = new NetworkMenu();
+                break;
+            case "news":
+                nextMenu = new NewsMenu();
+                break;
+            case "profile":
+                nextMenu = new ProfileMenu();
+                break;
+            default:
+                nextMenu = new MainMenu();
+                return new Result("You cannot enter this menu." , nextMenu);
+        }
+        
+        return new Result("Enterned " + nextMenu.getName() , nextMenu);
+
+    }
     public Result showCurrent(Matcher matcher) { return null; }
     public Result exit(Matcher matcher) { return null; }
     public Result logout(Matcher matcher) { return null; }

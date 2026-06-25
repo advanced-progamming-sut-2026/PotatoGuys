@@ -6,7 +6,7 @@ import Models.Commands.LoginMenuCommand;
 import java.util.regex.Matcher;
 
 public class LoginMenu implements Menu {
-    LoginController controller=new LoginController();
+    LoginController controller = new LoginController();
     @Override
     public Result handleInput(String input) {
         Matcher matcher;
@@ -15,5 +15,10 @@ public class LoginMenu implements Menu {
         if ((matcher = LoginMenuCommand.ANSWER.getMatcher(input)) != null) return controller.answer(matcher);
         if ((matcher = LoginMenuCommand.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
         return new Result("Invalid command in Login Menu.", this);
+    }
+
+    @Override
+    public String getName(){
+        return "Login menu";
     }
 }

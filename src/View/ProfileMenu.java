@@ -18,4 +18,9 @@ public class ProfileMenu implements Menu {
         if ((matcher = ProfileMenuCommand.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
         return new Result("Invalid command in Profile Menu.", this);
     }
+
+    @Override
+    public String getName(){
+        return "Profile menu";
+    }
 }

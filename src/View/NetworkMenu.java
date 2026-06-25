@@ -14,4 +14,9 @@ public class NetworkMenu implements Menu {
         if ((matcher = NetworkMenuCommand.BACK.getMatcher(input)) != null) return controller.back(matcher);
         return new Result("Invalid command in Network Menu.", this);
     }
+
+    @Override
+    public String getName(){
+        return "Network menu";
+    }
 }

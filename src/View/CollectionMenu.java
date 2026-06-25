@@ -21,4 +21,9 @@ public class CollectionMenu implements Menu {
         if ((matcher = CollectionMenuCommand.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
         return new Result("Invalid command in Collection Menu.", this);
     }
+
+    @Override
+    public String getName(){
+        return "Collection menu";
+    }
 }

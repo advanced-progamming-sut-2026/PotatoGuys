@@ -15,4 +15,9 @@ public class NewsMenu implements Menu {
         if ((matcher = NewsMenuCommand.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
         return new Result("Invalid command in News Menu.", this);
     }
+
+    @Override
+    public String getName(){
+        return "News menu";
+    }
 }

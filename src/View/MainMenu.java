@@ -16,4 +16,9 @@ public class MainMenu implements Menu {
         if ((matcher = MainMenuCommand.LOGOUT.getMatcher(input)) != null) return controller.logout(matcher);
         return new Result("Invalid command in Main Menu.", this);
     }
+
+    @Override
+    public String getName(){
+        return "Main menu";
+    }
 }

@@ -14,4 +14,9 @@ public class SettingsMenu implements Menu {
         if ((matcher = SettingsMenuCommand.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
         return new Result("Invalid command in Settings Menu.", this);
     }
+
+    @Override
+    public String getName(){
+        return "Settings menu";
+    }
 }

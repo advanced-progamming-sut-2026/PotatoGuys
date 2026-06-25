@@ -6,7 +6,7 @@ import Models.Commands.GameMenuCommand;
 import java.util.regex.Matcher;
 
 public class GameMenu implements Menu {
-    GameController controller=new GameController();
+    GameController controller = new GameController();
     @Override
     public Result handleInput(String input) {
         Matcher matcher;
@@ -19,5 +19,10 @@ public class GameMenu implements Menu {
         if ((matcher = GameMenuCommand.CHEAT_ADD.getMatcher(input)) != null) return controller.cheatAdd(matcher);
         if ((matcher = GameMenuCommand.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
         return new Result("Invalid command in Game Menu.", this);
+    }
+
+    @Override
+    public String getName(){
+        return "Game menu";
     }
 }
