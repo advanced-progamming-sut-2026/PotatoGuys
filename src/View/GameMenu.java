@@ -10,6 +10,7 @@ public class GameMenu implements Menu {
     @Override
     public Result handleInput(String input) {
         Matcher matcher;
+        if ((matcher = GameMenuCommand.ENTER_MENU.getMatcher(input)) != null) return controller.enterMenu(matcher);
         if ((matcher = GameMenuCommand.ENTER_CHAPTER.getMatcher(input)) != null) return controller.enterChapter(matcher);
         if ((matcher = GameMenuCommand.GREENHOUSE.getMatcher(input)) != null) return controller.greenhouse(matcher);
         if ((matcher = GameMenuCommand.TRAVEL_LOG.getMatcher(input)) != null) return controller.travelLog(matcher);

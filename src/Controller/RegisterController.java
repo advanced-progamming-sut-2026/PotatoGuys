@@ -13,7 +13,7 @@ public class RegisterController {
         menuName = menuName.replaceAll("  ", "");
         Menu nextMenu = null;
         switch (menuName.trim()) {
-            case "game":
+            case "login":
                 nextMenu = new LoginMenu();
                 break;
             default:

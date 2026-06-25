@@ -1,15 +1,24 @@
 package View;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
+
+import Models.Commands.MainMenuCommand;
 
 public class MenuManager {
     private Menu currentMenu;
 
-    public void handleInput(String input){
+    public void handleInput(String Input){
         Scanner scanner = new Scanner(System.in);
 
         while (scanner.hasNextLine()) {
-            Result result = currentMenu.handleInput(scanner.nextLine().trim());
+            String input = scanner.nextLine().trim();
+            Matcher matcher = MainMenuCommand.SHOW_CURRENT.getMatcher(input);
+            if(matcher != null){
+                System.out.println(currentMenu.getName());
+                continue;
+            }
+            Result result = currentMenu.handleInput(input);
             System.out.println(result.getMessage());
             setCurrentMenu(result.getNextMenu());
         }

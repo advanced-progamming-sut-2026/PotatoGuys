@@ -10,6 +10,7 @@ public class LoginMenu implements Menu {
     @Override
     public Result handleInput(String input) {
         Matcher matcher;
+        if ((matcher = LoginMenuCommand.ENTER_MENU.getMatcher(input)) != null) return controller.enterMenu(matcher);
         if ((matcher = LoginMenuCommand.LOGIN.getMatcher(input)) != null) return controller.login(matcher);
         if ((matcher = LoginMenuCommand.FORGET_PASSWORD.getMatcher(input)) != null) return controller.forgetPassword(matcher);
         if ((matcher = LoginMenuCommand.ANSWER.getMatcher(input)) != null) return controller.answer(matcher);

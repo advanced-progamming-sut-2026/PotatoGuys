@@ -1,6 +1,7 @@
 package Models.Commands;
 
 public enum GameMenuCommand implements MenuCommand {
+    ENTER_MENU("^menu\\s+enter\\s+(?<menuName>\\w+)\\s*$"),
     ENTER_CHAPTER("^menu\\s+enter\\s+chapter\\s+-c\\s+(?<chapterName>\\w+)\\s*$"),
     GREENHOUSE("^menu\\s+greenhouse\\s*$"),
     TRAVEL_LOG("^menu\\s+travel-log\\s*$"),

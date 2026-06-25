@@ -1,6 +1,7 @@
 package Models.Commands;
 
 public enum RegisterMenuCommand implements MenuCommand {
+    ENTER_MENU("^menu\\s+enter\\s+(?<menuName>\\w+)\\s*$"),
     REGISTER("^register\\s+-u\\s+(?<username>\\S+)\\s+-p\\s+(?<password>\\S+)\\s+(?<nickname>\\S+)\\s+-n\\s+(?<screenName>\\S+)\\s+-e\\s+(?<email>\\S+)\\s+-g\\s+(?<gender>\\S+)\\s*$"),
     PICK_QUESTION("^pick\\s+question\\s+-q\\s+(?<questionId>\\d+)\\s+-a\\s+(?<answer>\\S+)\\s+-c\\s+(?<category>\\S+)\\s*$"),
     ENTER_LOGIN("^menu\\s+enter\\s+login\\s*$"),

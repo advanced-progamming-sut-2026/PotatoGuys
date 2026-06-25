@@ -23,7 +23,6 @@ public class GameController {
         
         return new Result("Enterned " + nextMenu.getName() , nextMenu);
     }
-
     public Result enterChapter(Matcher matcher) { return null; }
     public Result greenhouse(Matcher matcher) { return null; }
     public Result travelLog(Matcher matcher) { return null; }
