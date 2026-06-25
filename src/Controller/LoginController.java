@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import View.LoginMenu;
 import View.MainMenu;
 import View.Menu;
+import View.RegisterMenu;
 import View.Result;
 
 public class LoginController {
@@ -27,5 +28,8 @@ public class LoginController {
     public Result login(Matcher matcher) { return null; }
     public Result forgetPassword(Matcher matcher) { return null; }
     public Result answer(Matcher matcher) { return null; }
-    public Result exit(Matcher matcher) { return null; }
+    public Result exit(Matcher matcher) {
+        Menu nextMenu = new RegisterMenu();
+        return new Result("Exited to " + nextMenu.getName(), nextMenu);
+    }
 }

@@ -11,7 +11,6 @@ public class MainMenu implements Menu {
     public Result handleInput(String input) {
         Matcher matcher;
         if ((matcher = MainMenuCommand.ENTER_MENU.getMatcher(input)) != null) return controller.enterMenu(matcher);
-        if ((matcher = MainMenuCommand.SHOW_CURRENT.getMatcher(input)) != null) return controller.showCurrent(matcher);
         if ((matcher = MainMenuCommand.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
         if ((matcher = MainMenuCommand.LOGOUT.getMatcher(input)) != null) return controller.logout(matcher);
         return new Result("Invalid command in Main Menu.", this);

@@ -29,7 +29,7 @@ public abstract class Zombie {
         this.baseHp = baseHp;
         this.baseDamage = baseDamage;
         this.movementSpeed = movementSpeed;
-        this.damage = damage;
+        this.damage = baseDamage;
         this.effects = effects;
         this.armors = armors;
     }

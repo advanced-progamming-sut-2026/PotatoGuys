@@ -8,6 +8,7 @@ import View.Menu;
 import View.NetworkMenu;
 import View.NewsMenu;
 import View.ProfileMenu;
+import View.RegisterMenu;
 import View.Result;
 import View.SettingsMenu;
 
@@ -40,7 +41,10 @@ public class MainController {
         return new Result("Enterned " + nextMenu.getName() , nextMenu);
 
     }
-    public Result showCurrent(Matcher matcher) { return null; }
-    public Result exit(Matcher matcher) { return null; }
-    public Result logout(Matcher matcher) { return null; }
+    public Result exit(Matcher matcher) {
+        return new Result("Use 'menu logout' to exit from Main Menu.", new MainMenu());
+    }
+    public Result logout(Matcher matcher) { 
+        return new Result("logouted", new RegisterMenu());
+    }
 }

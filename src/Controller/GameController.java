@@ -30,5 +30,8 @@ public class GameController {
     public Result coinWallet(Matcher matcher) { return null; }
     public Result gemWallet(Matcher matcher) { return null; }
     public Result cheatAdd(Matcher matcher) { return null; }
-    public Result exit(Matcher matcher) { return null; }
+    public Result exit(Matcher matcher) {
+        Menu nextMenu = new View.MainMenu();
+        return new Result("Exited to " + nextMenu.getName(), nextMenu);
+    }
 }
