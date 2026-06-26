@@ -1,0 +1,62 @@
+package Models;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+public class SaveManager {
+    
+    private static SaveManager instance;
+    private final Gson gson;
+
+    private SaveManager() {
+        gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+    }
+
+    public static SaveManager getInstance() {
+        if (instance == null) {
+            instance = new SaveManager();
+        }
+        return instance;
+    }
+
+    public void save(Object data, String filePath) {
+        File file = new File(filePath);
+        if (file.getParentFile() != null) {
+            file.getParentFile().mkdirs();
+        }
+
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(data, writer);
+            System.out.println("[GsonManager] Data successfully saved to " + filePath);
+        } catch (IOException e) {
+            System.err.println("[GsonManager] Error saving file: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public <T> T load(String filePath, Class<T> classType) {
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            System.out.println("[GsonManager] Save file not found at " + filePath);
+            return null;
+        }
+
+        try (FileReader reader = new FileReader(file)) {
+            T data = gson.fromJson(reader, classType);
+            System.out.println("[GsonManager] Data successfully loaded from " + filePath);
+            return data;
+        } catch (IOException e) {
+            System.err.println("[GsonManager] Error loading file: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+}
