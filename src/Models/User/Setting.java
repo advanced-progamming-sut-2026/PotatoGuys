@@ -3,6 +3,11 @@ package Models.User;
 public class Setting {
     private int difficulty;
 
+    // creating a setting with default difficulty
+    public Setting(){
+        difficulty=3;
+    }
+
     public Setting(int difficulty) {
         this.difficulty = difficulty;
     }

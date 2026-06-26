@@ -20,7 +20,10 @@ public class MenuManager {
             }
             Result result = currentMenu.handleInput(input);
             System.out.println(result.getMessage());
-            setCurrentMenu(result.getNextMenu());
+
+            if (result.getNextMenu()!=null) {
+                setCurrentMenu(result.getNextMenu());
+            }
         }
 
         scanner.close();
