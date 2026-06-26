@@ -1,12 +1,12 @@
 package Models.Shop;
 
 public class Price {
-    private Currency currency;
-    private int amount;
+    private final Currency currency;
+    private final int amount;
 
-    public Price(Currency currencyType, int amount){
-        this.currency=currencyType;
-        this.amount=amount;
+    public Price(Currency currency, int amount) {
+        this.currency = currency;
+        this.amount = amount;
     }
 
     public Currency getCurrency() {
@@ -15,5 +15,9 @@ public class Price {
 
     public int getAmount() {
         return amount;
+    }
+
+    public int getTotalPrice(int count) {
+        return amount * count;
     }
 }

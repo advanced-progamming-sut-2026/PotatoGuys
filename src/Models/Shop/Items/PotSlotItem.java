@@ -6,14 +6,30 @@ import Models.Shop.ShopItem;
 import Models.User.User;
 
 public class PotSlotItem extends ShopItem {
-    public PotSlotItem(){
 
+    public PotSlotItem() {
+        this.id = 1;
+        this.name = "Pot";
+        this.price = new Price(Currency.COIN, 2000);
+        this.unitAmount = 1;
+        this.maxPurchasePerUser = 20;
     }
 
     @Override
-    public void applyEffect(User user, int count, String plantType){
-        this.name = "Gold Pot";
-        this.price = new Price(Currency.COIN, 2000);
-        this.maxPurchasePerUser = 20;
+    public boolean canBuy(User user, int count, String plantType) {
+        if (user == null || count <= 0) {
+            return false;
+        }
+
+        return user.getGreenHouse().canUnlockMorePots(count);
+    }
+
+    @Override
+    public boolean applyEffect(User user, int count, String plantType) {
+        if (user == null || count <= 0) {
+            return false;
+        }
+
+        return user.getGreenHouse().unlockPots(count);
     }
 }
