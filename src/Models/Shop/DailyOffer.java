@@ -11,6 +11,17 @@ public class DailyOffer extends ShopItem {
     private LocalDate offerDate;
     private boolean purchasedToday;
 
+    public DailyOffer(PlantType plantType, LocalDate offerDate) {
+        this.id = id;
+        this.name = "Daily Offer";
+        this.price = new Price(Currency.COIN, 1600);
+        this.unitAmount = 10;
+        this.maxPurchasePerUser = 1;
+        this.plantType = plantType;
+        this.offerDate = offerDate;
+        this.purchasedToday = false;
+    }
+
     public PlantType getPlantType() {
         return plantType;
     }
@@ -23,20 +34,28 @@ public class DailyOffer extends ShopItem {
         return purchasedToday;
     }
 
-    public DailyOffer(PlantType plantType, LocalDate date){
-
-    }
-
     public boolean isExpired(LocalDate today) {
-        return false;
+        return !offerDate.equals(today);
     }
 
-    public void refresh(){
-
+    public void refresh(PlantType plantType) {
+        this.plantType = plantType;
+        this.offerDate = LocalDate.now();
+        this.purchasedToday = false;
     }
 
     @Override
-    public void applyEffect(User user, int count, String plantType) {
+    public boolean canBuy(User user, int count, String plantType) {
+        return count == 1 && !purchasedToday;
+    }
 
+    @Override
+    public boolean applyEffect(User user, int count, String plantType) {
+        if (!canBuy(user, count, plantType)) {
+            return false;
+        }
+
+        purchasedToday = true;
+        return true;
     }
 }
