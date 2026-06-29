@@ -3,8 +3,9 @@ package pvz.Controller;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import pvz.Enums.Commands.RegisterMenuCommand;
 import pvz.Models.AppContext;
-import pvz.Models.Commands.RegisterMenuCommand;
+import pvz.Models.SaveManager;
 import pvz.Models.User.Gender;
 import pvz.Models.User.User;
 import pvz.Utils.PasswordUtils;
@@ -70,6 +71,7 @@ public class RegisterController {
         }
 
         User user = new User(username, passwordHash, nickname, email, gender);
+        SaveManager.getInstance().save(user, "users/" + username + ".json");
 
         //temporary
         return new Result("user info is correct!");
@@ -80,6 +82,7 @@ public class RegisterController {
     }
 
     public Result enterLogin(Matcher matcher) {
+        
         return null;
     }
 

@@ -1,6 +1,6 @@
 package pvz.Models.Shop;
 
-import pvz.Models.Plants.Enums.PlantType;
+import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.User.User;
 
 import java.time.LocalDate;

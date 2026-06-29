@@ -2,10 +2,10 @@ package pvz.Models.Seasons;
 
 import java.util.List;
 
+import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.Seasons.Levels.Level;
 import pvz.Models.Seasons.Levels.TileType;
 import pvz.Models.Seasons.SeasonEffects.SeasonEffect;
-import pvz.Models.Zombies.ZombieType;
 
 public abstract class Season {
     private String name;

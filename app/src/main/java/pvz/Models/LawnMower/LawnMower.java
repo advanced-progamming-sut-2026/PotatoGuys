@@ -2,7 +2,7 @@ package pvz.Models.LawnMower;
 
 import pvz.Models.DataTypes.Vector2;
 import pvz.Models.Engine.TickAware;
-import pvz.Models.Zombies.Zombie;
+import pvz.Models.Entities.Zombies.Zombie;
 
 public class LawnMower implements TickAware{
     private Vector2 position;

@@ -7,6 +7,7 @@ public class Score {
     private int dailyQuests;
     private int nonDailyQuests;
     private int highestScore;
+    
     public int getLastLevel() {
         return lastLevel;
     }

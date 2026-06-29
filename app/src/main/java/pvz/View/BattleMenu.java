@@ -3,7 +3,7 @@ package pvz.View;
 import java.util.regex.Matcher;
 
 import pvz.Controller.BattleController;
-import pvz.Models.Commands.BattleMenuCommand;
+import pvz.Enums.Commands.BattleMenuCommand;
 
 public class BattleMenu implements Menu {
     @Override

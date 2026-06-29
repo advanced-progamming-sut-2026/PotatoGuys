@@ -3,7 +3,7 @@ package pvz.View;
 import java.util.regex.Matcher;
 
 import pvz.Controller.NetworkController;
-import pvz.Models.Commands.NetworkMenuCommand;
+import pvz.Enums.Commands.NetworkMenuCommand;
 
 public class NetworkMenu implements Menu {
     @Override

@@ -3,7 +3,7 @@ package pvz.View;
 import java.util.regex.Matcher;
 
 import pvz.Controller.GameController;
-import pvz.Models.Commands.GameMenuCommand;
+import pvz.Enums.Commands.GameMenuCommand;
 
 public class GameMenu implements Menu {
     GameController controller = new GameController();

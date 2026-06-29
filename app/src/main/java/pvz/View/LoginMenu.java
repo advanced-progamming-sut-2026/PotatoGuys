@@ -3,7 +3,7 @@ package pvz.View;
 import java.util.regex.Matcher;
 
 import pvz.Controller.LoginController;
-import pvz.Models.Commands.LoginMenuCommand;
+import pvz.Enums.Commands.LoginMenuCommand;
 
 public class LoginMenu implements Menu {
     LoginController controller = new LoginController();

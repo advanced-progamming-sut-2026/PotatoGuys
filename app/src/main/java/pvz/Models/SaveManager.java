@@ -27,32 +27,32 @@ public class SaveManager {
         return instance;
     }
 
-    public void save(Object data, String filePath) {
-        File file = new File(filePath);
+    public void save(Object data, String path) {
+        File file = new File(Constants.SAVE_PATH + path);
         if (file.getParentFile() != null) {
             file.getParentFile().mkdirs();
         }
 
         try (FileWriter writer = new FileWriter(file)) {
             gson.toJson(data, writer);
-            System.out.println("[GsonManager] Data successfully saved to " + filePath);
+            System.out.println("[GsonManager] Data successfully saved to " + path);
         } catch (IOException e) {
             System.err.println("[GsonManager] Error saving file: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    public <T> T load(String filePath, Class<T> classType) {
-        File file = new File(filePath);
+    public <T> T load(String path, Class<T> classType) {
+        File file = new File(path);
 
         if (!file.exists()) {
-            System.out.println("[GsonManager] Save file not found at " + filePath);
+            System.out.println("[GsonManager] Save file not found at " + path);
             return null;
         }
 
         try (FileReader reader = new FileReader(file)) {
             T data = gson.fromJson(reader, classType);
-            System.out.println("[GsonManager] Data successfully loaded from " + filePath);
+            System.out.println("[GsonManager] Data successfully loaded from " + path);
             return data;
         } catch (IOException e) {
             System.err.println("[GsonManager] Error loading file: " + e.getMessage());

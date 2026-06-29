@@ -3,7 +3,7 @@ package pvz.View;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
-import pvz.Models.Commands.MainMenuCommand;
+import pvz.Enums.Commands.MainMenuCommand;
 
 public class MenuManager {
     private Menu currentMenu;

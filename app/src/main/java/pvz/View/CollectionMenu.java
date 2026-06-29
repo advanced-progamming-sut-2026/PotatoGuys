@@ -3,7 +3,7 @@ package pvz.View;
 import java.util.regex.Matcher;
 
 import pvz.Controller.CollectionController;
-import pvz.Models.Commands.CollectionMenuCommand;
+import pvz.Enums.Commands.CollectionMenuCommand;
 
 public class CollectionMenu implements Menu {
     @Override

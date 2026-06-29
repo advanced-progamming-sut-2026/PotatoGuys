@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import pvz.Models.Plants.Enums.PlantType;
+import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Shop.Items.CurrencyExchangeItem;
 import pvz.Models.Shop.Items.PlantFoodItem;
 import pvz.Models.Shop.Items.PotSlotItem;

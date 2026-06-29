@@ -3,9 +3,9 @@ package pvz.Models.MiniGames;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import pvz.Models.Plants.Plant;
+import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Seasons.Levels.Tile;
-import pvz.Models.Zombies.Zombie;
 
 
 public class IZombie extends Level{

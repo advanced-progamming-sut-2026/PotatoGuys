@@ -1,7 +1,7 @@
 package pvz.Models.MiniGames;
 
-import pvz.Models.Plants.Plant;
-import pvz.Models.Zombies.Zombie;
+import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Entities.Zombies.Zombie;
 
 public class Vase {
     private VaseType type;

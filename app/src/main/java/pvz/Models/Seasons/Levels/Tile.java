@@ -2,8 +2,8 @@ package pvz.Models.Seasons.Levels;
 
 import java.util.List;
 
-import pvz.Models.Plants.Plant;
-import pvz.Models.Zombies.Zombie;
+import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Entities.Zombies.Zombie;
 
 public class Tile {
     private TileType type;

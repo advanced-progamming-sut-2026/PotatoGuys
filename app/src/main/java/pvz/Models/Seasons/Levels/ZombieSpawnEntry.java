@@ -1,6 +1,6 @@
 package pvz.Models.Seasons.Levels;
 
-import pvz.Models.Zombies.ZombieType;
+import pvz.Models.Entities.Zombies.ZombieType;
 
 public class ZombieSpawnEntry {
     private ZombieType type;

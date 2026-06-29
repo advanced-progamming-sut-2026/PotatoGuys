@@ -1,7 +1,7 @@
 package pvz.Models.User;
 
-import pvz.Models.Plants.Plant;
-import pvz.Models.Zombies.Zombie;
+import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Entities.Zombies.Zombie;
 
 import java.util.List;
 

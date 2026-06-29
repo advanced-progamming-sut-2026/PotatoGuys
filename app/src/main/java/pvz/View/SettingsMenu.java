@@ -3,7 +3,7 @@ package pvz.View;
 import java.util.regex.Matcher;
 
 import pvz.Controller.SettingsController;
-import pvz.Models.Commands.SettingsMenuCommand;
+import pvz.Enums.Commands.SettingsMenuCommand;
 
 public class SettingsMenu implements Menu {
     SettingsController controller=new SettingsController();
