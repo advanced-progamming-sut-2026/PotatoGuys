@@ -49,8 +49,8 @@ public abstract class Plant implements TickAware{
         this.isBoosted = isBoosted;
     }
 
-    public void onFirstTick(){}
-    public void onTick(){
+    public void enter(){}
+    public void update(){
         strategy.defaultApply();
     }
 

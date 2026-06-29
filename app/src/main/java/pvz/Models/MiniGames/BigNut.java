@@ -15,10 +15,10 @@ public class BigNut extends Plant{
     }
 
     @Override
-    public void onFirstTick(){}
+    public void enter(){}
     @Override
-    public void onTick()
-    {super.onTick();}
+    public void update()
+    {super.update();}
 
     @Override
     public void dispose() {

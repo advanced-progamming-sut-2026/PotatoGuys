@@ -23,12 +23,12 @@ public abstract class Projectile implements TickAware {
     }
 
     @Override
-    public void onFirstTick() {
+    public void enter() {
 
     }
 
     @Override
-    public void onTick() {
+    public void update() {
         position.x+=velocity.x;
         position.y=velocity.y;
     }

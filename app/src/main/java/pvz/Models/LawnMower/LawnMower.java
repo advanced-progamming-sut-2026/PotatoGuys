@@ -35,12 +35,12 @@ public class LawnMower implements TickAware{
     }
 
     @Override
-    public void onFirstTick() {
+    public void enter() {
 
     }
 
     @Override
-    public void onTick() {
+    public void update() {
 
     }
 

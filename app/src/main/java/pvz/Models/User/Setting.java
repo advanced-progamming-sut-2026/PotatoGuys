@@ -5,7 +5,7 @@ public class Setting {
 
     // creating a setting with default difficulty
     public Setting(){
-        difficulty=3;
+        difficulty = 3;
     }
 
     public Setting(int difficulty) {

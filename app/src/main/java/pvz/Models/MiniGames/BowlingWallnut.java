@@ -14,8 +14,8 @@ public class BowlingWallnut extends Plant{
         super(position, speed, type, category, tags, strategy, sunCost, baseHp, baseRecharge, baseActionInterval, recharge, actionInterval, level, isBoosted);
     }
 
-    public void onFirstTick(){}
-    public void onTick(){}
+    public void enter(){}
+    public void update(){}
 
     @Override
     public void dispose() {

@@ -24,8 +24,8 @@ public class Sun implements TickAware{
     public float getTimeRemainingToDespawn() {
         return timeRemainingToDespawn;
     }
-    public void onFirstTick(){}
-    public void onTick(){
+    public void enter(){}
+    public void update(){
         if (Vector2.calculateDistance(position,targetPosition)> velocity.magnitude()*1.2) {
             position.x += velocity.x;
             position.y += velocity.y;

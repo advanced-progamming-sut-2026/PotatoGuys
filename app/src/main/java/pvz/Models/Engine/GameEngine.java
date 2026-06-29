@@ -26,7 +26,7 @@ public class GameEngine {
     private void processOneTick() {
         if (!isFirstTickDone()) {
             for (TickAware e : getToAdd()) {
-                e.onFirstTick();
+                e.enter();
             }
             firstTickDone = true;
         }
@@ -39,7 +39,7 @@ public class GameEngine {
 
         List<TickAware> snapshot = new ArrayList<>(getEntities());
         for (TickAware e : snapshot) {
-            e.onTick();
+            e.update();
         }
     }
 
