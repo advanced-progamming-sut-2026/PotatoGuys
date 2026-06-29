@@ -43,7 +43,7 @@ public class SaveManager {
     }
 
     public <T> T load(String path, Class<T> classType) {
-        File file = new File(path);
+        File file = new File(Constants.SAVE_PATH + path);
 
         if (!file.exists()) {
             System.out.println("[GsonManager] Save file not found at " + path);

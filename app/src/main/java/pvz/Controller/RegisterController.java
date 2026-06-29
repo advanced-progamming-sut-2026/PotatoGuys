@@ -81,11 +81,6 @@ public class RegisterController {
         return null;
     }
 
-    public Result enterLogin(Matcher matcher) {
-        
-        return null;
-    }
-
     public Result exit(Matcher matcher) {
         return new Result("Exiting the program...", null);
     }
