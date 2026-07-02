@@ -2,18 +2,116 @@ package pvz.Controller;
 
 import java.util.regex.Matcher;
 
+import pvz.Models.GameSession;
+import pvz.Models.User.User;
+import pvz.Utils.PasswordUtils;
 import pvz.View.MainMenu;
 import pvz.View.Menu;
 import pvz.View.Result;
 
 public class ProfileController {
-    public Result changeUsername(Matcher matcher) { return null; }
-    public Result changeNickname(Matcher matcher) { return null; }
-    public Result changeEmail(Matcher matcher) { return null; }
-    public Result changePassword(Matcher matcher) { return null; }
-    public Result showInfo(Matcher matcher) { return null; }
+    public Result changeUsername(Matcher matcher) { 
+        String newUsername = matcher.group("username");
+        User user = GameSession.getInstance().getCurrentUser();
+
+        if(newUsername == null || newUsername.isEmpty()) {
+            return new Result("Username cannot be empty.");
+        }
+
+        if(user.getUsername().equals(newUsername)){
+            return new Result("Username is sameNew username cannot be the same as your current username.");
+        }
+
+        if(PatternManager.validateUsername(newUsername) != null) {
+            return new Result("Invalid username format.");
+        }
+
+        user.setUsername(newUsername);
+
+        return new Result("Username has changed successfully."); 
+    }
+    public Result changeNickname(Matcher matcher) { 
+        String newNickname = matcher.group("nickname");
+        User user = GameSession.getInstance().getCurrentUser();
+
+        if(newNickname == null || newNickname.isEmpty()) {
+            return new Result("Nickname cannot be empty.");
+        }
+
+        if(user.getNickName().equals(newNickname)){
+            return new Result("Nickname is same as your current username.");
+        }
+
+        if(PatternManager.validateNickname(newNickname) != null) {
+            return new Result("Invalid nickname format.");
+        }
+
+        user.setNickName(newNickname);
+
+        return new Result("Nickname has changed successfully"); 
+    }
+    public Result changeEmail(Matcher matcher) { 
+        String newEmail = matcher.group("email");
+        User user = GameSession.getInstance().getCurrentUser();
+
+        if(newEmail == null || newEmail.isEmpty()) {
+            return new Result("Email cannot be empty.");
+        }
+
+        if(user.getEmail().equals(newEmail)){
+            return new Result("Email is same as your current username.");
+        }
+
+        if(PatternManager.validateEmail(newEmail) != null) {
+            return new Result("Invalid email format.");
+        }
+
+        user.setEmail(newEmail);
+
+        return new Result("Email has changed successfully"); 
+    }
+    public Result changePassword(Matcher matcher) { 
+        String newPassword = matcher.group("newPassword");
+        String oldPassword = matcher.group("oldPassword");
+        User user = GameSession.getInstance().getCurrentUser();
+
+        if(newPassword == null || newPassword.isEmpty() || oldPassword == null || oldPassword.isEmpty()) {
+            return new Result("New password and old password cannot be empty.");
+        }
+
+        if(PatternManager.validatePassword(newPassword , newPassword) != null) {
+            return new Result("Invalid password format.");
+        }
+
+        if(!PasswordUtils.verifyPassword(oldPassword, user.getPasswordHash())){
+            return new Result("Old password is incorrect.");
+        }
+
+        if(PasswordUtils.verifyPassword(newPassword, user.getPasswordHash())){
+            return new Result("Password is same as your current username.");
+        }
+
+        user.setPasswordHash(PasswordUtils.hashPassword(newPassword));
+
+        return new Result("Password has changed successfully"); 
+    }
+    public Result showInfo(Matcher matcher) { 
+        StringBuilder result = new StringBuilder();
+        User user = GameSession.getInstance().getCurrentUser();
+
+        result.append("Username: " + user.getUsername() + "\n");
+        result.append("Nickname: " + user.getNickName() + "\n");
+        result.append("Game played: " + user.getProfile().getGamePlayed() + "\n");
+        result.append("Coins: " + user.getProfile().getCoins() + "\n");
+        result.append("Diamonds: " + user.getProfile().getDiamonds() + "\n");
+        result.append("Season Progresses: " + user.getProfile().getSeasonProgresses().size() + "\n");
+        result.append("Miopoint: " + user.getProfile().getMaxMiopoint() + "\n");
+
+        return new Result(result.toString()); 
+    }
     public Result exit(Matcher matcher) {
         Menu nextMenu = new MainMenu();
         return new Result("Exited to " + nextMenu.getName(), nextMenu);
     }
+
 }
