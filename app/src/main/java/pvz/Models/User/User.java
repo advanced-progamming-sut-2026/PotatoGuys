@@ -6,6 +6,8 @@ public class User {
     private String nickName;
     private String email;
     private Gender gender;
+    private String securityQuestion;
+    private String securityAnswer;
     private Profile profile;
     private Setting setting;
     private News news;
@@ -49,6 +51,22 @@ public class User {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public String getSecurityQuestion() {
+        return securityQuestion;
+    }
+
+    public void setSecurityQuestion(String securityQuestion) {
+        this.securityQuestion = securityQuestion;
+    }
+
+    public String getSecurityAnswer() {
+        return securityAnswer;
+    }
+
+    public void setSecurityAnswer(String securityAnswer) {
+        this.securityAnswer = securityAnswer;
     }
 
     public Profile getProfile() {

@@ -1,9 +1,11 @@
 {
   "username": "hello",
-  "passwordHash": "2037d8a8c95e2342e34e45d53f39e0f54d6f906668c159afc1d73bd06b64924b",
-  "nickName": "byebey",
-  "email": "all@gamil.com",
+  "passwordHash": "d8eac7e468b66e04c968fce4cadf750d73136f8ce4906098afa93f09f92c556a",
+  "nickName": "wow",
+  "email": "salam@gmail.com",
   "gender": "MALE",
+  "securityQuestion": "1",
+  "securityAnswer": "tiko",
   "profile": {
     "gamePlayed": 0,
     "coins": 0,

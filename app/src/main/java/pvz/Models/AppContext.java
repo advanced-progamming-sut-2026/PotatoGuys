@@ -6,7 +6,7 @@ import java.util.List;
 public class AppContext {
     List<String> allUsernames;
     private static AppContext instance;
-
+    
     private AppContext(){
 
     }

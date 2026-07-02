@@ -3,18 +3,22 @@ package pvz.Controller;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import pvz.Enums.SecurityQuestions;
 import pvz.Enums.Commands.RegisterMenuCommand;
 import pvz.Models.AppContext;
-import pvz.Models.SaveManager;
 import pvz.Models.User.Gender;
 import pvz.Models.User.User;
 import pvz.Utils.PasswordUtils;
+import pvz.Utils.SaveManager;
 import pvz.View.LoginMenu;
 import pvz.View.Menu;
+import pvz.View.PickSecurityQuestionMenu;
 import pvz.View.RegisterMenu;
 import pvz.View.Result;
 
 public class RegisterController {
+    private User currentUser;
+
     public Result enterMenu(Matcher matcher) {
         String menuName = matcher.group("menuName");
         menuName = menuName.replaceAll("  ", "");
@@ -71,14 +75,32 @@ public class RegisterController {
         }
 
         User user = new User(username, passwordHash, nickname, email, gender);
-        SaveManager.getInstance().save(user, "users/" + username + ".json");
+        currentUser = user;
 
         //temporary
-        return new Result("user info is correct!");
+        StringBuilder resultMessage = new StringBuilder();
+        resultMessage.append("User registered successfully! Please pick a security question:\n");
+        for(int i = 0 ; i < SecurityQuestions.QUESTIONS.size() ; i++){
+            resultMessage.append((i+1) + ". " + SecurityQuestions.getQuestionByNumber(i)).append("\n");
+        }
+        resultMessage.append("\nPlease use the command 'pick question -q <questionId> -a <answer> -c <confirmAnswer>' to pick a security question and set your answer.");
+        return new Result(resultMessage.toString(), new PickSecurityQuestionMenu(this));
     }
 
     public Result pickQuestion(Matcher matcher) {
-        return null;
+        String question = matcher.group("questionId");
+        String answer = matcher.group("answer");
+        String confirmAnswer = matcher.group("confirmAnswer");
+        
+        if(!answer.equals(confirmAnswer)){
+            return new Result("Answer and its Confirm aren't equal!");
+        }
+        
+        currentUser.setSecurityQuestion(question);
+        currentUser.setSecurityAnswer(answer);
+        SaveManager.getInstance().save(currentUser, "users/" + currentUser.getUsername() + ".json");
+
+        return new Result("Security question and answer set successfully!\nUser saved successfully!", new LoginMenu());
     }
 
     public Result exit(Matcher matcher) {
