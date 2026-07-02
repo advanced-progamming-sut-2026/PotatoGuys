@@ -2,6 +2,7 @@ package pvz.Controller;
 
 import java.util.regex.Matcher;
 
+import pvz.Models.GameSession;
 import pvz.Models.User.User;
 import pvz.Utils.PasswordUtils;
 import pvz.Utils.SaveManager;
@@ -41,6 +42,7 @@ public class LoginController {
             return new Result("Password is incorrect!");
         }
 
+        GameSession.getInstance().setCurrentUser(currentUser);
         return new Result("Wellcome " + currentUser.getNickName() + ".", new MainMenu()); 
     }
     public Result forgetPassword(Matcher matcher) {
