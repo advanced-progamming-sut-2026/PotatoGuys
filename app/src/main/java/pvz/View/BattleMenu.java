@@ -32,4 +32,9 @@ public class BattleMenu implements Menu {
     public String getName(){
         return "Battle menu";
     }
+
+    @Override
+    public Result onEnter() {
+        return null;
+    }
 }

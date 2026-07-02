@@ -19,10 +19,16 @@ public class MenuManager {
                 continue;
             }
             Result result = currentMenu.handleInput(input);
-            System.out.println(result.getMessage());
+            if (result!=null && !result.getMessage().isEmpty()) {
+                System.out.println(result.getMessage());
+            }
 
             if (result.getNextMenu()!=null) {
                 setCurrentMenu(result.getNextMenu());
+                result=result.getNextMenu().onEnter();
+                if (result!=null && !result.getMessage().isEmpty()) {
+                    System.out.println(result.getMessage());
+                }
             }
         }
 

@@ -22,4 +22,9 @@ public class LoginMenu implements Menu {
     public String getName(){
         return "Login menu";
     }
+
+    @Override
+    public Result onEnter() {
+        return null;
+    }
 }

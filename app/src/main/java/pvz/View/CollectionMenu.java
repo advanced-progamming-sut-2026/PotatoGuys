@@ -26,4 +26,9 @@ public class CollectionMenu implements Menu {
     public String getName(){
         return "Collection menu";
     }
+
+    @Override
+    public Result onEnter() {
+        return null;
+    }
 }

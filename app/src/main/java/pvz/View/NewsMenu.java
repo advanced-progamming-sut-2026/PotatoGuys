@@ -20,4 +20,9 @@ public class NewsMenu implements Menu {
     public String getName(){
         return "News menu";
     }
+
+    @Override
+    public Result onEnter() {
+        return null;
+    }
 }

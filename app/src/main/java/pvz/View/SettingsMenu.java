@@ -19,4 +19,9 @@ public class SettingsMenu implements Menu {
     public String getName(){
         return "Settings menu";
     }
+
+    @Override
+    public Result onEnter() {
+        return null;
+    }
 }

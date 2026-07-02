@@ -22,4 +22,9 @@ public class RegisterMenu implements Menu {
     public String getName(){
         return "Register menu";
     }
+
+    @Override
+    public Result onEnter() {
+        return null;
+    }
 }

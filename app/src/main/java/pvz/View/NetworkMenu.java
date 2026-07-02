@@ -19,4 +19,9 @@ public class NetworkMenu implements Menu {
     public String getName(){
         return "Network menu";
     }
+
+    @Override
+    public Result onEnter() {
+        return null;
+    }
 }

@@ -20,4 +20,9 @@ public class MainMenu implements Menu {
     public String getName(){
         return "Main menu";
     }
+
+    @Override
+    public Result onEnter() {
+        return null;
+    }
 }

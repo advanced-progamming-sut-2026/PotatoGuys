@@ -3,12 +3,12 @@ package pvz.Controller;
 import java.util.regex.Matcher;
 
 import pvz.View.CollectionMenu;
-import pvz.View.GameMenu;
+import pvz.View.SeasonMenu;
 import pvz.View.MainMenu;
 import pvz.View.Menu;
 import pvz.View.Result;
 
-public class GameController {
+public class SeasonController {
     public Result enterMenu(Matcher matcher) {
         String menuName = matcher.group("menuName");
         menuName = menuName.replaceAll("  ", "");
@@ -18,7 +18,7 @@ public class GameController {
                 nextMenu = new CollectionMenu();
                 break;
             default:
-                nextMenu = new GameMenu();
+                nextMenu = new SeasonMenu();
                 return new Result("You cannot enter this menu." , nextMenu);
         }
         

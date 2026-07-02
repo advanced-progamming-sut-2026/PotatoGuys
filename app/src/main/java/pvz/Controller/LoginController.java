@@ -25,7 +25,7 @@ public class LoginController {
                 return new Result("You cannot enter this menu." , nextMenu);
         }
         
-        return new Result("Enterned " + nextMenu.getName() , nextMenu);
+        return new Result("Entered " + nextMenu.getName() , nextMenu);
     }
 
     public Result login(Matcher matcher) { 
@@ -41,7 +41,7 @@ public class LoginController {
             return new Result("Password is incorrect!");
         }
 
-        return new Result("Wellcome " + currentUser.getNickName() + ".", new MainMenu()); 
+        return new Result("Welcome " + currentUser.getNickName() + ".", new MainMenu());
     }
     public Result forgetPassword(Matcher matcher) { return null; }
     public Result answer(Matcher matcher) { return null; }

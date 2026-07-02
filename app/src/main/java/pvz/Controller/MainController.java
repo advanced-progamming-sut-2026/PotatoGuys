@@ -2,15 +2,7 @@ package pvz.Controller;
 
 import java.util.regex.Matcher;
 
-import pvz.View.GameMenu;
-import pvz.View.MainMenu;
-import pvz.View.Menu;
-import pvz.View.NetworkMenu;
-import pvz.View.NewsMenu;
-import pvz.View.ProfileMenu;
-import pvz.View.RegisterMenu;
-import pvz.View.Result;
-import pvz.View.SettingsMenu;
+import pvz.View.*;
 
 public class MainController {
     public Result enterMenu(Matcher matcher) { 
@@ -19,7 +11,7 @@ public class MainController {
         Menu nextMenu = null;
         switch (menuName.trim()) {
             case "game":
-                nextMenu = new GameMenu();
+                nextMenu = new GameModesMenu();
                 break;
             case "settings":
                 nextMenu = new SettingsMenu();

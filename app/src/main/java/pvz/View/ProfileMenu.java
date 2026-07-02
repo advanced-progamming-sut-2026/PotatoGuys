@@ -23,4 +23,9 @@ public class ProfileMenu implements Menu {
     public String getName(){
         return "Profile menu";
     }
+
+    @Override
+    public Result onEnter() {
+        return null;
+    }
 }

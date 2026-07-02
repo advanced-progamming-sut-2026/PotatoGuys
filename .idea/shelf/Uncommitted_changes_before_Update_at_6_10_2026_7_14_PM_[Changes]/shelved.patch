@@ -1,0 +1,169 @@
+Index: src/Models/GreenHouse/GreenHouse.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import java.util.ArrayList;\r\nimport java.util.List;\r\n\r\npublic class GreenHouse {\r\n\r\n    private List<GreenHousePot> greenHousePots = new ArrayList<>();\r\n\r\n    public Greenhouse() {\r\n\r\n        for(int y=1;y<=4;y++){\r\n            for(int x=1;x<=5;x++){\r\n\r\n                boolean locked = column >= 2; \r\n\r\n                greenHousePots.add(new GreenHousePot(x,y,locked));\r\n            }\r\n        }\r\n    }\r\n\r\n    public GreenHousePot getPot(int x, int y){\r\n\r\n        for(GreenHousePot greenHousePot : greenHousePots){\r\n            if(greenHousePot.getX()==x && greenHousePot.getY()==y)\r\n                return greenHousePot;\r\n        }\r\n\r\n        return null;\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Models/GreenHouse/GreenHouse.java b/src/Models/GreenHouse/GreenHouse.java
+--- a/src/Models/GreenHouse/GreenHouse.java	(revision 7bcf9c6403490730a2e8acb4fa2eb668ba8debe7)
++++ b/src/Models/GreenHouse/GreenHouse.java	(date 1781106223833)
+@@ -5,7 +5,7 @@
+ 
+     private List<GreenHousePot> greenHousePots = new ArrayList<>();
+ 
+-    public Greenhouse() {
++    public GreenHouse() {
+ 
+         for(int y=1;y<=4;y++){
+             for(int x=1;x<=5;x++){
+Index: src/Models/LawnMower/LawnMower.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Models/LawnMower/LawnMower.java b/src/Models/LawnMower/LawnMower.java
+new file mode 100644
+--- /dev/null	(date 1781106223836)
++++ b/src/Models/LawnMower/LawnMower.java	(date 1781106223836)
+@@ -0,0 +1,25 @@
++package Models.LawnMower;
++
++public class LawnMower {
++    private int row;
++    private boolean available;
++    private int killedZombiesCount;
++
++    public LawnMower(int row) {
++        this.row = row;
++        this.available = true;
++        this.killedZombiesCount = 0;
++    }
++
++    public int getRow() {
++        return row;
++    }
++
++    public boolean isAvailable() {
++        return available;
++    }
++
++    public int getKilledZombiesCount() {
++        return killedZombiesCount;
++    }
++}
+Index: src/Models/Models.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Models/Models.iml b/src/Models/Models.iml
+new file mode 100644
+--- /dev/null	(date 1781106223838)
++++ b/src/Models/Models.iml	(date 1781106223838)
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="JAVA_MODULE" version="4">
++  <component name="NewModuleRootManager" inherit-compiler-output="true">
++    <exclude-output />
++    <content url="file://$MODULE_DIR$">
++      <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" packagePrefix="Models" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
+Index: information.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>404105959- سید محمد مهدی سید شاکری\r\n\r\n\r\nسید حسین حسینی نژاد-404105756
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/information.txt b/information.txt
+--- a/information.txt	(revision 7bcf9c6403490730a2e8acb4fa2eb668ba8debe7)
++++ b/information.txt	(date 1781106223824)
+@@ -1,4 +1,3 @@
+-404105959- سید محمد مهدی سید شاکری
+-
+-
+-سید حسین حسینی نژاد-404105756
+\ No newline at end of file
++404105959-سید محمد مهدی سید شاکری
++سید حسین حسینی نژاد-404105756
++404105853-یوسف رحیم زاده
+\ No newline at end of file
+Index: src/Models/.idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Models/.idea/vcs.xml b/src/Models/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1781106223831)
++++ b/src/Models/.idea/vcs.xml	(date 1781106223831)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$/../.." vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: src/Models/.idea/modules.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Models/.idea/modules.xml b/src/Models/.idea/modules.xml
+new file mode 100644
+--- /dev/null	(date 1781106223830)
++++ b/src/Models/.idea/modules.xml	(date 1781106223830)
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/Models.iml" filepath="$PROJECT_DIR$/Models.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+Index: src/Models/.idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Models/.idea/misc.xml b/src/Models/.idea/misc.xml
+new file mode 100644
+--- /dev/null	(date 1781106223828)
++++ b/src/Models/.idea/misc.xml	(date 1781106223828)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectRootManager" version="2" project-jdk-name="25" project-jdk-type="JavaSDK">
++    <output url="file://$PROJECT_DIR$/out" />
++  </component>
++</project>
+\ No newline at end of file
+Index: src/Models/.idea/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Models/.idea/.gitignore b/src/Models/.idea/.gitignore
+new file mode 100644
+--- /dev/null	(date 1781106223827)
++++ b/src/Models/.idea/.gitignore	(date 1781106223827)
+@@ -0,0 +1,10 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Ignored default folder with query files
++/queries/
++# Datasource local storage ignored files
++/dataSources/
++/dataSources.local.xml
++# Editor-based HTTP Client requests
++/httpRequests/
