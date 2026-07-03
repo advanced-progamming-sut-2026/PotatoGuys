@@ -7,16 +7,19 @@ public class ChapterMenu implements Menu{
     }
     @Override
     public Result handleInput(String input) {
-        return null;
+        if (input.equals("1")){
+            return new Result(new PreGameMenu());
+        }
+        return new Result("Invalid command in Chapter Menu");
     }
 
     @Override
     public String getName() {
-        return "";
+        return "Chapter Menu";
     }
 
     @Override
     public Result onEnter() {
-        return null;
+        return new Result("Enter level number to play.");
     }
 }

@@ -1,6 +1,6 @@
 package pvz.Enums.Commands;
 
-public enum BattleMenuCommand implements MenuCommand {
+public enum GameMenuCommand implements MenuCommand {
     ADVANCE_TIME("^advance\\s+time\\s+-t\\s+(?<ticks>\\d+)\\s+ticks\\s*$"),
     COLLECT_SUN("^collect\\s+sun\\s+-l\\s+\\(\\s*(?<sunX>\\d+)\\s*,\\s*(?<sunY>\\d+)\\s*\\)\\s*$"),
     SHOW_SUN("^show\\s+sun\\s+amount\\s*$"),
@@ -18,6 +18,6 @@ public enum BattleMenuCommand implements MenuCommand {
     CHEAT_SPAWN_ZOMBIE("^cheat\\s+spawn-zombie\\s+-t\\s+(?<zombieType>\\w+)\\s+-l\\s+<\\s*(?<zombieX>\\d+)\\s*,\\s*(?<zombieY>\\d+)\\s*>\\s*$");
 
     private final String pattern;
-    BattleMenuCommand(String pattern) { this.pattern = pattern; }
+    GameMenuCommand(String pattern) { this.pattern = pattern; }
     @Override public String getPattern() { return this.pattern; }
 }

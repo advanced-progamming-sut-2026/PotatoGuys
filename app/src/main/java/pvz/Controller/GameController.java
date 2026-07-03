@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 
 import pvz.View.Result;
 
-public class BattleController {
+public class GameController {
     public Result advanceTime(Matcher matcher) { return null; }
     public Result collectSun(Matcher matcher) { return null; }
     public Result showSun(Matcher matcher) { return null; }
