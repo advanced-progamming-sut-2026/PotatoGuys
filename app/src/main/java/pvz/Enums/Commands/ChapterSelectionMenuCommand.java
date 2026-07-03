@@ -1,6 +1,6 @@
 package pvz.Enums.Commands;
 
-public enum SeasonMenuCommand implements MenuCommand {
+public enum ChapterSelectionMenuCommand implements MenuCommand {
     ENTER_MENU("^menu\\s+enter\\s+(?<menuName>\\w+)\\s*$"),
     ENTER_CHAPTER("^menu\\s+enter\\s+chapter\\s+-c\\s+(?<chapterName>\\w+)\\s*$"),
     GREENHOUSE("^menu\\s+greenhouse\\s*$"),
@@ -12,6 +12,6 @@ public enum SeasonMenuCommand implements MenuCommand {
     EXIT("^menu\\s+exit\\s*$");
 
     private final String pattern;
-    SeasonMenuCommand(String pattern) { this.pattern = pattern; }
+    ChapterSelectionMenuCommand(String pattern) { this.pattern = pattern; }
     @Override public String getPattern() { return this.pattern; }
 }

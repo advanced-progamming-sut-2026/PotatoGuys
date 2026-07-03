@@ -2,13 +2,9 @@ package pvz.Controller;
 
 import java.util.regex.Matcher;
 
-import pvz.View.CollectionMenu;
-import pvz.View.SeasonMenu;
-import pvz.View.MainMenu;
-import pvz.View.Menu;
-import pvz.View.Result;
+import pvz.View.*;
 
-public class SeasonController {
+public class ChapterSelectionController {
     public Result enterMenu(Matcher matcher) {
         String menuName = matcher.group("menuName");
         menuName = menuName.replaceAll("  ", "");
@@ -18,14 +14,26 @@ public class SeasonController {
                 nextMenu = new CollectionMenu();
                 break;
             default:
-                nextMenu = new SeasonMenu();
+                nextMenu = new ChapterSelectionMenu();
                 return new Result("You cannot enter this menu." , nextMenu);
         }
         
-        return new Result("Enterned " + nextMenu.getName() , nextMenu);
+        return new Result("Entered " + nextMenu.getName() , nextMenu);
     }
-    public Result enterChapter(Matcher matcher) { return null; }
-    public Result greenhouse(Matcher matcher) { return null; }
+    public Result enterChapter(Matcher matcher)
+    {
+        String chapter=matcher.group("chapterName").toLowerCase();
+        return switch (chapter) {
+            case "ancient egypt" -> new Result("", new ChapterMenu("Ancient Egypt"));
+            case "frostbite caves" -> new Result("", new ChapterMenu("Frostbite Caves"));
+            case "dark ages" -> new Result("", new ChapterMenu("Dark Ages"));
+            case "big wave beach" -> new Result("", new ChapterMenu("Big Wave Beach"));
+            default -> new Result("Invalid chapter name");
+        };
+    }
+    public Result greenhouse(Matcher matcher) {
+        return new Result(new GreenHouseMenu());
+    }
     public Result travelLog(Matcher matcher) { return null; }
     public Result leaderboard(Matcher matcher) { return null; }
     public Result coinWallet(Matcher matcher) { return null; }

@@ -16,6 +16,12 @@ public class Result {
         this.nextMenu = nextMenu;
     }
 
+    //print nothing and go to next menu
+    public Result(Menu nextMenu){
+        this.message="";
+        this.nextMenu=nextMenu;
+    }
+
     public String getMessage() {
         return message;
     }

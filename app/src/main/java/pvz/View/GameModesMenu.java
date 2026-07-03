@@ -4,7 +4,7 @@ public class GameModesMenu implements Menu{
     @Override
     public Result handleInput(String input) {
         if (input.equals("1")){
-            return new Result("",new SeasonMenu());
+            return new Result("",new ChapterSelectionMenu());
         } else if(input.equals("2")){
             return new Result("",new MiniGamesMenu());
         } else {

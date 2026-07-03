@@ -5,24 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7fd54749-b0f8-4a89-ad5d-d24c03e69d49" name="Changes" comment="h_edit3">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/GameModesController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/ChapterMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/GameModesMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/CollectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/CollectionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/ChapterController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Enums/Commands/GameMenuCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Enums/Commands/ChapterMenuCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/BattleMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/BattleMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/CollectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/CollectionMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/GameMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/GameMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/LoginMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/LoginMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/MainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/MainMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/Menu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/Menu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/NetworkMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/NetworkMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/NewsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/NewsMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/ProfileMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/ProfileMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/RegisterMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/RegisterMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/SettingsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/SettingsMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,34 +74,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/media/sedhhn/CG_Files/Code/Java/AP Exercises/Exercise 3/q1&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;H:/Code/Java/AP Project/PlantsVsZombies2/src/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.App.executor": "Run",
+    "Application.Main.executor": "Run",
+    "Gradle.Build PlantsVsZombies2.executor": "Run",
+    "Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/media/sedhhn/CG_Files/Code/Java/AP Exercises/Exercise 3/q1",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "H:/Code/Java/AP Project/PlantsVsZombies2/src/Main.java",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="Models.Plants.Strategies" />
@@ -199,6 +184,7 @@
       <workItem from="1783009235562" duration="633000" />
       <workItem from="1783009979306" duration="799000" />
       <workItem from="1783010994303" duration="5330000" />
+      <workItem from="1783024573960" duration="1995000" />
     </task>
     <servers />
   </component>
