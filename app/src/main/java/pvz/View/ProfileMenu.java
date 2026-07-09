@@ -2,7 +2,7 @@ package pvz.View;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.ProfileController;
+import pvz.Controller.user.ProfileController;
 import pvz.Enums.Commands.ProfileMenuCommand;
 
 public class ProfileMenu implements Menu {

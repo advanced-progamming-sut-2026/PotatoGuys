@@ -9,7 +9,7 @@ public enum RegisterMenuCommand implements MenuCommand {
     //Validation Patterns
     USERNAME("^[a-zA-Z0-9\\-]+$"),
 
-    PASSWORD_SPECIAL_CHAR("[?><,\"';:\\\\/|\\[\\]}{+=()*?&^%$#!]"),
+    PASSWORD_SPECIAL_CHAR("[?><,\"';:\\\\/|\\[\\]}{+=()*?&@^%$#!]"),
     PASSWORD_LOWERCASE_CHAR("[a-z]"),
     PASSWORD_UPPERCASE_CHAR("[A-Z]"),
     PASSWORD_NUMBER_CHAR("\\d"),

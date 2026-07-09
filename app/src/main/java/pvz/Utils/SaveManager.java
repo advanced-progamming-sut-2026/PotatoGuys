@@ -62,4 +62,18 @@ public class SaveManager {
             return null;
         }
     }
+
+    public void delete(String path) {
+        File file = new File(Constants.SAVE_PATH + path);
+        if (file.exists()) {
+            if (file.delete()) {
+                System.out.println("[GsonManager] Save file deleted at " + path);
+            } else {
+                System.err.println("[GsonManager] Failed to delete save file at " + path);
+            }
+        } else {
+            System.out.println("[GsonManager] Save file not found at " + path);
+        }
+    }
+
 }

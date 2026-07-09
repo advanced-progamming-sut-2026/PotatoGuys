@@ -2,7 +2,7 @@ package pvz.View;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.LoginController;
+import pvz.Controller.user.LoginController;
 import pvz.Enums.Commands.LoginMenuCommand;
 
 public class ResetPasswordMenu implements Menu {
@@ -25,5 +25,11 @@ public class ResetPasswordMenu implements Menu {
     @Override
     public String getName() {
         return "Forgot Password menu";
+    }
+
+    @Override
+    public Result onEnter() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'onEnter'");
     }
 }

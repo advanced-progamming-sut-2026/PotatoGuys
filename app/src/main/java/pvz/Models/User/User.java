@@ -1,6 +1,9 @@
 package pvz.Models.User;
 
+import java.util.UUID;
+
 public class User {
+    private String id;
     private String username;
     private String passwordHash;
     private String nickName;
@@ -13,8 +16,15 @@ public class User {
     private News news;
     private Score score;
 
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public void setUsername(String username) {
@@ -102,7 +112,8 @@ public class User {
     }
 
     public User(String username, String passwordHash, String nickName, String email, Gender gender){
-        this.username=username;
+        this.id = UUID.randomUUID().toString();
+        this.username = username;
         this.passwordHash=passwordHash;
         this.nickName=nickName;
         this.email=email;

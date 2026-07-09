@@ -1,5 +1,6 @@
-package pvz.Controller;
+package pvz.Controller.user;
 
+import java.util.HashMap;
 import java.util.regex.Matcher;
 
 import pvz.Models.GameSession;
@@ -37,7 +38,9 @@ public class LoginController {
         String username = matcher.group("username");
         String password = matcher.group("password");
 
-        User currentUser = SaveManager.getInstance().load("users/" + username + ".json", User.class);
+        HashMap<String , String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+        String Id = usernames.get(username);
+        User currentUser = SaveManager.getInstance().load("users/" + Id + ".json", User.class);
         if(!PasswordUtils.verifyPassword(password, currentUser.getPasswordHash())){
             return new Result("Password is incorrect!");
         }

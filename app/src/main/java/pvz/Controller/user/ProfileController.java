@@ -1,10 +1,12 @@
-package pvz.Controller;
+package pvz.Controller.user;
 
+import java.util.HashMap;
 import java.util.regex.Matcher;
 
 import pvz.Models.GameSession;
 import pvz.Models.User.User;
 import pvz.Utils.PasswordUtils;
+import pvz.Utils.SaveManager;
 import pvz.View.MainMenu;
 import pvz.View.Menu;
 import pvz.View.Result;
@@ -13,6 +15,7 @@ public class ProfileController {
     public Result changeUsername(Matcher matcher) { 
         String newUsername = matcher.group("username");
         User user = GameSession.getInstance().getCurrentUser();
+        String lastUsername = user.getUsername();
 
         if(newUsername == null || newUsername.isEmpty()) {
             return new Result("Username cannot be empty.");
@@ -27,7 +30,7 @@ public class ProfileController {
         }
 
         user.setUsername(newUsername);
-
+        updateUser(user , lastUsername);
         return new Result("Username has changed successfully."); 
     }
     public Result changeNickname(Matcher matcher) { 
@@ -47,6 +50,7 @@ public class ProfileController {
         }
 
         user.setNickName(newNickname);
+        updateUser(user , user.getUsername());
 
         return new Result("Nickname has changed successfully"); 
     }
@@ -67,6 +71,7 @@ public class ProfileController {
         }
 
         user.setEmail(newEmail);
+        updateUser(user, user.getUsername());
 
         return new Result("Email has changed successfully"); 
     }
@@ -92,6 +97,7 @@ public class ProfileController {
         }
 
         user.setPasswordHash(PasswordUtils.hashPassword(newPassword));
+        updateUser(user , user.getUsername());
 
         return new Result("Password has changed successfully"); 
     }
@@ -104,10 +110,18 @@ public class ProfileController {
         result.append("Game played: " + user.getProfile().getGamePlayed() + "\n");
         result.append("Coins: " + user.getProfile().getCoins() + "\n");
         result.append("Diamonds: " + user.getProfile().getDiamonds() + "\n");
-        result.append("Season Progresses: " + user.getProfile().getSeasonProgresses().size() + "\n");
+        // result.append("Season Progresses: " + user.getProfile().getSeasonProgresses().size() + "\n");
         result.append("Miopoint: " + user.getProfile().getMaxMiopoint() + "\n");
 
         return new Result(result.toString()); 
+    }
+
+    public void updateUser(User user , String lastUsername){
+        HashMap<String , String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+        usernames.remove(lastUsername);
+        usernames.put(user.getUsername() , user.getId());
+        SaveManager.getInstance().save(usernames, "users/username.json");
+        SaveManager.getInstance().save(user, "users/" + user.getId() + ".json");
     }
     public Result exit(Matcher matcher) {
         Menu nextMenu = new MainMenu();

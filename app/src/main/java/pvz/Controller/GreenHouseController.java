@@ -1,10 +1,10 @@
 package pvz.Controller;
 
+import java.util.List;
+
 import pvz.Models.GreenHouse.GreenHouse;
 import pvz.Models.GreenHouse.GreenHousePlant;
 import pvz.Models.GreenHouse.GreenHousePot;
-import pvz.Models.GreenHouse.MariGold;
-import java.util.List;
 
 public class GreenHouseController {
     private final GreenHouse greenHouse;

@@ -16,7 +16,6 @@ public class GameSession {
         return instance;
     }
     
-    // Getters and Setters...
     public User getCurrentUser() { return currentUser; }
     public void setCurrentUser(User user) { this.currentUser = user; }
 }

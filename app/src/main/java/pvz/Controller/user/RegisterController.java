@@ -1,5 +1,7 @@
-package pvz.Controller;
+package pvz.Controller.user;
 
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.regex.Matcher;
 
 import pvz.Enums.SecurityQuestions;
@@ -77,8 +79,8 @@ public class RegisterController {
         //temporary
         StringBuilder resultMessage = new StringBuilder();
         resultMessage.append("User registered successfully! Please pick a security question:\n");
-        for(int i = 0 ; i < SecurityQuestions.QUESTIONS.size() ; i++){
-            resultMessage.append((i+1) + ". " + SecurityQuestions.getQuestionByNumber(i)).append("\n");
+        for(int i = 1 ; i <= SecurityQuestions.QUESTIONS.size() ; i++){
+            resultMessage.append((i) + ". " + SecurityQuestions.getQuestionByNumber(i)).append("\n");
         }
         resultMessage.append("\nPlease use the command 'pick question -q <questionId> -a <answer> -c <confirmAnswer>' to pick a security question and set your answer.");
         return new Result(resultMessage.toString(), new PickSecurityQuestionMenu(this));
@@ -95,9 +97,21 @@ public class RegisterController {
         
         currentUser.setSecurityQuestion(question);
         currentUser.setSecurityAnswer(answer);
-        SaveManager.getInstance().save(currentUser, "users/" + currentUser.getUsername() + ".json");
+        saveUser(currentUser);
 
         return new Result("Security question and answer set successfully!\nUser saved successfully!", new LoginMenu());
+    }
+
+    public void saveUser(User user){
+        String id = UUID.randomUUID().toString();
+        user.setId(id);
+        HashMap<String , String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+        if(usernames == null){
+            usernames = new HashMap<>();
+        }
+        usernames.put(user.getUsername() , user.getId());
+        SaveManager.getInstance().save(usernames, "users/username.json");
+        SaveManager.getInstance().save(user, "users/" + user.getId() + ".json");
     }
 
     public Result exit(Matcher matcher) {

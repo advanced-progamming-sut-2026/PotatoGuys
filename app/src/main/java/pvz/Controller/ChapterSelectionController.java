@@ -2,7 +2,13 @@ package pvz.Controller;
 
 import java.util.regex.Matcher;
 
-import pvz.View.*;
+import pvz.View.ChapterMenu;
+import pvz.View.ChapterSelectionMenu;
+import pvz.View.CollectionMenu;
+import pvz.View.GreenHouseMenu;
+import pvz.View.MainMenu;
+import pvz.View.Menu;
+import pvz.View.Result;
 
 public class ChapterSelectionController {
     public Result enterMenu(Matcher matcher) {
@@ -32,7 +38,7 @@ public class ChapterSelectionController {
         };
     }
     public Result greenhouse(Matcher matcher) {
-        return new Result(new GreenHouseMenu());
+        return new Result(new GreenHouseMenu(new GreenHouseController(null, null)));
     }
     public Result travelLog(Matcher matcher) { return null; }
     public Result leaderboard(Matcher matcher) { return null; }
