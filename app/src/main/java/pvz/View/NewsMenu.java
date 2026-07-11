@@ -2,7 +2,7 @@ package pvz.View;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.NewsController;
+import pvz.Controller.user.NewsController;
 import pvz.Enums.Commands.NewsMenuCommand;
 
 public class NewsMenu implements Menu {

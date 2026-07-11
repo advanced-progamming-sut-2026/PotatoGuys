@@ -11,6 +11,9 @@ import pvz.View.Result;
 public class SettingsController {
     public Result changeDifficulty(Matcher matcher) { 
         int newDifficulty = Integer.parseInt(matcher.group("difficulty"));
+        if(newDifficulty < 1 || newDifficulty > 5) {
+            return new Result("difficulty must be between 1 and 5");
+        }
         GameSession.getInstance().getCurrentUser().getSetting().setDifficulty(newDifficulty);
         SaveManager.getInstance().save(GameSession.getInstance().getCurrentUser() , "users/" + GameSession.getInstance().getCurrentUser().getId() + ".json");
         return new Result("changed difficulty to " + newDifficulty);  

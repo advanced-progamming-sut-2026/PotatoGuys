@@ -42,3 +42,13 @@ tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
+// Run the interactive zombie-walk demo directly from Gradle:
+//   ./gradlew runDemo
+tasks.register('runDemo', JavaExec) {
+    group       = 'Demo'
+    description = 'Run the ZombieWalkDemo CLI (interactive zombie simulation)'
+    classpath   = sourceSets.main.runtimeClasspath
+    mainClass   = 'pvz.Demo.ZombieWalkDemo'
+    standardInput = System.in
+}

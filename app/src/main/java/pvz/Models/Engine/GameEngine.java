@@ -24,13 +24,12 @@ public class GameEngine {
     }
 
     private void processOneTick() {
-        if (!isFirstTickDone()) {
-            for (TickAware e : getToAdd()) {
-                e.enter();
-            }
-            firstTickDone = true;
+        // Always call enter() on every batch of newly registered entities
+        // before merging them into the live list.
+        // Bug in original: enter() was only called once (on the very first tick).
+        for (TickAware entity : new ArrayList<>(getToAdd())) {
+            entity.enter();
         }
-
         getEntities().addAll(getToAdd());
         getToAdd().clear();
 
@@ -38,9 +37,10 @@ public class GameEngine {
         getToRemove().clear();
 
         List<TickAware> snapshot = new ArrayList<>(getEntities());
-        for (TickAware e : snapshot) {
-            e.update();
+        for (TickAware entity : snapshot) {
+            entity.update();
         }
+        firstTickDone = true;
     }
 
     public List<TickAware> getEntities() {
