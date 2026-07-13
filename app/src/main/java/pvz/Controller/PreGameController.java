@@ -5,6 +5,7 @@ import pvz.Models.Entities.Plants.Enums.PlantStorage;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.GameSession;
+import pvz.View.GameMenu;
 import pvz.View.Result;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 public class PreGameController {
+    private static final int MAX_PLANTS = 7;
     List<Plant> selectedPlants;
 
     public PreGameController(){
@@ -38,28 +40,117 @@ public class PreGameController {
 
     public Result plantAdd(Matcher matcher){
         String type=matcher.group("type").trim().toUpperCase();
+
+        if (selectedPlants.size() >= MAX_PLANTS){
+            return new Result("You can only select up to " + MAX_PLANTS + " plants.");
+        }
+
+        PlantType plantType = null;
         for (PlantStorage ps: PlantStorage.values()){
             if (ps.getType().toString().equals(type)){
+                plantType = ps.getType();
+                break;
+            }
+        }
+        if (plantType == null){
+            return new Result("Plant not found.");
+        }
+
+        List<Plant> unlocked = GameSession.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants();
+        boolean isUnlocked = false;
+        for (Plant p : unlocked){
+            if (p.getType() == plantType){
+                isUnlocked = true;
+                break;
+            }
+        }
+        if (!isUnlocked){
+            return new Result("You have not unlocked this plant.");
+        }
+
+        for (Plant p : selectedPlants){
+            if (p.getType() == plantType){
+                return new Result("This plant is already in your selection.");
+            }
+        }
+
+        for (PlantStorage ps: PlantStorage.values()){
+            if (ps.getType() == plantType){
                 selectedPlants.add(ps.getCopy(new Vector2(-1,-1)));
-                StringBuilder output=new StringBuilder("Selected Plants:");
-                for (Plant p :selectedPlants){
-                    output.append("\n").append(p.getType().toString());
+                break;
+            }
+        }
+
+        StringBuilder output=new StringBuilder("Plant added. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
+        for (Plant p : selectedPlants){
+            output.append("\n- ").append(p.getType().toString());
+        }
+        return new Result(output.toString());
+    }
+
+    public Result plantRemove(Matcher matcher){
+        String type=matcher.group("type").trim().toUpperCase();
+
+        PlantType plantType = null;
+        for (PlantStorage ps: PlantStorage.values()){
+            if (ps.getType().toString().equals(type)){
+                plantType = ps.getType();
+                break;
+            }
+        }
+        if (plantType == null){
+            return new Result("Plant not found.");
+        }
+
+        for (int i = 0; i < selectedPlants.size(); i++){
+            if (selectedPlants.get(i).getType() == plantType){
+                selectedPlants.remove(i);
+                StringBuilder output=new StringBuilder("Plant removed. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
+                for (Plant p : selectedPlants){
+                    output.append("\n- ").append(p.getType().toString());
                 }
                 return new Result(output.toString());
             }
         }
-        return new Result("Plant not found");
-    }
-
-    public Result plantRemove(Matcher matcher){
-        return null;
+        return new Result("This plant is not in your selection.");
     }
 
     public Result boostPlant(Matcher matcher){
-        return null;
+        String type=matcher.group("type").trim().toUpperCase();
+
+        PlantType plantType = null;
+        for (PlantStorage ps: PlantStorage.values()){
+            if (ps.getType().toString().equals(type)){
+                plantType = ps.getType();
+                break;
+            }
+        }
+        if (plantType == null){
+            return new Result("Plant not found.");
+        }
+
+        for (Plant p : selectedPlants){
+            if (p.getType() == plantType){
+                if (p.isBoosted()){
+                    return new Result("This plant is already boosted.");
+                }
+                p.setBoosted(true);
+                return new Result(p.getType().toString() + " has been boosted.");
+            }
+        }
+        return new Result("This plant is not in your selection.");
     }
 
     public Result startGame(Matcher matcher){
-        return null;
+        if (selectedPlants.size() < MAX_PLANTS){
+            return new Result("You must select all " + MAX_PLANTS + " plants before starting. Currently selected: " + selectedPlants.size() + "/" + MAX_PLANTS);
+        }
+
+        StringBuilder output=new StringBuilder("Starting game with:");
+        for (Plant p : selectedPlants){
+            String boost = p.isBoosted() ? " [BOOSTED]" : "";
+            output.append("\n- ").append(p.getType().toString()).append(boost);
+        }
+        return new Result(output.toString(), new GameMenu(selectedPlants));
     }
 }

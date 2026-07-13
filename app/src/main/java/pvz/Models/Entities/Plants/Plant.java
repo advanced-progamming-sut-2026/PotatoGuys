@@ -102,4 +102,8 @@ public class Plant implements TickAware{
         return isBoosted;
     }
 
+    public void setBoosted(boolean boosted) {
+        isBoosted = boosted;
+    }
+
 }

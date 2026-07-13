@@ -1,15 +1,23 @@
 package pvz.View;
 
+import java.util.List;
 import java.util.regex.Matcher;
 
 import pvz.Controller.GameController;
 import pvz.Enums.Commands.GameMenuCommand;
+import pvz.Models.Entities.Plants.Plant;
 
 public class GameMenu implements Menu {
+    GameController controller;
+    Matcher matcher;
+
+    public GameMenu(List<Plant> plants){
+        super();
+        controller=new GameController(plants);
+    }
+
     @Override
     public Result handleInput(String input) {
-        GameController controller=new GameController();
-        Matcher matcher;
         if ((matcher = GameMenuCommand.ADVANCE_TIME.getMatcher(input)) != null) return controller.advanceTime(matcher);
         if ((matcher = GameMenuCommand.COLLECT_SUN.getMatcher(input)) != null) return controller.collectSun(matcher);
         if ((matcher = GameMenuCommand.SHOW_SUN.getMatcher(input)) != null) return controller.showSun(matcher);

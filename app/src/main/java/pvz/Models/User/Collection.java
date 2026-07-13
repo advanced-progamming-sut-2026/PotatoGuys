@@ -4,11 +4,17 @@ import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Zombies.Zombie;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Collection {
     private List<Plant> unlockedPlants;
     private List<Zombie> unlockedZombies;
+
+    public Collection(){
+        this.unlockedPlants=new ArrayList<>();
+        this.unlockedZombies=new ArrayList<>();
+    }
 
     public List<Plant> getUnlockedPlants() {
         return unlockedPlants;

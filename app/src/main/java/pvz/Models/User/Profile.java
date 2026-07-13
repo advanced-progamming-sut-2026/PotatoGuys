@@ -12,6 +12,10 @@ public class Profile {
     private ArrayList<SeasonProgress> seasonProgresses;
     private int maxMiopoint;
 
+    public Profile(){
+        this.collection=new Collection();
+    }
+
     public int getGamePlayed() {
         return gamePlayed;
     }

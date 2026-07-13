@@ -1,10 +1,16 @@
 package pvz.Controller;
 
+import java.util.List;
 import java.util.regex.Matcher;
 
+import pvz.Models.Entities.Plants.Plant;
 import pvz.View.Result;
 
 public class GameController {
+    List<Plant> plants;
+    public GameController(List<Plant> plants){
+        this.plants=plants;
+    }
     public Result advanceTime(Matcher matcher) { return null; }
     public Result collectSun(Matcher matcher) { return null; }
     public Result showSun(Matcher matcher) { return null; }
