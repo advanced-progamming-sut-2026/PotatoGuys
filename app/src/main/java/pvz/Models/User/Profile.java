@@ -24,8 +24,16 @@ public class Profile {
         return coins;
     }
 
+    public void setCoins(int coins) {
+        this.coins = coins;
+    }
+
     public int getDiamonds() {
         return diamonds;
+    }
+
+    public void setDiamonds(int diamonds) {
+        this.diamonds = diamonds;
     }
 
     public Collection getCollection() {

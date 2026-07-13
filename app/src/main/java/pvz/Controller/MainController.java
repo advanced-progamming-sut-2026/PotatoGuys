@@ -25,6 +25,9 @@ public class MainController {
             case "profile":
                 nextMenu = new ProfileMenu();
                 break;
+            case "collection":
+                nextMenu=new CollectionMenu();
+                break;
             default:
                 nextMenu = new MainMenu();
                 return new Result("You cannot enter this menu." , nextMenu);
@@ -37,6 +40,6 @@ public class MainController {
         return new Result("Use 'menu logout' to exit from Main Menu.", new MainMenu());
     }
     public Result logout(Matcher matcher) { 
-        return new Result("logouted", new RegisterMenu());
+        return new Result("logged out", new RegisterMenu());
     }
 }

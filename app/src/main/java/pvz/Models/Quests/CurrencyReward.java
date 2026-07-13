@@ -11,12 +11,17 @@ public class CurrencyReward extends Reward {
         this.amount = amount;
     }
 
-    @Override
+/*    @Override
     public void grant(User user) {
         if (currencyKind == CurrencyKind.COIN) {
             // user.addCoins(amount);
         } else if (currencyKind == CurrencyKind.GEM) {
             // user.addDiamonds(amount);
         }
+    }*/
+
+    @Override
+    public void grant() {
+
     }
 }

@@ -6,14 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="7fd54749-b0f8-4a89-ad5d-d24c03e69d49" name="Changes" comment="h_edit3">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/CurrencyReward.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/CurrencyReward.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/InventoryReward.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/InventoryReward.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Progress.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Progress.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Quest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Quest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/QuestLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/QuestLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Reward.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Reward.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/UnlockableReward.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/UnlockableReward.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/CollectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/CollectionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/Plant.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/Plant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Collection.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Collection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/GameMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/GameMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,6 +162,7 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
@@ -197,6 +195,7 @@
       <workItem from="1783009979306" duration="799000" />
       <workItem from="1783010994303" duration="5330000" />
       <workItem from="1783024573960" duration="1995000" />
+      <workItem from="1783967805064" duration="1088000" />
     </task>
     <servers />
   </component>

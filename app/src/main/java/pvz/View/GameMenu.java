@@ -33,12 +33,12 @@ public class GameMenu implements Menu {
         if ((matcher = GameMenuCommand.SHOW_TILE_STATUS.getMatcher(input)) != null) return controller.showTileStatus(matcher);
         if ((matcher = GameMenuCommand.ZOMBIES_INFO.getMatcher(input)) != null) return controller.zombiesInfo(matcher);
         if ((matcher = GameMenuCommand.CHEAT_SPAWN_ZOMBIE.getMatcher(input)) != null) return controller.cheatSpawnZombie(matcher);
-        return new Result("Invalid command in Battle.", this);
+        return new Result("Invalid command in Game.", this);
     }
 
     @Override
     public String getName(){
-        return "Battle menu";
+        return "Game menu";
     }
 
     @Override

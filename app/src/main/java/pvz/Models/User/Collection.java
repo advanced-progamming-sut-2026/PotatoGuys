@@ -49,4 +49,17 @@ public class Collection {
         }
         return false;
     }
+
+    public void addPlant(Plant plant){
+        unlockedPlants.add(plant);
+    }
+
+    public Plant getPlant(PlantType type){
+        for (Plant p : unlockedPlants){
+            if (p.getType() == type){
+                return p;
+            }
+        }
+        return null;
+    }
 }

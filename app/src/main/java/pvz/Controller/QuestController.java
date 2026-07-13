@@ -25,7 +25,7 @@ public class QuestController {
 
     // Displays the Travel Log page based on the requested category
     public String showTravelLogPage(String pageName) {
-        if (currentUser == null) return "No user logged in.";
+       /* if (currentUser == null) return "No user logged in.";
 
         QuestLog log = currentUser.getQuestLog();
         List<Quest> filteredQuests;
@@ -53,12 +53,13 @@ public class QuestController {
                     .append("  ").append(q.getDescription()).append("\n")
                     .append("  Progress: ").append(q.getProgress().toString()).append("\n");
         }
-        return sb.toString();
+        return sb.toString();*/
+        return null;
     }
 
     // Called when a user completes a quest objective
     public String claimQuestReward(String questId) {
-        Quest quest = currentUser.getQuestLog().findById(questId);
+    /*    Quest quest = currentUser.getQuestLog().findById(questId);
 
         if (quest == null) return "Quest not found.";
         if (!quest.getProgress().isComplete()) return "Quest is not completed yet.";
@@ -70,6 +71,7 @@ public class QuestController {
         }
 
         quest.deactivate(); // Mark as claimed
-        return "Rewards claimed for quest: " + quest.getTitle();
+        return "Rewards claimed for quest: " + quest.getTitle();*/
+        return null;
     }
 }
