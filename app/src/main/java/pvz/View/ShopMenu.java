@@ -1,0 +1,52 @@
+package pvz.View;
+
+import pvz.Controller.ShopController;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class ShopMenu implements Menu {
+    private final ShopController controller;
+
+    public ShopMenu(ShopController controller) {
+        this.controller = controller;
+    }
+
+    @Override
+    public Result handleInput(String input) {
+        // Handle listing permanent items
+        if (input.equals("shop list")) {
+            return new Result(controller.showPermanentItems());
+        }
+
+        // Handle daily offer
+        if (input.equals("shop daily")) {
+            return new Result(controller.showDailyOffer());
+        }
+
+        // Regex for: shop buy -i <item_id> -n <count> [-t <plant_type>]
+        // The plant_type part is optional (?: ...)?
+        Pattern buyPattern = Pattern.compile("shop buy -i (\\d+) -n (\\d+)(?: -t (\\w+))?");
+        Matcher matcher = buyPattern.matcher(input);
+
+        if (matcher.matches()) {
+            int itemId = Integer.parseInt(matcher.group(1));
+            int count = Integer.parseInt(matcher.group(2));
+            String plantType = matcher.group(3); // Will be null if not provided in the command
+
+            String msg = controller.buyItem(itemId, count, plantType);
+            return new Result(msg);
+        }
+
+        return new Result("Invalid command.");
+    }
+
+    @Override
+    public String getName() {
+        return "Shop";
+    }
+
+    @Override
+    public Result onEnter() {
+        return new Result("Entered Shop.");
+    }
+}
