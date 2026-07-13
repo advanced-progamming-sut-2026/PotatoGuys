@@ -6,6 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="7fd54749-b0f8-4a89-ad5d-d24c03e69d49" name="Changes" comment="h_edit3">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/CurrencyReward.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/CurrencyReward.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/InventoryReward.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/InventoryReward.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Progress.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Progress.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Quest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Quest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/QuestLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/QuestLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Reward.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Reward.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/UnlockableReward.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/UnlockableReward.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +78,9 @@
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="3EhtQq7cdtR5etykGDiYWn2syZ2" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -79,17 +90,20 @@
     &quot;Application.App.executor&quot;: &quot;Run&quot;,
     &quot;Application.Main.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Build PlantsVsZombies2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build plantsvszombies2.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/media/sedhhn/CG_Files/Code/Java/AP Exercises/Exercise 3/q1&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/104/plantsvszombies2&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -123,7 +137,6 @@
   <component name="RunManager" selected="Application.App">
     <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="pvz.App" />
-      <module name="pvz.app.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="pvz.*" />
@@ -152,7 +165,6 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
@@ -185,8 +197,6 @@
       <workItem from="1783009979306" duration="799000" />
       <workItem from="1783010994303" duration="5330000" />
       <workItem from="1783024573960" duration="1995000" />
-      <workItem from="1783063305100" duration="4534000" />
-      <workItem from="1783786171680" duration="1232000" />
     </task>
     <servers />
   </component>

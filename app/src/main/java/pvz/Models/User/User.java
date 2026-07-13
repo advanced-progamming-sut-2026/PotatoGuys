@@ -2,6 +2,7 @@ package pvz.Models.User;
 
 import java.util.UUID;
 
+
 public class User {
     private String id;
     private String username;
@@ -15,6 +16,7 @@ public class User {
     private Setting setting;
     private News news;
     private Score score;
+
 
     public String getId() {
         return this.id;
