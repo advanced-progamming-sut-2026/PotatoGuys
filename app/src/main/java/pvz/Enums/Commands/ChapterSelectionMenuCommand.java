@@ -2,7 +2,7 @@ package pvz.Enums.Commands;
 
 public enum ChapterSelectionMenuCommand implements MenuCommand {
     ENTER_MENU("^menu\\s+enter\\s+(?<menuName>\\w+)\\s*$"),
-    ENTER_CHAPTER("^menu\\s+enter\\s+chapter\\s+-c\\s+(?<chapterName>\\w+)\\s*$"),
+    ENTER_CHAPTER("^menu\\s+enter\\s+chapter\\s+-c\\s+(?<chapterName>.+)\\s*$"),
     GREENHOUSE("^menu\\s+greenhouse\\s*$"),
     TRAVEL_LOG("^menu\\s+travel-log\\s*$"),
     LEADERBOARD("^menu\\s+leaderboard\\s*$"),

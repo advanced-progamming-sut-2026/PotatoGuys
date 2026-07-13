@@ -8,7 +8,7 @@ import pvz.Models.Entities.Plants.Enums.PlantCategory;
 import pvz.Models.Entities.Plants.Enums.PlantTag;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 
-public abstract class Plant implements TickAware{
+public class Plant implements TickAware{
     private Vector2 position;
     private Vector2 velocity;
 
@@ -30,9 +30,9 @@ public abstract class Plant implements TickAware{
     private int damage;
     private boolean isBoosted;
 
-    public Plant(Vector2 position, Vector2 speed, PlantType type, PlantCategory category, List<PlantTag> tags,
-            Strategy strategy, int sunCost, int baseHp, int baseRecharge, int baseActionInterval, int recharge,
-            int actionInterval, int level, boolean isBoosted) {
+    public Plant(Vector2 position, PlantType type, PlantCategory category, List<PlantTag> tags,
+            Strategy strategy, int sunCost, int baseHp, int baseRecharge, int baseActionInterval
+            , int level, boolean isBoosted) {
         this.position = position;
         this.type = type;
         this.category = category;
@@ -43,8 +43,8 @@ public abstract class Plant implements TickAware{
         hp=baseHp;
         this.baseRecharge = baseRecharge;
         this.baseActionInterval = baseActionInterval;
-        Recharge = recharge;
-        ActionInterval = actionInterval;
+        Recharge = baseRecharge;
+        ActionInterval = baseActionInterval;
         this.level = level;
         this.isBoosted = isBoosted;
     }
@@ -52,6 +52,11 @@ public abstract class Plant implements TickAware{
     public void enter(){}
     public void update(){
         strategy.defaultApply();
+    }
+
+    @Override
+    public void dispose() {
+
     }
 
     public Vector2 getPosition() {

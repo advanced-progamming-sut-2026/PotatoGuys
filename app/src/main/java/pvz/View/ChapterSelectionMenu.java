@@ -29,6 +29,6 @@ public class ChapterSelectionMenu implements Menu {
 
     @Override
     public Result onEnter() {
-        return null;
+        return new Result("Select Chapter");
     }
 }

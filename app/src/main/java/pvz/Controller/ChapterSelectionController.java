@@ -28,7 +28,7 @@ public class ChapterSelectionController {
     }
     public Result enterChapter(Matcher matcher)
     {
-        String chapter=matcher.group("chapterName").toLowerCase();
+        String chapter=matcher.group("chapterName").trim().toLowerCase();
         return switch (chapter) {
             case "ancient egypt" -> new Result("", new ChapterMenu("Ancient Egypt"));
             case "frostbite caves" -> new Result("", new ChapterMenu("Frostbite Caves"));
