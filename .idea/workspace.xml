@@ -6,6 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="7fd54749-b0f8-4a89-ad5d-d24c03e69d49" name="Changes" comment="h_edit3">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/CurrencyReward.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/CurrencyReward.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/InventoryReward.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/InventoryReward.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Progress.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Progress.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Quest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Quest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/QuestLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/QuestLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Reward.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/Reward.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/UnlockableReward.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Quests/UnlockableReward.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,40 +78,46 @@
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="3EhtQq7cdtR5etykGDiYWn2syZ2" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.App.executor": "Run",
-    "Application.Main.executor": "Run",
-    "Gradle.Build PlantsVsZombies2.executor": "Run",
-    "Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/media/sedhhn/CG_Files/Code/Java/AP Exercises/Exercise 3/q1",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "H:/Code/Java/AP Project/PlantsVsZombies2/src/Main.java",
-    "project.structure.last.edited": "SDKs",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.App.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build PlantsVsZombies2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build plantsvszombies2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/104/plantsvszombies2&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;H:/Code/Java/AP Project/PlantsVsZombies2/src/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="Models.Plants.Strategies" />
@@ -123,7 +137,6 @@
   <component name="RunManager" selected="Application.App">
     <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="pvz.App" />
-      <module name="pvz.app.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="pvz.*" />
@@ -152,7 +165,6 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
