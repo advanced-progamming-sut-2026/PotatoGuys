@@ -12,7 +12,11 @@ public abstract class GameController {
     public GameController(Level level){
         this.level=level;
     }
-    public Result advanceTime(Matcher matcher) { return null; }
+    public Result advanceTime(Matcher matcher) {
+        int ticks = Integer.parseInt(matcher.group("ticks"));
+        level.getEngine().advanceTime(ticks);
+        return new Result("Time advanced by " + ticks + " ticks.");
+    }
     public Result releaseNuke(Matcher matcher) { return null; }
     public Result cheatCooldown(Matcher matcher) { return null; }
     public Result feedPlant(Matcher matcher) { return null; }
