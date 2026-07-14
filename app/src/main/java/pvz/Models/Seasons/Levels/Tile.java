@@ -37,6 +37,10 @@ public class Tile {
         return plant;
     }
 
+    public void setPlant(Plant plant) {
+        this.plant = plant;
+    }
+
     public List<Zombie> getZombies() {
         return zombies;
     }

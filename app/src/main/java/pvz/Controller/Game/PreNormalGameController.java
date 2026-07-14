@@ -1,24 +1,41 @@
 package pvz.Controller;
 
+import pvz.Models.DataTypes.Vector2;
+import pvz.Models.Entities.Plants.Enums.PlantStorage;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
+import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
+<<<<<<< HEAD:app/src/main/java/pvz/Controller/PreGameController.java
 import pvz.Models.AppContext;
 import pvz.View.GameMenu;
+=======
+import pvz.Models.GameSession;
+import pvz.Models.Seasons.Levels.GameMap;
+import pvz.Models.Seasons.Levels.LevelGameContext;
+import pvz.Models.Seasons.Levels.NormalLevel;
+import pvz.Models.Seasons.Levels.Wave;
+import pvz.Models.Seasons.Levels.WavePhase;
+import pvz.Models.Seasons.Season;
+import pvz.View.Game.NormalGameMenu;
+>>>>>>> 3d5d7df78cc46409d7ad15c51afe5efb15ab670a:app/src/main/java/pvz/Controller/Game/PreNormalGameController.java
 import pvz.View.Result;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-public class PreGameController {
+public class PreNormalGameController extends PreGameController{
     private static final int MAX_PLANTS = 7;
     private final PlantFactory plantFactory = new PlantFactory();
-    List<Plant> selectedPlants;
+    List<PlantPropertySheet> selectedPlants;
+    int levelNumber;
 
-    public PreGameController(){
+    public PreNormalGameController(Season season, int level){
+        super(season,level);
         selectedPlants=new ArrayList<>();
+        levelNumber=level;
     }
 
     public Result showAllPlants(Matcher matcher){
@@ -34,7 +51,11 @@ public class PreGameController {
 
     public Result showAvailablePlants(Matcher matcher){
         StringBuilder output=new StringBuilder();
+<<<<<<< HEAD:app/src/main/java/pvz/Controller/PreGameController.java
         for (Plant p:AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
+=======
+        for (Plant p: GameSession.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
+>>>>>>> 3d5d7df78cc46409d7ad15c51afe5efb15ab670a:app/src/main/java/pvz/Controller/Game/PreNormalGameController.java
             output.append("type: ").append(p.getType().toString());
             output.append("\n Sun Cost: ").append(p.getSunCost());
         }
@@ -140,16 +161,60 @@ public class PreGameController {
         return new Result("This plant is not in your selection.");
     }
 
-    public Result startGame(Matcher matcher){
-        if (selectedPlants.size() < MAX_PLANTS){
-            return new Result("You must select all " + MAX_PLANTS + " plants before starting. Currently selected: " + selectedPlants.size() + "/" + MAX_PLANTS);
+    @Override
+    public Result startGame(Matcher matcher) {
+        if (selectedPlants.isEmpty()){
+            // Debugging mode: add some default plants if none selected
+            for (PlantStorage ps: PlantStorage.values()){
+                if (selectedPlants.size() < MAX_PLANTS){
+                    selectedPlants.add(ps.getCopy(new Vector2(-1,-1)));
+                } else {
+                    break;
+                }
+            }
         }
+
+        GameEngine engine = GameEngine.getInstance();
+        engine.reset();
+
+        GameMap map = new GameMap();
+        LevelGameContext context = new LevelGameContext(engine, map, null);
+
+        List<Wave> waves = createHardcodedWaves(context, map);
+
+        NormalLevel level = new NormalLevel(engine, map, levelNumber, 150, waves, selectedPlants);
+
+        // This is a bit of a hack, but we need to associate the level with the context if possible
+        // Actually, LevelGameContext didn't have a setter for level.
+        // With the fix I applied to LevelGameContext, it should work fine without the level object.
 
         StringBuilder output=new StringBuilder("Starting game with:");
         for (Plant p : selectedPlants){
             String boost = p.isBoosted() ? " [BOOSTED]" : "";
             output.append("\n- ").append(p.getType().toString()).append(boost);
         }
-        return new Result(output.toString(), new GameMenu(selectedPlants));
+        return new Result(output.toString(), new NormalGameMenu(level));
+    }
+
+    private List<Wave> createHardcodedWaves(LevelGameContext context, GameMap map) {
+        List<Wave> waves = new ArrayList<>();
+        int lanes = map.getRows();
+
+        List<ZombieType> basicOnly = List.of(ZombieType.BASIC);
+        List<ZombieType> basicAndMummy = List.of(ZombieType.BASIC, ZombieType.MUMMY);
+        List<ZombieType> basicConeMummy = List.of(ZombieType.BASIC, ZombieType.CONEHEAD, ZombieType.MUMMY);
+
+        WavePhase phase1 = new WavePhase(3, 50, basicOnly, false);
+        waves.add(new Wave(1, false, 300, List.of(phase1), context, lanes, 3));
+
+        WavePhase phase2a = new WavePhase(4, 40, basicAndMummy, false);
+        WavePhase phase2b = new WavePhase(3, 25, basicAndMummy, true);
+        waves.add(new Wave(2, false, 500, List.of(phase2a, phase2b), context, lanes, 3));
+
+        WavePhase phase3a = new WavePhase(5, 35, basicConeMummy, false);
+        WavePhase phase3b = new WavePhase(6, 20, basicConeMummy, true);
+        waves.add(new Wave(3, true, 800, List.of(phase3a, phase3b), context, lanes, 3));
+
+        return waves;
     }
 }

@@ -1,5 +1,7 @@
 package pvz.Models.Seasons.Levels;
 
+import pvz.Models.Constants;
+
 public class GameMap {
     private int rows;
     private int columns;
@@ -9,6 +11,15 @@ public class GameMap {
         this.rows=rows;
         this.columns=columns;
         map=new Tile[rows][columns];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                map[i][j]=new Tile();
+            }
+        }
+    }
+
+    public GameMap(){
+        this(Constants.DEFAULT_ROWS, Constants.DEFAULT_COLS);
     }
 
     public int getRows() {
