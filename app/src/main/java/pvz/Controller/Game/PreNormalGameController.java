@@ -1,32 +1,28 @@
-package pvz.Controller;
-
-import pvz.Models.DataTypes.Vector2;
-import pvz.Models.Entities.Plants.Enums.PlantStorage;
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantFactory;
-import pvz.Models.Entities.Plants.data.PlantPropertySheet;
-import pvz.Models.Entities.Plants.data.PlantRegistry;
-<<<<<<< HEAD:app/src/main/java/pvz/Controller/PreGameController.java
-import pvz.Models.AppContext;
-import pvz.View.GameMenu;
-=======
-import pvz.Models.GameSession;
-import pvz.Models.Seasons.Levels.GameMap;
-import pvz.Models.Seasons.Levels.LevelGameContext;
-import pvz.Models.Seasons.Levels.NormalLevel;
-import pvz.Models.Seasons.Levels.Wave;
-import pvz.Models.Seasons.Levels.WavePhase;
-import pvz.Models.Seasons.Season;
-import pvz.View.Game.NormalGameMenu;
->>>>>>> 3d5d7df78cc46409d7ad15c51afe5efb15ab670a:app/src/main/java/pvz/Controller/Game/PreNormalGameController.java
-import pvz.View.Result;
+package pvz.Controller.Game;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-public class PreNormalGameController extends PreGameController{
+import pvz.Models.AppContext;
+import pvz.Models.DataTypes.Vector2;
+import pvz.Models.Engine.GameEngine;
+import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Entities.Plants.PlantFactory;
+import pvz.Models.Entities.Plants.Enums.PlantType;
+import pvz.Models.Entities.Plants.data.PlantPropertySheet;
+import pvz.Models.Entities.Plants.data.PlantRegistry;
+import pvz.Models.Entities.Zombies.ZombieType;
+import pvz.Models.Seasons.Season;
+import pvz.Models.Seasons.Levels.GameMap;
+import pvz.Models.Seasons.Levels.LevelGameContext;
+import pvz.Models.Seasons.Levels.NormalLevel;
+import pvz.Models.Seasons.Levels.Wave;
+import pvz.Models.Seasons.Levels.WavePhase;
+import pvz.View.Result;
+import pvz.View.Game.NormalGameMenu;
+
+public class PreNormalGameController extends PreGameController {
     private static final int MAX_PLANTS = 7;
     private final PlantFactory plantFactory = new PlantFactory();
     List<PlantPropertySheet> selectedPlants;
@@ -51,11 +47,7 @@ public class PreNormalGameController extends PreGameController{
 
     public Result showAvailablePlants(Matcher matcher){
         StringBuilder output=new StringBuilder();
-<<<<<<< HEAD:app/src/main/java/pvz/Controller/PreGameController.java
         for (Plant p:AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
-=======
-        for (Plant p: GameSession.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
->>>>>>> 3d5d7df78cc46409d7ad15c51afe5efb15ab670a:app/src/main/java/pvz/Controller/Game/PreNormalGameController.java
             output.append("type: ").append(p.getType().toString());
             output.append("\n Sun Cost: ").append(p.getSunCost());
         }
