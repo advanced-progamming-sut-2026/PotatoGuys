@@ -167,7 +167,7 @@ public final class ZombiePropertySheet {
             this.objClass = objClass;
         }
 
-        public Builder hitPoints(float v)               { hitPoints = v; return this; }
+        public Builder hitPoints(float v)                { hitPoints = v; return this; }
         public Builder eatDps(float v)                   { eatDps = v; return this; }
         public Builder speed(float v)                    { speed = v; return this; }
         public Builder wavePointCost(int v)              { wavePointCost = v; return this; }

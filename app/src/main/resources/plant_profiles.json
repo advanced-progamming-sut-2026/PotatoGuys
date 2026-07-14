@@ -1,0 +1,4304 @@
+[
+  {
+    "id": 1,
+    "name": "Sunflower",
+    "type": "Sunflower",
+    "category": "SUN_PRODUCER",
+    "tags": [
+      "DAY"
+    ],
+    "isMint": false,
+    "sunCost": 50,
+    "baseHp": 300,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 24.0,
+    "rechargeSeconds": 5.0,
+    "production": {
+      "kind": "FIXED",
+      "amount": 50,
+      "stages": [],
+      "stageSeconds": []
+    },
+    "plantFood": {
+      "kind": "INSTANT_SUN",
+      "amount": 150,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "تولید فوری 150 خورشید."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "ACTION_INTERVAL_SECONDS",
+            "delta": -2.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 150.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "Double Sun Chance"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "تولید 50 خورشید هر 24 ثانیه."
+  },
+  {
+    "id": 2,
+    "name": "Twin Sunflower",
+    "type": "TwinSunflower",
+    "category": "SUN_PRODUCER",
+    "tags": [
+      "DAY"
+    ],
+    "isMint": false,
+    "sunCost": 125,
+    "baseHp": 300,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 24.0,
+    "rechargeSeconds": 15.0,
+    "production": {
+      "kind": "FIXED",
+      "amount": 100,
+      "stages": [],
+      "stageSeconds": []
+    },
+    "plantFood": {
+      "kind": "INSTANT_SUN",
+      "amount": 250,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "تولید فوری 250 خورشید."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "ACTION_INTERVAL_SECONDS",
+            "delta": -2.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 150.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "تولید 100 خورشید در هر دور."
+  },
+  {
+    "id": 3,
+    "name": "Sun-shroom",
+    "type": "Sunshroom",
+    "category": "SUN_PRODUCER",
+    "tags": [
+      "SHROOM",
+      "WRAMP_UP",
+      "NIGHT"
+    ],
+    "isMint": false,
+    "sunCost": 25,
+    "baseHp": 300,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 24.0,
+    "rechargeSeconds": 5.0,
+    "production": {
+      "kind": "STAGED",
+      "stages": [
+        25,
+        50,
+        75
+      ],
+      "stageSeconds": [
+        24,
+        72
+      ]
+    },
+    "plantFood": {
+      "kind": "INSTANT_SUN",
+      "amount": 225,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "رشد آنی به سایز آخر و تولید 225 خورشید."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "ACTION_INTERVAL_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 150.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "Double Sun Chance"
+        ]
+      }
+    ],
+    "growth": {
+      "stageSeconds": [
+        24.0,
+        72.0
+      ]
+    },
+    "description": "رشد در 3 مرحله و تولید خورشید بیشتر(25/50/75). To Stg2: 24s | To Stg3: 72s"
+  },
+  {
+    "id": 4,
+    "name": "Primal Sunflower",
+    "type": "PrimalSunflower",
+    "category": "SUN_PRODUCER",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 75,
+    "baseHp": 300,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 24.0,
+    "rechargeSeconds": 5.0,
+    "production": {
+      "kind": "FIXED",
+      "amount": 75,
+      "stages": [],
+      "stageSeconds": []
+    },
+    "plantFood": {
+      "kind": "INSTANT_SUN",
+      "amount": 225,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "تولید فوری 225 خورشید."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "ACTION_INTERVAL_SECONDS",
+            "delta": -2.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 150.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "تولید خورشید بزرگ 75 تایی از ابتدا."
+  },
+  {
+    "id": 5,
+    "name": "Gold Bloom",
+    "type": "GoldBloom",
+    "category": "SUN_PRODUCER",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 0.0,
+    "rechargeSeconds": 75.0,
+    "production": {
+      "kind": "ONESHOT",
+      "amount": 375,
+      "stages": [],
+      "stageSeconds": []
+    },
+    "plantFood": {
+      "kind": "NONE",
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [],
+        "flags": [
+          "Sun +50"
+        ]
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "تولید فوری و یک‌باره مقدار زیادی خورشید و سپس ناپدید شدن.(375 خورشید)"
+  },
+  {
+    "id": 6,
+    "name": "Peashooter",
+    "type": "Peashooter",
+    "category": "SHOOTER",
+    "tags": [
+      "PEA"
+    ],
+    "isMint": false,
+    "sunCost": 100,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 20.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "amount": 0,
+      "count": 0,
+      "flags": [],
+      "description": "شلیک رگباری سریع برای چند ثانیه."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 150.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک تیر مستقیم."
+  },
+  {
+    "id": 7,
+    "name": "Repeater",
+    "type": "Repeater",
+    "category": "SHOOTER",
+    "tags": [
+      "PEA"
+    ],
+    "isMint": false,
+    "sunCost": 200,
+    "baseHp": 300,
+    "damage": {
+      "kind": "MULTI_SHOT",
+      "value": 20.0,
+      "count": 2,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "flags": [
+        "GIANT_PEA_BONUS"
+      ],
+      "amount": 0,
+      "count": 0,
+      "description": "شلیک رگباری سنگین + 1 نخود غول‌پیکر (دمیج 20 برابر)."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 200.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک 2 تیر مستقیم متوالی."
+  },
+  {
+    "id": 8,
+    "name": "Threepeater",
+    "type": "Threepeater",
+    "category": "SHOOTER",
+    "tags": [
+      "PEA"
+    ],
+    "isMint": false,
+    "sunCost": 300,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 20.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "amount": 0,
+      "count": 0,
+      "flags": [],
+      "description": "شلیک رگباری بادبزنی در تمام لاین‌ها."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 200.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک همزمان تیر در 3 لاین موازی."
+  },
+  {
+    "id": 9,
+    "name": "Snow Pea",
+    "type": "SnowPea",
+    "category": "SHOOTER",
+    "tags": [
+      "ICE",
+      "PEA"
+    ],
+    "isMint": false,
+    "sunCost": 150,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 20.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "amount": 0,
+      "count": 0,
+      "flags": [],
+      "description": "انجماد لاین و شلیک رگباری یخی."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [],
+        "flags": [
+          "Chill Time +2s"
+        ]
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک تیر مستقیم کندکننده سرعت."
+  },
+  {
+    "id": 10,
+    "name": "Rotobaga",
+    "type": "Rotobaga",
+    "category": "SHOOTER",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 150,
+    "baseHp": 300,
+    "damage": {
+      "kind": "MULTI_SHOT",
+      "value": 10.0,
+      "count": 3,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "amount": 0,
+      "count": 0,
+      "flags": [],
+      "description": "شلیک رگباری در هر 4 جهت اریب."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 150.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک در 4 جهت اریب."
+  },
+  {
+    "id": 11,
+    "name": "Pea Pod",
+    "type": "PeaPod",
+    "category": "SHOOTER",
+    "tags": [
+      "PEA",
+      "STACK"
+    ],
+    "isMint": false,
+    "sunCost": 125,
+    "baseHp": 300,
+    "damage": {
+      "kind": "STAGED",
+      "value": 20.0,
+      "count": 1,
+      "stages": [
+        20.0,
+        40.0,
+        60.0,
+        80.0,
+        100.0
+      ]
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "amount": 0,
+      "count": 0,
+      "flags": [],
+      "description": "شلیک یک نخود غول‌پیکر به ازای هر سر(دمیج 20 برابر)."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 200.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک تیر مستقیم به ازای هر سر کاشته شده روی هم (تا 5 سر)."
+  },
+  {
+    "id": 12,
+    "name": "Split Pea",
+    "type": "SplitPea",
+    "category": "SHOOTER",
+    "tags": [
+      "PEA"
+    ],
+    "isMint": false,
+    "sunCost": 125,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 20.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "amount": 0,
+      "count": 0,
+      "flags": [],
+      "description": "شلیک رگباری همزمان از جلو و عقب."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 200.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک 1 تیر به جلو و 2 تیر به عقب."
+  },
+  {
+    "id": 13,
+    "name": "Citron",
+    "type": "Citron",
+    "category": "SHOOTER",
+    "tags": [
+      "CHARGE"
+    ],
+    "isMint": false,
+    "sunCost": 350,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 800.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 9.0,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "AOE_BURST",
+      "count": 0,
+      "flags": [
+        "CLEAR_LANE"
+      ],
+      "amount": 0,
+      "durationSeconds": 0,
+      "description": "شلیک توپ پلاسمایی پاکسازی‌کننده کل لاین."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "ACTION_INTERVAL_SECONDS",
+            "delta": -1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 150.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -50.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک تیر سنگین مستقیم (نیازمند زمان شارژ)."
+  },
+  {
+    "id": 14,
+    "name": "Caulipower",
+    "type": "Caulipower",
+    "category": "HOMING",
+    "tags": [
+      "MAGIC",
+      "CHARGE"
+    ],
+    "isMint": false,
+    "sunCost": 250,
+    "baseHp": 300,
+    "damage": {
+      "kind": "INSTA_KILL",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 12.0,
+    "rechargeSeconds": 15.0,
+    "production": null,
+    "plantFood": {
+      "kind": "HYPNOTIZE",
+      "count": 3,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "هیپنوتیزم کردن چند زامبی تصادفی در باغچه."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -2.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 150.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -50.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک تیر جادویی (جهت رندوم، عبور از موانع، هیپنوتیزم‌کننده)."
+  },
+  {
+    "id": 15,
+    "name": "Electric Blueberry",
+    "type": "ElectricBlueberry",
+    "category": "HOMING",
+    "tags": [
+      "CHARGE"
+    ],
+    "isMint": false,
+    "sunCost": 150,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 5000.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 12.0,
+    "rechargeSeconds": 15.0,
+    "production": null,
+    "plantFood": {
+      "kind": "MULTI_INSTAKILL",
+      "count": 3,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "نابودی کامل 3 زامبی تصادفی."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -2.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [],
+        "flags": [
+          "Target Priority Up"
+        ]
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک رعدوبرق (جهت رندوم، نابودی کامل یک زامبی)."
+  },
+  {
+    "id": 16,
+    "name": "Bowling Bulb",
+    "type": "BowlingBulb",
+    "category": "SHOOTER",
+    "tags": [
+      "CHARGE"
+    ],
+    "isMint": false,
+    "sunCost": 200,
+    "baseHp": 300,
+    "damage": {
+      "kind": "STAGED",
+      "value": 40.0,
+      "count": 1,
+      "stages": [
+        40.0,
+        120.0,
+        180.0
+      ]
+    },
+    "actionIntervalSeconds": 2.0,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "AOE_BURST",
+      "count": 3,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "شلیک 3 پیاز انفجاری بزرگ که کمانه می‌کنند."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [],
+        "flags": [
+          "Regen -1s"
+        ]
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 15.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک 3 نوع پیاز که بین لاین‌ها کمانه می‌کند (مثل wall nut bowling). تاخیر هر یک Cyan: 2s | Blue: 5s | Orange: 10s"
+  },
+  {
+    "id": 17,
+    "name": "Cactus",
+    "type": "Cactus",
+    "category": "STRIKE_THROUGH",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 175,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 30.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "amount": 0,
+      "count": 0,
+      "flags": [],
+      "description": "تیغ‌های برقی با دمیج بالا و نفوذ نامحدود."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "PIERCE_COUNT",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک خار مستقیم (عبور از 3 زامبی)."
+  },
+  {
+    "id": 18,
+    "name": "Fire Peashooter",
+    "type": "FirePeashooter",
+    "category": "SHOOTER",
+    "tags": [
+      "FIRE",
+      "PEA"
+    ],
+    "isMint": false,
+    "sunCost": 175,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 40.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "amount": 0,
+      "count": 0,
+      "flags": [],
+      "description": "شلیک رگباری آتشین در کل لاین."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 200.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک تیر مستقیم آتشی (دمیج 2 برابر)."
+  },
+  {
+    "id": 19,
+    "name": "Starfruit",
+    "type": "Starfruit",
+    "category": "SHOOTER",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 150,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 20.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "amount": 0,
+      "count": 0,
+      "flags": [],
+      "description": "شلیک رگباری ستاره در تمام جهات."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "ATK_SPEED_PERCENT",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک در 5 جهت ستاره‌ای شامل عقب."
+  },
+  {
+    "id": 20,
+    "name": "Goo Peashooter",
+    "type": "GooPeashooter",
+    "category": "SHOOTER",
+    "tags": [
+      "POISON"
+    ],
+    "isMint": false,
+    "sunCost": 125,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 20.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "amount": 0,
+      "count": 0,
+      "flags": [],
+      "description": "شلیک رگباری سمی که زامبی‌ها را درجا مسموم می‌کند."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [],
+        "flags": [
+          "Dmg/Tick +5"
+        ]
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 150.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک تیر مستقیم (نادیده گرفتن زره + آسیب مستمر)."
+  },
+  {
+    "id": 21,
+    "name": "Mega Gatling Pea",
+    "type": "MegaGatlingPea",
+    "category": "SHOOTER",
+    "tags": [
+      "PEA"
+    ],
+    "isMint": false,
+    "sunCost": 400,
+    "baseHp": 300,
+    "damage": {
+      "kind": "MULTI_SHOT",
+      "value": 20.0,
+      "count": 4,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "amount": 0,
+      "count": 0,
+      "flags": [],
+      "description": "شلیک رگباری عظیم و طولانی در لاین به همراه 4 تیر غول‌پیکر."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [],
+        "flags": [
+          "Plant Food Chance +5%"
+        ]
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -50.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک 4 تیر مستقیم متوالی با سرعت بسیار بالا."
+  },
+  {
+    "id": 22,
+    "name": "Sea-shroom",
+    "type": "Seashroom",
+    "category": "SHOOTER",
+    "tags": [
+      "SHROOM",
+      "WATER"
+    ],
+    "isMint": false,
+    "sunCost": 0,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 20.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 15.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "flags": [
+        "RESET_LIFESPAN_ALL"
+      ],
+      "amount": 0,
+      "count": 0,
+      "description": "شلیک رگباری و ریست شدن طول عمر تمام Sea-shroomها."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RANGE_TILES",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "Lifespan +10s"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه."
+  },
+  {
+    "id": 23,
+    "name": "Puff-shroom",
+    "type": "Puffshroom",
+    "category": "SHOOTER",
+    "tags": [
+      "SHROOM"
+    ],
+    "isMint": false,
+    "sunCost": 0,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 20.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "flags": [
+        "RESET_LIFESPAN_ALL"
+      ],
+      "amount": 0,
+      "count": 0,
+      "description": "شلیک رگباری و ریست شدن طول عمر تمامی Puff-shroomها."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [],
+        "flags": [
+          "Lifespan +10s"
+        ]
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "RANGE_TILES",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه."
+  },
+  {
+    "id": 24,
+    "name": "Fume-shroom",
+    "type": "Fumeshroom",
+    "category": "STRIKE_THROUGH",
+    "tags": [
+      "SHROOM"
+    ],
+    "isMint": false,
+    "sunCost": 125,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 20.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "amount": 0,
+      "count": 0,
+      "flags": [],
+      "description": "پرتاب توده دود عظیم که زامبی‌ها را به عقب می‌راند."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RANGE_TILES",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک دود با برد متوسط که از زامبی‌ها رد می‌شود."
+  },
+  {
+    "id": 25,
+    "name": "Cabbage-pult",
+    "type": "Cabbagepult",
+    "category": "LOBBER",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 100,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 40.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 2.9,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "AOE_BURST",
+      "count": 3,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "پرتاب کلم به چند زامبی تصادفی."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "ATK_SPEED_PERCENT",
+            "delta": 15.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 150.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک هوایی از روی موانع."
+  },
+  {
+    "id": 26,
+    "name": "Kernel-pult",
+    "type": "Kernelpult",
+    "category": "LOBBER",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 100,
+    "baseHp": 300,
+    "damage": {
+      "kind": "STAGED",
+      "value": 20.0,
+      "count": 1,
+      "stages": [
+        20.0,
+        40.0
+      ]
+    },
+    "actionIntervalSeconds": 2.9,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "AOE_BURST",
+      "count": 3,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "پرتاب کره به سر تمامی زامبی‌های زمین."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [],
+        "flags": [
+          "Butter +5%"
+        ]
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 150.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک دانه ذرت (آسیب کم) یا کره (توقف موقت زامبی)."
+  },
+  {
+    "id": 27,
+    "name": "Melon-pult",
+    "type": "Melonpult",
+    "category": "LOBBER",
+    "tags": [
+      "AOE"
+    ],
+    "isMint": false,
+    "sunCost": 325,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 80.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 2.9,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "AOE_BURST",
+      "count": 3,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "پرتاب هندوانه غول‌پیکر به زامبی‌های تصادفی."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 15.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 30.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک هوایی سنگین با آسیب مساحتی."
+  },
+  {
+    "id": 28,
+    "name": "Winter Melon",
+    "type": "WinterMelon",
+    "category": "LOBBER",
+    "tags": [
+      "ICE",
+      "AOE"
+    ],
+    "isMint": false,
+    "sunCost": 500,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 80.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 2.9,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "AOE_BURST",
+      "count": 3,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "پرتاب هندوانه یخی به زامبی‌های تصادفی."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -50.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 15.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک هوایی سنگین با آسیب مساحتی (کندکننده سرعت)."
+  },
+  {
+    "id": 29,
+    "name": "Pepper-pult",
+    "type": "Pepperpult",
+    "category": "LOBBER",
+    "tags": [
+      "FIRE",
+      "AOE"
+    ],
+    "isMint": false,
+    "sunCost": 200,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 50.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 2.9,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "AOE_BURST",
+      "count": 3,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "پرتاب فلفل‌های بزرگ به 3 زامبی تصادفی."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 15.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [],
+        "flags": [
+          "Warmth Radius +1"
+        ]
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "شلیک هوایی با آسیب مساحتی (گرم‌کننده محیط اطراف)."
+  },
+  {
+    "id": 30,
+    "name": "Potato Mine",
+    "type": "PotatoMine",
+    "category": "EXPLOSIVE",
+    "tags": [
+      "TRAP",
+      "CHARGE"
+    ],
+    "isMint": false,
+    "sunCost": 25,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 1800.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 25.0,
+    "production": null,
+    "plantFood": {
+      "kind": "CLONE_SELF",
+      "count": 2,
+      "flags": [
+        "INSTANT_ARM"
+      ],
+      "amount": 0,
+      "durationSeconds": 0,
+      "description": "مسلح شدن آنی و پرتاب 2 مین کلون دیگر."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "ACTION_INTERVAL_SECONDS",
+            "delta": -3.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 600.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "مسلح شدن با تاخیر 15 ثانیه؛ انفجار هنگام تماس."
+  },
+  {
+    "id": 31,
+    "name": "Primal Potato Mine",
+    "type": "PrimalPotatoMine",
+    "category": "EXPLOSIVE",
+    "tags": [
+      "TRAP",
+      "CHARGE"
+    ],
+    "isMint": false,
+    "sunCost": 50,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 2400.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "CLONE_SELF",
+      "count": 2,
+      "flags": [
+        "INSTANT_ARM"
+      ],
+      "amount": 0,
+      "durationSeconds": 0,
+      "description": "مسلح شدن آنی و پرتاب 2 مین به نقاط دیگر."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "ACTION_INTERVAL_SECONDS",
+            "delta": -1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -3.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 400.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "مسلح شدن سریع‌تر 5 ثانیه ای و انفجار مساحتی 3x3."
+  },
+  {
+    "id": 32,
+    "name": "Cherry Bomb",
+    "type": "CherryBomb",
+    "category": "EXPLOSIVE",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 150,
+    "baseHp": 0,
+    "damage": {
+      "kind": "FIXED",
+      "value": 1800.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 35.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 600.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "انفجار فوری مساحت 3x3."
+  },
+  {
+    "id": 33,
+    "name": "Squash",
+    "type": "Squash",
+    "category": "EXPLOSIVE",
+    "tags": [
+      "TRAP"
+    ],
+    "isMint": false,
+    "sunCost": 50,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 1800.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "production": null,
+    "plantFood": {
+      "kind": "MULTI_INSTAKILL",
+      "count": 2,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "له کردن 2 زامبی تصادفی در سطح زمین."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -3.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 600.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "Can crush 2x"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "له کردن اولین زامبی مجاور."
+  },
+  {
+    "id": 34,
+    "name": "Grapeshot",
+    "type": "Grapeshot",
+    "category": "EXPLOSIVE",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 150,
+    "baseHp": 0,
+    "damage": {
+      "kind": "FIXED",
+      "value": 1800.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 35.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 600.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [],
+        "flags": [
+          "Bounces +1"
+        ]
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "انفجار مساحتی 3x3 و پرتاب حبه‌های کمانه‌کننده که پس از 5 ثانیه نابود می‌شوند."
+  },
+  {
+    "id": 35,
+    "name": "Jalapeno",
+    "type": "Jalapeno",
+    "category": "EXPLOSIVE",
+    "tags": [
+      "FIRE"
+    ],
+    "isMint": false,
+    "sunCost": 125,
+    "baseHp": 0,
+    "damage": {
+      "kind": "FIXED",
+      "value": 1800.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 35.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 600.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "آتش زدن کل زامبی‌های یک لاین به صورت آنی (ذوب یخ)."
+  },
+  {
+    "id": 36,
+    "name": "Doom-shroom",
+    "type": "Doomshroom",
+    "category": "EXPLOSIVE",
+    "tags": [
+      "SHROOM"
+    ],
+    "isMint": false,
+    "sunCost": 125,
+    "baseHp": 0,
+    "damage": {
+      "kind": "FIXED",
+      "value": 1800.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 15.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 800.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -50.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "انفجار مهیب در کل باغچه و ایجاد یک گودال غیرقابل کشت."
+  },
+  {
+    "id": 37,
+    "name": "Tangle Kelp",
+    "type": "TangleKelp",
+    "category": "EXPLOSIVE",
+    "tags": [
+      "TRAP",
+      "WATER"
+    ],
+    "isMint": false,
+    "sunCost": 25,
+    "baseHp": 300,
+    "damage": {
+      "kind": "INSTA_KILL",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 15.0,
+    "production": null,
+    "plantFood": {
+      "kind": "MULTI_INSTAKILL",
+      "count": 3,
+      "flags": [
+        "WATER_ONLY"
+      ],
+      "amount": 0,
+      "durationSeconds": 0,
+      "description": "کشیدن چند زامبی تصادفی در آب به زیر آب."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [],
+        "flags": [
+          "Targets +1"
+        ]
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "کشیدن اولین زامبی آبی به زیر آب و نابودی آن (مخصوص ساحل)."
+  },
+  {
+    "id": 38,
+    "name": "Iceberg Lettuce",
+    "type": "IcebergLettuce",
+    "category": "EXPLOSIVE",
+    "tags": [
+      "TRAP",
+      "ICE"
+    ],
+    "isMint": false,
+    "sunCost": 0,
+    "baseHp": 300,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "production": null,
+    "plantFood": {
+      "kind": "FREEZE_ALL",
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "یخ زدن تمامی زامبی‌های موجود در تصویر."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -2.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [],
+        "flags": [
+          "Freeze Time +2s"
+        ]
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -0.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "یخ زدن اولین زامبی که روی آن پا بگذارد."
+  },
+  {
+    "id": 39,
+    "name": "Bonk Choy",
+    "type": "BonkChoy",
+    "category": "MELEE",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 150,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 15.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 0.25,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "AOE_BURST",
+      "count": 0,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "مشت زدن رگباری به شعاع 3x3 اطراف خود."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "ATK_SPEED_PERCENT",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 200.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "ضربه فیزیکی به خانه‌های جلو و عقب."
+  },
+  {
+    "id": 40,
+    "name": "Phat Beet",
+    "type": "PhatBeet",
+    "category": "MELEE",
+    "tags": [
+      "AOE"
+    ],
+    "isMint": false,
+    "sunCost": 150,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 15.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 2.0,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "AOE_BURST",
+      "count": 0,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "ضربه صوتی بسیار قدرتمند به تمام زامبی‌های اطراف."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "ATK_SPEED_PERCENT",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 200.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "ضربه صوتی به مساحت 3x3 اطراف."
+  },
+  {
+    "id": 41,
+    "name": "Chomper",
+    "type": "Chomper",
+    "category": "MELEE",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 150,
+    "baseHp": 300,
+    "damage": {
+      "kind": "INSTA_KILL",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 40.0,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "MULTI_INSTAKILL",
+      "count": 3,
+      "flags": [
+        "LONG_RANGE"
+      ],
+      "amount": 0,
+      "durationSeconds": 0,
+      "description": "بلعیدن همزمان 3 زامبی از فاصله دور."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "ACTION_INTERVAL_SECONDS",
+            "delta": -2.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 200.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "ACTION_INTERVAL_SECONDS",
+            "delta": -3.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "بلعیدن آنی؛ نابودی یک زامبی درجا و سپس توقف برای هضم به مدت 40 ثانیه."
+  },
+  {
+    "id": 42,
+    "name": "Wasabi Whip",
+    "type": "WasabiWhip",
+    "category": "MELEE",
+    "tags": [
+      "FIRE"
+    ],
+    "isMint": false,
+    "sunCost": 150,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 40.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 2.0,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "AOE_BURST",
+      "count": 0,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "چرخش شلاق در مساحت 3x3."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RANGE_TILES",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 200.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "ضربه شلاق به خانه‌های جلو و عقب (گرم‌کننده محیط)."
+  },
+  {
+    "id": 43,
+    "name": "Kiwibeast",
+    "type": "Kiwibeast",
+    "category": "MELEE",
+    "tags": [
+      "AOE",
+      "WRAMP_UP"
+    ],
+    "isMint": false,
+    "sunCost": 175,
+    "baseHp": 300,
+    "damage": {
+      "kind": "STAGED",
+      "value": 15.0,
+      "count": 1,
+      "stages": [
+        15.0,
+        30.0,
+        45.0
+      ]
+    },
+    "actionIntervalSeconds": 2.0,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "AOE_BURST",
+      "count": 0,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "پرش و کوبیدن محکم به زمین با دمیج مساحتی."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 200.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 15.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "Max Size +1"
+        ]
+      }
+    ],
+    "growth": {
+      "stageSeconds": [
+        24.0,
+        72.0
+      ]
+    },
+    "description": "موج صوتی مساحتی؛ با گذر زمان بزرگتر شده و دمیج بیشتر می‌دهد. To Stg2: 24s | To Stg3: 72s"
+  },
+  {
+    "id": 44,
+    "name": "Wall-nut",
+    "type": "Wallnut",
+    "category": "WALL_NUT",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 50,
+    "baseHp": 4000,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "production": null,
+    "plantFood": {
+      "kind": "PERMANENT_HP_BOOST",
+      "amount": 4000,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "دریافت زره دائمی به اندازه 4000 جان اضافه‌تر."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 1000.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 1500.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "سد دفاعی مقاوم برای متوقف کردن زامبی‌ها."
+  },
+  {
+    "id": 45,
+    "name": "Tall-nut",
+    "type": "Tallnut",
+    "category": "WALL_NUT",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 125,
+    "baseHp": 8000,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "production": null,
+    "plantFood": {
+      "kind": "PERMANENT_HP_BOOST",
+      "amount": 8000,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "دریافت زره دائمی 8000 تایی."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 2000.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 3000.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "سد بلند؛ جلوگیری از پریدن زامبی‌ها از روی آن."
+  },
+  {
+    "id": 46,
+    "name": "Endurian",
+    "type": "Endurian",
+    "category": "WALL_NUT",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 100,
+    "baseHp": 3000,
+    "damage": {
+      "kind": "FIXED",
+      "value": 20.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 15.0,
+    "production": null,
+    "plantFood": {
+      "kind": "PERMANENT_HP_BOOST",
+      "amount": 1000,
+      "flags": [
+        "REFLECT_DAMAGE_BUFF"
+      ],
+      "count": 0,
+      "durationSeconds": 0,
+      "description": "دریافت زره فلزی و افزایش دمیج انعکاسی."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [],
+        "flags": [
+          "Reflect Dmg +5"
+        ]
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 1000.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "سد دفاعی با قابلیت بازتاب دمیج به زامبی مهاجم."
+  },
+  {
+    "id": 47,
+    "name": "Garlic",
+    "type": "Garlic",
+    "category": "WALL_NUT",
+    "tags": [
+      "MOVE_ZOMBIES"
+    ],
+    "isMint": false,
+    "sunCost": 50,
+    "baseHp": 300,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "production": null,
+    "plantFood": {
+      "kind": "FORCE_MOVE_ALL_IN_LANE",
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "انتقال اجباری تمام زامبی‌های لاین به لاین‌های دیگر."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 150.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -3.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 250.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "با خورده شدن، زامبی را مجبور به حرکت به لاین مجاور می‌کند."
+  },
+  {
+    "id": 48,
+    "name": "Sweet Potato",
+    "type": "SweetPotato",
+    "category": "WALL_NUT",
+    "tags": [
+      "MOVE_ZOMBIES"
+    ],
+    "isMint": false,
+    "sunCost": 150,
+    "baseHp": 3000,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "production": null,
+    "plantFood": {
+      "kind": "FULL_HEAL_AND_ABSORB",
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "جذب تمام زامبی‌های اطراف و بازیابی کامل جان."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 1000.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 1500.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "جذب‌کننده؛ زامبی‌های لاین‌های مجاور را به لاین خود می‌کشد."
+  },
+  {
+    "id": 49,
+    "name": "Explode-o-nut",
+    "type": "Explodeonut",
+    "category": "WALL_NUT",
+    "tags": [
+      "EXPLOSIVE"
+    ],
+    "isMint": false,
+    "sunCost": 50,
+    "baseHp": 4000,
+    "damage": {
+      "kind": "FIXED",
+      "value": 1800.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "production": null,
+    "plantFood": {
+      "kind": "PERMANENT_HP_BOOST",
+      "amount": 1000,
+      "flags": [
+        "EXPLODE_ON_DESTROY"
+      ],
+      "count": 0,
+      "durationSeconds": 0,
+      "description": "دریافت زره فلزی (هنگام نابودی زره نیز منفجر می‌شود)."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 1000.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [],
+        "flags": [
+          "Explode Dmg +200"
+        ]
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "سد دفاعی که به محض از بین رفتن جانش، انفجار مساحتی ایجاد می‌کند."
+  },
+  {
+    "id": 50,
+    "name": "Pumpkin",
+    "type": "Pumpkin",
+    "category": "WALL_NUT",
+    "tags": [
+      "STACK"
+    ],
+    "isMint": false,
+    "sunCost": 150,
+    "baseHp": 4000,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "production": null,
+    "plantFood": {
+      "kind": "PERMANENT_HP_BOOST",
+      "amount": 1000,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "دریافت زره فلزی قدرتمند."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 1000.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 1500.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "سد دفاعی پوششی؛ روی سایر گیاهان کاشته می‌شود تا از آن‌ها محافظت کند."
+  },
+  {
+    "id": 51,
+    "name": "Sun Bean",
+    "type": "SunBean",
+    "category": "WALL_NUT",
+    "tags": [
+      "SUN"
+    ],
+    "isMint": false,
+    "sunCost": 50,
+    "baseHp": 1000,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "production": null,
+    "plantFood": {
+      "kind": "PERMANENT_HP_BOOST",
+      "amount": 1000,
+      "flags": [
+        "SUN_ON_HIT"
+      ],
+      "count": 0,
+      "durationSeconds": 0,
+      "description": "دریافت زره فلزی قدرتمند."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [],
+        "flags": [
+          "Sun Drop +5"
+        ]
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 150.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "مثل دیوار دفاعی عمل می‌کند و با هر ضربه 5 خورشید تولید می‌کند."
+  },
+  {
+    "id": 52,
+    "name": "Torchwood",
+    "type": "Torchwood",
+    "category": "MODIFIER",
+    "tags": [
+      "FIRE"
+    ],
+    "isMint": false,
+    "sunCost": 175,
+    "baseHp": 300,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "AURA_BUFF",
+      "amount": 3,
+      "flags": [
+        "TRIPLE_FIRE_DAMAGE_AURA"
+      ],
+      "count": 0,
+      "durationSeconds": 0,
+      "description": "ایجاد شعله آبی (دمیج تیرها را 3 برابر می‌کند)."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 300.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [],
+        "flags": [
+          "AoE on Death"
+        ]
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "تغییر خواص تیر؛ تبدیل تیر عبوری به آتشی (دمیج دو برابر و ذوب یخ)."
+  },
+  {
+    "id": 53,
+    "name": "Magnet-shroom",
+    "type": "Magnetshroom",
+    "category": "HOMING",
+    "tags": [
+      "SHROOM",
+      "MAGIC"
+    ],
+    "isMint": false,
+    "sunCost": 100,
+    "baseHp": 300,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 10.0,
+    "rechargeSeconds": 15.0,
+    "production": null,
+    "plantFood": {
+      "kind": "MULTI_DISARM",
+      "count": 3,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "جذب چندین فلز همزمان و هضم آنها"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RANGE_TILES",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 200.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "خلع سلاح؛ جذب اشیای فلزی (سطل/کلاهخود) از سر زامبی‌ها."
+  },
+  {
+    "id": 54,
+    "name": "Hypno-shroom",
+    "type": "Hypnoshroom",
+    "category": "MODIFIER",
+    "tags": [
+      "SHROOM",
+      "MAGIC"
+    ],
+    "isMint": false,
+    "sunCost": 125,
+    "baseHp": 300,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "production": null,
+    "plantFood": {
+      "kind": "CONVERT_EATER_TO_ALLY",
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "تبدیل زامبی خورنده به غول متفق (Gargantuar)."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [],
+        "flags": [
+          "Zombie HP Buff"
+        ]
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "Zombie Dmg Buff"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "با خورده شدن، زامبی مهاجم هیپنوتیزم شده و به نفع بازیکن می‌جنگد."
+  },
+  {
+    "id": 55,
+    "name": "Cat-tail",
+    "type": "Cattail",
+    "category": "HOMING",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 175,
+    "baseHp": 300,
+    "damage": {
+      "kind": "FIXED",
+      "value": 15.0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 20.0,
+    "production": null,
+    "plantFood": {
+      "kind": "RAPID_FIRE",
+      "durationSeconds": 5,
+      "amount": 0,
+      "count": 0,
+      "flags": [],
+      "description": "شلیک رگباری تیر هدف‌دار"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 200.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "تیر هدف‌دار به سمت نزدیک‌ترین زامبی شلیک می‌کند"
+  },
+  {
+    "id": 56,
+    "name": "Imitater",
+    "type": "Imitater",
+    "category": "MODIFIER",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 0.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "ندارد (بر اساس گیاه کپی شده)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -2.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "plant food on enterance"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "کپی کردن یک گیاه دیگر (امکان استفاده از دو کارت یکسان)."
+  },
+  {
+    "id": 57,
+    "name": "Ice-shroom",
+    "type": "Iceshroom",
+    "category": "EXPLOSIVE",
+    "tags": [
+      "SHROOM",
+      "ICE"
+    ],
+    "isMint": false,
+    "sunCost": 75,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 50.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [],
+        "flags": [
+          "Freeze Time +2s"
+        ]
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 50.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "یخ زدن و توقف موقت تمامی زامبی‌های موجود در کل نقشه."
+  },
+  {
+    "id": 58,
+    "name": "Lily Pad",
+    "type": "LilyPad",
+    "category": "MODIFIER",
+    "tags": [
+      "WATER",
+      "STACK"
+    ],
+    "isMint": false,
+    "sunCost": 25,
+    "baseHp": 300,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "CLONE_SELF",
+      "count": 3,
+      "amount": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "ایجاد چند کپی از خود روی خانه‌های خالی آب."
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "SUN_COST",
+            "delta": -25.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "MAX_HP",
+            "delta": 200.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -2.0
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "growth": null,
+    "description": "بستر کاشت سایر گیاهان روی آب (ضروری برای ساحل)."
+  },
+  {
+    "id": 59,
+    "name": "Hot Potato",
+    "type": "HotPotato",
+    "category": "EXPLOSIVE",
+    "tags": [
+      "FIRE"
+    ],
+    "isMint": false,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 5.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -2.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [],
+        "flags": [
+          "Melt Area 3x3"
+        ]
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "Explode on Finish"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "کاشت روی یخ برای آب کردن فوری آن (ضروری برای غار یخ‌زده)."
+  },
+  {
+    "id": 60,
+    "name": "Grave Buster",
+    "type": "GraveBuster",
+    "category": "EXPLOSIVE",
+    "tags": [],
+    "isMint": false,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "INSTA_KILL",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 10.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "flags": [],
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "ACTION_INTERVAL_SECONDS",
+            "delta": -1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -2.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "Explode on Finish"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "از بین بردن قبرها. (ضروری برای مراحل مصر باستان و قرون تاریک)."
+  },
+  {
+    "id": 61,
+    "name": "Enlighten-mint",
+    "type": "Enlightenmint",
+    "category": "SUN_PRODUCER",
+    "tags": [],
+    "isMint": true,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 85.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "flags": [
+        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
+      ],
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "EFFECT_DURATION_SECONDS",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "reset family cooldowns"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
+  },
+  {
+    "id": 62,
+    "name": "Appease-mint",
+    "type": "Appeasemint",
+    "category": "SHOOTER",
+    "tags": [],
+    "isMint": true,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 85.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "flags": [
+        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
+      ],
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "EFFECT_DURATION_SECONDS",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "reset family cooldowns"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
+  },
+  {
+    "id": 63,
+    "name": "Arma-mint",
+    "type": "Armamint",
+    "category": "LOBBER",
+    "tags": [],
+    "isMint": true,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 85.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "flags": [
+        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
+      ],
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "EFFECT_DURATION_SECONDS",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "reset family cooldowns"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
+  },
+  {
+    "id": 64,
+    "name": "Bombard-mint",
+    "type": "Bombardmint",
+    "category": "EXPLOSIVE",
+    "tags": [],
+    "isMint": true,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 85.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "flags": [
+        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
+      ],
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "EFFECT_DURATION_SECONDS",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "reset family cooldowns"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
+  },
+  {
+    "id": 65,
+    "name": "Enforce-mint",
+    "type": "Enforcemint",
+    "category": "MELEE",
+    "tags": [],
+    "isMint": true,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 85.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "flags": [
+        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
+      ],
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "EFFECT_DURATION_SECONDS",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "reset family cooldowns"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
+  },
+  {
+    "id": 66,
+    "name": "Reinforce-mint",
+    "type": "Reinforcemint",
+    "category": "WALL_NUT",
+    "tags": [],
+    "isMint": true,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 85.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "flags": [
+        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
+      ],
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "EFFECT_DURATION_SECONDS",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "reset family cooldowns"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
+  },
+  {
+    "id": 67,
+    "name": "Enchant-mint",
+    "type": "Enchantmint",
+    "category": "MODIFIER",
+    "tags": [],
+    "isMint": true,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 85.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "flags": [
+        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
+      ],
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "EFFECT_DURATION_SECONDS",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "reset family cooldowns"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
+  },
+  {
+    "id": 68,
+    "name": "Pierce-mint",
+    "type": "Piercemint",
+    "category": "STRIKE_THROUGH",
+    "tags": [],
+    "isMint": true,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 85.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "flags": [
+        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
+      ],
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "EFFECT_DURATION_SECONDS",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "reset family cooldowns"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
+  },
+  {
+    "id": 69,
+    "name": "catTail-mint",
+    "type": "catTailmint",
+    "category": "HOMING",
+    "tags": [],
+    "isMint": true,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 85.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE",
+      "flags": [
+        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
+      ],
+      "amount": 0,
+      "count": 0,
+      "durationSeconds": 0,
+      "description": "ندارد (مصرفی آنی)"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "EFFECT_DURATION_SECONDS",
+            "delta": 1.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -5.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [],
+        "flags": [
+          "reset family cooldowns"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
+  }
+]

@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.skills;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieGameContext;
+import pvz.Models.Entities.Zombies.GameContext;
 
 /**
  * TombRaiser Zombie — throws bones to raise tombs on random grid cells.
@@ -30,12 +30,12 @@ public class TombRaiserSkill extends CooldownSkill {
     }
 
     @Override
-    protected boolean canUse(Zombie zombie, ZombieGameContext ctx) {
+    protected boolean canUse(Zombie zombie, GameContext ctx) {
         return ammoLeft > 0;
     }
 
     @Override
-    protected void doExecute(Zombie zombie, ZombieGameContext ctx) {
+    protected void doExecute(Zombie zombie, GameContext ctx) {
         for (int i = 0; i < tombsPerCast; i++) {
             int[] cell = ctx.getRandomEmptyCell();
             if (cell != null) {

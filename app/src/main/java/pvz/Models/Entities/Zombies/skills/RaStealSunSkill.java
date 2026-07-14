@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.skills;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieGameContext;
+import pvz.Models.Entities.Zombies.GameContext;
 
 /**
  * Ra Zombie — magnetically steals sun from the player's reserve.
@@ -9,7 +9,7 @@ import pvz.Models.Entities.Zombies.ZombieGameContext;
  * <p>From JSON {@code ZombieRaProps}: {@code MaxClaimedSunCurrency = 250}.
  * Every second (10 ticks), Ra steals 25 sun — up to the configured maximum.
  * When Ra dies all stolen sun is returned to the player (handled in
- * {@link Zombie#onDeath()} via {@link ZombieGameContext#returnSun}).
+ * {@link Zombie#onDeath()} via {@link GameContext#returnSun}).
  */
 public class RaStealSunSkill extends CooldownSkill {
 
@@ -27,12 +27,12 @@ public class RaStealSunSkill extends CooldownSkill {
     }
 
     @Override
-    protected boolean canUse(Zombie zombie, ZombieGameContext ctx) {
+    protected boolean canUse(Zombie zombie, GameContext ctx) {
         return ctx.getSunAmount() > 0 && zombie.getStolenSun() < maxStealable;
     }
 
     @Override
-    protected void doExecute(Zombie zombie, ZombieGameContext ctx) {
+    protected void doExecute(Zombie zombie, GameContext ctx) {
         int headroom = maxStealable - zombie.getStolenSun();
         int toSteal = Math.min(SUN_PER_STEAL, Math.min(headroom, ctx.getSunAmount()));
         ctx.stealSun(toSteal);

@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.fsm;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieGameContext;
+import pvz.Models.Entities.Zombies.GameContext;
 import pvz.Models.Entities.Zombies.skills.ZombieSkill;
 
 /**
@@ -38,12 +38,12 @@ public class SpecialActionState implements ZombieState {
     }
 
     @Override
-    public void onEnter(Zombie zombie, ZombieGameContext ctx) {
+    public void onEnter(Zombie zombie, GameContext ctx) {
         skill.execute(zombie, ctx);
     }
 
     @Override
-    public ZombieState tick(Zombie zombie, ZombieGameContext ctx) {
+    public ZombieState tick(Zombie zombie, GameContext ctx) {
         if (pauseTicksRemaining > 0) {
             pauseTicksRemaining--;
             return this;
@@ -52,7 +52,7 @@ public class SpecialActionState implements ZombieState {
     }
 
     @Override
-    public void onExit(Zombie zombie, ZombieGameContext ctx) {
+    public void onExit(Zombie zombie, GameContext ctx) {
         // nothing
     }
 

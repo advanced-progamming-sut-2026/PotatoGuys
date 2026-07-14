@@ -2,7 +2,7 @@ package pvz.Demo;
 
 import pvz.Models.Engine.GameEngine;
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieGameContext;
+import pvz.Models.Entities.Zombies.GameContext;
 import pvz.Models.Entities.Zombies.ZombieFactory;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Minimal {@link ZombieGameContext} implementation for the CLI walk demo.
+ * Minimal {@link GameContext} implementation for the CLI walk demo.
  *
  * <p>There are no plants. The only active game-world elements are:
  * <ul>
@@ -23,7 +23,7 @@ import java.util.List;
  * current board state. Call {@link #cleanupDeadZombies()} after advancing to
  * remove expired zombies from the engine's tick list.
  */
-public class DemoGameContext implements ZombieGameContext {
+public class DemoGameContext implements GameContext {
 
     public static final int COLS  = 9;
     public static final int LANES = 5;

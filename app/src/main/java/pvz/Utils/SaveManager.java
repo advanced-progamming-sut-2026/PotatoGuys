@@ -45,16 +45,26 @@ public class SaveManager {
     }
 
     public <T> T load(String path, Class<T> classType) {
-        File file = new File(Constants.SAVE_PATH + path);
+        return loadAbsolute(Constants.SAVE_PATH + path, classType);
+    }
+
+    /**
+     * Loads and deserializes JSON from {@code fullPath} taken as-is (no
+     * {@link Constants#SAVE_PATH} prefix). Used for static, read-only game
+     * data resources such as {@code plant_profiles.json}, as opposed to
+     * user save files.
+     */
+    public <T> T loadAbsolute(String fullPath, Class<T> classType) {
+        File file = new File(fullPath);
 
         if (!file.exists()) {
-            System.out.println("[GsonManager] Save file not found at " + path);
+            System.out.println("[GsonManager] File not found at " + fullPath);
             return null;
         }
 
         try (FileReader reader = new FileReader(file)) {
             T data = gson.fromJson(reader, classType);
-            System.out.println("[GsonManager] Data successfully loaded from " + path);
+            System.out.println("[GsonManager] Data successfully loaded from " + fullPath);
             return data;
         } catch (IOException e) {
             System.err.println("[GsonManager] Error loading file: " + e.getMessage());

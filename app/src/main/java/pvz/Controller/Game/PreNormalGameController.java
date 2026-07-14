@@ -1,11 +1,11 @@
-package pvz.Controller.Game;
+package pvz.Controller;
 
 import pvz.Models.DataTypes.Vector2;
-import pvz.Models.Engine.GameEngine;
 import pvz.Models.Entities.Plants.Enums.PlantStorage;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Zombies.ZombieType;
+import pvz.Models.Entities.Plants.PlantFactory;
+import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.GameSession;
 import pvz.Models.Seasons.Levels.GameMap;
 import pvz.Models.Seasons.Levels.LevelGameContext;
@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
 
 public class PreNormalGameController extends PreGameController{
     private static final int MAX_PLANTS = 7;
+    private final PlantFactory plantFactory = new PlantFactory();
     List<Plant> selectedPlants;
     int levelNumber;
 
@@ -33,9 +34,11 @@ public class PreNormalGameController extends PreGameController{
 
     public Result showAllPlants(Matcher matcher){
         StringBuilder output=new StringBuilder();
-        for (PlantStorage p: PlantStorage.values()){
-            output.append("type: ").append(p.getType().toString());
-            output.append("\n Sun Cost: ").append(p.getSunCost());
+        for (PlantType type : PlantType.values()){
+            var sheet = PlantRegistry.getInstance().getSheet(type);
+            if (sheet == null) continue;
+            output.append("type: ").append(type.toString());
+            output.append("\n Sun Cost: ").append(sheet.getSunCost());
         }
         return new Result(output.toString());
     }
@@ -57,9 +60,9 @@ public class PreNormalGameController extends PreGameController{
         }
 
         PlantType plantType = null;
-        for (PlantStorage ps: PlantStorage.values()){
-            if (ps.getType().toString().equals(type)){
-                plantType = ps.getType();
+        for (PlantType pt : PlantType.values()){
+            if (pt.toString().equals(type)){
+                plantType = pt;
                 break;
             }
         }
@@ -85,12 +88,8 @@ public class PreNormalGameController extends PreGameController{
             }
         }
 
-        for (PlantStorage ps: PlantStorage.values()){
-            if (ps.getType() == plantType){
-                selectedPlants.add(ps.getCopy(new Vector2(-1,-1)));
-                break;
-            }
-        }
+        Plant owned = GameSession.getInstance().getCurrentUser().getProfile().getCollection().getPlant(plantType);
+        selectedPlants.add(owned != null ? plantFactory.copyUnplaced(owned) : plantFactory.createUnplaced(plantType, 1, false));
 
         StringBuilder output=new StringBuilder("Plant added. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
         for (Plant p : selectedPlants){
@@ -103,9 +102,9 @@ public class PreNormalGameController extends PreGameController{
         String type=matcher.group("type").trim().toUpperCase();
 
         PlantType plantType = null;
-        for (PlantStorage ps: PlantStorage.values()){
-            if (ps.getType().toString().equals(type)){
-                plantType = ps.getType();
+        for (PlantType pt : PlantType.values()){
+            if (pt.toString().equals(type)){
+                plantType = pt;
                 break;
             }
         }
@@ -130,9 +129,9 @@ public class PreNormalGameController extends PreGameController{
         String type=matcher.group("type").trim().toUpperCase();
 
         PlantType plantType = null;
-        for (PlantStorage ps: PlantStorage.values()){
-            if (ps.getType().toString().equals(type)){
-                plantType = ps.getType();
+        for (PlantType pt : PlantType.values()){
+            if (pt.toString().equals(type)){
+                plantType = pt;
                 break;
             }
         }
@@ -174,9 +173,9 @@ public class PreNormalGameController extends PreGameController{
         List<Wave> waves = createHardcodedWaves(context, map);
 
         NormalLevel level = new NormalLevel(engine, map, levelNumber, 150, waves, selectedPlants);
-        
+
         // This is a bit of a hack, but we need to associate the level with the context if possible
-        // Actually, LevelGameContext didn't have a setter for level. 
+        // Actually, LevelGameContext didn't have a setter for level.
         // With the fix I applied to LevelGameContext, it should work fine without the level object.
 
         StringBuilder output=new StringBuilder("Starting game with:");

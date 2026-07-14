@@ -52,7 +52,7 @@ public class ZombieFactory {
      * @throws IllegalArgumentException if the alias is not registered
      */
     public Zombie create(String alias, float startX, int lane,
-                         ZombieGameContext ctx, int waveIndex, int difficulty) {
+                         GameContext ctx, int waveIndex, int difficulty) {
         ZombiePropertySheet sheet = REGISTRY.getSheet(alias);
         if (sheet == null) {
             throw new IllegalArgumentException("Unknown zombie alias: " + alias);
@@ -64,7 +64,7 @@ public class ZombieFactory {
 
     /**
      * Legacy convenience method; delegates to {@link #create(String, float, int,
-     * ZombieGameContext, int, int)} using the enum's alias.
+     * GameContext, int, int)} using the enum's alias.
      */
     public Zombie createZombie(ZombieType type) {
         // Legacy stub — callers should migrate to create(alias, ...) for full functionality.

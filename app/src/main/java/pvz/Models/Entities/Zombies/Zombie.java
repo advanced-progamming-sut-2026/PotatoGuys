@@ -54,7 +54,7 @@ public class Zombie implements TickAware {
 
     // ── Identity ──────────────────────────────────────────────────────────────
     private final ZombiePropertySheet sheet;
-    private final ZombieGameContext context;
+    private final GameContext context;
 
     // ── Grid position ─────────────────────────────────────────────────────────
     private float x;
@@ -96,7 +96,7 @@ public class Zombie implements TickAware {
      */
     public Zombie(ZombiePropertySheet sheet, float startX, int lane,
                   List<ArmorPiece> armors, List<ZombieSkill> skills,
-                  ZombieGameContext ctx, int waveIndex, int difficulty) {
+                  GameContext ctx, int waveIndex, int difficulty) {
         this.sheet = sheet;
         this.x = startX;
         this.lane = lane;
@@ -190,7 +190,7 @@ public class Zombie implements TickAware {
     // ── Accessors ─────────────────────────────────────────────────────────────
 
     public ZombiePropertySheet getSheet()       { return sheet; }
-    public ZombieGameContext getContext()        { return context; }
+    public GameContext getContext()        { return context; }
     public float getX()                         { return x; }
     public void setX(float newX)               { this.x = newX; }
     public int getLane()                        { return lane; }

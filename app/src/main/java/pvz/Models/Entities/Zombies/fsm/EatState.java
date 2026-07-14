@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.fsm;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieGameContext;
+import pvz.Models.Entities.Zombies.GameContext;
 
 /**
  * The zombie is eating a plant at a fixed grid cell.
@@ -29,13 +29,13 @@ public class EatState implements ZombieState {
     }
 
     @Override
-    public void onEnter(Zombie zombie, ZombieGameContext ctx) {
+    public void onEnter(Zombie zombie, GameContext ctx) {
         ctx.log(zombie.getSheet().getAlias()
                 + " is eating plant at (" + targetCol + "," + targetLane + ")");
     }
 
     @Override
-    public ZombieState tick(Zombie zombie, ZombieGameContext ctx) {
+    public ZombieState tick(Zombie zombie, GameContext ctx) {
         if (!ctx.isPlantAt(targetCol, targetLane)) {
             // Plant was destroyed — return to walking
             ctx.log("Plant at (" + targetCol + "," + targetLane + ") is destroyed.");
@@ -47,7 +47,7 @@ public class EatState implements ZombieState {
     }
 
     @Override
-    public void onExit(Zombie zombie, ZombieGameContext ctx) {
+    public void onExit(Zombie zombie, GameContext ctx) {
         // nothing
     }
 

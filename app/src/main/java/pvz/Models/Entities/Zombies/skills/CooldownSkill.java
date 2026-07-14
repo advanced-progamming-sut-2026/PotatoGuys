@@ -1,15 +1,15 @@
 package pvz.Models.Entities.Zombies.skills;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieGameContext;
+import pvz.Models.Entities.Zombies.GameContext;
 
 /**
  * Abstract base for skills that fire on a repeating cooldown.
  *
  * <p>Subclasses implement:
  * <ul>
- *   <li>{@link #canUse(Zombie, ZombieGameContext)} — world-state guard (e.g. is there sun to steal?)</li>
- *   <li>{@link #doExecute(Zombie, ZombieGameContext)} — the actual skill effect</li>
+ *   <li>{@link #canUse(Zombie, GameContext)} — world-state guard (e.g. is there sun to steal?)</li>
+ *   <li>{@link #doExecute(Zombie, GameContext)} — the actual skill effect</li>
  * </ul>
  *
  * <p>The cooldown counter is incremented every call to {@link #shouldTrigger}.
@@ -31,14 +31,14 @@ public abstract class CooldownSkill implements ZombieSkill {
     }
 
     @Override
-    public final boolean shouldTrigger(Zombie zombie, ZombieGameContext ctx) {
+    public final boolean shouldTrigger(Zombie zombie, GameContext ctx) {
         elapsed++;
         if (elapsed < cooldownTicks) return false;
         return canUse(zombie, ctx);
     }
 
     @Override
-    public final void execute(Zombie zombie, ZombieGameContext ctx) {
+    public final void execute(Zombie zombie, GameContext ctx) {
         elapsed = 0;
         doExecute(zombie, ctx);
     }
@@ -47,8 +47,8 @@ public abstract class CooldownSkill implements ZombieSkill {
      * Additional world-state condition checked after the cooldown is ready.
      * Override to add pre-conditions (e.g. ammo check, range check).
      */
-    protected abstract boolean canUse(Zombie zombie, ZombieGameContext ctx);
+    protected abstract boolean canUse(Zombie zombie, GameContext ctx);
 
     /** Perform the skill's game-world side-effect. */
-    protected abstract void doExecute(Zombie zombie, ZombieGameContext ctx);
+    protected abstract void doExecute(Zombie zombie, GameContext ctx);
 }
