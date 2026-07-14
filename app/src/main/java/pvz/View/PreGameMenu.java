@@ -1,6 +1,6 @@
 package pvz.View;
 
-import pvz.Controller.PreGameController;
+import pvz.Controller.Game.PreGameController;
 import pvz.Enums.Commands.PreGameMenuCommand;
 
 import java.util.regex.Matcher;

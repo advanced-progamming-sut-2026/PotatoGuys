@@ -9,9 +9,18 @@ public abstract class Level {
     private GameMap gameMap;
     private int levelNumber;
     private LevelType type;
-    private int initialSun;
     private int currentSun;
-    private List<WaveConfig> waves;
+    private List<Wave> waves;
+
+    public Level(GameEngine engine, GameMap gameMap, int levelNumber, LevelType type, int initialSun,
+                 List<Wave> waves){
+        this.engine=engine;
+        this.gameMap=gameMap;
+        this.levelNumber=levelNumber;
+        this.type=type;
+        this.currentSun=initialSun;
+        this.waves=waves;
+    }
 
     public GameMap getGameMap() {
         return gameMap;
@@ -24,15 +33,11 @@ public abstract class Level {
         return type;
     }
 
-    public int getInitialSun() {
-        return initialSun;
-    }
-
     public int getCurrentSun() {
         return currentSun;
     }
 
-    public List<WaveConfig> getWaves() {
+    public List<Wave> getWaves() {
         return waves;
     }
 

@@ -4,6 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameEngine {
+    public static GameEngine instance;
+
+    public static GameEngine getInstance(){
+        if (instance==null){
+            instance=new GameEngine();
+        }
+        return instance;
+    }
     private List<TickAware> entities=new ArrayList<>();
     private List<TickAware> toAdd = new ArrayList<>();
     private List<TickAware> toRemove = new ArrayList<>();

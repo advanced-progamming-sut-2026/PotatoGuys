@@ -1,23 +1,32 @@
-package pvz.Controller;
+package pvz.Controller.Game;
 
+import pvz.Models.Constants;
 import pvz.Models.DataTypes.Vector2;
+import pvz.Models.Engine.GameEngine;
 import pvz.Models.Entities.Plants.Enums.PlantStorage;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.GameSession;
-import pvz.View.GameMenu;
+import pvz.Models.Seasons.Levels.GameMap;
+import pvz.Models.Seasons.Levels.NormalLevel;
+import pvz.Models.Seasons.Levels.Wave;
+import pvz.Models.Seasons.Season;
+import pvz.View.Game.NormalGameMenu;
 import pvz.View.Result;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-public class PreGameController {
+public class PreNormalGameController extends PreGameController{
     private static final int MAX_PLANTS = 7;
     List<Plant> selectedPlants;
+    int levelNumber;
 
-    public PreGameController(){
+    public PreNormalGameController(Season season, int level){
+        super(season,level);
         selectedPlants=new ArrayList<>();
+        levelNumber=level;
     }
 
     public Result showAllPlants(Matcher matcher){
@@ -31,7 +40,7 @@ public class PreGameController {
 
     public Result showAvailablePlants(Matcher matcher){
         StringBuilder output=new StringBuilder();
-        for (Plant p:GameSession.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
+        for (Plant p: GameSession.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
             output.append("type: ").append(p.getType().toString());
             output.append("\n Sun Cost: ").append(p.getSunCost());
         }
@@ -141,7 +150,8 @@ public class PreGameController {
         return new Result("This plant is not in your selection.");
     }
 
-    public Result startGame(Matcher matcher){
+    @Override
+    public Result startGame(Matcher matcher) {
         if (selectedPlants.size() < MAX_PLANTS){
             return new Result("You must select all " + MAX_PLANTS + " plants before starting. Currently selected: " + selectedPlants.size() + "/" + MAX_PLANTS);
         }
@@ -151,6 +161,15 @@ public class PreGameController {
             String boost = p.isBoosted() ? " [BOOSTED]" : "";
             output.append("\n- ").append(p.getType().toString()).append(boost);
         }
-        return new Result(output.toString(), new GameMenu(selectedPlants));
+        List<Wave> waves =new ArrayList<>();
+        waves.add(new Wave(1,false,20,new ArrayList<>()));
+        waves.getFirst().getSpawns().add(new ZombieSpawnEntry());
+        NormalLevel level=new NormalLevel(
+                new GameEngine(),
+                new GameMap(Constants.DEFAULT_ROWS,Constants.DEFAULT_COLS),
+                levelNumber,Constants.DEFAULT_INITIAL_SUN,
+
+                )
+        return new Result(output.toString(), new NormalGameMenu(selectedPlants));
     }
 }
