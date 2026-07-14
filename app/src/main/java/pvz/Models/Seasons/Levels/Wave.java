@@ -20,7 +20,7 @@ public class Wave implements TickAware {
     int remainingInPhase;
     private int ticksUntilNextSpawn;
     private boolean done;
-    private Random rand;
+    private transient Random rand;
 
     public Wave(int waveNumber, boolean isFinalWave, int totalWaveCost, List<WavePhase> phases,
                 ZombieGameContext context, int lanes, int difficulty) {
