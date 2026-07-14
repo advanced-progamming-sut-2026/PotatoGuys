@@ -2,16 +2,16 @@ package pvz.Models;
 
 import pvz.Models.User.User;
 
-public class GameSession {
-    private static GameSession instance;
+public class AppContext {
+    private static AppContext instance;
     
     private User currentUser;
     
-    private GameSession() { }
+    private AppContext() { }
     
-    public static GameSession getInstance() {
+    public static AppContext getInstance() {
         if (instance == null) {
-            instance = new GameSession();
+            instance = new AppContext();
         }
         return instance;
     }

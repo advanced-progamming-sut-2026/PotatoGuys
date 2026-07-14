@@ -1,4 +1,4 @@
-package pvz.Models.LawnMower;
+package pvz.Models.Entities.LawnMower;
 
 import pvz.Models.DataTypes.Vector2;
 import pvz.Models.Engine.TickAware;

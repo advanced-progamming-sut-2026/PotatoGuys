@@ -40,7 +40,7 @@ public interface GameContext {
     void transformPlantToCat(int col, int lane);
 
     /**
-     * Adds one frost level to the plant at (col, lane).
+     * Adds one frost level to the plant at(col, lane).
      * At 3 stacked levels the plant becomes fully frozen (Hunter Zombie).
      */
     void applyFrostToPlant(int col, int lane);

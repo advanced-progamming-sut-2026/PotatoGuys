@@ -3,7 +3,7 @@ package pvz.Controller.user;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 
-import pvz.Models.GameSession;
+import pvz.Models.AppContext;
 import pvz.Models.User.User;
 import pvz.Utils.PasswordUtils;
 import pvz.Utils.SaveManager;
@@ -14,7 +14,7 @@ import pvz.View.Result;
 public class ProfileController {
     public Result changeUsername(Matcher matcher) { 
         String newUsername = matcher.group("username");
-        User user = GameSession.getInstance().getCurrentUser();
+        User user = AppContext.getInstance().getCurrentUser();
         String lastUsername = user.getUsername();
 
         if(newUsername == null || newUsername.isEmpty()) {
@@ -35,7 +35,7 @@ public class ProfileController {
     }
     public Result changeNickname(Matcher matcher) { 
         String newNickname = matcher.group("nickname");
-        User user = GameSession.getInstance().getCurrentUser();
+        User user = AppContext.getInstance().getCurrentUser();
 
         if(newNickname == null || newNickname.isEmpty()) {
             return new Result("Nickname cannot be empty.");
@@ -56,7 +56,7 @@ public class ProfileController {
     }
     public Result changeEmail(Matcher matcher) { 
         String newEmail = matcher.group("email");
-        User user = GameSession.getInstance().getCurrentUser();
+        User user = AppContext.getInstance().getCurrentUser();
 
         if(newEmail == null || newEmail.isEmpty()) {
             return new Result("Email cannot be empty.");
@@ -78,7 +78,7 @@ public class ProfileController {
     public Result changePassword(Matcher matcher) { 
         String newPassword = matcher.group("newPassword");
         String oldPassword = matcher.group("oldPassword");
-        User user = GameSession.getInstance().getCurrentUser();
+        User user = AppContext.getInstance().getCurrentUser();
 
         if(newPassword == null || newPassword.isEmpty() || oldPassword == null || oldPassword.isEmpty()) {
             return new Result("New password and old password cannot be empty.");
@@ -103,7 +103,7 @@ public class ProfileController {
     }
     public Result showInfo(Matcher matcher) { 
         StringBuilder result = new StringBuilder();
-        User user = GameSession.getInstance().getCurrentUser();
+        User user = AppContext.getInstance().getCurrentUser();
 
         result.append("Username: " + user.getUsername() + "\n");
         result.append("Nickname: " + user.getNickName() + "\n");

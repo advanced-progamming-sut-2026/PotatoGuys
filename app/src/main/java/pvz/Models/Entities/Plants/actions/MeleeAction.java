@@ -2,6 +2,8 @@ package pvz.Models.Entities.Plants.actions;
 
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Entities.Plants.Enums.PlantTag;
+import pvz.Models.Entities.Plants.data.DamageKind;
 import pvz.Models.Entities.Zombies.Zombie;
 
 /**
@@ -23,9 +25,8 @@ public class MeleeAction extends CooldownPlantAction {
 
     @Override
     protected void doExecute(Plant plant, PlantContext ctx) {
-        boolean aoe = plant.getSheet().hasTag(pvz.Models.Entities.Plants.Enums.PlantTag.AOE);
-        boolean instaKill = plant.getSheet().getDamage().getKind()
-                == pvz.Models.Entities.Plants.data.DamageKind.INSTA_KILL;
+        boolean aoe = plant.getSheet().hasTag(PlantTag.AOE);
+        boolean instaKill = plant.getSheet().getDamage().getKind() == DamageKind.INSTA_KILL;
         float dmg = instaKill ? Float.MAX_VALUE : plant.getEffectiveDamage();
 
         int hit = 0;

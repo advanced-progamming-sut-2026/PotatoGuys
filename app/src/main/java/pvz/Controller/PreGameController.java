@@ -4,7 +4,7 @@ import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
-import pvz.Models.GameSession;
+import pvz.Models.AppContext;
 import pvz.View.GameMenu;
 import pvz.View.Result;
 
@@ -34,7 +34,7 @@ public class PreGameController {
 
     public Result showAvailablePlants(Matcher matcher){
         StringBuilder output=new StringBuilder();
-        for (Plant p:GameSession.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
+        for (Plant p:AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
             output.append("type: ").append(p.getType().toString());
             output.append("\n Sun Cost: ").append(p.getSunCost());
         }
@@ -59,7 +59,7 @@ public class PreGameController {
             return new Result("Plant not found.");
         }
 
-        List<Plant> unlocked = GameSession.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants();
+        List<Plant> unlocked = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants();
         boolean isUnlocked = false;
         for (Plant p : unlocked){
             if (p.getType() == plantType){
@@ -77,7 +77,7 @@ public class PreGameController {
             }
         }
 
-        Plant owned = GameSession.getInstance().getCurrentUser().getProfile().getCollection().getPlant(plantType);
+        Plant owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(plantType);
         selectedPlants.add(owned != null ? plantFactory.copyUnplaced(owned) : plantFactory.createUnplaced(plantType, 1, false));
 
         StringBuilder output=new StringBuilder("Plant added. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");

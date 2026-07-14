@@ -2,13 +2,13 @@ package pvz.Models.Entities.Plants.data;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
 
 import pvz.Models.Constants;
+import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.Enums.PlantCategory;
 import pvz.Models.Entities.Plants.Enums.PlantTag;
 import pvz.Models.Entities.Plants.Enums.PlantType;

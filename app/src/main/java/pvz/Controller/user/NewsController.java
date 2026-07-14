@@ -3,7 +3,7 @@ package pvz.Controller.user;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
-import pvz.Models.GameSession;
+import pvz.Models.AppContext;
 import pvz.Models.User.Message;
 import pvz.View.MainMenu;
 import pvz.View.Menu;
@@ -11,7 +11,7 @@ import pvz.View.Result;
 
 public class NewsController {
     public Result showUnread(Matcher matcher) {
-        ArrayList<Message> messages = GameSession.getInstance().getCurrentUser().getNews().getMessages();
+        ArrayList<Message> messages = AppContext.getInstance().getCurrentUser().getNews().getMessages();
         StringBuilder result = new StringBuilder();
         if(messages.isEmpty()) {
             return new Result("No messages found.");
@@ -27,7 +27,7 @@ public class NewsController {
         return new Result(result.toString()); 
     }
     public Result showAll(Matcher matcher) { 
-        ArrayList<Message> messages = GameSession.getInstance().getCurrentUser().getNews().getMessages();
+        ArrayList<Message> messages = AppContext.getInstance().getCurrentUser().getNews().getMessages();
         StringBuilder result = new StringBuilder();
         if(messages.isEmpty()) {
             return new Result("No messages found.");

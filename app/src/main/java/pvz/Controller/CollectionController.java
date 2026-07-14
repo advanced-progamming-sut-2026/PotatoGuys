@@ -9,7 +9,7 @@ import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Entities.Zombies.ZombieType;
-import pvz.Models.GameSession;
+import pvz.Models.AppContext;
 import pvz.Models.User.Collection;
 import pvz.Models.User.Profile;
 import pvz.View.ChapterSelectionMenu;
@@ -22,7 +22,7 @@ public class CollectionController {
     private final PlantFactory plantFactory = new PlantFactory();
 
     private Profile getProfile() {
-        return GameSession.getInstance().getCurrentUser().getProfile();
+        return AppContext.getInstance().getCurrentUser().getProfile();
     }
 
     private Collection getCollection() {
