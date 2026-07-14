@@ -49,8 +49,10 @@ public class PreNormalGameController extends PreGameController {
     public Result showAvailablePlants(Matcher matcher){
         StringBuilder output=new StringBuilder();
         for (MyPlant p:AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
-            output.append("type: ").append(p.Type);
-            output.append("\n Sun Cost: ").append(PlantRegistry.getInstance().getSheet(p.Type).getSunCost());
+            output.append("\n- ").append(p.Type);
+            output.append(" | Level: ").append(p.level);
+            output.append(" | Sun Cost: ").append(PlantRegistry.getInstance().getSheet(p.Type).getSunCost());
+            if (p.isBoosted) output.append(" [BOOSTED]");
         }
         return new Result(output.toString());
     }
