@@ -84,13 +84,13 @@ public class PreNormalGameController extends PreGameController {
             return new Result("You have not unlocked this plant.");
         }
 
-        for (Plant p : selectedPlants){
+        for (PlantPropertySheet p : selectedPlants){
             if (p.getType() == plantType){
                 return new Result("This plant is already in your selection.");
             }
         }
 
-        Plant owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(plantType);
+        PlantPropertySheet owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(plantType);
         selectedPlants.add(owned != null ? plantFactory.copyUnplaced(owned) : plantFactory.createUnplaced(plantType, 1, false));
 
         StringBuilder output=new StringBuilder("Plant added. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
@@ -118,7 +118,7 @@ public class PreNormalGameController extends PreGameController {
             if (selectedPlants.get(i).getType() == plantType){
                 selectedPlants.remove(i);
                 StringBuilder output=new StringBuilder("Plant removed. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
-                for (Plant p : selectedPlants){
+                for (PlantPropertySheet p : selectedPlants){
                     output.append("\n- ").append(p.getType().toString());
                 }
                 return new Result(output.toString());
@@ -141,7 +141,7 @@ public class PreNormalGameController extends PreGameController {
             return new Result("Plant not found.");
         }
 
-        for (Plant p : selectedPlants){
+        for (PlantPropertySheet p : selectedPlants){
             if (p.getType() == plantType){
                 if (p.isBoosted()){
                     return new Result("This plant is already boosted.");
@@ -157,7 +157,7 @@ public class PreNormalGameController extends PreGameController {
     public Result startGame(Matcher matcher) {
         if (selectedPlants.isEmpty()){
             // Debugging mode: add some default plants if none selected
-            for (PlantStorage ps: PlantStorage.values()){
+            for (PlantStragy ps: PlantStorage.values()){
                 if (selectedPlants.size() < MAX_PLANTS){
                     selectedPlants.add(ps.getCopy(new Vector2(-1,-1)));
                 } else {
