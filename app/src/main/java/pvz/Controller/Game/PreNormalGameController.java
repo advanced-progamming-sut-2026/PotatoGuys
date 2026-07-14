@@ -19,6 +19,7 @@ import pvz.Models.Seasons.Levels.LevelGameContext;
 import pvz.Models.Seasons.Levels.NormalLevel;
 import pvz.Models.Seasons.Levels.Wave;
 import pvz.Models.Seasons.Levels.WavePhase;
+import pvz.Models.User.MyPlant;
 import pvz.View.Result;
 import pvz.View.Game.NormalGameMenu;
 
@@ -47,9 +48,9 @@ public class PreNormalGameController extends PreGameController {
 
     public Result showAvailablePlants(Matcher matcher){
         StringBuilder output=new StringBuilder();
-        for (Plant p:AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
-            output.append("type: ").append(p.getType().toString());
-            output.append("\n Sun Cost: ").append(p.getSunCost());
+        for (MyPlant p:AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
+            output.append("type: ").append(p.Type);
+            output.append("\n Sun Cost: ").append(PlantRegistry.getInstance().getSheet(p.Type).getSunCost());
         }
         return new Result(output.toString());
     }
