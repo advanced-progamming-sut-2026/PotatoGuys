@@ -2,10 +2,11 @@ package pvz.Controller;
 
 import java.util.regex.Matcher;
 
-import pvz.Models.DataTypes.Vector2;
-import pvz.Models.Entities.Plants.Enums.PlantStorage;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Entities.Plants.PlantFactory;
+import pvz.Models.Entities.Plants.data.PlantPropertySheet;
+import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.GameSession;
@@ -18,6 +19,7 @@ import pvz.View.Result;
 public class CollectionController {
     private static final int PURCHASE_COST = 100;
     private static final int UPGRADE_BASE_COST = 50;
+    private final PlantFactory plantFactory = new PlantFactory();
 
     private Profile getProfile() {
         return GameSession.getInstance().getCurrentUser().getProfile();
@@ -40,12 +42,14 @@ public class CollectionController {
 
     public Result showAllPlants(Matcher matcher) {
         StringBuilder output = new StringBuilder("All plants:");
-        for (PlantStorage ps : PlantStorage.values()) {
-            output.append("\n- ").append(ps.getType().toString());
-            output.append(" | ").append(ps.getCategory().toString());
-            output.append(" | Sun: ").append(ps.getSunCost());
-            output.append(" | HP: ").append(ps.getBaseHP());
-            output.append(" | Recharge: ").append(ps.getBaseRecharge());
+        for (PlantType pt : PlantType.values()) {
+            PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(pt);
+            if (sheet == null) continue;
+            output.append("\n- ").append(sheet.getType().toString());
+            output.append(" | ").append(sheet.getCategory().toString());
+            output.append(" | Sun: ").append(sheet.getSunCost());
+            output.append(" | HP: ").append((int) sheet.getBaseHp());
+            output.append(" | Recharge: ").append(sheet.getRechargeSeconds());
         }
         return new Result(output.toString());
     }
@@ -81,13 +85,7 @@ public class CollectionController {
             return new Result("Plant \"" + name + "\" not found.");
         }
 
-        PlantStorage storage = null;
-        for (PlantStorage ps : PlantStorage.values()) {
-            if (ps.getType() == plantType) {
-                storage = ps;
-                break;
-            }
-        }
+        PlantPropertySheet storage = PlantRegistry.getInstance().getSheet(plantType);
         if (storage == null) {
             return new Result("No data available for this plant.");
         }
@@ -96,17 +94,17 @@ public class CollectionController {
         output.append("Plant: ").append(plantType.toString());
         output.append("\nCategory: ").append(storage.getCategory().toString());
         output.append("\nSun Cost: ").append(storage.getSunCost());
-        output.append("\nBase HP: ").append(storage.getBaseHP());
-        output.append("\nBase Recharge: ").append(storage.getBaseRecharge());
-        output.append("\nBase Action Interval: ").append(storage.getBaseActionInterval());
+        output.append("\nBase HP: ").append((int) storage.getBaseHp());
+        output.append("\nBase Recharge: ").append(storage.getRechargeSeconds());
+        output.append("\nBase Action Interval: ").append(storage.getActionIntervalSeconds());
 
         Plant owned = getCollection().getPlant(plantType);
         if (owned != null) {
             output.append("\n\nYour plant:");
             output.append("\nLevel: ").append(owned.getLevel());
-            output.append("\nHP: ").append(owned.getHP());
-            output.append("\nRecharge: ").append(owned.getRecharge());
-            output.append("\nAction Interval: ").append(owned.getActionInterval());
+            output.append("\nHP: ").append((int) owned.getHp());
+            output.append("\nRecharge: ").append(owned.getRechargeSeconds());
+            output.append("\nAction Interval: ").append(owned.getActionIntervalSeconds());
             output.append("\nBoosted: ").append(owned.isBoosted() ? "Yes" : "No");
         } else {
             output.append("\n\nStatus: Not yet unlocked.");
@@ -185,14 +183,7 @@ public class CollectionController {
             return new Result("You already own this plant.");
         }
 
-        PlantStorage storage = null;
-        for (PlantStorage ps : PlantStorage.values()) {
-            if (ps.getType() == plantType) {
-                storage = ps;
-                break;
-            }
-        }
-        if (storage == null) {
+        if (PlantRegistry.getInstance().getSheet(plantType) == null) {
             return new Result("This plant is not available for purchase.");
         }
 
@@ -201,7 +192,7 @@ public class CollectionController {
             return new Result("Not enough coins. Need " + PURCHASE_COST + " coins, have " + coins + ".");
         }
 
-        Plant newPlant = storage.getCopy(new Vector2(-1, -1));
+        Plant newPlant = plantFactory.createUnplaced(plantType, 1, false);
         getCollection().addPlant(newPlant);
         getProfile().setCoins(coins - PURCHASE_COST);
 

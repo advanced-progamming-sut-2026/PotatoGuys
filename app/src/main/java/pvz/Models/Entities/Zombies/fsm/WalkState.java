@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.fsm;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieGameContext;
+import pvz.Models.Entities.Zombies.GameContext;
 import pvz.Models.Entities.Zombies.skills.ZombieSkill;
 
 /**
@@ -22,12 +22,12 @@ import pvz.Models.Entities.Zombies.skills.ZombieSkill;
 public class WalkState implements ZombieState {
 
     @Override
-    public void onEnter(Zombie zombie, ZombieGameContext ctx) {
+    public void onEnter(Zombie zombie, GameContext ctx) {
         // no visual cue needed for walking
     }
 
     @Override
-    public ZombieState tick(Zombie zombie, ZombieGameContext ctx) {
+    public ZombieState tick(Zombie zombie, GameContext ctx) {
         advancePosition(zombie);
 
         if (zombie.getX() <= 0f) {
@@ -45,7 +45,7 @@ public class WalkState implements ZombieState {
     }
 
     @Override
-    public void onExit(Zombie zombie, ZombieGameContext ctx) {
+    public void onExit(Zombie zombie, GameContext ctx) {
         // nothing
     }
 
@@ -62,7 +62,7 @@ public class WalkState implements ZombieState {
     }
 
     /** Returns {@link EatState} if a plant is at the zombie's current column, else null. */
-    private ZombieState checkForPlant(Zombie zombie, ZombieGameContext ctx) {
+    private ZombieState checkForPlant(Zombie zombie, GameContext ctx) {
         int col = (int) zombie.getX();
         if (ctx.isPlantAt(col, zombie.getLane())) {
             return new EatState(col, zombie.getLane());
@@ -71,7 +71,7 @@ public class WalkState implements ZombieState {
     }
 
     /** Returns {@link SpecialActionState} for the first ready skill, else null. */
-    private ZombieState checkForSkill(Zombie zombie, ZombieGameContext ctx) {
+    private ZombieState checkForSkill(Zombie zombie, GameContext ctx) {
         for (ZombieSkill skill : zombie.getSkills()) {
             if (skill.shouldTrigger(zombie, ctx)) {
                 return new SpecialActionState(skill);

@@ -51,4 +51,16 @@ tasks.register('runDemo', JavaExec) {
     classpath   = sourceSets.main.runtimeClasspath
     mainClass   = 'pvz.Demo.ZombieWalkDemo'
     standardInput = System.in
+    workingDir  = rootProject.projectDir
+}
+
+// Run the interactive Plants + Projectiles + Suns + Zombies demo:
+//   ./gradlew runPlantWarDemo
+tasks.register('runPlantWarDemo', JavaExec) {
+    group       = 'Demo'
+    description = 'Run the PlantWarDemo CLI (interactive plants/projectiles/suns/zombies simulation)'
+    classpath   = sourceSets.main.runtimeClasspath
+    mainClass   = 'pvz.Demo.PlantWarDemo'
+    standardInput = System.in
+    workingDir  = rootProject.projectDir
 }

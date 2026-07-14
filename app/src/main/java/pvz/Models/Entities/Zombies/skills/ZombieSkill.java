@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.skills;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieGameContext;
+import pvz.Models.Entities.Zombies.GameContext;
 
 /**
  * A discrete, re-usable special ability plug-in.
@@ -24,13 +24,13 @@ public interface ZombieSkill {
      *
      * @return true if the skill is ready and conditions for its use are met
      */
-    boolean shouldTrigger(Zombie zombie, ZombieGameContext ctx);
+    boolean shouldTrigger(Zombie zombie, GameContext ctx);
 
     /**
      * Performs the skill's game-world effect.
      * Called once by {@link pvz.Models.Entities.Zombies.fsm.SpecialActionState#onEnter}.
      */
-    void execute(Zombie zombie, ZombieGameContext ctx);
+    void execute(Zombie zombie, GameContext ctx);
 
     /** Short label shown in CLI debug output, e.g. {@code "StealSun"}, {@code "RaiseTomb"}. */
     String getName();

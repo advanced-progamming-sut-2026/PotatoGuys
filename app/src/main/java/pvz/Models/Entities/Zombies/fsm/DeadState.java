@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.fsm;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieGameContext;
+import pvz.Models.Entities.Zombies.GameContext;
 
 /**
  * Terminal FSM state — the zombie is dead.
@@ -14,18 +14,18 @@ import pvz.Models.Entities.Zombies.ZombieGameContext;
 public class DeadState implements ZombieState {
 
     @Override
-    public void onEnter(Zombie zombie, ZombieGameContext ctx) {
+    public void onEnter(Zombie zombie, GameContext ctx) {
         // Death logging is handled inside Zombie.onDeath() to ensure it fires
         // exactly once regardless of how death was triggered.
     }
 
     @Override
-    public ZombieState tick(Zombie zombie, ZombieGameContext ctx) {
+    public ZombieState tick(Zombie zombie, GameContext ctx) {
         return this; // stay in dead state; engine will deregister this zombie
     }
 
     @Override
-    public void onExit(Zombie zombie, ZombieGameContext ctx) {
+    public void onExit(Zombie zombie, GameContext ctx) {
         // nothing — dead zombies don't exit this state
     }
 

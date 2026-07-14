@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.skills;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieGameContext;
+import pvz.Models.Entities.Zombies.GameContext;
 
 /**
  * Ice-Age Hunter Zombie — throws snowballs that build up frost levels on plants.
@@ -15,7 +15,7 @@ import pvz.Models.Entities.Zombies.ZombieGameContext;
  *
  * <p>Three frost levels freeze a plant solid (same model as the WalkState checks for
  * FROZEN plants in Frostbite Caves). Each snowball in a barrage increments the plant's
- * frost counter via {@link ZombieGameContext#applyFrostToPlant}.
+ * frost counter via {@link GameContext#applyFrostToPlant}.
  */
 public class HunterSnowballSkill extends CooldownSkill {
 
@@ -37,12 +37,12 @@ public class HunterSnowballSkill extends CooldownSkill {
     }
 
     @Override
-    protected boolean canUse(Zombie zombie, ZombieGameContext ctx) {
+    protected boolean canUse(Zombie zombie, GameContext ctx) {
         return findTargetCol(zombie, ctx) >= 0;
     }
 
     @Override
-    protected void doExecute(Zombie zombie, ZombieGameContext ctx) {
+    protected void doExecute(Zombie zombie, GameContext ctx) {
         int targetCol = findTargetCol(zombie, ctx);
         if (targetCol < 0) return;
 
@@ -66,7 +66,7 @@ public class HunterSnowballSkill extends CooldownSkill {
      * The hunter does not throw snowballs if the plant is within nearRange
      * (it eats directly instead).
      */
-    private int findTargetCol(Zombie zombie, ZombieGameContext ctx) {
+    private int findTargetCol(Zombie zombie, GameContext ctx) {
         int col = (int) zombie.getX();
         int minCol = Math.max(0, col - farRange);
         int maxCol = col - nearRange; // do not attack at melee range

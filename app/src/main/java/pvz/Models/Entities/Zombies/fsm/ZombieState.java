@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.fsm;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieGameContext;
+import pvz.Models.Entities.Zombies.GameContext;
 
 /**
  * One node in the zombie's Finite State Machine.
@@ -21,17 +21,17 @@ import pvz.Models.Entities.Zombies.ZombieGameContext;
 public interface ZombieState {
 
     /** Side-effects when entering this state (e.g. logging, animation cue). */
-    void onEnter(Zombie zombie, ZombieGameContext ctx);
+    void onEnter(Zombie zombie, GameContext ctx);
 
     /**
      * Core update logic.
      *
      * @return the next state ({@code this} = no transition, any other object = transition)
      */
-    ZombieState tick(Zombie zombie, ZombieGameContext ctx);
+    ZombieState tick(Zombie zombie, GameContext ctx);
 
     /** Side-effects when leaving this state. */
-    void onExit(Zombie zombie, ZombieGameContext ctx);
+    void onExit(Zombie zombie, GameContext ctx);
 
     /** Short human-readable label used by {@code zombies info} CLI command. */
     String getLabel();

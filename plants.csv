@@ -1,0 +1,70 @@
+﻿ID,Name,Category,Tags,Cost,Base HP,Damage,Base Ability,Plant Food Effect,Lvl 2,Lvl 3,Lvl 4,Action Interval (s),Recharge (s)
+1,Sunflower,Sun Producer,Day,50,300,0,تولید ۵۰ خورشید هر ۲۴ ثانیه.,تولید فوری ۱۵۰ خورشید.,Prod. Time -2s,HP +150,Double Sun Chance,24,5
+2,Twin Sunflower,Sun Producer,Day,125,300,0,تولید ۱۰۰ خورشید در هر دور.,تولید فوری ۲۵۰ خورشید.,Prod. Time -2s,HP +150,Cost -25,24,15
+3,Sun-shroom,Sun Producer,"Shroom, wramp-up, night",25,300,0,رشد در ۳ مرحله و تولید خورشید بیشتر(۲۵/۵۰/۷۵). To Stg2: 24s | To Stg3: 72s,رشد آنی به سایز آخر و تولید ۲۲۵ خورشید.,Grow Time -5s,HP +150,Double Sun Chance,24,5
+4,Primal Sunflower,Sun Producer,-,75,300,0,تولید خورشید بزرگ ۷۵ تایی از ابتدا.,تولید فوری ۲۲۵ خورشید.,Prod. Time -2s,HP +150,Cost -25,24,5
+5,Gold Bloom,Sun Producer,-,0,0,0,تولید فوری و یک‌باره مقدار زیادی خورشید و سپس ناپدید شدن.(۳۷۵ خورشید),ندارد (مصرفی آنی),Cooldown -5s,Sun +50,Cost -25,0,75
+6,Peashooter,Shooter,Pea,100,300,20,شلیک تیر مستقیم.,شلیک رگباری سریع برای چند ثانیه.,Dmg +10,HP +150,Cost -25,1.5,5
+7,Repeater,Shooter,Pea,200,300,20x2,شلیک ۲ تیر مستقیم متوالی.,شلیک رگباری سنگین + ۱ نخود غول‌پیکر (دمیج 20 برابر).,Dmg +10,HP +200,Cost -25,1.5,5
+8,Threepeater,Shooter,Pea,300,300,20,شلیک همزمان تیر در ۳ لاین موازی.,شلیک رگباری بادبزنی در تمام لاین‌ها.,Cost -25,Dmg +10,HP +200,1.5,5
+9,Snow Pea,Shooter,"Ice, Pea",150,300,20,شلیک تیر مستقیم کندکننده سرعت.,انجماد لاین و شلیک رگباری یخی.,Dmg +10,Chill Time +2s,Cost -25,1.5,5
+10,Rotobaga,Shooter,-,150,300,10x3,شلیک در ۴ جهت اریب.,شلیک رگباری در هر ۴ جهت اریب.,Dmg +10,HP +150,Cost -25,1.5,5
+11,Pea Pod,Shooter,"Pea, stack",125,300,20/40/60/80/100,شلیک تیر مستقیم به ازای هر سر کاشته شده روی هم (تا ۵ سر).,شلیک یک نخود غول‌پیکر به ازای هر سر(دمیج 20 برابر).,Dmg +10,HP +200,Cost -25,1.5,5
+12,Split Pea,Shooter,Pea,125,300,20,شلیک ۱ تیر به جلو و ۲ تیر به عقب.,شلیک رگباری همزمان از جلو و عقب.,Dmg +10,HP +200,Cost -25,1.5,5
+13,Citron,Shooter,charge,350,300,800,شلیک تیر سنگین مستقیم (نیازمند زمان شارژ).,شلیک توپ پلاسمایی پاکسازی‌کننده کل لاین.,Charge Time -1s,Dmg +150,Cost -50,9,5
+14,Caulipower,Homing,"Magic, charge",250,300,Insta-kill,"شلیک تیر جادویی (جهت رندوم، عبور از موانع، هیپنوتیزم‌کننده).",هیپنوتیزم کردن چند زامبی تصادفی در باغچه.,Cooldown -2s,HP +150,Cost -50,12,15
+15,Electric Blueberry,Homing,charge,150,300,5000,"شلیک رعدوبرق (جهت رندوم، نابودی کامل یک زامبی).",نابودی کامل ۳ زامبی تصادفی.,Cooldown -2s,Target Priority Up,Cost -25,12,15
+16,Bowling Bulb,Shooter,charge,200,300,40/120/180,شلیک 3 نوع پیاز که بین لاین‌ها کمانه می‌کند (مثل wall nut bowling). تاخیر هر یک Cyan: 2s | Blue: 5s | Orange: 10s,شلیک ۳ پیاز انفجاری بزرگ که کمانه می‌کنند.,Regen -1s,Dmg +15,Cost -25,2,5
+17,Cactus,Strike-through,-,175,300,30,شلیک خار مستقیم (عبور از ۳ زامبی).,تیغ‌های برقی با دمیج بالا و نفوذ نامحدود.,Pierce +1,Dmg +10,Cost -25,1.5,5
+18,Fire Peashooter,Shooter,"Fire, Pea",175,300,40,شلیک تیر مستقیم آتشی (دمیج ۲ برابر).,شلیک رگباری آتشین در کل لاین.,Dmg +10,HP +200,Cost -25,1.5,5
+19,Starfruit,Shooter,-,150,300,20,شلیک در ۵ جهت ستاره‌ای شامل عقب.,شلیک رگباری ستاره در تمام جهات.,Atk Speed +10%,Dmg +10,Cost -25,1.5,5
+20,Goo Peashooter,Shooter,Poison,125,300,20,شلیک تیر مستقیم (نادیده گرفتن زره + آسیب مستمر).,شلیک رگباری سمی که زامبی‌ها را درجا مسموم می‌کند.,Dmg/Tick +5,HP +150,Cost -25,1.5,5
+21,Mega Gatling Pea,Shooter,Pea,400,300,20x4,شلیک ۴ تیر مستقیم متوالی با سرعت بسیار بالا.,شلیک رگباری عظیم و طولانی در لاین به همراه 4 تیر غول‌پیکر.,Dmg +10,Plant Food Chance +5%,Cost -50,1.5,5
+22,Sea-shroom,Shooter,"Shroom, Water",0,300,20,شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه.,شلیک رگباری و ریست شدن طول عمر تمام Sea-shroomها.,Range +1 Tile,Dmg +5,Lifespan +10s,1.5,15
+23,Puff-shroom,Shooter,Shroom,0,300,20,شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه.,شلیک رگباری و ریست شدن طول عمر تمامی Puff-shroomها.,Lifespan +10s,Dmg +10,Range +1 Tile,1.5,5
+24,Fume-shroom,Strike-through,Shroom,125,300,20,شلیک دود با برد متوسط که از زامبی‌ها رد می‌شود.,پرتاب توده دود عظیم که زامبی‌ها را به عقب می‌راند.,Range +1 Tile,Dmg +10,Cost -25,1.5,5
+25,Cabbage-pult,Lobber,-,100,300,40,شلیک هوایی از روی موانع.,پرتاب کلم به چند زامبی تصادفی.,Dmg +10,Atk Speed +15%,HP +150,2.9,5
+26,Kernel-pult,Lobber,-,100,300,20/40,شلیک دانه ذرت (آسیب کم) یا کره (توقف موقت زامبی).,پرتاب کره به سر تمامی زامبی‌های زمین.,Butter +5%,Dmg +10,HP +150,2.9,5
+27,Melon-pult,Lobber,AoE,325,300,80,شلیک هوایی سنگین با آسیب مساحتی.,پرتاب هندوانه غول‌پیکر به زامبی‌های تصادفی.,Cost -25,AoE Dmg +15,Dmg +30,2.9,5
+28,Winter Melon,Lobber,"Ice, AoE",500,300,80,شلیک هوایی سنگین با آسیب مساحتی (کندکننده سرعت).,پرتاب هندوانه یخی به زامبی‌های تصادفی.,Cost -50,AoE Dmg +15,Cost -25,2.9,5
+29,Pepper-pult,Lobber,"Fire, AoE",200,300,50,شلیک هوایی با آسیب مساحتی (گرم‌کننده محیط اطراف).,پرتاب فلفل‌های بزرگ به ۳ زامبی تصادفی.,Dmg +15,Warmth Radius +1,Cost -25,2.9,5
+30,Potato Mine,Explosive,"Trap, charge",25,300,1800,مسلح شدن با تاخیر ۱۵ ثانیه؛ انفجار هنگام تماس.,مسلح شدن آنی و پرتاب ۲ مین کلون دیگر.,Arm Time -3s,Cooldown -5s,Dmg +600,-,25
+31,Primal Potato Mine,Explosive,"Trap, charge",50,300,2400,مسلح شدن سریع‌تر ۵ ثانیه ای و انفجار مساحتی ۳x۳.,مسلح شدن آنی و پرتاب ۲ مین به نقاط دیگر.,Arm Time -1s,Cooldown -3s,Dmg +400,-,5
+32,Cherry Bomb,Explosive,-,150,0,1800,انفجار فوری مساحت ۳x۳.,ندارد (مصرفی آنی),Cooldown -5s,Dmg +600,Cost -25,-,35
+33,Squash,Explosive,Trap,50,300,1800,له کردن اولین زامبی مجاور.,له کردن ۲ زامبی تصادفی در سطح زمین.,Cooldown -3s,Dmg +600,Can crush 2x,-,20
+34,Grapeshot,Explosive,-,150,0,1800,انفجار مساحتی ۳x۳ و پرتاب حبه‌های کمانه‌کننده که پس از ۵ ثانیه نابود می‌شوند.,ندارد (مصرفی آنی),Dmg +600,Bounces +1,Cost -25,-,35
+35,Jalapeno,Explosive,Fire,125,0,1800,آتش زدن کل زامبی‌های یک لاین به صورت آنی (ذوب یخ).,ندارد (مصرفی آنی),Cooldown -5s,Dmg +600,Cost -25,-,35
+36,Doom-shroom,Explosive,Shroom,125,0,1800,انفجار مهیب در کل باغچه و ایجاد یک گودال غیرقابل کشت.,ندارد (مصرفی آنی),Cooldown -5s,Dmg +800,Cost -50,-,15
+37,Tangle Kelp,Explosive,"Trap, Water",25,300,Insta-kill,کشیدن اولین زامبی آبی به زیر آب و نابودی آن (مخصوص ساحل).,کشیدن چند زامبی تصادفی در آب به زیر آب.,Cooldown -5s,Targets +1,Cost -25,-,15
+38,Iceberg Lettuce,Explosive,"Trap, Ice",0,300,0,یخ زدن اولین زامبی که روی آن پا بگذارد.,یخ زدن تمامی زامبی‌های موجود در تصویر.,Cooldown -2s,Freeze Time +2s,Cost -0,-,20
+39,Bonk Choy,Melee,-,150,300,15,ضربه فیزیکی به خانه‌های جلو و عقب.,مشت زدن رگباری به شعاع ۳x۳ اطراف خود.,Dmg +5,Atk Speed +10%,HP +200,0.25,5
+40,Phat Beet,Melee,AoE,150,300,15,ضربه صوتی به مساحت ۳x۳ اطراف.,ضربه صوتی بسیار قدرتمند به تمام زامبی‌های اطراف.,Dmg +10,Atk Speed +10%,HP +200,2,5
+41,Chomper,Melee,-,150,300,Insta-kill,بلعیدن آنی؛ نابودی یک زامبی درجا و سپس توقف برای هضم به مدت ۴۰ ثانیه.,بلعیدن همزمان ۳ زامبی از فاصله دور.,Digest -2s,HP +200,Digest -3s,40,5
+42,Wasabi Whip,Melee,Fire,150,300,40,ضربه شلاق به خانه‌های جلو و عقب (گرم‌کننده محیط).,چرخش شلاق در مساحت ۳x۳.,Dmg +10,Range +1 Tile,HP +200,2,5
+43,Kiwibeast,Melee,"AoE, wramp-up",175,300,15/30/45,موج صوتی مساحتی؛ با گذر زمان بزرگتر شده و دمیج بیشتر می‌دهد. To Stg2: 24s | To Stg3: 72s,پرش و کوبیدن محکم به زمین با دمیج مساحتی.,HP +200,Dmg +15,Max Size +1,2,5
+44,Wall-nut,Wall-nut,-,50,4000,0,سد دفاعی مقاوم برای متوقف کردن زامبی‌ها.,دریافت زره دائمی به اندازه ۴۰۰۰ جان اضافه‌تر.,HP +1000,Cooldown -5s,HP +1500,-,20
+45,Tall-nut,Wall-nut,-,125,8000,0,سد بلند؛ جلوگیری از پریدن زامبی‌ها از روی آن.,دریافت زره دائمی ۸۰۰۰ تایی.,HP +2000,Cooldown -5s,HP +3000,-,20
+46,Endurian,Wall-nut,-,100,3000,20,سد دفاعی با قابلیت بازتاب دمیج به زامبی مهاجم.,دریافت زره فلزی و افزایش دمیج انعکاسی.,Reflect Dmg +5,HP +1000,Cost -25,-,15
+47,Garlic,Wall-nut,moveZombies,50,300,0,"با خورده شدن، زامبی را مجبور به حرکت به لاین مجاور می‌کند.",انتقال اجباری تمام زامبی‌های لاین به لاین‌های دیگر.,HP +150,Cooldown -3s,HP +250,-,20
+48,Sweet Potato,Wall-nut,moveZombies,150,3000,0,جذب‌کننده؛ زامبی‌های لاین‌های مجاور را به لاین خود می‌کشد.,جذب تمام زامبی‌های اطراف و بازیابی کامل جان.,HP +1000,Cooldown -5s,HP +1500,-,20
+49,Explode-o-nut,Wall-nut,Explosive,50,4000,1800,"سد دفاعی که به محض از بین رفتن جانش، انفجار مساحتی ایجاد می‌کند.",دریافت زره فلزی (هنگام نابودی زره نیز منفجر می‌شود).,HP +1000,Explode Dmg +200,Cost -25,-,20
+50,Pumpkin,Wall-nut,stack,150,4000,0,سد دفاعی پوششی؛ روی سایر گیاهان کاشته می‌شود تا از آن‌ها محافظت کند.,دریافت زره فلزی قدرتمند.,HP +1000,Cooldown -5s,HP +1500,-,20
+51,Sun Bean,Wall-nut,Sun,50,1000,0,مثل دیوار دفاعی عمل می‌کند و با هر ضربه 5 خورشید تولید می‌کند.,دریافت زره فلزی قدرتمند.,Sun Drop +5,HP +150,Cost -25,-,20
+52,Torchwood,Modifier,Fire,175,300,0,تغییر خواص تیر؛ تبدیل تیر عبوری به آتشی (دمیج دو برابر و ذوب یخ).,ایجاد شعله آبی (دمیج تیرها را ۳ برابر می‌کند).,HP +300,AoE on Death,Cost -25,-,5
+53,Magnet-shroom,Homing,"Shroom, Magic",100,300,0,خلع سلاح؛ جذب اشیای فلزی (سطل/کلاهخود) از سر زامبی‌ها.,جذب چندین فلز همزمان و هضم آنها,Range +1 Tile,Cooldown -5s,HP +200,10,15
+54,Hypno-shroom,Modifier,"Shroom, Magic",125,300,0,"با خورده شدن، زامبی مهاجم هیپنوتیزم شده و به نفع بازیکن می‌جنگد.",تبدیل زامبی خورنده به غول متفق (Gargantuar).,Cost -25,Zombie HP Buff,Zombie Dmg Buff,-,20
+55,Cat-tail,Homing,-,175,300,15,تیر هدف‌دار به سمت نزدیک‌ترین زامبی شلیک می‌کند,شلیک رگباری تیر هدف‌دار,Dmg +10,HP +200,Cost -25,1.5,20
+56,Imitater,Modifier,-,0,0,0,کپی کردن یک گیاه دیگر (امکان استفاده از دو کارت یکسان).,ندارد (بر اساس گیاه کپی شده),Cooldown -2s,Cost -25,plant food on enterance,-,0
+57,Ice-shroom,Explosive,"Shroom, Ice",75,0,0,یخ زدن و توقف موقت تمامی زامبی‌های موجود در کل نقشه.,ندارد (مصرفی آنی),Freeze Time +2s,Cooldown -5s,Dmg +50,-,50
+58,Lily Pad,Modifier,"Water, stack",25,300,0,بستر کاشت سایر گیاهان روی آب (ضروری برای ساحل).,ایجاد چند کپی از خود روی خانه‌های خالی آب.,Cost -25,HP +200,Cooldown -2s,-,5
+59,Hot Potato,Explosive,Fire,0,0,0,کاشت روی یخ برای آب کردن فوری آن (ضروری برای غار یخ‌زده).,ندارد (مصرفی آنی),Cooldown -2s,Melt Area 3x3,Explode on Finish,-,5
+60,Grave Buster,Explosive,-,0,0,Insta-kill,از بین بردن قبرها. (ضروری برای مراحل مصر باستان و قرون تاریک).,ندارد (مصرفی آنی),Eat Time -1s,Cooldown -2s,Explode on Finish,-,10
+61,Enlighten-mint,Sun Producer,-,0,0,0,اعمال موقت پلنت فود به تمامی گیاهان خانواده خود,ندارد (مصرفی آنی),Duration +1s,Cooldown -5s,reset family cooldowns,-,85
+62,Appease-mint,Shooter,-,0,0,0,اعمال موقت پلنت فود به تمامی گیاهان خانواده خود,ندارد (مصرفی آنی),Duration +1s,Cooldown -5s,reset family cooldowns,-,85
+63,Arma-mint,Lobber,-,0,0,0,اعمال موقت پلنت فود به تمامی گیاهان خانواده خود,ندارد (مصرفی آنی),Duration +1s,Cooldown -5s,reset family cooldowns,-,85
+64,Bombard-mint,Explosive,-,0,0,0,اعمال موقت پلنت فود به تمامی گیاهان خانواده خود,ندارد (مصرفی آنی),Duration +1s,Cooldown -5s,reset family cooldowns,-,85
+65,Enforce-mint,Melee,-,0,0,0,اعمال موقت پلنت فود به تمامی گیاهان خانواده خود,ندارد (مصرفی آنی),Duration +1s,Cooldown -5s,reset family cooldowns,-,85
+66,Reinforce-mint,Wall-nut,-,0,0,0,اعمال موقت پلنت فود به تمامی گیاهان خانواده خود,ندارد (مصرفی آنی),Duration +1s,Cooldown -5s,reset family cooldowns,-,85
+67,Enchant-mint,Modifier,-,0,0,0,اعمال موقت پلنت فود به تمامی گیاهان خانواده خود,ندارد (مصرفی آنی),Duration +1s,Cooldown -5s,reset family cooldowns,-,85
+68,Pierce-mint,Strike-through,-,0,0,0,اعمال موقت پلنت فود به تمامی گیاهان خانواده خود,ندارد (مصرفی آنی),Duration +1s,Cooldown -5s,reset family cooldowns,-,85
+69,catTail-mint,Homing,-,0,0,0,اعمال موقت پلنت فود به تمامی گیاهان خانواده خود,ندارد (مصرفی آنی),Duration +1s,Cooldown -5s,reset family cooldowns,-,85

@@ -192,13 +192,13 @@ public class ZombieWalkDemo {
 
     private void printBanner() {
         System.out.println();
-        System.out.println("╔══════════════════════════════════════════════════════╗");
-        System.out.println("║    PvZ CLI Demo  —  Zombie Walking Left Engine       ║");
-        System.out.println("╠══════════════════════════════════════════════════════╣");
+        System.out.println("╔══════════════════════════════════════════════════════════╗");
+        System.out.println("║    PvZ CLI Demo  —  Zombie Walking Left Engine           ║");
+        System.out.println("╠══════════════════════════════════════════════════════════╣");
         System.out.println("║  Grid : 9 cols × 5 lanes  (col 0 = house, col 8 = spawn) ║");
-        System.out.println("║  Zombie: ZombieMummyDefault  |  Speed: 0.185 cells/s ║");
-        System.out.println("║  10 ticks = 1 second  |  Type 'help' for commands   ║");
-        System.out.println("╚══════════════════════════════════════════════════════╝");
+        System.out.println("║  Zombie: ZombieMummyDefault  |  Speed: 0.185 cells/s     ║");
+        System.out.println("║  10 ticks = 1 second  |  Type 'help' for commands        ║");
+        System.out.println("╚══════════════════════════════════════════════════════════╝");
         System.out.println();
     }
 

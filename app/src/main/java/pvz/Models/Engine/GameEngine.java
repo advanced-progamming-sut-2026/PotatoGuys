@@ -24,9 +24,6 @@ public class GameEngine {
     }
 
     private void processOneTick() {
-        // Always call enter() on every batch of newly registered entities
-        // before merging them into the live list.
-        // Bug in original: enter() was only called once (on the very first tick).
         for (TickAware entity : new ArrayList<>(getToAdd())) {
             entity.enter();
         }

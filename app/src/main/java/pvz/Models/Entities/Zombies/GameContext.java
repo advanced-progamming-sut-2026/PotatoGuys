@@ -12,7 +12,7 @@ package pvz.Models.Entities.Zombies;
  * around it) should implement this interface and be passed into every
  * {@link Zombie} at construction time via {@link ZombieFactory}.
  */
-public interface ZombieGameContext {
+public interface GameContext {
 
     // ─── Plant queries ────────────────────────────────────────────────────────
 
