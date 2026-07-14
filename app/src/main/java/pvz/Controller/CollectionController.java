@@ -3,7 +3,6 @@ package pvz.Controller;
 import java.util.regex.Matcher;
 
 import pvz.Models.AppContext;
-import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
@@ -37,7 +36,7 @@ public class CollectionController {
             output.append("\n- ").append(p.Type);
             output.append(" | Level: ").append(p.level);
             output.append(" | Sun Cost: ").append(sheet.getSunCost());
-            if (p.isBoost) output.append(" [BOOSTED]");
+            if (p.isBoosted) output.append(" [BOOSTED]");
         }
         return new Result(output.toString());
     }
@@ -108,7 +107,7 @@ public class CollectionController {
             output.append("\nHP: ").append((int) sheet.getBaseHp());
             output.append("\nRecharge: ").append(sheet.getRechargeSeconds());
             output.append("\nAction Interval: ").append(sheet.getActionIntervalSeconds());
-            output.append("\nBoosted: ").append(plant.isBoost ? "Yes" : "No");
+            output.append("\nBoosted: ").append(plant.isBoosted ? "Yes" : "No");
         } else {
             output.append("\n\nStatus: Not yet unlocked.");
         }

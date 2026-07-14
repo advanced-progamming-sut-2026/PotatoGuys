@@ -27,7 +27,7 @@ public class Collection {
         MyPlant newPlant = new MyPlant();
         newPlant.Type = plant;
         newPlant.level = level;
-        newPlant.isBoost = isBoost;
+        newPlant.isBoosted = isBoost;
         unlockedPlants.add(newPlant);
     }
 
