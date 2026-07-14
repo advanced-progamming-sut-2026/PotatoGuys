@@ -1,12 +1,18 @@
 package pvz.View;
 
-import pvz.Controller.Game.PreGameController;
+import pvz.Controller.Game.PreNormalGameController;
 import pvz.Enums.Commands.PreGameMenuCommand;
+import pvz.Models.Seasons.Season;
 
 import java.util.regex.Matcher;
 
 public class PreGameMenu implements Menu{
-    PreGameController controller=new PreGameController();
+    PreNormalGameController controller;
+
+    public PreGameMenu(Season season, int levelNumber){
+        this.controller = new PreNormalGameController(season, levelNumber);
+    }
+
     @Override
     public Result handleInput(String input) {
         Matcher matcher;
@@ -26,6 +32,6 @@ public class PreGameMenu implements Menu{
 
     @Override
     public Result onEnter() {
-        return null;
+        return new Result("Select 7 plants to start the game.");
     }
 }

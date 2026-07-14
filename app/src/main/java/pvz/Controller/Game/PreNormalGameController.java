@@ -1,15 +1,17 @@
 package pvz.Controller.Game;
 
-import pvz.Models.Constants;
 import pvz.Models.DataTypes.Vector2;
 import pvz.Models.Engine.GameEngine;
 import pvz.Models.Entities.Plants.Enums.PlantStorage;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.GameSession;
 import pvz.Models.Seasons.Levels.GameMap;
+import pvz.Models.Seasons.Levels.LevelGameContext;
 import pvz.Models.Seasons.Levels.NormalLevel;
 import pvz.Models.Seasons.Levels.Wave;
+import pvz.Models.Seasons.Levels.WavePhase;
 import pvz.Models.Seasons.Season;
 import pvz.View.Game.NormalGameMenu;
 import pvz.View.Result;
@@ -152,24 +154,58 @@ public class PreNormalGameController extends PreGameController{
 
     @Override
     public Result startGame(Matcher matcher) {
-        if (selectedPlants.size() < MAX_PLANTS){
-            return new Result("You must select all " + MAX_PLANTS + " plants before starting. Currently selected: " + selectedPlants.size() + "/" + MAX_PLANTS);
+        if (selectedPlants.isEmpty()){
+            // Debugging mode: add some default plants if none selected
+            for (PlantStorage ps: PlantStorage.values()){
+                if (selectedPlants.size() < MAX_PLANTS){
+                    selectedPlants.add(ps.getCopy(new Vector2(-1,-1)));
+                } else {
+                    break;
+                }
+            }
         }
+
+        GameEngine engine = GameEngine.getInstance();
+        engine.reset();
+
+        GameMap map = new GameMap();
+        LevelGameContext context = new LevelGameContext(engine, map, null);
+
+        List<Wave> waves = createHardcodedWaves(context, map);
+
+        NormalLevel level = new NormalLevel(engine, map, levelNumber, 150, waves, selectedPlants);
+        
+        // This is a bit of a hack, but we need to associate the level with the context if possible
+        // Actually, LevelGameContext didn't have a setter for level. 
+        // With the fix I applied to LevelGameContext, it should work fine without the level object.
 
         StringBuilder output=new StringBuilder("Starting game with:");
         for (Plant p : selectedPlants){
             String boost = p.isBoosted() ? " [BOOSTED]" : "";
             output.append("\n- ").append(p.getType().toString()).append(boost);
         }
-        List<Wave> waves =new ArrayList<>();
-        waves.add(new Wave(1,false,20,new ArrayList<>()));
-        waves.getFirst().getSpawns().add(new ZombieSpawnEntry());
-        NormalLevel level=new NormalLevel(
-                new GameEngine(),
-                new GameMap(Constants.DEFAULT_ROWS,Constants.DEFAULT_COLS),
-                levelNumber,Constants.DEFAULT_INITIAL_SUN,
+        return new Result(output.toString(), new NormalGameMenu(level));
+    }
 
-                )
-        return new Result(output.toString(), new NormalGameMenu(selectedPlants));
+    private List<Wave> createHardcodedWaves(LevelGameContext context, GameMap map) {
+        List<Wave> waves = new ArrayList<>();
+        int lanes = map.getRows();
+
+        List<ZombieType> basicOnly = List.of(ZombieType.BASIC);
+        List<ZombieType> basicAndMummy = List.of(ZombieType.BASIC, ZombieType.MUMMY);
+        List<ZombieType> basicConeMummy = List.of(ZombieType.BASIC, ZombieType.CONEHEAD, ZombieType.MUMMY);
+
+        WavePhase phase1 = new WavePhase(3, 50, basicOnly, false);
+        waves.add(new Wave(1, false, 300, List.of(phase1), context, lanes, 3));
+
+        WavePhase phase2a = new WavePhase(4, 40, basicAndMummy, false);
+        WavePhase phase2b = new WavePhase(3, 25, basicAndMummy, true);
+        waves.add(new Wave(2, false, 500, List.of(phase2a, phase2b), context, lanes, 3));
+
+        WavePhase phase3a = new WavePhase(5, 35, basicConeMummy, false);
+        WavePhase phase3b = new WavePhase(6, 20, basicConeMummy, true);
+        waves.add(new Wave(3, true, 800, List.of(phase3a, phase3b), context, lanes, 3));
+
+        return waves;
     }
 }

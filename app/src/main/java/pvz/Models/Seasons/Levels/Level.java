@@ -11,6 +11,7 @@ public abstract class Level {
     private LevelType type;
     private int currentSun;
     private List<Wave> waves;
+    private int currentWaveIndex;
 
     public Level(GameEngine engine, GameMap gameMap, int levelNumber, LevelType type, int initialSun,
                  List<Wave> waves){
@@ -20,6 +21,7 @@ public abstract class Level {
         this.type=type;
         this.currentSun=initialSun;
         this.waves=waves;
+        this.currentWaveIndex=0;
     }
 
     public GameMap getGameMap() {
@@ -37,8 +39,37 @@ public abstract class Level {
         return currentSun;
     }
 
+    public void addSun(int amount) {
+        currentSun += amount;
+    }
+
+    public boolean spendSun(int amount) {
+        if (currentSun < amount) return false;
+        currentSun -= amount;
+        return true;
+    }
+
     public List<Wave> getWaves() {
         return waves;
+    }
+
+    public int getCurrentWaveIndex() {
+        return currentWaveIndex;
+    }
+
+    public Wave getCurrentWave() {
+        if (currentWaveIndex >= waves.size()) return null;
+        return waves.get(currentWaveIndex);
+    }
+
+    public boolean allWavesDone() {
+        return currentWaveIndex >= waves.size();
+    }
+
+    public void advanceWave() {
+        if (currentWaveIndex < waves.size()) {
+            currentWaveIndex++;
+        }
     }
 
     public GameEngine getEngine() {

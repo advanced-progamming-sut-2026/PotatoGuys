@@ -14,7 +14,7 @@ public class GameMap {
     }
 
     public GameMap(){
-        this.rows= Constants.
+        this(Constants.DEFAULT_ROWS, Constants.DEFAULT_COLS);
     }
 
     public int getRows() {

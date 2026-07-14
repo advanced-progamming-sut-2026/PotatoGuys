@@ -1,14 +1,18 @@
 package pvz.View;
 
+import pvz.Models.Seasons.AncientEgypt;
+
 public class ChapterMenu implements Menu{
+    private String seasonName;
 
     public ChapterMenu(String seasonName){
-
+        this.seasonName = seasonName;
     }
+
     @Override
     public Result handleInput(String input) {
         if (input.equals("1")){
-            return new Result(new PreGameMenu());
+            return new Result(new PreGameMenu(new AncientEgypt(), 1));
         }
         return new Result("Invalid command in Chapter Menu");
     }

@@ -66,4 +66,11 @@ public class GameEngine {
     public boolean isFirstTickDone() {
         return firstTickDone;
     }
+
+    public void reset() {
+        entities.clear();
+        toAdd.clear();
+        toRemove.clear();
+        firstTickDone = false;
+    }
 }

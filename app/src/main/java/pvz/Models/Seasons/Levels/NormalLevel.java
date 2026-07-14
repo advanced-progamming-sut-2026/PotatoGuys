@@ -11,4 +11,8 @@ public class NormalLevel extends Level{
         super(engine, gameMap, levelNumber, LevelType.NORMAL, initialSun, waves);
         this.plants=plants;
     }
+
+    public List<Plant> getPlants() {
+        return plants;
+    }
 }
