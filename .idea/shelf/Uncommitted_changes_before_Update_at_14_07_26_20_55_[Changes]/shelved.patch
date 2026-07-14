@@ -1,0 +1,197 @@
+Index: app/src/main/java/pvz/Models/User/MyPlant.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Models.User;\n\nimport pvz.Models.Entities.Plants.Enums.PlantType;\n\npublic class MyPlant {\n    public PlantType Type;\n    public int level;\n    public boolean isBoosted;\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Models/User/MyPlant.java b/app/src/main/java/pvz/Models/User/MyPlant.java
+--- a/app/src/main/java/pvz/Models/User/MyPlant.java	(revision e583b7cb725be3581d00dff91b8a752541de95f7)
++++ b/app/src/main/java/pvz/Models/User/MyPlant.java	(date 1784049701038)
+@@ -3,7 +3,31 @@
+ import pvz.Models.Entities.Plants.Enums.PlantType;
+ 
+ public class MyPlant {
+-    public PlantType Type;
+-    public int level;
+-    public boolean isBoosted;
++    private PlantType Type;
++    private int level;
++    private boolean isBoosted;
++
++    public PlantType getType() {
++        return Type;
++    }
++
++    public void setType(PlantType type) {
++        Type = type;
++    }
++
++    public int getLevel() {
++        return level;
++    }
++
++    public void setLevel(int level) {
++        this.level = level;
++    }
++
++    public boolean isBoosted() {
++        return isBoosted;
++    }
++
++    public void setBoosted(boolean boosted) {
++        isBoosted = boosted;
++    }
+ }
+Index: app/src/main/java/pvz/Controller/Game/PreNormalGameController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Controller.Game;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.regex.Matcher;\n\nimport pvz.Models.AppContext;\nimport pvz.Models.DataTypes.Vector2;\nimport pvz.Models.Engine.GameEngine;\nimport pvz.Models.Entities.Plants.Plant;\nimport pvz.Models.Entities.Plants.PlantFactory;\nimport pvz.Models.Entities.Plants.Enums.PlantType;\nimport pvz.Models.Entities.Plants.data.PlantPropertySheet;\nimport pvz.Models.Entities.Plants.data.PlantRegistry;\nimport pvz.Models.Entities.Zombies.ZombieType;\nimport pvz.Models.Seasons.Season;\nimport pvz.Models.Seasons.Levels.GameMap;\nimport pvz.Models.Seasons.Levels.LevelGameContext;\nimport pvz.Models.Seasons.Levels.NormalLevel;\nimport pvz.Models.Seasons.Levels.Wave;\nimport pvz.Models.Seasons.Levels.WavePhase;\nimport pvz.View.Result;\nimport pvz.View.Game.NormalGameMenu;\n\npublic class PreNormalGameController extends PreGameController {\n    private static final int MAX_PLANTS = 7;\n    private final PlantFactory plantFactory = new PlantFactory();\n    List<PlantPropertySheet> selectedPlants;\n    int levelNumber;\n\n    public PreNormalGameController(Season season, int level){\n        super(season,level);\n        selectedPlants=new ArrayList<>();\n        levelNumber=level;\n    }\n\n    public Result showAllPlants(Matcher matcher){\n        StringBuilder output=new StringBuilder();\n        for (PlantType type : PlantType.values()){\n            var sheet = PlantRegistry.getInstance().getSheet(type);\n            if (sheet == null) continue;\n            output.append(\"type: \").append(type.toString());\n            output.append(\"\\n Sun Cost: \").append(sheet.getSunCost());\n        }\n        return new Result(output.toString());\n    }\n\n    public Result showAvailablePlants(Matcher matcher){\n        StringBuilder output=new StringBuilder();\n        for (Plant p:AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){\n            output.append(\"type: \").append(p.getType().toString());\n            output.append(\"\\n Sun Cost: \").append(p.getSunCost());\n        }\n        return new Result(output.toString());\n    }\n\n    public Result plantAdd(Matcher matcher){\n        String type=matcher.group(\"type\").trim().toUpperCase();\n\n        if (selectedPlants.size() >= MAX_PLANTS){\n            return new Result(\"You can only select up to \" + MAX_PLANTS + \" plants.\");\n        }\n\n        PlantType plantType = null;\n        for (PlantType pt : PlantType.values()){\n            if (pt.toString().equals(type)){\n                plantType = pt;\n                break;\n            }\n        }\n        if (plantType == null){\n            return new Result(\"Plant not found.\");\n        }\n\n        List<Plant> unlocked = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants();\n        boolean isUnlocked = false;\n        for (Plant p : unlocked){\n            if (p.getType() == plantType){\n                isUnlocked = true;\n                break;\n            }\n        }\n        if (!isUnlocked){\n            return new Result(\"You have not unlocked this plant.\");\n        }\n\n        for (PlantPropertySheet p : selectedPlants){\n            if (p.getType() == plantType){\n                return new Result(\"This plant is already in your selection.\");\n            }\n        }\n\n        PlantPropertySheet owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(plantType);\n        selectedPlants.add(owned != null ? plantFactory.copyUnplaced(owned) : plantFactory.createUnplaced(plantType, 1, false));\n\n        StringBuilder output=new StringBuilder(\"Plant added. Selected Plants (\" + selectedPlants.size() + \"/\" + MAX_PLANTS + \"):\");\n        for (Plant p : selectedPlants){\n            output.append(\"\\n- \").append(p.getType().toString());\n        }\n        return new Result(output.toString());\n    }\n\n    public Result plantRemove(Matcher matcher){\n        String type=matcher.group(\"type\").trim().toUpperCase();\n\n        PlantType plantType = null;\n        for (PlantType pt : PlantType.values()){\n            if (pt.toString().equals(type)){\n                plantType = pt;\n                break;\n            }\n        }\n        if (plantType == null){\n            return new Result(\"Plant not found.\");\n        }\n\n        for (int i = 0; i < selectedPlants.size(); i++){\n            if (selectedPlants.get(i).getType() == plantType){\n                selectedPlants.remove(i);\n                StringBuilder output=new StringBuilder(\"Plant removed. Selected Plants (\" + selectedPlants.size() + \"/\" + MAX_PLANTS + \"):\");\n                for (PlantPropertySheet p : selectedPlants){\n                    output.append(\"\\n- \").append(p.getType().toString());\n                }\n                return new Result(output.toString());\n            }\n        }\n        return new Result(\"This plant is not in your selection.\");\n    }\n\n    public Result boostPlant(Matcher matcher){\n        String type=matcher.group(\"type\").trim().toUpperCase();\n\n        PlantType plantType = null;\n        for (PlantType pt : PlantType.values()){\n            if (pt.toString().equals(type)){\n                plantType = pt;\n                break;\n            }\n        }\n        if (plantType == null){\n            return new Result(\"Plant not found.\");\n        }\n\n        for (PlantPropertySheet p : selectedPlants){\n            if (p.getType() == plantType){\n                if (p.isBoosted()){\n                    return new Result(\"This plant is already boosted.\");\n                }\n                p.setBoosted(true);\n                return new Result(p.getType().toString() + \" has been boosted.\");\n            }\n        }\n        return new Result(\"This plant is not in your selection.\");\n    }\n\n    @Override\n    public Result startGame(Matcher matcher) {\n        if (selectedPlants.isEmpty()){\n            // Debugging mode: add some default plants if none selected\n            for (PlantStragy ps: PlantStorage.values()){\n                if (selectedPlants.size() < MAX_PLANTS){\n                    selectedPlants.add(ps.getCopy(new Vector2(-1,-1)));\n                } else {\n                    break;\n                }\n            }\n        }\n\n        GameEngine engine = GameEngine.getInstance();\n        engine.reset();\n\n        GameMap map = new GameMap();\n        LevelGameContext context = new LevelGameContext(engine, map, null);\n\n        List<Wave> waves = createHardcodedWaves(context, map);\n\n        NormalLevel level = new NormalLevel(engine, map, levelNumber, 150, waves, selectedPlants);\n\n        // This is a bit of a hack, but we need to associate the level with the context if possible\n        // Actually, LevelGameContext didn't have a setter for level.\n        // With the fix I applied to LevelGameContext, it should work fine without the level object.\n\n        StringBuilder output=new StringBuilder(\"Starting game with:\");\n        for (Plant p : selectedPlants){\n            String boost = p.isBoosted() ? \" [BOOSTED]\" : \"\";\n            output.append(\"\\n- \").append(p.getType().toString()).append(boost);\n        }\n        return new Result(output.toString(), new NormalGameMenu(level));\n    }\n\n    private List<Wave> createHardcodedWaves(LevelGameContext context, GameMap map) {\n        List<Wave> waves = new ArrayList<>();\n        int lanes = map.getRows();\n\n        List<ZombieType> basicOnly = List.of(ZombieType.BASIC);\n        List<ZombieType> basicAndMummy = List.of(ZombieType.BASIC, ZombieType.MUMMY);\n        List<ZombieType> basicConeMummy = List.of(ZombieType.BASIC, ZombieType.CONEHEAD, ZombieType.MUMMY);\n\n        WavePhase phase1 = new WavePhase(3, 50, basicOnly, false);\n        waves.add(new Wave(1, false, 300, List.of(phase1), context, lanes, 3));\n\n        WavePhase phase2a = new WavePhase(4, 40, basicAndMummy, false);\n        WavePhase phase2b = new WavePhase(3, 25, basicAndMummy, true);\n        waves.add(new Wave(2, false, 500, List.of(phase2a, phase2b), context, lanes, 3));\n\n        WavePhase phase3a = new WavePhase(5, 35, basicConeMummy, false);\n        WavePhase phase3b = new WavePhase(6, 20, basicConeMummy, true);\n        waves.add(new Wave(3, true, 800, List.of(phase3a, phase3b), context, lanes, 3));\n\n        return waves;\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java b/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java
+--- a/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java	(revision e583b7cb725be3581d00dff91b8a752541de95f7)
++++ b/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java	(date 1784049620406)
+@@ -19,6 +19,7 @@
+ import pvz.Models.Seasons.Levels.NormalLevel;
+ import pvz.Models.Seasons.Levels.Wave;
+ import pvz.Models.Seasons.Levels.WavePhase;
++import pvz.Models.User.MyPlant;
+ import pvz.View.Result;
+ import pvz.View.Game.NormalGameMenu;
+ 
+@@ -34,6 +35,7 @@
+         levelNumber=level;
+     }
+ 
++
+     public Result showAllPlants(Matcher matcher){
+         StringBuilder output=new StringBuilder();
+         for (PlantType type : PlantType.values()){
+@@ -47,7 +49,7 @@
+ 
+     public Result showAvailablePlants(Matcher matcher){
+         StringBuilder output=new StringBuilder();
+-        for (Plant p:AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
++        for (MyPlant p:AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
+             output.append("type: ").append(p.getType().toString());
+             output.append("\n Sun Cost: ").append(p.getSunCost());
+         }
+Index: app/src/main/java/pvz/Models/User/Collection.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Models.User;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\nimport pvz.Models.Entities.Plants.Enums.PlantType;\r\nimport pvz.Models.Entities.Zombies.ZombieType;\r\n\r\npublic class Collection {\r\n    private List<MyPlant> unlockedPlants;\r\n    private List<ZombieType> unlockedZombies;\r\n\r\n    public Collection(){\r\n        this.unlockedPlants=new ArrayList<>();\r\n        this.unlockedZombies=new ArrayList<>();\r\n    }\r\n\r\n    public List<MyPlant> getUnlockedPlants() {\r\n        return unlockedPlants;\r\n    }\r\n\r\n    public void setUnlockedPlants(List<MyPlant> unlockedPlants) {\r\n        this.unlockedPlants = unlockedPlants;\r\n    }\r\n\r\n    public void addPlant(PlantType plant , int level , boolean isBoost){\r\n        MyPlant newPlant = new MyPlant();\r\n        newPlant.Type = plant;\r\n        newPlant.level = level;\r\n        newPlant.isBoosted = isBoost;\r\n        unlockedPlants.add(newPlant);\r\n    }\r\n\r\n    public MyPlant getPlant(PlantType type){\r\n        for (MyPlant p : unlockedPlants){\r\n            if (p.Type == type){\r\n                return p;\r\n            }\r\n        }\r\n        return null;\r\n    }\r\n\r\n    public List<ZombieType> getUnlockedZombies() {\r\n        return unlockedZombies;\r\n    }\r\n\r\n    public void setUnlockedZombies(List<ZombieType> unlockedZombies) {\r\n        this.unlockedZombies = unlockedZombies;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Models/User/Collection.java b/app/src/main/java/pvz/Models/User/Collection.java
+--- a/app/src/main/java/pvz/Models/User/Collection.java	(revision e583b7cb725be3581d00dff91b8a752541de95f7)
++++ b/app/src/main/java/pvz/Models/User/Collection.java	(date 1784049700841)
+@@ -25,15 +25,15 @@
+ 
+     public void addPlant(PlantType plant , int level , boolean isBoost){
+         MyPlant newPlant = new MyPlant();
+-        newPlant.Type = plant;
+-        newPlant.level = level;
+-        newPlant.isBoosted = isBoost;
++        newPlant.setType(plant);
++        newPlant.setLevel(level);
++        newPlant.setBoosted(isBoost);
+         unlockedPlants.add(newPlant);
+     }
+ 
+     public MyPlant getPlant(PlantType type){
+         for (MyPlant p : unlockedPlants){
+-            if (p.Type == type){
++            if (p.getType() == type){
+                 return p;
+             }
+         }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"7fd54749-b0f8-4a89-ad5d-d24c03e69d49\" name=\"Changes\" comment=\"h_edit3\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ExternalProjectsData\">\r\n    <projectState path=\"$PROJECT_DIR$\">\r\n      <ProjectState />\r\n    </projectState>\r\n  </component>\r\n  <component name=\"ExternalProjectsManager\">\r\n    <system id=\"GRADLE\">\r\n      <state>\r\n        <projects_view>\r\n          <tree_state>\r\n            <expand>\r\n              <path>\r\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\r\n                <item name=\"pvz\" type=\"f1a62948:ProjectNode\" />\r\n              </path>\r\n            </expand>\r\n            <select />\r\n          </tree_state>\r\n        </projects_view>\r\n      </state>\r\n    </system>\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Interface\" />\r\n        <option value=\"Enum\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitLabMergeRequestFiltersHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPENED&quot;,\n    &quot;assignee&quot;: {\n      &quot;type&quot;: &quot;org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue&quot;,\n      &quot;username&quot;: &quot;sedhhn&quot;,\n      &quot;fullname&quot;: &quot;sedhhn&quot;\n    }\n  }\n}</component>\r\n  <component name=\"GitLabMergeRequestsSettings\">{\n  &quot;selectedUrlAndAccountId&quot;: {\n    &quot;first&quot;: &quot;https://hamgit.ir/sedhhn/plantsvszombies2.git&quot;,\n    &quot;second&quot;: &quot;83191278-9b68-4e33-a55d-f523d58ebe84&quot;\n  }\n}</component>\r\n  <component name=\"McpProjectServerCommands\">\r\n    <commands />\r\n    <urls />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 7\n}</component>\r\n  <component name=\"ProjectId\" id=\"3EhtQq7cdtR5etykGDiYWn2syZ2\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;Application.App.executor&quot;: &quot;Run&quot;,\n    &quot;Application.Main.executor&quot;: &quot;Run&quot;,\n    &quot;Gradle.Build PlantsVsZombies2.executor&quot;: &quot;Run&quot;,\n    &quot;Gradle.Build plantsvszombies2.executor&quot;: &quot;Run&quot;,\n    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,\n    &quot;Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor&quot;: &quot;Run&quot;,\n    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,\n    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,\n    &quot;git-widget-placeholder&quot;: &quot;main&quot;,\n    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,\n    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\n    &quot;last_opened_file_path&quot;: &quot;C:/Users/104/plantsvszombies2&quot;,\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\n    &quot;onboarding.tips.debug.path&quot;: &quot;H:/Code/Java/AP Project/PlantsVsZombies2/src/Main.java&quot;,\n    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,\n    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,\n    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,\n    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,\n    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\n  }\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CreateClassDialog.RecentsKey\">\r\n      <recent name=\"Models.Plants.Strategies\" />\r\n    </key>\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"H:\\Code\\Java\\AP Project\\PlantsVsZombies2\" />\r\n      <recent name=\"H:\\Code\\Java\\AP Project\\PlantsVsZombies2\\src\\Models\" />\r\n      <recent name=\"H:\\Code\\Java\\AP Project\\PlantsVsZombies2\\src\\Models\\Quests\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"H:\\Code\\Java\\AP Project\\PlantsVsZombies2\\src\\Models\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"Models.Seasons.Levels\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.App\">\r\n    <configuration name=\"App\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"ALTERNATIVE_JRE_PATH\" value=\"25\" />\r\n      <option name=\"ALTERNATIVE_JRE_PATH_ENABLED\" value=\"true\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"pvz.App\" />\r\n      <module name=\"pvz.app.main\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"pvz.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"Main\" />\r\n      <module name=\"PlantsVsZombies2\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.App\" />\r\n        <item itemvalue=\"Application.Main\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"7fd54749-b0f8-4a89-ad5d-d24c03e69d49\" name=\"Changes\" comment=\"\" />\r\n      <created>1780642625198</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1780642625198</updated>\r\n      <workItem from=\"1780642626620\" duration=\"14477000\" />\r\n      <workItem from=\"1780727383033\" duration=\"14135000\" />\r\n      <workItem from=\"1780804437258\" duration=\"285000\" />\r\n      <workItem from=\"1780925266895\" duration=\"929000\" />\r\n      <workItem from=\"1781073541845\" duration=\"6364000\" />\r\n      <workItem from=\"1781101092972\" duration=\"19478000\" />\r\n      <workItem from=\"1781247032363\" duration=\"72000\" />\r\n      <workItem from=\"1781271335831\" duration=\"9143000\" />\r\n      <workItem from=\"1781910195158\" duration=\"2313000\" />\r\n      <workItem from=\"1781946617001\" duration=\"115000\" />\r\n      <workItem from=\"1781966693070\" duration=\"2800000\" />\r\n      <workItem from=\"1781975412844\" duration=\"4962000\" />\r\n      <workItem from=\"1781986710773\" duration=\"49000\" />\r\n      <workItem from=\"1782487778184\" duration=\"13935000\" />\r\n      <workItem from=\"1782510561795\" duration=\"23000\" />\r\n      <workItem from=\"1782510607217\" duration=\"3592000\" />\r\n      <workItem from=\"1782570237495\" duration=\"326000\" />\r\n      <workItem from=\"1782837458977\" duration=\"1143000\" />\r\n      <workItem from=\"1783009235562\" duration=\"633000\" />\r\n      <workItem from=\"1783009979306\" duration=\"799000\" />\r\n      <workItem from=\"1783010994303\" duration=\"5330000\" />\r\n      <workItem from=\"1783024573960\" duration=\"1995000\" />\r\n      <workItem from=\"1783967805064\" duration=\"3369000\" />\r\n      <workItem from=\"1784005253170\" duration=\"13538000\" />\r\n      <workItem from=\"1784032908142\" duration=\"9226000\" />\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"XSLT-Support.FileAssociations.UIState\">\r\n    <expand />\r\n    <select />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision e583b7cb725be3581d00dff91b8a752541de95f7)
++++ b/.idea/workspace.xml	(date 1784049937759)
+@@ -5,8 +5,10 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="7fd54749-b0f8-4a89-ad5d-d24c03e69d49" name="Changes" comment="h_edit3">
+-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/CollectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/CollectionController.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Collection.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Collection.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/MyPlant.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/MyPlant.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -198,6 +200,7 @@
+       <workItem from="1783967805064" duration="3369000" />
+       <workItem from="1784005253170" duration="13538000" />
+       <workItem from="1784032908142" duration="9226000" />
++      <workItem from="1784043171457" duration="4151000" />
+     </task>
+     <servers />
+   </component>
+Index: app/src/main/java/pvz/Controller/CollectionController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Controller;\n\nimport java.util.regex.Matcher;\n\nimport pvz.Models.AppContext;\nimport pvz.Models.Entities.Plants.PlantFactory;\nimport pvz.Models.Entities.Plants.Enums.PlantType;\nimport pvz.Models.Entities.Plants.data.PlantPropertySheet;\nimport pvz.Models.Entities.Plants.data.PlantRegistry;\nimport pvz.Models.Entities.Zombies.ZombieType;\nimport pvz.Models.Entities.Zombies.data.ZombieRegistry;\nimport pvz.Models.User.Collection;\nimport pvz.Models.User.MyPlant;\nimport pvz.Models.User.Profile;\nimport pvz.View.ChapterSelectionMenu;\nimport pvz.View.Menu;\nimport pvz.View.Result;\n\npublic class CollectionController {\n    private static final int PURCHASE_COST = 100;\n    private static final int UPGRADE_BASE_COST = 50;\n    private final PlantFactory plantFactory = new PlantFactory();\n\n    private Profile getProfile() {\n        return AppContext.getInstance().getCurrentUser().getProfile();\n    }\n\n    private Collection getCollection() {\n        return getProfile().getCollection();\n    }\n\n    public Result showPlants(Matcher matcher) {\n        StringBuilder output = new StringBuilder(\"Your unlocked plants:\");\n        for (MyPlant p : getCollection().getUnlockedPlants()) {\n            PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(p.Type);\n            output.append(\"\\n- \").append(p.Type);\n            output.append(\" | Level: \").append(p.level);\n            output.append(\" | Sun Cost: \").append(sheet.getSunCost());\n            if (p.isBoosted) output.append(\" [BOOSTED]\");\n        }\n        return new Result(output.toString());\n    }\n\n    public Result showAllPlants(Matcher matcher) {\n        StringBuilder output = new StringBuilder(\"All plants:\");\n        for (PlantType pt : PlantType.values()) {\n            PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(pt);\n            if (sheet == null) continue;\n            output.append(\"\\n- \").append(sheet.getType().toString());\n            output.append(\" | \").append(sheet.getCategory().toString());\n            output.append(\" | Sun: \").append(sheet.getSunCost());\n            output.append(\" | HP: \").append((int) sheet.getBaseHp());\n            output.append(\" | Recharge: \").append(sheet.getRechargeSeconds());\n        }\n        return new Result(output.toString());\n    }\n\n    public Result showZombies(Matcher matcher) {\n        StringBuilder output = new StringBuilder(\"Your unlocked zombies:\");\n        for (ZombieType z : getCollection().getUnlockedZombies()) {\n            output.append(\"\\n- \").append(ZombieRegistry.getInstance().getSheet(z.getAlias()));\n        }\n        return new Result(output.toString());\n    }\n\n    public Result showAllZombies(Matcher matcher) {\n        StringBuilder output = new StringBuilder(\"All zombie types:\");\n        for (ZombieType zt : ZombieType.values()) {\n            output.append(\"\\n- \").append(zt.name());\n            output.append(\" (\").append(zt.getAlias()).append(\")\");\n        }\n        return new Result(output.toString());\n    }\n\n    public Result showPlantInfo(Matcher matcher) {\n        String name = matcher.group(\"plantName\");\n\n        PlantType plantType = null;\n        for (PlantType pt : PlantType.values()) {\n            if (pt.name().equalsIgnoreCase(name)) {\n                plantType = pt;\n                break;\n            }\n        }\n        if (plantType == null) {\n            return new Result(\"Plant \\\"\" + name + \"\\\" not found.\");\n        }\n\n        PlantPropertySheet storage = PlantRegistry.getInstance().getSheet(plantType);\n        if (storage == null) {\n            return new Result(\"No data available for this plant.\");\n        }\n\n        StringBuilder output = new StringBuilder();\n        output.append(\"Plant: \").append(plantType.toString());\n        output.append(\"\\nCategory: \").append(storage.getCategory().toString());\n        output.append(\"\\nSun Cost: \").append(storage.getSunCost());\n        output.append(\"\\nBase HP: \").append((int) storage.getBaseHp());\n        output.append(\"\\nBase Recharge: \").append(storage.getRechargeSeconds());\n        output.append(\"\\nBase Action Interval: \").append(storage.getActionIntervalSeconds());\n\n        MyPlant plant = getCollection().getPlant(plantType);\n        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(plantType);\n        if (plant != null) {\n            output.append(\"\\n\\nYour plant:\");\n            output.append(\"\\nLevel: \").append(plant.level);\n            output.append(\"\\nHP: \").append((int) sheet.getBaseHp());\n            output.append(\"\\nRecharge: \").append(sheet.getRechargeSeconds());\n            output.append(\"\\nAction Interval: \").append(sheet.getActionIntervalSeconds());\n            output.append(\"\\nBoosted: \").append(plant.isBoosted ? \"Yes\" : \"No\");\n        } else {\n            output.append(\"\\n\\nStatus: Not yet unlocked.\");\n        }\n        return new Result(output.toString());\n    }\n\n    public Result showZombieInfo(Matcher matcher) {\n        String name = matcher.group(\"zombieName\");\n\n        ZombieType zombieType = null;\n        for (ZombieType zt : ZombieType.values()) {\n            if (zt.name().equalsIgnoreCase(name)) {\n                zombieType = zt;\n                break;\n            }\n        }\n        if (zombieType == null) {\n            return new Result(\"Zombie \\\"\" + name + \"\\\" not found.\");\n        }\n\n        StringBuilder output = new StringBuilder();\n        output.append(\"Zombie: \").append(zombieType.name());\n        output.append(\"\\nAlias: \").append(zombieType.getAlias());\n        return new Result(output.toString());\n    }\n\n    public Result upgradePlant(Matcher matcher) {\n        String name = matcher.group(\"plantName\");\n\n        PlantType plantType = null;\n        for (PlantType pt : PlantType.values()) {\n            if (pt.name().equalsIgnoreCase(name)) {\n                plantType = pt;\n                break;\n            }\n        }\n        if (plantType == null) {\n            return new Result(\"Plant \\\"\" + name + \"\\\" not found.\");\n        }\n\n        MyPlant owned = getCollection().getPlant(plantType);\n        if (owned == null) {\n            return new Result(\"You do not own this plant. Purchase it first.\");\n        }\n\n        int currentLevel = owned.level;\n        int cost = UPGRADE_BASE_COST * currentLevel;\n        int coins = getProfile().getCoins();\n        if (coins < cost) {\n            return new Result(\"Not enough coins. Need \" + cost + \" coins, have \" + coins + \".\");\n        }\n\n        owned.level = (currentLevel + 1);\n        getProfile().setCoins(coins - cost);\n\n        return new Result(plantType.toString() + \" upgraded to level \" + (currentLevel + 1)\n                + \". Cost: \" + cost + \" coins. Remaining: \" + (coins - cost) + \" coins.\");\n    }\n\n    public Result purchasePlant(Matcher matcher) {\n        String name = matcher.group(\"plantName\");\n\n        PlantType plantType = null;\n        for (PlantType pt : PlantType.values()) {\n            if (pt.name().equalsIgnoreCase(name)) {\n                plantType = pt;\n                break;\n            }\n        }\n        if (plantType == null) {\n            return new Result(\"Plant \\\"\" + name + \"\\\" not found.\");\n        }\n\n        if (getCollection().getPlant(plantType) != null) {\n            return new Result(\"You already own this plant.\");\n        }\n\n        if (PlantRegistry.getInstance().getSheet(plantType) == null) {\n            return new Result(\"This plant is not available for purchase.\");\n        }\n\n        int coins = getProfile().getCoins();\n        if (coins < PURCHASE_COST) {\n            return new Result(\"Not enough coins. Need \" + PURCHASE_COST + \" coins, have \" + coins + \".\");\n        }\n\n        getCollection().addPlant(plantType, 1, false);\n        getProfile().setCoins(coins - PURCHASE_COST);\n\n        return new Result(\"Purchased \" + plantType.toString() + \" for \" + PURCHASE_COST + \" coins. \"\n                + \"Remaining: \" + (coins - PURCHASE_COST) + \" coins.\");\n    }\n\n    public Result exit(Matcher matcher) {\n        Menu nextMenu = new ChapterSelectionMenu();\n        return new Result(\"Exited to \" + nextMenu.getName(), nextMenu);\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Controller/CollectionController.java b/app/src/main/java/pvz/Controller/CollectionController.java
+--- a/app/src/main/java/pvz/Controller/CollectionController.java	(revision e583b7cb725be3581d00dff91b8a752541de95f7)
++++ b/app/src/main/java/pvz/Controller/CollectionController.java	(date 1784049700932)
+@@ -32,11 +32,11 @@
+     public Result showPlants(Matcher matcher) {
+         StringBuilder output = new StringBuilder("Your unlocked plants:");
+         for (MyPlant p : getCollection().getUnlockedPlants()) {
+-            PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(p.Type);
+-            output.append("\n- ").append(p.Type);
+-            output.append(" | Level: ").append(p.level);
++            PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(p.getType());
++            output.append("\n- ").append(p.getType());
++            output.append(" | Level: ").append(p.getLevel());
+             output.append(" | Sun Cost: ").append(sheet.getSunCost());
+-            if (p.isBoosted) output.append(" [BOOSTED]");
++            if (p.isBoosted()) output.append(" [BOOSTED]");
+         }
+         return new Result(output.toString());
+     }
+@@ -103,11 +103,11 @@
+         PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(plantType);
+         if (plant != null) {
+             output.append("\n\nYour plant:");
+-            output.append("\nLevel: ").append(plant.level);
++            output.append("\nLevel: ").append(plant.getLevel());
+             output.append("\nHP: ").append((int) sheet.getBaseHp());
+             output.append("\nRecharge: ").append(sheet.getRechargeSeconds());
+             output.append("\nAction Interval: ").append(sheet.getActionIntervalSeconds());
+-            output.append("\nBoosted: ").append(plant.isBoosted ? "Yes" : "No");
++            output.append("\nBoosted: ").append(plant.isBoosted() ? "Yes" : "No");
+         } else {
+             output.append("\n\nStatus: Not yet unlocked.");
+         }
+@@ -153,14 +153,14 @@
+             return new Result("You do not own this plant. Purchase it first.");
+         }
+ 
+-        int currentLevel = owned.level;
++        int currentLevel = owned.getLevel();
+         int cost = UPGRADE_BASE_COST * currentLevel;
+         int coins = getProfile().getCoins();
+         if (coins < cost) {
+             return new Result("Not enough coins. Need " + cost + " coins, have " + coins + ".");
+         }
+ 
+-        owned.level = (currentLevel + 1);
++        owned.setLevel((currentLevel + 1));
+         getProfile().setCoins(coins - cost);
+ 
+         return new Result(plantType.toString() + " upgraded to level " + (currentLevel + 1)

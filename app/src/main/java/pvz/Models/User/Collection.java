@@ -25,15 +25,15 @@ public class Collection {
 
     public void addPlant(PlantType plant , int level , boolean isBoost){
         MyPlant newPlant = new MyPlant();
-        newPlant.Type = plant;
-        newPlant.level = level;
-        newPlant.isBoosted = isBoost;
+        newPlant.setType(plant);
+        newPlant.setLevel(level);
+        newPlant.setBoosted(isBoost);
         unlockedPlants.add(newPlant);
     }
 
     public MyPlant getPlant(PlantType type){
         for (MyPlant p : unlockedPlants){
-            if (p.Type == type){
+            if (p.getType() == type){
                 return p;
             }
         }

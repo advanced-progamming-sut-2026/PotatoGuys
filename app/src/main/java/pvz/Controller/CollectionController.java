@@ -32,11 +32,11 @@ public class CollectionController {
     public Result showPlants(Matcher matcher) {
         StringBuilder output = new StringBuilder("Your unlocked plants:");
         for (MyPlant p : getCollection().getUnlockedPlants()) {
-            PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(p.Type);
-            output.append("\n- ").append(p.Type);
-            output.append(" | Level: ").append(p.level);
+            PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(p.getType());
+            output.append("\n- ").append(p.getType());
+            output.append(" | Level: ").append(p.getLevel());
             output.append(" | Sun Cost: ").append(sheet.getSunCost());
-            if (p.isBoosted) output.append(" [BOOSTED]");
+            if (p.isBoosted()) output.append(" [BOOSTED]");
         }
         return new Result(output.toString());
     }
@@ -103,11 +103,11 @@ public class CollectionController {
         PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(plantType);
         if (plant != null) {
             output.append("\n\nYour plant:");
-            output.append("\nLevel: ").append(plant.level);
+            output.append("\nLevel: ").append(plant.getLevel());
             output.append("\nHP: ").append((int) sheet.getBaseHp());
             output.append("\nRecharge: ").append(sheet.getRechargeSeconds());
             output.append("\nAction Interval: ").append(sheet.getActionIntervalSeconds());
-            output.append("\nBoosted: ").append(plant.isBoosted ? "Yes" : "No");
+            output.append("\nBoosted: ").append(plant.isBoosted() ? "Yes" : "No");
         } else {
             output.append("\n\nStatus: Not yet unlocked.");
         }
@@ -153,14 +153,14 @@ public class CollectionController {
             return new Result("You do not own this plant. Purchase it first.");
         }
 
-        int currentLevel = owned.level;
+        int currentLevel = owned.getLevel();
         int cost = UPGRADE_BASE_COST * currentLevel;
         int coins = getProfile().getCoins();
         if (coins < cost) {
             return new Result("Not enough coins. Need " + cost + " coins, have " + coins + ".");
         }
 
-        owned.level = (currentLevel + 1);
+        owned.setLevel((currentLevel + 1));
         getProfile().setCoins(coins - cost);
 
         return new Result(plantType.toString() + " upgraded to level " + (currentLevel + 1)

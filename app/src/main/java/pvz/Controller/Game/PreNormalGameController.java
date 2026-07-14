@@ -49,10 +49,10 @@ public class PreNormalGameController extends PreGameController {
     public Result showAvailablePlants(Matcher matcher){
         StringBuilder output=new StringBuilder();
         for (MyPlant p:AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
-            output.append("\n- ").append(p.Type);
-            output.append(" | Level: ").append(p.level);
-            output.append(" | Sun Cost: ").append(PlantRegistry.getInstance().getSheet(p.Type).getSunCost());
-            if (p.isBoosted) output.append(" [BOOSTED]");
+            output.append("\n- ").append(p.getType());
+            output.append(" | Level: ").append(p.getLevel());
+            output.append(" | Sun Cost: ").append(PlantRegistry.getInstance().getSheet(p.getType()).getSunCost());
+            if (p.isBoosted()) output.append(" [BOOSTED]");
         }
         return new Result(output.toString());
     }
@@ -93,7 +93,7 @@ public class PreNormalGameController extends PreGameController {
             }
         }
 
-        PlantPropertySheet owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(plantType);
+        MyPlant owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(plantType);
         selectedPlants.add(owned != null ? plantFactory.copyUnplaced(owned) : plantFactory.createUnplaced(plantType, 1, false));
 
         StringBuilder output=new StringBuilder("Plant added. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
