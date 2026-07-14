@@ -6,7 +6,7 @@ public enum GameMenuCommand implements MenuCommand {
     SHOW_SUN("^show\\s+sun\\s+amount\\s*$"),
     CHEAT_SUN("^cheat\\s+add\\s+-n\\s+(?<sunCount>\\d+)\\s+suns\\s*$"),
     RELEASE_NUKE("^release\\s+the\\s+nuke\\s*$"),
-    PLANT("^plant\\s+plant\\s+-t\\s+(?<plantType>\\w+)\\s+-l\\s+\\(\\s*(?<plantX>\\d+)\\s*,\\s*(?<plantY>\\d+)\\s*\\)\\s*$"),
+    PLANT("^plant\\s+plant\\s+-t\\s+(?<plantType>.+)\\s+-l\\s+\\(\\s*(?<plantX>\\d+)\\s*,\\s*(?<plantY>\\d+)\\s*\\)\\s*$"),
     CHEAT_COOLDOWN("^cheat\\s+remove-cooldown\\s*$"),
     PLUCK_PLANT("^pluck\\s+plant\\s+-l\\s+\\(\\s*(?<pluckX>\\d+)\\s*,\\s*(?<pluckY>\\d+)\\s*\\)\\s*$"),
     FEED_PLANT("^feed\\s+plant\\s+-l\\s+\\(\\s*(?<feedX>\\d+)\\s*,\\s*(?<feedY>\\d+)\\s*\\)\\s*$"),

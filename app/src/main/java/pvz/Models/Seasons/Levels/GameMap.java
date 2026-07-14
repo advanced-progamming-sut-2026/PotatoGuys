@@ -11,6 +11,11 @@ public class GameMap {
         this.rows=rows;
         this.columns=columns;
         map=new Tile[rows][columns];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                map[i][j]=new Tile();
+            }
+        }
     }
 
     public GameMap(){
