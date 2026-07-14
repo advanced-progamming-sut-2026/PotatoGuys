@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 import pvz.Models.AppContext;
-import pvz.Models.DataTypes.Vector2;
 import pvz.Models.Engine.GameEngine;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.Seasons.Season;
@@ -26,7 +24,7 @@ import pvz.View.Game.NormalGameMenu;
 public class PreNormalGameController extends PreGameController {
     private static final int MAX_PLANTS = 7;
     private final PlantFactory plantFactory = new PlantFactory();
-    List<PlantPropertySheet> selectedPlants;
+    List<MyPlant> selectedPlants;
     int levelNumber;
 
     public PreNormalGameController(Season season, int level){
@@ -58,7 +56,7 @@ public class PreNormalGameController extends PreGameController {
     }
 
     public Result plantAdd(Matcher matcher){
-        String type=matcher.group("type").trim().toUpperCase();
+        String type = matcher.group("type").trim().toUpperCase();
 
         if (selectedPlants.size() >= MAX_PLANTS){
             return new Result("You can only select up to " + MAX_PLANTS + " plants.");
@@ -75,29 +73,21 @@ public class PreNormalGameController extends PreGameController {
             return new Result("Plant not found.");
         }
 
-        List<Plant> unlocked = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants();
-        boolean isUnlocked = false;
-        for (Plant p : unlocked){
-            if (p.getType() == plantType){
-                isUnlocked = true;
-                break;
-            }
-        }
-        if (!isUnlocked){
+        MyPlant owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(plantType);
+        if (owned == null){
             return new Result("You have not unlocked this plant.");
         }
 
-        for (PlantPropertySheet p : selectedPlants){
+        for (MyPlant p : selectedPlants){
             if (p.getType() == plantType){
                 return new Result("This plant is already in your selection.");
             }
         }
 
-        MyPlant owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(plantType);
-        selectedPlants.add(owned != null ? plantFactory.copyUnplaced(owned) : plantFactory.createUnplaced(plantType, 1, false));
+        selectedPlants.add(owned);
 
         StringBuilder output=new StringBuilder("Plant added. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
-        for (Plant p : selectedPlants){
+        for (MyPlant p : selectedPlants){
             output.append("\n- ").append(p.getType().toString());
         }
         return new Result(output.toString());
@@ -121,7 +111,7 @@ public class PreNormalGameController extends PreGameController {
             if (selectedPlants.get(i).getType() == plantType){
                 selectedPlants.remove(i);
                 StringBuilder output=new StringBuilder("Plant removed. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
-                for (PlantPropertySheet p : selectedPlants){
+                for (MyPlant p : selectedPlants){
                     output.append("\n- ").append(p.getType().toString());
                 }
                 return new Result(output.toString());
@@ -144,7 +134,7 @@ public class PreNormalGameController extends PreGameController {
             return new Result("Plant not found.");
         }
 
-        for (PlantPropertySheet p : selectedPlants){
+        for (MyPlant p : selectedPlants){
             if (p.getType() == plantType){
                 if (p.isBoosted()){
                     return new Result("This plant is already boosted.");
@@ -160,13 +150,13 @@ public class PreNormalGameController extends PreGameController {
     public Result startGame(Matcher matcher) {
         if (selectedPlants.isEmpty()){
             // Debugging mode: add some default plants if none selected
-            for (PlantStragy ps: PlantStorage.values()){
-                if (selectedPlants.size() < MAX_PLANTS){
-                    selectedPlants.add(ps.getCopy(new Vector2(-1,-1)));
-                } else {
-                    break;
-                }
-            }
+            // for (PlantStragy ps: PlantStorage.values()){
+            //     if (selectedPlants.size() < MAX_PLANTS){
+            //         selectedPlants.add(ps.getCopy(new Vector2(-1,-1)));
+            //     } else {
+            //         break;
+            //     }
+            // }
         }
 
         GameEngine engine = GameEngine.getInstance();
@@ -177,14 +167,18 @@ public class PreNormalGameController extends PreGameController {
 
         List<Wave> waves = createHardcodedWaves(context, map);
 
-        NormalLevel level = new NormalLevel(engine, map, levelNumber, 150, waves, selectedPlants);
+        List<Plant> plants = new ArrayList<>();
+        for(MyPlant p : selectedPlants){
+            plantFactory.createUnplaced(p.getType() , p.getLevel() , p.isBoosted());
+        }
+        NormalLevel level = new NormalLevel(engine, map, levelNumber, 150, waves, plants);
 
         // This is a bit of a hack, but we need to associate the level with the context if possible
         // Actually, LevelGameContext didn't have a setter for level.
         // With the fix I applied to LevelGameContext, it should work fine without the level object.
 
         StringBuilder output=new StringBuilder("Starting game with:");
-        for (Plant p : selectedPlants){
+        for (MyPlant p : selectedPlants){
             String boost = p.isBoosted() ? " [BOOSTED]" : "";
             output.append("\n- ").append(p.getType().toString()).append(boost);
         }

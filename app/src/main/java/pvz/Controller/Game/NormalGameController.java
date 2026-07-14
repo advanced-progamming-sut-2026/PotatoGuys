@@ -2,11 +2,13 @@ package pvz.Controller.Game;
 
 import java.util.regex.Matcher;
 
-import pvz.Models.DataTypes.Vector2;
 import pvz.Models.Engine.GameEngine;
 import pvz.Models.Engine.TickAware;
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.Enums.PlantStorage;
+import pvz.Models.Entities.Plants.PlantFactory;
+import pvz.Models.Entities.Plants.Enums.PlantType;
+import pvz.Models.Entities.Plants.data.PlantPropertySheet;
+import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Seasons.Levels.NormalLevel;
 import pvz.Models.Seasons.Levels.Tile;
@@ -26,7 +28,7 @@ public class NormalGameController extends GameController{
             if (entity instanceof Sun) {
                 Sun sun = (Sun) entity;
                 // Assuming coordinates match within a reasonable threshold
-                if (Math.abs(sun.getPosition().x - x) < 1.0 && Math.abs(sun.getPosition().y - y) < 1.0) {
+                if (Math.abs(sun.getCol() - x) < 0.5 && Math.abs(sun.getLane() - y) < 0.5) {
                     level.addSun(sun.getType().getAmountSun());
                     sun.dispose();
                     return new Result("Sun collected!");
@@ -62,24 +64,25 @@ public class NormalGameController extends GameController{
         }
         
         // Find plant storage
-        PlantStorage storage = null;
-        for (PlantStorage ps : PlantStorage.values()) {
-            if (ps.getType().toString().equalsIgnoreCase(typeString)) {
-                storage = ps;
+        PlantType type = null;
+        for (PlantType ps : PlantType.values()) {
+            if (ps.toString().equalsIgnoreCase(typeString)) {
+                type = ps;
                 break;
             }
         }
-        if (storage == null) {
+        if (type == null) {
             return new Result("Invalid plant type: " + typeString);
         }
-        
+
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
         // Check sun
-        if (!level.spendSun(storage.getSunCost())) {
+        if (!level.spendSun(sheet.getSunCost())) {
             return new Result("Not enough sun.");
         }
         
         // Create plant
-        Plant plant = storage.getCopy(new Vector2(x, y));
+        Plant plant = new PlantFactory().create(type, x, y , null); 
         tile.setPlant(plant);
         level.getEngine().register(plant);
         
