@@ -1,13 +1,13 @@
 package pvz.Models.Seasons.Levels;
 
-import pvz.Models.Engine.GameEngine;
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieFactory;
-import pvz.Models.Entities.Zombies.ZombieGameContext;
-
 import java.util.Random;
 
-public class LevelGameContext implements ZombieGameContext {
+import pvz.Models.Engine.GameEngine;
+import pvz.Models.Entities.Zombies.GameContext;
+import pvz.Models.Entities.Zombies.Zombie;
+import pvz.Models.Entities.Zombies.ZombieFactory;
+
+public class LevelGameContext implements GameContext {
     private final GameEngine engine;
     private final GameMap map;
     private final Level level;
