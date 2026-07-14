@@ -1,7 +1,6 @@
 package pvz.Controller.Game;
 
 import pvz.Models.DataTypes.Vector2;
-import pvz.Models.Entities.Plants.Enums.PlantStorage;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.GameSession;
