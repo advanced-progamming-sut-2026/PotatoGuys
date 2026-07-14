@@ -2,15 +2,16 @@ package pvz.Controller;
 
 import java.util.regex.Matcher;
 
-import pvz.Models.Entities.Plants.Enums.PlantType;
+import pvz.Models.AppContext;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
+import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
-import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Entities.Zombies.ZombieType;
-import pvz.Models.AppContext;
+import pvz.Models.Entities.Zombies.data.ZombieRegistry;
 import pvz.Models.User.Collection;
+import pvz.Models.User.MyPlant;
 import pvz.Models.User.Profile;
 import pvz.View.ChapterSelectionMenu;
 import pvz.View.Menu;
@@ -31,11 +32,12 @@ public class CollectionController {
 
     public Result showPlants(Matcher matcher) {
         StringBuilder output = new StringBuilder("Your unlocked plants:");
-        for (Plant p : getCollection().getUnlockedPlants()) {
-            output.append("\n- ").append(p.getType().toString());
-            output.append(" | Level: ").append(p.getLevel());
-            output.append(" | Sun Cost: ").append(p.getSunCost());
-            if (p.isBoosted()) output.append(" [BOOSTED]");
+        for (MyPlant p : getCollection().getUnlockedPlants()) {
+            PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(p.Type);
+            output.append("\n- ").append(p.Type);
+            output.append(" | Level: ").append(p.level);
+            output.append(" | Sun Cost: ").append(sheet.getSunCost());
+            if (p.isBoost) output.append(" [BOOSTED]");
         }
         return new Result(output.toString());
     }
@@ -56,8 +58,8 @@ public class CollectionController {
 
     public Result showZombies(Matcher matcher) {
         StringBuilder output = new StringBuilder("Your unlocked zombies:");
-        for (Zombie z : getCollection().getUnlockedZombies()) {
-            output.append("\n- ").append(z.getSheet().getAlias());
+        for (ZombieType z : getCollection().getUnlockedZombies()) {
+            output.append("\n- ").append(ZombieRegistry.getInstance().getSheet(z.getAlias()));
         }
         return new Result(output.toString());
     }
@@ -98,14 +100,15 @@ public class CollectionController {
         output.append("\nBase Recharge: ").append(storage.getRechargeSeconds());
         output.append("\nBase Action Interval: ").append(storage.getActionIntervalSeconds());
 
-        Plant owned = getCollection().getPlant(plantType);
-        if (owned != null) {
+        MyPlant plant = getCollection().getPlant(plantType);
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(plantType);
+        if (plant != null) {
             output.append("\n\nYour plant:");
-            output.append("\nLevel: ").append(owned.getLevel());
-            output.append("\nHP: ").append((int) owned.getHp());
-            output.append("\nRecharge: ").append(owned.getRechargeSeconds());
-            output.append("\nAction Interval: ").append(owned.getActionIntervalSeconds());
-            output.append("\nBoosted: ").append(owned.isBoosted() ? "Yes" : "No");
+            output.append("\nLevel: ").append(plant.level);
+            output.append("\nHP: ").append((int) sheet.getBaseHp());
+            output.append("\nRecharge: ").append(sheet.getRechargeSeconds());
+            output.append("\nAction Interval: ").append(sheet.getActionIntervalSeconds());
+            output.append("\nBoosted: ").append(plant.isBoost ? "Yes" : "No");
         } else {
             output.append("\n\nStatus: Not yet unlocked.");
         }
@@ -146,19 +149,19 @@ public class CollectionController {
             return new Result("Plant \"" + name + "\" not found.");
         }
 
-        Plant owned = getCollection().getPlant(plantType);
+        MyPlant owned = getCollection().getPlant(plantType);
         if (owned == null) {
             return new Result("You do not own this plant. Purchase it first.");
         }
 
-        int currentLevel = owned.getLevel();
+        int currentLevel = owned.level;
         int cost = UPGRADE_BASE_COST * currentLevel;
         int coins = getProfile().getCoins();
         if (coins < cost) {
             return new Result("Not enough coins. Need " + cost + " coins, have " + coins + ".");
         }
 
-        owned.setLevel(currentLevel + 1);
+        owned.level = (currentLevel + 1);
         getProfile().setCoins(coins - cost);
 
         return new Result(plantType.toString() + " upgraded to level " + (currentLevel + 1)
@@ -192,8 +195,7 @@ public class CollectionController {
             return new Result("Not enough coins. Need " + PURCHASE_COST + " coins, have " + coins + ".");
         }
 
-        Plant newPlant = plantFactory.createUnplaced(plantType, 1, false);
-        getCollection().addPlant(newPlant);
+        getCollection().addPlant(plantType, 1, false);
         getProfile().setCoins(coins - PURCHASE_COST);
 
         return new Result("Purchased " + plantType.toString() + " for " + PURCHASE_COST + " coins. "

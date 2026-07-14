@@ -1,18 +1,18 @@
 package pvz.Models.Seasons.Levels;
 
-import pvz.Models.Engine.TickAware;
-import pvz.Models.Entities.Zombies.ZombieGameContext;
-import pvz.Models.Entities.Zombies.ZombieType;
-
 import java.util.List;
 import java.util.Random;
+
+import pvz.Models.Engine.TickAware;
+import pvz.Models.Entities.Zombies.GameContext;
+import pvz.Models.Entities.Zombies.ZombieType;
 
 public class Wave implements TickAware {
     private int waveNumber;
     private boolean isFinalWave;
     private int baseTotalWaveCost;
     private List<WavePhase> phases;
-    private ZombieGameContext context;
+    private GameContext context;
     private int lanes;
     private int difficulty;
 
@@ -23,7 +23,7 @@ public class Wave implements TickAware {
     private transient Random rand;
 
     public Wave(int waveNumber, boolean isFinalWave, int totalWaveCost, List<WavePhase> phases,
-                ZombieGameContext context, int lanes, int difficulty) {
+                GameContext context, int lanes, int difficulty) {
         this.waveNumber = waveNumber;
         this.isFinalWave = isFinalWave;
         this.baseTotalWaveCost = totalWaveCost;

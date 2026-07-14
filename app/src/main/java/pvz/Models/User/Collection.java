@@ -23,20 +23,21 @@ public class Collection {
         this.unlockedPlants = unlockedPlants;
     }
 
-    public void addPlant(PlantType plant , int level){
+    public void addPlant(PlantType plant , int level , boolean isBoost){
         MyPlant newPlant = new MyPlant();
         newPlant.Type = plant;
         newPlant.level = level;
+        newPlant.isBoost = isBoost;
         unlockedPlants.add(newPlant);
     }
 
-    public int getPlantLevel(PlantType type){
+    public MyPlant getPlant(PlantType type){
         for (MyPlant p : unlockedPlants){
             if (p.Type == type){
-                return p.level;
+                return p;
             }
         }
-        return -1;
+        return null;
     }
 
     public List<ZombieType> getUnlockedZombies() {
