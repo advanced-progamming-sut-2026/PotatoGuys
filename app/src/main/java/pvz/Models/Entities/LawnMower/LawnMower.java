@@ -1,6 +1,5 @@
 package pvz.Models.Entities.LawnMower;
 
-import pvz.Models.DataTypes.Vector2;
 import pvz.Models.Engine.TickAware;
 import pvz.Models.Entities.Zombies.Zombie;
 
@@ -18,10 +17,6 @@ public class LawnMower implements TickAware{
 
     public void onZombieContact(Zombie zombie){
         
-    }
-
-    public int getRow() {
-        return row;
     }
 
     public boolean isAvailable() {

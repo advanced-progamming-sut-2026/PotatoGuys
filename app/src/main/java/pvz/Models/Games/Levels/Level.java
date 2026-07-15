@@ -5,25 +5,20 @@ import java.util.List;
 import pvz.Models.Games.Modes.GameModeType;
 import pvz.Models.Games.map.GameMap;
 
-public class Level {
-    private GameMap gameMap;
-    private GameModeType gameMode;
-    private final LevelType type;
-    private final int initialSun;
-    private final int levelNumber;
-    private final List<Wave> waves;
-    private int currentWaveIndex;
+public abstract class Level {
+    protected GameMap gameMap;
+    protected GameModeType gameMode;
+    protected final LevelType type;
+    protected final int initialSun;
+    protected final int levelNumber;
     
 
-    public Level(GameModeType gameMode, GameMap gameMap, int levelNumber, LevelType type, int initialSun,
-                 List<Wave> waves){
+    public Level(GameModeType gameMode, GameMap gameMap, int levelNumber, LevelType type, int initialSun){
         this.gameMode=gameMode;
         this.gameMap=gameMap;
         this.levelNumber=levelNumber;
         this.type=type;
         this.initialSun=initialSun;
-        this.waves=waves;
-        this.currentWaveIndex=0;
     }
 
     public GameMap getGameMap() {
@@ -41,29 +36,6 @@ public class Level {
         return initialSun;
     }
 
-    public List<Wave> getWaves() {
-        return waves;
-    }
-
-    public int getCurrentWaveIndex() {
-        return currentWaveIndex;
-    }
-
-    public Wave getCurrentWave() {
-        if (currentWaveIndex >= waves.size()) return null;
-        return waves.get(currentWaveIndex);
-    }
-
-    public boolean allWavesDone() {
-        return currentWaveIndex >= waves.size();
-    }
-
-    public void advanceWave() {
-        if (currentWaveIndex < waves.size()) {
-            currentWaveIndex++;
-        }
-    }
-
     public void setGameMap(GameMap gameMap) {
         this.gameMap = gameMap;
     }
@@ -74,9 +46,5 @@ public class Level {
 
     public void setGameMode(GameModeType gameMode) {
         this.gameMode = gameMode;
-    }
-
-    public void setCurrentWaveIndex(int currentWaveIndex) {
-        this.currentWaveIndex = currentWaveIndex;
     }
 }

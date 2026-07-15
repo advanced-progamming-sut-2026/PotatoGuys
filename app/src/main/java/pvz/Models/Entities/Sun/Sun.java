@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Sun;
 
 import pvz.Models.Engine.TickAware;
-import pvz.Models.Entities.Plants.GameContext;
+import pvz.Models.Games.GameContext;
 
 /**
  * A collectible sun drop sitting on a single grid cell.

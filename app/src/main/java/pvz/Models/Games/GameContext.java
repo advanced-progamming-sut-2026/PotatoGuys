@@ -26,20 +26,18 @@ public class GameContext implements TickAware {
     private List<Plant> plants;
     private List<Projectile> projectiles;
     private List<Sun> suns;
-    private List<Card> cards;
     private GameMode mode;
     private GameMap map;
 
     public GameContext(Level currentLevel) {
         this.engine         = GameEngine.getInstance();
         this.currentSun     = currentLevel.getInitialSun();
-        this.cards          = new ArrayList<>();
         this.zombies        = new ArrayList<>();
         this.plants         = new ArrayList<>();
         this.projectiles    = new ArrayList<>();
         this.suns           = new ArrayList<>();
         this.map = currentLevel.getGameMap();
-        this.mode = GameModeFactory.createGameMode(currentLevel.getGameMode());
+        this.mode = GameModeFactory.createGameMode(currentLevel.getGameMode() , currentLevel);
     }
 
 
@@ -145,20 +143,9 @@ public class GameContext implements TickAware {
         return suns.remove(s);
     }
 
-    public List<Card> getCards() {
-        return cards;
-    }
-    public void addCard(Card c) {
-        cards.add(c);
-    }
-    public boolean removeCard(Card c) {
-        return cards.remove(c);
-    }
-
     public int getCurrentTick() {
         return currentTick;
     }
-
 
     public void setCurrentTick(int currentTick) {
         this.currentTick = currentTick;

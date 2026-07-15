@@ -4,20 +4,24 @@ import java.util.List;
 
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
+import pvz.Models.Games.Levels.NormalLevel;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.card.Card;
+import pvz.Models.Games.card.PlantCard;
 
 /**
  * Standard game mode implementation.
  * Manages waves and standard win/loss conditions.
  */
-public class StandardMode implements GameMode {
+public class NormalMode implements GameMode {
     private Wave currentWave;
     private List<Wave> waves;
+    private List<PlantCard> plantCards;
     
-
-    public StandardMode(Level level){
-        waves = level.getWaves();
+    public NormalMode(Level level){
+        if(level instanceof NormalLevel normalLevel){
+            waves = normalLevel.getWaves();
+        }
         currentWave = waves.getFirst();
     }
     @Override
@@ -46,5 +50,15 @@ public class StandardMode implements GameMode {
     @Override
     public void handlePlacement(GameContext context, int col, int lane, Card card) {
         throw new UnsupportedOperationException("Unimplemented method 'handlePlacement'");
+    }
+
+    public List<PlantCard> getPlantCards() {
+        return plantCards;
+    }
+    public void setPlantCards(List<PlantCard> plantCards) {
+        this.plantCards = plantCards;
+    }
+    public void addPlantCard(PlantCard newCard){
+        this.plantCards.add(newCard);
     }
 }

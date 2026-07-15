@@ -7,8 +7,8 @@ public class GameModeFactory {
         switch (modeType) {
             case IZOMBIE:
                 return new IZombieMode(level);
-            case STANDARD:
-                return new StandardMode(level);
+            case NORMAL:
+                return new NormalMode(level);
             default:
                 throw new IllegalArgumentException("Unknown game mode: " + modeType.toString());
         }
