@@ -1,5 +1,6 @@
 package pvz.Models.Seasons.Levels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pvz.Models.Entities.Plants.Plant;
@@ -12,6 +13,10 @@ public class Tile {
     private Plant plant;
     private List<Zombie> zombies;
     private boolean isFrozenPlant;
+
+    public Tile(){
+        zombies=new ArrayList<>();
+    }
 
     public boolean isPlantable(){
         return true;
