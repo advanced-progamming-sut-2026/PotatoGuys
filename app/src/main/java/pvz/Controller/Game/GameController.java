@@ -17,7 +17,17 @@ public abstract class GameController {
         level.getEngine().advanceTime(ticks);
         return new Result("Time advanced by " + ticks + " ticks.");
     }
-    public Result releaseNuke(Matcher matcher) { return null; }
+    public Result releaseNuke(Matcher matcher) {
+        int killed = 0;
+        List<pvz.Models.Engine.TickAware> entities = level.getEngine().getEntities();
+        for (pvz.Models.Engine.TickAware entity : entities) {
+            if (entity instanceof pvz.Models.Entities.Zombies.Zombie) {
+                ((pvz.Models.Entities.Zombies.Zombie) entity).takeDamage(999999f, true);
+                killed++;
+            }
+        }
+        return new Result("Nuke released! Killed " + killed + " zombies.");
+    }
     public Result cheatCooldown(Matcher matcher) { return null; }
     public Result feedPlant(Matcher matcher) { return null; }
     public Result cheatPlantFood(Matcher matcher) {
@@ -96,5 +106,20 @@ public abstract class GameController {
         }
         return new Result(info.toString());
     }
-    public Result cheatSpawnZombie(Matcher matcher) { return null; }
+    public Result cheatSpawnZombie(Matcher matcher) {
+        String alias = matcher.group("zombieType");
+        int x = Integer.parseInt(matcher.group("zombieX"));
+        int y = Integer.parseInt(matcher.group("zombieY"));
+
+        pvz.Models.Entities.Zombies.ZombieFactory factory = new pvz.Models.Entities.Zombies.ZombieFactory();
+        pvz.Models.Entities.Zombies.GameContext ctx = new pvz.Models.Seasons.Levels.LevelGameContext(level.getEngine(), level.getGameMap(), level);
+        
+        try {
+            pvz.Models.Entities.Zombies.Zombie zombie = factory.create(alias, (float)x, y, ctx, 0, 3);
+            level.getEngine().register(zombie);
+            return new Result("Spawned " + alias + " at (" + x + "," + y + ").");
+        } catch (IllegalArgumentException e) {
+            return new Result("Failed to spawn: " + e.getMessage());
+        }
+    }
 }
