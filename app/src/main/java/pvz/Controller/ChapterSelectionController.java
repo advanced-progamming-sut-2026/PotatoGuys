@@ -2,6 +2,7 @@ package pvz.Controller;
 
 import java.util.regex.Matcher;
 
+import pvz.Models.GreenHouse.GreenHouse;
 import pvz.View.ChapterMenu;
 import pvz.View.ChapterSelectionMenu;
 import pvz.View.CollectionMenu;
@@ -36,9 +37,6 @@ public class ChapterSelectionController {
             case "big wave beach" -> new Result("", new ChapterMenu("Big Wave Beach"));
             default -> new Result("Invalid chapter name");
         };
-    }
-    public Result greenhouse(Matcher matcher) {
-        return new Result(new GreenHouseMenu(new GreenHouseController(null, null)));
     }
     public Result travelLog(Matcher matcher) { return null; }
     public Result leaderboard(Matcher matcher) { return null; }

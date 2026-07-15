@@ -2,9 +2,11 @@ package pvz.Controller;
 
 import java.util.List;
 
+import pvz.Models.AppContext;
 import pvz.Models.GreenHouse.GreenHouse;
 import pvz.Models.GreenHouse.GreenHousePlant;
 import pvz.Models.GreenHouse.GreenHousePot;
+import pvz.View.Result;
 
 public class GreenHouseController {
     private final GreenHouse greenHouse;
@@ -44,6 +46,12 @@ public class GreenHouseController {
         int cost = greenHouse.getGrowCost(x, y);
         greenHouse.grow(x, y);
         return "Plant grown instantly for " + cost + " gems.";
+    }
+
+    public Result back(){
+        AppContext.getInstance().getCurrentUser().getProfile().getGreenHouseCollection().getPlants().add(null);
+        AppContext.getInstance().getCurrentUser().saveUser();
+        return new Result("exited green house");
     }
 
     public GreenHouse getGreenHouse() {

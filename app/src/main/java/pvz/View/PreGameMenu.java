@@ -2,7 +2,7 @@ package pvz.View;
 
 import pvz.Controller.Game.PreNormalGameController;
 import pvz.Enums.Commands.PreGameMenuCommand;
-import pvz.Models.toDel.Seasons.Season;
+import pvz.Models.Games.Seasons.Season;
 
 import java.util.regex.Matcher;
 

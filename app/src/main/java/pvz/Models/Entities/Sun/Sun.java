@@ -3,15 +3,6 @@ package pvz.Models.Entities.Sun;
 import pvz.Models.Engine.TickAware;
 import pvz.Models.Games.GameContext;
 
-/**
- * A collectible sun drop sitting on a single grid cell.
- *
- * <p>Produced either by {@code SunProducerAction} (autonomous production) or
- * dropped by a glowing zombie on death. In this text/CLI game there is no
- * physical fall animation: a sun simply appears at (col, lane) and either
- * gets {@link #collect(GameContext)}ed by a player command or expires after
- * its lifespan elapses.
- */
 public class Sun implements TickAware {
 
     private static final int TICKS_PER_SECOND = 10;

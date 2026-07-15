@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 
 import pvz.Enums.SecurityQuestions;
 import pvz.Models.Entities.Plants.Enums.PlantType;
+import pvz.Models.Games.Seasons.Season;
 import pvz.Models.User.Gender;
 import pvz.Models.User.User;
 import pvz.Utils.PasswordUtils;
@@ -114,6 +115,10 @@ public class RegisterController {
         user.getProfile().getCollection().addPlant(PlantType.TwinSunflower,1,false);
         user.getProfile().getCollection().addPlant(PlantType.PeaPod,1,false);
         user.getProfile().getCollection().addPlant(PlantType.SnowPea,1,false);
+        user.getProfile().getSeasons().add(new Season("Ancient Egypt"));
+        user.getProfile().getSeasons().add(new Season("Frostbite Caves"));
+        user.getProfile().getSeasons().add(new Season("Dark Ages"));
+        user.getProfile().getSeasons().add(new Season("Big Wave Beach"));
         HashMap<String , String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
         if(usernames == null){
             usernames = new HashMap<>();

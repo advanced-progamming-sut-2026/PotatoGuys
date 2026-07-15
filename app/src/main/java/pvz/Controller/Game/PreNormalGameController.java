@@ -14,9 +14,9 @@ import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.Levels.WavePhase;
 import pvz.Models.Games.Seasons.Season;
+import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.map.GameMap;
 import pvz.Models.User.MyPlant;
-import pvz.Models.toDel.Seasons.Levels.LevelGameContext;
 import pvz.Models.toDel.Seasons.Levels.NormalLevel;
 import pvz.View.Result;
 import pvz.View.Game.NormalGameMenu;
@@ -24,7 +24,7 @@ import pvz.View.Game.NormalGameMenu;
 public class PreNormalGameController extends PreGameController {
     private static final int MAX_PLANTS = 7;
     private final PlantFactory plantFactory = new PlantFactory();
-    List<MyPlant> selectedPlants;
+    List<PlantCard> selectedPlants;
     int levelNumber;
 
     public PreNormalGameController(Season season, int level){

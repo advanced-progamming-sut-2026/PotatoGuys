@@ -2,15 +2,17 @@ package pvz.View;
 
 import pvz.Controller.ShopController;
 import pvz.Enums.Commands.ShopMenuCommands;
+import pvz.Models.AppContext;
+import pvz.Models.Games.GameContext;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ShopMenu implements Menu {
-    private final ShopController controller;
+    private ShopController controller;
 
-    public ShopMenu(ShopController controller) {
-        this.controller = controller;
+    public ShopMenu() {
+        controller=new ShopController(AppContext.getInstance().getCurrentUser());
     }
 
     @Override
@@ -29,7 +31,6 @@ public class ShopMenu implements Menu {
         // Regex for: shop buy -i <item_id> -n <count> [-t <plant_type>]
         // The plant_type part is optional (?: ...)?
         Pattern buyPattern = Pattern.compile("shop buy -i (\\d+) -n (\\d+)(?: -t (\\w+))?");
-        Matcher matcher = buyPattern.matcher(input);
 
         if (matcher.matches()) {
             int itemId = Integer.parseInt(matcher.group(1));

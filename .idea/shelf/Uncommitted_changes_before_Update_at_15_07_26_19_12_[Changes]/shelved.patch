@@ -1,0 +1,301 @@
+Index: app/src/main/java/pvz/Controller/GreenHouseController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Controller;\n\nimport java.util.List;\n\nimport pvz.Models.GreenHouse.GreenHouse;\nimport pvz.Models.GreenHouse.GreenHousePlant;\nimport pvz.Models.GreenHouse.GreenHousePot;\n\npublic class GreenHouseController {\n    private final GreenHouse greenHouse;\n    private final List<String> unlockedPlants;\n\n    public GreenHouseController(GreenHouse greenHouse, List<String> unlockedPlants) {\n        this.greenHouse = greenHouse;\n        this.unlockedPlants = unlockedPlants;\n    }\n\n    public String plant(int x, int y) {\n        if (!greenHouse.isValidCoordinate(x, y)) return \"Invalid coordinates.\";\n        GreenHousePot pot = greenHouse.getPot(x, y);\n        if (pot.isLocked()) return \"Pot is locked.\";\n        if (!pot.isEmpty()) return \"Pot is not empty.\";\n\n        greenHouse.plantRandomPotAt(x, y, unlockedPlants);\n        return \"Plant placed successfully.\";\n    }\n\n    public String collect(int x, int y) {\n        if (!greenHouse.isValidCoordinate(x, y)) return \"Invalid coordinates.\";\n        GreenHousePlant plant = greenHouse.collect(x, y);\n\n        if (plant == null) return \"No ready plant found.\";\n\n        return \"Collected 500 coins.\";\n    }\n\n    public String grow(int x, int y) {\n        if (!greenHouse.isValidCoordinate(x, y)) return \"Invalid coordinates.\";\n        GreenHousePot pot = greenHouse.getPot(x, y);\n\n        if (pot.isLocked() || pot.isEmpty()) return \"No plant to grow.\";\n        if (pot.getPlant().isReady()) return \"Plant is already ready.\";\n\n        int cost = greenHouse.getGrowCost(x, y);\n        greenHouse.grow(x, y);\n        return \"Plant grown instantly for \" + cost + \" gems.\";\n    }\n\n    public GreenHouse getGreenHouse() {\n        return greenHouse;\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Controller/GreenHouseController.java b/app/src/main/java/pvz/Controller/GreenHouseController.java
+--- a/app/src/main/java/pvz/Controller/GreenHouseController.java	(revision 939c8dee59e3a323de871608092c12d51028680b)
++++ b/app/src/main/java/pvz/Controller/GreenHouseController.java	(date 1784124980084)
+@@ -2,9 +2,12 @@
+ 
+ import java.util.List;
+ 
++import pvz.Models.AppContext;
+ import pvz.Models.GreenHouse.GreenHouse;
+ import pvz.Models.GreenHouse.GreenHousePlant;
+ import pvz.Models.GreenHouse.GreenHousePot;
++import pvz.Utils.SaveManager;
++import pvz.View.Result;
+ 
+ public class GreenHouseController {
+     private final GreenHouse greenHouse;
+@@ -46,6 +49,11 @@
+         return "Plant grown instantly for " + cost + " gems.";
+     }
+ 
++    public Result back(){
++        AppContext.getInstance().getCurrentUser().getProfile().getGreenHouseCollcetion().getPlants().add();
++        AppContext.getInstance().getCurrentUser().save();
++    }
++
+     public GreenHouse getGreenHouse() {
+         return greenHouse;
+     }
+Index: app/src/main/java/pvz/Controller/MainController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Controller;\n\nimport java.util.regex.Matcher;\n\nimport pvz.View.*;\n\npublic class MainController {\n    public Result enterMenu(Matcher matcher) { \n        String menuName = matcher.group(\"menuName\");\n        menuName = menuName.replaceAll(\"  \", \"\");\n        Menu nextMenu = null;\n        switch (menuName.trim()) {\n            case \"game\":\n                nextMenu = new GameModesMenu();\n                break;\n            case \"settings\":\n                nextMenu = new SettingsMenu();\n                break;\n            case \"network\":\n                nextMenu = new NetworkMenu();\n                break;\n            case \"news\":\n                nextMenu = new NewsMenu();\n                break;\n            case \"profile\":\n                nextMenu = new ProfileMenu();\n                break;\n            case \"collection\":\n                nextMenu=new CollectionMenu();\n                break;\n            default:\n                nextMenu = new MainMenu();\n                return new Result(\"You cannot enter this menu.\" , nextMenu);\n        }\n        \n        return new Result(\"Enterned \" + nextMenu.getName() , nextMenu);\n\n    }\n    public Result exit(Matcher matcher) {\n        return new Result(\"Use 'menu logout' to exit from Main Menu.\", new MainMenu());\n    }\n    public Result logout(Matcher matcher) { \n        return new Result(\"logged out\", new RegisterMenu());\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Controller/MainController.java b/app/src/main/java/pvz/Controller/MainController.java
+--- a/app/src/main/java/pvz/Controller/MainController.java	(revision 939c8dee59e3a323de871608092c12d51028680b)
++++ b/app/src/main/java/pvz/Controller/MainController.java	(date 1784125429502)
+@@ -28,6 +28,12 @@
+             case "collection":
+                 nextMenu=new CollectionMenu();
+                 break;
++            case "greenHouse":
++                nextMenu=new GreenHouseMenu();
++                break;
++            case "shop":
++                nextMenu=new ShopMenu();
++                break;
+             default:
+                 nextMenu = new MainMenu();
+                 return new Result("You cannot enter this menu." , nextMenu);
+Index: app/src/main/java/pvz/Models/User/Profile.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Models.User;\r\n\r\nimport java.util.ArrayList;\r\n\r\nimport pvz.Models.Games.Seasons.SeasonProgress;\r\n\r\npublic class Profile {\r\n    private int gamePlayed;\r\n    private int coins;\r\n    private int diamonds;\r\n    private Collection collection;\r\n    private ArrayList<SeasonProgress> seasonProgresses;\r\n    private int maxMiopoint;\r\n\r\n    public Profile(){\r\n        this.collection=new Collection();\r\n    }\r\n\r\n    public int getGamePlayed() {\r\n        return gamePlayed;\r\n    }\r\n\r\n    public int getCoins() {\r\n        return coins;\r\n    }\r\n\r\n    public void setCoins(int coins) {\r\n        this.coins = coins;\r\n    }\r\n\r\n    public int getDiamonds() {\r\n        return diamonds;\r\n    }\r\n\r\n    public void setDiamonds(int diamonds) {\r\n        this.diamonds = diamonds;\r\n    }\r\n\r\n    public Collection getCollection() {\r\n        return collection;\r\n    }\r\n\r\n    public ArrayList<SeasonProgress> getSeasonProgresses() {\r\n        return seasonProgresses;\r\n    }\r\n\r\n    public int getMaxMiopoint() {\r\n        return maxMiopoint;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Models/User/Profile.java b/app/src/main/java/pvz/Models/User/Profile.java
+--- a/app/src/main/java/pvz/Models/User/Profile.java	(revision 939c8dee59e3a323de871608092c12d51028680b)
++++ b/app/src/main/java/pvz/Models/User/Profile.java	(date 1784124980664)
+@@ -9,6 +9,7 @@
+     private int coins;
+     private int diamonds;
+     private Collection collection;
++    private GreenHouseCollection greenHouseCollcetion;
+     private ArrayList<SeasonProgress> seasonProgresses;
+     private int maxMiopoint;
+ 
+@@ -47,4 +48,8 @@
+     public int getMaxMiopoint() {
+         return maxMiopoint;
+     }
++
++    public GreenHouseCollection getGreenHouseCollcetion(){
++        return greenHouseCollcetion;
++    }
+ }
+Index: app/src/main/java/pvz/View/ShopMenu.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.View;\n\nimport pvz.Controller.ShopController;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\n\npublic class ShopMenu implements Menu {\n    private final ShopController controller;\n\n    public ShopMenu(ShopController controller) {\n        this.controller = controller;\n    }\n\n    @Override\n    public Result handleInput(String input) {\n        // Handle listing permanent items\n        if (input.equals(\"shop list\")) {\n            return new Result(controller.showPermanentItems());\n        }\n\n        // Handle daily offer\n        if (input.equals(\"shop daily\")) {\n            return new Result(controller.showDailyOffer());\n        }\n\n        // Regex for: shop buy -i <item_id> -n <count> [-t <plant_type>]\n        // The plant_type part is optional (?: ...)?\n        Pattern buyPattern = Pattern.compile(\"shop buy -i (\\\\d+) -n (\\\\d+)(?: -t (\\\\w+))?\");\n        Matcher matcher = buyPattern.matcher(input);\n\n        if (matcher.matches()) {\n            int itemId = Integer.parseInt(matcher.group(1));\n            int count = Integer.parseInt(matcher.group(2));\n            String plantType = matcher.group(3); // Will be null if not provided in the command\n\n            String msg = controller.buyItem(itemId, count, plantType);\n            return new Result(msg);\n        }\n\n        return new Result(\"Invalid command.\");\n    }\n\n    @Override\n    public String getName() {\n        return \"Shop\";\n    }\n\n    @Override\n    public Result onEnter() {\n        return new Result(\"Entered Shop.\");\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/View/ShopMenu.java b/app/src/main/java/pvz/View/ShopMenu.java
+--- a/app/src/main/java/pvz/View/ShopMenu.java	(revision 939c8dee59e3a323de871608092c12d51028680b)
++++ b/app/src/main/java/pvz/View/ShopMenu.java	(date 1784125429377)
+@@ -7,8 +7,7 @@
+ public class ShopMenu implements Menu {
+     private final ShopController controller;
+ 
+-    public ShopMenu(ShopController controller) {
+-        this.controller = controller;
++    public ShopMenu() {
+     }
+ 
+     @Override
+Index: app/src/main/java/pvz/Models/Entities/Sun/Sun.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Models.Entities.Sun;\r\n\r\nimport pvz.Models.Engine.TickAware;\r\nimport pvz.Models.Entities.Plants.GameContext;\r\n\r\n/**\r\n * A collectible sun drop sitting on a single grid cell.\r\n *\r\n * <p>Produced either by {@code SunProducerAction} (autonomous production) or\r\n * dropped by a glowing zombie on death. In this text/CLI game there is no\r\n * physical fall animation: a sun simply appears at (col, lane) and either\r\n * gets {@link #collect(GameContext)}ed by a player command or expires after\r\n * its lifespan elapses.\r\n */\r\npublic class Sun implements TickAware {\r\n\r\n    private static final int TICKS_PER_SECOND = 10;\r\n    private static final float DEFAULT_LIFESPAN_SECONDS = 8f;\r\n\r\n    private final SunType type;\r\n    private final int col;\r\n    private final int lane;\r\n    private final int amount;\r\n    private int ticksRemaining;\r\n    private boolean collected;\r\n\r\n    public Sun(SunType type, int col, int lane, int amount) {\r\n        this(type, col, lane, amount, DEFAULT_LIFESPAN_SECONDS);\r\n    }\r\n\r\n    public Sun(SunType type, int col, int lane, int amount, float lifespanSeconds) {\r\n        this.type = type;\r\n        this.col = col;\r\n        this.lane = lane;\r\n        this.amount = amount;\r\n        this.ticksRemaining = Math.max(1, Math.round(lifespanSeconds * TICKS_PER_SECOND));\r\n    }\r\n\r\n    @Override\r\n    public void enter() { }\r\n\r\n    @Override\r\n    public void update() {\r\n        if (collected) return;\r\n        ticksRemaining--;\r\n    }\r\n\r\n    @Override\r\n    public void dispose() { }\r\n\r\n    /** Collects this sun, crediting the player's wallet through {@code ctx}. No-op once expired/collected. */\r\n    public void collect(GameContext ctx) {\r\n        if (isDone()) return;\r\n        collected = true;\r\n        ctx.addSun(getAmount());\r\n    }\r\n\r\n    public boolean isExpired()  { return !collected && ticksRemaining <= 0; }\r\n    public boolean isCollected(){ return collected; }\r\n    /** True once this sun should be removed from the engine (collected or timed out). */\r\n    public boolean isDone()     { return collected || isExpired(); }\r\n\r\n    public SunType getType() { return type; }\r\n    public int getCol()      { return col; }\r\n    public int getLane()     { return lane; }\r\n    public int getAmount()   { return amount > 0 ? amount : type.getAmountSun(); }\r\n    public float getSecondsRemaining() { return Math.max(0, ticksRemaining) / (float) TICKS_PER_SECOND; }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Models/Entities/Sun/Sun.java b/app/src/main/java/pvz/Models/Entities/Sun/Sun.java
+--- a/app/src/main/java/pvz/Models/Entities/Sun/Sun.java	(revision 939c8dee59e3a323de871608092c12d51028680b)
++++ b/app/src/main/java/pvz/Models/Entities/Sun/Sun.java	(date 1784130053961)
+@@ -1,17 +1,7 @@
+ package pvz.Models.Entities.Sun;
+ 
+ import pvz.Models.Engine.TickAware;
+-import pvz.Models.Entities.Plants.GameContext;
+ 
+-/**
+- * A collectible sun drop sitting on a single grid cell.
+- *
+- * <p>Produced either by {@code SunProducerAction} (autonomous production) or
+- * dropped by a glowing zombie on death. In this text/CLI game there is no
+- * physical fall animation: a sun simply appears at (col, lane) and either
+- * gets {@link #collect(GameContext)}ed by a player command or expires after
+- * its lifespan elapses.
+- */
+ public class Sun implements TickAware {
+ 
+     private static final int TICKS_PER_SECOND = 10;
+Index: app/src/main/java/pvz/View/GreenHouseMenu.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.View;\n\nimport pvz.Controller.GreenHouseController;\nimport pvz.Models.GreenHouse.GreenHousePot;\nimport java.util.regex.Matcher;\nimport java.util.regex.Pattern;\n\npublic class GreenHouseMenu implements Menu {\n    private final GreenHouseController controller;\n\n    public GreenHouseMenu(GreenHouseController controller) {\n        this.controller = controller;\n    }\n\n    @Override\n    public Result handleInput(String input) {\n        if (input.equals(\"show greenhouse\")) {\n            showGreenhouse();\n            return new Result(\"\");\n        }\n\n        Matcher plantMatcher = Pattern.compile(\"plant pot at \\\\((\\\\d+), (\\\\d+)\\\\)\").matcher(input);\n        if (plantMatcher.matches()) {\n            String msg = controller.plant(Integer.parseInt(plantMatcher.group(1)), Integer.parseInt(plantMatcher.group(2)));\n            return new Result(msg);\n        }\n\n        Matcher collectMatcher = Pattern.compile(\"collect \\\\((\\\\d+), (\\\\d+)\\\\)\").matcher(input);\n        if (collectMatcher.matches()) {\n            String msg = controller.collect(Integer.parseInt(collectMatcher.group(1)), Integer.parseInt(collectMatcher.group(2)));\n            return new Result(msg);\n        }\n\n        Matcher growMatcher = Pattern.compile(\"grow \\\\((\\\\d+), (\\\\d+)\\\\)\").matcher(input);\n        if (growMatcher.matches()) {\n            String msg = controller.grow(Integer.parseInt(growMatcher.group(1)), Integer.parseInt(growMatcher.group(2)));\n            return new Result(msg);\n        }\n\n        return new Result(\"Invalid command\");\n    }\n\n    private void showGreenhouse() {\n        for (GreenHousePot pot : controller.getGreenHouse().getGreenHousePots()) {\n            String status = pot.isLocked() ? \"Locked\" : (pot.isEmpty() ? \"Empty\" : (pot.getPlant().isReady() ? \"Ready\" : \"Growing\"));\n            System.out.println(\"Pot (\" + pot.getX() + \",\" + pot.getY() + \"): \" + status);\n        }\n    }\n\n    @Override\n    public String getName() {\n        return \"GreenHouse\";\n    }\n\n    @Override\n    public Result onEnter() {\n        return new Result(\"Entered Greenhouse.\");\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/View/GreenHouseMenu.java b/app/src/main/java/pvz/View/GreenHouseMenu.java
+--- a/app/src/main/java/pvz/View/GreenHouseMenu.java	(revision 939c8dee59e3a323de871608092c12d51028680b)
++++ b/app/src/main/java/pvz/View/GreenHouseMenu.java	(date 1784125429250)
+@@ -1,15 +1,14 @@
+ package pvz.View;
+ 
+ import pvz.Controller.GreenHouseController;
++import pvz.Models.GreenHouse.GreenHouse;
+ import pvz.Models.GreenHouse.GreenHousePot;
+ import java.util.regex.Matcher;
+ import java.util.regex.Pattern;
+ 
+ public class GreenHouseMenu implements Menu {
+-    private final GreenHouseController controller;
+ 
+-    public GreenHouseMenu(GreenHouseController controller) {
+-        this.controller = controller;
++    public GreenHouseMenu() {
+     }
+ 
+     @Override
+Index: app/src/main/java/pvz/Controller/Game/GameController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Controller.Game;\n\nimport java.util.regex.Matcher;\n\nimport pvz.Models.Entities.Plants.Plant;\nimport pvz.Models.Games.GameContext;\nimport pvz.Models.Games.map.Tile;\nimport pvz.View.Result;\n\npublic abstract class GameController {\n    GameContext level;\n    public GameController(GameContext level){\n        this.level = level;\n    }\n    public Result advanceTime(Matcher matcher) {\n        int ticks = Integer.parseInt(matcher.group(\"ticks\"));\n        level.getEngine().advanceTime(ticks);\n        return new Result(\"Time advanced by \" + ticks + \" ticks.\");\n    }\n    public Result releaseNuke(Matcher matcher) {\n        int killed = 0;\n        List<pvz.Models.Engine.TickAware> entities = level.getEngine().getEntities();\n        for (pvz.Models.Engine.TickAware entity : entities) {\n            if (entity instanceof pvz.Models.Entities.Zombies.Zombie) {\n                ((pvz.Models.Entities.Zombies.Zombie) entity).takeDamage(999999f, true);\n                killed++;\n            }\n        }\n        return new Result(\"Nuke released! Killed \" + killed + \" zombies.\");\n    }\n    public Result cheatCooldown(Matcher matcher) { return null; }\n    public Result feedPlant(Matcher matcher) { return null; }\n    public Result cheatPlantFood(Matcher matcher) {\n        if (level.getPlantFoodCount()>3) return new Result(\"Plant food slots are full.\");\n        level.addPlantFood(1);\n        return new Result(\"Added 1 plant food.\");\n    }\n    public Result showMap(Matcher matcher) {\n        StringBuilder mapOutput = new StringBuilder(\"Game Map:\\n\");\n        int rows = level.getGameMap().getRows();\n        int cols = level.getGameMap().getColumns();\n        for (int i = 0; i < rows; i++) {\n            for (int j = 0; j < cols; j++) {\n                Tile tile = level.getGameMap().getMap()[i][j];\n                if (tile.getPlant() != null) {\n                    mapOutput.append(\"[P]\"); // Represent plant\n                } else if (!tile.getZombies().isEmpty()) {\n                    mapOutput.append(\"[Z]\"); // Represent zombie\n                } else {\n                    mapOutput.append(\"[ ]\"); // Represent empty\n                }\n            }\n            mapOutput.append(\"\\n\");\n        }\n        return new Result(mapOutput.toString());\n    }\n    public Result showPlantsStatus(Matcher matcher) {\n        StringBuilder status = new StringBuilder(\"Plants Status:\\n\");\n        int rows = level.getGameMap().getRows();\n        int cols = level.getGameMap().getColumns();\n        for (int i = 0; i < rows; i++) {\n            for (int j = 0; j < cols; j++) {\n                Tile tile = level.getGameMap().getMap()[i][j];\n                Plant plant = tile.getPlant();\n                if (plant != null) {\n                    status.append(\"Plant at (\").append(j).append(\",\").append(i).append(\"): \")\n                          .append(plant.getType()).append(\" | HP: \").append((int)plant.getHp()).append(\"\\n\");\n                }\n            }\n        }\n        if (status.length() == 15) { // \"Plants Status:\\n\"\n            return new Result(\"No plants on the map.\");\n        }\n        return new Result(status.toString());\n    }\n    public Result showTileStatus(Matcher matcher) {\n        int x = Integer.parseInt(matcher.group(\"tileX\"));\n        int y = Integer.parseInt(matcher.group(\"tileY\"));\n\n        if (x < 0 || x >= level.getGameMap().getColumns() || y < 0 || y >= level.getGameMap().getRows()) {\n             return new Result(\"Invalid coordinates.\");\n        }\n\n        Tile tile = level.getGameMap().getMap()[y][x];\n        StringBuilder status = new StringBuilder(\"Tile Status at (\").append(x).append(\",\").append(y).append(\"):\\n\");\n        if (tile.getPlant() != null) {\n            status.append(\"Plant: \").append(tile.getPlant().getType()).append(\"\\n\");\n        } else {\n            status.append(\"Plant: None\\n\");\n        }\n        status.append(\"Zombies count: \").append(tile.getZombies().size()).append(\"\\n\");\n        return new Result(status.toString());\n    }\n    public Result zombiesInfo(Matcher matcher) {\n        StringBuilder info = new StringBuilder(\"Zombies Info:\\n\");\n        int count = 0;\n        for (pvz.Models.Engine.TickAware entity : level.getEngine().getEntities()) {\n            if (entity instanceof pvz.Models.Entities.Zombies.Zombie) {\n                pvz.Models.Entities.Zombies.Zombie zombie = (pvz.Models.Entities.Zombies.Zombie) entity;\n                info.append(zombie.toInfoString()).append(\"\\n\");\n                count++;\n            }\n        }\n        if (count == 0) {\n            return new Result(\"No zombies on the map.\");\n        }\n        return new Result(info.toString());\n    }\n    public Result cheatSpawnZombie(Matcher matcher) {\n        String alias = matcher.group(\"zombieType\");\n        int x = Integer.parseInt(matcher.group(\"zombieX\"));\n        int y = Integer.parseInt(matcher.group(\"zombieY\"));\n\n        pvz.Models.Entities.Zombies.ZombieFactory factory = new pvz.Models.Entities.Zombies.ZombieFactory();\n        pvz.Models.Entities.Zombies.GameContext ctx = new pvz.Models.Seasons.Levels.LevelGameContext(level.getEngine(), level.getGameMap(), level);\n        \n        try {\n            pvz.Models.Entities.Zombies.Zombie zombie = factory.create(alias, (float)x, y, ctx, 0, 3);\n            level.getEngine().register(zombie);\n            return new Result(\"Spawned \" + alias + \" at (\" + x + \",\" + y + \").\");\n        } catch (IllegalArgumentException e) {\n            return new Result(\"Failed to spawn: \" + e.getMessage());\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Controller/Game/GameController.java b/app/src/main/java/pvz/Controller/Game/GameController.java
+--- a/app/src/main/java/pvz/Controller/Game/GameController.java	(revision 939c8dee59e3a323de871608092c12d51028680b)
++++ b/app/src/main/java/pvz/Controller/Game/GameController.java	(date 1784125429616)
+@@ -1,7 +1,9 @@
+ package pvz.Controller.Game;
+ 
++import java.util.List;
+ import java.util.regex.Matcher;
+ 
++import pvz.Models.Engine.TickAware;
+ import pvz.Models.Entities.Plants.Plant;
+ import pvz.Models.Games.GameContext;
+ import pvz.Models.Games.map.Tile;
+@@ -19,7 +21,7 @@
+     }
+     public Result releaseNuke(Matcher matcher) {
+         int killed = 0;
+-        List<pvz.Models.Engine.TickAware> entities = level.getEngine().getEntities();
++        List<TickAware> entities = level.getEngine().getEntities();
+         for (pvz.Models.Engine.TickAware entity : entities) {
+             if (entity instanceof pvz.Models.Entities.Zombies.Zombie) {
+                 ((pvz.Models.Entities.Zombies.Zombie) entity).takeDamage(999999f, true);
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"7fd54749-b0f8-4a89-ad5d-d24c03e69d49\" name=\"Changes\" comment=\"h_edit3\" />\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ExternalProjectsData\">\r\n    <projectState path=\"$PROJECT_DIR$\">\r\n      <ProjectState />\r\n    </projectState>\r\n  </component>\r\n  <component name=\"ExternalProjectsManager\">\r\n    <system id=\"GRADLE\">\r\n      <state>\r\n        <projects_view>\r\n          <tree_state>\r\n            <expand>\r\n              <path>\r\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\r\n                <item name=\"pvz\" type=\"f1a62948:ProjectNode\" />\r\n              </path>\r\n            </expand>\r\n            <select />\r\n          </tree_state>\r\n        </projects_view>\r\n      </state>\r\n    </system>\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Interface\" />\r\n        <option value=\"Enum\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitLabMergeRequestFiltersHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPENED&quot;,\n    &quot;assignee&quot;: {\n      &quot;type&quot;: &quot;org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue&quot;,\n      &quot;username&quot;: &quot;sedhhn&quot;,\n      &quot;fullname&quot;: &quot;sedhhn&quot;\n    }\n  }\n}</component>\r\n  <component name=\"GitLabMergeRequestsSettings\">{\n  &quot;selectedUrlAndAccountId&quot;: {\n    &quot;first&quot;: &quot;https://hamgit.ir/sedhhn/plantsvszombies2.git&quot;,\n    &quot;second&quot;: &quot;83191278-9b68-4e33-a55d-f523d58ebe84&quot;\n  }\n}</component>\r\n  <component name=\"McpProjectServerCommands\">\r\n    <commands />\r\n    <urls />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 7\n}</component>\r\n  <component name=\"ProjectId\" id=\"3EhtQq7cdtR5etykGDiYWn2syZ2\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\n  \"keyToString\": {\n    \"Application.App.executor\": \"Run\",\n    \"Application.Main.executor\": \"Run\",\n    \"Gradle.Build PlantsVsZombies2.executor\": \"Run\",\n    \"Gradle.Build plantsvszombies2.executor\": \"Run\",\n    \"Gradle.Download Sources.executor\": \"Run\",\n    \"Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor\": \"Debug\",\n    \"ModuleVcsDetector.initialDetectionPerformed\": \"true\",\n    \"RunOnceActivity.MCP Project settings loaded\": \"true\",\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\n    \"RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252\": \"true\",\n    \"RunOnceActivity.git.unshallow\": \"true\",\n    \"RunOnceActivity.typescript.service.memoryLimit.init\": \"true\",\n    \"com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1\": \"true\",\n    \"git-widget-placeholder\": \"main\",\n    \"ignore.virus.scanning.warn.message\": \"true\",\n    \"junie.onboarding.icon.badge.shown\": \"true\",\n    \"kotlin-language-version-configured\": \"true\",\n    \"last_opened_file_path\": \"C:/Users/104/plantsvszombies2\",\n    \"node.js.detected.package.eslint\": \"true\",\n    \"node.js.detected.package.tslint\": \"true\",\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\n    \"nodejs_package_manager_path\": \"npm\",\n    \"onboarding.tips.debug.path\": \"H:/Code/Java/AP Project/PlantsVsZombies2/src/Main.java\",\n    \"project.structure.last.edited\": \"SDKs\",\n    \"project.structure.proportion\": \"0.15\",\n    \"project.structure.side.proportion\": \"0.2\",\n    \"settings.editor.selected.configurable\": \"preferences.pluginManager\",\n    \"to.speed.mode.migration.done\": \"true\",\n    \"vue.rearranger.settings.migration\": \"true\"\n  }\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CreateClassDialog.RecentsKey\">\r\n      <recent name=\"Models.Plants.Strategies\" />\r\n    </key>\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"H:\\Code\\Java\\AP Project\\PlantsVsZombies2\" />\r\n      <recent name=\"H:\\Code\\Java\\AP Project\\PlantsVsZombies2\\src\\Models\" />\r\n      <recent name=\"H:\\Code\\Java\\AP Project\\PlantsVsZombies2\\src\\Models\\Quests\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"H:\\Code\\Java\\AP Project\\PlantsVsZombies2\\src\\Models\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"Models.Seasons.Levels\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.App\">\r\n    <configuration name=\"App\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"ALTERNATIVE_JRE_PATH\" value=\"25\" />\r\n      <option name=\"ALTERNATIVE_JRE_PATH_ENABLED\" value=\"true\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"pvz.App\" />\r\n      <module name=\"pvz.app.main\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"pvz.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"Main\" />\r\n      <module name=\"PlantsVsZombies2\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.App\" />\r\n        <item itemvalue=\"Application.Main\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"7fd54749-b0f8-4a89-ad5d-d24c03e69d49\" name=\"Changes\" comment=\"\" />\r\n      <created>1780642625198</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1780642625198</updated>\r\n      <workItem from=\"1780642626620\" duration=\"14477000\" />\r\n      <workItem from=\"1780727383033\" duration=\"14135000\" />\r\n      <workItem from=\"1780804437258\" duration=\"285000\" />\r\n      <workItem from=\"1780925266895\" duration=\"929000\" />\r\n      <workItem from=\"1781073541845\" duration=\"6364000\" />\r\n      <workItem from=\"1781101092972\" duration=\"19478000\" />\r\n      <workItem from=\"1781247032363\" duration=\"72000\" />\r\n      <workItem from=\"1781271335831\" duration=\"9143000\" />\r\n      <workItem from=\"1781910195158\" duration=\"2313000\" />\r\n      <workItem from=\"1781946617001\" duration=\"115000\" />\r\n      <workItem from=\"1781966693070\" duration=\"2800000\" />\r\n      <workItem from=\"1781975412844\" duration=\"4962000\" />\r\n      <workItem from=\"1781986710773\" duration=\"49000\" />\r\n      <workItem from=\"1782487778184\" duration=\"13935000\" />\r\n      <workItem from=\"1782510561795\" duration=\"23000\" />\r\n      <workItem from=\"1782510607217\" duration=\"3592000\" />\r\n      <workItem from=\"1782570237495\" duration=\"326000\" />\r\n      <workItem from=\"1782837458977\" duration=\"1143000\" />\r\n      <workItem from=\"1783009235562\" duration=\"633000\" />\r\n      <workItem from=\"1783009979306\" duration=\"799000\" />\r\n      <workItem from=\"1783010994303\" duration=\"5330000\" />\r\n      <workItem from=\"1783024573960\" duration=\"1995000\" />\r\n      <workItem from=\"1783967805064\" duration=\"3369000\" />\r\n      <workItem from=\"1784005253170\" duration=\"13538000\" />\r\n      <workItem from=\"1784032908142\" duration=\"9226000\" />\r\n      <workItem from=\"1784043171457\" duration=\"7411000\" />\r\n      <workItem from=\"1784090699060\" duration=\"3424000\" />\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"XSLT-Support.FileAssociations.UIState\">\r\n    <expand />\r\n    <select />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 939c8dee59e3a323de871608092c12d51028680b)
++++ b/.idea/workspace.xml	(date 1784130054218)
+@@ -4,7 +4,16 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="7fd54749-b0f8-4a89-ad5d-d24c03e69d49" name="Changes" comment="h_edit3" />
++    <list default="true" id="7fd54749-b0f8-4a89-ad5d-d24c03e69d49" name="Changes" comment="h_edit3">
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/GameController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/GreenHouseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/GreenHouseController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/MainController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/Sun.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/Sun.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/GreenHouseMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/GreenHouseMenu.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/ShopMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/ShopMenu.java" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -75,40 +84,40 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "Application.App.executor": "Run",
+-    "Application.Main.executor": "Run",
+-    "Gradle.Build PlantsVsZombies2.executor": "Run",
+-    "Gradle.Build plantsvszombies2.executor": "Run",
+-    "Gradle.Download Sources.executor": "Run",
+-    "Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor": "Debug",
+-    "ModuleVcsDetector.initialDetectionPerformed": "true",
+-    "RunOnceActivity.MCP Project settings loaded": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+-    "RunOnceActivity.git.unshallow": "true",
+-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+-    "git-widget-placeholder": "main",
+-    "ignore.virus.scanning.warn.message": "true",
+-    "junie.onboarding.icon.badge.shown": "true",
+-    "kotlin-language-version-configured": "true",
+-    "last_opened_file_path": "C:/Users/104/plantsvszombies2",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "nodejs_package_manager_path": "npm",
+-    "onboarding.tips.debug.path": "H:/Code/Java/AP Project/PlantsVsZombies2/src/Main.java",
+-    "project.structure.last.edited": "SDKs",
+-    "project.structure.proportion": "0.15",
+-    "project.structure.side.proportion": "0.2",
+-    "settings.editor.selected.configurable": "preferences.pluginManager",
+-    "to.speed.mode.migration.done": "true",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Application.App.executor&quot;: &quot;Run&quot;,
++    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
++    &quot;Gradle.Build PlantsVsZombies2.executor&quot;: &quot;Run&quot;,
++    &quot;Gradle.Build plantsvszombies2.executor&quot;: &quot;Run&quot;,
++    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
++    &quot;Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor&quot;: &quot;Run&quot;,
++    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
++    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
++    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
++    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
++    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;C:/Users/104/plantsvszombies2&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;onboarding.tips.debug.path&quot;: &quot;H:/Code/Java/AP Project/PlantsVsZombies2/src/Main.java&quot;,
++    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
++    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
++    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
++    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RecentsManager">
+     <key name="CreateClassDialog.RecentsKey">
+       <recent name="Models.Plants.Strategies" />
+@@ -197,6 +206,8 @@
+       <workItem from="1784032908142" duration="9226000" />
+       <workItem from="1784043171457" duration="7411000" />
+       <workItem from="1784090699060" duration="3424000" />
++      <workItem from="1784099055451" duration="10462000" />
++      <workItem from="1784122842175" duration="4545000" />
+     </task>
+     <servers />
+   </component>

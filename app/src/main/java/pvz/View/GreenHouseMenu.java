@@ -1,15 +1,15 @@
 package pvz.View;
 
 import pvz.Controller.GreenHouseController;
+import pvz.Models.GreenHouse.GreenHouse;
 import pvz.Models.GreenHouse.GreenHousePot;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GreenHouseMenu implements Menu {
-    private final GreenHouseController controller;
+    GreenHouseController controller=new GreenHouseController(null,null);
+    public GreenHouseMenu() {
 
-    public GreenHouseMenu(GreenHouseController controller) {
-        this.controller = controller;
     }
 
     @Override
