@@ -1,5 +1,6 @@
 package pvz.Models.Games.map;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pvz.Models.Entities.Plants.Plant;
@@ -11,6 +12,10 @@ public class Tile {
     private List<Zombie> zombies;
     private boolean isFrozenPlant;
     private boolean plantable;
+
+    public Tile(){
+        zombies=new ArrayList<>();
+    }
 
     public boolean isPlantable(){
         return plantable;
