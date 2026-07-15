@@ -1,4 +1,4 @@
-package pvz.Models.Games.TestGameContext;
+package pvz.Models.Games;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,15 +9,14 @@ import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Projectile.Projectile;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Zombies.Zombie;
+import pvz.Models.Games.Levels.Level;
+import pvz.Models.Games.Modes.GameMode;
+import pvz.Models.Games.Modes.GameModeFactory;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.map.GameMap;
 
 
 public class GameContext implements TickAware {
-
-    public static final int COLS;
-    public static final int LANES;
-
     private int currentSun;
     private int currentTick;
     private boolean gameOver;
@@ -28,21 +27,23 @@ public class GameContext implements TickAware {
     private List<Projectile> projectiles;
     private List<Sun> suns;
     private List<Card> cards;
+    private GameMode mode;
     private GameMap map;
 
     private final GameEngine engine;
 
 
-    public GameContext() {
+    public GameContext(Level currentLevel) {
         this.engine         = GameEngine.getInstance();
         this.currentSun            = 50;
-        this.lawnMowerUsed  = new boolean[LANES];
+        this.lawnMowerUsed  = new boolean[currentLevel.getGameMap().getRows()];
         this.cards          = new ArrayList<>();
         this.zombies        = new ArrayList<>();
         this.plants         = new ArrayList<>();
         this.projectiles    = new ArrayList<>();
         this.suns           = new ArrayList<>();
-        this.map            = new GameMap(COLS, LANES);
+        this.map            = currentLevel.getGameMap();
+        mode = GameModeFactory.createGameMode(currentLevel.getGameMode());
     }
 
 
@@ -108,26 +109,40 @@ public class GameContext implements TickAware {
         return cards.remove(c);
     }
 
+    public int getCurrentTick() {
+        return currentTick;
+    }
+
+
+    public void setCurrentTick(int currentTick) {
+        this.currentTick = currentTick;
+    }
+
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
 
     @Override
     public void enter() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'enter'");
+        mode.initMode(this);
     }
 
 
     @Override
     public void update() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        mode.updateMode(this);
     }
 
 
     @Override
-    public void dispose() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'dispose'");
-    }
+    public void dispose() {}
 }
 
 //     // ── ZombieGameContext ─────────────────────────────────────────────────────

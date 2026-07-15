@@ -1,8 +1,12 @@
 package pvz.Models.Games.Modes;
 
+import java.util.List;
+
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Games.TestGameContext.GameContext;
+import pvz.Models.Entities.Plants.PlantFactory;
+import pvz.Models.Games.GameContext;
 import pvz.Models.Games.card.Card;
+import pvz.Models.Games.map.Wave;
 
 /**
  * Standard game mode implementation.
@@ -11,6 +15,7 @@ import pvz.Models.Games.card.Card;
 public class StandardMode implements GameMode {
     private int currentWave = 1;
     private final int totalWaves = 5; // Example
+    private final List<Wave> waves;
     
     @Override
     public void initMode(GameContext context) {
@@ -41,9 +46,8 @@ public class StandardMode implements GameMode {
     @Override
     public void handlePlacement(GameContext context, int col, int lane, Card card) {
         if (isValidPlacement(context, col, lane, card)) {
-            // Subtract sun, add plant, etc.
-            Plant p = card.createPlant(col, lane);
-            context.getPlants().add(p);
+            Plant p = PlantFactory.createPlant(card.getPlantType(), col, lane);
+            context.addPlant(p);
         }
     }
 }

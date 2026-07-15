@@ -1,12 +1,12 @@
 package pvz.Models.MiniGames;
 
-import pvz.Models.Engine.GameEngine;
-import pvz.Models.Games.map.GameMap;
-import pvz.Models.Seasons.Levels.Level;
-import pvz.Models.Seasons.Levels.LevelType;
-import pvz.Models.Seasons.Levels.Wave;
-
 import java.util.List;
+
+import pvz.Models.Engine.GameEngine;
+import pvz.Models.Games.Levels.Level;
+import pvz.Models.Games.Levels.LevelType;
+import pvz.Models.Games.map.GameMap;
+import pvz.Models.Games.map.Wave;
 
 public class VaseBreaker extends Level {
     private int rows;

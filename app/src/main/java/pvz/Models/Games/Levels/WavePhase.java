@@ -1,13 +1,14 @@
-package pvz.Models.Seasons.Levels;
+package pvz.Models.Games.map;
 
 import pvz.Models.Entities.Zombies.ZombieType;
 
 import java.util.List;
 
 public class WavePhase {
-    private int zombieCount;              // تعداد زامبی‌هایی که در این فاز اسپاون می‌شن
-    private int intervalTicks;            // فاصله بین هر اسپاون (بر حسب تیک)
-    private List<ZombieType> allowedTypes; // نوع‌های مجاز با هزینه‌ی پایه
+    private int zombieCount;
+    private int intervalTicks;
+    private List<ZombieType> allowedTypes;
+    private boolean isBurst;       
 
     public WavePhase(int zombieCount, int intervalTicks, List<ZombieType> allowedTypes, boolean isBurst) {
         this.setZombieCount(zombieCount);
@@ -16,7 +17,6 @@ public class WavePhase {
         this.setBurst(isBurst);
     }
 
-    private boolean isBurst;              // آیا این فاز یک اوج فشرده است؟ (اختیاری)
 
     public int getZombieCount() {
         return zombieCount;

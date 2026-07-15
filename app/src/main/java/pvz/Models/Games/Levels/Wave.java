@@ -1,4 +1,4 @@
-package pvz.Models.Seasons.Levels;
+package pvz.Models.Games.Levels;
 
 import java.util.List;
 import java.util.Random;

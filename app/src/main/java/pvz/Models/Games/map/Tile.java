@@ -4,25 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Entities.Plants.Enums.PlantTag;
 import pvz.Models.Entities.Zombies.Zombie;
 
 public class Tile {
     private TileType type;
     private List<Plant> plants;
     private List<Zombie> zombies;
-    private boolean isFrozenPlant;
-    private boolean plantable;
 
     public Tile(){
         zombies=new ArrayList<>();
+        plants=new ArrayList<>();
     }
 
-    public boolean isPlantable(){
-        return plantable;
-    }
+    public boolean isPlantable(Plant newPlant) {
+        if(plants.isEmpty()){
+            if(type == TileType.ICE || type == TileType.SLIP_DOWN || type == TileType.SLIP_UP || type == TileType.GRAVE)
+                return false;
+            if(type == TileType.WATER && !newPlant.getSheet().getTags().contains(PlantTag.WATER))
+                return false;
+        }
 
-    public void onZombieStep(Zombie z){
-
+        if(!plants.isEmpty() && !newPlant.getSheet().getTags().contains(PlantTag.STACK)){
+            return false;
+        }
+        return true;
     }
 
     public TileType getType() {
@@ -34,15 +40,24 @@ public class Tile {
     }
 
     public void addPlant(Plant plant) {
-        if(this.isPlantable())
-        plants.add(plant);
+        if(this.isPlantable(plant))
+            plants.add(plant);
+    }
+
+    public void removePlant(Plant plant) {
+        plants.remove(plant);
     }
 
     public List<Zombie> getZombies() {
         return zombies;
     }
 
-    public boolean isFrozenPlant() {
-        return isFrozenPlant;
+    public void addZombie(Zombie zombie) {
+        zombies.add(zombie);
     }
+
+    public void removeZombie(Zombie zombie) {
+        zombies.remove(zombie);
+    }
+
 }

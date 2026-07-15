@@ -1,29 +1,28 @@
-package pvz.Models.Seasons.Levels;
+package pvz.Models.Games.Levels;
 
 import java.util.List;
 
-import pvz.Models.Engine.GameEngine;
+import pvz.Models.Games.Modes.GameModeType;
 import pvz.Models.Games.map.GameMap;
-import pvz.Models.TestGameContext.GameContext;
+import pvz.Models.Games.map.Wave;
 
 public abstract class Level {
-    private GameEngine engine;
     private GameMap gameMap;
-    private GameContext gameContext;
+    private GameModeType gameMode;
 
-    private LevelType type;
-    private int levelNumber;
-    private List<Wave> waves;
+    private final LevelType type;
+    private final int initialSun;
+    private final int levelNumber;
+    private final List<Wave> waves;
     private int currentWaveIndex;
 
-    public Level(GameEngine engine, GameMap gameMap, GameContext gameContext, int levelNumber, LevelType type, int initialSun,
+    public Level(GameModeType gameMode, GameMap gameMap, int levelNumber, LevelType type, int initialSun,
                  List<Wave> waves){
-        this.engine=engine;
+        this.gameMode=gameMode;
         this.gameMap=gameMap;
-        this.gameContext=gameContext;
         this.levelNumber=levelNumber;
         this.type=type;
-        this.currentSun=initialSun;
+        this.initialSun=initialSun;
         this.waves=waves;
         this.currentWaveIndex=0;
     }
@@ -39,18 +38,8 @@ public abstract class Level {
         return type;
     }
 
-    public int getCurrentSun() {
-        return currentSun;
-    }
-
-    public void addSun(int amount) {
-        currentSun += amount;
-    }
-
-    public boolean spendSun(int amount) {
-        if (currentSun < amount) return false;
-        currentSun -= amount;
-        return true;
+    public int getInitialSun() {
+        return initialSun;
     }
 
     public List<Wave> getWaves() {
@@ -76,7 +65,19 @@ public abstract class Level {
         }
     }
 
-    public GameEngine getEngine() {
-        return engine;
+    public void setGameMap(GameMap gameMap) {
+        this.gameMap = gameMap;
+    }
+
+    public GameModeType getGameMode() {
+        return gameMode;
+    }
+
+    public void setGameMode(GameModeType gameMode) {
+        this.gameMode = gameMode;
+    }
+
+    public void setCurrentWaveIndex(int currentWaveIndex) {
+        this.currentWaveIndex = currentWaveIndex;
     }
 }

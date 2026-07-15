@@ -1,4 +1,4 @@
-package pvz.Models.Seasons.Levels;
+package pvz.Models.Games.Levels;
 
 public enum LevelType {
     NORMAL,

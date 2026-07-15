@@ -1,7 +1,7 @@
 package pvz.Models.Games.Modes;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.TestGameContext.GameContext;
+import pvz.Models.Games.GameContext;
 import pvz.Models.Games.card.Card;
 
 /**
