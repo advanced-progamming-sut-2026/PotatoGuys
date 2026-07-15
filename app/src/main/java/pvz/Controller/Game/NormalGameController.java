@@ -59,7 +59,7 @@ public class NormalGameController extends GameController{
         }
         
         Tile tile = context.getMap().getTile(y,x);
-        if (tile.getPlants() != null && tile.getPlants().getLast()!=null) {
+        if (!tile.getPlants().isEmpty()) {
             return new Result("Tile already has a plant.");
         }
         
@@ -82,7 +82,7 @@ public class NormalGameController extends GameController{
         }
         
         // Create plant
-        Plant plant = new PlantFactory().create(type, x, y , null); 
+        Plant plant = new PlantFactory().create(type, x, y, context); 
         tile.addPlant(plant);
         context.spawnPlant(plant);
         context.getEngine().register(plant);

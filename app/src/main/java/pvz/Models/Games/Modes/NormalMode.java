@@ -2,6 +2,7 @@ package pvz.Models.Games.Modes;
 
 import java.util.List;
 
+import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
@@ -25,10 +26,11 @@ public class NormalMode implements GameMode {
             waves = normalLevel.getWaves();
         }
         currentWave = waves.getFirst();
+        SetupLawnMowers();
     }
     @Override
     public void initMode(GameContext context) {
-        SetupLawnMowers();
+       
     }
 
     @Override
@@ -61,7 +63,7 @@ public class NormalMode implements GameMode {
         int lanes = 5; 
         lawnMower = new Boolean[lanes];
         for (int i = 0; i < lanes; i++) {
-            lawnMower[i] = true; // All lawn mowers are initially available
+            lawnMower[i] = false; // All lawn mowers are initially available
         }
     }
 
@@ -114,14 +116,15 @@ public class NormalMode implements GameMode {
     private void appendHeader(StringBuilder sb , GameContext context) {
         sb.append("\n=== Tick: ").append(context.getCurrentTick())
           .append(" | Sun: ").append(context.getSuns().size())
-          .append(" | Active zombies: ").append(context.getZombies().size()) // Example for lane 0
+          .append(" | Active zombies: ").append(context.getZombies().size())
+          .append(" | Active plants: ").append(context.getPlants().size())
           .append(" ===\n");
     }
 
     private void appendColumnHeaders(StringBuilder sb , GameContext context) {
-        sb.append("        ");
+        sb.append("\n     ");
         for (int c = 0; c < context.getColumns(); c++) {
-            sb.append(String.format("  C%-2d ", c));
+            sb.append(String.format(" C%-2d ", c));
         }
         sb.append("\n");
     }
@@ -146,6 +149,33 @@ public class NormalMode implements GameMode {
         sb.append("         ←←←←←←← zombies walk this direction\n");
     }
 
+    private String getCellContent(int col, GameContext context, int lane) {
+        // ۱. بررسی وجود گیاه زنده در این کاشی
+        List<Plant> plantsAtCell = context.getPlantsAt(col, lane);
+        boolean hasPlant = !plantsAtCell.isEmpty();
+
+        // ۲. بررسی وجود زامبی زنده در این کاشی (مختصات X زامبی کست شده به int)
+        int zombieIndex = -1;
+        for (int i = 0; i < context.getZombiesInLane(lane).size(); i++) {
+            Zombie z = context.getZombiesInLane(lane).get(i);
+            if (!z.isDead() && z.getLane() == lane && (int) z.getX() == col) {
+                zombieIndex = i;
+                break;
+            }
+        }
+
+        if (hasPlant && zombieIndex != -1) {
+            return String.format("P/Z%-1d", zombieIndex); 
+        } else if (hasPlant) {
+            return " P  "; 
+        } else if (zombieIndex != -1) {
+            return String.format(" Z%-2d", zombieIndex); 
+        }
+
+        // خانه خالی است
+        return CELL_EMPTY; 
+    }
+
     private void appendZombieStatus(StringBuilder sb , GameContext context) {
         if (context.getZombies().isEmpty()) { sb.append("\n(no zombies)\n"); return; }
         sb.append("\nZombies (").append(context.getZombies().size()).append(" active):\n");
@@ -157,14 +187,4 @@ public class NormalMode implements GameMode {
         }
     }
 
-    /** Returns 4-char cell content for rendering, e.g. {@code " Z0 "} or {@code "    "}. */
-    private String getCellContent(int col , GameContext context, int lane) {
-        for (int i = 0; i < context.getZombies().size(); i++) {
-            Zombie z = context.getZombies().get(i);
-            if (!z.isDead() && z.getLane() == lane && (int) z.getX() == col) {
-                return String.format("Z%-3d", i);
-            }
-        }
-        return CELL_EMPTY;
-    }
 }
