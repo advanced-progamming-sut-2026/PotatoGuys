@@ -5,7 +5,7 @@ import pvz.Models.User.MyPlant;
 public class PlantCard extends Card {
     private final MyPlant plant;
 
-    public PlantCard(MyPlant plant, int cost, int cooldown) {
+    public PlantCard(MyPlant plant, int cost, float cooldown) {
         super(cost, cooldown);
         this.plant = plant;
     }

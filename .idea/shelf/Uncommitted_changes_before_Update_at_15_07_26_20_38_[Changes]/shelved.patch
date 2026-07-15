@@ -1,0 +1,403 @@
+Index: app/src/main/java/pvz/View/Game/NormalGameMenu.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.View.Game;\n\nimport pvz.Controller.Game.NormalGameController;\nimport pvz.Enums.Commands.GameMenuCommand;\nimport pvz.Models.Games.Levels.Wave;\nimport pvz.Models.toDel.Seasons.Levels.NormalLevel;\nimport pvz.View.Result;\n\npublic class NormalGameMenu extends GameMenu {\n    private final NormalGameController normalController;\n    private final NormalLevel level;\n    private boolean wavesStarted;\n\n    public NormalGameMenu(NormalLevel level) {\n        super(new NormalGameController(level));\n        this.level = level;\n        this.normalController = (NormalGameController) this.gameController;\n        this.wavesStarted = false;\n    }\n\n    @Override\n    public Result handleInput(String input) {\n        Result result = super.handleInput(input);\n        if (result != null) return result;\n        if ((matcher = GameMenuCommand.COLLECT_SUN.getMatcher(input)) != null) return normalController.collectSun(matcher);\n        if ((matcher = GameMenuCommand.SHOW_SUN.getMatcher(input)) != null) return normalController.showSun(matcher);\n        if ((matcher = GameMenuCommand.CHEAT_SUN.getMatcher(input)) != null) return normalController.cheatSun(matcher);\n        if ((matcher = GameMenuCommand.PLANT.getMatcher(input)) != null) return normalController.plant(matcher);\n        if ((matcher = GameMenuCommand.PLUCK_PLANT.getMatcher(input)) != null) return normalController.pluckPlant(matcher);\n        return new Result(\"Invalid command in Game.\", this);\n    }\n\n    @Override\n    public Result onEnter() {\n        StringBuilder output = new StringBuilder();\n        output.append(\"=== Level \").append(level.getLevelNumber()).append(\" ===\\n\");\n        output.append(\"Sun: \").append(level.getCurrentSun()).append(\"\\n\");\n        output.append(\"Waves: \").append(level.getWaves().size()).append(\"\\n\");\n        output.append(\"Commands: advance time -t N ticks | show sun amount | show map | zombies info\\n\");\n\n        if (!wavesStarted) {\n            Wave first = level.getCurrentWave();\n            if (first != null) {\n                level.getEngine().register(first);\n                wavesStarted = true;\n                output.append(\"\\nWave \").append(first.getWaveNumber()).append(\" incoming...\");\n            }\n        }\n        return new Result(output.toString());\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/View/Game/NormalGameMenu.java b/app/src/main/java/pvz/View/Game/NormalGameMenu.java
+--- a/app/src/main/java/pvz/View/Game/NormalGameMenu.java	(revision 2f8eea0e4769401732e5c6ad51bac2282ca12093)
++++ b/app/src/main/java/pvz/View/Game/NormalGameMenu.java	(date 1784135245090)
+@@ -2,18 +2,19 @@
+ 
+ import pvz.Controller.Game.NormalGameController;
+ import pvz.Enums.Commands.GameMenuCommand;
++import pvz.Models.Games.GameContext;
+ import pvz.Models.Games.Levels.Wave;
+ import pvz.Models.toDel.Seasons.Levels.NormalLevel;
+ import pvz.View.Result;
+ 
+ public class NormalGameMenu extends GameMenu {
+     private final NormalGameController normalController;
+-    private final NormalLevel level;
+     private boolean wavesStarted;
++    GameContext context;
+ 
+-    public NormalGameMenu(NormalLevel level) {
+-        super(new NormalGameController(level));
+-        this.level = level;
++    public NormalGameMenu(GameContext context) {
++        super(new NormalGameController(context));
++        this.context=context;
+         this.normalController = (NormalGameController) this.gameController;
+         this.wavesStarted = false;
+     }
+@@ -33,8 +34,8 @@
+     @Override
+     public Result onEnter() {
+         StringBuilder output = new StringBuilder();
+-        output.append("=== Level ").append(level.getLevelNumber()).append(" ===\n");
+-        output.append("Sun: ").append(level.getCurrentSun()).append("\n");
++        output.append("=== Level ").append(context.getLevelNumber()).append(" ===\n");
++        output.append("Sun: ").append(context.getCurrentSun()).append("\n");
+         output.append("Waves: ").append(level.getWaves().size()).append("\n");
+         output.append("Commands: advance time -t N ticks | show sun amount | show map | zombies info\n");
+ 
+Index: app/src/main/java/pvz/Models/Entities/Plants/data/PlantPropertySheet.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Models.Entities.Plants.data;\n\nimport java.util.List;\n\nimport pvz.Models.Entities.Plants.Enums.PlantCategory;\nimport pvz.Models.Entities.Plants.Enums.PlantTag;\nimport pvz.Models.Entities.Plants.Enums.PlantType;\n\n/**\n * Immutable, data-driven description of one plant kind, loaded from\n * {@code plant_profiles.json} by {@link PlantRegistry}.\n *\n * <p>This is the direct structural counterpart of\n * {@link pvz.Models.Entities.Zombies.data.ZombiePropertySheet}: all 69 plant\n * kinds share the single {@link pvz.Models.Entities.Plants.Plant} class, and\n * their unique behaviour comes entirely from the sheet plugged in by\n * {@link pvz.Models.Entities.Plants.PlantFactory} — never from per-ID\n * branching in Java code.\n *\n * <p>{@link #getCategory()} doubles as the plant's \"family\" for Mint plants\n * (IDs 61-69): a Mint's own category names the family it buffs, since it is\n * itself planted like a member of that family in the source dataset.\n */\npublic final class PlantPropertySheet {\n\n    private final int id;\n    private final String name;\n    private final PlantType type;\n    private final PlantCategory category;\n    private final List<PlantTag> tags;\n    private final boolean mint;\n\n    private final int sunCost;\n    private final float baseHp;\n    private final DamageProfile damage;\n\n    /** {@code null} means the plant has no autonomous repeating action. */\n    private final Float actionIntervalSeconds;\n    /** Card re-select cooldown; consumed by a future seed-packet/UI system, not by {@code Plant} itself. */\n    private final Float rechargeSeconds;\n\n    private final SunProduction production;   // non-null only for SUN_PRODUCER\n    private final PlantFoodProfile plantFood;\n    private final GrowthProfile growth;        // non-null only for wramp-up plants\n    private final List<LevelUpgrade> levelUpgrades;\n    private final String description;\n\n    public PlantPropertySheet(Builder b) {\n        this.id = b.id;\n        this.name = b.name;\n        this.type = b.type;\n        this.category = b.category;\n        this.tags = List.copyOf(b.tags);\n        this.mint = b.mint;\n        this.sunCost = b.sunCost;\n        this.baseHp = b.baseHp;\n        this.damage = b.damage;\n        this.actionIntervalSeconds = b.actionIntervalSeconds;\n        this.rechargeSeconds = b.rechargeSeconds;\n        this.production = b.production;\n        this.plantFood = b.plantFood;\n        this.growth = b.growth;\n        this.levelUpgrades = List.copyOf(b.levelUpgrades);\n        this.description = b.description;\n    }\n\n    public int getId()                             { return id; }\n    public String getName()                        { return name; }\n    public PlantType getType()                     { return type; }\n    public PlantCategory getCategory()             { return category; }\n    public List<PlantTag> getTags()                { return tags; }\n    public boolean isMint()                        { return mint; }\n    public int getSunCost()                        { return sunCost; }\n    public float getBaseHp()                       { return baseHp; }\n    public DamageProfile getDamage()               { return damage; }\n    public Float getActionIntervalSeconds()        { return actionIntervalSeconds; }\n    public Float getRechargeSeconds()              { return rechargeSeconds; }\n    public SunProduction getProduction()           { return production; }\n    public PlantFoodProfile getPlantFood()         { return plantFood; }\n    public GrowthProfile getGrowth()               { return growth; }\n    public List<LevelUpgrade> getLevelUpgrades()   { return levelUpgrades; }\n    public String getDescription()                 { return description; }\n\n    public boolean hasTag(PlantTag tag) { return tags.contains(tag); }\n\n    @Override\n    public String toString() {\n        return \"PlantPropertySheet{id=\" + id + \", name='\" + name + \"', category=\" + category + '}';\n    }\n\n    // ── Builder ───────────────────────────────────────────────────────────────\n\n    public static final class Builder {\n        private final int id;\n        private final String name;\n        private final PlantType type;\n        private PlantCategory category = PlantCategory.MODIFIER;\n        private List<PlantTag> tags = List.of();\n        private boolean mint = false;\n        private int sunCost = 0;\n        private float baseHp = 300f;\n        private DamageProfile damage = new DamageProfile(DamageKind.NONE, 0, 1, null);\n        private Float actionIntervalSeconds = null;\n        private Float rechargeSeconds = null;\n        private SunProduction production = null;\n        private PlantFoodProfile plantFood = new PlantFoodProfile(PlantFoodKind.NONE, 0, 0, 0, List.of(), \"\");\n        private GrowthProfile growth = null;\n        private List<LevelUpgrade> levelUpgrades = List.of();\n        private String description = \"\";\n\n        public Builder(int id, String name, PlantType type) {\n            this.id = id;\n            this.name = name;\n            this.type = type;\n        }\n\n        public Builder category(PlantCategory v)               { category = v; return this; }\n        public Builder tags(List<PlantTag> v)                  { tags = v; return this; }\n        public Builder mint(boolean v)                         { mint = v; return this; }\n        public Builder sunCost(int v)                          { sunCost = v; return this; }\n        public Builder baseHp(float v)                         { baseHp = v; return this; }\n        public Builder damage(DamageProfile v)                 { damage = v; return this; }\n        public Builder actionIntervalSeconds(Float v)          { actionIntervalSeconds = v; return this; }\n        public Builder rechargeSeconds(Float v)                { rechargeSeconds = v; return this; }\n        public Builder production(SunProduction v)             { production = v; return this; }\n        public Builder plantFood(PlantFoodProfile v)           { plantFood = v; return this; }\n        public Builder growth(GrowthProfile v)                 { growth = v; return this; }\n        public Builder levelUpgrades(List<LevelUpgrade> v)     { levelUpgrades = v; return this; }\n        public Builder description(String v)                   { description = v; return this; }\n\n        public PlantPropertySheet build() { return new PlantPropertySheet(this); }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Models/Entities/Plants/data/PlantPropertySheet.java b/app/src/main/java/pvz/Models/Entities/Plants/data/PlantPropertySheet.java
+--- a/app/src/main/java/pvz/Models/Entities/Plants/data/PlantPropertySheet.java	(revision 2f8eea0e4769401732e5c6ad51bac2282ca12093)
++++ b/app/src/main/java/pvz/Models/Entities/Plants/data/PlantPropertySheet.java	(date 1784134376251)
+@@ -35,9 +35,9 @@
+     private final DamageProfile damage;
+ 
+     /** {@code null} means the plant has no autonomous repeating action. */
+-    private final Float actionIntervalSeconds;
++    private final float actionIntervalSeconds;
+     /** Card re-select cooldown; consumed by a future seed-packet/UI system, not by {@code Plant} itself. */
+-    private final Float rechargeSeconds;
++    private final float rechargeSeconds;
+ 
+     private final SunProduction production;   // non-null only for SUN_PRODUCER
+     private final PlantFoodProfile plantFood;
+Index: app/src/main/java/pvz/Controller/Game/NormalGameController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Controller.Game;\n\nimport java.util.regex.Matcher;\n\nimport pvz.Models.Engine.GameEngine;\nimport pvz.Models.Engine.TickAware;\nimport pvz.Models.Entities.Plants.Plant;\nimport pvz.Models.Entities.Plants.PlantFactory;\nimport pvz.Models.Entities.Plants.Enums.PlantType;\nimport pvz.Models.Entities.Plants.data.PlantPropertySheet;\nimport pvz.Models.Entities.Plants.data.PlantRegistry;\nimport pvz.Models.Entities.Sun.Sun;\nimport pvz.Models.Games.map.Tile;\nimport pvz.Models.toDel.Seasons.Levels.NormalLevel;\nimport pvz.View.Result;\n\npublic class NormalGameController extends GameController{\n    public NormalGameController(NormalLevel level) {\n        super(level);\n    }\n\n    public Result collectSun(Matcher matcher) {\n        int x = Integer.parseInt(matcher.group(\"sunX\"));\n        int y = Integer.parseInt(matcher.group(\"sunY\"));\n        \n        GameEngine engine = GameEngine.getInstance();\n        for (TickAware entity : engine.getEntities()) {\n            if (entity instanceof Sun) {\n                Sun sun = (Sun) entity;\n                // Assuming coordinates match within a reasonable threshold\n                if (Math.abs(sun.getCol() - x) < 0.5 && Math.abs(sun.getLane() - y) < 0.5) {\n                    level.addSun(sun.getType().getAmountSun());\n                    sun.dispose();\n                    return new Result(\"Sun collected!\");\n                }\n            }\n        }\n        return new Result(\"No sun found at these coordinates.\");\n    }\n\n    public Result showSun(Matcher matcher) {\n        return new Result(\"Current Sun: \" + level.getCurrentSun());\n    }\n\n    public Result cheatSun(Matcher matcher) {\n        int amount = Integer.parseInt(matcher.group(\"sunCount\"));\n        level.addSun(amount);\n        return new Result(\"Added \" + amount + \" sun.\");\n    }\n\n    public Result plant(Matcher matcher) {\n        String typeString = matcher.group(\"plantType\");\n        int x = Integer.parseInt(matcher.group(\"plantX\"));\n        int y = Integer.parseInt(matcher.group(\"plantY\"));\n        \n        // Validation\n        if (x < 0 || x >= level.getGameMap().getColumns() || y < 0 || y >= level.getGameMap().getRows()) {\n             return new Result(\"Invalid coordinates.\");\n        }\n        \n        Tile tile = level.getGameMap().getMap()[y][x];\n        if (tile.getPlant() != null) {\n            return new Result(\"Tile already has a plant.\");\n        }\n        \n        // Find plant storage\n        PlantType type = null;\n        for (PlantType ps : PlantType.values()) {\n            if (ps.toString().equalsIgnoreCase(typeString)) {\n                type = ps;\n                break;\n            }\n        }\n        if (type == null) {\n            return new Result(\"Invalid plant type: \" + typeString);\n        }\n\n        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);\n        // Check sun\n        if (!level.spendSun(sheet.getSunCost())) {\n            return new Result(\"Not enough sun.\");\n        }\n        \n        // Create plant\n        Plant plant = new PlantFactory().create(type, x, y , null); \n        tile.setPlant(plant);\n        level.getEngine().register(plant);\n        \n        return new Result(typeString + \" placed at (\" + x + \", \" + y + \").\");\n    }\n\n    public Result pluckPlant(Matcher matcher) {\n        int x = Integer.parseInt(matcher.group(\"pluckX\"));\n        int y = Integer.parseInt(matcher.group(\"pluckY\"));\n        \n        // Validation\n        if (x < 0 || x >= level.getGameMap().getColumns() || y < 0 || y >= level.getGameMap().getRows()) {\n             return new Result(\"Invalid coordinates.\");\n        }\n        \n        Tile tile = level.getGameMap().getMap()[y][x];\n        if (tile.getPlant() == null) {\n            return new Result(\"No plant to pluck at (\" + x + \", \" + y + \").\");\n        }\n        \n        Plant plant = tile.getPlant();\n        level.getEngine().unRegister(plant);\n        tile.setPlant(null);\n        \n        return new Result(\"Plant plucked from (\" + x + \", \" + y + \").\");\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Controller/Game/NormalGameController.java b/app/src/main/java/pvz/Controller/Game/NormalGameController.java
+--- a/app/src/main/java/pvz/Controller/Game/NormalGameController.java	(revision 2f8eea0e4769401732e5c6ad51bac2282ca12093)
++++ b/app/src/main/java/pvz/Controller/Game/NormalGameController.java	(date 1784135130554)
+@@ -10,13 +10,14 @@
+ import pvz.Models.Entities.Plants.data.PlantPropertySheet;
+ import pvz.Models.Entities.Plants.data.PlantRegistry;
+ import pvz.Models.Entities.Sun.Sun;
++import pvz.Models.Games.GameContext;
+ import pvz.Models.Games.map.Tile;
+ import pvz.Models.toDel.Seasons.Levels.NormalLevel;
+ import pvz.View.Result;
+ 
+ public class NormalGameController extends GameController{
+-    public NormalGameController(NormalLevel level) {
+-        super(level);
++    public NormalGameController(GameContext context) {
++        super(context);
+     }
+ 
+     public Result collectSun(Matcher matcher) {
+Index: app/src/main/java/pvz/Controller/Game/PreNormalGameController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Controller.Game;\n\nimport java.util.ArrayList;\nimport java.util.List;\nimport java.util.regex.Matcher;\n\nimport pvz.Models.AppContext;\nimport pvz.Models.Engine.GameEngine;\nimport pvz.Models.Entities.Plants.Plant;\nimport pvz.Models.Entities.Plants.PlantFactory;\nimport pvz.Models.Entities.Plants.Enums.PlantType;\nimport pvz.Models.Entities.Plants.data.PlantRegistry;\nimport pvz.Models.Entities.Zombies.ZombieType;\nimport pvz.Models.Games.Levels.Wave;\nimport pvz.Models.Games.Levels.WavePhase;\nimport pvz.Models.Games.Seasons.Season;\nimport pvz.Models.Games.card.PlantCard;\nimport pvz.Models.Games.map.GameMap;\nimport pvz.Models.User.MyPlant;\nimport pvz.Models.toDel.Seasons.Levels.NormalLevel;\nimport pvz.View.Result;\nimport pvz.View.Game.NormalGameMenu;\n\npublic class PreNormalGameController extends PreGameController {\n    private static final int MAX_PLANTS = 7;\n    private final PlantFactory plantFactory = new PlantFactory();\n    List<PlantCard> selectedPlants;\n    int levelNumber;\n\n    public PreNormalGameController(Season season, int level){\n        super(season,level);\n        selectedPlants=new ArrayList<>();\n        levelNumber=level;\n    }\n\n    public Result showAllPlants(Matcher matcher){\n        StringBuilder output=new StringBuilder();\n        for (PlantType type : PlantType.values()){\n            var sheet = PlantRegistry.getInstance().getSheet(type);\n            if (sheet == null) continue;\n            output.append(\"type: \").append(type.toString());\n            output.append(\"\\n Sun Cost: \").append(sheet.getSunCost());\n        }\n        return new Result(output.toString());\n    }\n\n    public Result showAvailablePlants(Matcher matcher){\n        StringBuilder output=new StringBuilder();\n        for (MyPlant p:AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){\n            output.append(\"\\n- \").append(p.getType());\n            output.append(\" | Level: \").append(p.getLevel());\n            output.append(\" | Sun Cost: \").append(PlantRegistry.getInstance().getSheet(p.getType()).getSunCost());\n            if (p.isBoosted()) output.append(\" [BOOSTED]\");\n        }\n        return new Result(output.toString());\n    }\n\n    public Result plantAdd(Matcher matcher){\n        String type = matcher.group(\"type\").trim();\n\n        if (selectedPlants.size() >= MAX_PLANTS){\n            return new Result(\"You can only select up to \" + MAX_PLANTS + \" plants.\");\n        }\n\n        PlantType plantType = null;\n        for (PlantType pt : PlantType.values()){\n            if (pt.toString().equalsIgnoreCase(type)){\n                plantType = pt;\n                break;\n            }\n        }\n        if (plantType == null){\n            return new Result(\"Plant not found.\");\n        }\n\n        MyPlant owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(plantType);\n        if (owned == null){\n            return new Result(\"You have not unlocked this plant.\");\n        }\n\n        for (MyPlant p : selectedPlants){\n            if (p.getType() == plantType){\n                return new Result(\"This plant is already in your selection.\");\n            }\n        }\n\n        selectedPlants.add(owned);\n\n        StringBuilder output=new StringBuilder(\"Plant added. Selected Plants (\" + selectedPlants.size() + \"/\" + MAX_PLANTS + \"):\");\n        for (MyPlant p : selectedPlants){\n            output.append(\"\\n- \").append(p.getType().toString());\n        }\n        return new Result(output.toString());\n    }\n\n    public Result plantRemove(Matcher matcher){\n        String type=matcher.group(\"type\").trim().toUpperCase();\n\n        PlantType plantType = null;\n        for (PlantType pt : PlantType.values()){\n            if (pt.toString().equals(type)){\n                plantType = pt;\n                break;\n            }\n        }\n        if (plantType == null){\n            return new Result(\"Plant not found.\");\n        }\n\n        for (int i = 0; i < selectedPlants.size(); i++){\n            if (selectedPlants.get(i).getType() == plantType){\n                selectedPlants.remove(i);\n                StringBuilder output=new StringBuilder(\"Plant removed. Selected Plants (\" + selectedPlants.size() + \"/\" + MAX_PLANTS + \"):\");\n                for (MyPlant p : selectedPlants){\n                    output.append(\"\\n- \").append(p.getType().toString());\n                }\n                return new Result(output.toString());\n            }\n        }\n        return new Result(\"This plant is not in your selection.\");\n    }\n\n    public Result boostPlant(Matcher matcher){\n        String type=matcher.group(\"type\").trim().toUpperCase();\n\n        PlantType plantType = null;\n        for (PlantType pt : PlantType.values()){\n            if (pt.toString().equals(type)){\n                plantType = pt;\n                break;\n            }\n        }\n        if (plantType == null){\n            return new Result(\"Plant not found.\");\n        }\n\n        for (MyPlant p : selectedPlants){\n            if (p.getType() == plantType){\n                if (p.isBoosted()){\n                    return new Result(\"This plant is already boosted.\");\n                }\n                p.setBoosted(true);\n                return new Result(p.getType().toString() + \" has been boosted.\");\n            }\n        }\n        return new Result(\"This plant is not in your selection.\");\n    }\n\n    @Override\n    public Result startGame(Matcher matcher) {\n        if (selectedPlants.isEmpty()){\n            // Debugging mode: add some default plants if none selected\n            // for (PlantStragy ps: PlantStorage.values()){\n            //     if (selectedPlants.size() < MAX_PLANTS){\n            //         selectedPlants.add(ps.getCopy(new Vector2(-1,-1)));\n            //     } else {\n            //         break;\n            //     }\n            // }\n        }\n\n        GameEngine engine = GameEngine.getInstance();\n        engine.reset();\n\n        GameMap map = new GameMap();\n        LevelGameContext context = new LevelGameContext(engine, map, null);\n\n        List<Wave> waves = createHardcodedWaves(context, map);\n\n        List<Plant> plants = new ArrayList<>();\n        for(MyPlant p : selectedPlants){\n            plants.add(plantFactory.createUnplaced(p.getType() , p.getLevel() , p.isBoosted()));\n        }\n        NormalLevel level = new NormalLevel(engine, map, levelNumber, 150, waves, plants);\n\n        // This is a bit of a hack, but we need to associate the level with the context if possible\n        // Actually, LevelGameContext didn't have a setter for level.\n        // With the fix I applied to LevelGameContext, it should work fine without the level object.\n\n        StringBuilder output=new StringBuilder(\"Starting game with:\");\n        for (MyPlant p : selectedPlants){\n            String boost = p.isBoosted() ? \" [BOOSTED]\" : \"\";\n            output.append(\"\\n- \").append(p.getType().toString()).append(boost);\n        }\n        return new Result(output.toString(), new NormalGameMenu(level));\n    }\n\n    private List<Wave> createHardcodedWaves(LevelGameContext context, GameMap map) {\n        List<Wave> waves = new ArrayList<>();\n        int lanes = map.getRows();\n\n        List<ZombieType> basicOnly = List.of(ZombieType.BASIC);\n        List<ZombieType> basicAndMummy = List.of(ZombieType.BASIC, ZombieType.MUMMY);\n        List<ZombieType> basicConeMummy = List.of(ZombieType.BASIC, ZombieType.CONEHEAD, ZombieType.MUMMY);\n\n        WavePhase phase1 = new WavePhase(3, 50, basicOnly, false);\n        waves.add(new Wave(1, false, 300, List.of(phase1), context, lanes, 3));\n\n        WavePhase phase2a = new WavePhase(4, 40, basicAndMummy, false);\n        WavePhase phase2b = new WavePhase(3, 25, basicAndMummy, true);\n        waves.add(new Wave(2, false, 500, List.of(phase2a, phase2b), context, lanes, 3));\n\n        WavePhase phase3a = new WavePhase(5, 35, basicConeMummy, false);\n        WavePhase phase3b = new WavePhase(6, 20, basicConeMummy, true);\n        waves.add(new Wave(3, true, 800, List.of(phase3a, phase3b), context, lanes, 3));\n\n        return waves;\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java b/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java
+--- a/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java	(revision 2f8eea0e4769401732e5c6ad51bac2282ca12093)
++++ b/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java	(date 1784135130437)
+@@ -9,8 +9,10 @@
+ import pvz.Models.Entities.Plants.Plant;
+ import pvz.Models.Entities.Plants.PlantFactory;
+ import pvz.Models.Entities.Plants.Enums.PlantType;
++import pvz.Models.Entities.Plants.data.PlantPropertySheet;
+ import pvz.Models.Entities.Plants.data.PlantRegistry;
+ import pvz.Models.Entities.Zombies.ZombieType;
++import pvz.Models.Games.GameContext;
+ import pvz.Models.Games.Levels.Wave;
+ import pvz.Models.Games.Levels.WavePhase;
+ import pvz.Models.Games.Seasons.Season;
+@@ -78,17 +80,18 @@
+             return new Result("You have not unlocked this plant.");
+         }
+ 
+-        for (MyPlant p : selectedPlants){
+-            if (p.getType() == plantType){
++        for (PlantCard p : selectedPlants){
++            if (p.getPlant().getType() == plantType){
+                 return new Result("This plant is already in your selection.");
+             }
+         }
+ 
+-        selectedPlants.add(owned);
++        PlantPropertySheet propertySheet=PlantRegistry.getInstance().getSheet(plantType);
++        selectedPlants.add(new PlantCard(owned,propertySheet.getSunCost(),propertySheet.getRechargeSeconds()));
+ 
+         StringBuilder output=new StringBuilder("Plant added. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
+-        for (MyPlant p : selectedPlants){
+-            output.append("\n- ").append(p.getType().toString());
++        for (PlantCard p : selectedPlants){
++            output.append("\n- ").append(p.getPlant().getType().toString());
+         }
+         return new Result(output.toString());
+     }
+@@ -108,11 +111,11 @@
+         }
+ 
+         for (int i = 0; i < selectedPlants.size(); i++){
+-            if (selectedPlants.get(i).getType() == plantType){
++            if (selectedPlants.get(i).getPlant().getType() == plantType){
+                 selectedPlants.remove(i);
+                 StringBuilder output=new StringBuilder("Plant removed. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
+-                for (MyPlant p : selectedPlants){
+-                    output.append("\n- ").append(p.getType().toString());
++                for (PlantCard p : selectedPlants){
++                    output.append("\n- ").append(p.getPlant().getType().toString());
+                 }
+                 return new Result(output.toString());
+             }
+@@ -134,13 +137,13 @@
+             return new Result("Plant not found.");
+         }
+ 
+-        for (MyPlant p : selectedPlants){
+-            if (p.getType() == plantType){
+-                if (p.isBoosted()){
++        for (PlantCard p : selectedPlants){
++            if (p.getPlant().getType() == plantType){
++                if (p.getPlant().isBoosted()){
+                     return new Result("This plant is already boosted.");
+                 }
+-                p.setBoosted(true);
+-                return new Result(p.getType().toString() + " has been boosted.");
++                p.getPlant().setBoosted(true);
++                return new Result(p.getPlant().getType().toString() + " has been boosted.");
+             }
+         }
+         return new Result("This plant is not in your selection.");
+@@ -163,13 +166,12 @@
+         engine.reset();
+ 
+         GameMap map = new GameMap();
+-        LevelGameContext context = new LevelGameContext(engine, map, null);
+ 
+-        List<Wave> waves = createHardcodedWaves(context, map);
++        List<Wave> waves = createHardcodedWaves(map);
+ 
+         List<Plant> plants = new ArrayList<>();
+-        for(MyPlant p : selectedPlants){
+-            plants.add(plantFactory.createUnplaced(p.getType() , p.getLevel() , p.isBoosted()));
++        for(PlantCard p : selectedPlants){
++            plants.add(plantFactory.createUnplaced(p.getPlant().getType() , p.getPlant().getLevel() , p.getPlant().isBoosted()));
+         }
+         NormalLevel level = new NormalLevel(engine, map, levelNumber, 150, waves, plants);
+ 
+@@ -178,14 +180,14 @@
+         // With the fix I applied to LevelGameContext, it should work fine without the level object.
+ 
+         StringBuilder output=new StringBuilder("Starting game with:");
+-        for (MyPlant p : selectedPlants){
+-            String boost = p.isBoosted() ? " [BOOSTED]" : "";
+-            output.append("\n- ").append(p.getType().toString()).append(boost);
++        for (PlantCard p : selectedPlants){
++            String boost = p.getPlant().isBoosted() ? " [BOOSTED]" : "";
++            output.append("\n- ").append(p.getPlant().getType().toString()).append(boost);
+         }
+-        return new Result(output.toString(), new NormalGameMenu(level));
++        return new Result(output.toString(), new NormalGameMenu(new GameContext(level)));
+     }
+ 
+-    private List<Wave> createHardcodedWaves(LevelGameContext context, GameMap map) {
++    private List<Wave> createHardcodedWaves(GameMap map) {
+         List<Wave> waves = new ArrayList<>();
+         int lanes = map.getRows();
+ 
+@@ -194,15 +196,15 @@
+         List<ZombieType> basicConeMummy = List.of(ZombieType.BASIC, ZombieType.CONEHEAD, ZombieType.MUMMY);
+ 
+         WavePhase phase1 = new WavePhase(3, 50, basicOnly, false);
+-        waves.add(new Wave(1, false, 300, List.of(phase1), context, lanes, 3));
++        waves.add(new Wave(1, false, 300, List.of(phase1), lanes, 3));
+ 
+         WavePhase phase2a = new WavePhase(4, 40, basicAndMummy, false);
+         WavePhase phase2b = new WavePhase(3, 25, basicAndMummy, true);
+-        waves.add(new Wave(2, false, 500, List.of(phase2a, phase2b), context, lanes, 3));
++        waves.add(new Wave(2, false, 500, List.of(phase2a, phase2b), lanes, 3));
+ 
+         WavePhase phase3a = new WavePhase(5, 35, basicConeMummy, false);
+         WavePhase phase3b = new WavePhase(6, 20, basicConeMummy, true);
+-        waves.add(new Wave(3, true, 800, List.of(phase3a, phase3b), context, lanes, 3));
++        waves.add(new Wave(3, true, 800, List.of(phase3a, phase3b), lanes, 3));
+ 
+         return waves;
+     }
+Index: app/src/main/java/pvz/Models/Games/GameContext.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Models.Games;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\nimport pvz.Models.Engine.GameEngine;\nimport pvz.Models.Engine.TickAware;\nimport pvz.Models.Entities.Plants.Plant;\nimport pvz.Models.Entities.Projectile.Projectile;\nimport pvz.Models.Entities.Sun.Sun;\nimport pvz.Models.Entities.Zombies.Zombie;\nimport pvz.Models.Games.Levels.Level;\nimport pvz.Models.Games.Modes.GameMode;\nimport pvz.Models.Games.Modes.GameModeFactory;\nimport pvz.Models.Games.card.Card;\nimport pvz.Models.Games.map.GameMap;\n\n\npublic class GameContext implements TickAware {\n    private int currentSun;\n    private int currentTick;\n    private boolean gameOver;\n\n    private final GameEngine engine;\n    private List<Zombie> zombies;\n    private List<Plant> plants;\n    private List<Projectile> projectiles;\n    private List<Sun> suns;\n    private GameMode mode;\n    private GameMap map;\n\n    public GameContext(Level currentLevel) {\n        this.engine         = GameEngine.getInstance();\n        this.currentSun     = currentLevel.getInitialSun();\n        this.zombies        = new ArrayList<>();\n        this.plants         = new ArrayList<>();\n        this.projectiles    = new ArrayList<>();\n        this.suns           = new ArrayList<>();\n        this.map = currentLevel.getGameMap();\n        this.mode = GameModeFactory.createGameMode(currentLevel.getGameMode() , currentLevel);\n    }\n\n\n    public GameEngine getEngine() {\n        return engine;\n    }\n\n    public GameMode getMode() {\n        return mode;\n    }\n\n    public int getCurrentSun() {\n        return currentSun;\n    }\n    public void addSun(int amount) {\n        currentSun += amount;\n    }\n    public boolean spendSun(int amount) {\n        if (currentSun < amount) return false;\n        currentSun -= amount;\n        return true;\n    }\n\n    public int getColumns() {\n        return map.getColumns();\n    }\n    public int getLanes() {\n        return map.getRows();\n    }\n\n    public List<Zombie> getZombies() {\n        return zombies;\n    }\n    public List<Zombie> getZombiesAt(int col, int lane) {\n        return map.getTile(col, lane).getZombies().stream()\n                .filter(z -> !z.isDead())\n                .toList();\n    }\n    public List<Zombie> getZombiesInLane(int lane) {\n        return zombies.stream()\n                .filter(z -> z.getLane() == lane && !z.isDead())\n                .toList();\n    }\n    public List<Zombie> getZombiesInColumn(int col) {\n        return zombies.stream()\n                .filter(z -> (int) z.getX() == col && !z.isDead())\n                .toList();\n    }\n    public void spawnZombie(Zombie z) {\n        zombies.add(z);\n    }\n    public boolean removeZombie(Zombie z) {\n        return zombies.remove(z);\n    }\n    public boolean isZombieAt(int col, int lane) {\n        return !getZombiesAt(col, lane).isEmpty();\n    }\n    public List<Plant> getPlants() {\n        return plants;\n    }\n    public List<Plant> getPlantsAt(int col, int lane) {\n        return map.getTile(col, lane).getPlants().stream()\n                .filter(p -> !p.isDead())\n                .toList();\n    }\n    public List<Plant> getPlantsInLane(int lane) {\n        return plants.stream()\n                .filter(p -> p.getLane() == lane && !p.isDead())\n                .toList();\n    }\n    public List<Plant> getPlantsInColumn(int col) {\n        return plants.stream()\n                .filter(p -> p.getCol() == col && !p.isDead())\n                .toList();\n    }\n    public void spawnPlant(Plant p) {\n        plants.add(p);\n    }\n    public boolean isPlantAt(int col, int lane) {\n        return !getPlantsAt(col, lane).isEmpty();\n    }\n    public boolean removePlant(Plant p) {\n        return plants.remove(p);\n    }\n\n    public List<Projectile> getProjectiles() {\n        return projectiles;\n    }\n    public void spawnProjectile(Projectile p) {\n        projectiles.add(p);\n    }\n    public boolean removeProjectile(Projectile p) {\n        return projectiles.remove(p);\n    }\n\n    public List<Sun> getSuns() {\n        return suns;\n    }\n    public void spawnSun(Sun s) {\n        suns.add(s);\n    }\n    public boolean removeSun(Sun s) {\n        return suns.remove(s);\n    }\n\n    public int getCurrentTick() {\n        return currentTick;\n    }\n\n    public void setCurrentTick(int currentTick) {\n        this.currentTick = currentTick;\n    }\n\n\n    public boolean isGameOver() {\n        return gameOver;\n    }\n\n\n    public void setGameOver(boolean gameOver) {\n        this.gameOver = gameOver;\n    }\n\n    public GameMap getMap() {\n        return map;\n    }\n\n    public void setMap(GameMap map) {\n        this.map = map;\n    }\n\n    public void log(String message) { System.out.println(\"  \" + message); }\n\n    @Override\n    public void enter() {\n        mode.initMode(this);\n    }\n\n\n    @Override\n    public void update() {\n        mode.updateMode(this);\n    }\n\n\n    @Override\n    public void dispose() {}\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Models/Games/GameContext.java b/app/src/main/java/pvz/Models/Games/GameContext.java
+--- a/app/src/main/java/pvz/Models/Games/GameContext.java	(revision 2f8eea0e4769401732e5c6ad51bac2282ca12093)
++++ b/app/src/main/java/pvz/Models/Games/GameContext.java	(date 1784135130668)
+@@ -12,13 +12,13 @@
+ import pvz.Models.Games.Levels.Level;
+ import pvz.Models.Games.Modes.GameMode;
+ import pvz.Models.Games.Modes.GameModeFactory;
+-import pvz.Models.Games.card.Card;
+ import pvz.Models.Games.map.GameMap;
+ 
+ 
+ public class GameContext implements TickAware {
+     private int currentSun;
+     private int currentTick;
++    private int levelNumber;
+     private boolean gameOver;
+ 
+     private final GameEngine engine;
+@@ -38,6 +38,7 @@
+         this.suns           = new ArrayList<>();
+         this.map = currentLevel.getGameMap();
+         this.mode = GameModeFactory.createGameMode(currentLevel.getGameMode() , currentLevel);
++        this.setLevelNumber(currentLevel.getLevelNumber());
+     }
+ 
+ 
+@@ -185,4 +186,12 @@
+ 
+     @Override
+     public void dispose() {}
++
++    public int getLevelNumber() {
++        return levelNumber;
++    }
++
++    public void setLevelNumber(int levelNumber) {
++        this.levelNumber = levelNumber;
++    }
+ }
+Index: app/src/main/java/pvz/Models/Games/card/Card.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Models.Games.card;\n\n\npublic abstract class Card {\n\n    protected final int cost;\n    protected final int baseColldown;\n    protected int cooldown;\n\n    protected Card(int cost, int cooldown) {\n        this.cost = cost;\n        this.baseColldown = cooldown;\n        this.cooldown = cooldown;\n    }\n\n    public int getCost() {\n        return cost;\n    }\n\n    public int getCooldown() {\n        return cooldown;\n    }\n\n    public int getBaseColldown() {\n        return baseColldown;\n    }\n\n    public void decrementCooldown() {\n        if (cooldown > 0) {\n            cooldown--;\n        }\n    }\n\n    public boolean canUse() {\n        return cooldown == 0;\n    }\n\n    public void setCooldown(int cooldown) {\n        if (cooldown < 0) {\n            this.cooldown = 0;\n        } else if (cooldown > baseColldown) {\n            this.cooldown = baseColldown;\n        } else {\n            this.cooldown = cooldown;\n        }\n    }\n\n    public void resetCooldown() {\n        this.cooldown = baseColldown;\n    }\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Models/Games/card/Card.java b/app/src/main/java/pvz/Models/Games/card/Card.java
+--- a/app/src/main/java/pvz/Models/Games/card/Card.java	(revision 2f8eea0e4769401732e5c6ad51bac2282ca12093)
++++ b/app/src/main/java/pvz/Models/Games/card/Card.java	(date 1784134376419)
+@@ -4,12 +4,12 @@
+ public abstract class Card {
+ 
+     protected final int cost;
+-    protected final int baseColldown;
+-    protected int cooldown;
++    protected final float baseCooldown;
++    protected float cooldown;
+ 
+-    protected Card(int cost, int cooldown) {
++    protected Card(int cost, float cooldown) {
+         this.cost = cost;
+-        this.baseColldown = cooldown;
++        this.baseCooldown = cooldown;
+         this.cooldown = cooldown;
+     }
+ 
+@@ -17,12 +17,12 @@
+         return cost;
+     }
+ 
+-    public int getCooldown() {
++    public float getCooldown() {
+         return cooldown;
+     }
+ 
+-    public int getBaseColldown() {
+-        return baseColldown;
++    public float getBaseColldown() {
++        return baseCooldown;
+     }
+ 
+     public void decrementCooldown() {
+@@ -38,15 +38,15 @@
+     public void setCooldown(int cooldown) {
+         if (cooldown < 0) {
+             this.cooldown = 0;
+-        } else if (cooldown > baseColldown) {
+-            this.cooldown = baseColldown;
++        } else if (cooldown > baseCooldown) {
++            this.cooldown = baseCooldown;
+         } else {
+             this.cooldown = cooldown;
+         }
+     }
+ 
+     public void resetCooldown() {
+-        this.cooldown = baseColldown;
++        this.cooldown = baseCooldown;
+     }
+ 
+ }
+Index: app/src/main/java/pvz/Models/Games/card/PlantCard.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package pvz.Models.Games.card;\n\nimport pvz.Models.User.MyPlant;\n\npublic class PlantCard extends Card {\n    private final MyPlant plant;\n\n    public PlantCard(MyPlant plant, int cost, int cooldown) {\n        super(cost, cooldown);\n        this.plant = plant;\n    }\n\n    public MyPlant getPlant() {\n        return plant;\n    }\n\n    public MyPlant use() {\n        if (canUse()) {\n            resetCooldown();\n            return plant;\n        }\n        return null;\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/Models/Games/card/PlantCard.java b/app/src/main/java/pvz/Models/Games/card/PlantCard.java
+--- a/app/src/main/java/pvz/Models/Games/card/PlantCard.java	(revision 2f8eea0e4769401732e5c6ad51bac2282ca12093)
++++ b/app/src/main/java/pvz/Models/Games/card/PlantCard.java	(date 1784134376336)
+@@ -5,7 +5,7 @@
+ public class PlantCard extends Card {
+     private final MyPlant plant;
+ 
+-    public PlantCard(MyPlant plant, int cost, int cooldown) {
++    public PlantCard(MyPlant plant, int cost, float cooldown) {
+         super(cost, cooldown);
+         this.plant = plant;
+     }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"7fd54749-b0f8-4a89-ad5d-d24c03e69d49\" name=\"Changes\" comment=\"h_edit3\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/ChapterSelectionController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/ChapterSelectionController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/GameController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/GameController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreGameController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreGameController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/GreenHouseController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/GreenHouseController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/MainController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/MainController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/user/RegisterController.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/Controller/user/RegisterController.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/Sun.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/Sun.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Seasons/Season.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Seasons/Season.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Seasons/SeasonProgress.java\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/View/ChapterMenu.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/View/ChapterMenu.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/View/GreenHouseMenu.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/View/GreenHouseMenu.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/View/PreGameMenu.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/View/PreGameMenu.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/app/src/main/java/pvz/View/ShopMenu.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/src/main/java/pvz/View/ShopMenu.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ExternalProjectsData\">\r\n    <projectState path=\"$PROJECT_DIR$\">\r\n      <ProjectState />\r\n    </projectState>\r\n  </component>\r\n  <component name=\"ExternalProjectsManager\">\r\n    <system id=\"GRADLE\">\r\n      <state>\r\n        <projects_view>\r\n          <tree_state>\r\n            <expand>\r\n              <path>\r\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\r\n                <item name=\"pvz\" type=\"f1a62948:ProjectNode\" />\r\n              </path>\r\n            </expand>\r\n            <select />\r\n          </tree_state>\r\n        </projects_view>\r\n      </state>\r\n    </system>\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Interface\" />\r\n        <option value=\"Enum\" />\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitLabMergeRequestFiltersHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPENED&quot;,\n    &quot;assignee&quot;: {\n      &quot;type&quot;: &quot;org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue&quot;,\n      &quot;username&quot;: &quot;sedhhn&quot;,\n      &quot;fullname&quot;: &quot;sedhhn&quot;\n    }\n  }\n}</component>\r\n  <component name=\"GitLabMergeRequestsSettings\">{\n  &quot;selectedUrlAndAccountId&quot;: {\n    &quot;first&quot;: &quot;https://hamgit.ir/sedhhn/plantsvszombies2.git&quot;,\n    &quot;second&quot;: &quot;83191278-9b68-4e33-a55d-f523d58ebe84&quot;\n  }\n}</component>\r\n  <component name=\"McpProjectServerCommands\">\r\n    <commands />\r\n    <urls />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 7\n}</component>\r\n  <component name=\"ProjectId\" id=\"3EhtQq7cdtR5etykGDiYWn2syZ2\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;Application.App.executor&quot;: &quot;Run&quot;,\n    &quot;Application.Main.executor&quot;: &quot;Run&quot;,\n    &quot;Gradle.Build PlantsVsZombies2.executor&quot;: &quot;Run&quot;,\n    &quot;Gradle.Build plantsvszombies2.executor&quot;: &quot;Run&quot;,\n    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,\n    &quot;Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor&quot;: &quot;Run&quot;,\n    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,\n    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,\n    &quot;git-widget-placeholder&quot;: &quot;main&quot;,\n    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,\n    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\n    &quot;last_opened_file_path&quot;: &quot;C:/Users/104/plantsvszombies2&quot;,\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\n    &quot;onboarding.tips.debug.path&quot;: &quot;H:/Code/Java/AP Project/PlantsVsZombies2/src/Main.java&quot;,\n    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,\n    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,\n    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,\n    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,\n    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\n  }\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CreateClassDialog.RecentsKey\">\r\n      <recent name=\"Models.Plants.Strategies\" />\r\n    </key>\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"H:\\Code\\Java\\AP Project\\PlantsVsZombies2\" />\r\n      <recent name=\"H:\\Code\\Java\\AP Project\\PlantsVsZombies2\\src\\Models\" />\r\n      <recent name=\"H:\\Code\\Java\\AP Project\\PlantsVsZombies2\\src\\Models\\Quests\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"H:\\Code\\Java\\AP Project\\PlantsVsZombies2\\src\\Models\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"Models.Seasons.Levels\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.App\">\r\n    <configuration name=\"App\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"ALTERNATIVE_JRE_PATH\" value=\"25\" />\r\n      <option name=\"ALTERNATIVE_JRE_PATH_ENABLED\" value=\"true\" />\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"pvz.App\" />\r\n      <module name=\"pvz.app.main\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"pvz.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"Main\" />\r\n      <module name=\"PlantsVsZombies2\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.App\" />\r\n        <item itemvalue=\"Application.Main\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"7fd54749-b0f8-4a89-ad5d-d24c03e69d49\" name=\"Changes\" comment=\"\" />\r\n      <created>1780642625198</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1780642625198</updated>\r\n      <workItem from=\"1780642626620\" duration=\"14477000\" />\r\n      <workItem from=\"1780727383033\" duration=\"14135000\" />\r\n      <workItem from=\"1780804437258\" duration=\"285000\" />\r\n      <workItem from=\"1780925266895\" duration=\"929000\" />\r\n      <workItem from=\"1781073541845\" duration=\"6364000\" />\r\n      <workItem from=\"1781101092972\" duration=\"19478000\" />\r\n      <workItem from=\"1781247032363\" duration=\"72000\" />\r\n      <workItem from=\"1781271335831\" duration=\"9143000\" />\r\n      <workItem from=\"1781910195158\" duration=\"2313000\" />\r\n      <workItem from=\"1781946617001\" duration=\"115000\" />\r\n      <workItem from=\"1781966693070\" duration=\"2800000\" />\r\n      <workItem from=\"1781975412844\" duration=\"4962000\" />\r\n      <workItem from=\"1781986710773\" duration=\"49000\" />\r\n      <workItem from=\"1782487778184\" duration=\"13935000\" />\r\n      <workItem from=\"1782510561795\" duration=\"23000\" />\r\n      <workItem from=\"1782510607217\" duration=\"3592000\" />\r\n      <workItem from=\"1782570237495\" duration=\"326000\" />\r\n      <workItem from=\"1782837458977\" duration=\"1143000\" />\r\n      <workItem from=\"1783009235562\" duration=\"633000\" />\r\n      <workItem from=\"1783009979306\" duration=\"799000\" />\r\n      <workItem from=\"1783010994303\" duration=\"5330000\" />\r\n      <workItem from=\"1783024573960\" duration=\"1995000\" />\r\n      <workItem from=\"1783967805064\" duration=\"3369000\" />\r\n      <workItem from=\"1784005253170\" duration=\"13538000\" />\r\n      <workItem from=\"1784032908142\" duration=\"9226000\" />\r\n      <workItem from=\"1784043171457\" duration=\"7411000\" />\r\n      <workItem from=\"1784090699060\" duration=\"3424000\" />\r\n      <workItem from=\"1784099055451\" duration=\"10462000\" />\r\n      <workItem from=\"1784122842175\" duration=\"6642000\" />\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"XSLT-Support.FileAssociations.UIState\">\r\n    <expand />\r\n    <select />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 2f8eea0e4769401732e5c6ad51bac2282ca12093)
++++ b/.idea/workspace.xml	(date 1784135131113)
+@@ -6,21 +6,13 @@
+   <component name="ChangeListManager">
+     <list default="true" id="7fd54749-b0f8-4a89-ad5d-d24c03e69d49" name="Changes" comment="h_edit3">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/ChapterSelectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/ChapterSelectionController.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/GameController.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreGameController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/NormalGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/NormalGameController.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/GreenHouseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/GreenHouseController.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/MainController.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/user/RegisterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/user/RegisterController.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/Sun.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/Sun.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Seasons/Season.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Seasons/Season.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Seasons/SeasonProgress.java" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/ChapterMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/ChapterMenu.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/GreenHouseMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/GreenHouseMenu.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/PreGameMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/PreGameMenu.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/ShopMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/ShopMenu.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/data/PlantPropertySheet.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/data/PlantPropertySheet.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/GameContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/GameContext.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/card/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/card/Card.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/card/PlantCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/card/PlantCard.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/Game/NormalGameMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/Game/NormalGameMenu.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -215,7 +207,7 @@
+       <workItem from="1784043171457" duration="7411000" />
+       <workItem from="1784090699060" duration="3424000" />
+       <workItem from="1784099055451" duration="10462000" />
+-      <workItem from="1784122842175" duration="6642000" />
++      <workItem from="1784122842175" duration="9037000" />
+     </task>
+     <servers />
+   </component>

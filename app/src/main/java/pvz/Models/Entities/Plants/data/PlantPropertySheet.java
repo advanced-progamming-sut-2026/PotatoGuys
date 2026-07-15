@@ -35,9 +35,9 @@ public final class PlantPropertySheet {
     private final DamageProfile damage;
 
     /** {@code null} means the plant has no autonomous repeating action. */
-    private final Float actionIntervalSeconds;
+    private final float actionIntervalSeconds;
     /** Card re-select cooldown; consumed by a future seed-packet/UI system, not by {@code Plant} itself. */
-    private final Float rechargeSeconds;
+    private final float rechargeSeconds;
 
     private final SunProduction production;   // non-null only for SUN_PRODUCER
     private final PlantFoodProfile plantFood;

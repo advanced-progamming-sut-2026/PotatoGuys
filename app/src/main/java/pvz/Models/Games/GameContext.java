@@ -12,14 +12,15 @@ import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Modes.GameMode;
 import pvz.Models.Games.Modes.GameModeFactory;
-import pvz.Models.Games.card.Card;
 import pvz.Models.Games.map.GameMap;
 
 
 public class GameContext implements TickAware {
     private int currentSun;
     private int currentTick;
+    private int levelNumber;
     private boolean gameOver;
+    int plantFoodCount;
 
     private final GameEngine engine;
     private List<Zombie> zombies;
@@ -38,6 +39,8 @@ public class GameContext implements TickAware {
         this.suns           = new ArrayList<>();
         this.map = currentLevel.getGameMap();
         this.mode = GameModeFactory.createGameMode(currentLevel.getGameMode() , currentLevel);
+        this.setLevelNumber(currentLevel.getLevelNumber());
+        this.plantFoodCount=0;
     }
 
 
@@ -188,4 +191,23 @@ public class GameContext implements TickAware {
 
     @Override
     public void dispose() {}
+
+    public int getLevelNumber() {
+        return levelNumber;
+    }
+
+    public void setLevelNumber(int levelNumber) {
+        this.levelNumber = levelNumber;
+    }
+
+    public int getPlantFoodCount(){
+        return plantFoodCount;
+    }
+
+    public void addPlantFood(int amount){
+        plantFoodCount+=amount;
+        if (plantFoodCount>4){
+            plantFoodCount=4;
+        }
+    }
 }

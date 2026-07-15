@@ -10,13 +10,14 @@ import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Sun.Sun;
+import pvz.Models.Games.GameContext;
 import pvz.Models.Games.map.Tile;
 import pvz.Models.toDel.Seasons.Levels.NormalLevel;
 import pvz.View.Result;
 
 public class NormalGameController extends GameController{
-    public NormalGameController(NormalLevel level) {
-        super(level);
+    public NormalGameController(GameContext context) {
+        super(context);
     }
 
     public Result collectSun(Matcher matcher) {
@@ -29,7 +30,7 @@ public class NormalGameController extends GameController{
                 Sun sun = (Sun) entity;
                 // Assuming coordinates match within a reasonable threshold
                 if (Math.abs(sun.getCol() - x) < 0.5 && Math.abs(sun.getLane() - y) < 0.5) {
-                    level.addSun(sun.getType().getAmountSun());
+                    context.addSun(sun.getType().getAmountSun());
                     sun.dispose();
                     return new Result("Sun collected!");
                 }
@@ -39,12 +40,12 @@ public class NormalGameController extends GameController{
     }
 
     public Result showSun(Matcher matcher) {
-        return new Result("Current Sun: " + level.getCurrentSun());
+        return new Result("Current Sun: " + context.getCurrentSun());
     }
 
     public Result cheatSun(Matcher matcher) {
         int amount = Integer.parseInt(matcher.group("sunCount"));
-        level.addSun(amount);
+        context.addSun(amount);
         return new Result("Added " + amount + " sun.");
     }
 
@@ -54,12 +55,12 @@ public class NormalGameController extends GameController{
         int y = Integer.parseInt(matcher.group("plantY"));
         
         // Validation
-        if (x < 0 || x >= level.getGameMap().getColumns() || y < 0 || y >= level.getGameMap().getRows()) {
+        if (x < 0 || x >= context.getMap().getColumns() || y < 0 || y >= context.getMap().getRows()) {
              return new Result("Invalid coordinates.");
         }
         
-        Tile tile = level.getGameMap().getMap()[y][x];
-        if (tile.getPlant() != null) {
+        Tile tile = context.getMap().getTile(y,x);
+        if (tile.getPlants() != null && tile.getPlants().getLast()!=null) {
             return new Result("Tile already has a plant.");
         }
         
