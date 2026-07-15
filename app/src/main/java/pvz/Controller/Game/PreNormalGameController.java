@@ -56,7 +56,7 @@ public class PreNormalGameController extends PreGameController {
     }
 
     public Result plantAdd(Matcher matcher){
-        String type = matcher.group("type").trim().toUpperCase();
+        String type = matcher.group("type").trim();
 
         if (selectedPlants.size() >= MAX_PLANTS){
             return new Result("You can only select up to " + MAX_PLANTS + " plants.");
@@ -64,7 +64,7 @@ public class PreNormalGameController extends PreGameController {
 
         PlantType plantType = null;
         for (PlantType pt : PlantType.values()){
-            if (pt.toString().equals(type)){
+            if (pt.toString().equalsIgnoreCase(type)){
                 plantType = pt;
                 break;
             }

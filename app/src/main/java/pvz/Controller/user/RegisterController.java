@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 
 import pvz.Enums.SecurityQuestions;
+import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.User.Gender;
 import pvz.Models.User.User;
 import pvz.Utils.PasswordUtils;
@@ -76,7 +77,7 @@ public class RegisterController {
         User user = new User(username, passwordHash, nickname, email, gender);
         currentUser = user;
 
-        //temporary
+        //Successful registration
         StringBuilder resultMessage = new StringBuilder();
         resultMessage.append("User registered successfully! Please pick a security question:\n");
         for(int i = 1 ; i <= SecurityQuestions.QUESTIONS.size() ; i++){
@@ -105,6 +106,14 @@ public class RegisterController {
     public void saveUser(User user){
         String id = UUID.randomUUID().toString();
         user.setId(id);
+        user.getProfile().getCollection().addPlant(PlantType.Peashooter,1,false);
+        user.getProfile().getCollection().addPlant(PlantType.Sunflower,1,false);
+        user.getProfile().getCollection().addPlant(PlantType.Cabbagepult,1,false);
+        user.getProfile().getCollection().addPlant(PlantType.BonkChoy,1,false);
+        user.getProfile().getCollection().addPlant(PlantType.Repeater,1,false);
+        user.getProfile().getCollection().addPlant(PlantType.TwinSunflower,1,false);
+        user.getProfile().getCollection().addPlant(PlantType.PeaPod,1,false);
+        user.getProfile().getCollection().addPlant(PlantType.SnowPea,1,false);
         HashMap<String , String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
         if(usernames == null){
             usernames = new HashMap<>();
