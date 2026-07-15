@@ -2,20 +2,20 @@ package pvz.View.Game;
 
 import pvz.Controller.Game.NormalGameController;
 import pvz.Enums.Commands.GameMenuCommand;
+import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Wave;
+import pvz.Models.Games.Modes.NormalMode;
 import pvz.Models.toDel.Seasons.Levels.NormalLevel;
 import pvz.View.Result;
 
 public class NormalGameMenu extends GameMenu {
     private final NormalGameController normalController;
-    private final NormalLevel level;
-    private boolean wavesStarted;
+    GameContext context;
 
-    public NormalGameMenu(NormalLevel level) {
-        super(new NormalGameController(level));
-        this.level = level;
+    public NormalGameMenu(GameContext context) {
+        super(new NormalGameController(context));
+        this.context=context;
         this.normalController = (NormalGameController) this.gameController;
-        this.wavesStarted = false;
     }
 
     @Override
@@ -33,19 +33,10 @@ public class NormalGameMenu extends GameMenu {
     @Override
     public Result onEnter() {
         StringBuilder output = new StringBuilder();
-        output.append("=== Level ").append(level.getLevelNumber()).append(" ===\n");
-        output.append("Sun: ").append(level.getCurrentSun()).append("\n");
-        output.append("Waves: ").append(level.getWaves().size()).append("\n");
+        output.append("=== Level ").append(context.getLevelNumber()).append(" ===\n");
+        output.append("Sun: ").append(context.getCurrentSun()).append("\n");
+        output.append("Waves: ").append(((NormalMode)context.getMode()).getWaves().size()).append("\n");
         output.append("Commands: advance time -t N ticks | show sun amount | show map | zombies info\n");
-
-        if (!wavesStarted) {
-            Wave first = level.getCurrentWave();
-            if (first != null) {
-                level.getEngine().register(first);
-                wavesStarted = true;
-                output.append("\nWave ").append(first.getWaveNumber()).append(" incoming...");
-            }
-        }
         return new Result(output.toString());
     }
 }

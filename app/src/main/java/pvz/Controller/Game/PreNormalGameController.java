@@ -9,8 +9,10 @@ import pvz.Models.Engine.GameEngine;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.Enums.PlantType;
+import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Zombies.ZombieType;
+import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.Levels.WavePhase;
 import pvz.Models.Games.Seasons.Season;
@@ -78,17 +80,18 @@ public class PreNormalGameController extends PreGameController {
             return new Result("You have not unlocked this plant.");
         }
 
-        for (MyPlant p : selectedPlants){
-            if (p.getType() == plantType){
+        for (PlantCard p : selectedPlants){
+            if (p.getPlant().getType() == plantType){
                 return new Result("This plant is already in your selection.");
             }
         }
 
-        selectedPlants.add(owned);
+        PlantPropertySheet propertySheet=PlantRegistry.getInstance().getSheet(plantType);
+        selectedPlants.add(new PlantCard(owned,propertySheet.getSunCost(),propertySheet.getRechargeSeconds()));
 
         StringBuilder output=new StringBuilder("Plant added. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
-        for (MyPlant p : selectedPlants){
-            output.append("\n- ").append(p.getType().toString());
+        for (PlantCard p : selectedPlants){
+            output.append("\n- ").append(p.getPlant().getType().toString());
         }
         return new Result(output.toString());
     }
@@ -108,11 +111,11 @@ public class PreNormalGameController extends PreGameController {
         }
 
         for (int i = 0; i < selectedPlants.size(); i++){
-            if (selectedPlants.get(i).getType() == plantType){
+            if (selectedPlants.get(i).getPlant().getType() == plantType){
                 selectedPlants.remove(i);
                 StringBuilder output=new StringBuilder("Plant removed. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
-                for (MyPlant p : selectedPlants){
-                    output.append("\n- ").append(p.getType().toString());
+                for (PlantCard p : selectedPlants){
+                    output.append("\n- ").append(p.getPlant().getType().toString());
                 }
                 return new Result(output.toString());
             }
@@ -134,13 +137,13 @@ public class PreNormalGameController extends PreGameController {
             return new Result("Plant not found.");
         }
 
-        for (MyPlant p : selectedPlants){
-            if (p.getType() == plantType){
-                if (p.isBoosted()){
+        for (PlantCard p : selectedPlants){
+            if (p.getPlant().getType() == plantType){
+                if (p.getPlant().isBoosted()){
                     return new Result("This plant is already boosted.");
                 }
-                p.setBoosted(true);
-                return new Result(p.getType().toString() + " has been boosted.");
+                p.getPlant().setBoosted(true);
+                return new Result(p.getPlant().getType().toString() + " has been boosted.");
             }
         }
         return new Result("This plant is not in your selection.");
@@ -163,13 +166,12 @@ public class PreNormalGameController extends PreGameController {
         engine.reset();
 
         GameMap map = new GameMap();
-        LevelGameContext context = new LevelGameContext(engine, map, null);
 
-        List<Wave> waves = createHardcodedWaves(context, map);
+        List<Wave> waves = createHardcodedWaves(map);
 
         List<Plant> plants = new ArrayList<>();
-        for(MyPlant p : selectedPlants){
-            plants.add(plantFactory.createUnplaced(p.getType() , p.getLevel() , p.isBoosted()));
+        for(PlantCard p : selectedPlants){
+            plants.add(plantFactory.createUnplaced(p.getPlant().getType() , p.getPlant().getLevel() , p.getPlant().isBoosted()));
         }
         NormalLevel level = new NormalLevel(engine, map, levelNumber, 150, waves, plants);
 
@@ -178,14 +180,14 @@ public class PreNormalGameController extends PreGameController {
         // With the fix I applied to LevelGameContext, it should work fine without the level object.
 
         StringBuilder output=new StringBuilder("Starting game with:");
-        for (MyPlant p : selectedPlants){
-            String boost = p.isBoosted() ? " [BOOSTED]" : "";
-            output.append("\n- ").append(p.getType().toString()).append(boost);
+        for (PlantCard p : selectedPlants){
+            String boost = p.getPlant().isBoosted() ? " [BOOSTED]" : "";
+            output.append("\n- ").append(p.getPlant().getType().toString()).append(boost);
         }
-        return new Result(output.toString(), new NormalGameMenu(level));
+        return new Result(output.toString(), new NormalGameMenu(new GameContext(level)));
     }
 
-    private List<Wave> createHardcodedWaves(LevelGameContext context, GameMap map) {
+    private List<Wave> createHardcodedWaves(GameMap map) {
         List<Wave> waves = new ArrayList<>();
         int lanes = map.getRows();
 
@@ -194,15 +196,15 @@ public class PreNormalGameController extends PreGameController {
         List<ZombieType> basicConeMummy = List.of(ZombieType.BASIC, ZombieType.CONEHEAD, ZombieType.MUMMY);
 
         WavePhase phase1 = new WavePhase(3, 50, basicOnly, false);
-        waves.add(new Wave(1, false, 300, List.of(phase1), context, lanes, 3));
+        waves.add(new Wave(1, false, 300, List.of(phase1), lanes, 3));
 
         WavePhase phase2a = new WavePhase(4, 40, basicAndMummy, false);
         WavePhase phase2b = new WavePhase(3, 25, basicAndMummy, true);
-        waves.add(new Wave(2, false, 500, List.of(phase2a, phase2b), context, lanes, 3));
+        waves.add(new Wave(2, false, 500, List.of(phase2a, phase2b), lanes, 3));
 
         WavePhase phase3a = new WavePhase(5, 35, basicConeMummy, false);
         WavePhase phase3b = new WavePhase(6, 20, basicConeMummy, true);
-        waves.add(new Wave(3, true, 800, List.of(phase3a, phase3b), context, lanes, 3));
+        waves.add(new Wave(3, true, 800, List.of(phase3a, phase3b), lanes, 3));
 
         return waves;
     }
