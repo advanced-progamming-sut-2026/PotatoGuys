@@ -20,8 +20,9 @@ public class GameContext implements TickAware {
     private int currentSun;
     private int currentTick;
     private boolean gameOver;
-
+    
     private final boolean[] lawnMowerUsed;
+    private final GameEngine engine;
     private List<Zombie> zombies;
     private List<Plant> plants;
     private List<Projectile> projectiles;
@@ -29,9 +30,6 @@ public class GameContext implements TickAware {
     private List<Card> cards;
     private GameMode mode;
     private GameMap map;
-
-    private final GameEngine engine;
-
 
     public GameContext(Level currentLevel) {
         this.engine         = GameEngine.getInstance();
@@ -42,10 +40,18 @@ public class GameContext implements TickAware {
         this.plants         = new ArrayList<>();
         this.projectiles    = new ArrayList<>();
         this.suns           = new ArrayList<>();
-        this.map            = currentLevel.getGameMap();
-        mode = GameModeFactory.createGameMode(currentLevel.getGameMode());
+        this.map = currentLevel.getGameMap();
+        this.mode = GameModeFactory.createGameMode(currentLevel.getGameMode());
     }
 
+
+    public GameEngine getEngine() {
+        return engine;
+    }
+
+    public GameMode getMode() {
+        return mode;
+    }
 
     public int getCurrentSun() {
         return currentSun;
@@ -59,21 +65,63 @@ public class GameContext implements TickAware {
         return true;
     }
 
+    public int getColumns() {
+        return map.getColumns();
+    }
+    public int getLanes() {
+        return map.getRows();
+    }
+
     public List<Zombie> getZombies() {
         return zombies;
     }
-    public void addZombie(Zombie z) {
+    public List<Zombie> getZombiesAt(int col, int lane) {
+        return map.getTile(col, lane).getZombies().stream()
+                .filter(z -> !z.isDead())
+                .toList();
+    }
+    public List<Zombie> getZombiesInLane(int lane) {
+        return zombies.stream()
+                .filter(z -> z.getLane() == lane && !z.isDead())
+                .toList();
+    }
+    public List<Zombie> getZombiesInColumn(int col) {
+        return zombies.stream()
+                .filter(z -> (int) z.getX() == col && !z.isDead())
+                .toList();
+    }
+    public void spawnZombie(Zombie z) {
         zombies.add(z);
     }
     public boolean removeZombie(Zombie z) {
         return zombies.remove(z);
     }
-
+    public boolean isZombieAt(int col, int lane) {
+        return !getZombiesAt(col, lane).isEmpty();
+    }
     public List<Plant> getPlants() {
         return plants;
     }
-    public void addPlant(Plant p) {
+    public List<Plant> getPlantsAt(int col, int lane) {
+        return map.getTile(col, lane).getPlants().stream()
+                .filter(p -> !p.isDead())
+                .toList();
+    }
+    public List<Plant> getPlantsInLane(int lane) {
+        return plants.stream()
+                .filter(p -> p.getLane() == lane && !p.isDead())
+                .toList();
+    }
+    public List<Plant> getPlantsInColumn(int col) {
+        return plants.stream()
+                .filter(p -> p.getCol() == col && !p.isDead())
+                .toList();
+    }
+    public void spawnPlant(Plant p) {
         plants.add(p);
+    }
+    public boolean isPlantAt(int col, int lane) {
+        return !getPlantsAt(col, lane).isEmpty();
     }
     public boolean removePlant(Plant p) {
         return plants.remove(p);
@@ -82,7 +130,7 @@ public class GameContext implements TickAware {
     public List<Projectile> getProjectiles() {
         return projectiles;
     }
-    public void addProjectile(Projectile p) {
+    public void spawnProjectile(Projectile p) {
         projectiles.add(p);
     }
     public boolean removeProjectile(Projectile p) {
@@ -92,10 +140,10 @@ public class GameContext implements TickAware {
     public List<Sun> getSuns() {
         return suns;
     }
-    public void addSunEntity(Sun s) {
+    public void spawnSun(Sun s) {
         suns.add(s);
     }
-    public boolean removeSunEntity(Sun s) {
+    public boolean removeSun(Sun s) {
         return suns.remove(s);
     }
 
@@ -128,6 +176,15 @@ public class GameContext implements TickAware {
         this.gameOver = gameOver;
     }
 
+    public GameMap getMap() {
+        return map;
+    }
+
+    public void setMap(GameMap map) {
+        this.map = map;
+    }
+
+    public void log(String message) { System.out.println("  " + message); }
 
     @Override
     public void enter() {

@@ -1,10 +1,13 @@
 package pvz.Models.Entities.Plants.data;
 
-import pvz.Models.Entities.Plants.Enums.PlantCategory;
+import java.util.ArrayList;
+import java.util.List;
+
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Entities.Plants.Enums.PlantCategory;
 import pvz.Models.Entities.Plants.actions.CooldownPlantAction;
 import pvz.Models.Entities.Zombies.Zombie;
+import pvz.Models.Games.GameContext;
 
 /**
  * Interprets a plant's {@link PlantFoodProfile} at the moment its Plant Food
@@ -19,7 +22,7 @@ public final class PlantFoodExecutor {
 
     private PlantFoodExecutor() { }
 
-    public static void execute(Plant plant, PlantContext ctx) {
+    public static void execute(Plant plant, GameContext ctx) {
         PlantFoodProfile pf = plant.getSheet().getPlantFood();
         String name = plant.getSheet().getName();
         switch (pf.getKind()) {
@@ -44,7 +47,7 @@ public final class PlantFoodExecutor {
                 int hit = 0;
                 for (Zombie z : ctx.getZombiesInLane(plant.getLane())) {
                     if (hit >= limit) break;
-                    ctx.dealDamageToZombie(z, dmg, false);
+                    z.takeDamage(dmg , false);
                     hit++;
                 }
                 ctx.log("[PlantFood] " + name + " unleashed an AoE burst on " + hit + " zombie(s).");
@@ -53,10 +56,10 @@ public final class PlantFoodExecutor {
             case MULTI_INSTAKILL -> {
                 int limit = Math.max(1, pf.getCount());
                 int killed = 0;
-                for (int lane = 0; lane < ctx.getLanes() && killed < limit; lane++) {
+                for (int lane = 0; lane < ctx.getMap().getRows() && killed < limit; lane++) {
                     for (Zombie z : ctx.getZombiesInLane(lane)) {
                         if (killed >= limit) break;
-                        ctx.dealDamageToZombie(z, Float.MAX_VALUE, true);
+                        z.takeDamage(Float.MAX_VALUE, true);
                         killed++;
                     }
                 }
@@ -86,14 +89,23 @@ public final class PlantFoodExecutor {
      * buff — currently implements {@code "reset family cooldowns"} by forcing
      * every family member's cooldown action to fire again immediately.
      */
-    public static void applyMintOwnUpgrades(Plant mint) {
+    public static void applyMintOwnUpgrades(Plant mint , GameContext ctx) {
         if (!mint.getUnlockedFlags().contains("reset family cooldowns")) return;
-        PlantContext ctx = mint.getContext();
         PlantCategory family = mint.getSheet().getCategory();
-        for (Plant member : ctx.getActivePlantsInFamily(family)) {
+        for (Plant member : getActivePlantsInFamily(family, ctx)) {
             if (member.getAction() instanceof CooldownPlantAction cooldown) {
                 cooldown.forceReady();
             }
         }
+    }
+
+    private static List<Plant> getActivePlantsInFamily(PlantCategory family, GameContext ctx) {
+        List<Plant> activePlants = new ArrayList<>();
+        for(Plant plant : ctx.getPlants()) {
+            if (plant.getSheet().getCategory() == family) {
+                activePlants.add(plant);
+            }
+        }
+        return activePlants;
     }
 }

@@ -13,6 +13,7 @@ import pvz.Models.Entities.Plants.actions.SunProducerAction;
 import pvz.Models.Entities.Plants.actions.TriggeredExplosiveAction;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
+import pvz.Models.Games.GameContext;
 
 /**
  * Creates fully configured {@link Plant} instances from a {@link PlantType},
@@ -30,7 +31,7 @@ public class PlantFactory {
     private static final PlantRegistry REGISTRY = PlantRegistry.getInstance();
 
     /** Places a new, live plant on the board at (col, lane), registered against {@code ctx}. */
-    public Plant create(PlantType type, int col, int lane, int level, boolean boosted, PlantContext ctx) {
+    public Plant create(PlantType type, int col, int lane, int level, boolean boosted, GameContext ctx) {
         PlantPropertySheet sheet = REGISTRY.getSheet(type);
         if (sheet == null) {
             throw new IllegalArgumentException("Unknown plant type: " + type);
@@ -39,13 +40,13 @@ public class PlantFactory {
     }
 
     /** Convenience overload: level 1, not boosted. */
-    public Plant create(PlantType type, int col, int lane, PlantContext ctx) {
+    public Plant create(PlantType type, int col, int lane, GameContext ctx) {
         return create(type, col, lane, 1, false, ctx);
     }
 
     /**
      * Builds an "unplaced" record — a {@link Plant} with no grid position and
-     * no {@link PlantContext}, used by catalog/collection UIs that only need
+     * no {@link GameContext}, used by catalog/collection UIs that only need
      * type/level/boosted/cost bookkeeping. Must never be registered with a
      * {@link pvz.Models.Engine.GameEngine}.
      */

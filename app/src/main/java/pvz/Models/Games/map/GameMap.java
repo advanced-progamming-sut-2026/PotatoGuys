@@ -22,6 +22,13 @@ public class GameMap {
         this(Constants.DEFAULT_ROWS, Constants.DEFAULT_COLS);
     }
 
+    public Tile getTile(int col, int lane) {
+        if (col < 0 || col >= columns || lane < 0 || lane >= rows) {
+            throw new IndexOutOfBoundsException("Invalid column or lane index.");
+        }
+        return map[lane][col];
+    }
+
     public int getRows() {
         return rows;
     }

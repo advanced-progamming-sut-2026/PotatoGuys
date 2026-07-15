@@ -1,7 +1,8 @@
 package pvz.Models.Entities.Plants.fsm;
 
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Games.GameContext;
+
 
 /**
  * Default resting state — the plant waits for its {@link
@@ -11,12 +12,12 @@ import pvz.Models.Entities.Plants.PlantContext;
 public class PlantIdleState implements PlantState {
 
     @Override
-    public void onEnter(Plant plant, PlantContext ctx) {
+    public void onEnter(Plant plant, GameContext ctx) {
         // no visual cue needed for idling
     }
 
     @Override
-    public PlantState tick(Plant plant, PlantContext ctx) {
+    public PlantState tick(Plant plant, GameContext ctx) {
         if (plant.getAction().shouldTrigger(plant, ctx)) {
             return new PlantActionState(plant.getAction());
         }
@@ -24,7 +25,7 @@ public class PlantIdleState implements PlantState {
     }
 
     @Override
-    public void onExit(Plant plant, PlantContext ctx) {
+    public void onExit(Plant plant, GameContext ctx) {
         // nothing
     }
 

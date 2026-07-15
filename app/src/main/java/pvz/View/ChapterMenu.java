@@ -1,6 +1,6 @@
 package pvz.View;
 
-import pvz.Models.Seasons.AncientEgypt;
+import pvz.Models.toDel.Seasons.AncientEgypt;
 
 public class ChapterMenu implements Menu{
     private String seasonName;

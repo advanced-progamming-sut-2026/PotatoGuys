@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Sun;
 
 import pvz.Models.Engine.TickAware;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Entities.Plants.GameContext;
 
 /**
  * A collectible sun drop sitting on a single grid cell.
@@ -9,7 +9,7 @@ import pvz.Models.Entities.Plants.PlantContext;
  * <p>Produced either by {@code SunProducerAction} (autonomous production) or
  * dropped by a glowing zombie on death. In this text/CLI game there is no
  * physical fall animation: a sun simply appears at (col, lane) and either
- * gets {@link #collect(PlantContext)}ed by a player command or expires after
+ * gets {@link #collect(GameContext)}ed by a player command or expires after
  * its lifespan elapses.
  */
 public class Sun implements TickAware {
@@ -49,7 +49,7 @@ public class Sun implements TickAware {
     public void dispose() { }
 
     /** Collects this sun, crediting the player's wallet through {@code ctx}. No-op once expired/collected. */
-    public void collect(PlantContext ctx) {
+    public void collect(GameContext ctx) {
         if (isDone()) return;
         collected = true;
         ctx.addSun(getAmount());

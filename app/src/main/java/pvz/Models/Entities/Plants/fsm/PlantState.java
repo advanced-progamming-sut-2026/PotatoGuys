@@ -1,7 +1,8 @@
 package pvz.Models.Entities.Plants.fsm;
 
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Games.GameContext;
+
 
 /**
  * One node in the plant's Finite State Machine — the structural mirror of
@@ -19,17 +20,17 @@ import pvz.Models.Entities.Plants.PlantContext;
 public interface PlantState {
 
     /** Side-effects when entering this state (e.g. logging, animation cue). */
-    void onEnter(Plant plant, PlantContext ctx);
+    void onEnter(Plant plant, GameContext ctx);
 
     /**
      * Core update logic.
      *
      * @return the next state ({@code this} = no transition, any other object = transition)
      */
-    PlantState tick(Plant plant, PlantContext ctx);
+    PlantState tick(Plant plant, GameContext ctx);
 
     /** Side-effects when leaving this state. */
-    void onExit(Plant plant, PlantContext ctx);
+    void onExit(Plant plant, GameContext ctx);
 
     /** Short human-readable label used by {@code plants info} CLI command. */
     String getLabel();

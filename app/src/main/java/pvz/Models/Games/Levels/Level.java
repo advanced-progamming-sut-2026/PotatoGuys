@@ -4,7 +4,6 @@ import java.util.List;
 
 import pvz.Models.Games.Modes.GameModeType;
 import pvz.Models.Games.map.GameMap;
-import pvz.Models.Games.map.Wave;
 
 public abstract class Level {
     private GameMap gameMap;

@@ -74,7 +74,7 @@ public final class PlantPropertySheet {
     public float getBaseHp()                       { return baseHp; }
     public DamageProfile getDamage()               { return damage; }
     public Float getActionIntervalSeconds()        { return actionIntervalSeconds; }
-    public Float getRechargeSeconds()               { return rechargeSeconds; }
+    public Float getRechargeSeconds()              { return rechargeSeconds; }
     public SunProduction getProduction()           { return production; }
     public PlantFoodProfile getPlantFood()         { return plantFood; }
     public GrowthProfile getGrowth()               { return growth; }
@@ -114,7 +114,7 @@ public final class PlantPropertySheet {
             this.type = type;
         }
 
-        public Builder category(PlantCategory v)              { category = v; return this; }
+        public Builder category(PlantCategory v)               { category = v; return this; }
         public Builder tags(List<PlantTag> v)                  { tags = v; return this; }
         public Builder mint(boolean v)                         { mint = v; return this; }
         public Builder sunCost(int v)                          { sunCost = v; return this; }
@@ -126,7 +126,7 @@ public final class PlantPropertySheet {
         public Builder plantFood(PlantFoodProfile v)           { plantFood = v; return this; }
         public Builder growth(GrowthProfile v)                 { growth = v; return this; }
         public Builder levelUpgrades(List<LevelUpgrade> v)     { levelUpgrades = v; return this; }
-        public Builder description(String v)                  { description = v; return this; }
+        public Builder description(String v)                   { description = v; return this; }
 
         public PlantPropertySheet build() { return new PlantPropertySheet(this); }
     }

@@ -2,7 +2,7 @@ package pvz.Models.Entities.Plants.actions;
 
 import pvz.Models.Entities.Plants.Enums.PlantTag;
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Games.GameContext;
 import pvz.Models.Entities.Plants.data.DamageKind;
 import pvz.Models.Entities.Zombies.Zombie;
 
@@ -35,32 +35,32 @@ public class TriggeredExplosiveAction implements PlantAction {
     }
 
     @Override
-    public boolean shouldTrigger(Plant plant, PlantContext ctx) {
+    public boolean shouldTrigger(Plant plant, GameContext ctx) {
         if (elapsed < armTicks) {
             elapsed++;
             return false;
         }
         boolean isTrap = plant.getSheet().hasTag(PlantTag.TRAP);
-        return !isTrap || ctx.hasZombieInLane(plant.getLane());
+        return !isTrap || !ctx.getZombiesInLane(plant.getLane()).isEmpty();
     }
 
     @Override
-    public void execute(Plant plant, PlantContext ctx) {
+    public void execute(Plant plant, GameContext ctx) {
         boolean instaKill = plant.getSheet().getDamage().getKind() == DamageKind.INSTA_KILL;
         float dmg = instaKill ? Float.MAX_VALUE : plant.getEffectiveDamage();
         boolean wholeBoard = !plant.getSheet().hasTag(PlantTag.TRAP);
 
         int hit = 0;
         if (wholeBoard) {
-            for (int lane = 0; lane < ctx.getLanes(); lane++) {
+            for (int lane = 0; lane < ctx.getMap().getRows(); lane++) {
                 for (Zombie z : ctx.getZombiesInLane(lane)) {
-                    ctx.dealDamageToZombie(z, dmg, false);
+                    z.takeDamage(dmg, false);
                     hit++;
                 }
             }
         } else {
             for (Zombie z : ctx.getZombiesInLane(plant.getLane())) {
-                ctx.dealDamageToZombie(z, dmg, false);
+                z.takeDamage(dmg, false);
                 hit++;
                 break; // a trap only takes out the zombie that triggered it
             }

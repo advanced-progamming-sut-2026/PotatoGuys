@@ -2,9 +2,9 @@ package pvz.View.Game;
 
 import pvz.Controller.Game.NormalGameController;
 import pvz.Enums.Commands.GameMenuCommand;
-import pvz.Models.Seasons.Levels.LevelGameContext;
-import pvz.Models.Seasons.Levels.NormalLevel;
-import pvz.Models.Seasons.Levels.Wave;
+import pvz.Models.toDel.Seasons.Levels.LevelGameContext;
+import pvz.Models.toDel.Seasons.Levels.NormalLevel;
+import pvz.Models.toDel.Seasons.Levels.Wave;
 import pvz.View.Result;
 
 public class NormalGameMenu extends GameMenu {

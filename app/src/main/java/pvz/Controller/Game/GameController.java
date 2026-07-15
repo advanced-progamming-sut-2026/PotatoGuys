@@ -1,17 +1,16 @@
 package pvz.Controller.Game;
 
-import java.util.List;
 import java.util.regex.Matcher;
 
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Seasons.Levels.Level;
-import pvz.Models.Seasons.Levels.Tile;
+import pvz.Models.Games.GameContext;
+import pvz.Models.Games.map.Tile;
 import pvz.View.Result;
 
 public abstract class GameController {
-    Level level;
-    public GameController(Level level){
-        this.level=level;
+    GameContext level;
+    public GameController(GameContext level){
+        this.level = level;
     }
     public Result advanceTime(Matcher matcher) {
         int ticks = Integer.parseInt(matcher.group("ticks"));
@@ -21,7 +20,11 @@ public abstract class GameController {
     public Result releaseNuke(Matcher matcher) { return null; }
     public Result cheatCooldown(Matcher matcher) { return null; }
     public Result feedPlant(Matcher matcher) { return null; }
-    public Result cheatPlantFood(Matcher matcher) { return null; }
+    public Result cheatPlantFood(Matcher matcher) {
+        if (level.getPlantFoodCount()>3) return new Result("Plant food slots are full.");
+        level.addPlantFood(1);
+        return new Result("Added 1 plant food.");
+    }
     public Result showMap(Matcher matcher) {
         StringBuilder mapOutput = new StringBuilder("Game Map:\n");
         int rows = level.getGameMap().getRows();

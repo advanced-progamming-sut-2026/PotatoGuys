@@ -40,7 +40,7 @@ public class Tile {
     }
 
     public void addPlant(Plant plant) {
-        if(this.isPlantable(plant))
+        if(this.isPlantable(plant) && !plants.contains(plant))
             plants.add(plant);
     }
 
@@ -53,7 +53,8 @@ public class Tile {
     }
 
     public void addZombie(Zombie zombie) {
-        zombies.add(zombie);
+        if(!zombies.contains(zombie))
+            zombies.add(zombie);
     }
 
     public void removeZombie(Zombie zombie) {

@@ -2,7 +2,7 @@ package pvz.Models.Entities.Plants.actions;
 
 import pvz.Models.Entities.Plants.Enums.PlantTag;
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Games.GameContext;
 import pvz.Models.Entities.Projectile.Projectile;
 import pvz.Models.Entities.Projectile.ProjectileType;
 
@@ -23,12 +23,12 @@ public class ShooterAction extends CooldownPlantAction {
     }
 
     @Override
-    protected boolean canUse(Plant plant, PlantContext ctx) {
-        return ctx.hasZombieInLane(plant.getLane());
+    protected boolean canUse(Plant plant, GameContext ctx) {
+        return !ctx.getZombiesInLane(plant.getLane()).isEmpty();
     }
 
     @Override
-    protected void doExecute(Plant plant, PlantContext ctx) {
+    protected void doExecute(Plant plant, GameContext ctx) {
         int pellets = Math.max(1, plant.getSheet().getDamage().getCount());
         boolean poisonous = plant.getSheet().hasTag(PlantTag.POISON);
         boolean chills = plant.getSheet().hasTag(PlantTag.ICE);

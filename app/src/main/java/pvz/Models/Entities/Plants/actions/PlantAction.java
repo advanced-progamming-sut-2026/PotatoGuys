@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Plants.actions;
 
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Games.GameContext;
 
 /**
  * A discrete, re-usable plant behaviour plug-in — the Strategy-pattern
@@ -15,10 +15,10 @@ import pvz.Models.Entities.Plants.PlantContext;
 public interface PlantAction {
 
     /** Evaluated every tick while the plant is idle. Should be cheap. */
-    boolean shouldTrigger(Plant plant, PlantContext ctx);
+    boolean shouldTrigger(Plant plant, GameContext ctx);
 
     /** Performs the action's game-world effect. Called once per activation. */
-    void execute(Plant plant, PlantContext ctx);
+    void execute(Plant plant, GameContext ctx);
 
     /** Short label for CLI debug output, e.g. {@code "Shoot"}, {@code "ProduceSun"}. */
     String getName();

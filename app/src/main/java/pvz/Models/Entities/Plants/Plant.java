@@ -13,6 +13,7 @@ import pvz.Models.Entities.Plants.data.PlantStatResolver.ResolvedStats;
 import pvz.Models.Entities.Plants.data.ProductionKind;
 import pvz.Models.Entities.Plants.fsm.PlantIdleState;
 import pvz.Models.Entities.Plants.fsm.PlantState;
+import pvz.Models.Games.GameContext;
 
 /**
  * Concrete, data-driven plant entity.
@@ -44,7 +45,7 @@ public class Plant implements TickAware {
     public static final int TICKS_PER_SECOND = 10;
 
     private final PlantPropertySheet sheet;
-    private final PlantContext context;
+    private final GameContext context;
     private final PlantAction action;
 
     private final int col;
@@ -70,7 +71,7 @@ public class Plant implements TickAware {
      *                {@link #enter()}/{@link #update()} invoked)
      */
     public Plant(PlantPropertySheet sheet, PlantAction action, int col, int lane,
-                 int level, boolean boosted, PlantContext context) {
+                 int level, boolean boosted, GameContext context) {
         this.sheet = sheet;
         this.action = action;
         this.col = col;
@@ -138,7 +139,7 @@ public class Plant implements TickAware {
     // ── Plant Food ────────────────────────────────────────────────────────────
 
     /** Triggers this plant's own Plant-Food effect immediately. */
-    public void triggerPlantFood(PlantContext ctx) {
+    public void triggerPlantFood(GameContext ctx) {
         PlantFoodExecutor.execute(this, ctx);
     }
 
@@ -173,7 +174,7 @@ public class Plant implements TickAware {
     // ── Accessors ─────────────────────────────────────────────────────────────
 
     public PlantPropertySheet getSheet()   { return sheet; }
-    public PlantContext getContext()       { return context; }
+    public GameContext getContext()       { return context; }
     public PlantAction getAction()         { return action; }
     public pvz.Models.Entities.Plants.Enums.PlantType getType() { return sheet.getType(); }
     public int getCol()                    { return col; }

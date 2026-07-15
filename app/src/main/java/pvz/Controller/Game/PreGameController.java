@@ -2,7 +2,7 @@ package pvz.Controller.Game;
 
 import java.util.regex.Matcher;
 
-import pvz.Models.Seasons.Season;
+import pvz.Models.toDel.Seasons.Season;
 import pvz.View.Result;
 
 public abstract class PreGameController {

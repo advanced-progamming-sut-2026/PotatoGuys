@@ -1,4 +1,4 @@
-package pvz.Models.Games.map;
+package pvz.Models.Games.Levels;
 
 import pvz.Models.Entities.Zombies.ZombieType;
 

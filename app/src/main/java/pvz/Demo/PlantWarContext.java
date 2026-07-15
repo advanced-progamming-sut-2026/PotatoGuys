@@ -6,7 +6,7 @@ import java.util.List;
 
 import pvz.Models.Engine.GameEngine;
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Entities.Plants.GameContext;
 import pvz.Models.Entities.Plants.Enums.PlantCategory;
 import pvz.Models.Entities.Projectile.Projectile;
 import pvz.Models.Entities.Sun.Sun;
@@ -16,13 +16,13 @@ import pvz.Models.Entities.Zombies.ZombieFactory;
 
 /**
  * Full-board world adapter for the CLI demo: implements both
- * {@link GameContext} (what {@link Zombie} sees) and {@link PlantContext}
+ * {@link GameContext} (what {@link Zombie} sees) and {@link GameContext}
  * (what {@link Plant}/{@link Projectile} see), so a single object mediates
  * every cross-system interaction — Plants shoot Zombies, Zombies eat Plants,
  * Suns get collected, exactly as {@link pvz.Models.Engine.GameEngine} drives
  * all of them through the same tick loop.
  */
-public class PlantWarContext implements GameContext, PlantContext {
+public class PlantWarContext implements GameContext, GameContext {
 
     public static final int COLS = 9;
     public static final int LANES = 5;

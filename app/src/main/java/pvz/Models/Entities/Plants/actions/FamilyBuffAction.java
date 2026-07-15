@@ -1,8 +1,11 @@
 package pvz.Models.Entities.Plants.actions;
 
+import java.util.List;
+
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Entities.Plants.Enums.PlantCategory;
 import pvz.Models.Entities.Plants.data.PlantFoodExecutor;
+import pvz.Models.Games.GameContext;
 
 /**
  * Single-use behaviour for Mint plants (IDs 61-69, rule #5): rather than
@@ -22,23 +25,30 @@ public class FamilyBuffAction implements PlantAction {
     private boolean used;
 
     @Override
-    public boolean shouldTrigger(Plant plant, PlantContext ctx) {
+    public boolean shouldTrigger(Plant plant, GameContext ctx) {
         return !used; // instant consumable — fires exactly once, on the tick it is planted
     }
 
     @Override
-    public void execute(Plant plant, PlantContext ctx) {
+    public void execute(Plant plant, GameContext ctx) {
         used = true;
         int buffed = 0;
-        for (Plant member : ctx.getActivePlantsInFamily(plant.getSheet().getCategory())) {
-            if (member == plant) continue; // don't buff the mint itself
+        for (Plant member : getFamilyMembers(plant, ctx)) {
             member.triggerPlantFood(ctx);
             buffed++;
         }
         ctx.log("[Action] " + plant.getSheet().getName() + " triggered Plant Food on " + buffed
                 + " " + plant.getSheet().getCategory() + " plant(s).");
-        PlantFoodExecutor.applyMintOwnUpgrades(plant); // e.g. "reset family cooldowns" flag
+        PlantFoodExecutor.applyMintOwnUpgrades(plant, ctx); // e.g. "reset family cooldowns" flag
         plant.kill();
+    }
+
+    private List<Plant> getFamilyMembers(Plant mint, GameContext ctx) {
+        PlantCategory family = mint.getSheet().getCategory();
+        return ctx.getPlants().stream()
+                .filter(p -> p.getSheet().getCategory() == family)
+                .filter(p -> p != mint)
+                .toList();
     }
 
     @Override

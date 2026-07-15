@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Plants.actions;
 
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Games.GameContext;
 
 /**
  * Abstract base for actions that fire on a repeating cooldown — the plant
@@ -23,14 +23,14 @@ public abstract class CooldownPlantAction implements PlantAction {
     }
 
     @Override
-    public final boolean shouldTrigger(Plant plant, PlantContext ctx) {
+    public final boolean shouldTrigger(Plant plant, GameContext ctx) {
         elapsed++;
         if (elapsed < cooldownTicks) return false;
         return canUse(plant, ctx);
     }
 
     @Override
-    public final void execute(Plant plant, PlantContext ctx) {
+    public final void execute(Plant plant, GameContext ctx) {
         elapsed = 0;
         doExecute(plant, ctx);
     }
@@ -39,8 +39,8 @@ public abstract class CooldownPlantAction implements PlantAction {
     public final void forceReady() { elapsed = cooldownTicks; }
 
     /** Additional world-state precondition checked once the cooldown has elapsed. */
-    protected abstract boolean canUse(Plant plant, PlantContext ctx);
+    protected abstract boolean canUse(Plant plant, GameContext ctx);
 
     /** The action's actual game-world effect. */
-    protected abstract void doExecute(Plant plant, PlantContext ctx);
+    protected abstract void doExecute(Plant plant, GameContext ctx);
 }

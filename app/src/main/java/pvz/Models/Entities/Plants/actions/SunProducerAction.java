@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Plants.actions;
 
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Games.GameContext;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Sun.SunType;
 
@@ -18,12 +18,12 @@ public class SunProducerAction extends CooldownPlantAction {
     }
 
     @Override
-    protected boolean canUse(Plant plant, PlantContext ctx) {
+    protected boolean canUse(Plant plant, GameContext ctx) {
         return true; // autonomous — no zombie precondition
     }
 
     @Override
-    protected void doExecute(Plant plant, PlantContext ctx) {
+    protected void doExecute(Plant plant, GameContext ctx) {
         int amount = Math.round(plant.getEffectiveProductionAmount());
         if (amount <= 0) return;
         if (plant.getUnlockedFlags().contains("Double Sun Chance") && Math.random() < 0.5) {

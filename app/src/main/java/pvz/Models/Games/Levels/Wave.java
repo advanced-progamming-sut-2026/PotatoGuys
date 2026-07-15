@@ -3,16 +3,14 @@ package pvz.Models.Games.Levels;
 import java.util.List;
 import java.util.Random;
 
-import pvz.Models.Engine.TickAware;
-import pvz.Models.Entities.Zombies.GameContext;
 import pvz.Models.Entities.Zombies.ZombieType;
+import pvz.Models.Games.GameContext;
 
-public class Wave implements TickAware {
+public class Wave{
     private int waveNumber;
     private boolean isFinalWave;
     private int baseTotalWaveCost;
     private List<WavePhase> phases;
-    private GameContext context;
     private int lanes;
     private int difficulty;
 
@@ -23,17 +21,16 @@ public class Wave implements TickAware {
     private transient Random rand;
 
     public Wave(int waveNumber, boolean isFinalWave, int totalWaveCost, List<WavePhase> phases,
-                GameContext context, int lanes, int difficulty) {
+                 int lanes, int difficulty) {
         this.waveNumber = waveNumber;
         this.isFinalWave = isFinalWave;
         this.baseTotalWaveCost = totalWaveCost;
         this.phases = phases;
-        this.context = context;
         this.lanes = lanes;
         this.difficulty = difficulty;
         this.currentPhase = 0;
-        this.remainingInPhase = phases.getFirst().getZombieCount();
-        this.ticksUntilNextSpawn = phases.getFirst().getIntervalTicks();
+        this.remainingInPhase = phases.get(currentPhase).getZombieCount();
+        this.ticksUntilNextSpawn = phases.get(currentPhase  ).getIntervalTicks();
         this.done = false;
         this.rand = new Random();
     }
@@ -54,16 +51,14 @@ public class Wave implements TickAware {
         return done;
     }
 
-    @Override
-    public void enter() {
+    public void startWave(GameContext context) {
         context.log("Wave " + waveNumber + " started" + (isFinalWave ? " — FINAL WAVE!" : ""));
         if (phases.get(currentPhase).isBurst()) {
             context.log("Wave " + waveNumber + " phase " + (currentPhase + 1) + " [BURST]");
         }
     }
 
-    @Override
-    public void update() {
+    public void updateWave(GameContext context) {
         if (done) return;
 
         ticksUntilNextSpawn--;
@@ -73,7 +68,7 @@ public class Wave implements TickAware {
         int spawnCount = phase.isBurst() ? 3 : 1;
 
         for (int i = 0; i < spawnCount && remainingInPhase > 0; i++) {
-            spawnZombie(phase);
+            spawnZombie(context, phase);
             remainingInPhase--;
         }
 
@@ -92,7 +87,7 @@ public class Wave implements TickAware {
         ticksUntilNextSpawn = phases.get(currentPhase).getIntervalTicks();
     }
 
-    private void spawnZombie(WavePhase phase) {
+    private void spawnZombie(GameContext context, WavePhase phase) {
         List<ZombieType> allowed = phase.getAllowedTypes();
         if (allowed == null || allowed.isEmpty()) return;
 
@@ -103,7 +98,6 @@ public class Wave implements TickAware {
         context.spawnZombie(type.getAlias(), col, lane);
     }
 
-    @Override
     public void dispose() {
         done = true;
     }

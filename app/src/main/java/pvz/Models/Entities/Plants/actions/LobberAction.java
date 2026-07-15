@@ -4,7 +4,7 @@ import java.util.List;
 
 import pvz.Models.Entities.Plants.Enums.PlantTag;
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Games.GameContext;
 import pvz.Models.Entities.Zombies.Zombie;
 
 /**
@@ -23,12 +23,12 @@ public class LobberAction extends CooldownPlantAction {
     }
 
     @Override
-    protected boolean canUse(Plant plant, PlantContext ctx) {
-        return ctx.hasZombieInLane(plant.getLane());
+    protected boolean canUse(Plant plant, GameContext ctx) {
+        return !ctx.getZombiesInLane(plant.getLane()).isEmpty();
     }
 
     @Override
-    protected void doExecute(Plant plant, PlantContext ctx) {
+    protected void doExecute(Plant plant, GameContext ctx) {
         List<Zombie> zombies = ctx.getZombiesInLane(plant.getLane());
         boolean aoe = plant.getSheet().hasTag(PlantTag.AOE);
         boolean chills = plant.getSheet().hasTag(PlantTag.ICE);
@@ -37,7 +37,7 @@ public class LobberAction extends CooldownPlantAction {
         int hit = 0;
         for (Zombie z : zombies) {
             if (hit >= targets) break;
-            ctx.dealDamageToZombie(z, plant.getEffectiveDamage(), false);
+            z.takeDamage(plant.getEffectiveDamage() , false);
             if (chills) {
                 z.applyEffect(new pvz.Models.Entities.Zombies.effects.StatusEffect(
                         pvz.Models.Entities.Zombies.effects.EffectType.CHILL, 3 * Plant.TICKS_PER_SECOND));

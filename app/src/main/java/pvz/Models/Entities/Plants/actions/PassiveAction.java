@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Plants.actions;
 
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Games.GameContext;
 
 /**
  * No-op action for passive plants ({@code WALL_NUT} tanks, purely reactive
@@ -16,10 +16,10 @@ public final class PassiveAction implements PlantAction {
     private PassiveAction() { }
 
     @Override
-    public boolean shouldTrigger(Plant plant, PlantContext ctx) { return false; }
+    public boolean shouldTrigger(Plant plant, GameContext ctx) { return false; }
 
     @Override
-    public void execute(Plant plant, PlantContext ctx) { /* never invoked */ }
+    public void execute(Plant plant, GameContext ctx) { /* never invoked */ }
 
     @Override
     public String getName() { return "Passive"; }

@@ -1,8 +1,8 @@
 package pvz.Models.Entities.Plants.fsm;
 
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
 import pvz.Models.Entities.Plants.actions.PlantAction;
+import pvz.Models.Games.GameContext;
 
 /**
  * Generic action-execution state — the plant counterpart of
@@ -28,12 +28,12 @@ public class PlantActionState implements PlantState {
     }
 
     @Override
-    public void onEnter(Plant plant, PlantContext ctx) {
+    public void onEnter(Plant plant, GameContext ctx) {
         action.execute(plant, ctx);
     }
 
     @Override
-    public PlantState tick(Plant plant, PlantContext ctx) {
+    public PlantState tick(Plant plant, GameContext ctx) {
         if (plant.isDead()) return this;
         if (pauseTicksRemaining > 0) {
             pauseTicksRemaining--;
@@ -43,7 +43,7 @@ public class PlantActionState implements PlantState {
     }
 
     @Override
-    public void onExit(Plant plant, PlantContext ctx) {
+    public void onExit(Plant plant, GameContext ctx) {
         // nothing
     }
 

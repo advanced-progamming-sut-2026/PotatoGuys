@@ -1,4 +1,4 @@
-package pvz.Models.MiniGames;
+package pvz.Models.toDel.Seasons.Levels.MiniGames;
 
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Zombies.Zombie;

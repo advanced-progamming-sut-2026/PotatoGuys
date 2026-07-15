@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Plants.actions;
 
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
+import pvz.Models.Games.GameContext;
 import pvz.Models.Entities.Projectile.Projectile;
 import pvz.Models.Entities.Projectile.ProjectileType;
 import pvz.Models.Entities.Zombies.Zombie;
@@ -19,14 +19,14 @@ public class HomingAction extends CooldownPlantAction {
     }
 
     @Override
-    protected boolean canUse(Plant plant, PlantContext ctx) {
-        return ctx.getAnyZombieOnBoard() != null;
+    protected boolean canUse(Plant plant, GameContext ctx) {
+        return !ctx.getZombies().isEmpty();
     }
 
     @Override
-    protected void doExecute(Plant plant, PlantContext ctx) {
-        Zombie target = ctx.getNearestZombieAhead(plant.getCol(), plant.getLane());
-        if (target == null) target = ctx.getAnyZombieOnBoard();
+    protected void doExecute(Plant plant, GameContext ctx) {
+        Zombie target = getNearestZombieAhead(plant.getCol(), plant.getLane(), ctx);
+        if (target == null) target = ctx.getZombies().isEmpty() ? null : ctx.getZombies().get(0);
         if (target == null) return;
 
         boolean instaKill = plant.getSheet().getDamage().getKind()
@@ -38,6 +38,13 @@ public class HomingAction extends CooldownPlantAction {
         ctx.spawnProjectile(bolt);
         ctx.log("[Action] " + plant.getSheet().getName() + " locked onto a zombie in lane "
                 + target.getLane() + ".");
+    }
+
+    private Zombie getNearestZombieAhead(int col, int lane, GameContext ctx) {
+        return ctx.getZombiesInLane(lane).stream()
+                .filter(z -> z.getX() >= col && !z.isDead())
+                .min((z1, z2) -> Integer.compare((int)z1.getX(), (int)z2.getX()))
+                .orElse(null);
     }
 
     @Override

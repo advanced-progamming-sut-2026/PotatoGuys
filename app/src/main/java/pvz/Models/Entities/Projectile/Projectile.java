@@ -2,10 +2,10 @@ package pvz.Models.Entities.Projectile;
 
 import pvz.Models.Engine.TickAware;
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantContext;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Entities.Zombies.effects.EffectType;
 import pvz.Models.Entities.Zombies.effects.StatusEffect;
+import pvz.Models.Games.GameContext;
 
 /**
  * A single, data-configured travelling projectile fired by a plant.
@@ -23,7 +23,7 @@ public class Projectile implements TickAware {
     private static final float HIT_RADIUS = 0.5f;
     private static final int CHILL_DURATION_TICKS = 3 * Plant.TICKS_PER_SECOND;
 
-    private final PlantContext context;
+    private final GameContext context;
     private final ProjectileType type;
     private final int lane;
     private float col;
@@ -35,7 +35,7 @@ public class Projectile implements TickAware {
 
     private boolean spent;
 
-    public Projectile(PlantContext context, ProjectileType type, int lane, float startCol,
+    public Projectile(GameContext context, ProjectileType type, int lane, float startCol,
                        float damage, boolean poisonous, boolean chills, int pierceCount,
                        Zombie homingTarget) {
         this.context = context;
@@ -82,7 +82,7 @@ public class Projectile implements TickAware {
     }
 
     private void onCollide(Zombie zombie) {
-        context.dealDamageToZombie(zombie, damage, poisonous);
+        zombie.takeDamage(damage, poisonous);
         if (chills) {
             zombie.applyEffect(new StatusEffect(EffectType.CHILL, CHILL_DURATION_TICKS));
         }

@@ -1,4 +1,4 @@
-package pvz.Models.MiniGames;
+package pvz.Models.toDel.Seasons.Levels.MiniGames;
 
 
 import pvz.Models.DataTypes.Vector2;
