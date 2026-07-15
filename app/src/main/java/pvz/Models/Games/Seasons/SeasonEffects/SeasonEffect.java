@@ -2,8 +2,8 @@ package pvz.Models.Seasons.SeasonEffects;
 
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Seasons.Levels.GameMap;
-import pvz.Models.Seasons.Levels.Tile;
+import pvz.Models.Games.map.GameMap;
+import pvz.Models.Games.map.Tile;
 
 public interface SeasonEffect {
     void applyOnTile(Tile tile, GameMap map);

@@ -8,11 +8,12 @@ package pvz.Models.Entities.Zombies;
  * through this interface. This makes the zombie system fully testable
  * and prevents circular dependencies between the Models layers.
  *
- * <p>The {@link pvz.Models.Seasons.Levels.GameMap} (or a thin adapter
+ * <p>The {@link pvz.Models.Games.map.GameMap} (or a thin adapter
  * around it) should implement this interface and be passed into every
  * {@link Zombie} at construction time via {@link ZombieFactory}.
  */
 public interface GameContext {
+
 
     // ─── Plant queries ────────────────────────────────────────────────────────
 

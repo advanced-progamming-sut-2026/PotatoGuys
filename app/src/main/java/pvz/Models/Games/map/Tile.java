@@ -1,4 +1,4 @@
-package pvz.Models.Seasons.Levels;
+package pvz.Models.Games.map;
 
 import java.util.List;
 
@@ -7,14 +7,13 @@ import pvz.Models.Entities.Zombies.Zombie;
 
 public class Tile {
     private TileType type;
-    private int health;
-    private int freezeLevel;
-    private Plant plant;
+    private List<Plant> plants;
     private List<Zombie> zombies;
     private boolean isFrozenPlant;
+    private boolean plantable;
 
     public boolean isPlantable(){
-        return true;
+        return plantable;
     }
 
     public void onZombieStep(Zombie z){
@@ -25,20 +24,13 @@ public class Tile {
         return type;
     }
 
-    public int getHealth() {
-        return health;
+    public List<Plant> getPlants() {
+        return plants;
     }
 
-    public int getFreezeLevel() {
-        return freezeLevel;
-    }
-
-    public Plant getPlant() {
-        return plant;
-    }
-
-    public void setPlant(Plant plant) {
-        this.plant = plant;
+    public void addPlant(Plant plant) {
+        if(this.isPlantable())
+        plants.add(plant);
     }
 
     public List<Zombie> getZombies() {

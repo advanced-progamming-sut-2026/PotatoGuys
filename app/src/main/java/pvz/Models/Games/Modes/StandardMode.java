@@ -1,0 +1,49 @@
+package pvz.Models.Games.Modes;
+
+import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Games.TestGameContext.GameContext;
+import pvz.Models.Games.card.Card;
+
+/**
+ * Standard game mode implementation.
+ * Manages waves and standard win/loss conditions.
+ */
+public class StandardMode implements GameMode {
+    private int currentWave = 1;
+    private final int totalWaves = 5; // Example
+    
+    @Override
+    public void initMode(GameContext context) {
+        context.setupLawnMowers();
+    }
+
+    @Override
+    public void updateMode(GameContext context) {
+        // Manage Waves (simplified logic)
+        if (context.getZombies().isEmpty() && !context.isSpawningWaves()) {
+            if (currentWave < totalWaves) {
+                currentWave++;
+                context.log("Wave " + currentWave + " started.");
+            } else {
+                // Win Condition
+                context.setGameOver(true);
+                context.log("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
+            }
+        }
+    }
+
+    @Override
+    public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
+        // Standard rule: cannot place on non-plantable tiles, etc.
+        return context.getMap().getTile(col, lane).isPlantable();
+    }
+
+    @Override
+    public void handlePlacement(GameContext context, int col, int lane, Card card) {
+        if (isValidPlacement(context, col, lane, card)) {
+            // Subtract sun, add plant, etc.
+            Plant p = card.createPlant(col, lane);
+            context.getPlants().add(p);
+        }
+    }
+}

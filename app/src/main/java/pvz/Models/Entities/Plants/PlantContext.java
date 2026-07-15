@@ -15,7 +15,7 @@ import pvz.Models.Entities.Zombies.Zombie;
  * attack, spending/earning sun, spawning projectiles or floating suns,
  * broadcasting a Mint's family-wide Plant Food buff — goes through this
  * interface. The concrete adapter (a thin wrapper around
- * {@link pvz.Models.Seasons.Levels.GameMap}, or a demo/test double) implements
+ * {@link pvz.Models.Games.map.GameMap}, or a demo/test double) implements
  * both {@code GameContext} and {@code PlantContext} so zombies and plants
  * observe a single, consistent world.
  */

@@ -3,6 +3,7 @@ package pvz.Models.Seasons.Levels;
 import java.util.List;
 
 import pvz.Models.Engine.GameEngine;
+import pvz.Models.Games.map.GameMap;
 import pvz.Models.TestGameContext.GameContext;
 
 public abstract class Level {

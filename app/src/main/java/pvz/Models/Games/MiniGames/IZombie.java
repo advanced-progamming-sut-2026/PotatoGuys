@@ -5,7 +5,7 @@ import java.util.logging.Level;
 
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Seasons.Levels.Tile;
+import pvz.Models.Games.map.Tile;
 
 
 public class IZombie extends Level{

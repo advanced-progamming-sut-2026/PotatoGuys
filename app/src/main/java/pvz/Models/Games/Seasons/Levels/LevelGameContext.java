@@ -6,6 +6,7 @@ import pvz.Models.Engine.GameEngine;
 import pvz.Models.Entities.Zombies.GameContext;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Entities.Zombies.ZombieFactory;
+import pvz.Models.Games.map.GameMap;
 
 public class LevelGameContext implements GameContext {
     private final GameEngine engine;

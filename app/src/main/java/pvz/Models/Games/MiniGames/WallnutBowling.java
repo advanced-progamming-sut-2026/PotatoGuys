@@ -2,7 +2,7 @@ package pvz.Models.MiniGames;
 
 import java.util.logging.Level;
 
-import pvz.Models.Seasons.Levels.Tile;
+import pvz.Models.Games.map.Tile;
 
 
 public class WallnutBowling extends Level{

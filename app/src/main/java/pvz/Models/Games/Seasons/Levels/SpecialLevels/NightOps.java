@@ -1,7 +1,7 @@
 package pvz.Models.Seasons.Levels.SpecialLevels;
 
 import pvz.Models.Engine.GameEngine;
-import pvz.Models.Seasons.Levels.GameMap;
+import pvz.Models.Games.map.GameMap;
 import pvz.Models.Seasons.Levels.LevelType;
 import pvz.Models.Seasons.Levels.SpecialLevel;
 import pvz.Models.Seasons.Levels.Wave;

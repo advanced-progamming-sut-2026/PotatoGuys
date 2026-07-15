@@ -2,6 +2,7 @@ package pvz.Models.Seasons.Levels;
 
 import pvz.Models.Engine.GameEngine;
 import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Games.map.GameMap;
 
 import java.util.List;
 

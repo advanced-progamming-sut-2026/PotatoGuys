@@ -10,8 +10,8 @@ import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Sun.Sun;
+import pvz.Models.Games.map.Tile;
 import pvz.Models.Seasons.Levels.NormalLevel;
-import pvz.Models.Seasons.Levels.Tile;
 import pvz.View.Result;
 
 public class NormalGameController extends GameController{

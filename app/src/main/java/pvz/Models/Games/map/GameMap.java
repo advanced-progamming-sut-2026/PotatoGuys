@@ -1,4 +1,4 @@
-package pvz.Models.Seasons.Levels;
+package pvz.Models.Games.map;
 
 import pvz.Models.Constants;
 

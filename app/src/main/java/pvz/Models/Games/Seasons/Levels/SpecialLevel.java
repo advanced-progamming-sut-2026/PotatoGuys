@@ -1,6 +1,7 @@
 package pvz.Models.Seasons.Levels;
 
 import pvz.Models.Engine.GameEngine;
+import pvz.Models.Games.map.GameMap;
 import pvz.Models.Seasons.Levels.SpecialLevels.SpecialLevelType;
 
 import java.util.List;

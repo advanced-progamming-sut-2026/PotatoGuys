@@ -2,7 +2,7 @@ package pvz.Models.User;
 
 import java.util.ArrayList;
 
-import pvz.Models.Seasons.SeasonProgress;
+import pvz.Models.Games.Seasons.SeasonProgress;
 
 public class Profile {
     private int gamePlayed;
