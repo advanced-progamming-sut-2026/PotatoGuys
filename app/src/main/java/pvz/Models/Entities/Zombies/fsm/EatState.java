@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.fsm;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.GameContext;
+import pvz.Models.Games.GameContext;
 
 /**
  * The zombie is eating a plant at a fixed grid cell.
@@ -42,7 +42,7 @@ public class EatState implements ZombieState {
             return new WalkState();
         }
         // Deal eat-DPS damage (not poisonous — regular bite)
-        ctx.dealDamageToPlant(targetCol, targetLane, zombie.getEatDpsPerTick(), false);
+        ctx.getPlantsAt(targetCol, targetLane).get(0).takeDamage(zombie.getEatDpsPerTick());
         return this;
     }
 

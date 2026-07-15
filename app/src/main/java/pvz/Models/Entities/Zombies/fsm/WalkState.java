@@ -3,6 +3,7 @@ package pvz.Models.Entities.Zombies.fsm;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Entities.Zombies.skills.ZombieSkill;
 import pvz.Models.Games.GameContext;
+import pvz.Models.Games.Modes.NormalMode;
 
 /**
  * Default movement state — the zombie walks left across the lawn.
@@ -31,8 +32,8 @@ public class WalkState implements ZombieState {
         advancePosition(zombie);
 
         if (zombie.getX() <= 0f) {
-            ctx.triggerLawnMower(zombie.getLane());
-            return this; // engine removes this zombie via lawn-mower logic
+            ((NormalMode)ctx.getMode()).runLawnMowers(ctx, zombie.getLane());
+            return this;
         }
 
         ZombieState eatTransition = checkForPlant(zombie, ctx);

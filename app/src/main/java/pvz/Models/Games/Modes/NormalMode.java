@@ -42,7 +42,10 @@ public class NormalMode implements GameMode {
                 context.setGameOver(true);
                 context.log("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
             }
+            return;
         }
+
+        currentWave.updateWave(context);
     }
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
@@ -54,8 +57,21 @@ public class NormalMode implements GameMode {
     }
 
     private void SetupLawnMowers(){
-        
+        int lanes = 5; 
+        lawnMower = new Boolean[lanes];
+        for (int i = 0; i < lanes; i++) {
+            lawnMower[i] = true; // All lawn mowers are initially available
+        }
     }
+
+    public void runLawnMowers(GameContext context , int lane){   
+        context.getZombiesInLane(lane).forEach(zombie -> {
+            zombie.takeDamage(Float.MAX_VALUE);
+            context.removeZombie(zombie);
+            context.log("Lawn mower in lane " + lane + " ran over a zombie!");
+        });
+    }
+
     public List<Wave> getWaves() {
         return waves;
     }
