@@ -11,13 +11,13 @@ import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Zombies.ZombieType;
+import pvz.Models.Games.Levels.Wave;
+import pvz.Models.Games.Levels.WavePhase;
+import pvz.Models.Games.Seasons.Season;
 import pvz.Models.Games.map.GameMap;
 import pvz.Models.User.MyPlant;
-import pvz.Models.toDel.Seasons.Season;
 import pvz.Models.toDel.Seasons.Levels.LevelGameContext;
 import pvz.Models.toDel.Seasons.Levels.NormalLevel;
-import pvz.Models.toDel.Seasons.Levels.Wave;
-import pvz.Models.toDel.Seasons.Levels.WavePhase;
 import pvz.View.Result;
 import pvz.View.Game.NormalGameMenu;
 

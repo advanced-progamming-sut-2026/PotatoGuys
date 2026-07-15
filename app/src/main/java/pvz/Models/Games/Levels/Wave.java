@@ -3,6 +3,8 @@ package pvz.Models.Games.Levels;
 import java.util.List;
 import java.util.Random;
 
+import pvz.Models.Entities.Zombies.Zombie;
+import pvz.Models.Entities.Zombies.ZombieFactory;
 import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.Games.GameContext;
 
@@ -94,8 +96,8 @@ public class Wave{
         ZombieType type = allowed.get(rand.nextInt(allowed.size()));
         int lane = rand.nextInt(lanes);
         int col = context.getColumns() - 1;
-
-        context.spawnZombie(type.getAlias(), col, lane);
+        Zombie newZombie = new ZombieFactory().create(type.getAlias(), col, lane, context, waveNumber, difficulty);
+        context.spawnZombie(newZombie);
     }
 
     public void dispose() {

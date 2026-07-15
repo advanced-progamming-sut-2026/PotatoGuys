@@ -1,13 +1,22 @@
 package pvz.Models.Games.Modes;
 
+import java.util.List;
+
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
+import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.card.Card;
+import pvz.Models.Games.card.ZombieCard;
 
 /**
  * I, Zombie mode implementation.
  */
 public class IZombieMode implements GameMode {
+    private List<ZombieCard> zombieCards;
+
+    public IZombieMode(Level level) {
+        
+    }
 
     @Override
     public void initMode(GameContext context) {

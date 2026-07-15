@@ -5,7 +5,18 @@ import pvz.Models.Entities.Plants.Enums.PlantType;
 public class MyPlant {
     private PlantType Type;
     private int level;
+    private int seed;
     private boolean isBoosted;
+
+
+    public int getSeed() {
+        return seed;
+    }
+
+    public void setSeed(int seed) {
+        this.seed = seed;
+    }
+
 
     public PlantType getType() {
         return Type;

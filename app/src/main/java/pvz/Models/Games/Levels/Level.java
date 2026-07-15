@@ -5,15 +5,15 @@ import java.util.List;
 import pvz.Models.Games.Modes.GameModeType;
 import pvz.Models.Games.map.GameMap;
 
-public abstract class Level {
+public class Level {
     private GameMap gameMap;
     private GameModeType gameMode;
-
     private final LevelType type;
     private final int initialSun;
     private final int levelNumber;
     private final List<Wave> waves;
     private int currentWaveIndex;
+    
 
     public Level(GameModeType gameMode, GameMap gameMap, int levelNumber, LevelType type, int initialSun,
                  List<Wave> waves){

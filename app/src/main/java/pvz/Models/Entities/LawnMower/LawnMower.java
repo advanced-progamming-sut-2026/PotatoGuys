@@ -5,20 +5,19 @@ import pvz.Models.Engine.TickAware;
 import pvz.Models.Entities.Zombies.Zombie;
 
 public class LawnMower implements TickAware{
-    private Vector2 position;
-    private Vector2 velocity;
-    private int row;
+    private int y;
+    private float x;
     private boolean available;
     private int killedZombiesCount;
 
     public LawnMower(int row) {
-        this.row = row;
+        this.y = row;
         this.available = true;
         this.killedZombiesCount = 0;
     }
 
     public void onZombieContact(Zombie zombie){
-
+        
     }
 
     public int getRow() {
@@ -47,13 +46,5 @@ public class LawnMower implements TickAware{
     @Override
     public void dispose() {
 
-    }
-
-    public Vector2 getPosition() {
-        return position;
-    }
-
-    public Vector2 getVelocity() {
-        return velocity;
     }
 }

@@ -2,6 +2,8 @@ package pvz.Models.User;
 
 import java.util.UUID;
 
+import pvz.Utils.SaveManager;
+
 
 public class User {
     private String id;
@@ -16,6 +18,10 @@ public class User {
     private Setting setting;
     private News news;
     private Score score;
+
+    public void saveUser(){
+        SaveManager.getInstance().save(this, "saves/" + id + ".json");
+    }
 
 
     public String getId() {

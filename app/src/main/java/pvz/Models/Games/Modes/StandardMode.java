@@ -2,12 +2,10 @@ package pvz.Models.Games.Modes;
 
 import java.util.List;
 
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Games.GameContext;
+import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.card.Card;
-import pvz.Models.Games.card.PlantCard;
 
 /**
  * Standard game mode implementation.
@@ -17,9 +15,14 @@ public class StandardMode implements GameMode {
     private Wave currentWave;
     private List<Wave> waves;
     
+
+    public StandardMode(Level level){
+        waves = level.getWaves();
+        currentWave = waves.getFirst();
+    }
     @Override
     public void initMode(GameContext context) {
-        context.setupLawnMowers();
+        // context.setupLawnMowers();
     }
 
     @Override
@@ -36,19 +39,12 @@ public class StandardMode implements GameMode {
             }
         }
     }
-
     @Override
-    public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
-        // Standard rule: cannot place on non-plantable tiles, etc.
-        return context.getMap().getTile(col, lane).isPlantable(p);
+    public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
+        throw new UnsupportedOperationException("Unimplemented method 'isValidPlacement'");
     }
-
     @Override
     public void handlePlacement(GameContext context, int col, int lane, Card card) {
-        if (isValidPlacement(context, col, lane, card)) {
-            PlantCard plantCard = (PlantCard) card;
-            Plant p = PlantFactory.create(plantCard.getPlant().getType(), col, lane , context);
-            context.addPlant(p);
-        }
+        throw new UnsupportedOperationException("Unimplemented method 'handlePlacement'");
     }
 }

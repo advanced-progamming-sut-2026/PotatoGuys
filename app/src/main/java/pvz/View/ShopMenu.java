@@ -1,6 +1,8 @@
 package pvz.View;
 
 import pvz.Controller.ShopController;
+import pvz.Enums.Commands.ShopMenuCommands;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +16,8 @@ public class ShopMenu implements Menu {
     @Override
     public Result handleInput(String input) {
         // Handle listing permanent items
-        if (input.equals("shop list")) {
+        Matcher matcher = ShopMenuCommands.EXIT.getMatcher(input);
+        if (matcher != null) {
             return new Result(controller.showPermanentItems());
         }
 
