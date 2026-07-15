@@ -3,9 +3,7 @@ package pvz.View.Game;
 import pvz.Controller.Game.NormalGameController;
 import pvz.Enums.Commands.GameMenuCommand;
 import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.Modes.NormalMode;
-import pvz.Models.toDel.Seasons.Levels.NormalLevel;
 import pvz.View.Result;
 
 public class NormalGameMenu extends GameMenu {

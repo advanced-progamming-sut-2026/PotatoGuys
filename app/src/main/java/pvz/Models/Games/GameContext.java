@@ -33,6 +33,7 @@ public class GameContext implements TickAware {
 
     public GameContext(Level currentLevel) {
         this.engine         = GameEngine.getInstance();
+        this.engine.register(this);
         this.currentSun     = currentLevel.getInitialSun();
         this.zombies        = new ArrayList<>();
         this.plants         = new ArrayList<>();

@@ -70,4 +70,9 @@ public class IZombieMode implements GameMode {
             // context.spawnZombie(z);
         }
     }
+
+    @Override
+    public String renderMap(GameContext context){
+        return null;
+    }
 }

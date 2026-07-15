@@ -11,7 +11,7 @@ import pvz.View.Result;
 
 public abstract class GameController {
     GameContext context;
-    public GameController(GameContext level){
+    public GameController(GameContext context){
         this.context = context;
     }
     public Result advanceTime(Matcher matcher) {
@@ -40,24 +40,25 @@ public abstract class GameController {
     }
 
     public Result showMap(Matcher matcher) {
-        StringBuilder mapOutput = new StringBuilder("Game Map:\n");
-        int rows = context.getMap().getRows();
-        int cols = context.getMap().getColumns();
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                Tile tile = context.getMap().getMap()[i][j];
-                if (tile.getPlants() != null && tile.getPlants().getLast()!=null) {
-                    mapOutput.append("[P]"); // Represent plant
-                } //else if (!tile.getZombies().isEmpty()) {
-                   // mapOutput.append("[Z]"); // Represent zombie
-                //}
-                else {
-                    mapOutput.append("[ ]"); // Represent empty
-                }
-            }
-            mapOutput.append("\n");
-        }
-        return new Result(mapOutput.toString());
+        return new Result(context.getMode().renderMap(context));
+        // StringBuilder mapOutput = new StringBuilder("Game Map:\n");
+        // int rows = context.getMap().getRows();
+        // int cols = context.getMap().getColumns();
+        // for (int i = 0; i < rows; i++) {
+        //     for (int j = 0; j < cols; j++) {
+        //         Tile tile = context.getMap().getMap()[i][j];
+        //         if (tile.getPlants() != null && tile.getPlants().get(tile.getPlants().size() - 1)!=null) {
+        //             mapOutput.append("[P]"); // Represent plant
+        //         } //else if (!tile.getZombies().isEmpty()) {
+        //            // mapOutput.append("[Z]"); // Represent zombie
+        //         //}
+        //         else {
+        //             mapOutput.append("[ ]"); // Represent empty
+        //         }
+        //     }
+        //     mapOutput.append("\n");
+        // }
+        // return new Result(mapOutput.toString());
     }
     public Result showPlantsStatus(Matcher matcher) {
         StringBuilder status = new StringBuilder("Plants Status:\n");
@@ -66,7 +67,7 @@ public abstract class GameController {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 Tile tile = context.getMap().getMap()[i][j];
-                Plant plant = tile.getPlants().getLast();
+                Plant plant = tile.getPlants().get(tile.getPlants().size() - 1);
                 if (plant != null) {
                     status.append("Plant at (").append(j).append(",").append(i).append("): ")
                           .append(plant.getType()).append(" | HP: ").append((int)plant.getHp()).append("\n");
@@ -114,4 +115,5 @@ public abstract class GameController {
     public Result cheatSpawnZombie(Matcher matcher) {
         return new Result("");
     }
+
 }

@@ -19,4 +19,6 @@ public interface GameMode {
     
     /** Perform placement of card (subtract sun, add entity). */
     void handlePlacement(GameContext context, int col, int lane, Card card);
+
+    String renderMap(GameContext context);
 }

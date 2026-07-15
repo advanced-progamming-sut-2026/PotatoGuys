@@ -1,0 +1,106 @@
+{
+  "id": "84cf027d-8b2b-42b2-9dba-109f7ead8cf2",
+  "username": "YousofRD",
+  "passwordHash": "d9ea9af7ee365b6e5c23eec82457e14ea9d987449ef6e2df00fb02c601accb8e",
+  "nickName": "YRD",
+  "email": "haha@gmail.com",
+  "gender": "MALE",
+  "securityQuestion": "1",
+  "securityAnswer": "ticko",
+  "profile": {
+    "gamePlayed": 0,
+    "coins": 0,
+    "diamonds": 0,
+    "collection": {
+      "unlockedPlants": [
+        {
+          "Type": "Peashooter",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Sunflower",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Cabbagepult",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "BonkChoy",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Repeater",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "TwinSunflower",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "PeaPod",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "SnowPea",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        }
+      ],
+      "unlockedZombies": []
+    },
+    "greenHouseCollection": null,
+    "seasons": [
+      {
+        "name": "Ancient Egypt",
+        "levels": [],
+        "levelUnlocked": {}
+      },
+      {
+        "name": "Frostbite Caves",
+        "levels": [],
+        "levelUnlocked": {}
+      },
+      {
+        "name": "Dark Ages",
+        "levels": [],
+        "levelUnlocked": {}
+      },
+      {
+        "name": "Big Wave Beach",
+        "levels": [],
+        "levelUnlocked": {}
+      }
+    ],
+    "maxMiopoint": 0
+  },
+  "setting": {
+    "difficulty": 3
+  },
+  "news": {
+    "messages": []
+  },
+  "score": {
+    "lastLevel": 0,
+    "lastSeason": 0,
+    "numMiniGames": 0,
+    "dailyQuests": 0,
+    "nonDailyQuests": 0,
+    "highestScore": 0
+  }
+}

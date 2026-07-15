@@ -2,6 +2,7 @@ package pvz.Models.Games.Modes;
 
 import java.util.List;
 
+import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Levels.NormalLevel;
@@ -86,5 +87,84 @@ public class NormalMode implements GameMode {
     }
     public void addPlantCard(PlantCard newCard){
         this.plantCards.add(newCard);
+    }
+
+
+    private static final String CELL_EMPTY = "    ";
+    private static final String MOWER_OK   = "[M]";
+    private static final String MOWER_USED = "[!]";
+
+    @Override
+    public String renderMap(GameContext context) {
+        StringBuilder sb = new StringBuilder();
+        appendHeader(sb , context);
+        appendColumnHeaders(sb , context);
+        appendDivider(sb , context);
+        for (int lane = 0; lane < context.getLanes(); lane++) {
+            appendLaneRow(sb , context, lane);
+            appendDivider(sb , context);
+        }
+        appendDirectionHint(sb , context);
+        appendZombieStatus(sb , context);
+        return sb.toString();
+    }
+
+    // ── Private rendering helpers ─────────────────────────────────────────────
+
+    private void appendHeader(StringBuilder sb , GameContext context) {
+        sb.append("\n=== Tick: ").append(context.getCurrentTick())
+          .append(" | Sun: ").append(context.getSuns().size())
+          .append(" | Active zombies: ").append(context.getZombies().size()) // Example for lane 0
+          .append(" ===\n");
+    }
+
+    private void appendColumnHeaders(StringBuilder sb , GameContext context) {
+        sb.append("        ");
+        for (int c = 0; c < context.getColumns(); c++) {
+            sb.append(String.format("  C%-2d ", c));
+        }
+        sb.append("\n");
+    }
+
+    private void appendDivider(StringBuilder sb , GameContext context) {
+        sb.append("    +");
+        for (int c = 0; c < context.getColumns(); c++) {
+            sb.append("----+");
+        }
+        sb.append("\n");
+    }
+
+    private void appendLaneRow(StringBuilder sb, GameContext context , int lane) {
+        sb.append(lawnMower[lane] ? MOWER_USED : MOWER_OK).append(" |");
+        for (int col = 0; col < context.getColumns(); col++) {
+            sb.append(getCellContent(col, context, lane)).append('|');
+        }
+        sb.append("  Lane ").append(lane).append("\n");
+    }
+
+    private void appendDirectionHint(StringBuilder sb , GameContext context) {
+        sb.append("         ←←←←←←← zombies walk this direction\n");
+    }
+
+    private void appendZombieStatus(StringBuilder sb , GameContext context) {
+        if (context.getZombies().isEmpty()) { sb.append("\n(no zombies)\n"); return; }
+        sb.append("\nZombies (").append(context.getZombies().size()).append(" active):\n");
+        for (int i = 0; i < context.getZombies().size(); i++) {
+            Zombie z = context.getZombies().get(i);
+            if (!z.isDead()) {
+                sb.append("  Z").append(i).append(" ").append(z.toInfoString()).append("\n");
+            }
+        }
+    }
+
+    /** Returns 4-char cell content for rendering, e.g. {@code " Z0 "} or {@code "    "}. */
+    private String getCellContent(int col , GameContext context, int lane) {
+        for (int i = 0; i < context.getZombies().size(); i++) {
+            Zombie z = context.getZombies().get(i);
+            if (!z.isDead() && z.getLane() == lane && (int) z.getX() == col) {
+                return String.format("Z%-3d", i);
+            }
+        }
+        return CELL_EMPTY;
     }
 }

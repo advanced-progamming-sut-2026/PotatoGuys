@@ -13,13 +13,14 @@ import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.Games.GameContext;
+import pvz.Models.Games.Levels.LevelType;
+import pvz.Models.Games.Levels.NormalLevel;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.Levels.WavePhase;
 import pvz.Models.Games.Seasons.Season;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.map.GameMap;
 import pvz.Models.User.MyPlant;
-import pvz.Models.toDel.Seasons.Levels.NormalLevel;
 import pvz.View.Result;
 import pvz.View.Game.NormalGameMenu;
 
@@ -173,7 +174,7 @@ public class PreNormalGameController extends PreGameController {
         for(PlantCard p : selectedPlants){
             plants.add(plantFactory.createUnplaced(p.getPlant().getType() , p.getPlant().getLevel() , p.getPlant().isBoosted()));
         }
-        NormalLevel level = new NormalLevel(map, levelNumber, 150, plants);
+        NormalLevel level = new NormalLevel(map, levelNumber, LevelType.NORMAL, 200 , waves);
 
         // This is a bit of a hack, but we need to associate the level with the context if possible
         // Actually, LevelGameContext didn't have a setter for level.
