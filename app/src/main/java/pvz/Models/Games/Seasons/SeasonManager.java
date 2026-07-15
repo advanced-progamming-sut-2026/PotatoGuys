@@ -1,11 +1,10 @@
 package pvz.Models.Games.Seasons;
 
 import java.util.List;
-import java.util.Map;
 
 public class SeasonManager {
     private List<Season> allSeasons;
-    private Map<String,SeasonProgress> userProgress;
+    // private Map<String,SeasonProgress> userProgress;
 
     public Season getSeason(String name){
         return null;
@@ -27,7 +26,7 @@ public class SeasonManager {
         return allSeasons;
     }
 
-    public Map<String, SeasonProgress> getUserProgress() {
-        return userProgress;
-    }
+    // public Map<String, SeasonProgress> getUserProgress() {
+    //     return userProgress;
+    // }
 }

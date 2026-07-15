@@ -12,7 +12,6 @@ import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.map.Tile;
-import pvz.Models.toDel.Seasons.Levels.NormalLevel;
 import pvz.View.Result;
 
 public class NormalGameController extends GameController{
@@ -78,14 +77,14 @@ public class NormalGameController extends GameController{
 
         PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
         // Check sun
-        if (!level.spendSun(sheet.getSunCost())) {
+        if (!context.spendSun(sheet.getSunCost())) {
             return new Result("Not enough sun.");
         }
         
         // Create plant
         Plant plant = new PlantFactory().create(type, x, y , null); 
-        tile.setPlant(plant);
-        level.getEngine().register(plant);
+        tile.addPlant(plant);
+        context.getEngine().register(plant);
         
         return new Result(typeString + " placed at (" + x + ", " + y + ").");
     }
@@ -95,18 +94,19 @@ public class NormalGameController extends GameController{
         int y = Integer.parseInt(matcher.group("pluckY"));
         
         // Validation
-        if (x < 0 || x >= level.getGameMap().getColumns() || y < 0 || y >= level.getGameMap().getRows()) {
+        if (x < 0 || x >= context.getMap().getColumns() || y < 0 || y >= context.getMap().getRows()) {
              return new Result("Invalid coordinates.");
         }
         
-        Tile tile = level.getGameMap().getMap()[y][x];
-        if (tile.getPlant() == null) {
+        Tile tile = context.getMap().getTile(y, x);
+        if (tile.getPlants().isEmpty()) {
             return new Result("No plant to pluck at (" + x + ", " + y + ").");
         }
         
-        Plant plant = tile.getPlant();
-        level.getEngine().unRegister(plant);
-        tile.setPlant(null);
+        tile.getPlants().forEach(p -> {
+            context.removePlant(p);
+        });
+        tile.getPlants().clear();
         
         return new Result("Plant plucked from (" + x + ", " + y + ").");
     }

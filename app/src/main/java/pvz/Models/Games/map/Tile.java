@@ -10,10 +10,10 @@ import pvz.Models.Entities.Zombies.Zombie;
 public class Tile {
     private TileType type;
     private List<Plant> plants;
-    private List<Zombie> zombies;
+    // private List<Zombie> zombies;
 
     public Tile(){
-        zombies=new ArrayList<>();
+        // zombies=new ArrayList<>();
         plants=new ArrayList<>();
     }
 
@@ -48,17 +48,17 @@ public class Tile {
         plants.remove(plant);
     }
 
-    public List<Zombie> getZombies() {
-        return zombies;
-    }
+    // public List<Zombie> getZombies() {
+    //     return zombies;
+    // }
 
-    public void addZombie(Zombie zombie) {
-        if(!zombies.contains(zombie))
-            zombies.add(zombie);
-    }
+    // public void addZombie(Zombie zombie) {
+    //     if(!zombies.contains(zombie))
+    //         zombies.add(zombie);
+    // }
 
-    public void removeZombie(Zombie zombie) {
-        zombies.remove(zombie);
-    }
+    // public void removeZombie(Zombie zombie) {
+    //     zombies.remove(zombie);
+    // }
 
 }
