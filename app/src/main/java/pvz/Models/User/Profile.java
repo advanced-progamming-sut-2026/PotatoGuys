@@ -1,15 +1,16 @@
 package pvz.Models.User;
 
-import java.util.ArrayList;
+import pvz.Models.Games.Seasons.Season;
 
-import pvz.Models.Games.Seasons.SeasonProgress;
+import java.util.ArrayList;
 
 public class Profile {
     private int gamePlayed;
     private int coins;
     private int diamonds;
     private Collection collection;
-    private ArrayList<SeasonProgress> seasonProgresses;
+    private GreenHouseCollection greenHouseCollection;
+    private ArrayList<Season> seasons;
     private int maxMiopoint;
 
     public Profile(){
@@ -40,11 +41,15 @@ public class Profile {
         return collection;
     }
 
-    public ArrayList<SeasonProgress> getSeasonProgresses() {
-        return seasonProgresses;
+    public ArrayList<Season> getSeasons() {
+        return seasons;
     }
 
     public int getMaxMiopoint() {
         return maxMiopoint;
+    }
+
+    public GreenHouseCollection getGreenHouseCollection(){
+        return greenHouseCollection;
     }
 }

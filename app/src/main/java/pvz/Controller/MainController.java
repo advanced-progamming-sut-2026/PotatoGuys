@@ -28,6 +28,12 @@ public class MainController {
             case "collection":
                 nextMenu=new CollectionMenu();
                 break;
+            case "greenHouse":
+                nextMenu=new GreenHouseMenu();
+                break;
+            case "shop":
+                nextMenu=new ShopMenu();
+                break;
             default:
                 nextMenu = new MainMenu();
                 return new Result("You cannot enter this menu." , nextMenu);

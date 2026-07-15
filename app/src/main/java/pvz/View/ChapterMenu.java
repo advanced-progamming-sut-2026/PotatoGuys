@@ -1,6 +1,10 @@
 package pvz.View;
 
-import pvz.Models.toDel.Seasons.AncientEgypt;
+
+import pvz.Models.AppContext;
+import pvz.Models.Games.Seasons.Season;
+
+import java.util.List;
 
 public class ChapterMenu implements Menu{
     private String seasonName;
@@ -11,8 +15,9 @@ public class ChapterMenu implements Menu{
 
     @Override
     public Result handleInput(String input) {
+        List<Season> seasons=AppContext.getInstance().getCurrentUser().getProfile().getSeasons();
         if (input.equals("1")){
-            return new Result(new PreGameMenu(new AncientEgypt(), 1));
+            return new Result(new PreGameMenu(seasons.getFirst(), 1));
         }
         return new Result("Invalid command in Chapter Menu");
     }

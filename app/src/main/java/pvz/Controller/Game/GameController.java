@@ -1,7 +1,9 @@
 package pvz.Controller.Game;
 
+import java.util.List;
 import java.util.regex.Matcher;
 
+import pvz.Models.Engine.TickAware;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.map.Tile;
@@ -19,7 +21,7 @@ public abstract class GameController {
     }
     public Result releaseNuke(Matcher matcher) {
         int killed = 0;
-        List<pvz.Models.Engine.TickAware> entities = level.getEngine().getEntities();
+        List<TickAware> entities = level.getEngine().getEntities();
         for (pvz.Models.Engine.TickAware entity : entities) {
             if (entity instanceof pvz.Models.Entities.Zombies.Zombie) {
                 ((pvz.Models.Entities.Zombies.Zombie) entity).takeDamage(999999f, true);
