@@ -1,11 +1,13 @@
 package pvz.Models;
 
+import pvz.Models.Entities.Zombies.GameContext;
 import pvz.Models.User.User;
 
 public class AppContext {
     private static AppContext instance;
     
     private User currentUser;
+    private GameContext gameContext;
     
     private AppContext() { }
     

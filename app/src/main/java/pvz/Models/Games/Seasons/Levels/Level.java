@@ -3,20 +3,23 @@ package pvz.Models.Seasons.Levels;
 import java.util.List;
 
 import pvz.Models.Engine.GameEngine;
+import pvz.Models.TestGameContext.GameContext;
 
 public abstract class Level {
     private GameEngine engine;
     private GameMap gameMap;
-    private int levelNumber;
+    private GameContext gameContext;
+
     private LevelType type;
-    private int currentSun;
+    private int levelNumber;
     private List<Wave> waves;
     private int currentWaveIndex;
 
-    public Level(GameEngine engine, GameMap gameMap, int levelNumber, LevelType type, int initialSun,
+    public Level(GameEngine engine, GameMap gameMap, GameContext gameContext, int levelNumber, LevelType type, int initialSun,
                  List<Wave> waves){
         this.engine=engine;
         this.gameMap=gameMap;
+        this.gameContext=gameContext;
         this.levelNumber=levelNumber;
         this.type=type;
         this.currentSun=initialSun;
