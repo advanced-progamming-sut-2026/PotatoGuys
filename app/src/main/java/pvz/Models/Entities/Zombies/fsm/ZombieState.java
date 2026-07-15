@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.fsm;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.GameContext;
+import pvz.Models.Games.GameContext;
 
 /**
  * One node in the zombie's Finite State Machine.

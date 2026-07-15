@@ -55,6 +55,9 @@ public class GameContext implements TickAware {
     public void addSun(int amount) {
         currentSun += amount;
     }
+    public void decreaseSun(int amount){
+        currentSun -= amount;
+    }
     public boolean spendSun(int amount) {
         if (currentSun < amount) return false;
         currentSun -= amount;

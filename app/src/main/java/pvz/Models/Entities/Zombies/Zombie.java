@@ -1,5 +1,12 @@
 package pvz.Models.Entities.Zombies;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 import pvz.Models.Engine.TickAware;
 import pvz.Models.Entities.Zombies.armor.ArmorFlag;
 import pvz.Models.Entities.Zombies.armor.ArmorPiece;
@@ -11,13 +18,7 @@ import pvz.Models.Entities.Zombies.fsm.DeadState;
 import pvz.Models.Entities.Zombies.fsm.WalkState;
 import pvz.Models.Entities.Zombies.fsm.ZombieState;
 import pvz.Models.Entities.Zombies.skills.ZombieSkill;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import pvz.Models.Games.GameContext;
 
 /**
  * Concrete, data-driven zombie entity.
@@ -282,7 +283,7 @@ public class Zombie implements TickAware {
             context.log("The glowing zombie dropped a plant food! [" + sheet.getAlias() + "]");
         }
         if (stolenSun > 0) {
-            context.returnSun(stolenSun);
+            context.addSun(stolenSun);
             context.log(sheet.getAlias() + " dropped " + stolenSun + " stolen sun on death!");
             stolenSun = 0;
         }

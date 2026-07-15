@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.skills;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.GameContext;
+import pvz.Models.Games.GameContext;
 
 /**
  * Dark Ages Wizard Zombie — transforms the nearest plant into a harmless cat.
@@ -39,7 +39,7 @@ public class WizardZapSkill extends CooldownSkill {
         int col = (int) zombie.getX();
         for (int c = col; c >= 0; c--) {
             if (ctx.isPlantAt(c, zombie.getLane())) {
-                ctx.transformPlantToCat(c, zombie.getLane());
+                // ctx.transformPlantToCat(c, zombie.getLane());
                 ctx.log("Wizard Zombie cast a spell! Plant at ("
                         + c + "," + zombie.getLane() + ") is now a cat.");
                 return;

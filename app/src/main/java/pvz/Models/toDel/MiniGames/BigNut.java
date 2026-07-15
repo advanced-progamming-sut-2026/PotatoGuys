@@ -1,4 +1,4 @@
-package pvz.Models.toDel.Seasons.Levels.MiniGames;
+package pvz.Models.toDel.MiniGames
 
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.GameContext;

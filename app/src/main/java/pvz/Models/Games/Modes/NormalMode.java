@@ -17,6 +17,7 @@ public class NormalMode implements GameMode {
     private Wave currentWave;
     private List<Wave> waves;
     private List<PlantCard> plantCards;
+    private Boolean[] lawnMower;
     
     public NormalMode(Level level){
         if(level instanceof NormalLevel normalLevel){
@@ -26,7 +27,7 @@ public class NormalMode implements GameMode {
     }
     @Override
     public void initMode(GameContext context) {
-        // context.setupLawnMowers();
+        SetupLawnMowers();
     }
 
     @Override
@@ -52,6 +53,15 @@ public class NormalMode implements GameMode {
         throw new UnsupportedOperationException("Unimplemented method 'handlePlacement'");
     }
 
+    private void SetupLawnMowers(){
+        
+    }
+    public List<Wave> getWaves() {
+        return waves;
+    }
+    public void setWaves(List<Wave> waves) {
+        this.waves = waves;
+    }
     public List<PlantCard> getPlantCards() {
         return plantCards;
     }

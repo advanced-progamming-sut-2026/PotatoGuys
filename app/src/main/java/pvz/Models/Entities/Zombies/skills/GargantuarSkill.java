@@ -1,7 +1,8 @@
 package pvz.Models.Entities.Zombies.skills;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.GameContext;
+import pvz.Models.Entities.Zombies.ZombieFactory;
+import pvz.Models.Games.GameContext;
 
 /**
  * Gargantuar — throws an Imp when the zombie drops to 50 % HP.
@@ -48,7 +49,8 @@ public class GargantuarSkill implements ZombieSkill {
     public void execute(Zombie zombie, GameContext ctx) {
         zombie.markImpThrown();
         int targetCol = Math.max(0, Math.min(IMP_TARGET_COL, ctx.getColumns() - 1));
-        ctx.spawnZombie(impAlias, targetCol, zombie.getLane());
+        Zombie imp = new ZombieFactory().create(impAlias, targetCol, zombie.getLane(), ctx, 1, 2);
+        ctx.spawnZombie(imp);
         ctx.log("Gargantuar threw Imp [" + impAlias + "] to column "
                 + targetCol + " in lane " + zombie.getLane() + "!");
     }

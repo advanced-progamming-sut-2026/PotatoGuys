@@ -1,5 +1,10 @@
 package pvz.Models.Entities.Zombies;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
+
 import pvz.Models.Entities.Zombies.armor.ArmorFlag;
 import pvz.Models.Entities.Zombies.armor.ArmorPiece;
 import pvz.Models.Entities.Zombies.armor.ArmorType;
@@ -13,11 +18,7 @@ import pvz.Models.Entities.Zombies.skills.RaStealSunSkill;
 import pvz.Models.Entities.Zombies.skills.TombRaiserSkill;
 import pvz.Models.Entities.Zombies.skills.WizardZapSkill;
 import pvz.Models.Entities.Zombies.skills.ZombieSkill;
-
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import pvz.Models.Games.GameContext;
 
 /**
  * Creates fully configured {@link Zombie} instances from a registry alias string.

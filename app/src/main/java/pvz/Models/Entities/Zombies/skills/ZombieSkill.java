@@ -1,7 +1,8 @@
 package pvz.Models.Entities.Zombies.skills;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.GameContext;
+import pvz.Models.Games.GameContext;
+
 
 /**
  * A discrete, re-usable special ability plug-in.

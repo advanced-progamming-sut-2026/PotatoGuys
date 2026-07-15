@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.skills;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.GameContext;
+import pvz.Models.Games.GameContext;
 
 /**
  * Explorer Zombie — carries a torch that instantly destroys torch-vulnerable
@@ -56,11 +56,11 @@ public class ExplorerTorchSkill implements ZombieSkill {
         if (!torchLit) return;
         int col = (int) zombie.getX();
         for (int c = col; c >= Math.max(0, col - REACH_CELLS); c--) {
-            if (ctx.isTorchVulnerablePlantAt(c, zombie.getLane())) {
-                ctx.burnPlant(c, zombie.getLane());
-                ctx.log("Explorer Zombie burned plant at ("
-                        + c + "," + zombie.getLane() + ") with torch!");
-            }
+            // if (ctx.isTorchVulnerablePlantAt(c, zombie.getLane())) {
+            //     ctx.burnPlant(c, zombie.getLane());
+            //     ctx.log("Explorer Zombie burned plant at ("
+            //             + c + "," + zombie.getLane() + ") with torch!");
+            // }
         }
     }
 
@@ -73,9 +73,9 @@ public class ExplorerTorchSkill implements ZombieSkill {
 
     private boolean hasTorchVulnerablePlantAhead(Zombie zombie, GameContext ctx) {
         int col = (int) zombie.getX();
-        for (int c = col; c >= Math.max(0, col - REACH_CELLS); c--) {
-            if (ctx.isTorchVulnerablePlantAt(c, zombie.getLane())) return true;
-        }
+        // for (int c = col; c >= Math.max(0, col - REACH_CELLS); c--) {
+        //     if (ctx.isTorchVulnerablePlantAt(c, zombie.getLane())) return true;
+        // }
         return false;
     }
 }

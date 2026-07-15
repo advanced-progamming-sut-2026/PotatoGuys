@@ -1,4 +1,4 @@
-package pvz.Models.toDel.Seasons.Levels.MiniGames;
+package pvz.Models.toDel.MiniGames;
 
 import java.util.ArrayList;
 import java.util.logging.Level;

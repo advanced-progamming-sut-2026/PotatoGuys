@@ -1,7 +1,7 @@
 package pvz.Models.Entities.Zombies.skills;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.GameContext;
+import pvz.Models.Games.GameContext;
 
 /**
  * Ice-Age Hunter Zombie — throws snowballs that build up frost levels on plants.
@@ -47,7 +47,7 @@ public class HunterSnowballSkill extends CooldownSkill {
         if (targetCol < 0) return;
 
         for (int shot = 0; shot < snowballsPerBarrage; shot++) {
-            ctx.applyFrostToPlant(targetCol, zombie.getLane());
+            // ctx.applyFrostToPlant(targetCol, zombie.getLane());
         }
         ctx.log("Hunter Zombie threw " + snowballsPerBarrage
                 + " snowball(s) at (" + targetCol + "," + zombie.getLane()
