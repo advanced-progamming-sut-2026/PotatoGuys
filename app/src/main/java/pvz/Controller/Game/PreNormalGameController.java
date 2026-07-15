@@ -173,7 +173,7 @@ public class PreNormalGameController extends PreGameController {
         for(PlantCard p : selectedPlants){
             plants.add(plantFactory.createUnplaced(p.getPlant().getType() , p.getPlant().getLevel() , p.getPlant().isBoosted()));
         }
-        NormalLevel level = new NormalLevel(engine, map, levelNumber, 150, waves, plants);
+        NormalLevel level = new NormalLevel(map, levelNumber, 150, plants);
 
         // This is a bit of a hack, but we need to associate the level with the context if possible
         // Actually, LevelGameContext didn't have a setter for level.

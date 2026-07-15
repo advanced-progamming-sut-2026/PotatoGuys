@@ -7,13 +7,17 @@
     <list default="true" id="7fd54749-b0f8-4a89-ad5d-d24c03e69d49" name="Changes" comment="h_edit3">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/NormalGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/NormalGameController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/AppContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/AppContext.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/data/PlantPropertySheet.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/data/PlantPropertySheet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/GameContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/GameContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/card/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/card/Card.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/card/PlantCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/card/PlantCard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/Game/NormalGameMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/Game/NormalGameMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/BigNut.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/BigNut.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/BowlingWallnut.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/BowlingWallnut.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/ExplodeONut.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/ExplodeONut.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/VaseBreaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/VaseBreaker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/Seasons/Levels/NormalLevel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/Seasons/Levels/NormalLevel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/ChapterSelectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/ChapterSelectionMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/saves/users/username.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/saves/users/username.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -208,7 +212,7 @@
       <workItem from="1784043171457" duration="7411000" />
       <workItem from="1784090699060" duration="3424000" />
       <workItem from="1784099055451" duration="10462000" />
-      <workItem from="1784122842175" duration="10187000" />
+      <workItem from="1784122842175" duration="13898000" />
     </task>
     <servers />
   </component>

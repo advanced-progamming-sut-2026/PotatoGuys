@@ -15,6 +15,7 @@ public class Profile {
 
     public Profile(){
         this.collection=new Collection();
+        seasons=new ArrayList<>();
     }
 
     public int getGamePlayed() {

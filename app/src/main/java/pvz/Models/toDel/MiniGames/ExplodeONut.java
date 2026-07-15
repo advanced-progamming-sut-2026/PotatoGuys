@@ -1,9 +1,9 @@
-package pvz.Models.toDel.MiniGames
+package pvz.Models.toDel.MiniGames;
 
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.GameContext;
 import pvz.Models.Entities.Plants.actions.PlantAction;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
+import pvz.Models.Games.GameContext;
 
 public class ExplodeONut extends Plant{
     public ExplodeONut(PlantPropertySheet sheet, PlantAction action, int col, int lane, int level, boolean isBoosted, GameContext context) {

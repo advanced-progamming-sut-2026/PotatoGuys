@@ -48,9 +48,10 @@ public abstract class GameController {
                 Tile tile = context.getMap().getMap()[i][j];
                 if (tile.getPlants() != null && tile.getPlants().getLast()!=null) {
                     mapOutput.append("[P]"); // Represent plant
-                } else if (!tile.getZombies().isEmpty()) {
-                    mapOutput.append("[Z]"); // Represent zombie
-                } else {
+                } //else if (!tile.getZombies().isEmpty()) {
+                   // mapOutput.append("[Z]"); // Represent zombie
+                //}
+                else {
                     mapOutput.append("[ ]"); // Represent empty
                 }
             }
@@ -92,7 +93,7 @@ public abstract class GameController {
         } else {
             status.append("Plant: None\n");
         }
-        status.append("Zombies count: ").append(tile.getZombies().size()).append("\n");
+        //status.append("Zombies count: ").append(tile.getZombies().size()).append("\n");
         return new Result(status.toString());
     }
     public Result zombiesInfo(Matcher matcher) {

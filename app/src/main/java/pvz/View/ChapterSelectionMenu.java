@@ -12,7 +12,7 @@ public class ChapterSelectionMenu implements Menu {
         Matcher matcher;
         if ((matcher = ChapterSelectionMenuCommand.ENTER_MENU.getMatcher(input)) != null) return controller.enterMenu(matcher);
         if ((matcher = ChapterSelectionMenuCommand.ENTER_CHAPTER.getMatcher(input)) != null) return controller.enterChapter(matcher);
-        if ((matcher = ChapterSelectionMenuCommand.GREENHOUSE.getMatcher(input)) != null) return controller.greenhouse(matcher);
+        //if ((matcher = ChapterSelectionMenuCommand.GREENHOUSE.getMatcher(input)) != null) return controller.greenhouse(matcher);
         if ((matcher = ChapterSelectionMenuCommand.TRAVEL_LOG.getMatcher(input)) != null) return controller.travelLog(matcher);
         if ((matcher = ChapterSelectionMenuCommand.LEADERBOARD.getMatcher(input)) != null) return controller.leaderboard(matcher);
         if ((matcher = ChapterSelectionMenuCommand.COIN_WALLET.getMatcher(input)) != null) return controller.coinWallet(matcher);
