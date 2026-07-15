@@ -21,7 +21,11 @@ public abstract class GameController {
     public Result releaseNuke(Matcher matcher) { return null; }
     public Result cheatCooldown(Matcher matcher) { return null; }
     public Result feedPlant(Matcher matcher) { return null; }
-    public Result cheatPlantFood(Matcher matcher) { return null; }
+    public Result cheatPlantFood(Matcher matcher) {
+        if (level.getPlantFoodCount()>3) return new Result("Plant food slots are full.");
+        level.addPlantFood(1);
+        return new Result("Added 1 plant food.");
+    }
     public Result showMap(Matcher matcher) {
         StringBuilder mapOutput = new StringBuilder("Game Map:\n");
         int rows = level.getGameMap().getRows();

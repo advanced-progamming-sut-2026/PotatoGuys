@@ -12,6 +12,8 @@ public abstract class Level {
     private int currentSun;
     private List<Wave> waves;
     private int currentWaveIndex;
+    private static final int MAX_PLANT_FOOD = 4;
+    private int plantFoodCount;
 
     public Level(GameEngine engine, GameMap gameMap, int levelNumber, LevelType type, int initialSun,
                  List<Wave> waves){
@@ -22,6 +24,24 @@ public abstract class Level {
         this.currentSun=initialSun;
         this.waves=waves;
         this.currentWaveIndex=0;
+        this.plantFoodCount = 0;
+    }
+
+    public void addPlantFood(int amount) {
+        this.plantFoodCount = Math.min(this.plantFoodCount + amount, MAX_PLANT_FOOD);
+    }
+
+    public int getPlantFoodCount() {
+        return plantFoodCount;
+    }
+
+
+    public boolean usePlantFood() {
+        if (plantFoodCount > 0) {
+            plantFoodCount--;
+            return true;
+        }
+        return false;
     }
 
     public GameMap getGameMap() {
