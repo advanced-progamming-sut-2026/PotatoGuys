@@ -169,7 +169,7 @@ public class PreNormalGameController extends PreGameController {
 
         List<Plant> plants = new ArrayList<>();
         for(MyPlant p : selectedPlants){
-            plantFactory.createUnplaced(p.getType() , p.getLevel() , p.isBoosted());
+            plants.add(plantFactory.createUnplaced(p.getType() , p.getLevel() , p.isBoosted()));
         }
         NormalLevel level = new NormalLevel(engine, map, levelNumber, 150, waves, plants);
 
