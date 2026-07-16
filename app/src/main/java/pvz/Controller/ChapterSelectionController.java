@@ -2,12 +2,8 @@ package pvz.Controller;
 
 import java.util.regex.Matcher;
 
-import pvz.View.ChapterMenu;
-import pvz.View.ChapterSelectionMenu;
-import pvz.View.CollectionMenu;
-import pvz.View.MainMenu;
-import pvz.View.Menu;
-import pvz.View.Result;
+import pvz.Models.AppContext;
+import pvz.View.*;
 
 public class ChapterSelectionController {
     public Result enterMenu(Matcher matcher) {
@@ -36,13 +32,28 @@ public class ChapterSelectionController {
             default -> new Result("Invalid chapter name");
         };
     }
-    public Result travelLog(Matcher matcher) { return null; }
+
+    public Result travelLog(Matcher matcher) {
+        return new Result("Entering Travel Log (Quest Menu) ...", new QuestMenu());
+    }
+
     public Result leaderboard(Matcher matcher) { return null; }
-    public Result coinWallet(Matcher matcher) { return null; }
-    public Result gemWallet(Matcher matcher) { return null; }
+
+    public Result coinWallet(Matcher matcher) {
+        return new Result("Coins: "+ AppContext.getInstance().getCurrentUser().getProfile().getCoins());
+    }
+
+    public Result gemWallet(Matcher matcher) {
+        return new Result("Gems: "+ AppContext.getInstance().getCurrentUser().getProfile().getDiamonds());
+    }
+
     public Result cheatAdd(Matcher matcher) { return null; }
     public Result exit(Matcher matcher) {
         Menu nextMenu = new MainMenu();
         return new Result("Exited to " + nextMenu.getName(), nextMenu);
+    }
+
+    public Result greenhouse(Matcher matcher) {
+        return new Result("Entering Green House ...", new GreenHouseMenu());
     }
 }
