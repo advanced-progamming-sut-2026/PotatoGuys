@@ -17,11 +17,25 @@ public class CurrencyExchangeItem extends ShopItem {
 
     @Override
     public boolean canBuy(User user, int count, String plantType) {
-        return user != null && count > 0;
+        if (user == null || count <= 0) return false;
+
+        int totalCost = price.getAmount() * count;
+        if (user.getProfile().getDiamonds() < totalCost) return false;
+
+        return true;
     }
 
     @Override
     public boolean applyEffect(User user, int count, String plantType) {
-        return user != null && count > 0;
+        if (!canBuy(user, count, plantType)) return false;
+
+        int totalCost = price.getAmount() * count;
+        int coinsGained = unitAmount * count;
+
+        user.getProfile().setDiamonds(user.getProfile().getDiamonds() - totalCost);
+        user.getProfile().setCoins(user.getProfile().getCoins() + coinsGained);
+
+        user.saveUser();
+        return true;
     }
 }
