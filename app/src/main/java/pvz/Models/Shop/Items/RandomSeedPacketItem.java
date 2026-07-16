@@ -3,7 +3,6 @@ package pvz.Models.Shop.Items;
 import java.util.List;
 import java.util.Random;
 
-import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Shop.Currency;
 import pvz.Models.Shop.Price;
 import pvz.Models.Shop.ShopItem;

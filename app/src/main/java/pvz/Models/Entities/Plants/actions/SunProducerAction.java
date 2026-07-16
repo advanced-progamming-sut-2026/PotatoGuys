@@ -1,9 +1,10 @@
 package pvz.Models.Entities.Plants.actions;
 
 import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Games.GameContext;
+import pvz.Models.Entities.Plants.data.ProductionKind;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Sun.SunType;
+import pvz.Models.Games.GameContext;
 
 /**
  * Behaviour for {@code SUN_PRODUCER} plants: periodically spawns a collectible
@@ -34,7 +35,7 @@ public class SunProducerAction extends CooldownPlantAction {
         ctx.log("[Action] " + plant.getSheet().getName() + " produced " + amount + " sun.");
 
         boolean oneShot = plant.getSheet().getProduction() != null
-                && plant.getSheet().getProduction().getKind() == pvz.Models.Entities.Plants.data.ProductionKind.ONESHOT;
+                && plant.getSheet().getProduction().getKind() == ProductionKind.ONESHOT;
         if (oneShot) {
             plant.kill();
         }

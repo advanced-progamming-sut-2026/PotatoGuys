@@ -20,17 +20,17 @@ import pvz.Models.Games.card.PlantCard;
  * Standard game mode implementation.
  * Manages waves and standard win/loss conditions.
  */
-public class NormalMode implements GameMode, PlantPlacer {
+public class ConveyorBeltNormal implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
     private List<PlantCard> plantCards;
     private Boolean[] lawnMower;
 
-    public NormalMode(Level level) {
+    public ConveyorBeltNormal(Level level) {
         if (level instanceof NormalLevel normalLevel) {
             waves = normalLevel.getWaves();
         }
-        currentWave = waves.getFirst();
+        currentWave = waves.get(0);
         SetupLawnMowers();
     }
 
@@ -194,11 +194,10 @@ public class NormalMode implements GameMode, PlantPlacer {
     private void appendHeader(StringBuilder sb, GameContext context) {
         sb.append("\n=== Tick: ").append(context.getCurrentTick())
                 .append(" | Sun: ").append(context.getCurrentSun())
-                .append(" | Zombies: ").append(context.getZombies().size())
-                .append(" | Plants: ").append(context.getPlants().size())
-                .append(" | Projectiles: ").append(context.getProjectiles().size())
-                .append(" | Suns: ").append(context.getSuns().size())
-                .append(" | Plant foods: ").append(context.getPlantFoodCount())
+                .append(" | zombies: ").append(context.getZombies().size())
+                .append(" | plants: ").append(context.getPlants().size())
+                .append(" | projectiles: ").append(context.getProjectiles().size())
+                .append(" | suns: ").append(context.getSuns().size())
                 .append(" ===\n");
     }
 
