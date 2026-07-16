@@ -36,7 +36,7 @@ public class Shop {
         this.permanentItems = new ArrayList<>();
         this.random = new Random();
         loadPermanentItems();
-        createDailyOffer();
+        loadOrCreateDailyOffer();
     }
 
     public boolean buy(int itemId, int count) {
@@ -44,20 +44,12 @@ public class Shop {
     }
 
     public boolean buy(int itemId, int count, String plantType) {
-        if (count <= 0) {
-            return false;
-        }
-
-        refreshDailyOfferIfNeeded();
+        if (count <= 0) return false;
 
         ShopItem item = findItem(itemId);
-        if (item == null) {
-            return false;
-        }
+        if (item == null) return false;
 
-        if (!item.canBuy(currentUser, count, plantType)) {
-            return false;
-        }
+        if (!item.canBuy(currentUser, count, plantType)) return false;
 
         return item.applyEffect(currentUser, count, plantType);
     }
@@ -84,7 +76,26 @@ public class Shop {
         permanentItems.add(new CurrencyExchangeItem());
     }
 
-    private void createDailyOffer() {
+    private void loadOrCreateDailyOffer() {
+        if (currentUser == null || currentUser.getProfile() == null) {
+            createNewDailyOffer();
+            return;
+        }
+
+        LocalDate savedDate = currentUser.getProfile().getDailyOfferDate();
+        PlantType savedType = currentUser.getProfile().getDailyOfferPlantType();
+        boolean purchased = currentUser.getProfile().isDailyOfferPurchased();
+
+        if (savedDate != null && savedDate.equals(LocalDate.now()) && savedType != null) {
+            dailyOffer = new DailyOffer(savedType, savedDate);
+            dailyOffer.setPurchasedToday(purchased);
+        } else {
+            createNewDailyOffer();
+            saveDailyOfferToProfile();
+        }
+    }
+
+    private void createNewDailyOffer() {
         PlantType[] plantTypes = PlantType.values();
         if (plantTypes.length == 0) {
             dailyOffer = null;
@@ -95,21 +106,12 @@ public class Shop {
         dailyOffer = new DailyOffer(randomPlantType, LocalDate.now());
     }
 
-    private void refreshDailyOfferIfNeeded() {
-        if (dailyOffer == null) {
-            createDailyOffer();
-            return;
-        }
+    private void saveDailyOfferToProfile() {
+        if (currentUser == null || currentUser.getProfile() == null || dailyOffer == null) return;
 
-        if (dailyOffer.isExpired(LocalDate.now())) {
-            PlantType[] plantTypes = PlantType.values();
-            if (plantTypes.length == 0) {
-                dailyOffer = null;
-                return;
-            }
-
-            PlantType randomPlantType = plantTypes[random.nextInt(plantTypes.length)];
-            dailyOffer.refresh(randomPlantType);
-        }
+        currentUser.getProfile().setDailyOfferPlantType(dailyOffer.getPlantType());
+        currentUser.getProfile().setDailyOfferDate(dailyOffer.getOfferDate());
+        currentUser.getProfile().setDailyOfferPurchased(false);
+        currentUser.saveUser();
     }
 }

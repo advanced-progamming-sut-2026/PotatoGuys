@@ -1,11 +1,17 @@
 package pvz.Models.Shop.Items;
 
+import java.util.List;
+import java.util.Random;
+
+import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Shop.Currency;
 import pvz.Models.Shop.Price;
 import pvz.Models.Shop.ShopItem;
+import pvz.Models.User.MyPlant;
 import pvz.Models.User.User;
 
 public class RandomSeedPacketItem extends ShopItem {
+    private final Random random = new Random();
 
     public RandomSeedPacketItem() {
         this.id = 3;
@@ -17,11 +23,34 @@ public class RandomSeedPacketItem extends ShopItem {
 
     @Override
     public boolean canBuy(User user, int count, String plantType) {
-        return user != null && count > 0;
+        if (user == null || count <= 0) return false;
+
+        List<MyPlant> unlocked = user.getProfile().getCollection().getUnlockedPlants();
+        if (unlocked == null || unlocked.isEmpty()) return false;
+
+        int totalCost = price.getAmount() * count;
+        if (user.getProfile().getCoins() < totalCost) return false;
+
+        return true;
     }
 
     @Override
     public boolean applyEffect(User user, int count, String plantType) {
-        return user != null && count > 0;
+        if (!canBuy(user, count, plantType)) return false;
+
+        int totalCost = price.getAmount() * count;
+        user.getProfile().setCoins(user.getProfile().getCoins() - totalCost);
+
+        List<MyPlant> unlocked = user.getProfile().getCollection().getUnlockedPlants();
+        int totalPackets = unitAmount * count;
+
+        for (int i = 0; i < totalPackets; i++) {
+            int idx = random.nextInt(unlocked.size());
+            MyPlant target = unlocked.get(idx);
+            target.setSeed(target.getSeed() + 1);
+        }
+
+        user.saveUser();
+        return true;
     }
 }

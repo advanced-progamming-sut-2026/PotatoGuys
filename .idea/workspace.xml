@@ -6,18 +6,28 @@
   <component name="ChangeListManager">
     <list default="true" id="7fd54749-b0f8-4a89-ad5d-d24c03e69d49" name="Changes" comment="h_edit3">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java" afterDir="false" />
+<<<<<<< HEAD
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/GreenHouseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/GreenHouseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/ShopController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/ShopController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Enums/Commands/GreenHouseMenuCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Enums/Commands/GreenHouseMenuCommands.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/AppContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/AppContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/data/PlantPropertySheet.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/data/PlantPropertySheet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/GreenHouse/GreenHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/GreenHouse/GreenHouse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/GreenHouse/GreenHousePlant.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/GreenHouse/GreenHousePlant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Shop/DailyOffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Shop/DailyOffer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Shop/Shop.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Shop/Shop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/GreenHouseCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/GreenHouseCollection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/BigNut.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/BigNut.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/BowlingWallnut.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/BowlingWallnut.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/ExplodeONut.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/ExplodeONut.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/VaseBreaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/VaseBreaker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/Seasons/Levels/NormalLevel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/Seasons/Levels/NormalLevel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/ChapterSelectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/ChapterSelectionMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/saves/users/username.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/saves/users/username.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/GreenHouseMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/GreenHouseMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/ShopMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/ShopMenu.java" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/NormalGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/NormalGameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/actions/SunProducerAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/actions/SunProducerAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/Sun.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/Sun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/SunManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/SunManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/GameContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/GameContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Modes/GameMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Modes/GameMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Modes/NormalMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Modes/NormalMode.java" afterDir="false" />
+>>>>>>> 5c7e96cc24b314a2bddb93d60ce23a68ece0a68e
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,6 +99,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< HEAD
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.App.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build PlantsVsZombies2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build plantsvszombies2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.plantsvszombies2 [:app:pvz.App.main()].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/104/plantsvszombies2&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;H:/Code/Java/AP Project/PlantsVsZombies2/src/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+=======
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.App.executor&quot;: &quot;Run&quot;,
@@ -122,6 +168,7 @@
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
+>>>>>>> 5c7e96cc24b314a2bddb93d60ce23a68ece0a68e
 }</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
@@ -173,7 +220,6 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
@@ -212,7 +258,8 @@
       <workItem from="1784043171457" duration="7411000" />
       <workItem from="1784090699060" duration="3424000" />
       <workItem from="1784099055451" duration="10462000" />
-      <workItem from="1784122842175" duration="13898000" />
+      <workItem from="1784122842175" duration="14429000" />
+      <workItem from="1784191239323" duration="3758000" />
     </task>
     <servers />
   </component>

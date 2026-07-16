@@ -29,7 +29,7 @@ public class SunProducerAction extends CooldownPlantAction {
         if (plant.getUnlockedFlags().contains("Double Sun Chance") && Math.random() < 0.5) {
             amount *= 2;
         }
-        Sun sun = new Sun(SunType.NORMAL, plant.getCol(), plant.getLane(), amount);
+        Sun sun = new Sun(SunType.NORMAL, plant.getCol(), plant.getLane(), amount, false, ctx);
         ctx.spawnSun(sun);
         ctx.log("[Action] " + plant.getSheet().getName() + " produced " + amount + " sun.");
 

@@ -100,16 +100,6 @@ public class GreenHouse {
         return true;
     }
 
-    public int getGrowCost(int x, int y) {
-        GreenHousePot pot = getPot(x, y);
-
-        if (pot == null || pot.isLocked() || pot.isEmpty()) {
-            return 0;
-        }
-
-        return pot.getPlant().remainingHours();
-    }
-
     private GreenHousePlant createRandomPlant(List<String> unlockedPlantTypesWithPlantFood) {
         boolean shouldPlantMariGold = random.nextBoolean();
 

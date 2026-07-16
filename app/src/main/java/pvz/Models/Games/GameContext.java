@@ -8,6 +8,7 @@ import pvz.Models.Engine.TickAware;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Projectile.Projectile;
 import pvz.Models.Entities.Sun.Sun;
+import pvz.Models.Entities.Sun.SunManager;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Modes.GameMode;
@@ -43,6 +44,7 @@ public class GameContext implements TickAware {
         this.mode = GameModeFactory.createGameMode(currentLevel.getGameMode() , currentLevel);
         this.setLevelNumber(currentLevel.getLevelNumber());
         this.plantFoodCount=0;
+        engine.register(new SunManager(this));
     }
 
 

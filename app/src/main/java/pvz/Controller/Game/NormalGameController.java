@@ -1,5 +1,6 @@
 package pvz.Controller.Game;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 import pvz.Models.AppContext;
@@ -24,16 +25,11 @@ public class NormalGameController extends GameController{
         int x = Integer.parseInt(matcher.group("sunX"));
         int y = Integer.parseInt(matcher.group("sunY"));
         
-        GameEngine engine = GameEngine.getInstance();
-        for (TickAware entity : engine.getEntities()) {
-            if (entity instanceof Sun) {
-                Sun sun = (Sun) entity;
-                // Assuming coordinates match within a reasonable threshold
-                if (Math.abs(sun.getCol() - x) < 0.5 && Math.abs(sun.getLane() - y) < 0.5) {
-                    context.addSun(sun.getType().getAmountSun());
-                    sun.dispose();
-                    return new Result("Sun collected!");
-                }
+        for (Sun sun : new ArrayList<>(context.getSuns())) {
+            if (sun.getCol() == x && sun.getLane() == y && !sun.isDone()) {
+                sun.collect(context);
+                context.removeSun(sun);
+                return new Result("Sun collected!");
             }
         }
         return new Result("No sun found at these coordinates.");

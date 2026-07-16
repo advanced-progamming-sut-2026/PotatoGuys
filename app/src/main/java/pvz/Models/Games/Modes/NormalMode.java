@@ -3,6 +3,7 @@ package pvz.Models.Games.Modes;
 import java.util.List;
 
 import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
@@ -66,9 +67,17 @@ public class NormalMode implements GameMode {
                     context.setGameOver(true);
                     context.log("Brain has eaten");
                     context.removeZombie(z);
-                }
             }
         }
+
+        context.getSuns().removeIf(sun -> {
+            if (sun.isDone()) {
+                context.removeSun(sun);
+                return true;
+            }
+            return false;
+        });
+    }
     }
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {

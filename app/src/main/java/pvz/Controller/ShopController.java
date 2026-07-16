@@ -1,48 +1,133 @@
 package pvz.Controller;
 
-import pvz.Models.User.User;
+import java.util.regex.Matcher;
+
+import pvz.Models.AppContext;
+import pvz.Models.Entities.Plants.Enums.PlantType;
+import pvz.Models.Shop.DailyOffer;
+import pvz.Models.Shop.Shop;
 import pvz.Models.Shop.ShopItem;
-// Import your specific ShopItems here
+import pvz.Models.User.User;
+import pvz.View.MainMenu;
+import pvz.View.Menu;
+import pvz.View.Result;
 
 public class ShopController {
-    private User currentUser;
+    private Menu previousMenu;
 
-    public ShopController(User currentUser) {
-        this.currentUser = currentUser;
+    public ShopController() {
+        this.previousMenu = new MainMenu();
     }
 
-    public String showPermanentItems() {
-        // In a full implementation, you would iterate over a static list of available ShopItems
-        return "1: Pot (2000 Coins)\n2: Plant Food (3 Diamonds)\n3: Random Seed Packet (1000 Coins)\n4: Selectable Seed Packet (5 Diamonds)\n5: Currency Exchange (5 Diamonds for 500 Coins)";
+    public ShopController(Menu previousMenu) {
+        this.previousMenu = previousMenu;
     }
 
-    public String showDailyOffer() {
-        // Logic to generate and display the daily offer (1600 coins for 10 seed packets)
-        // This should check the system date to ensure it only changes at 00:00
-        return "Daily Offer: 10x Random Seed Packets for 1600 Coins!";
+    private User getCurrentUser() {
+        return AppContext.getInstance().getCurrentUser();
     }
 
-    public String buyItem(int itemId, int count, String plantType) {
-        if (currentUser == null) return "No user logged in.";
+    public Result showPermanentItems(Matcher matcher) {
+        Shop shop = new Shop(getCurrentUser());
+        StringBuilder sb = new StringBuilder("Permanent Items:");
+        for (ShopItem item : shop.getPermanentItems()) {
+            sb.append("\n").append(item.getId()).append(": ").append(item.getName())
+              .append(" - ").append(item.getPrice().getAmount()).append(" ")
+              .append(item.getPrice().getCurrency())
+              .append(" | Unit: ").append(item.getUnitAmount());
+        }
+        return new Result(sb.toString());
+    }
 
-        ShopItem item = getShopItemById(itemId); // Helper method to instantiate the correct item
-        if (item == null) return "Invalid item ID.";
+    public Result showDailyOffer(Matcher matcher) {
+        Shop shop = new Shop(getCurrentUser());
+        DailyOffer offer = shop.getDailyOffer();
+        if (offer == null) {
+            return new Result("No daily offer available today.");
+        }
+        StringBuilder sb = new StringBuilder("Daily Offer:");
+        sb.append("\nPlant: ").append(offer.getPlantType().name());
+        sb.append("\nPackets: ").append(offer.getUnitAmount());
+        sb.append("\nPrice: ").append(offer.getPrice().getAmount()).append(" ").append(offer.getPrice().getCurrency());
+        sb.append(" (20% off from 2000 Coins)");
+        if (offer.isPurchasedToday()) {
+            sb.append("\nStatus: Already purchased today.");
+        } else {
+            sb.append("\nStatus: Available.");
+        }
+        return new Result(sb.toString());
+    }
+
+    public Result buyItem(Matcher matcher) {
+        User currentUser = getCurrentUser();
+        if (currentUser == null) {
+            return new Result("No user logged in.");
+        }
+
+        int itemId = Integer.parseInt(matcher.group(1));
+        int count = Integer.parseInt(matcher.group(2));
+        String plantType = matcher.group(3);
+
+        Shop shop = new Shop(currentUser);
+        ShopItem item = findItem(shop, itemId);
+        if (item == null) {
+            return new Result("Invalid item ID.");
+        }
+
+        if (item instanceof pvz.Models.Shop.Items.SelectableSeedPacketItem) {
+            if (plantType == null || plantType.isBlank()) {
+                return new Result("For Selectable Seed Packet, the -t parameter is mandatory.");
+            }
+            PlantType selectedType = null;
+            for (PlantType pt : PlantType.values()) {
+                if (pt.name().equalsIgnoreCase(plantType)) {
+                    selectedType = pt;
+                    break;
+                }
+            }
+            if (selectedType == null) {
+                return new Result("Invalid plant type: " + plantType);
+            }
+            if (currentUser.getProfile().getCollection().getPlant(selectedType) == null) {
+                return new Result("Plant " + plantType + " is not unlocked yet.");
+            }
+        }
 
         if (!item.canBuy(currentUser, count, plantType)) {
-            return "Cannot buy this item (insufficient funds, max capacity reached, or invalid plant type).";
+            if (currentUser.getProfile().getCoins() < item.getPrice().getAmount() * count
+                    && item.getPrice().getCurrency() == pvz.Models.Shop.Currency.COIN) {
+                return new Result("Insufficient coins. Need " + (item.getPrice().getAmount() * count)
+                        + " coins, have " + currentUser.getProfile().getCoins() + ".");
+            }
+            if (currentUser.getProfile().getDiamonds() < item.getPrice().getAmount() * count
+                    && item.getPrice().getCurrency() == pvz.Models.Shop.Currency.DIAMOND) {
+                return new Result("Insufficient diamonds. Need " + (item.getPrice().getAmount() * count)
+                        + " diamonds, have " + currentUser.getProfile().getDiamonds() + ".");
+            }
+            return new Result("Cannot buy this item (capacity limit reached or invalid parameters).");
         }
 
         boolean success = item.applyEffect(currentUser, count, plantType);
         if (success) {
-            return "Successfully purchased " + count + "x " + item.getName();
+            return new Result("Successfully purchased " + item.getName() + " x" + count + ".");
         } else {
-            return "Purchase failed.";
+            return new Result("Purchase failed.");
         }
     }
 
-    private ShopItem getShopItemById(int id) {
-        // Simple factory logic to return the correct item model
-        // e.g., if (id == 1) return new PotSlotItem();
+    public Result exit(Matcher matcher) {
+        return new Result("Exited to " + previousMenu.getName(), previousMenu);
+    }
+
+    private ShopItem findItem(Shop shop, int itemId) {
+        for (ShopItem item : shop.getPermanentItems()) {
+            if (item.getId() == itemId) {
+                return item;
+            }
+        }
+        if (shop.getDailyOffer() != null && shop.getDailyOffer().getId() == itemId) {
+            return shop.getDailyOffer();
+        }
         return null;
     }
 }
