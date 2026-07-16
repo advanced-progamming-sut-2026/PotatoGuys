@@ -17,6 +17,7 @@ public class PlantCard extends Card {
     public MyPlant use() {
         if (canUse()) {
             resetCooldown();
+            plant.setBoosted(false);
             return plant;
         }
         return null;

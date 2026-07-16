@@ -40,6 +40,9 @@ public class LoginController {
 
         HashMap<String , String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
         String Id = usernames.get(username);
+        if(Id == null){
+            return new Result("Username is incorrect!");
+        }
         User currentUser = SaveManager.getInstance().load("users/" + Id + ".json", User.class);
         if(!PasswordUtils.verifyPassword(password, currentUser.getPasswordHash())){
             return new Result("Password is incorrect!");

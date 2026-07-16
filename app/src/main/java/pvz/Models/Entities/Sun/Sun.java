@@ -76,6 +76,7 @@ public class Sun implements TickAware {
         } else {
             ctx.addSun(getAmount());
         }
+        ctx.removeSun(this);
     }
 
     private void dealExplosionDamage(GameContext ctx) {

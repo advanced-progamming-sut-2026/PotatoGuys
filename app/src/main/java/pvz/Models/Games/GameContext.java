@@ -175,6 +175,10 @@ public class GameContext implements TickAware {
         this.currentTick = currentTick;
     }
 
+    public void addCurrentTick(int amount){
+        this.currentTick += amount;
+    }
+
 
     public boolean isGameOver() {
         return gameOver;
@@ -231,5 +235,11 @@ public class GameContext implements TickAware {
         if (plantFoodCount>4){
             plantFoodCount=4;
         }
+    }
+
+    public boolean spendPlantFood(){
+        if (plantFoodCount<=0) return false;
+        plantFoodCount--;
+        return true;
     }
 }
