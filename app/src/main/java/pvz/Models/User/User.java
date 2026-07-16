@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import pvz.Utils.SaveManager;
 
+import pvz.Models.GreenHouse.GreenHouse;
+
 
 public class User {
     private String id;
@@ -18,6 +20,7 @@ public class User {
     private Setting setting;
     private News news;
     private Score score;
+    private GreenHouse greenHouse;
 
     public void saveUser(){
         SaveManager.getInstance().save(this, "saves/" + id + ".json");
@@ -91,6 +94,14 @@ public class User {
         return profile;
     }
 
+    public GreenHouse getGreenHouse() {
+        return greenHouse;
+    }
+
+    public void setGreenHouse(GreenHouse greenHouse) {
+        this.greenHouse = greenHouse;
+    }
+
     public void setProfile(Profile profile) {
         this.profile = profile;
     }
@@ -127,6 +138,7 @@ public class User {
         this.email=email;
         this.gender=gender;
         this.profile=new Profile();
+        this.greenHouse=new GreenHouse();
         this.setting=new Setting();
         this.news=new News();
         this.score=new Score();

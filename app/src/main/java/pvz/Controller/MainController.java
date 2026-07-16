@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import pvz.View.*;
 
 public class MainController {
-    public Result enterMenu(Matcher matcher) { 
+    public Result enterMenu(Matcher matcher) {
         String menuName = matcher.group("menuName");
         menuName = menuName.replaceAll("  ", "");
         Menu nextMenu = null;
@@ -38,14 +38,14 @@ public class MainController {
                 nextMenu = new MainMenu();
                 return new Result("You cannot enter this menu." , nextMenu);
         }
-        
+
         return new Result("Enterned " + nextMenu.getName() , nextMenu);
 
     }
     public Result exit(Matcher matcher) {
         return new Result("Use 'menu logout' to exit from Main Menu.", new MainMenu());
     }
-    public Result logout(Matcher matcher) { 
+    public Result logout(Matcher matcher) {
         return new Result("logged out", new RegisterMenu());
     }
 }
