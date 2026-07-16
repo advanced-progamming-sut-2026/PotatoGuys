@@ -2,6 +2,7 @@ package pvz.Models.User;
 
 import java.util.UUID;
 
+import pvz.Models.Games.Seasons.Season;
 import pvz.Utils.SaveManager;
 
 import pvz.Models.GreenHouse.GreenHouse;
@@ -144,5 +145,6 @@ public class User {
         this.score=new Score();
 
     }
+
 
 }

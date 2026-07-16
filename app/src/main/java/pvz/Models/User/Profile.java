@@ -91,4 +91,13 @@ public class Profile {
     public void setDailyOfferPurchased(boolean dailyOfferPurchased) {
         this.dailyOfferPurchased = dailyOfferPurchased;
     }
+
+    public Season getSeasonByName(String name){
+        for (Season s: seasons){
+            if (s.getName().equalsIgnoreCase(name)){
+                return s;
+            }
+        }
+        return null;
+    }
 }

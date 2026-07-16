@@ -1,8 +1,10 @@
 package pvz.Controller;
 
+import java.util.List;
 import java.util.regex.Matcher;
 
 import pvz.Models.AppContext;
+import pvz.Models.Games.Seasons.Season;
 import pvz.View.*;
 
 public class ChapterSelectionController {
@@ -21,16 +23,12 @@ public class ChapterSelectionController {
         
         return new Result("Entered " + nextMenu.getName() , nextMenu);
     }
-    public Result enterChapter(Matcher matcher)
-    {
-        String chapter=matcher.group("chapterName").trim().toLowerCase();
-        return switch (chapter) {
-            case "ancient egypt" -> new Result("Season selected: Ancient Egypt", new ChapterMenu("Ancient Egypt"));
-            case "frostbite caves" -> new Result("Season selected: Frostbite Caves", new ChapterMenu("Frostbite Caves"));
-            case "dark ages" -> new Result("Season selected: Dark Ages", new ChapterMenu("Dark Ages"));
-            case "big wave beach" -> new Result("Season selected: Big Wave Beach", new ChapterMenu("Big Wave Beach"));
-            default -> new Result("Invalid chapter name");
-        };
+    public Result enterChapter(Matcher matcher) {
+        String chapter = matcher.group("chapterName").trim().toLowerCase();
+        Season season = AppContext.getInstance().getCurrentUser().getProfile().getSeasonByName(chapter);
+        if (season == null) return new Result("Invalid chapter name");
+        else if (season.isLocked()) return new Result("This Chapter is locked!");
+        else return new Result("Entering Chapter: " + season.getName() + " ...", new ChapterMenu(season.getName()));
     }
 
     public Result travelLog(Matcher matcher) {
