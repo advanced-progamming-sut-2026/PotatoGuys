@@ -2,16 +2,17 @@ package pvz.Controller.Game;
 
 import java.util.regex.Matcher;
 
+import pvz.Models.AppContext;
 import pvz.Models.Engine.GameEngine;
 import pvz.Models.Engine.TickAware;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
-import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.map.Tile;
+import pvz.Models.User.MyPlant;
 import pvz.View.Result;
 
 public class NormalGameController extends GameController{
@@ -64,9 +65,9 @@ public class NormalGameController extends GameController{
         }
         
         // Find plant storage
-        PlantType type = null;
-        for (PlantType ps : PlantType.values()) {
-            if (ps.toString().equalsIgnoreCase(typeString)) {
+        MyPlant type = null;
+        for (MyPlant ps : AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()) {
+            if (ps.getType().toString().equalsIgnoreCase(typeString)) {
                 type = ps;
                 break;
             }
@@ -75,7 +76,7 @@ public class NormalGameController extends GameController{
             return new Result("Invalid plant type: " + typeString);
         }
 
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type.getType());
         // Check sun
         if (!context.spendSun(sheet.getSunCost())) {
             return new Result("Not enough sun.");

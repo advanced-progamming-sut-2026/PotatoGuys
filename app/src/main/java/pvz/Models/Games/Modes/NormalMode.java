@@ -138,7 +138,7 @@ public class NormalMode implements GameMode {
 
     private void appendHeader(StringBuilder sb , GameContext context) {
         sb.append("\n=== Tick: ").append(context.getCurrentTick())
-          .append(" | Sun: ").append(context.getSuns().size())
+          .append(" | Sun: ").append(context.getCurrentSun())
           .append(" | zombies: ").append(context.getZombies().size())
           .append(" | plants: ").append(context.getPlants().size())
           .append(" | projectiles: ").append(context.getProjectiles().size())
