@@ -23,7 +23,7 @@ public class User {
     private GreenHouse greenHouse;
 
     public void saveUser(){
-        SaveManager.getInstance().save(this, "saves/" + id + ".json");
+        SaveManager.getInstance().save(this, "users/" + id + ".json");
     }
 
 

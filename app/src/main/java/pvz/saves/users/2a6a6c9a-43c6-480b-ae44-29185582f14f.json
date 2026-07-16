@@ -108,5 +108,134 @@
     "dailyQuests": 0,
     "nonDailyQuests": 0,
     "highestScore": 0
+  },
+  "greenHouse": {
+    "greenHousePots": [
+      {
+        "x": 1,
+        "y": 1,
+        "locked": false,
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "TwinSunflower",
+          "plantedTime": "2026-07-16T20:08:39.513911800",
+          "growthHours": 8
+        }
+      },
+      {
+        "x": 2,
+        "y": 1,
+        "locked": false,
+        "greenHousePlant": null
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "locked": false,
+        "greenHousePlant": null
+      },
+      {
+        "x": 4,
+        "y": 1,
+        "locked": false,
+        "greenHousePlant": null
+      },
+      {
+        "x": 5,
+        "y": 1,
+        "locked": false,
+        "greenHousePlant": null
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 5,
+        "y": 2,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 4,
+        "y": 3,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 5,
+        "y": 3,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 3,
+        "y": 4,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 4,
+        "y": 4,
+        "locked": true,
+        "greenHousePlant": null
+      },
+      {
+        "x": 5,
+        "y": 4,
+        "locked": true,
+        "greenHousePlant": null
+      }
+    ]
   }
 }
