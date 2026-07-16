@@ -9,6 +9,7 @@ import pvz.Models.Games.Levels.Level;
 
 public class Season {
     private String name;
+    boolean locked;
     private List<Level> levels;
     private Map<Integer,Boolean> levelUnlocked;
 
@@ -16,6 +17,7 @@ public class Season {
         this.name=name;
         this.levels=new ArrayList<>();
         this.levelUnlocked=new HashMap<>();
+        locked=true;
     }
 
     public String getName() {
@@ -24,6 +26,21 @@ public class Season {
 
     public List<Level> getLevels() {
         return levels;
+    }
+
+    public void unlock(){
+        locked=false;
+    }
+
+    public boolean isLocked(){
+        return locked;
+    }
+
+    public boolean isLevelUnlocked(int levelNumber){
+        if (levelUnlocked.containsKey(levelNumber)){
+            return levelUnlocked.get(levelNumber);
+        }
+        return false;
     }
 
 }

@@ -1,14 +1,16 @@
 package pvz.View;
 
 import pvz.Controller.QuestController;
+import pvz.Models.AppContext;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class QuestMenu implements Menu {
     private final QuestController controller;
 
-    public QuestMenu(QuestController controller) {
-        this.controller = controller;
+    public QuestMenu() {
+        controller=new QuestController(AppContext.getInstance().getCurrentUser());
     }
 
     @Override

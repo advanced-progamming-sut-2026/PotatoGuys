@@ -115,7 +115,9 @@ public class RegisterController {
         user.getProfile().getCollection().addPlant(PlantType.TwinSunflower,1,false);
         user.getProfile().getCollection().addPlant(PlantType.PeaPod,1,false);
         user.getProfile().getCollection().addPlant(PlantType.SnowPea,1,false);
-        user.getProfile().getSeasons().add(new Season("Ancient Egypt"));
+        Season ancientEgypt=new Season("Ancient Egypt");
+        ancientEgypt.unlock();
+        user.getProfile().getSeasons().add(ancientEgypt);
         user.getProfile().getSeasons().add(new Season("Frostbite Caves"));
         user.getProfile().getSeasons().add(new Season("Dark Ages"));
         user.getProfile().getSeasons().add(new Season("Big Wave Beach"));
