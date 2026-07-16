@@ -1,11 +1,9 @@
 package pvz.View.Game;
 
-import java.util.List;
 import java.util.regex.Matcher;
 
 import pvz.Controller.Game.GameController;
 import pvz.Enums.Commands.GameMenuCommand;
-import pvz.Models.Entities.Plants.Plant;
 import pvz.View.Menu;
 import pvz.View.Result;
 

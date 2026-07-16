@@ -1,7 +1,8 @@
 package pvz.Models.Games.card;
 
+import pvz.Models.Engine.TickAware;
 
-public abstract class Card {
+public abstract class Card implements TickAware{
 
     protected final int cost;
     protected final float baseCooldown;
@@ -9,7 +10,7 @@ public abstract class Card {
 
     protected Card(int cost, float cooldown) {
         this.cost = cost;
-        this.baseCooldown = cooldown;
+        this.baseCooldown = cooldown * 10;
         this.cooldown = 0;
     }
 
@@ -21,13 +22,13 @@ public abstract class Card {
         return cooldown;
     }
 
-    public float getBaseColldown() {
+    public float getBaseCooldown() {
         return baseCooldown;
     }
 
     public void decrementCooldown() {
         if (cooldown > 0) {
-            cooldown--;
+            cooldown -= 1.0f;
         }
     }
 
@@ -35,7 +36,7 @@ public abstract class Card {
         return cooldown == 0;
     }
 
-    public void setCooldown(int cooldown) {
+    public void setCooldown(float cooldown) {
         if (cooldown < 0) {
             this.cooldown = 0;
         } else if (cooldown > baseCooldown) {
@@ -47,6 +48,22 @@ public abstract class Card {
 
     public void resetCooldown() {
         this.cooldown = baseCooldown;
+    }
+
+    @Override
+    public void dispose() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void enter() {
+        
+    }
+
+    @Override
+    public void update() {
+        decrementCooldown();
     }
 
 }
