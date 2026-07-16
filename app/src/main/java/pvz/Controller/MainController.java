@@ -2,6 +2,7 @@ package pvz.Controller;
 
 import java.util.regex.Matcher;
 
+import pvz.Utils.SaveManager;
 import pvz.View.*;
 
 public class MainController {
@@ -46,6 +47,7 @@ public class MainController {
         return new Result("Use 'menu logout' to exit from Main Menu.", new MainMenu());
     }
     public Result logout(Matcher matcher) {
+        SaveManager.getInstance().delete("session.json");
         return new Result("logged out", new RegisterMenu());
     }
 }

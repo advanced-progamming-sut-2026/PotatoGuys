@@ -49,7 +49,12 @@ public class LoginController {
         }
 
         AppContext.getInstance().setCurrentUser(currentUser);
-        return new Result("Wellcome " + currentUser.getNickName() + ".", new MainMenu()); 
+
+        if (matcher.group("stayLoggedIn") != null) {
+            SaveManager.getInstance().save(username, "session.json");
+        }
+
+        return new Result("Welcome " + currentUser.getNickName() + ".", new MainMenu());
     }
     public Result forgetPassword(Matcher matcher) {
         String username = matcher.group("username");
