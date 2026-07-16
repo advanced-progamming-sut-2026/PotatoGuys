@@ -83,7 +83,7 @@ public class NormalGameController extends GameController{
         }
         
         // Create plant
-        Plant plant = new PlantFactory().create(type, x, y, context); 
+        Plant plant = new PlantFactory().create(type.getType(), x, y, type.getLevel() ,type.isBoosted(), context);
         context.spawnPlant(plant);
         
         return new Result(typeString + " placed at (" + x + ", " + y + ").");
