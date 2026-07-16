@@ -39,7 +39,9 @@ public abstract class GameController {
         }
         return new Result("Nuke released! Killed " + killed + " zombies.");
     }
+
     public Result cheatCooldown(Matcher matcher) { return null; }
+
     public Result feedPlant(Matcher matcher) { return null; }
 
     public Result cheatPlantFood(Matcher matcher) {
@@ -51,25 +53,7 @@ public abstract class GameController {
     public Result showMap(Matcher matcher) {
         return new Result(context.getMode().renderMap(context));
     }
-    public Result showPlantsStatus(Matcher matcher) {
-        StringBuilder status = new StringBuilder("Plants Status:\n");
-        int rows = context.getMap().getRows();
-        int cols = context.getMap().getColumns();
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                Tile tile = context.getMap().getMap()[i][j];
-                Plant plant = tile.getPlants().get(tile.getPlants().size() - 1);
-                if (plant != null) {
-                    status.append("Plant at (").append(j).append(",").append(i).append("): ")
-                          .append(plant.getType()).append(" | HP: ").append((int)plant.getHp()).append("\n");
-                }
-            }
-        }
-        if (status.length() == 15) { // "Plants Status:\n"
-            return new Result("No plants on the map.");
-        }
-        return new Result(status.toString());
-    }
+
     public Result showTileStatus(Matcher matcher) {
         int x = Integer.parseInt(matcher.group("tileX"));
         int y = Integer.parseInt(matcher.group("tileY"));
