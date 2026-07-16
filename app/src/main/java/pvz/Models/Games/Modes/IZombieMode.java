@@ -2,8 +2,6 @@ package pvz.Models.Games.Modes;
 
 import java.util.List;
 
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieFactory;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.card.Card;

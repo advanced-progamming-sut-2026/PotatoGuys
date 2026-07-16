@@ -139,8 +139,10 @@ public class NormalMode implements GameMode {
     private void appendHeader(StringBuilder sb , GameContext context) {
         sb.append("\n=== Tick: ").append(context.getCurrentTick())
           .append(" | Sun: ").append(context.getSuns().size())
-          .append(" | Active zombies: ").append(context.getZombies().size())
-          .append(" | Active plants: ").append(context.getPlants().size())
+          .append(" | zombies: ").append(context.getZombies().size())
+          .append(" | plants: ").append(context.getPlants().size())
+          .append(" | projectiles: ").append(context.getProjectiles().size())
+          .append(" | suns: ").append(context.getSuns().size())
           .append(" ===\n");
     }
 
@@ -176,9 +178,9 @@ public class NormalMode implements GameMode {
         boolean hasZombie = !zombiesAtCell.isEmpty();
 
         if (hasPlant && hasZombie) {
-            return String.format("P%-1d/Z%-1d", plantsAtCell.size() , zombiesAtCell.size()); 
+            return String.format("P/Z%-1d", plantsAtCell.size() , zombiesAtCell.size()); 
         } else if (hasPlant) {
-            return String.format(" P%-2d", plantsAtCell.size()); 
+            return String.format(" P  ", plantsAtCell.size()); 
         } else if (hasZombie) {
             return String.format(" Z%-2d", zombiesAtCell.size()); 
         }
@@ -186,19 +188,19 @@ public class NormalMode implements GameMode {
         return CELL_EMPTY; 
     }
 
-    private void appendDirectionHint(StringBuilder sb , GameContext context) {
-        sb.append("         ←←←←←←← zombies walk this direction\n");
-    }
+    // private void appendDirectionHint(StringBuilder sb , GameContext context) {
+    //     sb.append("         ←←←←←←← zombies walk this direction\n");
+    // }
 
-    private void appendZombieStatus(StringBuilder sb , GameContext context) {
-        if (context.getZombies().isEmpty()) { sb.append("\n(no zombies)\n"); return; }
-        sb.append("\nZombies (").append(context.getZombies().size()).append(" active):\n");
-        for (int i = 0; i < context.getZombies().size(); i++) {
-            Zombie z = context.getZombies().get(i);
-            if (!z.isDead()) {
-                sb.append("  Z").append(i).append(" ").append(z.toInfoString()).append("\n");
-            }
-        }
-    }
+    // private void appendZombieStatus(StringBuilder sb , GameContext context) {
+    //     if (context.getZombies().isEmpty()) { sb.append("\n(no zombies)\n"); return; }
+    //     sb.append("\nZombies (").append(context.getZombies().size()).append(" active):\n");
+    //     for (int i = 0; i < context.getZombies().size(); i++) {
+    //         Zombie z = context.getZombies().get(i);
+    //         if (!z.isDead()) {
+    //             sb.append("  Z").append(i).append(" ").append(z.toInfoString()).append("\n");
+    //         }
+    //     }
+    // }
 
 }
