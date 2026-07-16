@@ -3,7 +3,6 @@ package pvz.Models.User;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Games.Seasons.Season;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Profile {
@@ -16,7 +15,7 @@ public class Profile {
     private ArrayList<Season> seasons;
     private int maxMiopoint;
     private PlantType dailyOfferPlantType;
-    private LocalDate dailyOfferDate;
+    private String dailyOfferDate; // Ino estefadeh bokon! Yousof RD
     private boolean dailyOfferPurchased;
 
     public Profile(){
@@ -77,11 +76,11 @@ public class Profile {
         this.dailyOfferPlantType = dailyOfferPlantType;
     }
 
-    public LocalDate getDailyOfferDate() {
+    public String getDailyOfferDate() {
         return dailyOfferDate;
     }
 
-    public void setDailyOfferDate(LocalDate dailyOfferDate) {
+    public void setDailyOfferDate(String dailyOfferDate) {
         this.dailyOfferDate = dailyOfferDate;
     }
 

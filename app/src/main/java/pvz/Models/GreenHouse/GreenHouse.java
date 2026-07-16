@@ -10,7 +10,7 @@ public class GreenHouse {
     public static final int HEIGHT = 4;
 
     private final List<GreenHousePot> greenHousePots = new ArrayList<>();
-    private final Random random = new Random();
+    private transient final Random random = new Random();
 
     public GreenHouse() {
         for (int y = 1; y <= HEIGHT; y++) {

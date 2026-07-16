@@ -12,9 +12,11 @@ public enum GameMenuCommand implements MenuCommand {
     FEED_PLANT("^feed\\s+plant\\s+-l\\s+\\(\\s*(?<feedX>\\d+)\\s*,\\s*(?<feedY>\\d+)\\s*\\)\\s*$"),
     CHEAT_PLANT_FOOD("^cheat\\s+add-plant-food\\s*$"),
     SHOW_MAP("^show\\s+map\\s*$"),
-    SHOW_PLANTS_STATUS("^show\\s+plants\\s+status\\s*$"),
+    SHOW_PLANTS("^show\\s+plants\\s*$"),
+    SHOW_ZOMBIES("^show\\s+zombies\\s*$"),
+    SHOW_PROJECTILE("^show\\s+projectiles\\s*$"),
+    SHOW_SUNS("^show\\s+suns\\s*$"),
     SHOW_TILE_STATUS("^show\\s+tile\\s+status\\s+-l\\s+\\(\\s*(?<tileX>\\d+)\\s*,\\s*(?<tileY>\\d+)\\s*\\)\\s*$"),
-    ZOMBIES_INFO("^zombies\\s+info\\s*$"),
     CHEAT_SPAWN_ZOMBIE("^cheat\\s+spawn-zombie\\s+-t\\s+(?<zombieType>\\w+)\\s+-l\\s+<\\s*(?<zombieX>\\d+)\\s*,\\s*(?<zombieY>\\d+)\\s*>\\s*$"),
     HELP("^\\s*help\\s*$");
 

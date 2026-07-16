@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 import pvz.Models.AppContext;
-import pvz.Models.Engine.GameEngine;
-import pvz.Models.Engine.TickAware;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
