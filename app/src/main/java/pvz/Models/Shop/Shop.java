@@ -77,14 +77,23 @@ public class Shop {
     }
 
     private void loadOrCreateDailyOffer() {
-/*        if (currentUser == null || currentUser.getProfile() == null) {
+        if (currentUser == null || currentUser.getProfile() == null) {
             createNewDailyOffer();
             return;
         }
 
-        LocalDate savedDate = currentUser.getProfile().getDailyOfferDate();
+        String savedDateStr = currentUser.getProfile().getDailyOfferDate();
         PlantType savedType = currentUser.getProfile().getDailyOfferPlantType();
         boolean purchased = currentUser.getProfile().isDailyOfferPurchased();
+
+        LocalDate savedDate = null;
+        if (savedDateStr != null && !savedDateStr.isBlank()) {
+            try {
+                savedDate = LocalDate.parse(savedDateStr);
+            } catch (Exception e) {
+                savedDate = null;
+            }
+        }
 
         if (savedDate != null && savedDate.equals(LocalDate.now()) && savedType != null) {
             dailyOffer = new DailyOffer(savedType, savedDate);
@@ -92,7 +101,7 @@ public class Shop {
         } else {
             createNewDailyOffer();
             saveDailyOfferToProfile();
-        }*/
+        }
     }
 
     private void createNewDailyOffer() {
@@ -107,11 +116,11 @@ public class Shop {
     }
 
     private void saveDailyOfferToProfile() {
-/*        if (currentUser == null || currentUser.getProfile() == null || dailyOffer == null) return;
+        if (currentUser == null || currentUser.getProfile() == null || dailyOffer == null) return;
 
         currentUser.getProfile().setDailyOfferPlantType(dailyOffer.getPlantType());
-        currentUser.getProfile().setDailyOfferDate(dailyOffer.getOfferDate());
+        currentUser.getProfile().setDailyOfferDate(dailyOffer.getOfferDate().toString());
         currentUser.getProfile().setDailyOfferPurchased(false);
-        currentUser.saveUser();*/
+        currentUser.saveUser();
     }
 }
