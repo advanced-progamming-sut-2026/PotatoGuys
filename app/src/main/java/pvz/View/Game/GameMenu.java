@@ -30,6 +30,7 @@ public abstract class GameMenu implements Menu {
         if ((matcher = GameMenuCommand.SHOW_TILE_STATUS.getMatcher(input)) != null) return gameController.showTileStatus(matcher);
         if ((matcher = GameMenuCommand.ZOMBIES_INFO.getMatcher(input)) != null) return gameController.zombiesInfo(matcher);
         if ((matcher = GameMenuCommand.CHEAT_SPAWN_ZOMBIE.getMatcher(input)) != null) return gameController.cheatSpawnZombie(matcher);
+        if ((matcher = GameMenuCommand.HELP.getMatcher(input)) != null) return new Result(GameMenuCommand.getHelp());
         return null;
     }
 

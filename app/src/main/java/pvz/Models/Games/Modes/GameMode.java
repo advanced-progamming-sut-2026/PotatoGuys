@@ -21,4 +21,7 @@ public interface GameMode {
     void handlePlacement(GameContext context, int col, int lane, Card card);
 
     String renderMap(GameContext context);
+
+    /** Whether this mode allows sky-dropped falling suns (e.g. Dark Ages disables them). */
+    default boolean supportsFallingSuns() { return true; }
 }

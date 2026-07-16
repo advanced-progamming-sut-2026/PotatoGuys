@@ -6,7 +6,6 @@ import java.util.regex.Matcher;
 
 import pvz.Models.AppContext;
 import pvz.Models.Engine.GameEngine;
-import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
@@ -17,6 +16,7 @@ import pvz.Models.Games.Levels.LevelType;
 import pvz.Models.Games.Levels.NormalLevel;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.Levels.WavePhase;
+import pvz.Models.Games.Modes.NormalMode;
 import pvz.Models.Games.Seasons.Season;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.map.GameMap;
@@ -27,8 +27,8 @@ import pvz.View.Game.NormalGameMenu;
 public class PreNormalGameController extends PreGameController {
     private static final int MAX_PLANTS = 7;
     private final PlantFactory plantFactory = new PlantFactory();
-    List<PlantCard> selectedPlants;
-    int levelNumber;
+    private List<PlantCard> selectedPlants;
+    private int levelNumber;
 
     public PreNormalGameController(Season season, int level){
         super(season,level);
@@ -49,7 +49,7 @@ public class PreNormalGameController extends PreGameController {
 
     public Result showAvailablePlants(Matcher matcher){
         StringBuilder output=new StringBuilder();
-        for (MyPlant p:AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
+        for (MyPlant p : AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
             output.append("\n- ").append(p.getType());
             output.append(" | Level: ").append(p.getLevel());
             output.append(" | Sun Cost: ").append(PlantRegistry.getInstance().getSheet(p.getType()).getSunCost());
@@ -87,10 +87,10 @@ public class PreNormalGameController extends PreGameController {
             }
         }
 
-        PlantPropertySheet propertySheet=PlantRegistry.getInstance().getSheet(plantType);
-        selectedPlants.add(new PlantCard(owned,propertySheet.getSunCost(),propertySheet.getRechargeSeconds()));
+        PlantPropertySheet propertySheet = PlantRegistry.getInstance().getSheet(plantType);
+        selectedPlants.add(new PlantCard(owned, propertySheet.getSunCost(), propertySheet.getRechargeSeconds()));
 
-        StringBuilder output=new StringBuilder("Plant added. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
+        StringBuilder output = new StringBuilder("Plant added. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
         for (PlantCard p : selectedPlants){
             output.append("\n- ").append(p.getPlant().getType().toString());
         }
@@ -125,7 +125,7 @@ public class PreNormalGameController extends PreGameController {
     }
 
     public Result boostPlant(Matcher matcher){
-        String type=matcher.group("type").trim().toUpperCase();
+        String type = matcher.group("type").trim().toUpperCase();
 
         PlantType plantType = null;
         for (PlantType pt : PlantType.values()){
@@ -153,14 +153,7 @@ public class PreNormalGameController extends PreGameController {
     @Override
     public Result startGame(Matcher matcher) {
         if (selectedPlants.isEmpty()){
-            // Debugging mode: add some default plants if none selected
-            // for (PlantStragy ps: PlantStorage.values()){
-            //     if (selectedPlants.size() < MAX_PLANTS){
-            //         selectedPlants.add(ps.getCopy(new Vector2(-1,-1)));
-            //     } else {
-            //         break;
-            //     }
-            // }
+            return new Result("You must select at least one plant to start!");
         }
 
         GameEngine engine = GameEngine.getInstance();
@@ -170,22 +163,18 @@ public class PreNormalGameController extends PreGameController {
 
         List<Wave> waves = createHardcodedWaves(map);
 
-        List<Plant> plants = new ArrayList<>();
-        for(PlantCard p : selectedPlants){
-            plants.add(plantFactory.createUnplaced(p.getPlant().getType() , p.getPlant().getLevel() , p.getPlant().isBoosted()));
-        }
         NormalLevel level = new NormalLevel(map, levelNumber, LevelType.NORMAL, 200 , waves);
-
-        // This is a bit of a hack, but we need to associate the level with the context if possible
-        // Actually, LevelGameContext didn't have a setter for level.
-        // With the fix I applied to LevelGameContext, it should work fine without the level object.
 
         StringBuilder output=new StringBuilder("Starting game with:");
         for (PlantCard p : selectedPlants){
             String boost = p.getPlant().isBoosted() ? " [BOOSTED]" : "";
             output.append("\n- ").append(p.getPlant().getType().toString()).append(boost);
         }
-        return new Result(output.toString(), new NormalGameMenu(new GameContext(level)));
+        GameContext context = new GameContext(level);
+        ((NormalMode) context.getMode()).setPlantCards(selectedPlants);
+        AppContext.getInstance().setGameContext(context);
+
+        return new Result(output.toString(), new NormalGameMenu(context));
     }
 
     private List<Wave> createHardcodedWaves(GameMap map) {

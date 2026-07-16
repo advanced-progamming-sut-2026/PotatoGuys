@@ -10,7 +10,7 @@ public abstract class Card {
     protected Card(int cost, float cooldown) {
         this.cost = cost;
         this.baseCooldown = cooldown;
-        this.cooldown = cooldown;
+        this.cooldown = 0;
     }
 
     public int getCost() {

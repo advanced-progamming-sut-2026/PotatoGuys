@@ -5,10 +5,10 @@ import pvz.Models.Games.GameContext;
 import java.util.Random;
 
 public class SunManager implements TickAware {
-    private GameContext gameContext;
+    private final GameContext gameContext;
     private int ticksSinceLastDrop;
     private int totalTicks;
-    private Random random = new Random();
+    private final Random random = new Random();
 
     public SunManager(GameContext gameContext) {
         this.gameContext = gameContext;
@@ -23,35 +23,40 @@ public class SunManager implements TickAware {
     public void update() {
         totalTicks++;
         ticksSinceLastDrop++;
-        
+
+        if (!gameContext.getMode().supportsFallingSuns()) return;
+
         double timeInSeconds = totalTicks / 10.0;
         double x_seconds = Math.min(6 + 0.05 * timeInSeconds, 12);
-        int x_ticks = (int)(x_seconds * 10);
-        
+        int x_ticks = (int) (x_seconds * 10);
+
         if (ticksSinceLastDrop >= x_ticks) {
             spawnSun();
             ticksSinceLastDrop = 0;
         }
     }
-    
+
     private void spawnSun() {
         int col = random.nextInt(gameContext.getMap().getColumns());
         int lane = random.nextInt(gameContext.getMap().getRows());
-        
+
         SunType type = SunType.NORMAL;
         double rand = random.nextDouble();
         if (rand < 0.05) type = SunType.RADIOACTIVE;
-        else if (rand < 0.10) type = SunType.SPECIAL;
-        
-        String typeName = (type == SunType.RADIOACTIVE) ? "radioactive" : 
-                          (type == SunType.SPECIAL) ? "special" : "regular";
+        else if (rand < 0.20) type = SunType.SPECIAL;
+
+        String typeName = switch (type) {
+            case RADIOACTIVE -> "radioactive";
+            case SPECIAL     -> "special";
+            case NORMAL      -> "regular";
+        };
 
         gameContext.log("New " + typeName + " sun is dropping at position (" + col + ", " + lane + ")");
-        
-        Sun sun = new Sun(type, col, lane, 25);
-        gameContext.getEngine().register(sun);
+
+        Sun sun = new Sun(type, col, lane, type.getAmountSun(), true, gameContext);
+        gameContext.spawnSun(sun);
     }
-    
+
     @Override
     public void dispose() {}
 }

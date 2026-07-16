@@ -3,6 +3,7 @@ package pvz.Models.Games.Modes;
 import java.util.List;
 
 import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
@@ -49,10 +50,34 @@ public class NormalMode implements GameMode {
             return;
         }
 
-        // در غیر این صورت، به آپدیت کردن و پیش بردن تایمرهای موج فعلی ادامه بده
         if (!currentWave.isDone()) {
             currentWave.updateWave(context);
         }
+
+        for(int i = 0; i < context.getZombies().size() ; i++){
+            Zombie z = context.getZombies().get(i);
+
+            if(z.getX() <= 0f ){
+                if(!lawnMower[z.getLane()]){
+                    runLawnMowers(context, z.getLane());
+                    i--;
+                    continue;
+                }
+                if(lawnMower[z.getLane()]){
+                    context.setGameOver(true);
+                    context.log("Brain has eaten");
+                    context.removeZombie(z);
+            }
+        }
+
+        context.getSuns().removeIf(sun -> {
+            if (sun.isDone()) {
+                context.removeSun(sun);
+                return true;
+            }
+            return false;
+        });
+    }
     }
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
@@ -72,6 +97,8 @@ public class NormalMode implements GameMode {
     }
 
     public void runLawnMowers(GameContext context , int lane){   
+        if(lawnMower[lane]) return; // Already used
+
         context.getZombiesInLane(lane).forEach(zombie -> {
             zombie.takeDamage(Float.MAX_VALUE);
             context.removeZombie(zombie);
@@ -111,8 +138,8 @@ public class NormalMode implements GameMode {
             appendLaneRow(sb , context, lane);
             appendDivider(sb , context);
         }
-        appendDirectionHint(sb , context);
-        appendZombieStatus(sb , context);
+        // appendDirectionHint(sb , context);
+        // appendZombieStatus(sb , context);
         return sb.toString();
     }
 
@@ -120,9 +147,11 @@ public class NormalMode implements GameMode {
 
     private void appendHeader(StringBuilder sb , GameContext context) {
         sb.append("\n=== Tick: ").append(context.getCurrentTick())
-          .append(" | Sun: ").append(context.getSuns().size())
-          .append(" | Active zombies: ").append(context.getZombies().size())
-          .append(" | Active plants: ").append(context.getPlants().size())
+          .append(" | Sun: ").append(context.getCurrentSun())
+          .append(" | zombies: ").append(context.getZombies().size())
+          .append(" | plants: ").append(context.getPlants().size())
+          .append(" | projectiles: ").append(context.getProjectiles().size())
+          .append(" | suns: ").append(context.getSuns().size())
           .append(" ===\n");
     }
 
@@ -150,45 +179,37 @@ public class NormalMode implements GameMode {
         sb.append("  Lane ").append(lane).append("\n");
     }
 
-    private void appendDirectionHint(StringBuilder sb , GameContext context) {
-        sb.append("         ←←←←←←← zombies walk this direction\n");
-    }
-
     private String getCellContent(int col, GameContext context, int lane) {
-        // ۱. بررسی وجود گیاه زنده در این کاشی
         List<Plant> plantsAtCell = context.getPlantsAt(col, lane);
         boolean hasPlant = !plantsAtCell.isEmpty();
 
-        // ۲. بررسی وجود زامبی زنده در این کاشی (مختصات X زامبی کست شده به int)
-        int zombieIndex = -1;
-        for (int i = 0; i < context.getZombiesInLane(lane).size(); i++) {
-            Zombie z = context.getZombiesInLane(lane).get(i);
-            if (!z.isDead() && z.getLane() == lane && (int) z.getX() == col) {
-                zombieIndex = i;
-                break;
-            }
-        }
+        List<Zombie> zombiesAtCell = context.getZombiesAt(col, lane);
+        boolean hasZombie = !zombiesAtCell.isEmpty();
 
-        if (hasPlant && zombieIndex != -1) {
-            return String.format("P/Z%-1d", zombieIndex); 
+        if (hasPlant && hasZombie) {
+            return String.format("P/Z%-1d", plantsAtCell.size() , zombiesAtCell.size()); 
         } else if (hasPlant) {
-            return " P  "; 
-        } else if (zombieIndex != -1) {
-            return String.format(" Z%-2d", zombieIndex); 
+            return String.format(" P  ", plantsAtCell.size()); 
+        } else if (hasZombie) {
+            return String.format(" Z%-2d", zombiesAtCell.size()); 
         }
 
         return CELL_EMPTY; 
     }
 
-    private void appendZombieStatus(StringBuilder sb , GameContext context) {
-        if (context.getZombies().isEmpty()) { sb.append("\n(no zombies)\n"); return; }
-        sb.append("\nZombies (").append(context.getZombies().size()).append(" active):\n");
-        for (int i = 0; i < context.getZombies().size(); i++) {
-            Zombie z = context.getZombies().get(i);
-            if (!z.isDead()) {
-                sb.append("  Z").append(i).append(" ").append(z.toInfoString()).append("\n");
-            }
-        }
-    }
+    // private void appendDirectionHint(StringBuilder sb , GameContext context) {
+    //     sb.append("         ←←←←←←← zombies walk this direction\n");
+    // }
+
+    // private void appendZombieStatus(StringBuilder sb , GameContext context) {
+    //     if (context.getZombies().isEmpty()) { sb.append("\n(no zombies)\n"); return; }
+    //     sb.append("\nZombies (").append(context.getZombies().size()).append(" active):\n");
+    //     for (int i = 0; i < context.getZombies().size(); i++) {
+    //         Zombie z = context.getZombies().get(i);
+    //         if (!z.isDead()) {
+    //             sb.append("  Z").append(i).append(" ").append(z.toInfoString()).append("\n");
+    //         }
+    //     }
+    // }
 
 }

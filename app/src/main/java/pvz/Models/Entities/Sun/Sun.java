@@ -1,30 +1,44 @@
 package pvz.Models.Entities.Sun;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pvz.Models.Engine.TickAware;
+import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
 
 public class Sun implements TickAware {
 
     private static final int TICKS_PER_SECOND = 10;
     private static final float DEFAULT_LIFESPAN_SECONDS = 8f;
+    private static final int FALL_DURATION_TICKS = 50;
 
     private final SunType type;
     private final int col;
     private final int lane;
     private final int amount;
+    private final GameContext context;
+
     private int ticksRemaining;
+    private int fallingTicksRemaining;
+    private boolean fallen;
     private boolean collected;
 
+    /** Backward-compatible constructor (plant-produced suns, no falling). */
     public Sun(SunType type, int col, int lane, int amount) {
-        this(type, col, lane, amount, DEFAULT_LIFESPAN_SECONDS);
+        this(type, col, lane, amount, false, null);
     }
 
-    public Sun(SunType type, int col, int lane, int amount, float lifespanSeconds) {
+    public Sun(SunType type, int col, int lane, int amount, boolean startFalling, GameContext context) {
         this.type = type;
         this.col = col;
         this.lane = lane;
         this.amount = amount;
-        this.ticksRemaining = Math.max(1, Math.round(lifespanSeconds * TICKS_PER_SECOND));
+        this.context = context;
+        this.ticksRemaining = Math.max(1, Math.round(DEFAULT_LIFESPAN_SECONDS * TICKS_PER_SECOND));
+        this.fallingTicksRemaining = startFalling ? FALL_DURATION_TICKS : 0;
+        this.fallen = !startFalling;
     }
 
     @Override
@@ -33,23 +47,77 @@ public class Sun implements TickAware {
     @Override
     public void update() {
         if (collected) return;
-        ticksRemaining--;
+
+        if (!fallen) {
+            fallingTicksRemaining--;
+            if (fallingTicksRemaining <= 0) {
+                fallen = true;
+                if (context != null) {
+                    context.log("Sun reached the ground at position (" + col + ", " + lane + ")");
+                }
+                if (type == SunType.RADIOACTIVE) {
+                    convertToNormal();
+                }
+            }
+        } else {
+            ticksRemaining--;
+        }
     }
 
     @Override
     public void dispose() { }
 
-    /** Collects this sun, crediting the player's wallet through {@code ctx}. No-op once expired/collected. */
     public void collect(GameContext ctx) {
         if (isDone()) return;
         collected = true;
-        ctx.addSun(getAmount());
+
+        if (type == SunType.RADIOACTIVE && !fallen) {
+            dealExplosionDamage(ctx);
+        } else {
+            ctx.addSun(getAmount());
+        }
     }
 
-    public boolean isExpired()  { return !collected && ticksRemaining <= 0; }
-    public boolean isCollected(){ return collected; }
-    /** True once this sun should be removed from the engine (collected or timed out). */
-    public boolean isDone()     { return collected || isExpired(); }
+    private void dealExplosionDamage(GameContext ctx) {
+        ctx.log("Radioactive sun exploded at position (" + col + ", " + lane + ")!");
+
+        List<Zombie> zombiesHit = new ArrayList<>();
+        List<Plant> plantsHit = new ArrayList<>();
+
+        for (int c = col - 2; c <= col + 2; c++) {
+            for (int l = lane - 2; l <= lane + 2; l++) {
+                if (c < 0 || c >= ctx.getColumns() || l < 0 || l >= ctx.getLanes()) continue;
+                zombiesHit.addAll(ctx.getZombiesAt(c, l));
+                plantsHit.addAll(ctx.getPlantsAt(c, l));
+            }
+        }
+        for (Zombie z : zombiesHit) z.takeDamage(150);
+        for (Plant p : plantsHit) p.takeDamage(150);
+
+        List<Zombie> zombiesCenter = new ArrayList<>();
+        List<Plant> plantsCenter = new ArrayList<>();
+
+        for (int c = col - 1; c <= col + 1; c++) {
+            for (int l = lane - 1; l <= lane + 1; l++) {
+                if (c < 0 || c >= ctx.getColumns() || l < 0 || l >= ctx.getLanes()) continue;
+                zombiesCenter.addAll(ctx.getZombiesAt(c, l));
+                plantsCenter.addAll(ctx.getPlantsAt(c, l));
+            }
+        }
+        for (Zombie z : zombiesCenter) z.takeDamage(80);
+        for (Plant p : plantsCenter) p.takeDamage(80);
+    }
+
+    private void convertToNormal() {
+        if (context != null) {
+            context.log("Radioactive sun at (" + col + ", " + lane + ") became a normal sun upon reaching the ground.");
+        }
+    }
+
+    public boolean isFalling()    { return !fallen; }
+    public boolean isExpired()    { return !collected && fallen && ticksRemaining <= 0; }
+    public boolean isCollected()  { return collected; }
+    public boolean isDone()       { return collected || isExpired(); }
 
     public SunType getType() { return type; }
     public int getCol()      { return col; }

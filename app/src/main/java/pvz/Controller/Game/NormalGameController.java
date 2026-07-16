@@ -1,17 +1,19 @@
 package pvz.Controller.Game;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 
+import pvz.Models.AppContext;
 import pvz.Models.Engine.GameEngine;
 import pvz.Models.Engine.TickAware;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
-import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.map.Tile;
+import pvz.Models.User.MyPlant;
 import pvz.View.Result;
 
 public class NormalGameController extends GameController{
@@ -23,16 +25,11 @@ public class NormalGameController extends GameController{
         int x = Integer.parseInt(matcher.group("sunX"));
         int y = Integer.parseInt(matcher.group("sunY"));
         
-        GameEngine engine = GameEngine.getInstance();
-        for (TickAware entity : engine.getEntities()) {
-            if (entity instanceof Sun) {
-                Sun sun = (Sun) entity;
-                // Assuming coordinates match within a reasonable threshold
-                if (Math.abs(sun.getCol() - x) < 0.5 && Math.abs(sun.getLane() - y) < 0.5) {
-                    context.addSun(sun.getType().getAmountSun());
-                    sun.dispose();
-                    return new Result("Sun collected!");
-                }
+        for (Sun sun : new ArrayList<>(context.getSuns())) {
+            if (sun.getCol() == x && sun.getLane() == y && !sun.isDone()) {
+                sun.collect(context);
+                context.removeSun(sun);
+                return new Result("Sun collected!");
             }
         }
         return new Result("No sun found at these coordinates.");
@@ -64,9 +61,9 @@ public class NormalGameController extends GameController{
         }
         
         // Find plant storage
-        PlantType type = null;
-        for (PlantType ps : PlantType.values()) {
-            if (ps.toString().equalsIgnoreCase(typeString)) {
+        MyPlant type = null;
+        for (MyPlant ps : AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()) {
+            if (ps.getType().toString().equalsIgnoreCase(typeString)) {
                 type = ps;
                 break;
             }
@@ -75,7 +72,7 @@ public class NormalGameController extends GameController{
             return new Result("Invalid plant type: " + typeString);
         }
 
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type.getType());
         // Check sun
         if (!context.spendSun(sheet.getSunCost())) {
             return new Result("Not enough sun.");
