@@ -100,4 +100,12 @@ public class Profile {
         }
         return null;
     }
+
+    public void addCoins(int amount){
+        coins+=amount;
+    }
+
+    public void addDiamonds(int amount){
+        diamonds+=amount;
+    }
 }

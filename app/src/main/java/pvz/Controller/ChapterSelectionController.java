@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 
 import pvz.Models.AppContext;
 import pvz.Models.Games.Seasons.Season;
+import pvz.Models.User.Profile;
 import pvz.View.*;
 
 public class ChapterSelectionController {
@@ -45,7 +46,27 @@ public class ChapterSelectionController {
         return new Result("Gems: "+ AppContext.getInstance().getCurrentUser().getProfile().getDiamonds());
     }
 
-    public Result cheatAdd(Matcher matcher) { return null; }
+    public Result cheatAdd(Matcher matcher) {
+        Profile userProfile=AppContext.getInstance().getCurrentUser().getProfile();
+        String amountStr=matcher.group("amount").trim();
+        String currency=matcher.group("currency");
+        int amount;
+        try {
+            amount=Integer.parseInt(amountStr);
+        } catch (Exception ex){
+            return new Result("Invalid amount");
+        }
+        switch (currency){
+            case "coin"-> userProfile.addCoins(amount);
+            case "diamond"-> userProfile.addDiamonds(amount);
+            default -> {
+                return new Result("Invalid Currency");
+            }
+        }
+        return new Result("Added "+amount+" "+currency+"s to current user");
+    }
+
+
     public Result exit(Matcher matcher) {
         Menu nextMenu = new MainMenu();
         return new Result("Exited to " + nextMenu.getName(), nextMenu);
