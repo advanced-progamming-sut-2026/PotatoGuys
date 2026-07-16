@@ -36,6 +36,5 @@ public class ShopMenu implements Menu {
     public Result onEnter() {
         return null;
     }
-
 }
 
