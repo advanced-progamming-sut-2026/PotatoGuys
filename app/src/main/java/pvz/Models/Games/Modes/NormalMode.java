@@ -154,10 +154,11 @@ public class NormalMode implements GameMode {
     private void appendHeader(StringBuilder sb, GameContext context) {
         sb.append("\n=== Tick: ").append(context.getCurrentTick())
                 .append(" | Sun: ").append(context.getCurrentSun())
-                .append(" | zombies: ").append(context.getZombies().size())
-                .append(" | plants: ").append(context.getPlants().size())
-                .append(" | projectiles: ").append(context.getProjectiles().size())
-                .append(" | suns: ").append(context.getSuns().size())
+                .append(" | Zombies: ").append(context.getZombies().size())
+                .append(" | Plants: ").append(context.getPlants().size())
+                .append(" | Projectiles: ").append(context.getProjectiles().size())
+                .append(" | Suns: ").append(context.getSuns().size())
+                .append(" | Plant foods: ").append(context.getPlantFoodCount())
                 .append(" ===\n");
     }
 
