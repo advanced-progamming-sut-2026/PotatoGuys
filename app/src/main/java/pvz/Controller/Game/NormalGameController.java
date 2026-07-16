@@ -108,7 +108,7 @@ public class NormalGameController extends GameController{
         }
 
         if (card.getCooldown() > 0.01f) {
-            String message = String.format("This seed packet is recharging! Please wait %.1fs.", card.getCooldown());
+            String message = String.format("This seed packet is recharging! Please wait %.1fs.", card.getCooldown()/10);
             return new Result(message);
         }
 

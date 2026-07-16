@@ -9,6 +9,8 @@ import pvz.Models.Entities.Projectile.Projectile;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
+import pvz.Models.Games.Modes.NormalMode;
+import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.map.Tile;
 import pvz.View.MainMenu;
 import pvz.View.Result;
@@ -40,7 +42,17 @@ public abstract class GameController {
         return new Result("Nuke released! Killed " + killed + " zombies.");
     }
 
-    public Result cheatCooldown(Matcher matcher) { return null; }
+    public Result cheatCooldown(Matcher matcher) {
+        List<PlantCard> cards = ((NormalMode) context.getMode()).getPlantCards();
+        int reset = 0;
+        for (PlantCard card : cards) {
+            if (card.getCooldown() > 0) {
+                card.setCooldown(0);
+                reset++;
+            }
+        }
+        return new Result("Reset cooldown for " + reset + " card(s).");
+    }
 
     public Result feedPlant(Matcher matcher) {
         int x = Integer.parseInt(matcher.group("feedX"));
