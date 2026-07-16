@@ -17,4 +17,6 @@ public interface PlantPlacer {
 
     /** Look up an available seed-packet card by plant type name, or {@code null} if none matches. */
     Card findCard(String plantType);
+
+    String getCardsStatus();
 }

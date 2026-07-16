@@ -13,7 +13,7 @@ import pvz.Models.Games.Levels.Level;
  */
 public class VasebreakerMode implements GameMode, VaseBreaker {
 
-    private final boolean[][] vases; // [lane][col]
+    private final boolean[][] vases;
 
     public VasebreakerMode(Level level) {
         int lanes = level.getGameMap().getRows();

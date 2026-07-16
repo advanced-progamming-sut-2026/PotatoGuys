@@ -130,6 +130,35 @@ public class NormalMode implements GameMode, PlantPlacer {
         return null;
     }
 
+    @Override
+    public String getCardsStatus(){
+        StringBuilder result = new StringBuilder();
+        List<PlantCard> cards = plantCards;
+            
+        if (cards == null || cards.isEmpty()) {
+            result.append("No plant cards available.");
+        } else {
+            result.append("=== SEED PACKETS ===");
+            
+            int cardWidth = 40;
+        
+            for (int i = 0; i < cards.size(); i++) {
+                PlantCard ps = cards.get(i);
+                
+                String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | Cooldown:%.1f%s",
+                        ps.getPlant().getType(),
+                        ps.getCost(),
+                        ps.getPlant().getLevel(),
+                        ps.getCooldown(),
+                        ps.getPlant().isBoosted() ? " | ⚡B" : "" 
+                );
+            
+                result.append(String.format("\n%-" + cardWidth + "s", cardInfo));
+            }
+        }
+        return result.toString();
+    }
+    
     private void SetupLawnMowers() {
         int lanes = 5;
         lawnMower = new Boolean[lanes];

@@ -32,20 +32,6 @@ public class PlantCommand implements GameCommand {
         int col = Integer.parseInt(args[1]);
         int lane = Integer.parseInt(args[2]);
 
-        GameMode mode = context.getMode();
-        if (mode instanceof PlantPlacer placer) {
-            Card card = placer.findCard(plantType);
-            if (card == null) {
-                context.log("Error: No such plant card '" + plantType + "'.");
-                return;
-            }
-            if (!placer.isValidPlacement(context, col, lane, card)) {
-                context.log("Error: Cannot place " + plantType + " at (" + col + ", " + lane + ").");
-                return;
-            }
-            placer.handlePlacement(context, col, lane, card);
-        } else {
-            context.log("Error: You cannot plant in this game mode!");
-        }
+        
     }
 }
