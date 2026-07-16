@@ -142,6 +142,7 @@ public class User {
         this.setting=new Setting();
         this.news=new News();
         this.score=new Score();
+
     }
 
 }
