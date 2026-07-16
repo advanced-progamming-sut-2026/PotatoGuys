@@ -32,12 +32,4 @@ public abstract class GreenHousePlant {
     public void makeReadyNow() {
         plantedTime = LocalDateTime.now().minusHours(growthHours);
     }
-
-    public LocalDateTime getPlantedTime() {
-        return plantedTime;
-    }
-
-    public int getGrowthHours() {
-        return growthHours;
-    }
 }

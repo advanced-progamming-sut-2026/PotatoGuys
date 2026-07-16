@@ -5,6 +5,7 @@ public enum GreenHouseMenuCommands implements MenuCommand {
     PLANT("^plant\\s+pot\\s+at\\s+\\((\\d+),\\s*(\\d+)\\)$"),
     COLLECT("^collect\\s+\\((\\d+),\\s*(\\d+)\\)$"),
     GROW("^grow\\s+\\((\\d+),\\s*(\\d+)\\)$"),
+    ENTER_SHOP("^enter\\s+shop$"),
     EXIT("^menu\\s+exit\\s*$");
 
     private final String pattern;

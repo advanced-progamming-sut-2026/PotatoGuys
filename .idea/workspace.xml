@@ -6,18 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="7fd54749-b0f8-4a89-ad5d-d24c03e69d49" name="Changes" comment="h_edit3">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/PreNormalGameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/GreenHouseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/GreenHouseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/ShopController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/ShopController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Enums/Commands/GreenHouseMenuCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Enums/Commands/GreenHouseMenuCommands.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/AppContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/AppContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/data/PlantPropertySheet.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/data/PlantPropertySheet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/GreenHouse/GreenHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/GreenHouse/GreenHouse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/GreenHouse/GreenHousePlant.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/GreenHouse/GreenHousePlant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Shop/DailyOffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Shop/DailyOffer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Shop/Shop.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Shop/Shop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/GreenHouseCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/GreenHouseCollection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/BigNut.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/BigNut.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/BowlingWallnut.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/BowlingWallnut.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/ExplodeONut.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/ExplodeONut.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/VaseBreaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/MiniGames/VaseBreaker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/Seasons/Levels/NormalLevel.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/toDel/Seasons/Levels/NormalLevel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/ChapterSelectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/ChapterSelectionMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/saves/users/username.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/saves/users/username.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/GreenHouseMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/GreenHouseMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/ShopMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/ShopMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,6 +97,7 @@
     &quot;Gradle.Build plantsvszombies2.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.plantsvszombies2 [:app:pvz.App.main()].executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -173,7 +174,6 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
