@@ -21,6 +21,7 @@ public abstract class GameController {
     public Result advanceTime(Matcher matcher) {
         int ticks = Integer.parseInt(matcher.group("ticks"));
         context.getEngine().advanceTime(ticks);
+        context.addCurrentTick(ticks);
         String map = context.getMode().renderMap(context);
         if(context.isGameOver()){
             return new Result("Game Over" , new MainMenu());

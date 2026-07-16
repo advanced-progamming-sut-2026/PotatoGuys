@@ -3,7 +3,6 @@ package pvz.Controller;
 import java.util.regex.Matcher;
 
 import pvz.Models.AppContext;
-import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
@@ -19,7 +18,6 @@ import pvz.View.Result;
 public class CollectionController {
     private static final int PURCHASE_COST = 100;
     private static final int UPGRADE_BASE_COST = 50;
-    private final PlantFactory plantFactory = new PlantFactory();
 
     private Profile getProfile() {
         return AppContext.getInstance().getCurrentUser().getProfile();

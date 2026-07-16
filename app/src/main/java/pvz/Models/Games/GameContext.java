@@ -175,6 +175,10 @@ public class GameContext implements TickAware {
         this.currentTick = currentTick;
     }
 
+    public void addCurrentTick(int amount){
+        this.currentTick += amount;
+    }
+
 
     public boolean isGameOver() {
         return gameOver;

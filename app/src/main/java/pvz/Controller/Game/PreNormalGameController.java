@@ -6,7 +6,6 @@ import java.util.regex.Matcher;
 
 import pvz.Models.AppContext;
 import pvz.Models.Engine.GameEngine;
-import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
@@ -26,7 +25,6 @@ import pvz.View.Game.NormalGameMenu;
 
 public class PreNormalGameController extends PreGameController {
     private static final int MAX_PLANTS = 7;
-    private final PlantFactory plantFactory = new PlantFactory();
     private List<PlantCard> selectedPlants;
     private int levelNumber;
 
@@ -92,7 +90,7 @@ public class PreNormalGameController extends PreGameController {
 
         StringBuilder output = new StringBuilder("Plant added. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
         for (PlantCard p : selectedPlants){
-            output.append("\n- ").append(p.getPlant().getType().toString());
+            output.append("\n- ").append(p.getPlant().getType().toString()).append(" level:").append(p.getPlant().getLevel()).append(" boosted:").append(p.getPlant().isBoosted());
         }
         return new Result(output.toString());
     }
@@ -172,6 +170,7 @@ public class PreNormalGameController extends PreGameController {
         }
         GameContext context = new GameContext(level);
         ((NormalMode) context.getMode()).setPlantCards(selectedPlants);
+        selectedPlants.forEach(context.getEngine()::register);
         AppContext.getInstance().setGameContext(context);
 
         return new Result(output.toString(), new NormalGameMenu(context));

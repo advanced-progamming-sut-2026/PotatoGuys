@@ -1,17 +1,18 @@
 package pvz.Controller.Game;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 
-import pvz.Models.AppContext;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Games.GameContext;
+import pvz.Models.Games.Modes.NormalMode;
+import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.map.Tile;
-import pvz.Models.User.MyPlant;
 import pvz.View.Result;
 
 public class NormalGameController extends GameController{
@@ -43,6 +44,41 @@ public class NormalGameController extends GameController{
         return new Result("Added " + amount + " sun.");
     }
 
+    public Result showCards(Matcher matcher){
+        StringBuilder result = new StringBuilder();
+        List<PlantCard> cards = ((NormalMode) context.getMode()).getPlantCards();
+            
+        if (cards == null || cards.isEmpty()) {
+            result.append("No plant cards available.");
+        } else {
+            result.append("=== SEED PACKETS ===\n");
+            
+            int COLUMNS_PER_ROW = 3;
+            int cardWidth = 40;
+        
+            for (int i = 0; i < cards.size(); i++) {
+                PlantCard ps = cards.get(i);
+                
+                String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | Cooldown:%.1f%s",
+                        ps.getPlant().getType(),
+                        ps.getCost(),
+                        ps.getPlant().getLevel(),
+                        ps.getCooldown(),
+                        ps.getPlant().isBoosted() ? " | ⚡B" : "" 
+                );
+            
+                result.append(String.format("%-" + cardWidth + "s", cardInfo));
+            
+                if ((i + 1) % COLUMNS_PER_ROW == 0 || i == cards.size() - 1) {
+                    result.append("\n");
+                } else {
+                    result.append("   ");
+                }
+            }
+        }
+        return new Result(result.toString());
+    }
+
     public Result plant(Matcher matcher) {
         String typeString = matcher.group("plantType");
         int x = Integer.parseInt(matcher.group("plantX"));
@@ -59,27 +95,34 @@ public class NormalGameController extends GameController{
         }
         
         // Find plant storage
-        MyPlant type = null;
-        for (MyPlant ps : AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()) {
-            if (ps.getType().toString().equalsIgnoreCase(typeString)) {
-                type = ps;
+        PlantCard card = null;
+        for (PlantCard ps : ((NormalMode)context.getMode()).getPlantCards()) {
+            if (ps.getPlant().getType().toString().equalsIgnoreCase(typeString)) {
+                card = ps;
                 break;
             }
         }
-        if (type == null) {
+
+        if (card == null) {
             return new Result("Invalid plant type: " + typeString);
         }
 
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type.getType());
+        if (card.getCooldown() > 0.01f) {
+            String message = String.format("This seed packet is recharging! Please wait %.1fs.", card.getCooldown());
+            return new Result(message);
+        }
+
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
         // Check sun
         if (!context.spendSun(sheet.getSunCost())) {
             return new Result("Not enough sun.");
         }
         
         // Create plant
-        Plant plant = new PlantFactory().create(type.getType(), x, y, type.getLevel() ,type.isBoosted(), context);
+        Plant plant = new PlantFactory().create(card.getPlant().getType(), x, y, card.getPlant().getLevel() ,card.getPlant().isBoosted(), context);
 
         context.spawnPlant(plant);
+        card.use();
         
         return new Result(typeString + " placed at (" + x + ", " + y + ").");
     }

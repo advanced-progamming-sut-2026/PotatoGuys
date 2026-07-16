@@ -12,6 +12,7 @@ public enum GameMenuCommand implements MenuCommand {
     FEED_PLANT("^feed\\s+plant\\s+-l\\s+\\(\\s*(?<feedX>\\d+)\\s*,\\s*(?<feedY>\\d+)\\s*\\)\\s*$"),
     CHEAT_PLANT_FOOD("^cheat\\s+add-plant-food\\s*$"),
     SHOW_MAP("^show\\s+map\\s*$"),
+    SHOW_CARDS("^show\\s+cards\\s*$"),
     SHOW_PLANTS("^show\\s+plants\\s*$"),
     SHOW_ZOMBIES("^show\\s+zombies\\s*$"),
     SHOW_PROJECTILE("^show\\s+projectiles\\s*$"),
