@@ -10,6 +10,7 @@ import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Games.GameContext;
+import pvz.Models.Games.Capabilities.PlantPlacer;
 import pvz.Models.Games.Modes.NormalMode;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.map.Tile;
@@ -83,48 +84,56 @@ public class NormalGameController extends GameController{
         String typeString = matcher.group("plantType");
         int x = Integer.parseInt(matcher.group("plantX"));
         int y = Integer.parseInt(matcher.group("plantY"));
-        
-        // Validation
-        if (x < 0 || x >= context.getMap().getColumns() || y < 0 || y >= context.getMap().getRows()) {
-             return new Result("Invalid coordinates.");
-        }
-        
-        Tile tile = context.getMap().getTile(x,y);
-        if (!tile.getPlants().isEmpty()) {
-            return new Result("Tile already has a plant.");
-        }
-        
-        // Find plant storage
-        PlantCard card = null;
-        for (PlantCard ps : ((NormalMode)context.getMode()).getPlantCards()) {
-            if (ps.getPlant().getType().toString().equalsIgnoreCase(typeString)) {
-                card = ps;
-                break;
-            }
-        }
 
-        if (card == null) {
-            return new Result("Invalid plant type: " + typeString);
+        if(context.getMode() instanceof PlantPlacer mode){
+            mode.handlePlacement(context, x, y, mode.findCard(typeString));
+            return new Result("Planted");
+        }else{
+            return new Result("You cant ahs;odfj;oajsf");
         }
-
-        if (card.getCooldown() > 0.01f) {
-            String message = String.format("This seed packet is recharging! Please wait %.1fs.", card.getCooldown()/10);
-            return new Result(message);
-        }
-
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
-        // Check sun
-        if (!context.spendSun(sheet.getSunCost())) {
-            return new Result("Not enough sun.");
-        }
+       
         
-        // Create plant
-        Plant plant = new PlantFactory().create(card.getPlant().getType(), x, y, card.getPlant().getLevel() ,card.getPlant().isBoosted(), context);
-
-        context.spawnPlant(plant);
-        card.use();
+        // // Validation
+        // if (x < 0 || x >= context.getMap().getColumns() || y < 0 || y >= context.getMap().getRows()) {
+        //      return new Result("Invalid coordinates.");
+        // }
         
-        return new Result(typeString + " placed at (" + x + ", " + y + ").");
+        // Tile tile = context.getMap().getTile(x,y);
+        // if (!tile.getPlants().isEmpty()) {
+        //     return new Result("Tile already has a plant.");
+        // }
+        
+        // // Find plant storage
+        // PlantCard card = null;
+        // for (PlantCard ps : ((NormalMode)context.getMode()).getPlantCards()) {
+        //     if (ps.getPlant().getType().toString().equalsIgnoreCase(typeString)) {
+        //         card = ps;
+        //         break;
+        //     }
+        // }
+
+        // if (card == null) {
+        //     return new Result("Invalid plant type: " + typeString);
+        // }
+
+        // if (card.getCooldown() > 0.01f) {
+        //     String message = String.format("This seed packet is recharging! Please wait %.1fs.", card.getCooldown()/10);
+        //     return new Result(message);
+        // }
+
+        // PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        // // Check sun
+        // if (!context.spendSun(sheet.getSunCost())) {
+        //     return new Result("Not enough sun.");
+        // }
+        
+        // // Create plant
+        // Plant plant = new PlantFactory().create(card.getPlant().getType(), x, y, card.getPlant().getLevel() ,card.getPlant().isBoosted(), context);
+
+        // context.spawnPlant(plant);
+        // card.use();
+        
+        // return new Result(typeString + " placed at (" + x + ", " + y + ").");
     }
 
     public Result pluckPlant(Matcher matcher) {

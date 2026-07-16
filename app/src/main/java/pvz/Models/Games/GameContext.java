@@ -41,7 +41,7 @@ public class GameContext implements TickAware {
         this.projectiles    = new ArrayList<>();
         this.suns           = new ArrayList<>();
         this.map = currentLevel.getGameMap();
-        this.mode = GameModeFactory.createGameMode(currentLevel.getGameMode() , currentLevel);
+        this.mode = GameModeFactory.createGameMode(currentLevel);
         this.setLevelNumber(currentLevel.getLevelNumber());
         this.plantFoodCount=0;
         engine.register(new SunManager(this));
