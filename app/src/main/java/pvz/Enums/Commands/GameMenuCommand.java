@@ -15,9 +15,31 @@ public enum GameMenuCommand implements MenuCommand {
     SHOW_PLANTS_STATUS("^show\\s+plants\\s+status\\s*$"),
     SHOW_TILE_STATUS("^show\\s+tile\\s+status\\s+-l\\s+\\(\\s*(?<tileX>\\d+)\\s*,\\s*(?<tileY>\\d+)\\s*\\)\\s*$"),
     ZOMBIES_INFO("^zombies\\s+info\\s*$"),
-    CHEAT_SPAWN_ZOMBIE("^cheat\\s+spawn-zombie\\s+-t\\s+(?<zombieType>\\w+)\\s+-l\\s+<\\s*(?<zombieX>\\d+)\\s*,\\s*(?<zombieY>\\d+)\\s*>\\s*$");
+    CHEAT_SPAWN_ZOMBIE("^cheat\\s+spawn-zombie\\s+-t\\s+(?<zombieType>\\w+)\\s+-l\\s+<\\s*(?<zombieX>\\d+)\\s*,\\s*(?<zombieY>\\d+)\\s*>\\s*$"),
+    HELP("^\\s*help\\s*$");
 
     private final String pattern;
     GameMenuCommand(String pattern) { this.pattern = pattern; }
     @Override public String getPattern() { return this.pattern; }
+    
+    public static String getHelp() {
+        StringBuilder result = new StringBuilder();
+        result.append("=== Game Commands Help ===\n");
+        
+        for (GameMenuCommand command : values()) {
+            String cleaned = command.getPattern();
+
+            cleaned = cleaned.replaceAll("^\\^", "").replaceAll("\\$$", "");
+            cleaned = cleaned.replaceAll("\\(\\?\\<(\\w+)\\>[^\\)]+\\)", "<$1>");
+            cleaned = cleaned.replace("\\(", "(").replace("\\)", ")");
+            cleaned = cleaned.replace("\\<", "<").replace("\\>", ">");
+            cleaned = cleaned.replaceAll("\\\\s\\*", "");
+            cleaned = cleaned.replaceAll("\\\\s\\+", " ");
+            cleaned = cleaned.replaceAll("\\s+", " ").trim();
+
+            result.append(String.format("%-20s : %s\n", command.name(), cleaned));
+        }
+
+        return result.toString();
+    }
 }
