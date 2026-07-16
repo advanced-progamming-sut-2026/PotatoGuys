@@ -21,17 +21,18 @@ public class NormalMode implements GameMode {
     private List<Wave> waves;
     private List<PlantCard> plantCards;
     private Boolean[] lawnMower;
-    
-    public NormalMode(Level level){
-        if(level instanceof NormalLevel normalLevel){
+
+    public NormalMode(Level level) {
+        if (level instanceof NormalLevel normalLevel) {
             waves = normalLevel.getWaves();
         }
         currentWave = waves.getFirst();
         SetupLawnMowers();
     }
+
     @Override
     public void initMode(GameContext context) {
-       
+
     }
 
     @Override
@@ -54,89 +55,94 @@ public class NormalMode implements GameMode {
             currentWave.updateWave(context);
         }
 
-        for(int i = 0; i < context.getZombies().size() ; i++){
+        for (int i = 0; i < context.getZombies().size(); i++) {
             Zombie z = context.getZombies().get(i);
 
-            if(z.getX() <= 0f ){
-                if(!lawnMower[z.getLane()]){
+            if (z.getX() <= 0f) {
+                if (!lawnMower[z.getLane()]) {
                     runLawnMowers(context, z.getLane());
                     i--;
                     continue;
                 }
-                if(lawnMower[z.getLane()]){
+                if (lawnMower[z.getLane()]) {
                     context.setGameOver(true);
                     context.log("Brain has eaten");
                     context.removeZombie(z);
+                }
             }
         }
-
-        context.getSuns().removeIf(sun -> {
-            if (sun.isDone()) {
+        for (int i = 0; i < context.getSuns().size(); i++) {
+            Sun sun=context.getSuns().get(i);
+            if (sun.isDone()){
                 context.removeSun(sun);
-                return true;
+                i--;
             }
-            return false;
-        });
+        }
     }
-    }
+
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
         throw new UnsupportedOperationException("Unimplemented method 'isValidPlacement'");
     }
+
     @Override
     public void handlePlacement(GameContext context, int col, int lane, Card card) {
         throw new UnsupportedOperationException("Unimplemented method 'handlePlacement'");
     }
 
-    private void SetupLawnMowers(){
-        int lanes = 5; 
+    private void SetupLawnMowers() {
+        int lanes = 5;
         lawnMower = new Boolean[lanes];
         for (int i = 0; i < lanes; i++) {
             lawnMower[i] = false; // All lawn mowers are initially available
         }
     }
 
-    public void runLawnMowers(GameContext context , int lane){   
-        if(lawnMower[lane]) return; // Already used
+    public void runLawnMowers(GameContext context, int lane) {
+        if (lawnMower[lane]) return; // Already used
 
         context.getZombiesInLane(lane).forEach(zombie -> {
             zombie.takeDamage(Float.MAX_VALUE);
             context.removeZombie(zombie);
             context.log("Lawn mower in lane " + lane + " ran over a zombie!");
         });
-        lawnMower[lane] = true; 
+        lawnMower[lane] = true;
     }
 
     public List<Wave> getWaves() {
         return waves;
     }
+
     public void setWaves(List<Wave> waves) {
         this.waves = waves;
     }
+
     public List<PlantCard> getPlantCards() {
         return plantCards;
     }
+
     public void setPlantCards(List<PlantCard> plantCards) {
         this.plantCards = plantCards;
     }
-    public void addPlantCard(PlantCard newCard){
+
+    public void addPlantCard(PlantCard newCard) {
         this.plantCards.add(newCard);
     }
 
 
     private static final String CELL_EMPTY = "    ";
-    private static final String MOWER_OK   = "[M]";
+    private static final String MOWER_OK = "[M]";
     private static final String MOWER_USED = "[!]";
 
     @Override
     public String renderMap(GameContext context) {
         StringBuilder sb = new StringBuilder();
-        appendHeader(sb , context);
-        appendColumnHeaders(sb , context);
-        appendDivider(sb , context);
+        appendHeader(sb, context);
+        appendColumnHeaders(sb, context);
+        appendDivider(sb, context);
         for (int lane = 0; lane < context.getLanes(); lane++) {
-            appendLaneRow(sb , context, lane);
-            appendDivider(sb , context);
+            appendLaneRow(sb, context, lane);
+            appendDivider(sb, context);
         }
         // appendDirectionHint(sb , context);
         // appendZombieStatus(sb , context);
@@ -145,17 +151,17 @@ public class NormalMode implements GameMode {
 
     // ── Private rendering helpers ─────────────────────────────────────────────
 
-    private void appendHeader(StringBuilder sb , GameContext context) {
+    private void appendHeader(StringBuilder sb, GameContext context) {
         sb.append("\n=== Tick: ").append(context.getCurrentTick())
-          .append(" | Sun: ").append(context.getCurrentSun())
-          .append(" | zombies: ").append(context.getZombies().size())
-          .append(" | plants: ").append(context.getPlants().size())
-          .append(" | projectiles: ").append(context.getProjectiles().size())
-          .append(" | suns: ").append(context.getSuns().size())
-          .append(" ===\n");
+                .append(" | Sun: ").append(context.getCurrentSun())
+                .append(" | zombies: ").append(context.getZombies().size())
+                .append(" | plants: ").append(context.getPlants().size())
+                .append(" | projectiles: ").append(context.getProjectiles().size())
+                .append(" | suns: ").append(context.getSuns().size())
+                .append(" ===\n");
     }
 
-    private void appendColumnHeaders(StringBuilder sb , GameContext context) {
+    private void appendColumnHeaders(StringBuilder sb, GameContext context) {
         sb.append("\n     ");
         for (int c = 0; c < context.getColumns(); c++) {
             sb.append(String.format(" C%-2d ", c));
@@ -163,7 +169,7 @@ public class NormalMode implements GameMode {
         sb.append("\n");
     }
 
-    private void appendDivider(StringBuilder sb , GameContext context) {
+    private void appendDivider(StringBuilder sb, GameContext context) {
         sb.append("    +");
         for (int c = 0; c < context.getColumns(); c++) {
             sb.append("----+");
@@ -171,7 +177,7 @@ public class NormalMode implements GameMode {
         sb.append("\n");
     }
 
-    private void appendLaneRow(StringBuilder sb, GameContext context , int lane) {
+    private void appendLaneRow(StringBuilder sb, GameContext context, int lane) {
         sb.append(lawnMower[lane] ? MOWER_USED : MOWER_OK).append(" |");
         for (int col = 0; col < context.getColumns(); col++) {
             sb.append(getCellContent(col, context, lane)).append('|');
@@ -187,14 +193,14 @@ public class NormalMode implements GameMode {
         boolean hasZombie = !zombiesAtCell.isEmpty();
 
         if (hasPlant && hasZombie) {
-            return String.format("P/Z%-1d", plantsAtCell.size() , zombiesAtCell.size()); 
+            return String.format("P/Z%-1d", plantsAtCell.size(), zombiesAtCell.size());
         } else if (hasPlant) {
-            return String.format(" P  ", plantsAtCell.size()); 
+            return String.format(" P  ", plantsAtCell.size());
         } else if (hasZombie) {
-            return String.format(" Z%-2d", zombiesAtCell.size()); 
+            return String.format(" Z%-2d", zombiesAtCell.size());
         }
 
-        return CELL_EMPTY; 
+        return CELL_EMPTY;
     }
 
     // private void appendDirectionHint(StringBuilder sb , GameContext context) {
