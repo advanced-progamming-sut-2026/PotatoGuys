@@ -37,3 +37,4 @@ public class ShopMenu implements Menu {
         return null;
     }
 }
+
