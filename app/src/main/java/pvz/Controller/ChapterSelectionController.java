@@ -31,10 +31,10 @@ public class ChapterSelectionController {
     {
         String chapter=matcher.group("chapterName").trim().toLowerCase();
         return switch (chapter) {
-            case "ancient egypt" -> new Result("", new ChapterMenu("Ancient Egypt"));
-            case "frostbite caves" -> new Result("", new ChapterMenu("Frostbite Caves"));
-            case "dark ages" -> new Result("", new ChapterMenu("Dark Ages"));
-            case "big wave beach" -> new Result("", new ChapterMenu("Big Wave Beach"));
+            case "ancient egypt" -> new Result("Season selected: Ancient Egypt", new ChapterMenu("Ancient Egypt"));
+            case "frostbite caves" -> new Result("Season selected: Frostbite Caves", new ChapterMenu("Frostbite Caves"));
+            case "dark ages" -> new Result("Season selected: Dark Ages", new ChapterMenu("Dark Ages"));
+            case "big wave beach" -> new Result("Season selected: Big Wave Beach", new ChapterMenu("Big Wave Beach"));
             default -> new Result("Invalid chapter name");
         };
     }

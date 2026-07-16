@@ -77,7 +77,7 @@ public class Shop {
     }
 
     private void loadOrCreateDailyOffer() {
-        if (currentUser == null || currentUser.getProfile() == null) {
+/*        if (currentUser == null || currentUser.getProfile() == null) {
             createNewDailyOffer();
             return;
         }
@@ -92,7 +92,7 @@ public class Shop {
         } else {
             createNewDailyOffer();
             saveDailyOfferToProfile();
-        }
+        }*/
     }
 
     private void createNewDailyOffer() {
@@ -107,11 +107,11 @@ public class Shop {
     }
 
     private void saveDailyOfferToProfile() {
-        if (currentUser == null || currentUser.getProfile() == null || dailyOffer == null) return;
+/*        if (currentUser == null || currentUser.getProfile() == null || dailyOffer == null) return;
 
         currentUser.getProfile().setDailyOfferPlantType(dailyOffer.getPlantType());
         currentUser.getProfile().setDailyOfferDate(dailyOffer.getOfferDate());
         currentUser.getProfile().setDailyOfferPurchased(false);
-        currentUser.saveUser();
+        currentUser.saveUser();*/
     }
 }

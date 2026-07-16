@@ -3,23 +3,33 @@ package pvz.View;
 
 import pvz.Models.AppContext;
 import pvz.Models.Games.Seasons.Season;
+import pvz.View.Game.PreGameMenu;
 
 import java.util.List;
 
 public class ChapterMenu implements Menu{
-    private String seasonName;
+    private Season season;
 
     public ChapterMenu(String seasonName){
-        this.seasonName = seasonName;
+        List<Season> seasons=AppContext.getInstance().getCurrentUser().getProfile().getSeasons();
+        for (Season s: seasons){
+            if (s.getName().equalsIgnoreCase(seasonName)){
+                season=s;
+            }
+        }
     }
 
     @Override
     public Result handleInput(String input) {
-        List<Season> seasons=AppContext.getInstance().getCurrentUser().getProfile().getSeasons();
-        if (input.equals("1")){
-            return new Result(new PreGameMenu(seasons.getFirst(), 1));
+        try {
+            int levelNumber=Integer.parseInt(input);
+            if (levelNumber>3 || levelNumber<1){
+                return new Result("Enter a number between 1 and 3");
+            }
+            return new Result(new PreGameMenu(season, levelNumber));
+        } catch (Exception ex) {
+            return new Result("Invalid command in Chapter Menu");
         }
-        return new Result("Invalid command in Chapter Menu");
     }
 
     @Override
