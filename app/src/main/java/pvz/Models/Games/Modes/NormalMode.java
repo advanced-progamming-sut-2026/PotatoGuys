@@ -36,9 +36,10 @@ public class NormalMode implements GameMode {
     @Override
     public void updateMode(GameContext context) {
 
-        if (context.getZombies().isEmpty()) {
-            if (waves.indexOf(currentWave) < waves.size() - 1) {
-                currentWave = waves.get(waves.indexOf(currentWave) + 1);
+        if (currentWave.isDone() && context.getZombies().isEmpty()) {
+            int nextWaveIndex = waves.indexOf(currentWave) + 1;
+            if (nextWaveIndex < waves.size()) {
+                currentWave = waves.get(nextWaveIndex);
                 currentWave.startWave(context);
                 context.log("Wave " + currentWave.getWaveNumber() + " started.");
             } else {
@@ -48,7 +49,10 @@ public class NormalMode implements GameMode {
             return;
         }
 
-        currentWave.updateWave(context);
+        // در غیر این صورت، به آپدیت کردن و پیش بردن تایمرهای موج فعلی ادامه بده
+        if (!currentWave.isDone()) {
+            currentWave.updateWave(context);
+        }
     }
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
@@ -73,6 +77,7 @@ public class NormalMode implements GameMode {
             context.removeZombie(zombie);
             context.log("Lawn mower in lane " + lane + " ran over a zombie!");
         });
+        lawnMower[lane] = true; 
     }
 
     public List<Wave> getWaves() {
@@ -172,7 +177,6 @@ public class NormalMode implements GameMode {
             return String.format(" Z%-2d", zombieIndex); 
         }
 
-        // خانه خالی است
         return CELL_EMPTY; 
     }
 

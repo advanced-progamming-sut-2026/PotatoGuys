@@ -97,9 +97,11 @@ public class GameContext implements TickAware {
     public void spawnZombie(Zombie z) {
         // getTileAt(z.getX(), z.getLane()).addZombie(z);
         zombies.add(z);
+        engine.register(z);
     }
     public boolean removeZombie(Zombie z) {
         // getTileAt(z.getX(), z.getLane()).removeZombie(z);
+        engine.unRegister(z);
         return zombies.remove(z);
     }
     // public boolean isZombieAt(int col, int lane) {
@@ -129,6 +131,7 @@ public class GameContext implements TickAware {
             return;
         }
         getTileAt(p.getCol(), p.getLane()).addPlant(p);
+        engine.register(p);
         plants.add(p);
     }
     public boolean isPlantAt(int col, int lane) {
@@ -136,6 +139,7 @@ public class GameContext implements TickAware {
     }
     public boolean removePlant(Plant p) {
         getTileAt(p.getCol(), p.getLane()).removePlant(p);
+        engine.unRegister(p);
         return plants.remove(p);
     }
 

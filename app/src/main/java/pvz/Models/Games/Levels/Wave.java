@@ -58,7 +58,6 @@ public class Wave{
         if (phases.get(currentPhase).isBurst()) {
             context.log("Wave " + waveNumber + " phase " + (currentPhase + 1) + " [BURST]");
         }
-        updateWave(context);
     }
 
     public void updateWave(GameContext context) {
@@ -99,7 +98,6 @@ public class Wave{
         int col = context.getColumns() - 1;
         Zombie newZombie = new ZombieFactory().create(type.getAlias(), col, lane, context, waveNumber, difficulty);
         context.spawnZombie(newZombie);
-        context.getEngine().register(newZombie);
     }
 
     public void dispose() {
