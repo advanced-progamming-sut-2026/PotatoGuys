@@ -9,7 +9,7 @@ public class GreenHouse {
     public static final int WIDTH = 5;
     public static final int HEIGHT = 4;
 
-    private final List<GreenHousePot> greenHousePots = new ArrayList<>();
+    private List<GreenHousePot> greenHousePots = new ArrayList<>();
     private transient final Random random = new Random();
 
     public GreenHouse() {
@@ -104,10 +104,10 @@ public class GreenHouse {
         boolean shouldPlantMariGold = random.nextBoolean();
 
         if (shouldPlantMariGold || unlockedPlantTypesWithPlantFood == null || unlockedPlantTypesWithPlantFood.isEmpty()) {
-            return new MariGold();
+            return GreenHousePlant.createMariGold();
         }
 
         int index = random.nextInt(unlockedPlantTypesWithPlantFood.size());
-        return new UnlockedPlant(unlockedPlantTypesWithPlantFood.get(index));
+        return GreenHousePlant.createUnlocked(unlockedPlantTypesWithPlantFood.get(index));
     }
 }

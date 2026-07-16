@@ -10,7 +10,7 @@ public class AppContext {
     private User currentUser;
     private GameContext gameContext;
     private GreenHouse greenHouse;
-
+    
     private AppContext() { }
     
     public static AppContext getInstance() {

@@ -9,8 +9,6 @@ import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.GreenHouse.GreenHouse;
 import pvz.Models.GreenHouse.GreenHousePlant;
 import pvz.Models.GreenHouse.GreenHousePot;
-import pvz.Models.GreenHouse.MariGold;
-import pvz.Models.GreenHouse.UnlockedPlant;
 import pvz.Models.User.MyPlant;
 import pvz.Models.User.User;
 import pvz.View.GreenHouseMenu;
@@ -22,11 +20,18 @@ import pvz.View.ShopMenu;
 public class GreenHouseController {
 
     private GreenHouse getGreenHouse() {
+        User user = getCurrentUser();
         GreenHouse gh = AppContext.getInstance().getGreenHouse();
+        if (gh == null && user != null) {
+            gh = user.getGreenHouse();
+        }
         if (gh == null) {
             gh = new GreenHouse();
-            AppContext.getInstance().setGreenHouse(gh);
         }
+        if (user != null) {
+            user.setGreenHouse(gh);
+        }
+        AppContext.getInstance().setGreenHouse(gh);
         return gh;
     }
 
@@ -64,10 +69,10 @@ public class GreenHouseController {
                     sb.append("Growing");
                 }
                 sb.append(" - ");
-                if (plant instanceof MariGold) {
+                if (plant.isMariGold()) {
                     sb.append("MariGold");
-                } else if (plant instanceof UnlockedPlant) {
-                    sb.append(((UnlockedPlant) plant).getPlantType());
+                } else {
+                    sb.append(plant.getPlantType());
                 }
                 if (!plant.isReady()) {
                     sb.append(" (").append(plant.remainingHours()).append(" hours remaining)");
@@ -90,6 +95,9 @@ public class GreenHouseController {
 
         List<String> unlockedPlants = getUnlockedPlantNames();
         greenHouse.plantRandomPotAt(x, y, unlockedPlants);
+
+        User user = getCurrentUser();
+        if (user != null) user.saveUser();
         return new Result("Plant placed successfully.");
     }
 
@@ -108,12 +116,12 @@ public class GreenHouseController {
         User user = getCurrentUser();
         if (user == null) return new Result("No user logged in.");
 
-        if (plant instanceof MariGold) {
-            user.getProfile().setCoins(user.getProfile().getCoins() + MariGold.REWARD);
+        if (plant.isMariGold()) {
+            user.getProfile().setCoins(user.getProfile().getCoins() + GreenHousePlant.MARIGOLD_REWARD);
             user.saveUser();
-            return new Result("Harvested MariGold. Collected " + MariGold.REWARD + " coins.");
-        } else if (plant instanceof UnlockedPlant) {
-            String plantTypeName = ((UnlockedPlant) plant).getPlantType();
+            return new Result("Harvested MariGold. Collected " + GreenHousePlant.MARIGOLD_REWARD + " coins.");
+        } else {
+            String plantTypeName = plant.getPlantType();
             PlantType plantType = null;
             for (PlantType pt : PlantType.values()) {
                 if (pt.name().equals(plantTypeName)) {
@@ -135,9 +143,6 @@ public class GreenHouseController {
             user.saveUser();
             return new Result("Harvested " + plantTypeName + ". Pot emptied.");
         }
-
-        user.saveUser();
-        return new Result("Plant harvested.");
     }
 
     public Result grow(Matcher matcher) {

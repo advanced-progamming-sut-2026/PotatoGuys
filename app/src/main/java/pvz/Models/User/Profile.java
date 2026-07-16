@@ -15,7 +15,7 @@ public class Profile {
     private ArrayList<Season> seasons;
     private int maxMiopoint;
     private PlantType dailyOfferPlantType;
-    private String dailyOfferDate; // Ino estefadeh bokon! Yousof RD
+    private String dailyOfferDate;
     private boolean dailyOfferPurchased;
 
     public Profile(){
