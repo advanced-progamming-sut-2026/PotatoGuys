@@ -31,11 +31,6 @@ public class WalkState implements ZombieState {
     public ZombieState tick(Zombie zombie, GameContext ctx) {
         advancePosition(zombie);
 
-        if (zombie.getX() <= 0f) {
-            ((NormalMode)ctx.getMode()).runLawnMowers(ctx, zombie.getLane());
-            return this;
-        }
-
         ZombieState eatTransition = checkForPlant(zombie, ctx);
         if (eatTransition != null) return eatTransition;
 

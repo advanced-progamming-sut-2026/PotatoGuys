@@ -3,6 +3,9 @@ package pvz.Models.Engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import pvz.App;
+import pvz.Models.AppContext;
+
 public class GameEngine {
     public static GameEngine instance;
 
@@ -28,6 +31,9 @@ public class GameEngine {
     public void advanceTime(int ticks){
         for (int i = 0; i < ticks; i++) {
             processOneTick();
+            if(AppContext.getInstance().getGameContext().isGameOver()){
+                break;
+            }
         }
     }
 

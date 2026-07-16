@@ -79,11 +79,11 @@ public class GameContext implements TickAware {
     public List<Zombie> getZombies() {
         return zombies;
     }
-    // public List<Zombie> getZombiesAt(int col, int lane) {
-    //     return map.getTile(col, lane).getZombies().stream()
-    //             .filter(z -> !z.isDead())
-    //             .toList();
-    // }
+    public List<Zombie> getZombiesAt(int col, int lane) {
+        return getZombies().stream()
+                .filter(z -> z.getLane() == lane && (int) z.getX() == col && !z.isDead())
+                .toList();
+    }
     public List<Zombie> getZombiesInLane(int lane) {
         return zombies.stream()
                 .filter(z -> z.getLane() == lane && !z.isDead())
@@ -95,18 +95,16 @@ public class GameContext implements TickAware {
                 .toList();
     }
     public void spawnZombie(Zombie z) {
-        // getTileAt(z.getX(), z.getLane()).addZombie(z);
         zombies.add(z);
         engine.register(z);
     }
     public boolean removeZombie(Zombie z) {
-        // getTileAt(z.getX(), z.getLane()).removeZombie(z);
         engine.unRegister(z);
         return zombies.remove(z);
     }
-    // public boolean isZombieAt(int col, int lane) {
-    //     return !getZombiesAt(col, lane).isEmpty();
-    // }
+    public boolean isZombieAt(int col, int lane) {
+        return !getZombiesAt(col, lane).isEmpty();
+    }
     public List<Plant> getPlants() {
         return plants;
     }
@@ -148,8 +146,10 @@ public class GameContext implements TickAware {
     }
     public void spawnProjectile(Projectile p) {
         projectiles.add(p);
+        engine.register(p);
     }
     public boolean removeProjectile(Projectile p) {
+        engine.unRegister(p);
         return projectiles.remove(p);
     }
 
@@ -157,9 +157,11 @@ public class GameContext implements TickAware {
         return suns;
     }
     public void spawnSun(Sun s) {
+        engine.register(s);
         suns.add(s);
     }
     public boolean removeSun(Sun s) {
+        engine.unRegister(s);
         return suns.remove(s);
     }
 

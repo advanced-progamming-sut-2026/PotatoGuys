@@ -1,7 +1,5 @@
 package pvz.Models.Games.Levels;
 
-import java.util.List;
-
 import pvz.Models.Games.Modes.GameModeType;
 import pvz.Models.Games.map.GameMap;
 

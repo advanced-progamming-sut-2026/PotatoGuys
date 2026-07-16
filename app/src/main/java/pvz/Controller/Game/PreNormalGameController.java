@@ -185,7 +185,9 @@ public class PreNormalGameController extends PreGameController {
             String boost = p.getPlant().isBoosted() ? " [BOOSTED]" : "";
             output.append("\n- ").append(p.getPlant().getType().toString()).append(boost);
         }
-        return new Result(output.toString(), new NormalGameMenu(new GameContext(level)));
+        GameContext context = new GameContext(level);
+        AppContext.getInstance().setGameContext(context);
+        return new Result(output.toString(), new NormalGameMenu(context));
     }
 
     private List<Wave> createHardcodedWaves(GameMap map) {

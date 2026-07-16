@@ -5,7 +5,6 @@ import java.util.List;
 
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.Enums.PlantTag;
-import pvz.Models.Entities.Zombies.Zombie;
 
 public class Tile {
     private TileType type;
