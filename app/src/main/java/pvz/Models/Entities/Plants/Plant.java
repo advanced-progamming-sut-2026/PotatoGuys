@@ -7,6 +7,7 @@ import pvz.Models.Entities.Plants.actions.PlantAction;
 import pvz.Models.Entities.Plants.data.DamageKind;
 import pvz.Models.Entities.Plants.data.GrowthProfile;
 import pvz.Models.Entities.Plants.data.PlantFoodExecutor;
+import pvz.Models.Entities.Plants.data.PlantFoodProfile;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantStatResolver;
 import pvz.Models.Entities.Plants.data.PlantStatResolver.ResolvedStats;
@@ -52,6 +53,7 @@ public class Plant implements TickAware {
     private final int lane;
     private int level;
     private boolean boosted;
+    private int boostedTicksRemaining;
 
     private ResolvedStats stats;
     private final GrowthProfile growth;
@@ -98,6 +100,7 @@ public class Plant implements TickAware {
     public void update() {
         if (dead) return;
         tickGrowth();
+        tickBoost();
         PlantState next = currentState.tick(this, context);
         if (next != currentState) {
             currentState.onExit(this, context);
@@ -140,7 +143,11 @@ public class Plant implements TickAware {
 
     /** Triggers this plant's own Plant-Food effect immediately. */
     public void triggerPlantFood(GameContext ctx) {
+        PlantFoodProfile pf = sheet.getPlantFood();
+        boosted = true;
+        boostedTicksRemaining = Math.max(1, Math.round(pf.getDurationSeconds() * TICKS_PER_SECOND));
         PlantFoodExecutor.execute(this, ctx);
+        ctx.log("[PlantFood] " + sheet.getName() + " is boosted for " + String.format("%.1f", pf.getDurationSeconds()) + "s!");
     }
 
     // ── Growth (wramp-up plants) ───────────────────────────────────────────────
@@ -149,6 +156,15 @@ public class Plant implements TickAware {
         ageTicks++;
         if (growth != null) {
             growthStageIndex = growth.stageIndexFor(ageTicks / TICKS_PER_SECOND);
+        }
+    }
+
+    private void tickBoost() {
+        if (boostedTicksRemaining <= 0) return;
+        boostedTicksRemaining--;
+        if (boostedTicksRemaining <= 0) {
+            boosted = false;
+            context.log("[PlantFood] " + sheet.getName() + " at (" + col + "," + lane + ") boost wore off.");
         }
     }
 

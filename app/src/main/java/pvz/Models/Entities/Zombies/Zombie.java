@@ -280,6 +280,7 @@ public class Zombie implements TickAware {
         dead = true;
         currentState = new DeadState();
         if (glowing) {
+            context.addPlantFood(1);
             context.log("The glowing zombie dropped a plant food! [" + sheet.getAlias() + "]");
         }
         if (stolenSun > 0) {

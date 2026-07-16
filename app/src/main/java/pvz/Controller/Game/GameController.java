@@ -41,7 +41,30 @@ public abstract class GameController {
 
     public Result cheatCooldown(Matcher matcher) { return null; }
 
-    public Result feedPlant(Matcher matcher) { return null; }
+    public Result feedPlant(Matcher matcher) {
+        int x = Integer.parseInt(matcher.group("feedX"));
+        int y = Integer.parseInt(matcher.group("feedY"));
+
+        if (context.getPlantFoodCount() <= 0) {
+            return new Result("No plant food available.");
+        }
+        if (x < 0 || x >= context.getMap().getColumns() || y < 0 || y >= context.getMap().getRows()) {
+            return new Result("Invalid coordinates.");
+        }
+
+        List<Plant> plantsAt = context.getPlantsAt(x, y);
+        if (plantsAt.isEmpty()) {
+            return new Result("No plant at (" + x + ", " + y + ").");
+        }
+
+        Plant target = plantsAt.getLast();
+        if (!context.spendPlantFood()) {
+            return new Result("Failed to consume plant food.");
+        }
+
+        target.triggerPlantFood(context);
+        return new Result("Plant food used on " + target.getSheet().getName() + " at (" + x + ", " + y + ")!");
+    }
 
     public Result cheatPlantFood(Matcher matcher) {
         if (context.getPlantFoodCount()>3) return new Result("Plant food slots are full.");

@@ -33,8 +33,9 @@ public class NormalGameMenu extends GameMenu {
         StringBuilder output = new StringBuilder();
         output.append("=== Level ").append(context.getLevelNumber()).append(" ===\n");
         output.append("Sun: ").append(context.getCurrentSun()).append("\n");
+        output.append("Plant Food: ").append(context.getPlantFoodCount()).append("/4\n");
         output.append("Waves: ").append(((NormalMode)context.getMode()).getWaves().size()).append("\n");
-        output.append("Commands: advance time -t N ticks | show sun amount | show map | zombies info\n");
+        output.append("Commands: advance time -t N ticks | show sun amount | show map | feed plant -l (x, y)\n");
         return new Result(output.toString());
     }
 }

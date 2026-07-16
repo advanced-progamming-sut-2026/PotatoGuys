@@ -232,4 +232,10 @@ public class GameContext implements TickAware {
             plantFoodCount=4;
         }
     }
+
+    public boolean spendPlantFood(){
+        if (plantFoodCount<=0) return false;
+        plantFoodCount--;
+        return true;
+    }
 }

@@ -53,7 +53,7 @@ public class NormalGameController extends GameController{
              return new Result("Invalid coordinates.");
         }
         
-        Tile tile = context.getMap().getTile(y,x);
+        Tile tile = context.getMap().getTile(x,y);
         if (!tile.getPlants().isEmpty()) {
             return new Result("Tile already has a plant.");
         }
@@ -93,14 +93,15 @@ public class NormalGameController extends GameController{
              return new Result("Invalid coordinates.");
         }
         
-        Tile tile = context.getMap().getTile(y, x);
+        Tile tile = context.getMap().getTile(x, y);
         if (tile.getPlants().isEmpty()) {
             return new Result("No plant to pluck at (" + x + ", " + y + ").");
         }
-        
-        tile.getPlants().forEach(p -> {
-            context.removePlant(p);
-        });
+
+        for (int i = 0; i < tile.getPlants().size(); i++) {
+            context.removePlant(tile.getPlants().get(i));
+            i--;
+        }
         tile.getPlants().clear();
         
         return new Result("Plant plucked from (" + x + ", " + y + ").");
