@@ -11,7 +11,7 @@ import pvz.View.Result;
 
 public class NewsController {
     public Result showUnread(Matcher matcher) {
-        ArrayList<Message> messages = AppContext.getInstance().getCurrentUser().getNews().getMessages();
+        ArrayList<Message> messages = AppContext.getInstance().getCurrentUser().getProfile().getNews().getMessages();
         StringBuilder result = new StringBuilder();
         if(messages.isEmpty()) {
             return new Result("No messages found.");
@@ -28,7 +28,7 @@ public class NewsController {
         return new Result(result.toString()); 
     }
     public Result showAll(Matcher matcher) { 
-        ArrayList<Message> messages = AppContext.getInstance().getCurrentUser().getNews().getMessages();
+        ArrayList<Message> messages = AppContext.getInstance().getCurrentUser().getProfile().getNews().getMessages();
         StringBuilder result = new StringBuilder();
         if(messages.isEmpty()) {
             return new Result("No messages found.");

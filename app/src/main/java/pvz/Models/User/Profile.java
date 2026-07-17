@@ -11,6 +11,7 @@ public class Profile {
     private int diamonds;
     private int plantFood;
     private Collection collection;
+    private News news;
     private GreenHouseCollection greenHouseCollection;
     private ArrayList<Season> seasons;
     private int maxMiopoint;
@@ -19,7 +20,8 @@ public class Profile {
     private boolean dailyOfferPurchased;
 
     public Profile(){
-        this.collection=new Collection();
+        this.news=new News();
+        this.collection=new Collection(news);
         this.greenHouseCollection=new GreenHouseCollection();
         seasons=new ArrayList<>();
     }
@@ -107,5 +109,13 @@ public class Profile {
 
     public void addDiamonds(int amount){
         diamonds+=amount;
+    }
+
+    public News getNews() {
+        return news;
+    }
+
+    public void setNews(News news) {
+        this.news = news;
     }
 }

@@ -108,21 +108,21 @@ public class RegisterController {
     public void saveUser(User user){
         String id = UUID.randomUUID().toString();
         user.setId(id);
-        user.getProfile().getCollection().addPlant(PlantType.Peashooter,1,false);
-        user.getProfile().getCollection().addPlant(PlantType.Sunflower,1,false);
-        user.getProfile().getCollection().addPlant(PlantType.Cabbagepult,1,false);
-        user.getProfile().getCollection().addPlant(PlantType.BonkChoy,1,false);
-        user.getProfile().getCollection().addPlant(PlantType.Repeater,1,false);
-        user.getProfile().getCollection().addPlant(PlantType.TwinSunflower,1,false);
-        user.getProfile().getCollection().addPlant(PlantType.PeaPod,1,false);
-        user.getProfile().getCollection().addPlant(PlantType.SnowPea,1,false);
+        user.getProfile().getCollection().unlockPlant(PlantType.Peashooter);
+        user.getProfile().getCollection().unlockPlant(PlantType.Sunflower);
+        user.getProfile().getCollection().unlockPlant(PlantType.Cabbagepult);
+        user.getProfile().getCollection().unlockPlant(PlantType.BonkChoy);
+        user.getProfile().getCollection().unlockPlant(PlantType.Repeater);
+        user.getProfile().getCollection().unlockPlant(PlantType.TwinSunflower);
+        user.getProfile().getCollection().unlockPlant(PlantType.PeaPod);
+        user.getProfile().getCollection().unlockPlant(PlantType.SnowPea);
         Season ancientEgypt=new Season("Ancient Egypt");
         ancientEgypt.unlock();
         user.getProfile().getSeasons().add(ancientEgypt);
         user.getProfile().getSeasons().add(new Season("Frostbite Caves"));
         user.getProfile().getSeasons().add(new Season("Dark Ages"));
         user.getProfile().getSeasons().add(new Season("Big Wave Beach"));
-        user.getNews().getMessages().add(new Message("Welcome to Plants vs Zombies 2 "+user.getNickName()+"!"));
+        user.getProfile().getNews().getMessages().add(new Message("Welcome to Plants vs Zombies 2 "+user.getNickName()+"!"));
         HashMap<String , String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
         if(usernames == null){
             usernames = new HashMap<>();

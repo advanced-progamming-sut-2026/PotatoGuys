@@ -3,14 +3,17 @@ package pvz.Models.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import pvz.Models.AppContext;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Zombies.ZombieType;
 
 public class Collection {
+    private News news;
     private List<MyPlant> unlockedPlants;
     private List<ZombieType> unlockedZombies;
 
-    public Collection(){
+    public Collection(News news){
+        this.news=news;
         this.unlockedPlants=new ArrayList<>();
         this.unlockedZombies=new ArrayList<>();
     }
@@ -23,12 +26,14 @@ public class Collection {
         this.unlockedPlants = unlockedPlants;
     }
 
-    public void addPlant(PlantType plant , int level , boolean isBoost){
+    public void unlockPlant(PlantType plant){
+        if(unlockedPlants.stream().anyMatch(p->p.getType()==plant)) return;
         MyPlant newPlant = new MyPlant();
         newPlant.setType(plant);
-        newPlant.setLevel(level);
-        newPlant.setBoosted(isBoost);
+        newPlant.setLevel(1);
+        newPlant.setBoosted(false);
         unlockedPlants.add(newPlant);
+        news.getMessages().add(new Message(plant.toString()+" has been unlocked!"));
     }
 
     public MyPlant getPlant(PlantType type){

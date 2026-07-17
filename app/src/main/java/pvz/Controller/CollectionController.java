@@ -192,7 +192,7 @@ public class CollectionController {
             return new Result("Not enough coins. Need " + PURCHASE_COST + " coins, have " + coins + ".");
         }
 
-        getCollection().addPlant(plantType, 1, false);
+        getCollection().unlockPlant(plantType);
         getProfile().setCoins(coins - PURCHASE_COST);
 
         return new Result("Purchased " + plantType.toString() + " for " + PURCHASE_COST + " coins. "

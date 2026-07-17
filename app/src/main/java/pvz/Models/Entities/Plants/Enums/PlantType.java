@@ -70,4 +70,11 @@ public enum PlantType {
     Enchantmint,
     Piercemint,
     catTailmint;
+
+    public static PlantType getTypeByName(String type){
+        for (PlantType p: PlantType.values()){
+            if (p.toString().equalsIgnoreCase(type)) return p;
+        }
+        return null;
+    }
 }

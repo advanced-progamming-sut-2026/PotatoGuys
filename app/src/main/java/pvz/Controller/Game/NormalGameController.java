@@ -54,7 +54,7 @@ public class NormalGameController extends GameController{
 
         GameMode mode = context.getMode();
         if (mode instanceof PlantPlacer placer) {
-            Card card = placer.findCard(plantType);
+            Card card = placer.findCard(context,plantType);
             if (card == null) {
                 return new Result("No such plant card '" + plantType + "'.");
             }

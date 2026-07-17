@@ -19,7 +19,6 @@ public class User {
     private String securityAnswer;
     private Profile profile;
     private Setting setting;
-    private News news;
     private Score score;
     private GreenHouse greenHouse;
 
@@ -115,14 +114,6 @@ public class User {
         this.setting = setting;
     }
 
-    public News getNews() {
-        return news;
-    }
-
-    public void setNews(News news) {
-        this.news = news;
-    }
-
     public Score getScore() {
         return score;
     }
@@ -141,7 +132,6 @@ public class User {
         this.profile=new Profile();
         this.greenHouse=new GreenHouse();
         this.setting=new Setting();
-        this.news=new News();
         this.score=new Score();
 
     }
