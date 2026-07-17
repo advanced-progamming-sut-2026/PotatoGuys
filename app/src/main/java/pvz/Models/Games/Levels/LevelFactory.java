@@ -14,13 +14,18 @@ import java.util.List;
 
 public class LevelFactory {
     public static Level createLevel(LevelDefinition def) {
-        GameMap map = new GameMap(def.map.rows, def.map.columns);
-        if (def.map.specialTiles != null) {
-            for (TileDefinition tileDef : def.map.specialTiles) {
-                map.getTile(tileDef.x, tileDef.y).setType(TileType.valueOf(tileDef.type));
+        GameMap map;
+        if (def.map != null) {
+            map = new GameMap(def.map.rows, def.map.columns);
+            if (def.map.specialTiles != null) {
+                for (TileDefinition tileDef : def.map.specialTiles) {
+                    map.getTile(tileDef.x, tileDef.y).setType(TileType.valueOf(tileDef.type));
+                }
             }
+        } else {
+            map = new GameMap(); // Default map
         }
-
+        
         if (def instanceof NormalLevelDefinition normalDef) {
             List<Wave> waves = new ArrayList<>();
             for (WaveDefinition waveDef : normalDef.waves) {
