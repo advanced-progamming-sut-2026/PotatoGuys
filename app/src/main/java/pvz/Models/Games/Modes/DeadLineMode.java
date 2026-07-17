@@ -112,7 +112,32 @@ public class DeadLineMode implements GameMode, PlantPlacer {
 
     @Override
     public String getCardsStatus(GameContext context) {
-        return context.getMode().getCardsStatus(context);
+        StringBuilder result = new StringBuilder();
+        List<Card> cards = context.getCards();
+            
+        if (cards == null || cards.isEmpty()) {
+            result.append("No plant cards available.");
+        } else {
+            result.append("=== SEED PACKETS ===");
+            
+            int cardWidth = 40;
+        
+            for (int i = 0; i < cards.size(); i++) {
+                PlantCard ps = (PlantCard) cards.get(i);
+                
+                String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | Cooldown:%.1f%s",
+                        ps.getPlant().getType(),
+                        ps.getCost(),
+                        ps.getPlant().getLevel(),
+                        ps.getCooldown(),
+                        ps.getPlant().isBoosted() ? " | ⚡B" : "" 
+                );
+            
+                result.append("\n");
+                result.append(String.format("%-" + cardWidth + "s", cardInfo));
+            }
+        }
+        return result.toString();
     }
 
     @Override

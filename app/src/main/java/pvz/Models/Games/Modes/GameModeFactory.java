@@ -9,6 +9,8 @@ public class GameModeFactory {
                 return new NormalMode(level);
             case CONVEYORBELT:
                 return new ConveyorBeltMode(level);
+            case DEADLINE:
+                return new DeadLineMode(level);
             case VASEBREAKER:
                 return new VasebreakerMode(level);
             case BEGHOULED:

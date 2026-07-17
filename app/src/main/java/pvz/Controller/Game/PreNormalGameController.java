@@ -11,7 +11,7 @@ import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Levels.ConveyorBeltLevel;
+import pvz.Models.Games.Levels.DeadLineLevel;
 import pvz.Models.Games.Levels.LevelType;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.Levels.WavePhase;
@@ -160,7 +160,7 @@ public class PreNormalGameController extends PreGameController {
 
         List<Wave> waves = createHardcodedWaves(map);
 
-        ConveyorBeltLevel level = new ConveyorBeltLevel(map, levelNumber, LevelType.NORMAL, 200 , waves);
+        DeadLineLevel level = new DeadLineLevel(map, levelNumber, LevelType.NORMAL, 200 , waves, 3);
 
         StringBuilder output=new StringBuilder("Starting game with:");
         for (PlantCard p : selectedPlants){
