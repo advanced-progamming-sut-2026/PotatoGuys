@@ -8,6 +8,7 @@ import pvz.Enums.SecurityQuestions;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Games.Seasons.Season;
 import pvz.Models.User.Gender;
+import pvz.Models.User.Message;
 import pvz.Models.User.User;
 import pvz.Utils.PasswordUtils;
 import pvz.Utils.SaveManager;
@@ -121,6 +122,7 @@ public class RegisterController {
         user.getProfile().getSeasons().add(new Season("Frostbite Caves"));
         user.getProfile().getSeasons().add(new Season("Dark Ages"));
         user.getProfile().getSeasons().add(new Season("Big Wave Beach"));
+        user.getNews().getMessages().add(new Message("Welcome to Plants vs Zombies 2 "+user.getNickName()+"!"));
         HashMap<String , String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
         if(usernames == null){
             usernames = new HashMap<>();

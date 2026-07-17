@@ -3,6 +3,10 @@ package pvz.Models.User;
 public class Message {
     private String message;
     private boolean unread;
+    public Message(String message) {
+        this.message = message;
+        this.unread = true;
+    }
     public Message(String message, boolean unread) {
         this.message = message;
         this.unread = unread;

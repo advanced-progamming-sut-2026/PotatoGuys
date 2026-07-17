@@ -22,6 +22,7 @@ public class NewsController {
         for(Message message : messages){
             if(message.isUnread()){
                 result.append(message + "\n");
+                message.setUnread(false);
             }
         }
         return new Result(result.toString()); 
@@ -34,6 +35,7 @@ public class NewsController {
         }
         for(Message message : messages){
             result.append(message + "\n");
+            message.setUnread(false);
         }
         return new Result(result.toString());    
     }

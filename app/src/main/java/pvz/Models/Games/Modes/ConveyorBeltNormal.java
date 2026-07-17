@@ -130,6 +130,11 @@ public class ConveyorBeltNormal implements GameMode, PlantPlacer {
         return null;
     }
 
+    @Override
+    public String getCardsStatus() {
+        return "";
+    }
+
     private void SetupLawnMowers() {
         int lanes = 5;
         lawnMower = new Boolean[lanes];
