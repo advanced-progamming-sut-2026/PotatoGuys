@@ -14,6 +14,7 @@ public class Tile {
     public Tile(){
         // zombies=new ArrayList<>();
         plants=new ArrayList<>();
+        this.type = TileType.NORMAL;
     }
 
     public boolean isPlantable(Plant newPlant) {
@@ -30,6 +31,10 @@ public class Tile {
         return true;
     }
 
+    public void setType(TileType type) {
+        this.type = type;
+    }
+    
     public TileType getType() {
         return type;
     }

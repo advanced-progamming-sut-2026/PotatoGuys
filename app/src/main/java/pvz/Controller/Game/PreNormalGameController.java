@@ -11,10 +11,7 @@ import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Levels.ConveyorBeltLevel;
-import pvz.Models.Games.Levels.LevelType;
-import pvz.Models.Games.Levels.Wave;
-import pvz.Models.Games.Levels.WavePhase;
+import pvz.Models.Games.Levels.*;
 import pvz.Models.Games.Seasons.Season;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.map.GameMap;
@@ -160,7 +157,9 @@ public class PreNormalGameController extends PreGameController {
 
         List<Wave> waves = createHardcodedWaves(map);
 
-        ConveyorBeltLevel level = new ConveyorBeltLevel(map, levelNumber, LevelType.NORMAL, 200 , waves);
+        //ConveyorBeltLevel level = new ConveyorBeltLevel(map, levelNumber, LevelType.NORMAL, 200 , waves);
+        NormalLevel level=new NormalLevel(map,levelNumber,LevelType.NORMAL,75,waves);
+        level=(NormalLevel) LevelFactory.createLevel(LevelLoader.loadLevel(season.getName(),levelNumber));
 
         StringBuilder output=new StringBuilder("Starting game with:");
         for (PlantCard p : selectedPlants){
