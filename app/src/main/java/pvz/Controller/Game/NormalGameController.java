@@ -44,10 +44,7 @@ public class NormalGameController extends GameController{
     }
 
     public Result showCards(Matcher matcher){
-        if(context.getMode() instanceof PlantPlacer placer){
-            return new Result(placer.getCardsStatus());
-        }
-        return new Result("You cannot use this command in this game mode!");
+        return new Result(context.getMode().getCardsStatus(context));
     }
 
     public Result plant(Matcher matcher) {

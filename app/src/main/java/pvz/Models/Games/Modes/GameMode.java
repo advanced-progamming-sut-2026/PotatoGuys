@@ -20,4 +20,6 @@ public interface GameMode {
 
     /** Whether this mode allows sky-dropped falling suns (e.g. Dark Ages disables them). */
     default boolean supportsFallingSuns() { return true; }
+
+    String getCardsStatus(GameContext context);
 }

@@ -169,8 +169,7 @@ public class PreNormalGameController extends PreGameController {
             output.append("\n- ").append(p.getPlant().getType().toString()).append(boost);
         }
         GameContext context = new GameContext(level);
-        ((NormalMode) context.getMode()).setPlantCards(selectedPlants);
-        selectedPlants.forEach(context.getEngine()::register);
+        selectedPlants.forEach(context::addCard);
         AppContext.getInstance().setGameContext(context);
 
         return new Result(output.toString(), new NormalGameMenu(context));

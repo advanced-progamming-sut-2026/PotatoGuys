@@ -77,4 +77,10 @@ public class VasebreakerMode implements GameMode, VaseBreaker {
     public boolean supportsFallingSuns() {
         return false;
     }
+
+    @Override
+    public String getCardsStatus(GameContext context) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCardsStatus'");
+    }
 }

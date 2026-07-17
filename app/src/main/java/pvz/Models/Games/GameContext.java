@@ -13,6 +13,7 @@ import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Modes.GameMode;
 import pvz.Models.Games.Modes.GameModeFactory;
+import pvz.Models.Games.card.Card;
 import pvz.Models.Games.map.GameMap;
 import pvz.Models.Games.map.Tile;
 
@@ -25,9 +26,10 @@ public class GameContext implements TickAware {
     int plantFoodCount;
 
     private final GameEngine engine;
+    private List<Projectile> projectiles;
     private List<Zombie> zombies;
     private List<Plant> plants;
-    private List<Projectile> projectiles;
+    private List<Card> cards;
     private List<Sun> suns;
     private GameMode mode;
     private GameMap map;
@@ -141,6 +143,23 @@ public class GameContext implements TickAware {
         getTileAt(p.getCol(), p.getLane()).removePlant(p);
         engine.unRegister(p);
         return plants.remove(p);
+    }
+
+    public List<Card> getCards() {
+        return cards;
+    }
+    public void addCard(Card card){
+        this.cards.add(card);
+        engine.register(card);
+    }
+    public void removeCard(Card card){
+        this.cards.remove(card);
+        engine.unRegister(card);
+    }
+    public void setCards(List<Card> cards) {
+        for(Card card : cards){
+            addCard(card);
+        }
     }
 
     public List<Projectile> getProjectiles() {
