@@ -21,7 +21,6 @@ import pvz.Models.Games.card.PlantCard;
 public class ConveyorBeltMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
-    private List<PlantCard> plantCards;
     private Boolean[] lawnMower;
 
     public ConveyorBeltMode(Level level) {
@@ -82,16 +81,6 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         }
     }
 
-
-    public Card findCard(String plantType) {
-        for (PlantCard card : plantCards) {
-            if (card.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
-                return card;
-            }
-        }
-        return null;
-    }
-
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
         if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
@@ -103,10 +92,10 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         if (card == null) {
             return false;
         }
-        if (card instanceof PlantCard) {
-            return true;
+        if (!(card instanceof PlantCard)) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -128,6 +117,17 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         throw new UnsupportedOperationException("Unimplemented method 'getCardsStatus'");
     }
 
+    @Override
+    public PlantCard findCard(GameContext context, String plantType) {
+        for (Card card : context.getCards()) {
+            PlantCard plantCard = (PlantCard) card;
+            if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
+                return plantCard;
+            }
+        }
+        return null;
+    }
+
     private void SetupLawnMowers() {
         int lanes = 5;
         lawnMower = new Boolean[lanes];
@@ -136,7 +136,7 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         }
     }
 
-    public void runLawnMowers(GameContext context, int lane) {
+    private void runLawnMowers(GameContext context, int lane) {
         if (lawnMower[lane]) return; // Already used
 
         context.getZombiesInLane(lane).forEach(zombie -> {
@@ -146,27 +146,6 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         });
         lawnMower[lane] = true;
     }
-
-    public List<Wave> getWaves() {
-        return waves;
-    }
-
-    public void setWaves(List<Wave> waves) {
-        this.waves = waves;
-    }
-
-    public List<PlantCard> getPlantCards() {
-        return plantCards;
-    }
-
-    public void setPlantCards(List<PlantCard> plantCards) {
-        this.plantCards = plantCards;
-    }
-
-    public void addPlantCard(PlantCard newCard) {
-        this.plantCards.add(newCard);
-    }
-
 
     private static final String CELL_EMPTY = "    ";
     private static final String MOWER_OK = "[M]";
@@ -239,11 +218,5 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         }
 
         return CELL_EMPTY;
-    }
-
-    @Override
-    public PlantCard findCard(GameContext context, String plantType) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findCard'");
     }
 }

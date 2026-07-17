@@ -168,7 +168,7 @@ public class NormalMode implements GameMode, PlantPlacer {
         }
     }
 
-    public void runLawnMowers(GameContext context, int lane) {
+    private void runLawnMowers(GameContext context, int lane) {
         if (lawnMower[lane]) return;
 
         context.getZombiesInLane(lane).forEach(zombie -> {
