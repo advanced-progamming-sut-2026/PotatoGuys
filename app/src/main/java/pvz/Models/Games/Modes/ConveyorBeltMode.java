@@ -20,13 +20,13 @@ import pvz.Models.Games.card.PlantCard;
  * Standard game mode implementation.
  * Manages waves and standard win/loss conditions.
  */
-public class ConveyorBeltNormal implements GameMode, PlantPlacer {
+public class ConveyorBeltMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
     private List<PlantCard> plantCards;
     private Boolean[] lawnMower;
 
-    public ConveyorBeltNormal(Level level) {
+    public ConveyorBeltMode(Level level) {
         if (level instanceof NormalLevel normalLevel) {
             waves = normalLevel.getWaves();
         }
@@ -84,6 +84,16 @@ public class ConveyorBeltNormal implements GameMode, PlantPlacer {
         }
     }
 
+
+    public Card findCard(String plantType) {
+        for (PlantCard card : plantCards) {
+            if (card.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
+                return card;
+            }
+        }
+        return null;
+    }
+
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
         if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
@@ -92,12 +102,11 @@ public class ConveyorBeltNormal implements GameMode, PlantPlacer {
         if (!context.getPlantsAt(col, lane).isEmpty()) {
             return false;
         }
-        if (card == null || !card.canUse()) {
+        if (card == null) {
             return false;
         }
-        if (card instanceof PlantCard plantCard) {
-            PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(plantCard.getPlant().getType());
-            return context.getCurrentSun() >= sheet.getSunCost();
+        if (card instanceof PlantCard) {
+            return true;
         }
         return false;
     }
@@ -108,26 +117,17 @@ public class ConveyorBeltNormal implements GameMode, PlantPlacer {
             context.log("Error: card is not a plant card.");
             return;
         }
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(plantCard.getPlant().getType());
-        if (!context.spendSun(sheet.getSunCost())) {
-            context.log("Not enough sun.");
-            return;
-        }
+
         Plant plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
-        plantCard.use();
+        
         context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
     }
 
     @Override
-    public Card findCard(String plantType) {
-        for (PlantCard card : plantCards) {
-            if (card.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
-                return card;
-            }
-        }
-        return null;
+    public String getCardsStatus(GameContext context) {
+        throw new UnsupportedOperationException("Unimplemented method 'getCardsStatus'");
     }
 
     @Override
@@ -248,19 +248,9 @@ public class ConveyorBeltNormal implements GameMode, PlantPlacer {
         return CELL_EMPTY;
     }
 
-    // private void appendDirectionHint(StringBuilder sb , GameContext context) {
-    //     sb.append("         ←←←←←←← zombies walk this direction\n");
-    // }
-
-    // private void appendZombieStatus(StringBuilder sb , GameContext context) {
-    //     if (context.getZombies().isEmpty()) { sb.append("\n(no zombies)\n"); return; }
-    //     sb.append("\nZombies (").append(context.getZombies().size()).append(" active):\n");
-    //     for (int i = 0; i < context.getZombies().size(); i++) {
-    //         Zombie z = context.getZombies().get(i);
-    //         if (!z.isDead()) {
-    //             sb.append("  Z").append(i).append(" ").append(z.toInfoString()).append("\n");
-    //         }
-    //     }
-    // }
-
+    @Override
+    public Card findCard(GameContext context, String plantType) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findCard'");
+    }
 }

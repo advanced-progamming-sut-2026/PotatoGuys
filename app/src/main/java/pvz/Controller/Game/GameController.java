@@ -9,7 +9,7 @@ import pvz.Models.Entities.Projectile.Projectile;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Modes.NormalMode;
+import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.map.Tile;
 import pvz.View.MainMenu;
@@ -43,9 +43,9 @@ public abstract class GameController {
     }
 
     public Result cheatCooldown(Matcher matcher) {
-        List<PlantCard> cards = ((NormalMode) context.getMode()).getPlantCards();
+        List<Card> cards = context.getCards();
         int reset = 0;
-        for (PlantCard card : cards) {
+        for (Card card : cards) {
             if (card.getCooldown() > 0) {
                 card.setCooldown(0);
                 reset++;

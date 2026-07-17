@@ -7,11 +7,13 @@ public abstract class Card implements TickAware{
     protected final int cost;
     protected final float baseCooldown;
     protected float cooldown;
+    protected boolean cooldownEnable;
 
     protected Card(int cost, float cooldown) {
         this.cost = cost;
         this.baseCooldown = cooldown * 10;
         this.cooldown = 0;
+        cooldownEnable = true;
     }
 
     public int getCost() {
@@ -33,6 +35,7 @@ public abstract class Card implements TickAware{
     }
 
     public boolean canUse() {
+        if(!cooldownEnable) return true;
         return cooldown == 0;
     }
 
@@ -48,6 +51,14 @@ public abstract class Card implements TickAware{
 
     public void resetCooldown() {
         this.cooldown = baseCooldown;
+    }
+
+    public boolean isCooldownEnable() {
+        return cooldownEnable;
+    }
+
+    public void setCooldownEnable(boolean cooldownEnable) {
+        this.cooldownEnable = cooldownEnable;
     }
 
     @Override

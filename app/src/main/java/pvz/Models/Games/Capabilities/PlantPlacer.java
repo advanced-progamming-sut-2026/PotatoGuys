@@ -16,7 +16,6 @@ public interface PlantPlacer {
     void handlePlacement(GameContext context, int col, int lane, Card card);
 
     /** Look up an available seed-packet card by plant type name, or {@code null} if none matches. */
-    Card findCard(String plantType);
+    Card findCard(GameContext context , String plantType);
 
-    String getCardsStatus();
 }

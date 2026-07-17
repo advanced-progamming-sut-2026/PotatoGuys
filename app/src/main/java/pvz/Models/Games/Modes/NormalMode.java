@@ -23,7 +23,6 @@ import pvz.Models.Games.card.PlantCard;
 public class NormalMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
-    private List<PlantCard> plantCards;
     private Boolean[] lawnMower;
 
     public NormalMode(Level level) {
@@ -121,19 +120,20 @@ public class NormalMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public Card findCard(String plantType) {
-        for (PlantCard card : plantCards) {
-            if (card.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
-                return card;
+    public PlantCard findCard(GameContext context , String plantType) {
+        for (Card card : context.getCards()) {
+            PlantCard plantCard = (PlantCard) card;
+            if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
+                return plantCard;
             }
         }
         return null;
     }
 
     @Override
-    public String getCardsStatus(){
+    public String getCardsStatus(GameContext context){
         StringBuilder result = new StringBuilder();
-        List<PlantCard> cards = plantCards;
+        List<Card> cards = context.getCards();
             
         if (cards == null || cards.isEmpty()) {
             result.append("No plant cards available.");
@@ -143,7 +143,7 @@ public class NormalMode implements GameMode, PlantPlacer {
             int cardWidth = 40;
         
             for (int i = 0; i < cards.size(); i++) {
-                PlantCard ps = cards.get(i);
+                PlantCard ps = (PlantCard) cards.get(i);
                 
                 String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | Cooldown:%.1f%s",
                         ps.getPlant().getType(),
@@ -153,7 +153,8 @@ public class NormalMode implements GameMode, PlantPlacer {
                         ps.getPlant().isBoosted() ? " | ⚡B" : "" 
                 );
             
-                result.append(String.format("\n%-" + cardWidth + "s", cardInfo));
+                result.append("\n");
+                result.append(String.format("%-" + cardWidth + "s", cardInfo));
             }
         }
         return result.toString();
@@ -168,7 +169,7 @@ public class NormalMode implements GameMode, PlantPlacer {
     }
 
     public void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane]) return; // Already used
+        if (lawnMower[lane]) return;
 
         context.getZombiesInLane(lane).forEach(zombie -> {
             zombie.takeDamage(Float.MAX_VALUE);
@@ -178,25 +179,6 @@ public class NormalMode implements GameMode, PlantPlacer {
         lawnMower[lane] = true;
     }
 
-    public List<Wave> getWaves() {
-        return waves;
-    }
-
-    public void setWaves(List<Wave> waves) {
-        this.waves = waves;
-    }
-
-    public List<PlantCard> getPlantCards() {
-        return plantCards;
-    }
-
-    public void setPlantCards(List<PlantCard> plantCards) {
-        this.plantCards = plantCards;
-    }
-
-    public void addPlantCard(PlantCard newCard) {
-        this.plantCards.add(newCard);
-    }
 
 
     private static final String CELL_EMPTY = "    ";
@@ -213,8 +195,6 @@ public class NormalMode implements GameMode, PlantPlacer {
             appendLaneRow(sb, context, lane);
             appendDivider(sb, context);
         }
-        // appendDirectionHint(sb , context);
-        // appendZombieStatus(sb , context);
         return sb.toString();
     }
 
@@ -272,20 +252,4 @@ public class NormalMode implements GameMode, PlantPlacer {
 
         return CELL_EMPTY;
     }
-
-    // private void appendDirectionHint(StringBuilder sb , GameContext context) {
-    //     sb.append("         ←←←←←←← zombies walk this direction\n");
-    // }
-
-    // private void appendZombieStatus(StringBuilder sb , GameContext context) {
-    //     if (context.getZombies().isEmpty()) { sb.append("\n(no zombies)\n"); return; }
-    //     sb.append("\nZombies (").append(context.getZombies().size()).append(" active):\n");
-    //     for (int i = 0; i < context.getZombies().size(); i++) {
-    //         Zombie z = context.getZombies().get(i);
-    //         if (!z.isDead()) {
-    //             sb.append("  Z").append(i).append(" ").append(z.toInfoString()).append("\n");
-    //         }
-    //     }
-    // }
-
 }
