@@ -3,10 +3,12 @@ package pvz.Models.Games.Levels;
 import java.util.List;
 import java.util.Random;
 
+import pvz.Models.AppContext;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Entities.Zombies.ZombieFactory;
 import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.Games.GameContext;
+import pvz.Models.User.Collection;
 
 public class Wave{
     private int waveNumber;
@@ -98,6 +100,12 @@ public class Wave{
         int col = context.getColumns() - 1;
         Zombie newZombie = new ZombieFactory().create(type.getAlias(), col, lane, context, waveNumber, difficulty);
         context.spawnZombie(newZombie);
+
+        //Adding this zombie type to user collection if user hasn't seen this type of zombie yet
+        Collection collection=AppContext.getInstance().getCurrentUser().getProfile().getCollection();
+        if (!collection.getUnlockedZombies().contains(type)){
+            collection.unlockZombie(type);
+        }
     }
 
     public void dispose() {

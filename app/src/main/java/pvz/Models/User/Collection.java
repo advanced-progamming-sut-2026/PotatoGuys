@@ -36,6 +36,12 @@ public class Collection {
         news.getMessages().add(new Message(plant.toString()+" has been unlocked!"));
     }
 
+    public void unlockZombie(ZombieType type){
+        if (unlockedZombies.contains(type)) return;
+        unlockedZombies.add(type);
+        news.getMessages().add(new Message(type.toString()+" has been unlocked!"));
+    }
+
     public MyPlant getPlant(PlantType type){
         for (MyPlant p : unlockedPlants){
             if (p.getType() == type){
