@@ -6,7 +6,7 @@ import pvz.Models.Games.map.GameMap;
 
 public class DeadLineLevel extends Level {
     private final List<Wave> waves;
-    private final int deadlineColumn; // ستونی که خط ددلاین روی آن قرار دارد
+    private final int deadlineColumn;
 
     public DeadLineLevel(GameMap gameMap, int levelNumber, LevelType type, int initialSun, List<Wave> waves, int deadlineColumn) {
         super(GameModeType.DEADLINE, gameMap, levelNumber, type, initialSun);
