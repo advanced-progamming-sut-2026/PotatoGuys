@@ -22,7 +22,7 @@ public class ProfileController {
         }
 
         if(user.getUsername().equals(newUsername)){
-            return new Result("Username is sameNew username cannot be the same as your current username.");
+            return new Result("Username is same. New username cannot be the same as your current username.");
         }
 
         if(PatternManager.validateUsername(newUsername) != null) {

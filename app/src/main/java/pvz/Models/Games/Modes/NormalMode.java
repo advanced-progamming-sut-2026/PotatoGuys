@@ -2,6 +2,7 @@ package pvz.Models.Games.Modes;
 
 import java.util.List;
 
+import pvz.Models.AppContext;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
@@ -69,7 +70,7 @@ public class NormalMode implements GameMode, PlantPlacer {
                 }
                 if (lawnMower[z.getLane()]) {
                     context.setGameOver(true);
-                    context.log("Brain has eaten");
+                    context.log("The zombie ate your brain; LOOSER!!!");
                     context.removeZombie(z);
                 }
             }
