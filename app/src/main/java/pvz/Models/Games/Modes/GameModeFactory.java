@@ -7,6 +7,8 @@ public class GameModeFactory {
         switch (level.getGameMode()) {
             case NORMAL:
                 return new NormalMode(level);
+            case CONVEYORBELT:
+                return new ConveyorBeltMode(level);
             case VASEBREAKER:
                 return new VasebreakerMode(level);
             case BEGHOULED:

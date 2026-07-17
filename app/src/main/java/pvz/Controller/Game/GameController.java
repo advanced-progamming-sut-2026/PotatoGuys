@@ -22,7 +22,7 @@ import pvz.View.Result;
 
 public class GameController {
     
-    protected final GameContext context;
+    private final GameContext context;
 
     public GameController(GameContext context) {
         this.context = context;

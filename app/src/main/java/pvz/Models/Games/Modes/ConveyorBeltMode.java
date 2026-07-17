@@ -1,31 +1,41 @@
 package pvz.Models.Games.Modes;
 
 import java.util.List;
+import java.util.Random;
 
+import pvz.Models.AppContext;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Capabilities.PlantPlacer;
+import pvz.Models.Games.Levels.ConveyorBeltLevel;
 import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Levels.NormalLevel;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
+import pvz.Models.User.MyPlant;
 
 /**
- * Standard game mode implementation.
- * Manages waves and standard win/loss conditions.
+ * Standard game mode implementation for Conveyor Belt level.
+ * Automatically spawns random unlocked plants every 12 seconds.
  */
 public class ConveyorBeltMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
     private Boolean[] lawnMower;
 
+    private int tickCounter = 0;
+    private static final int TICKS_PER_SECOND = 10;
+    private static final int SPAWN_INTERVAL_TICKS = 12 * TICKS_PER_SECOND;
+
     public ConveyorBeltMode(Level level) {
-        if (level instanceof NormalLevel normalLevel) {
+        if (level instanceof ConveyorBeltLevel normalLevel) {
             waves = normalLevel.getWaves();
+        }else{
+            return;
         }
         currentWave = waves.get(0);
         SetupLawnMowers();
@@ -33,11 +43,17 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
 
     @Override
     public void initMode(GameContext context) {
-
+        addRandomCard(context);
+        tickCounter = 0;
     }
 
     @Override
     public void updateMode(GameContext context) {
+        tickCounter++;
+        if (tickCounter >= SPAWN_INTERVAL_TICKS) {
+            addRandomCard(context);
+            tickCounter = 0;
+        }
 
         if (currentWave.isDone() && context.getZombies().isEmpty()) {
             int nextWaveIndex = waves.indexOf(currentWave) + 1;
@@ -72,9 +88,10 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
                 }
             }
         }
+
         for (int i = 0; i < context.getSuns().size(); i++) {
-            Sun sun=context.getSuns().get(i);
-            if (sun.isDone()){
+            Sun sun = context.getSuns().get(i);
+            if (sun.isDone()) {
                 context.removeSun(sun);
                 i--;
             }
@@ -89,10 +106,7 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         if (!context.getPlantsAt(col, lane).isEmpty()) {
             return false;
         }
-        if (card == null) {
-            return false;
-        }
-        if (!(card instanceof PlantCard)) {
+        if (card == null || !(card instanceof PlantCard)) {
             return false;
         }
         return true;
@@ -105,42 +119,85 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
             return;
         }
 
-        Plant plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
-                plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
+        // ایجاد و اسپان گیاه روی تایل نقشه
+        Plant plant = new PlantFactory().create(
+                plantCard.getPlant().getType(), col, lane,
+                plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context
+        );
         context.spawnPlant(plant);
+        
+        // حذف کارت از روی نوار نقاله پس از کاشت موفق
+        context.removeCard(card);
         
         context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
     }
 
     @Override
     public String getCardsStatus(GameContext context) {
-        throw new UnsupportedOperationException("Unimplemented method 'getCardsStatus'");
+        List<Card> currentCards = context.getCards();
+        if (currentCards.isEmpty()) {
+            return "Conveyor belt is empty. Waiting for the next plant...";
+        }
+
+        StringBuilder sb = new StringBuilder("=== Conveyor Belt ===\n");
+        for (int i = 0; i < currentCards.size(); i++) {
+            if (currentCards.get(i) instanceof PlantCard pc) {
+                String boostLabel = pc.getPlant().isBoosted() ? " [BOOSTED]" : "";
+                sb.append(String.format("[%d] %s (Lv: %d) | Cost: Free%s\n", 
+                        i, pc.getPlant().getType().toString(), pc.getPlant().getLevel(), boostLabel));
+            }
+        }
+        return sb.toString().trim();
     }
 
     @Override
     public PlantCard findCard(GameContext context, String plantType) {
         for (Card card : context.getCards()) {
-            PlantCard plantCard = (PlantCard) card;
-            if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
-                return plantCard;
+            if (card instanceof PlantCard plantCard) {
+                if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
+                    return plantCard;
+                }
             }
         }
         return null;
+    }
+
+
+    private void addRandomCard(GameContext context) {
+        var currentUser = AppContext.getInstance().getCurrentUser();
+        if (currentUser == null || currentUser.getProfile() == null || currentUser.getProfile().getCollection() == null) {
+            context.log("Error: User profiles or collection is not loaded.");
+            return;
+        }
+
+        List<MyPlant> unlockedPlants = currentUser.getProfile().getCollection().getUnlockedPlants();
+        if (unlockedPlants == null || unlockedPlants.isEmpty()) {
+            context.log("Conveyor Belt warning: Player has no unlocked plants!");
+            return;
+        }
+
+        Random random = new Random();
+        MyPlant randomPlant = unlockedPlants.get(random.nextInt(unlockedPlants.size()));
+
+        PlantCard conveyorCard = new PlantCard(randomPlant, 0, 0);
+        
+        context.addCard(conveyorCard);
+        context.log("Conveyor delivered a new card: " + randomPlant.getType().toString());
     }
 
     private void SetupLawnMowers() {
         int lanes = 5;
         lawnMower = new Boolean[lanes];
         for (int i = 0; i < lanes; i++) {
-            lawnMower[i] = false; // All lawn mowers are initially available
+            lawnMower[i] = false;
         }
     }
 
     private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane]) return; // Already used
+        if (lawnMower[lane]) return;
 
         context.getZombiesInLane(lane).forEach(zombie -> {
-            zombie.takeDamage(Float.MAX_VALUE);
+            zombie.takeDamage(Float.MAX_VALUE, true);
             context.removeZombie(zombie);
             context.log("Lawn mower in lane " + lane + " ran over a zombie!");
         });
@@ -161,12 +218,8 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
             appendLaneRow(sb, context, lane);
             appendDivider(sb, context);
         }
-        // appendDirectionHint(sb , context);
-        // appendZombieStatus(sb , context);
         return sb.toString();
     }
-
-    // ── Private rendering helpers ─────────────────────────────────────────────
 
     private void appendHeader(StringBuilder sb, GameContext context) {
         sb.append("\n=== Tick: ").append(context.getCurrentTick())
@@ -216,7 +269,6 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         } else if (hasZombie) {
             return String.format(" Z%-2d", zombiesAtCell.size());
         }
-
         return CELL_EMPTY;
     }
 }

@@ -37,7 +37,7 @@ public class GameMenu implements Menu {
         if ((matcher = GameMenuCommand.PLANT.getMatcher(input)) != null) return gameController.plantPlant(matcher);
         if ((matcher = GameMenuCommand.PLUCK_PLANT.getMatcher(input)) != null) return gameController.pluckPlant(matcher);
         if ((matcher = GameMenuCommand.HELP.getMatcher(input)) != null) return new Result(GameMenuCommand.getHelp());
-        return null;
+        return new Result("Command not found!");
     }
 
     @Override
