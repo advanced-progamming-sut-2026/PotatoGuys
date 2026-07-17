@@ -10,4 +10,6 @@ public interface VaseBreaker {
 
     /** Break the vase at the given tile, if any, revealing/releasing its contents. */
     void breakVase(GameContext context, int col, int lane);
+
+    void showVases(GameContext context);
 }

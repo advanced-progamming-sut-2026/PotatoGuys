@@ -4,12 +4,10 @@ import java.util.List;
 
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
-import pvz.Models.Entities.Plants.data.PlantPropertySheet;
-import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.Capabilities.PlantPlacer;
 import pvz.Models.Games.GameContext;
+import pvz.Models.Games.Capabilities.PlantPlacer;
 import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Levels.NormalLevel;
 import pvz.Models.Games.Levels.Wave;
@@ -130,11 +128,6 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         throw new UnsupportedOperationException("Unimplemented method 'getCardsStatus'");
     }
 
-    @Override
-    public String getCardsStatus() {
-        return "";
-    }
-
     private void SetupLawnMowers() {
         int lanes = 5;
         lawnMower = new Boolean[lanes];
@@ -249,7 +242,7 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public Card findCard(GameContext context, String plantType) {
+    public PlantCard findCard(GameContext context, String plantType) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findCard'");
     }

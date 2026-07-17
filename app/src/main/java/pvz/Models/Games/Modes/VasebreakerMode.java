@@ -83,4 +83,10 @@ public class VasebreakerMode implements GameMode, VaseBreaker {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getCardsStatus'");
     }
+
+    @Override
+    public void showVases(GameContext context) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'showVases'");
+    }
 }

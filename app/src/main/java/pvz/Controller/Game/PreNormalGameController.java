@@ -15,13 +15,12 @@ import pvz.Models.Games.Levels.LevelType;
 import pvz.Models.Games.Levels.NormalLevel;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.Levels.WavePhase;
-import pvz.Models.Games.Modes.NormalMode;
 import pvz.Models.Games.Seasons.Season;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.map.GameMap;
 import pvz.Models.User.MyPlant;
 import pvz.View.Result;
-import pvz.View.Game.NormalGameMenu;
+import pvz.View.Game.GameMenu;
 
 public class PreNormalGameController extends PreGameController {
     private static final int MAX_PLANTS = 7;
@@ -172,7 +171,7 @@ public class PreNormalGameController extends PreGameController {
         selectedPlants.forEach(context::addCard);
         AppContext.getInstance().setGameContext(context);
 
-        return new Result(output.toString(), new NormalGameMenu(context));
+        return new Result(output.toString() , new GameMenu(new GameController(context)));
     }
 
     private List<Wave> createHardcodedWaves(GameMap map) {

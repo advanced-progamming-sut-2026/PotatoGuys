@@ -20,10 +20,10 @@ public class Profile {
     private boolean dailyOfferPurchased;
 
     public Profile(){
-        this.news=new News();
-        this.collection=new Collection(news);
-        this.greenHouseCollection=new GreenHouseCollection();
-        seasons=new ArrayList<>();
+        this.news = new News();
+        this.collection = new Collection(news);
+        this.greenHouseCollection = new GreenHouseCollection();
+        seasons = new ArrayList<>();
     }
 
     public int getGamePlayed() {
@@ -95,7 +95,7 @@ public class Profile {
     }
 
     public Season getSeasonByName(String name){
-        for (Season s: seasons){
+        for (Season s : seasons){
             if (s.getName().equalsIgnoreCase(name)){
                 return s;
             }
@@ -104,11 +104,11 @@ public class Profile {
     }
 
     public void addCoins(int amount){
-        coins+=amount;
+        coins += amount;
     }
 
     public void addDiamonds(int amount){
-        diamonds+=amount;
+        diamonds += amount;
     }
 
     public News getNews() {

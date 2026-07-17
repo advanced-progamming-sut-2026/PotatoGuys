@@ -42,6 +42,7 @@ public class GameContext implements TickAware {
         this.plants         = new ArrayList<>();
         this.projectiles    = new ArrayList<>();
         this.suns           = new ArrayList<>();
+        this.cards          = new ArrayList<>();
         this.map = currentLevel.getGameMap();
         this.mode = GameModeFactory.createGameMode(currentLevel);
         this.setLevelNumber(currentLevel.getLevelNumber());
