@@ -53,6 +53,10 @@ public class GameController {
                     context.getCurrentSun(),
                     user.getSetting().getDifficulty()
                 );
+                if (won) {
+                    user.getScore().setLastLevel(context.getLevelNumber());
+                    user.getScore().setLastSeason(0);
+                }
                 user.saveUser();
             }
             return new Result("Game Over", new MainMenu());
