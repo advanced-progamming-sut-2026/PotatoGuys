@@ -11,7 +11,7 @@ public class Quest {
     private String description;
     private QuestCategory category;
     private QuestPriority priority;
-    private List<Reward> rewards;
+    private transient List<Reward> rewards;
     private Progress progress;
     private boolean active;
     private boolean claimed;
