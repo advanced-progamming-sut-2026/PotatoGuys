@@ -6,8 +6,18 @@
     "rows": 5,
     "columns": 9,
     "specialTiles": [
-      { "x": 2, "y": 3, "type": "GRAVE" },
-      { "x": 5, "y": 1, "type": "ICE" }
+      {
+        "x": 2, "y": 3,
+        "behaviors": [
+          { "type": "DESTRUCTIBLE", "hp": 700, "name": "Grave" }
+        ]
+      },
+      {
+        "x": 5, "y": 1,
+        "behaviors": [
+          { "type": "DESTRUCTIBLE", "hp": 500, "name": "Ice" }
+        ]
+      }
     ]
   },
   "waves": [
@@ -23,48 +33,6 @@
           "intervalTicks": 50,
           "allowedTypes": ["BASIC"],
           "isBurst": false
-        }
-      ]
-    },
-    {
-      "waveNumber": 2,
-      "isFinalWave": false,
-      "delayTicks": 500,
-      "lanes": 5,
-      "difficulty": 3,
-      "phases": [
-        {
-          "zombieCount": 4,
-          "intervalTicks": 40,
-          "allowedTypes": ["BASIC", "MUMMY"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 3,
-          "intervalTicks": 25,
-          "allowedTypes": ["BASIC", "MUMMY"],
-          "isBurst": true
-        }
-      ]
-    },
-    {
-      "waveNumber": 3,
-      "isFinalWave": true,
-      "delayTicks": 800,
-      "lanes": 5,
-      "difficulty": 3,
-      "phases": [
-        {
-          "zombieCount": 5,
-          "intervalTicks": 35,
-          "allowedTypes": ["BASIC", "CONEHEAD", "MUMMY"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 6,
-          "intervalTicks": 20,
-          "allowedTypes": ["BASIC", "CONEHEAD", "MUMMY"],
-          "isBurst": true
         }
       ]
     }

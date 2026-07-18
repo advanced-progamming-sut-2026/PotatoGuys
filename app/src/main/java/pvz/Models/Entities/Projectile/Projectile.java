@@ -66,6 +66,13 @@ public class Projectile implements TickAware {
             return;
         }
         col += COLS_PER_TICK;
+        
+        // Notify tile of potential hit
+        if (col >= 0 && col < context.getColumns()) {
+            context.getTileAt(col, lane).processHit(this);
+            if (spent) return;
+        }
+
         if (col > context.getColumns() + 1) { spent = true; return; }
         Zombie nearest = null;
         float bestDistance = Float.MAX_VALUE;
@@ -92,6 +99,8 @@ public class Projectile implements TickAware {
             spent = true;
         }
     }
+
+    public void spend() { spent = true; }
 
     @Override
     public void dispose() { }
