@@ -1,9 +1,11 @@
 package pvz.Models.Shop;
 
 import pvz.Models.Entities.Plants.Enums.PlantType;
+import pvz.Models.User.MyPlant;
 import pvz.Models.User.User;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class DailyOffer extends ShopItem {
 
@@ -67,6 +69,11 @@ public class DailyOffer extends ShopItem {
 
         user.getProfile().setCoins(user.getProfile().getCoins() - price.getAmount());
         purchasedToday = true;
+
+        MyPlant target = user.getProfile().getCollection().getPlant(this.plantType);
+        if (target != null) {
+            target.setSeed(target.getSeed() + unitAmount);
+        }
 
         user.getProfile().setDailyOfferPurchased(true);
         user.saveUser();

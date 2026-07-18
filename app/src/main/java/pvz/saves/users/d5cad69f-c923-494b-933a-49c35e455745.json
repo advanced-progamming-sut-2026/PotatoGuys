@@ -9,7 +9,7 @@
   "securityAnswer": "Tehran",
   "profile": {
     "gamePlayed": 0,
-    "coins": 0,
+    "coins": 8400,
     "diamonds": 0,
     "plantFood": 0,
     "collection": {
@@ -175,9 +175,9 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": null,
-    "dailyOfferDate": null,
-    "dailyOfferPurchased": false
+    "dailyOfferPlantType": "catTailmint",
+    "dailyOfferDate": "2026-07-18",
+    "dailyOfferPurchased": true
   },
   "setting": {
     "difficulty": 3
@@ -313,5 +313,6 @@
         "greenHousePlant": null
       }
     ]
-  }
+  },
+  "questLog": null
 }
