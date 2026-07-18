@@ -49,6 +49,8 @@ public class LoginController {
         }
 
         AppContext.getInstance().setCurrentUser(currentUser);
+        currentUser.refreshQuestLog();
+        currentUser.saveUser();
 
         if (matcher.group("stayLoggedIn") != null) {
             SaveManager.getInstance().save(username, "session.json");

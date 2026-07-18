@@ -13,10 +13,14 @@ import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Capabilities.PlantPlacer;
 import pvz.Models.Games.Capabilities.ZombiePlacer;
 import pvz.Models.Games.Modes.GameMode;
+import pvz.Models.Games.Seasons.Season;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.card.ZombieCard;
 import pvz.Models.Games.map.Tile;
+import pvz.Models.Quests.QuestEvaluator;
+import pvz.Models.AppContext;
+import pvz.Models.User.User;
 import pvz.View.MainMenu;
 import pvz.View.Result;
 
@@ -36,9 +40,21 @@ public class GameController {
         int ticks = Integer.parseInt(matcher.group("ticks"));
         context.getEngine().advanceTime(ticks);
         context.addCurrentTick(ticks);
-        
+
         String map = context.getMode().renderMap(context);
         if (context.isGameOver()) {
+            User user = AppContext.getInstance().getCurrentUser();
+            if (user != null) {
+                boolean won = context.getZombies().isEmpty();
+                QuestEvaluator.evaluateAll(
+                    user.getQuestLog(),
+                    context.getGameStats(),
+                    won,
+                    context.getCurrentSun(),
+                    user.getSetting().getDifficulty()
+                );
+                user.saveUser();
+            }
             return new Result("Game Over", new MainMenu());
         }
         return new Result("Time advanced by " + ticks + " ticks.\n" + map);

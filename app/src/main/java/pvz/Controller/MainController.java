@@ -35,6 +35,9 @@ public class MainController {
             case "shop":
                 nextMenu=new ShopMenu();
                 break;
+            case "travelLog":
+                nextMenu=new QuestMenu();
+                break;
             default:
                 nextMenu = new MainMenu();
                 return new Result("You cannot enter this menu." , nextMenu);

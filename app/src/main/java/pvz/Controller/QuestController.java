@@ -1,77 +1,131 @@
 package pvz.Controller;
 
+import java.util.List;
+import java.util.regex.Matcher;
+
+import pvz.Models.AppContext;
 import pvz.Models.Quests.Quest;
 import pvz.Models.Quests.QuestCategory;
 import pvz.Models.Quests.QuestLog;
-import pvz.Models.Quests.Reward;
 import pvz.Models.User.User;
-import java.util.List;
+import pvz.View.MainMenu;
+import pvz.View.Menu;
+import pvz.View.Result;
 
 public class QuestController {
-    private User currentUser;
 
-    public QuestController(User currentUser) {
-        this.currentUser = currentUser;
-
-        /*
-         * TODO: Game Initialization
-         * * Your quests.csv file acts as the database for creating these objects.
-         * In your main Game Initialization phase, you will write a simple CSV reader
-         * that parses that file, maps words like "روزانه" to QuestCategory.DAILY
-         * and "بالا" to QuestPriority.HIGH, creates Quest objects using the parameters,
-         * and adds them to the QuestLog.
-         */
+    private User getCurrentUser() {
+        return AppContext.getInstance().getCurrentUser();
     }
 
-    // Displays the Travel Log page based on the requested category
-    public String showTravelLogPage(String pageName) {
-       /* if (currentUser == null) return "No user logged in.";
+    public Result showPage(Matcher matcher) {
+        User user = getCurrentUser();
+        if (user == null) return new Result("No user logged in.");
 
-        QuestLog log = currentUser.getQuestLog();
-        List<Quest> filteredQuests;
-
-        // Match the pageName to the Category (ADVENTURE/MAIN, SPECIAL, MINIGAME, EPIC, DAILY)
+        String pageName = matcher.group(1).toLowerCase();
+        QuestCategory category;
         try {
-            QuestCategory category = QuestCategory.valueOf(pageName.toUpperCase());
-            filteredQuests = log.findByCategory(category);
+            category = QuestCategory.valueOf(pageName.toUpperCase());
         } catch (IllegalArgumentException e) {
-            return "Invalid Travel Log page. Available pages: DAILY, MAIN, EPIC.";
+            return new Result("Invalid page. Available pages: daily, main, epic.");
         }
 
-        if (filteredQuests.isEmpty()) {
-            return "No active quests in this category.";
+        QuestLog log = user.getQuestLog();
+        List<Quest> quests = log.getDisplayableQuests(category);
+
+        if (quests.isEmpty()) {
+            return new Result("No active quests in " + pageName + " category.");
         }
 
-        // Sort by priority before displaying
-        filteredQuests = log.sortByPriority(filteredQuests);
+        StringBuilder sb = new StringBuilder("=== Travel Log: " + category.name() + " ===");
+        for (Quest q : quests) {
+            sb.append("\n\n[");
+            sb.append(q.getPriority()).append("] ");
+            sb.append(q.getTitle());
+            sb.append("\n  ");
+            sb.append(q.getDescription());
+            sb.append("\n  Progress: ").append(q.getProgress().toString());
+            sb.append(" | Status: ").append(q.getStatus());
+            sb.append("\n  Reward: ").append(q.getRewardDescription());
+            if (q.isCompleted() && !q.isClaimed()) {
+                sb.append("\n  >> Use 'claim quest ").append(q.getId()).append("' to claim reward!");
+            }
+        }
+        return new Result(sb.toString());
+    }
+
+    public Result showAllPages(Matcher matcher) {
+        User user = getCurrentUser();
+        if (user == null) return new Result("No user logged in.");
+
+        QuestLog log = user.getQuestLog();
+        StringBuilder sb = new StringBuilder("=== Travel Log Summary ===");
+
+        for (QuestCategory cat : QuestCategory.values()) {
+            List<Quest> quests = log.getDisplayableQuests(cat);
+            sb.append("\n\n--- ").append(cat.name()).append(" (").append(quests.size()).append(" quests) ---");
+            for (Quest q : quests) {
+                sb.append("\n [").append(q.getPriority()).append("] ")
+                  .append(q.getTitle()).append(" - ").append(q.getStatus());
+            }
+        }
+        return new Result(sb.toString());
+    }
+
+    public Result showQuest(Matcher matcher) {
+        User user = getCurrentUser();
+        if (user == null) return new Result("No user logged in.");
+
+        String questId = matcher.group(1);
+        QuestLog log = user.getQuestLog();
+        Quest quest = log.findById(questId);
+
+        if (quest == null) {
+            return new Result("Quest not found: " + questId);
+        }
 
         StringBuilder sb = new StringBuilder();
-        sb.append("--- Travel Log: ").append(pageName.toUpperCase()).append(" ---\n");
-        for (Quest q : filteredQuests) {
-            sb.append("[").append(q.getPriority()).append("] ")
-                    .append(q.getTitle()).append("\n")
-                    .append("  ").append(q.getDescription()).append("\n")
-                    .append("  Progress: ").append(q.getProgress().toString()).append("\n");
+        sb.append("=== ").append(quest.getTitle()).append(" ===");
+        sb.append("\nCategory: ").append(quest.getCategory().name());
+        sb.append("\nPriority: ").append(quest.getPriority().name());
+        sb.append("\nDescription: ").append(quest.getDescription());
+        sb.append("\nProgress: ").append(quest.getProgress().toString());
+        sb.append("\nStatus: ").append(quest.getStatus());
+        sb.append("\nReward: ").append(quest.getRewardDescription());
+        if (quest.getVariable() != null) {
+            sb.append("\nVariable: ").append(quest.getVariable());
         }
-        return sb.toString();*/
-        return null;
+
+        if (quest.isCompleted() && !quest.isClaimed()) {
+            sb.append("\n>> Use 'claim quest ").append(questId).append("' to claim your reward!");
+        }
+        return new Result(sb.toString());
     }
 
-    // Called when a user completes a quest objective
-    public String claimQuestReward(String questId) {
-    /*    Quest quest = currentUser.getQuestLog().findById(questId);
+    public Result claimReward(Matcher matcher) {
+        User user = getCurrentUser();
+        if (user == null) return new Result("No user logged in.");
 
-        if (quest == null) return "Quest not found.";
-        if (!quest.getProgress().isComplete()) return "Quest is not completed yet.";
-        if (!quest.isActive()) return "Reward already claimed.";
+        String questId = matcher.group(1);
+        QuestLog log = user.getQuestLog();
+        Quest quest = log.findById(questId);
 
-        // Grant all rewards attached to this quest
-        for (Reward reward : quest.getRewards()) {
-            reward.grant(currentUser);
+        if (quest == null) {
+            return new Result("Quest not found: " + questId);
+        }
+        if (!quest.isCompleted()) {
+            return new Result("Quest is not completed yet. Progress: " + quest.getProgress().toString());
+        }
+        if (quest.isClaimed()) {
+            return new Result("Reward already claimed for this quest.");
         }
 
-        quest.deactivate(); // Mark as claimed
-        return "Rewards claimed for quest: " + quest.getTitle();*/
-        return null;
+        quest.claim(user);
+        user.saveUser();
+        return new Result("Rewards claimed for quest: " + quest.getTitle() + "!");
+    }
+
+    public Result exit(Matcher matcher) {
+        return new Result("Exited to " + new MainMenu().getName(), new MainMenu());
     }
 }
