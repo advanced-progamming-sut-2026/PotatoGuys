@@ -1,9 +1,9 @@
 package pvz.Models.Games.Levels.Data;
 
-import pvz.Models.Games.map.TileType;
+import java.util.List;
 
 public class TileDefinition {
     public int x;
     public int y;
-    public TileType type;
+    public List<BehaviorDefinition> behaviors;
 }
