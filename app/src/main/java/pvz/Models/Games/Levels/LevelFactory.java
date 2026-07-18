@@ -19,7 +19,7 @@ public class LevelFactory {
             map = new GameMap(def.map.rows, def.map.columns);
             if (def.map.specialTiles != null) {
                 for (TileDefinition tileDef : def.map.specialTiles) {
-                    map.getTile(tileDef.x, tileDef.y).setType(TileType.valueOf(tileDef.type));
+                    map.getTile(tileDef.x, tileDef.y).setType(tileDef.type);
                 }
             }
         } else {
@@ -31,10 +31,7 @@ public class LevelFactory {
             for (WaveDefinition waveDef : normalDef.waves) {
                 List<WavePhase> phases = new ArrayList<>();
                 for (WavePhaseDefinition phaseDef : waveDef.phases) {
-                    List<ZombieType> allowedTypes = new ArrayList<>();
-                    for (String typeName : phaseDef.allowedTypes) {
-                        allowedTypes.add(ZombieType.valueOf(typeName));
-                    }
+                    List<ZombieType> allowedTypes = new ArrayList<>(phaseDef.allowedTypes);
                     phases.add(new WavePhase(phaseDef.zombieCount, phaseDef.intervalTicks, allowedTypes, phaseDef.isBurst));
                 }
                 waves.add(new Wave(waveDef.waveNumber, waveDef.isFinalWave, waveDef.delayTicks, phases, waveDef.lanes, waveDef.difficulty));

@@ -221,7 +221,7 @@ public class GameController {
 
         Tile tile = context.getMap().getMap()[y][x];
         StringBuilder status = new StringBuilder("Tile Status at (").append(x).append(",").append(y).append("):\n");
-        if (tile.getPlants() != null && tile.getPlants().getLast() != null) {
+        if (tile.getPlants() != null && !tile.getPlants().isEmpty()) {
             status.append("Plant: ").append(tile.getPlants().getLast().getType()).append("\n");
         } else {
             status.append("Plant: None\n");
