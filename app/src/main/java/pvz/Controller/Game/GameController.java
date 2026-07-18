@@ -219,13 +219,29 @@ public class GameController {
              return new Result("Invalid coordinates.");
         }
 
-        Tile tile = context.getMap().getMap()[y][x];
-        StringBuilder status = new StringBuilder("Tile Status at (").append(x).append(",").append(y).append("):\n");
+        Tile tile = context.getMap().getMap()[x][y];
+        StringBuilder status = new StringBuilder("Tile Status at (").append(x).append(",").append(y).append("):");
+
+        //--- Tile type:
+        status.append("\n").append("  Type: ").append(tile.getType().typeName);
+
+        //--- Plant:
         if (tile.getPlants() != null && !tile.getPlants().isEmpty()) {
-            status.append("Plant: ").append(tile.getPlants().getLast().getType()).append("\n");
+            status.append("\n").append("  Plant: ").append(tile.getPlants().getLast().getType());
         } else {
-            status.append("Plant: None\n");
+            status.append("\n").append("  Plant: None");
         }
+
+        //-- Zombies:
+        if (!context.getZombiesAt(x,y).isEmpty()) {
+            status.append("\n").append("  Zombies: ");
+            for (Zombie z : context.getZombiesAt(x, y)) {
+                status.append("\n  ").append(z.getSheet().getAlias());
+            }
+        } else {
+            status.append("\n").append("  Zombies: None");
+        }
+
         return new Result(status.toString());
     }
 
