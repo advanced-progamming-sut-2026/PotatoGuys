@@ -36,7 +36,9 @@ public class ChapterSelectionController {
         return new Result("Entering Travel Log (Quest Menu) ...", new QuestMenu());
     }
 
-    public Result leaderboard(Matcher matcher) { return null; }
+    public Result leaderboard(Matcher matcher) {
+        return new Result("Entering Leaderboard ...", new LeaderBoardMenu());
+    }
 
     public Result coinWallet(Matcher matcher) {
         return new Result("Coins: "+ AppContext.getInstance().getCurrentUser().getProfile().getCoins());

@@ -121,6 +121,11 @@ public class QuestController {
         }
 
         quest.claim(user);
+        if (quest.getCategory() == QuestCategory.DAILY) {
+            user.getScore().setDailyQuests(user.getScore().getDailyQuests() + 1);
+        } else {
+            user.getScore().setNonDailyQuests(user.getScore().getNonDailyQuests() + 1);
+        }
         user.saveUser();
         return new Result("Rewards claimed for quest: " + quest.getTitle() + "!");
     }
