@@ -106,7 +106,7 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
+    public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
         if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) return false;
         if (!context.getPlantsAt(col, lane).isEmpty()) return false;
         if (!(card instanceof PlantCard plantCard)) return false;
@@ -122,7 +122,7 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public void handlePlacement(GameContext context, int col, int lane, Card card) {
+    public void handlePlacement(GameContext context, int col, int lane, PlantCard card) {
         if (!(card instanceof PlantCard plantCard)) return;
 
         Plant plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,

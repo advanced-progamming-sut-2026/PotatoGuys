@@ -15,6 +15,8 @@ import pvz.Models.Games.Levels.NormalLevel;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
+import pvz.Models.Games.map.Tile;
+import pvz.Models.Games.map.TileTags;
 
 /**
  * Standard game mode implementation.
@@ -75,8 +77,8 @@ public class NormalMode implements GameMode, PlantPlacer {
             }
         }
         for (int i = 0; i < context.getSuns().size(); i++) {
-            Sun sun=context.getSuns().get(i);
-            if (sun.isDone()){
+            Sun sun = context.getSuns().get(i);
+            if (sun.isDone()) {
                 context.removeSun(sun);
                 i--;
             }
@@ -84,25 +86,26 @@ public class NormalMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
+    public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
         if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
             return false;
         }
         if (!context.getPlantsAt(col, lane).isEmpty()) {
             return false;
         }
+        if (!context.getTileAt(col, lane).isPlantable(card)) {
+            return false;
+        }
         if (card == null || !card.canUse()) {
             return false;
         }
-        if (card instanceof PlantCard plantCard) {
-            PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(plantCard.getPlant().getType());
-            return context.getCurrentSun() >= sheet.getSunCost();
-        }
-        return false;
+
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        return context.getCurrentSun() >= sheet.getSunCost();
     }
 
     @Override
-    public void handlePlacement(GameContext context, int col, int lane, Card card) {
+    public void handlePlacement(GameContext context, int col, int lane, PlantCard card) {
         if (!(card instanceof PlantCard plantCard)) {
             context.log("Error: card is not a plant card.");
             return;
@@ -121,7 +124,7 @@ public class NormalMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public PlantCard findCard(GameContext context , String plantType) {
+    public PlantCard findCard(GameContext context, String plantType) {
         for (Card card : context.getCards()) {
             PlantCard plantCard = (PlantCard) card;
             if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
@@ -132,35 +135,35 @@ public class NormalMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public String getCardsStatus(GameContext context){
+    public String getCardsStatus(GameContext context) {
         StringBuilder result = new StringBuilder();
         List<Card> cards = context.getCards();
-            
+
         if (cards == null || cards.isEmpty()) {
             result.append("No plant cards available.");
         } else {
             result.append("=== SEED PACKETS ===");
-            
+
             int cardWidth = 40;
-        
+
             for (int i = 0; i < cards.size(); i++) {
                 PlantCard ps = (PlantCard) cards.get(i);
-                
+
                 String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | Cooldown:%.1f%s",
                         ps.getPlant().getType(),
                         ps.getCost(),
                         ps.getPlant().getLevel(),
                         ps.getCooldown(),
-                        ps.getPlant().isBoosted() ? " | ⚡B" : "" 
+                        ps.getPlant().isBoosted() ? " | ⚡B" : ""
                 );
-            
+
                 result.append("\n");
                 result.append(String.format("%-" + cardWidth + "s", cardInfo));
             }
         }
         return result.toString();
     }
-    
+
     private void SetupLawnMowers() {
         int lanes = 5;
         lawnMower = new Boolean[lanes];
@@ -179,7 +182,6 @@ public class NormalMode implements GameMode, PlantPlacer {
         });
         lawnMower[lane] = true;
     }
-
 
 
     private static final String CELL_EMPTY = "    ";
@@ -242,6 +244,14 @@ public class NormalMode implements GameMode, PlantPlacer {
 
         List<Zombie> zombiesAtCell = context.getZombiesAt(col, lane);
         boolean hasZombie = !zombiesAtCell.isEmpty();
+
+        Tile tile = context.getTileAt(col, lane);
+        if (tile!=null){
+            if (tile.getTags().contains(TileTags.GRAVE)){
+                if (hasZombie) return String.format("G/Z%-1d",zombiesAtCell.size());
+                return " G  ";
+            }
+        }
 
         if (hasPlant && hasZombie) {
             return String.format("P/Z%-1d", plantsAtCell.size(), zombiesAtCell.size());

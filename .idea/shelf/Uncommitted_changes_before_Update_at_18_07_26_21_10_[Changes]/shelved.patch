@@ -1,0 +1,899 @@
+Index: app/src/main/java/pvz/saves/session.json
+===================================================================
+diff --git a/app/src/main/java/pvz/saves/session.json b/app/src/main/java/pvz/saves/session.json
+deleted file mode 100644
+--- a/app/src/main/java/pvz/saves/session.json	(revision 81882dada5564ae24f8a26a6dcbd925634ab9cdf)
++++ /dev/null	(revision 81882dada5564ae24f8a26a6dcbd925634ab9cdf)
+@@ -1,1 +0,0 @@
+-"mahdi12"
+\ No newline at end of file
+Index: app/src/main/java/pvz/saves/users/username.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\n  \"sed6\": \"b2ce2096-0ff6-45ba-9028-123debe6eb96\",\n  \"sed\": \"bf665c1c-18bd-4c2f-9861-e0e2a07841f2\",\n  \"sed3\": \"9aedd9fa-561f-405c-aaa5-d5a2964a6eb5\",\n  \"mahdi\": \"2a6a6c9a-43c6-480b-ae44-29185582f14f\",\n  \"sed2\": \"3154eacb-a8d8-4228-a0a3-a6d89ddb384e\",\n  \"YousofRD\": \"84cf027d-8b2b-42b2-9dba-109f7ead8cf2\",\n  \"sed5\": \"798ecb19-8682-46c3-bd68-8cb457c79254\",\n  \"sed4\": \"94a6569b-9fb6-4506-b044-a314387dc5f6\",\n  \"Yousof\": \"4b71df69-4456-40ee-adce-e5f67be76600\",\n  \"YOUSOF\": \"b2b9ed0c-8a0f-4d6c-af4a-439eac763ab4\",\n  \"hihiH\": \"19394e82-e008-49cf-a8f3-89bb2bc7a043\",\n  \"mahdi12\": \"d5cad69f-c923-494b-933a-49c35e455745\"\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/saves/users/username.json b/app/src/main/java/pvz/saves/users/username.json
+--- a/app/src/main/java/pvz/saves/users/username.json	(revision 81882dada5564ae24f8a26a6dcbd925634ab9cdf)
++++ b/app/src/main/java/pvz/saves/users/username.json	(date 1784392766144)
+@@ -1,14 +1,16 @@
+ {
+-  "sed6": "b2ce2096-0ff6-45ba-9028-123debe6eb96",
++  "YOUSOF": "b2b9ed0c-8a0f-4d6c-af4a-439eac763ab4",
++  "hihiH": "19394e82-e008-49cf-a8f3-89bb2bc7a043",
++  "mahdi12": "d5cad69f-c923-494b-933a-49c35e455745",
++  "sed7": "f45eef08-ca05-466a-bc29-b11ed9b64101",
++  "sed6": "fb8100e5-3760-44bd-bed7-5036a551da9c",
+   "sed": "bf665c1c-18bd-4c2f-9861-e0e2a07841f2",
++  "sed8": "9166ad14-06c3-49b8-95d8-d926d6c189c6",
+   "sed3": "9aedd9fa-561f-405c-aaa5-d5a2964a6eb5",
+   "mahdi": "2a6a6c9a-43c6-480b-ae44-29185582f14f",
+   "sed2": "3154eacb-a8d8-4228-a0a3-a6d89ddb384e",
+   "YousofRD": "84cf027d-8b2b-42b2-9dba-109f7ead8cf2",
+   "sed5": "798ecb19-8682-46c3-bd68-8cb457c79254",
+   "sed4": "94a6569b-9fb6-4506-b044-a314387dc5f6",
+-  "Yousof": "4b71df69-4456-40ee-adce-e5f67be76600",
+-  "YOUSOF": "b2b9ed0c-8a0f-4d6c-af4a-439eac763ab4",
+-  "hihiH": "19394e82-e008-49cf-a8f3-89bb2bc7a043",
+-  "mahdi12": "d5cad69f-c923-494b-933a-49c35e455745"
++  "Yousof": "4b71df69-4456-40ee-adce-e5f67be76600"
+ }
+\ No newline at end of file
+Index: app/src/main/java/pvz/saves/users/b2ce2096-0ff6-45ba-9028-123debe6eb96.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\n  \"id\": \"b2ce2096-0ff6-45ba-9028-123debe6eb96\",\n  \"username\": \"sed6\",\n  \"passwordHash\": \"c731112cfdac04122988150d3e7d17da30173be84c3cd4c37a6961b0c4da6470\",\n  \"nickName\": \"sed6\",\n  \"email\": \"sed6@gmail.com\",\n  \"gender\": \"MALE\",\n  \"securityQuestion\": \"1\",\n  \"securityAnswer\": \"hamid\",\n  \"profile\": {\n    \"gamePlayed\": 0,\n    \"coins\": 0,\n    \"diamonds\": 0,\n    \"plantFood\": 0,\n    \"collection\": {\n      \"news\": {\n        \"messages\": [\n          {\n            \"message\": \"Peashooter has been unlocked!\",\n            \"unread\": true\n          },\n          {\n            \"message\": \"Sunflower has been unlocked!\",\n            \"unread\": true\n          },\n          {\n            \"message\": \"Cabbagepult has been unlocked!\",\n            \"unread\": true\n          },\n          {\n            \"message\": \"BonkChoy has been unlocked!\",\n            \"unread\": true\n          },\n          {\n            \"message\": \"Repeater has been unlocked!\",\n            \"unread\": true\n          },\n          {\n            \"message\": \"TwinSunflower has been unlocked!\",\n            \"unread\": true\n          },\n          {\n            \"message\": \"PeaPod has been unlocked!\",\n            \"unread\": true\n          },\n          {\n            \"message\": \"SnowPea has been unlocked!\",\n            \"unread\": true\n          },\n          {\n            \"message\": \"Welcome to Plants vs Zombies 2 sed6!\",\n            \"unread\": true\n          }\n        ]\n      },\n      \"unlockedPlants\": [\n        {\n          \"Type\": \"Peashooter\",\n          \"level\": 1,\n          \"seed\": 0,\n          \"isBoosted\": false\n        },\n        {\n          \"Type\": \"Sunflower\",\n          \"level\": 1,\n          \"seed\": 0,\n          \"isBoosted\": false\n        },\n        {\n          \"Type\": \"Cabbagepult\",\n          \"level\": 1,\n          \"seed\": 0,\n          \"isBoosted\": false\n        },\n        {\n          \"Type\": \"BonkChoy\",\n          \"level\": 1,\n          \"seed\": 0,\n          \"isBoosted\": false\n        },\n        {\n          \"Type\": \"Repeater\",\n          \"level\": 1,\n          \"seed\": 0,\n          \"isBoosted\": false\n        },\n        {\n          \"Type\": \"TwinSunflower\",\n          \"level\": 1,\n          \"seed\": 0,\n          \"isBoosted\": false\n        },\n        {\n          \"Type\": \"PeaPod\",\n          \"level\": 1,\n          \"seed\": 0,\n          \"isBoosted\": false\n        },\n        {\n          \"Type\": \"SnowPea\",\n          \"level\": 1,\n          \"seed\": 0,\n          \"isBoosted\": false\n        }\n      ],\n      \"unlockedZombies\": []\n    },\n    \"news\": {\n      \"messages\": [\n        {\n          \"message\": \"Peashooter has been unlocked!\",\n          \"unread\": true\n        },\n        {\n          \"message\": \"Sunflower has been unlocked!\",\n          \"unread\": true\n        },\n        {\n          \"message\": \"Cabbagepult has been unlocked!\",\n          \"unread\": true\n        },\n        {\n          \"message\": \"BonkChoy has been unlocked!\",\n          \"unread\": true\n        },\n        {\n          \"message\": \"Repeater has been unlocked!\",\n          \"unread\": true\n        },\n        {\n          \"message\": \"TwinSunflower has been unlocked!\",\n          \"unread\": true\n        },\n        {\n          \"message\": \"PeaPod has been unlocked!\",\n          \"unread\": true\n        },\n        {\n          \"message\": \"SnowPea has been unlocked!\",\n          \"unread\": true\n        },\n        {\n          \"message\": \"Welcome to Plants vs Zombies 2 sed6!\",\n          \"unread\": true\n        }\n      ]\n    },\n    \"greenHouseCollection\": {\n      \"plants\": []\n    },\n    \"seasons\": [\n      {\n        \"name\": \"Ancient Egypt\",\n        \"locked\": false,\n        \"levels\": [],\n        \"levelUnlocked\": {}\n      },\n      {\n        \"name\": \"Frostbite Caves\",\n        \"locked\": true,\n        \"levels\": [],\n        \"levelUnlocked\": {}\n      },\n      {\n        \"name\": \"Dark Ages\",\n        \"locked\": true,\n        \"levels\": [],\n        \"levelUnlocked\": {}\n      },\n      {\n        \"name\": \"Big Wave Beach\",\n        \"locked\": true,\n        \"levels\": [],\n        \"levelUnlocked\": {}\n      }\n    ],\n    \"maxMiopoint\": 0,\n    \"dailyOfferPlantType\": null,\n    \"dailyOfferDate\": null,\n    \"dailyOfferPurchased\": false\n  },\n  \"setting\": {\n    \"difficulty\": 3\n  },\n  \"score\": {\n    \"lastLevel\": 0,\n    \"lastSeason\": 0,\n    \"numMiniGames\": 0,\n    \"dailyQuests\": 0,\n    \"nonDailyQuests\": 0,\n    \"highestScore\": 0\n  },\n  \"greenHouse\": {\n    \"greenHousePots\": [\n      {\n        \"x\": 1,\n        \"y\": 1,\n        \"locked\": false,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 2,\n        \"y\": 1,\n        \"locked\": false,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 3,\n        \"y\": 1,\n        \"locked\": false,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 4,\n        \"y\": 1,\n        \"locked\": false,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 5,\n        \"y\": 1,\n        \"locked\": false,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 1,\n        \"y\": 2,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 2,\n        \"y\": 2,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 3,\n        \"y\": 2,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 4,\n        \"y\": 2,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 5,\n        \"y\": 2,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 1,\n        \"y\": 3,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 2,\n        \"y\": 3,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 3,\n        \"y\": 3,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 4,\n        \"y\": 3,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 5,\n        \"y\": 3,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 1,\n        \"y\": 4,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 2,\n        \"y\": 4,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 3,\n        \"y\": 4,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 4,\n        \"y\": 4,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      },\n      {\n        \"x\": 5,\n        \"y\": 4,\n        \"locked\": true,\n        \"greenHousePlant\": null\n      }\n    ]\n  }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/pvz/saves/users/b2ce2096-0ff6-45ba-9028-123debe6eb96.json b/app/src/main/java/pvz/saves/users/b2ce2096-0ff6-45ba-9028-123debe6eb96.json
+--- a/app/src/main/java/pvz/saves/users/b2ce2096-0ff6-45ba-9028-123debe6eb96.json	(revision 81882dada5564ae24f8a26a6dcbd925634ab9cdf)
++++ b/app/src/main/java/pvz/saves/users/b2ce2096-0ff6-45ba-9028-123debe6eb96.json	(date 1784391372784)
+@@ -313,5 +313,845 @@
+         "greenHousePlant": null
+       }
+     ]
++  },
++  "questLog": {
++    "quests": [
++      {
++        "id": "daily_sun_catcher_3000",
++        "title": "Daily Sun Catcher (3000)",
++        "description": "Collect 3000 units of sun during one day.",
++        "category": "DAILY",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "COIN",
++            "amount": 30,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 3000,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_sun_catcher_4000",
++        "title": "Daily Sun Catcher (4000)",
++        "description": "Collect 4000 units of sun during one day.",
++        "category": "DAILY",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "COIN",
++            "amount": 40,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 4000,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_sun_catcher_5000",
++        "title": "Daily Sun Catcher (5000)",
++        "description": "Collect 5000 units of sun during one day.",
++        "category": "DAILY",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "COIN",
++            "amount": 50,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 5000,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_pro_plant_player",
++        "title": "Professional Plant Player",
++        "description": "Kill 10 zombies only with plants.",
++        "category": "DAILY",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "targetType": "PLANT",
++            "targetId": "CherryBomb",
++            "type": "UNLOCKABLE"
++          }
++        ],
++        "progress": {
++          "targetAmount": 10,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_only_cactus",
++        "title": "Only Cactus",
++        "description": "Kill 10 zombies only with Cactus.",
++        "category": "DAILY",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 20,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 10,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_professional_destroyer",
++        "title": "Professional Destroyer",
++        "description": "Use 3 explosive plants in one level.",
++        "category": "DAILY",
++        "priority": "LOW",
++        "rewards": [
++          {
++            "currencyKind": "COIN",
++            "amount": 100,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 3,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_symmetry",
++        "title": "Symmetry",
++        "description": "Win a level where the garden is symmetrical at the end.",
++        "category": "DAILY",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "currencyKind": "COIN",
++            "amount": 500,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_family_slaughter_peashooter",
++        "title": "Family Slaughter (Peashooter)",
++        "description": "Win a level using only Peashooter family plants to kill zombies.",
++        "category": "DAILY",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "COIN",
++            "amount": 1000,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_family_slaughter_sunflower",
++        "title": "Family Slaughter (Sunflower)",
++        "description": "Win a level using only Sunflower family plants to kill zombies.",
++        "category": "DAILY",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "COIN",
++            "amount": 1000,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_blooming_constraints_shooter",
++        "title": "Blooming in Constraints (Shooter)",
++        "description": "Win a level without using any Shooter family plants.",
++        "category": "DAILY",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 100,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_blooming_constraints_explosive",
++        "title": "Blooming in Constraints (Explosive)",
++        "description": "Win a level without using any Explosive family plants.",
++        "category": "DAILY",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 100,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_win_after_win",
++        "title": "Win After Win",
++        "description": "Win 5 consecutive levels on the highest difficulty.",
++        "category": "DAILY",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "COIN",
++            "amount": 5000,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 5,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_almost_victorious",
++        "title": "Almost Victorious",
++        "description": "Kill 10 zombies in the first column of a row that has no lawnmower.",
++        "category": "DAILY",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "COIN",
++            "amount": 300,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 10,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_anti_ocd",
++        "title": "Anti-OCD",
++        "description": "Win a level where there is no symmetry in the garden (except the middle row).",
++        "category": "DAILY",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "COIN",
++            "amount": 800,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_cloudy_day",
++        "title": "Cloudy Day",
++        "description": "Win a level with only 3 sun-producing plants.",
++        "category": "DAILY",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 10,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_one_less_column_2",
++        "title": "One Less Column (2)",
++        "description": "Win a level without planting in column 2.",
++        "category": "DAILY",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 10,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_one_less_column_3",
++        "title": "One Less Column (3)",
++        "description": "Win a level without planting in column 3.",
++        "category": "DAILY",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 10,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_defenseless_row_1",
++        "title": "Defenseless Row (1)",
++        "description": "Win a level without planting in row 1.",
++        "category": "DAILY",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 20,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_defenseless_row_3",
++        "title": "Defenseless Row (3)",
++        "description": "Win a level without planting in row 3.",
++        "category": "DAILY",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 20,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "daily_defenseless_cross_2_2",
++        "title": "Defenseless Cross (2,2)",
++        "description": "Win a level without planting in row 2 or column 2.",
++        "category": "DAILY",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 25,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": true,
++        "variable": null
++      },
++      {
++        "id": "main_chapter_hunter_egypt",
++        "title": "Chapter Hunter (Ancient Egypt)",
++        "description": "Defeat 50 zombies from the Ancient Egypt chapter.",
++        "category": "MAIN",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "itemId": "seed_packet",
++            "quantity": 10,
++            "type": "INVENTORY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 50,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "main_chapter_hunter_caves",
++        "title": "Chapter Hunter (Frostbite Caves)",
++        "description": "Defeat 50 zombies from the Frostbite Caves chapter.",
++        "category": "MAIN",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "itemId": "seed_packet",
++            "quantity": 10,
++            "type": "INVENTORY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 50,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "main_chapter_hunter_ages",
++        "title": "Chapter Hunter (Dark Ages)",
++        "description": "Defeat 50 zombies from the Dark Ages chapter.",
++        "category": "MAIN",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "itemId": "seed_packet",
++            "quantity": 10,
++            "type": "INVENTORY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 50,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "main_chapter_hunter_beach",
++        "title": "Chapter Hunter (Big Wave Beach)",
++        "description": "Defeat 50 zombies from the Big Wave Beach chapter.",
++        "category": "MAIN",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "itemId": "seed_packet",
++            "quantity": 10,
++            "type": "INVENTORY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 50,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "main_economical_0",
++        "title": "Economical Vegetarian (Perfect)",
++        "description": "Win a level without losing any plants.",
++        "category": "MAIN",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "itemId": "seed_packet",
++            "quantity": 20,
++            "type": "INVENTORY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "main_economical_1",
++        "title": "Economical Vegetarian (1 Loss)",
++        "description": "Win a level losing at most 1 plant.",
++        "category": "MAIN",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "itemId": "seed_packet",
++            "quantity": 19,
++            "type": "INVENTORY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "main_economical_2",
++        "title": "Economical Vegetarian (2 Losses)",
++        "description": "Win a level losing at most 2 plants.",
++        "category": "MAIN",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "itemId": "seed_packet",
++            "quantity": 18,
++            "type": "INVENTORY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "main_economical_3",
++        "title": "Economical Vegetarian (3 Losses)",
++        "description": "Win a level losing at most 3 plants.",
++        "category": "MAIN",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "itemId": "seed_packet",
++            "quantity": 17,
++            "type": "INVENTORY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "main_economical_4",
++        "title": "Economical Vegetarian (4 Losses)",
++        "description": "Win a level losing at most 4 plants.",
++        "category": "MAIN",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "itemId": "seed_packet",
++            "quantity": 16,
++            "type": "INVENTORY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "main_economical_5",
++        "title": "Economical Vegetarian (5 Losses)",
++        "description": "Win a level losing at most 5 plants.",
++        "category": "MAIN",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "itemId": "seed_packet",
++            "quantity": 15,
++            "type": "INVENTORY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "main_quick_reflexes",
++        "title": "Quick Reflexes",
++        "description": "Kill 10 zombies in less than 30 seconds from the start of the first zombie attack wave.",
++        "category": "MAIN",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "COIN",
++            "amount": 500,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 10,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "epic_defense_master",
++        "title": "Defense Master",
++        "description": "Complete a level with exactly zero sun.",
++        "category": "EPIC",
++        "priority": "CRITICAL",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 200,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "epic_night_or_morning",
++        "title": "Night or Morning",
++        "description": "Finish a day game level with night plants (mushrooms).",
++        "category": "EPIC",
++        "priority": "HIGH",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 20,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 1,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "epic_lawnmowing_10",
++        "title": "Lawnmowing Time (10)",
++        "description": "Kill at least 10 zombies with a lawnmower.",
++        "category": "EPIC",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 10,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 10,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "epic_lawnmowing_20",
++        "title": "Lawnmowing Time (20)",
++        "description": "Kill at least 20 zombies with a lawnmower.",
++        "category": "EPIC",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 20,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 20,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "epic_lawnmowing_30",
++        "title": "Lawnmowing Time (30)",
++        "description": "Kill at least 30 zombies with a lawnmower.",
++        "category": "EPIC",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 30,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 30,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "epic_lawnmowing_40",
++        "title": "Lawnmowing Time (40)",
++        "description": "Kill at least 40 zombies with a lawnmower.",
++        "category": "EPIC",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 40,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 40,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      },
++      {
++        "id": "epic_lawnmowing_50",
++        "title": "Lawnmowing Time (50)",
++        "description": "Kill at least 50 zombies with a lawnmower.",
++        "category": "EPIC",
++        "priority": "MEDIUM",
++        "rewards": [
++          {
++            "currencyKind": "GEM",
++            "amount": 50,
++            "type": "CURRENCY"
++          }
++        ],
++        "progress": {
++          "targetAmount": 50,
++          "currentAmount": 0
++        },
++        "active": true,
++        "claimed": false,
++        "repeatable": false,
++        "variable": null
++      }
++    ]
+   }
+ }
+\ No newline at end of file

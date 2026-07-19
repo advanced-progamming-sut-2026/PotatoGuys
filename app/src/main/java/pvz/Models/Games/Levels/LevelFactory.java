@@ -3,6 +3,7 @@ package pvz.Models.Games.Levels;
 import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.Games.Levels.Data.*;
 import pvz.Models.Games.map.GameMap;
+import pvz.Models.Games.map.TileTags;
 import pvz.Models.Games.map.behaviors.DestructibleBehavior;
 import pvz.Models.Games.map.behaviors.SlipperyBehavior;
 
@@ -20,6 +21,11 @@ public class LevelFactory {
                             case "DESTRUCTIBLE" -> map.getTile(tileDef.x, tileDef.y).addBehavior(new DestructibleBehavior(behDef.hp, behDef.name));
                             case "SLIPPERY" -> map.getTile(tileDef.x, tileDef.y).addBehavior(new SlipperyBehavior(behDef.laneDelta));
                         }
+                    }
+                }
+                if (tileDef.tags !=null){
+                    for (TileTags tag: tileDef.tags){
+                        map.getTile(tileDef.x,tileDef.y).getTags().add(tag);
                     }
                 }
             }

@@ -1,9 +1,9 @@
 {
-  "id": "b2ce2096-0ff6-45ba-9028-123debe6eb96",
-  "username": "sed6",
+  "id": "643e69ad-4f24-4234-ab4a-311426ea64e4",
+  "username": "sedsed",
   "passwordHash": "c731112cfdac04122988150d3e7d17da30173be84c3cd4c37a6961b0c4da6470",
-  "nickName": "sed6",
-  "email": "sed6@gmail.com",
+  "nickName": "sedsed",
+  "email": "sedsed@gmail.com",
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "hamid",
@@ -48,7 +48,7 @@
             "unread": true
           },
           {
-            "message": "Welcome to Plants vs Zombies 2 sed6!",
+            "message": "Welcome to Plants vs Zombies 2 sedsed!",
             "unread": true
           }
         ]
@@ -140,7 +140,7 @@
           "unread": true
         },
         {
-          "message": "Welcome to Plants vs Zombies 2 sed6!",
+          "message": "Welcome to Plants vs Zombies 2 sedsed!",
           "unread": true
         }
       ]
@@ -322,13 +322,6 @@
         "description": "Collect 3000 units of sun during one day.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "COIN",
-            "amount": 30,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 3000,
           "currentAmount": 0
@@ -344,13 +337,6 @@
         "description": "Collect 4000 units of sun during one day.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "COIN",
-            "amount": 40,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 4000,
           "currentAmount": 0
@@ -366,13 +352,6 @@
         "description": "Collect 5000 units of sun during one day.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "COIN",
-            "amount": 50,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 5000,
           "currentAmount": 0
@@ -388,13 +367,6 @@
         "description": "Kill 10 zombies only with plants.",
         "category": "DAILY",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "targetType": "PLANT",
-            "targetId": "CherryBomb",
-            "type": "UNLOCKABLE"
-          }
-        ],
         "progress": {
           "targetAmount": 10,
           "currentAmount": 0
@@ -410,13 +382,6 @@
         "description": "Kill 10 zombies only with Cactus.",
         "category": "DAILY",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 20,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 10,
           "currentAmount": 0
@@ -432,13 +397,6 @@
         "description": "Use 3 explosive plants in one level.",
         "category": "DAILY",
         "priority": "LOW",
-        "rewards": [
-          {
-            "currencyKind": "COIN",
-            "amount": 100,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 3,
           "currentAmount": 0
@@ -454,13 +412,6 @@
         "description": "Win a level where the garden is symmetrical at the end.",
         "category": "DAILY",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "currencyKind": "COIN",
-            "amount": 500,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -476,13 +427,6 @@
         "description": "Win a level using only Peashooter family plants to kill zombies.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "COIN",
-            "amount": 1000,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -498,13 +442,6 @@
         "description": "Win a level using only Sunflower family plants to kill zombies.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "COIN",
-            "amount": 1000,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -520,13 +457,6 @@
         "description": "Win a level without using any Shooter family plants.",
         "category": "DAILY",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 100,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -542,13 +472,6 @@
         "description": "Win a level without using any Explosive family plants.",
         "category": "DAILY",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 100,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -564,13 +487,6 @@
         "description": "Win 5 consecutive levels on the highest difficulty.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "COIN",
-            "amount": 5000,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 5,
           "currentAmount": 0
@@ -586,13 +502,6 @@
         "description": "Kill 10 zombies in the first column of a row that has no lawnmower.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "COIN",
-            "amount": 300,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 10,
           "currentAmount": 0
@@ -608,13 +517,6 @@
         "description": "Win a level where there is no symmetry in the garden (except the middle row).",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "COIN",
-            "amount": 800,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -630,13 +532,6 @@
         "description": "Win a level with only 3 sun-producing plants.",
         "category": "DAILY",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 10,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -652,13 +547,6 @@
         "description": "Win a level without planting in column 2.",
         "category": "DAILY",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 10,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -674,13 +562,6 @@
         "description": "Win a level without planting in column 3.",
         "category": "DAILY",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 10,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -696,13 +577,6 @@
         "description": "Win a level without planting in row 1.",
         "category": "DAILY",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 20,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -718,13 +592,6 @@
         "description": "Win a level without planting in row 3.",
         "category": "DAILY",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 20,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -740,13 +607,6 @@
         "description": "Win a level without planting in row 2 or column 2.",
         "category": "DAILY",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 25,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -762,13 +622,6 @@
         "description": "Defeat 50 zombies from the Ancient Egypt chapter.",
         "category": "MAIN",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "itemId": "seed_packet",
-            "quantity": 10,
-            "type": "INVENTORY"
-          }
-        ],
         "progress": {
           "targetAmount": 50,
           "currentAmount": 0
@@ -784,13 +637,6 @@
         "description": "Defeat 50 zombies from the Frostbite Caves chapter.",
         "category": "MAIN",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "itemId": "seed_packet",
-            "quantity": 10,
-            "type": "INVENTORY"
-          }
-        ],
         "progress": {
           "targetAmount": 50,
           "currentAmount": 0
@@ -806,13 +652,6 @@
         "description": "Defeat 50 zombies from the Dark Ages chapter.",
         "category": "MAIN",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "itemId": "seed_packet",
-            "quantity": 10,
-            "type": "INVENTORY"
-          }
-        ],
         "progress": {
           "targetAmount": 50,
           "currentAmount": 0
@@ -828,13 +667,6 @@
         "description": "Defeat 50 zombies from the Big Wave Beach chapter.",
         "category": "MAIN",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "itemId": "seed_packet",
-            "quantity": 10,
-            "type": "INVENTORY"
-          }
-        ],
         "progress": {
           "targetAmount": 50,
           "currentAmount": 0
@@ -850,13 +682,6 @@
         "description": "Win a level without losing any plants.",
         "category": "MAIN",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "itemId": "seed_packet",
-            "quantity": 20,
-            "type": "INVENTORY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -872,13 +697,6 @@
         "description": "Win a level losing at most 1 plant.",
         "category": "MAIN",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "itemId": "seed_packet",
-            "quantity": 19,
-            "type": "INVENTORY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -894,13 +712,6 @@
         "description": "Win a level losing at most 2 plants.",
         "category": "MAIN",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "itemId": "seed_packet",
-            "quantity": 18,
-            "type": "INVENTORY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -916,13 +727,6 @@
         "description": "Win a level losing at most 3 plants.",
         "category": "MAIN",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "itemId": "seed_packet",
-            "quantity": 17,
-            "type": "INVENTORY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -938,13 +742,6 @@
         "description": "Win a level losing at most 4 plants.",
         "category": "MAIN",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "itemId": "seed_packet",
-            "quantity": 16,
-            "type": "INVENTORY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -960,13 +757,6 @@
         "description": "Win a level losing at most 5 plants.",
         "category": "MAIN",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "itemId": "seed_packet",
-            "quantity": 15,
-            "type": "INVENTORY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -982,13 +772,6 @@
         "description": "Kill 10 zombies in less than 30 seconds from the start of the first zombie attack wave.",
         "category": "MAIN",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "COIN",
-            "amount": 500,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 10,
           "currentAmount": 0
@@ -1004,13 +787,6 @@
         "description": "Complete a level with exactly zero sun.",
         "category": "EPIC",
         "priority": "CRITICAL",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 200,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -1026,13 +802,6 @@
         "description": "Finish a day game level with night plants (mushrooms).",
         "category": "EPIC",
         "priority": "HIGH",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 20,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 1,
           "currentAmount": 0
@@ -1048,13 +817,6 @@
         "description": "Kill at least 10 zombies with a lawnmower.",
         "category": "EPIC",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 10,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 10,
           "currentAmount": 0
@@ -1070,13 +832,6 @@
         "description": "Kill at least 20 zombies with a lawnmower.",
         "category": "EPIC",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 20,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 20,
           "currentAmount": 0
@@ -1092,13 +847,6 @@
         "description": "Kill at least 30 zombies with a lawnmower.",
         "category": "EPIC",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 30,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 30,
           "currentAmount": 0
@@ -1114,13 +862,6 @@
         "description": "Kill at least 40 zombies with a lawnmower.",
         "category": "EPIC",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 40,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 40,
           "currentAmount": 0
@@ -1136,13 +877,6 @@
         "description": "Kill at least 50 zombies with a lawnmower.",
         "category": "EPIC",
         "priority": "MEDIUM",
-        "rewards": [
-          {
-            "currencyKind": "GEM",
-            "amount": 50,
-            "type": "CURRENCY"
-          }
-        ],
         "progress": {
           "targetAmount": 50,
           "currentAmount": 0

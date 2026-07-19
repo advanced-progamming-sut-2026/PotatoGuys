@@ -142,10 +142,6 @@ public class GameContext implements TickAware {
     }
 
     public void spawnPlant(Plant p) {
-        if(!getTileAt(p.getCol(), p.getLane()).isPlantable(p)) {
-            log("Cant spawn this plant at " + p.getCol() + " " + p.getLane());
-            return;
-        }
         getTileAt(p.getCol(), p.getLane()).addPlant(p);
         engine.register(p);
         plants.add(p);

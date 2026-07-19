@@ -1,9 +1,9 @@
 {
-  "id": "b2ce2096-0ff6-45ba-9028-123debe6eb96",
-  "username": "sed6",
+  "id": "9166ad14-06c3-49b8-95d8-d926d6c189c6",
+  "username": "sed8",
   "passwordHash": "c731112cfdac04122988150d3e7d17da30173be84c3cd4c37a6961b0c4da6470",
-  "nickName": "sed6",
-  "email": "sed6@gmail.com",
+  "nickName": "sed8",
+  "email": "sed8@gmail.com",
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "hamid",
@@ -48,7 +48,7 @@
             "unread": true
           },
           {
-            "message": "Welcome to Plants vs Zombies 2 sed6!",
+            "message": "Welcome to Plants vs Zombies 2 sed8!",
             "unread": true
           }
         ]
@@ -140,7 +140,7 @@
           "unread": true
         },
         {
-          "message": "Welcome to Plants vs Zombies 2 sed6!",
+          "message": "Welcome to Plants vs Zombies 2 sed8!",
           "unread": true
         }
       ]

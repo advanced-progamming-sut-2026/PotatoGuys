@@ -98,7 +98,7 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
+    public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
         if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
             return false;
         }
@@ -112,7 +112,7 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public void handlePlacement(GameContext context, int col, int lane, Card card) {
+    public void handlePlacement(GameContext context, int col, int lane, PlantCard card) {
         if (!(card instanceof PlantCard plantCard)) {
             context.log("Error: card is not a plant card.");
             return;
