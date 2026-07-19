@@ -6,5 +6,6 @@ public enum GameModeType {
     CONVEYORBELT,
     VASEBREAKER,
     DEADLINE,
+    PLANTWHATYOUGET,
     BEGHOULED;
 }

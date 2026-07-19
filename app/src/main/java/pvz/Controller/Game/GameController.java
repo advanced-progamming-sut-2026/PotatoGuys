@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import pvz.Models.AppContext;
 import pvz.Models.Engine.TickAware;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Projectile.Projectile;
@@ -13,6 +14,7 @@ import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Capabilities.PlantPlacer;
 import pvz.Models.Games.Capabilities.ZombiePlacer;
 import pvz.Models.Games.Modes.GameMode;
+import pvz.Models.Games.Modes.PlantWhatYouGetMode;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.card.ZombieCard;
@@ -144,6 +146,17 @@ public class GameController {
 
         target.triggerPlantFood(context);
         return new Result("Plant food used on " + target.getSheet().getName() + " at (" + x + ", " + y + ")!");
+    }
+
+    public Result startZombieWavesCommand(Matcher matcher) {
+        GameContext context = AppContext.getInstance().getGameContext();
+        
+        if (context.getMode() instanceof PlantWhatYouGetMode pwygMode) {
+            pwygMode.startZombieWaves(context);
+            return new Result("Zombie waves started successfully!");
+        } else {
+            return new Result("This command is only available in 'Plant What You Get' mode.");
+        }
     }
 
 

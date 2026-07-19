@@ -1,7 +1,6 @@
 package pvz.Models.Games.Levels;
 
 import pvz.Models.Games.Modes.GameModeType;
-import pvz.Models.Games.Seasons.Season;
 import pvz.Models.Games.map.GameMap;
 
 public abstract class Level {

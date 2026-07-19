@@ -34,6 +34,7 @@ public class GameMenu implements Menu {
         if ((matcher = GameMenuCommand.SHOW_SUN.getMatcher(input)) != null) return gameController.showSun(matcher);
         if ((matcher = GameMenuCommand.CHEAT_SUN.getMatcher(input)) != null) return gameController.cheatSun(matcher);
         if ((matcher = GameMenuCommand.SHOW_CARDS.getMatcher(input)) != null) return gameController.showCards(matcher);
+        if ((matcher = GameMenuCommand.START_ZOMBIE_WAVE.getMatcher(input)) != null) return gameController.startZombieWavesCommand(matcher);
         if ((matcher = GameMenuCommand.PLANT.getMatcher(input)) != null) return gameController.plantPlant(matcher);
         if ((matcher = GameMenuCommand.PLUCK_PLANT.getMatcher(input)) != null) return gameController.pluckPlant(matcher);
         if ((matcher = GameMenuCommand.HELP.getMatcher(input)) != null) return new Result(GameMenuCommand.getHelp());
