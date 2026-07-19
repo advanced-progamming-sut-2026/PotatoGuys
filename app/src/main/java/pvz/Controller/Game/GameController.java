@@ -14,17 +14,12 @@ import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Capabilities.PlantPlacer;
 import pvz.Models.Games.Capabilities.ZombiePlacer;
 import pvz.Models.Games.Modes.GameMode;
-<<<<<<< HEAD
 import pvz.Models.Games.Modes.PlantWhatYouGetMode;
-=======
-import pvz.Models.Games.Seasons.Season;
->>>>>>> c5495aa82249c10f3e15421b0bcb2f220177af8c
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.card.ZombieCard;
 import pvz.Models.Games.map.Tile;
 import pvz.Models.Quests.QuestEvaluator;
-import pvz.Models.AppContext;
 import pvz.Models.User.User;
 import pvz.View.MainMenu;
 import pvz.View.Result;
