@@ -1,15 +1,20 @@
 package pvz.View;
 
+import java.util.regex.Matcher;
+
+import pvz.Enums.Commands.GameModesMenuCommand;
+
 public class GameModesMenu implements Menu{
     @Override
     public Result handleInput(String input) {
-        if (input.equals("1")){
-            return new Result("",new ChapterSelectionMenu());
-        } else if(input.equals("2")){
-            return new Result("",new MiniGamesMenu());
-        } else {
-            return new Result("Invalid Command");
-        }
+        Matcher matcher;
+        if ((matcher = GameModesMenuCommand.ADVENTURE.getMatcher(input)) != null)
+            return new Result("", new ChapterSelectionMenu());
+        if ((matcher = GameModesMenuCommand.MINI_GAMES.getMatcher(input)) != null)
+            return new Result("", new MiniGamesMenu());
+        if ((matcher = GameModesMenuCommand.HELP.getMatcher(input)) != null)
+            return new Result(GameModesMenuCommand.getHelp());
+        return new Result("Invalid Command");
     }
 
     @Override

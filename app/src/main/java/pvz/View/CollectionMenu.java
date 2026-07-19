@@ -19,6 +19,7 @@ public class CollectionMenu implements Menu {
         if ((matcher = CollectionMenuCommand.UPGRADE_PLANT.getMatcher(input)) != null) return controller.upgradePlant(matcher);
         if ((matcher = CollectionMenuCommand.PURCHASE_PLANT.getMatcher(input)) != null) return controller.purchasePlant(matcher);
         if ((matcher = CollectionMenuCommand.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
+        if ((matcher = CollectionMenuCommand.HELP.getMatcher(input)) != null) return new Result(CollectionMenuCommand.getHelp());
         return new Result("Invalid command in Collection Menu.", this);
     }
 

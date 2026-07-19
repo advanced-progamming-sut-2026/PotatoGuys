@@ -6,9 +6,14 @@ public enum ProfileMenuCommand implements MenuCommand {
     CHANGE_EMAIL("^menu\\s+profile\\s+change-email\\s+-e\\s+(?<email>\\S+)\\s*$"),
     CHANGE_PASSWORD("^menu\\s+profile\\s+change-password\\s+-p\\s+(?<newPassword>\\S+)\\s+-o\\s+(?<oldPassword>\\S+)\\s*$"),
     SHOW_INFO("^menu\\s+profile\\s+show-info\\s*$"),
-    EXIT("^menu\\s+exit\\s*$");
+    EXIT("^menu\\s+exit\\s*$"),
+    HELP("^\\s*help\\s*$");
 
     private final String pattern;
     ProfileMenuCommand(String pattern) { this.pattern = pattern; }
     @Override public String getPattern() { return this.pattern; }
+
+    public static String getHelp() {
+        return MenuCommand.generateHelp(ProfileMenuCommand.class, "Profile");
+    }
 }

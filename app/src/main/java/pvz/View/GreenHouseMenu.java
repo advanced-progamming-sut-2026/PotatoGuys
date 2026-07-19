@@ -16,6 +16,7 @@ public class GreenHouseMenu implements Menu {
         if ((matcher = GreenHouseMenuCommands.GROW.getMatcher(input)) != null) return controller.grow(matcher);
         if ((matcher = GreenHouseMenuCommands.ENTER_SHOP.getMatcher(input)) != null) return controller.enterShop(matcher);
         if ((matcher = GreenHouseMenuCommands.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
+        if ((matcher = GreenHouseMenuCommands.HELP.getMatcher(input)) != null) return new Result(GreenHouseMenuCommands.getHelp());
         return new Result("Invalid command in GreenHouse Menu.", this);
     }
 

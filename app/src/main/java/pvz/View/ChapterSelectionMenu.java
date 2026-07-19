@@ -19,6 +19,7 @@ public class ChapterSelectionMenu implements Menu {
         if ((matcher = ChapterSelectionMenuCommand.GEM_WALLET.getMatcher(input)) != null) return controller.gemWallet(matcher);
         if ((matcher = ChapterSelectionMenuCommand.CHEAT_ADD.getMatcher(input)) != null) return controller.cheatAdd(matcher);
         if ((matcher = ChapterSelectionMenuCommand.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
+        if ((matcher = ChapterSelectionMenuCommand.HELP.getMatcher(input)) != null) return new Result(ChapterSelectionMenuCommand.getHelp());
         return new Result("Invalid command in Chapter Selection Menu.", this);
     }
 

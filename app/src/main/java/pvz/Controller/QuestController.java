@@ -9,7 +9,6 @@ import pvz.Models.Quests.QuestCategory;
 import pvz.Models.Quests.QuestLog;
 import pvz.Models.User.User;
 import pvz.View.MainMenu;
-import pvz.View.Menu;
 import pvz.View.Result;
 
 public class QuestController {

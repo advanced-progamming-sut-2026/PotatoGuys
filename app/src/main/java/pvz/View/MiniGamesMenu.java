@@ -1,9 +1,16 @@
 package pvz.View;
 
+import java.util.regex.Matcher;
+
+import pvz.Enums.Commands.MiniGamesMenuCommand;
+
 public class MiniGamesMenu implements Menu {
     @Override
     public Result handleInput(String input) {
-        return null;
+        Matcher matcher;
+        if ((matcher = MiniGamesMenuCommand.HELP.getMatcher(input)) != null)
+            return new Result(MiniGamesMenuCommand.getHelp());
+        return new Result("No mini games available yet.");
     }
 
     @Override

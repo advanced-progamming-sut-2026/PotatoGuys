@@ -24,6 +24,7 @@ public class PreGameMenu implements Menu {
         if ((matcher= PreGameMenuCommand.PLANT_REMOVE.getMatcher(input))!=null){ return controller.plantRemove(matcher);}
         if ((matcher= PreGameMenuCommand.BOOST_PLANT.getMatcher(input))!=null){ return controller.boostPlant(matcher);}
         if ((matcher= PreGameMenuCommand.START_GAME.getMatcher(input))!=null){ return controller.startGame(matcher);}
+        if ((matcher = PreGameMenuCommand.HELP.getMatcher(input)) != null) return new Result(PreGameMenuCommand.getHelp());
         return new Result("Invalid command in Pre-Game Menu");
     }
 

@@ -18,7 +18,7 @@ public class ResetPasswordMenu implements Menu {
         
         if ((matcher = LoginMenuCommand.RESET_PASSWORD.getMatcher(input)) != null) return controller.resetPassword(matcher);
         if ((matcher = LoginMenuCommand.EXIT.getMatcher(input)) != null) return new Result("Exited to Login Menu.", new LoginMenu());
-        
+        if ((matcher = LoginMenuCommand.HELP.getMatcher(input)) != null) return new Result(LoginMenuCommand.getHelp());
         return new Result("Invalid command. Please reset password or type 'exit'.", this);
     }
 

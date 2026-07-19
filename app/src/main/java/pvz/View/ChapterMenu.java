@@ -1,11 +1,13 @@
 package pvz.View;
 
 
+import pvz.Enums.Commands.ChapterMenuCommand;
 import pvz.Models.AppContext;
 import pvz.Models.Games.Seasons.Season;
 import pvz.View.Game.PreGameMenu;
 
 import java.util.List;
+import java.util.regex.Matcher;
 
 public class ChapterMenu implements Menu{
     private Season season;
@@ -21,15 +23,14 @@ public class ChapterMenu implements Menu{
 
     @Override
     public Result handleInput(String input) {
-        try {
-            int levelNumber=Integer.parseInt(input);
-            if (levelNumber>3 || levelNumber<1){
-                return new Result("Enter a number between 1 and 3");
-            }
+        Matcher matcher;
+        if ((matcher = ChapterMenuCommand.SELECT_LEVEL.getMatcher(input)) != null) {
+            int levelNumber = Integer.parseInt(matcher.group("level"));
             return new Result(new PreGameMenu(season, levelNumber));
-        } catch (Exception ex) {
-            return new Result("Invalid command in Chapter Menu");
         }
+        if ((matcher = ChapterMenuCommand.HELP.getMatcher(input)) != null)
+            return new Result(ChapterMenuCommand.getHelp());
+        return new Result("Invalid command in Chapter Menu");
     }
 
     @Override

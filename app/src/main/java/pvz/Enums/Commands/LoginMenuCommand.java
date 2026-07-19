@@ -6,9 +6,14 @@ public enum LoginMenuCommand implements MenuCommand {
     FORGET_PASSWORD("^forget\\s+password\\s+-u\\s+(?<username>\\S+)\\s+-e\\s+(?<email>\\S+)\\s*$"),
     ANSWER("^answer\\s+-a\\s+(?<answer>\\S+)\\s*$"),
     RESET_PASSWORD("^reset\\s+password\\s+-p\\s+(?<newPassword>\\S+)\\s*$"),
-    EXIT("^menu\\s+exit\\s*$");
+    EXIT("^menu\\s+exit\\s*$"),
+    HELP("^\\s*help\\s*$");
 
     private final String pattern;
     LoginMenuCommand(String pattern) { this.pattern = pattern; }
     @Override public String getPattern() { return this.pattern; }
+
+    public static String getHelp() {
+        return MenuCommand.generateHelp(LoginMenuCommand.class, "Login");
+    }
 }

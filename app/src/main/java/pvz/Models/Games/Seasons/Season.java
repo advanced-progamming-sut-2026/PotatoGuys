@@ -9,7 +9,7 @@ import pvz.Models.Games.Levels.Level;
 
 public class Season {
     private String name;
-    boolean locked;
+    private boolean locked;
     private List<Level> levels;
     private Map<Integer,Boolean> levelUnlocked;
 

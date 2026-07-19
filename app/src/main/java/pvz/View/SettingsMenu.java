@@ -12,6 +12,7 @@ public class SettingsMenu implements Menu {
         Matcher matcher;
         if ((matcher = SettingsMenuCommand.CHANGE_DIFFICULTY.getMatcher(input)) != null) return controller.changeDifficulty(matcher);
         if ((matcher = SettingsMenuCommand.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
+        if ((matcher = SettingsMenuCommand.HELP.getMatcher(input)) != null) return new Result(SettingsMenuCommand.getHelp());
         return new Result("Invalid command in Settings Menu.", this);
     }
 

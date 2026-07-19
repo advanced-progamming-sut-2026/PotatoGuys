@@ -12,7 +12,6 @@ import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Capabilities.PlantPlacer;
 import pvz.Models.Games.Levels.ConveyorBeltLevel;
 import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.Levels.NormalLevel;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;

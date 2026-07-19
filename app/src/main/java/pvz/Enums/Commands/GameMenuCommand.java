@@ -27,23 +27,6 @@ public enum GameMenuCommand implements MenuCommand {
     @Override public String getPattern() { return this.pattern; }
     
     public static String getHelp() {
-        StringBuilder result = new StringBuilder();
-        result.append("=== Game Commands Help ===\n");
-        
-        for (GameMenuCommand command : values()) {
-            String cleaned = command.getPattern();
-
-            cleaned = cleaned.replaceAll("^\\^", "").replaceAll("\\$$", "");
-            cleaned = cleaned.replaceAll("\\(\\?\\<(\\w+)\\>[^\\)]+\\)", "<$1>");
-            cleaned = cleaned.replace("\\(", "(").replace("\\)", ")");
-            cleaned = cleaned.replace("\\<", "<").replace("\\>", ">");
-            cleaned = cleaned.replaceAll("\\\\s\\*", "");
-            cleaned = cleaned.replaceAll("\\\\s\\+", " ");
-            cleaned = cleaned.replaceAll("\\s+", " ").trim();
-
-            result.append(String.format("%-20s : %s\n", command.name(), cleaned));
-        }
-
-        return result.toString();
+        return MenuCommand.generateHelp(GameMenuCommand.class, "Game");
     }
 }

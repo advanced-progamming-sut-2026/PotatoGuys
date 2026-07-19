@@ -18,7 +18,7 @@ public class ForgotPasswordMenu implements Menu {
         
         if ((matcher = LoginMenuCommand.ANSWER.getMatcher(input)) != null) return controller.answer(matcher);
         if ((matcher = LoginMenuCommand.EXIT.getMatcher(input)) != null) return new Result("Exited to Login Menu.", new LoginMenu());
-        
+        if ((matcher = LoginMenuCommand.HELP.getMatcher(input)) != null) return new Result(LoginMenuCommand.getHelp());
         return new Result("Invalid command. Please answer the security question or type 'exit'.", this);
     }
 

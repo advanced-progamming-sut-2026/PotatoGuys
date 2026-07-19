@@ -5,7 +5,8 @@ public enum QuestMenuCommands implements MenuCommand {
     CLAIM_REWARD("^claim\\s+quest\\s+(\\S+)\\s*$"),
     SHOW_QUEST("^show\\s+quest\\s+(\\S+)\\s*$"),
     SHOW_ALL("^travel\\s+log\\s*$"),
-    EXIT("^menu\\s+exit\\s*$");
+    EXIT("^menu\\s+exit\\s*$"),
+    HELP("^\\s*help\\s*$");
 
     private final String pattern;
 
@@ -16,5 +17,9 @@ public enum QuestMenuCommands implements MenuCommand {
     @Override
     public String getPattern() {
         return this.pattern;
+    }
+
+    public static String getHelp() {
+        return MenuCommand.generateHelp(QuestMenuCommands.class, "Quest");
     }
 }

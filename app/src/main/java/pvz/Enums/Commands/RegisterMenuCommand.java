@@ -5,6 +5,7 @@ public enum RegisterMenuCommand implements MenuCommand {
     REGISTER("^register\\s+-u\\s+(?<username>\\S+)\\s+-p\\s+(?<password>\\S+)\\s+(?<passwordConfirm>\\S+)\\s+-n\\s+(?<nickname>\\S+)\\s+-e\\s+(?<email>\\S+)\\s+-g\\s+(?<gender>\\S+)\\s*$"),
     PICK_QUESTION("^pick\\s+question\\s+-q\\s+(?<questionId>\\d+)\\s+-a\\s+(?<answer>\\S+)\\s+-c\\s+(?<confirmAnswer>\\S+)\\s*$"),
     EXIT("^menu\\s+exit\\s*$"),
+    HELP("^\\s*help\\s*$"),
 
     //Validation Patterns
     USERNAME("^[a-zA-Z0-9\\-]+$"),
@@ -22,4 +23,8 @@ public enum RegisterMenuCommand implements MenuCommand {
     private final String pattern;
     RegisterMenuCommand(String pattern) { this.pattern = pattern; }
     @Override public String getPattern() { return this.pattern; }
+
+    public static String getHelp() {
+        return MenuCommand.generateHelp(RegisterMenuCommand.class, "Register");
+    }
 }

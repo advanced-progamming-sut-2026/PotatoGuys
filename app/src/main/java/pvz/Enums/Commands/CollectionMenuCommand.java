@@ -9,9 +9,14 @@ public enum CollectionMenuCommand implements MenuCommand {
     SHOW_ZOMBIE_INFO("^menu\\s+collection\\s+show-zombie\\s+-z\\s+(?<zombieName>\\w+)\\s*$"),
     UPGRADE_PLANT("^menu\\s+collection\\s+upgrade-plant\\s+-p\\s+(?<plantName>\\w+)\\s*$"),
     PURCHASE_PLANT("^menu\\s+collection\\s+purchase-plant\\s+-p\\s+(?<plantName>\\w+)\\s*$"),
-    EXIT("^menu\\s+exit\\s*$");
+    EXIT("^menu\\s+exit\\s*$"),
+    HELP("^\\s*help\\s*$");
 
     private final String pattern;
     CollectionMenuCommand(String pattern) { this.pattern = pattern; }
     @Override public String getPattern() { return this.pattern; }
+
+    public static String getHelp() {
+        return MenuCommand.generateHelp(CollectionMenuCommand.class, "Collection");
+    }
 }

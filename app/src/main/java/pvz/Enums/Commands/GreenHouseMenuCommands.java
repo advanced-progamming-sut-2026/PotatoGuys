@@ -2,11 +2,12 @@ package pvz.Enums.Commands;
 
 public enum GreenHouseMenuCommands implements MenuCommand {
     ENTER_MENU("^show\\s+greenhouse$"),
-    PLANT("^plant\\s+pot\\s+at\\s+\\((\\d+),\\s*(\\d+)\\)$"),
-    COLLECT("^collect\\s+\\((\\d+),\\s*(\\d+)\\)$"),
-    GROW("^grow\\s+\\((\\d+),\\s*(\\d+)\\)$"),
+    PLANT("^plant\\s+pot\\s+at\\s+\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*)$"),
+    COLLECT("^collect\\s+\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*)$"),
+    GROW("^grow\\s+\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*)$"),
     ENTER_SHOP("^enter\\s+shop$"),
-    EXIT("^menu\\s+exit\\s*$");
+    EXIT("^menu\\s+exit\\s*$"),
+    HELP("^\\s*help\\s*$");
 
     private final String pattern;
 
@@ -17,5 +18,9 @@ public enum GreenHouseMenuCommands implements MenuCommand {
     @Override
     public String getPattern() {
         return this.pattern;
+    }
+
+    public static String getHelp() {
+        return MenuCommand.generateHelp(GreenHouseMenuCommands.class, "GreenHouse");
     }
 }

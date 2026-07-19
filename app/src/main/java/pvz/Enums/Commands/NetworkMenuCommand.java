@@ -2,7 +2,8 @@ package pvz.Enums.Commands;
 
 public enum NetworkMenuCommand implements MenuCommand {
     CONNECT("(?i)connect\\s+(?<host>\\S+)\\s+(?<port>\\d+)\\s*$"),
-    BACK("(?i)back\\s*$");
+    BACK("(?i)back\\s*$"),
+    HELP("^\\s*help\\s*$");
 
     private final String pattern;
 
@@ -13,5 +14,9 @@ public enum NetworkMenuCommand implements MenuCommand {
     @Override
     public String getPattern() {
         return this.pattern;
+    }
+
+    public static String getHelp() {
+        return MenuCommand.generateHelp(NetworkMenuCommand.class, "Network");
     }
 }

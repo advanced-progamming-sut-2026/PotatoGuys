@@ -186,15 +186,15 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": null,
-    "dailyOfferDate": null,
+    "dailyOfferPlantType": "catTailmint",
+    "dailyOfferDate": "2026-07-19",
     "dailyOfferPurchased": false
   },
   "setting": {
     "difficulty": 3
   },
   "score": {
-    "lastLevel": 0,
+    "lastLevel": 1,
     "lastSeason": 0,
     "numMiniGames": 0,
     "dailyQuests": 0,
@@ -207,7 +207,12 @@
         "x": 1,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "Repeater",
+          "plantedTime": "2026-07-19T21:26:48.421384",
+          "growthHours": 8
+        }
       },
       {
         "x": 2,
@@ -322,6 +327,580 @@
         "y": 4,
         "locked": true,
         "greenHousePlant": null
+      }
+    ]
+  },
+  "questLog": {
+    "quests": [
+      {
+        "id": "daily_sun_catcher_3000",
+        "title": "Daily Sun Catcher (3000)",
+        "description": "Collect 3000 units of sun during one day.",
+        "category": "DAILY",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 3000,
+          "currentAmount": 75
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_sun_catcher_4000",
+        "title": "Daily Sun Catcher (4000)",
+        "description": "Collect 4000 units of sun during one day.",
+        "category": "DAILY",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 4000,
+          "currentAmount": 75
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_sun_catcher_5000",
+        "title": "Daily Sun Catcher (5000)",
+        "description": "Collect 5000 units of sun during one day.",
+        "category": "DAILY",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 5000,
+          "currentAmount": 75
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_pro_plant_player",
+        "title": "Professional Plant Player",
+        "description": "Kill 10 zombies only with plants.",
+        "category": "DAILY",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 10,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_only_cactus",
+        "title": "Only Cactus",
+        "description": "Kill 10 zombies only with Cactus.",
+        "category": "DAILY",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 10,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_professional_destroyer",
+        "title": "Professional Destroyer",
+        "description": "Use 3 explosive plants in one level.",
+        "category": "DAILY",
+        "priority": "LOW",
+        "progress": {
+          "targetAmount": 3,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_symmetry",
+        "title": "Symmetry",
+        "description": "Win a level where the garden is symmetrical at the end.",
+        "category": "DAILY",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_family_slaughter_peashooter",
+        "title": "Family Slaughter (Peashooter)",
+        "description": "Win a level using only Peashooter family plants to kill zombies.",
+        "category": "DAILY",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_family_slaughter_sunflower",
+        "title": "Family Slaughter (Sunflower)",
+        "description": "Win a level using only Sunflower family plants to kill zombies.",
+        "category": "DAILY",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_blooming_constraints_shooter",
+        "title": "Blooming in Constraints (Shooter)",
+        "description": "Win a level without using any Shooter family plants.",
+        "category": "DAILY",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_blooming_constraints_explosive",
+        "title": "Blooming in Constraints (Explosive)",
+        "description": "Win a level without using any Explosive family plants.",
+        "category": "DAILY",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_win_after_win",
+        "title": "Win After Win",
+        "description": "Win 5 consecutive levels on the highest difficulty.",
+        "category": "DAILY",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 5,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_almost_victorious",
+        "title": "Almost Victorious",
+        "description": "Kill 10 zombies in the first column of a row that has no lawnmower.",
+        "category": "DAILY",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 10,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_anti_ocd",
+        "title": "Anti-OCD",
+        "description": "Win a level where there is no symmetry in the garden (except the middle row).",
+        "category": "DAILY",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_cloudy_day",
+        "title": "Cloudy Day",
+        "description": "Win a level with only 3 sun-producing plants.",
+        "category": "DAILY",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_one_less_column_2",
+        "title": "One Less Column (2)",
+        "description": "Win a level without planting in column 2.",
+        "category": "DAILY",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_one_less_column_3",
+        "title": "One Less Column (3)",
+        "description": "Win a level without planting in column 3.",
+        "category": "DAILY",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_defenseless_row_1",
+        "title": "Defenseless Row (1)",
+        "description": "Win a level without planting in row 1.",
+        "category": "DAILY",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_defenseless_row_3",
+        "title": "Defenseless Row (3)",
+        "description": "Win a level without planting in row 3.",
+        "category": "DAILY",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "daily_defenseless_cross_2_2",
+        "title": "Defenseless Cross (2,2)",
+        "description": "Win a level without planting in row 2 or column 2.",
+        "category": "DAILY",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": true,
+        "variable": null
+      },
+      {
+        "id": "main_chapter_hunter_egypt",
+        "title": "Chapter Hunter (Ancient Egypt)",
+        "description": "Defeat 50 zombies from the Ancient Egypt chapter.",
+        "category": "MAIN",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 50,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "main_chapter_hunter_caves",
+        "title": "Chapter Hunter (Frostbite Caves)",
+        "description": "Defeat 50 zombies from the Frostbite Caves chapter.",
+        "category": "MAIN",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 50,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "main_chapter_hunter_ages",
+        "title": "Chapter Hunter (Dark Ages)",
+        "description": "Defeat 50 zombies from the Dark Ages chapter.",
+        "category": "MAIN",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 50,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "main_chapter_hunter_beach",
+        "title": "Chapter Hunter (Big Wave Beach)",
+        "description": "Defeat 50 zombies from the Big Wave Beach chapter.",
+        "category": "MAIN",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 50,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "main_economical_0",
+        "title": "Economical Vegetarian (Perfect)",
+        "description": "Win a level without losing any plants.",
+        "category": "MAIN",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "main_economical_1",
+        "title": "Economical Vegetarian (1 Loss)",
+        "description": "Win a level losing at most 1 plant.",
+        "category": "MAIN",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "main_economical_2",
+        "title": "Economical Vegetarian (2 Losses)",
+        "description": "Win a level losing at most 2 plants.",
+        "category": "MAIN",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "main_economical_3",
+        "title": "Economical Vegetarian (3 Losses)",
+        "description": "Win a level losing at most 3 plants.",
+        "category": "MAIN",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "main_economical_4",
+        "title": "Economical Vegetarian (4 Losses)",
+        "description": "Win a level losing at most 4 plants.",
+        "category": "MAIN",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "main_economical_5",
+        "title": "Economical Vegetarian (5 Losses)",
+        "description": "Win a level losing at most 5 plants.",
+        "category": "MAIN",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "main_quick_reflexes",
+        "title": "Quick Reflexes",
+        "description": "Kill 10 zombies in less than 30 seconds from the start of the first zombie attack wave.",
+        "category": "MAIN",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 10,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "epic_defense_master",
+        "title": "Defense Master",
+        "description": "Complete a level with exactly zero sun.",
+        "category": "EPIC",
+        "priority": "CRITICAL",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 1
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "epic_night_or_morning",
+        "title": "Night or Morning",
+        "description": "Finish a day game level with night plants (mushrooms).",
+        "category": "EPIC",
+        "priority": "HIGH",
+        "progress": {
+          "targetAmount": 1,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "epic_lawnmowing_10",
+        "title": "Lawnmowing Time (10)",
+        "description": "Kill at least 10 zombies with a lawnmower.",
+        "category": "EPIC",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 10,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "epic_lawnmowing_20",
+        "title": "Lawnmowing Time (20)",
+        "description": "Kill at least 20 zombies with a lawnmower.",
+        "category": "EPIC",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 20,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "epic_lawnmowing_30",
+        "title": "Lawnmowing Time (30)",
+        "description": "Kill at least 30 zombies with a lawnmower.",
+        "category": "EPIC",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 30,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "epic_lawnmowing_40",
+        "title": "Lawnmowing Time (40)",
+        "description": "Kill at least 40 zombies with a lawnmower.",
+        "category": "EPIC",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 40,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
+      },
+      {
+        "id": "epic_lawnmowing_50",
+        "title": "Lawnmowing Time (50)",
+        "description": "Kill at least 50 zombies with a lawnmower.",
+        "category": "EPIC",
+        "priority": "MEDIUM",
+        "progress": {
+          "targetAmount": 50,
+          "currentAmount": 0
+        },
+        "active": true,
+        "claimed": false,
+        "repeatable": false,
+        "variable": null
       }
     ]
   }

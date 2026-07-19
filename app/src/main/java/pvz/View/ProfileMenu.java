@@ -16,6 +16,7 @@ public class ProfileMenu implements Menu {
         if ((matcher = ProfileMenuCommand.CHANGE_PASSWORD.getMatcher(input)) != null) return controller.changePassword(matcher);
         if ((matcher = ProfileMenuCommand.SHOW_INFO.getMatcher(input)) != null) return controller.showInfo(matcher);
         if ((matcher = ProfileMenuCommand.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
+        if ((matcher = ProfileMenuCommand.HELP.getMatcher(input)) != null) return new Result(ProfileMenuCommand.getHelp());
         return new Result("Invalid command in Profile Menu.", this);
     }
 

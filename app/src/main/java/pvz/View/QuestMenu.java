@@ -25,6 +25,8 @@ public class QuestMenu implements Menu {
             return controller.showAllPages(matcher);
         if ((matcher = QuestMenuCommands.EXIT.getMatcher(input)) != null)
             return controller.exit(matcher);
+        if ((matcher = QuestMenuCommands.HELP.getMatcher(input)) != null)
+            return new Result(QuestMenuCommands.getHelp());
         return new Result("Invalid command in Travel Log.", this);
     }
 

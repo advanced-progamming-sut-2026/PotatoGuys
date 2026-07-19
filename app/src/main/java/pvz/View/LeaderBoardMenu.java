@@ -16,6 +16,8 @@ public class LeaderBoardMenu implements Menu {
             return controller.sort(matcher);
         if ((matcher = LeaderBoardCommands.EXIT.getMatcher(input)) != null)
             return controller.exit(matcher);
+        if ((matcher = LeaderBoardCommands.HELP.getMatcher(input)) != null)
+            return new Result(LeaderBoardCommands.getHelp());
         return new Result("Invalid command. Use: leaderboard, leaderboard sort -s <field> -o <asc|desc>, menu exit", this);
     }
 

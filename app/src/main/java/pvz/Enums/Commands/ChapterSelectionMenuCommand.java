@@ -9,9 +9,14 @@ public enum ChapterSelectionMenuCommand implements MenuCommand {
     COIN_WALLET("^menu\\s+coin-wallet\\s*$"),
     GEM_WALLET("^menu\\s+gem-wallet\\s*$"),
     CHEAT_ADD("^menu\\s+cheat\\s+add\\s+(?<amount>\\d+)\\s+(?<currency>coin|diamond)\\s*$"),
-    EXIT("^menu\\s+exit\\s*$");
+    EXIT("^menu\\s+exit\\s*$"),
+    HELP("^\\s*help\\s*$");
 
     private final String pattern;
     ChapterSelectionMenuCommand(String pattern) { this.pattern = pattern; }
     @Override public String getPattern() { return this.pattern; }
+
+    public static String getHelp() {
+        return MenuCommand.generateHelp(ChapterSelectionMenuCommand.class, "Chapter Selection");
+    }
 }

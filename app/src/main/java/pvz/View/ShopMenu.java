@@ -24,6 +24,7 @@ public class ShopMenu implements Menu {
         if ((matcher = ShopMenuCommands.SHOW_DAILY_OFFER.getMatcher(input)) != null) return controller.showDailyOffer(matcher);
         if ((matcher = ShopMenuCommands.BUY_ITEM.getMatcher(input)) != null) return controller.buyItem(matcher);
         if ((matcher = ShopMenuCommands.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
+        if ((matcher = ShopMenuCommands.HELP.getMatcher(input)) != null) return new Result(ShopMenuCommands.getHelp());
         return new Result("Invalid command in Shop Menu.", this);
     }
 
