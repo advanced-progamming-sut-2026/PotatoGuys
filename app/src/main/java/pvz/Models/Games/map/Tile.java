@@ -5,24 +5,22 @@ import java.util.List;
 
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.Enums.PlantTag;
+import pvz.Models.Entities.Projectile.Projectile;
+import pvz.Models.Entities.Zombies.Zombie;
+import pvz.Models.Games.GameContext;
+import pvz.Models.Games.map.behaviors.TileBehavior;
 
 public class Tile {
-    private TileType type;
+    private List<TileBehavior> behaviors = new ArrayList<>();
     private List<Plant> plants;
-    // private List<Zombie> zombies;
 
     public Tile(){
-        // zombies=new ArrayList<>();
         plants=new ArrayList<>();
-        this.type = TileType.NORMAL;
     }
 
     public boolean isPlantable(Plant newPlant) {
-        if(plants.isEmpty()){
-            if(type == TileType.ICE || type == TileType.SLIP_DOWN || type == TileType.SLIP_UP || type == TileType.GRAVE)
-                return false;
-            if(type == TileType.WATER && !newPlant.getSheet().getTags().contains(PlantTag.WATER))
-                return false;
+        for (TileBehavior b : behaviors) {
+            if (!b.canPlant(newPlant, this)) return false;
         }
 
         if(!plants.isEmpty() && !newPlant.getSheet().getTags().contains(PlantTag.STACK)){
@@ -31,13 +29,9 @@ public class Tile {
         return true;
     }
 
-    public void setType(TileType type) {
-        this.type = type;
-    }
-    
-    public TileType getType() {
-        return type;
-    }
+    public List<TileBehavior> getBehaviors() { return behaviors; }
+    public void addBehavior(TileBehavior b) { behaviors.add(b); }
+    public void removeBehavior(TileBehavior b) { behaviors.remove(b); }
 
     public List<Plant> getPlants() {
         return plants;
@@ -52,17 +46,15 @@ public class Tile {
         plants.remove(plant);
     }
 
-    // public List<Zombie> getZombies() {
-    //     return zombies;
-    // }
+    public void processHit(Projectile p) {
+        for (TileBehavior b : behaviors) b.onProjectileHit(p, this);
+    }
 
-    // public void addZombie(Zombie zombie) {
-    //     if(!zombies.contains(zombie))
-    //         zombies.add(zombie);
-    // }
+    public void onZombieEnter(Zombie z) {
+        for (TileBehavior b : behaviors) b.onZombieEnter(z, this);
+    }
 
-    // public void removeZombie(Zombie zombie) {
-    //     zombies.remove(zombie);
-    // }
-
+    public void onTick(GameContext ctx) {
+        for (TileBehavior b : behaviors) b.onTick(ctx, this);
+    }
 }

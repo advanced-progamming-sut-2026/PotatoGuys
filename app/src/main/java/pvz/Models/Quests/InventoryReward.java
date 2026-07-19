@@ -1,14 +1,19 @@
 package pvz.Models.Quests;
 
+import pvz.Models.User.User;
+
 public class InventoryReward extends Reward {
     private String itemId;
     private int quantity;
 
-    
+    public InventoryReward() {}
+
     public InventoryReward(String itemId, int quantity) {
-        super(null);
+        super(RewardType.INVENTORY);
+        this.itemId = itemId;
+        this.quantity = quantity;
     }
-    
+
     public String getItemId() {
         return itemId;
     }
@@ -16,8 +21,15 @@ public class InventoryReward extends Reward {
     public int getQuantity() {
         return quantity;
     }
-    
+
     @Override
-    public void grant() {
+    public void grant(User user) {
+        if (user == null) return;
+        user.getProfile().setPlantFood(user.getProfile().getPlantFood() + quantity);
+    }
+
+    @Override
+    public String getDescription() {
+        return quantity + "x " + itemId;
     }
 }

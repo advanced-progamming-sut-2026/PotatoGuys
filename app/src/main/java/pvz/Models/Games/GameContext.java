@@ -34,6 +34,7 @@ public class GameContext implements TickAware {
     private List<Sun> suns;
     private GameMode mode;
     private GameMap map;
+    private GameStats gameStats;
 
     public GameContext(Level currentLevel) {
         this.engine         = GameEngine.getInstance();
@@ -48,6 +49,7 @@ public class GameContext implements TickAware {
         this.mode = GameModeFactory.createGameMode(currentLevel);
         this.setLevelNumber(currentLevel.getLevelNumber());
         this.plantFoodCount=0;
+        this.gameStats=new GameStats();
         engine.register(new SunManager(this));
     }
 
@@ -66,6 +68,7 @@ public class GameContext implements TickAware {
 
     public void addSun(int amount) {
         currentSun += amount;
+        gameStats.onSunCollected(amount);
     }
 
     public void decreaseSun(int amount){
@@ -241,6 +244,8 @@ public class GameContext implements TickAware {
     }
 
     public void log(String message) { System.out.println("  " + message); }
+
+    public GameStats getGameStats() { return gameStats; }
 
     @Override
     public void enter() {

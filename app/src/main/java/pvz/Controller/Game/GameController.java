@@ -14,11 +14,18 @@ import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Capabilities.PlantPlacer;
 import pvz.Models.Games.Capabilities.ZombiePlacer;
 import pvz.Models.Games.Modes.GameMode;
+<<<<<<< HEAD
 import pvz.Models.Games.Modes.PlantWhatYouGetMode;
+=======
+import pvz.Models.Games.Seasons.Season;
+>>>>>>> c5495aa82249c10f3e15421b0bcb2f220177af8c
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.card.ZombieCard;
 import pvz.Models.Games.map.Tile;
+import pvz.Models.Quests.QuestEvaluator;
+import pvz.Models.AppContext;
+import pvz.Models.User.User;
 import pvz.View.MainMenu;
 import pvz.View.Result;
 
@@ -38,9 +45,25 @@ public class GameController {
         int ticks = Integer.parseInt(matcher.group("ticks"));
         context.getEngine().advanceTime(ticks);
         context.addCurrentTick(ticks);
-        
+
         String map = context.getMode().renderMap(context);
         if (context.isGameOver()) {
+            User user = AppContext.getInstance().getCurrentUser();
+            if (user != null) {
+                boolean won = context.getZombies().isEmpty();
+                QuestEvaluator.evaluateAll(
+                    user.getQuestLog(),
+                    context.getGameStats(),
+                    won,
+                    context.getCurrentSun(),
+                    user.getSetting().getDifficulty()
+                );
+                if (won) {
+                    user.getScore().setLastLevel(context.getLevelNumber());
+                    user.getScore().setLastSeason(0);
+                }
+                user.saveUser();
+            }
             return new Result("Game Over", new MainMenu());
         }
         return new Result("Time advanced by " + ticks + " ticks.\n" + map);
@@ -232,13 +255,26 @@ public class GameController {
              return new Result("Invalid coordinates.");
         }
 
-        Tile tile = context.getMap().getMap()[y][x];
-        StringBuilder status = new StringBuilder("Tile Status at (").append(x).append(",").append(y).append("):\n");
-        if (tile.getPlants() != null && tile.getPlants().getLast() != null) {
-            status.append("Plant: ").append(tile.getPlants().getLast().getType()).append("\n");
+        Tile tile = context.getMap().getMap()[x][y];
+        StringBuilder status = new StringBuilder("Tile Status at (").append(x).append(",").append(y).append("):");
+
+        //--- Plant:
+        if (tile.getPlants() != null && !tile.getPlants().isEmpty()) {
+            status.append("\n").append("  Plant: ").append(tile.getPlants().getLast().getType());
         } else {
-            status.append("Plant: None\n");
+            status.append("\n").append("  Plant: None");
         }
+
+        //-- Zombies:
+        if (!context.getZombiesAt(x,y).isEmpty()) {
+            status.append("\n").append("  Zombies: ");
+            for (Zombie z : context.getZombiesAt(x, y)) {
+                status.append("\n  ").append(z.getSheet().getAlias());
+            }
+        } else {
+            status.append("\n").append("  Zombies: None");
+        }
+
         return new Result(status.toString());
     }
 

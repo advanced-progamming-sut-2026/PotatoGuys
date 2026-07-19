@@ -1,40 +1,31 @@
 package pvz.View;
 
-import pvz.Controller.QuestController;
-import pvz.Models.AppContext;
-
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import pvz.Controller.QuestController;
+import pvz.Enums.Commands.QuestMenuCommands;
 
 public class QuestMenu implements Menu {
     private final QuestController controller;
 
     public QuestMenu() {
-        controller=new QuestController(AppContext.getInstance().getCurrentUser());
+        controller = new QuestController();
     }
 
     @Override
     public Result handleInput(String input) {
-        // Handle command: travel log page <page_name>
-        Pattern pagePattern = Pattern.compile("travel log page (\\w+)");
-        Matcher matcher = pagePattern.matcher(input);
-
-        if (matcher.matches()) {
-            String pageName = matcher.group(1);
-            String output = controller.showTravelLogPage(pageName);
-            return new Result(output);
-        }
-
-        // Command to claim a reward (custom command for testing/interaction)
-        Pattern claimPattern = Pattern.compile("claim quest (\\w+)");
-        Matcher claimMatcher = claimPattern.matcher(input);
-
-        if (claimMatcher.matches()) {
-            String questId = claimMatcher.group(1);
-            return new Result(controller.claimQuestReward(questId));
-        }
-
-        return new Result("Invalid command.");
+        Matcher matcher;
+        if ((matcher = QuestMenuCommands.SHOW_PAGE.getMatcher(input)) != null)
+            return controller.showPage(matcher);
+        if ((matcher = QuestMenuCommands.CLAIM_REWARD.getMatcher(input)) != null)
+            return controller.claimReward(matcher);
+        if ((matcher = QuestMenuCommands.SHOW_QUEST.getMatcher(input)) != null)
+            return controller.showQuest(matcher);
+        if ((matcher = QuestMenuCommands.SHOW_ALL.getMatcher(input)) != null)
+            return controller.showAllPages(matcher);
+        if ((matcher = QuestMenuCommands.EXIT.getMatcher(input)) != null)
+            return controller.exit(matcher);
+        return new Result("Invalid command in Travel Log.", this);
     }
 
     @Override
@@ -44,8 +35,6 @@ public class QuestMenu implements Menu {
 
     @Override
     public Result onEnter() {
-        return new Result("Entered Travel Log (Quests).");
+        return new Result("Entered Travel Log. Use 'travel log page <daily|main|epic>' to view quests.");
     }
 }
-
-//

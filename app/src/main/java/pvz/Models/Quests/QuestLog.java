@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 public class QuestLog {
     private List<Quest> quests;
 
+    public QuestLog() {
+        this.quests = new ArrayList<>();
+    }
+
     public QuestLog(List<Quest> quests) {
         this.quests = (quests != null) ? quests : new ArrayList<>();
     }
@@ -36,9 +40,34 @@ public class QuestLog {
         return quests.stream().filter(Quest::isActive).collect(Collectors.toList());
     }
 
-    // Sorts by Priority: CRITICAL > HIGH > MEDIUM > LOW
+    public List<Quest> getAllQuests() {
+        return new ArrayList<>(quests);
+    }
+
+    public List<Quest> getUnclaimedCompleted() {
+        return quests.stream()
+                .filter(q -> q.isCompleted() && !q.isClaimed() && q.isActive())
+                .collect(Collectors.toList());
+    }
+
     public List<Quest> sortByPriority(List<Quest> questList) {
         questList.sort(Comparator.comparing(Quest::getPriority).reversed());
         return questList;
+    }
+
+    public void resetDailyQuests() {
+        for (Quest q : quests) {
+            if (q.getCategory() == QuestCategory.DAILY) {
+                q.resetDaily();
+            }
+        }
+    }
+
+    public List<Quest> getDisplayableQuests(QuestCategory category) {
+        return sortByPriority(new ArrayList<>(
+            quests.stream()
+                .filter(q -> q.getCategory() == category && q.isActive())
+                .collect(Collectors.toList())
+        ));
     }
 }

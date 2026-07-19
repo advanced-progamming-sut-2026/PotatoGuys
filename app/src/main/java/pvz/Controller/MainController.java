@@ -32,8 +32,11 @@ public class MainController {
             case "greenHouse":
                 nextMenu=new GreenHouseMenu();
                 break;
-            case "shop":
-                nextMenu=new ShopMenu();
+            case "travelLog":
+                nextMenu=new QuestMenu();
+                break;
+            case "leaderboard":
+                nextMenu=new LeaderBoardMenu();
                 break;
             default:
                 nextMenu = new MainMenu();

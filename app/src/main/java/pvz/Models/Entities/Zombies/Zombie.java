@@ -289,6 +289,7 @@ public class Zombie implements TickAware {
             context.log(sheet.getAlias() + " dropped " + stolenSun + " stolen sun on death!");
             stolenSun = 0;
         }
+        context.getGameStats().onZombieKilled();
         context.removeZombie(this);
         context.log("Zombie of type " + sheet.getAlias()
                 + " is dead at (" + String.format("%.1f", x) + "," + lane + ")");
