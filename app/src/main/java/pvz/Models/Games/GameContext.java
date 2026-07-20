@@ -14,6 +14,9 @@ import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Modes.GameMode;
 import pvz.Models.Games.Modes.GameModeFactory;
 import pvz.Models.Games.card.Card;
+import pvz.Models.Games.Effects.ChapterEffect;
+import pvz.Models.Games.Effects.EffectFactory;
+import pvz.Models.Games.Levels.Data.EffectDefinition;
 import pvz.Models.Games.map.GameMap;
 import pvz.Models.Games.map.GameMapFactory;
 import pvz.Models.Games.map.tile.Tile;
@@ -35,6 +38,8 @@ public class GameContext implements TickAware {
     private GameMode mode;
     private GameMap map;
     private GameStats gameStats;
+    private String seasonName;
+    private List<ChapterEffect> activeEffects;
 
     public GameContext(Level currentLevel) {
         this.engine         = GameEngine.getInstance();
@@ -48,9 +53,21 @@ public class GameContext implements TickAware {
         this.map = GameMapFactory.createGameMap(currentLevel.getGameMapDefinition());
         this.mode = GameModeFactory.createGameMode(currentLevel);
         this.setLevelNumber(currentLevel.getLevelNumber());
+        this.seasonName     = currentLevel.getSeasonName();
+        this.log("DEBUG: GameContext initialized with season: '" + this.seasonName + "'");
         this.plantFoodCount=0;
         this.gameStats=new GameStats();
         engine.register(new SunManager(this));
+        
+        this.activeEffects = new ArrayList<>();
+        if (currentLevel.getEffects() != null) {
+            for (EffectDefinition def : currentLevel.getEffects()) {
+                ChapterEffect effect = EffectFactory.createEffect(def);
+                if (effect != null) {
+                    activeEffects.add(effect);
+                }
+            }
+        }
     }
 
 
@@ -251,6 +268,9 @@ public class GameContext implements TickAware {
 
     @Override
     public void update() {
+        for (ChapterEffect effect : activeEffects) {
+            effect.onTick(this);
+        }
         mode.updateMode(this);
     }
 
@@ -264,6 +284,10 @@ public class GameContext implements TickAware {
 
     public void setLevelNumber(int levelNumber) {
         this.levelNumber = levelNumber;
+    }
+
+    public String getSeasonName() {
+        return seasonName;
     }
 
     public int getPlantFoodCount(){

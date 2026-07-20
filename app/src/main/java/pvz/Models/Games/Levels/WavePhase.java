@@ -16,6 +16,9 @@ public class WavePhase {
         this.setAllowedTypes(allowedTypes);
         this.setBurst(isBurst);
     }
+    
+    public WavePhase() {}
+
 
 
     public int getZombieCount() {

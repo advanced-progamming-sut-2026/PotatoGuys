@@ -26,7 +26,7 @@ import pvz.Models.Games.map.tile.Tile;
 /**
  * Concrete, data-driven zombie entity.
  *
- * <p>All 52+ zombie types share this single class. Unique behaviour comes from:
+ * <p>All 52+ zombie types share this single class. Unique behavior comes from:
  * <ol>
  *   <li>A {@link ZombiePropertySheet} — immutable parsed stats.</li>
  *   <li>An ordered {@link ArmorPiece} stack — layered HP shield.</li>

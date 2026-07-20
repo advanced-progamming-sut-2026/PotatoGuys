@@ -22,38 +22,50 @@ public class LevelLoader {
         JsonObject jsonObject = SaveManager.getInstance().loadAbsolute(path, JsonObject.class);
         String type = jsonObject.get("gameType").getAsString();
         Gson gson = new Gson();
+        Level level;
 
         if (type != null) {
             switch (type) {
                 case "NORMAL":
-                    return gson.fromJson(jsonObject, NormalLevel.class);
+                    level = gson.fromJson(jsonObject, NormalLevel.class);
+                    break;
 
                 case "IZOMBIE":
-                    return gson.fromJson(jsonObject, IZombieLevel.class);
+                    level = gson.fromJson(jsonObject, IZombieLevel.class);
+                    break;
 
                 case "CONVEYORBELT":
-                    return gson.fromJson(jsonObject, ConveyorBeltLevel.class);
+                    level = gson.fromJson(jsonObject, ConveyorBeltLevel.class);
+                    break;
 
                 case "TIMEDWAR":
-                    return gson.fromJson(jsonObject, TimedWarLevel.class);
+                    level = gson.fromJson(jsonObject, TimedWarLevel.class);
+                    break;
 
                 case "VASEBREAKER":
-                    return gson.fromJson(jsonObject, VaseBreakerLevel.class);
+                    level = gson.fromJson(jsonObject, VaseBreakerLevel.class);
+                    break;
 
                 case "DEADLINE":
-                    return gson.fromJson(jsonObject, DeadLineLevel.class);
+                    level = gson.fromJson(jsonObject, DeadLineLevel.class);
+                    break;
 
                 case "PLANTWHATYOUGET":
-                    return gson.fromJson(jsonObject, PlantWhatYouGetLevel.class);
+                    level = gson.fromJson(jsonObject, PlantWhatYouGetLevel.class);
+                    break;
 
                 case "BEGHOULED":
-                    return gson.fromJson(jsonObject, BeghouledLevel.class);
+                    level = gson.fromJson(jsonObject, BeghouledLevel.class);
+                    break;
 
                 default:
                     throw new IllegalArgumentException("Unknown game mode type: " + type);
             }
+        } else {
+            return null;
         }
 
-        return null;
+        level.setSeasonName(seasonName);
+        return level;
     }
 }
