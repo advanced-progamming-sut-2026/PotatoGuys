@@ -115,11 +115,11 @@ public class PreGameController{
     }
 
     public Result boostPlant(Matcher matcher){
-        String type = matcher.group("type").trim().toUpperCase();
+        String type = matcher.group("type").trim();
 
         PlantType plantType = null;
         for (PlantType pt : PlantType.values()){
-            if (pt.toString().equals(type)){
+            if (pt.toString().equalsIgnoreCase(type)){
                 plantType = pt;
                 break;
             }

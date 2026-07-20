@@ -24,7 +24,7 @@ public abstract class Level {
     }
 
     public boolean hasPreGame() {
-        return false;
+        return true;
     }
 
     public boolean isPlantAllowed(PlantType type) {
