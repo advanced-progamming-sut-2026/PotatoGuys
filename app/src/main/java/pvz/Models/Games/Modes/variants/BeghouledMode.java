@@ -1,10 +1,11 @@
-package pvz.Models.Games.Modes;
+package pvz.Models.Games.Modes.variants;
 
 import java.util.Random;
 
 import pvz.Models.Games.Capabilities.BoardSwapper;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
+import pvz.Models.Games.Modes.GameMode;
 
 /**
  * "Beghouled" (match-3) mini-game skeleton. Demonstrates a second capability,

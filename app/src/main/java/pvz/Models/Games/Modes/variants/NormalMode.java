@@ -1,4 +1,4 @@
-package pvz.Models.Games.Modes;
+package pvz.Models.Games.Modes.variants;
 
 import java.util.List;
 
@@ -11,8 +11,9 @@ import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Capabilities.PlantPlacer;
 import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.Levels.NormalLevel;
 import pvz.Models.Games.Levels.Wave;
+import pvz.Models.Games.Levels.variants.NormalLevel;
+import pvz.Models.Games.Modes.GameMode;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
 
@@ -165,7 +166,7 @@ public class NormalMode implements GameMode, PlantPlacer {
         int lanes = 5;
         lawnMower = new Boolean[lanes];
         for (int i = 0; i < lanes; i++) {
-            lawnMower[i] = false; // All lawn mowers are initially available
+            lawnMower[i] = false;
         }
     }
 

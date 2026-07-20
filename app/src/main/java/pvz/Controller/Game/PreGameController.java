@@ -2,17 +2,15 @@ package pvz.Controller.Game;
 
 import java.util.regex.Matcher;
 
-import pvz.Models.Games.Seasons.Season;
+import pvz.Models.Games.Levels.Level;
 import pvz.View.Result;
 
 public abstract class PreGameController {
 
-    Season season;
-    int level;
+    protected Level level;
 
-    public PreGameController(Season season,int level){
-        this.season=season;
-        this.level=level;
+    public PreGameController(Level level){
+        this.level = level;
     }
 
     public abstract Result startGame(Matcher matcher);

@@ -1,18 +1,21 @@
-package pvz.Controller.Game;
+package pvz.Controller.Game.variants;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import pvz.Controller.Game.GameController;
+import pvz.Controller.Game.PreGameController;
 import pvz.Models.AppContext;
 import pvz.Models.Engine.GameEngine;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
-import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Levels.*;
-import pvz.Models.Games.Seasons.Season;
+import pvz.Models.Games.Levels.Level;
+import pvz.Models.Games.Levels.LevelFactory;
+import pvz.Models.Games.Levels.LevelLoader;
+import pvz.Models.Games.Levels.variants.NormalLevel;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.map.GameMap;
 import pvz.Models.User.MyPlant;
@@ -22,12 +25,10 @@ import pvz.View.Game.GameMenu;
 public class PreNormalGameController extends PreGameController {
     private static final int MAX_PLANTS = 7;
     private List<PlantCard> selectedPlants;
-    private int levelNumber;
 
-    public PreNormalGameController(Season season, int level){
-        super(season,level);
+    public PreNormalGameController(Level level){
+        super(level);
         selectedPlants=new ArrayList<>();
-        levelNumber=level;
     }
 
     public Result showAllPlants(Matcher matcher){
@@ -153,14 +154,6 @@ public class PreNormalGameController extends PreGameController {
         GameEngine engine = GameEngine.getInstance();
         engine.reset();
 
-        GameMap map = new GameMap();
-
-        List<Wave> waves = createHardcodedWaves(map);
-
-        //ConveyorBeltLevel level = new ConveyorBeltLevel(map, levelNumber, LevelType.NORMAL, 200 , waves);
-        NormalLevel level=new NormalLevel(map,levelNumber,LevelType.NORMAL,75,waves);
-        level=(NormalLevel) LevelFactory.createLevel(LevelLoader.loadLevel(season.getName(),levelNumber));
-
         StringBuilder output=new StringBuilder("Starting game with:");
         for (PlantCard p : selectedPlants){
             String boost = p.getPlant().isBoosted() ? " [BOOSTED]" : "";
@@ -171,27 +164,5 @@ public class PreNormalGameController extends PreGameController {
         AppContext.getInstance().setGameContext(context);
 
         return new Result(output.toString() , new GameMenu(new GameController(context)));
-    }
-
-    private List<Wave> createHardcodedWaves(GameMap map) {
-        List<Wave> waves = new ArrayList<>();
-        int lanes = map.getRows();
-
-        List<ZombieType> basicOnly = List.of(ZombieType.BASIC);
-        List<ZombieType> basicAndMummy = List.of(ZombieType.BASIC, ZombieType.MUMMY);
-        List<ZombieType> basicConeMummy = List.of(ZombieType.BASIC, ZombieType.CONEHEAD, ZombieType.MUMMY);
-
-        WavePhase phase1 = new WavePhase(3, 50, basicOnly, false);
-        waves.add(new Wave(1, false, 300, List.of(phase1), lanes, 3));
-
-        WavePhase phase2a = new WavePhase(4, 40, basicAndMummy, false);
-        WavePhase phase2b = new WavePhase(3, 25, basicAndMummy, true);
-        waves.add(new Wave(2, false, 500, List.of(phase2a, phase2b), lanes, 3));
-
-        WavePhase phase3a = new WavePhase(5, 35, basicConeMummy, false);
-        WavePhase phase3b = new WavePhase(6, 20, basicConeMummy, true);
-        waves.add(new Wave(3, true, 800, List.of(phase3a, phase3b), lanes, 3));
-
-        return waves;
     }
 }

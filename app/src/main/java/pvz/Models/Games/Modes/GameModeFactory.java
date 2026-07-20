@@ -1,6 +1,11 @@
 package pvz.Models.Games.Modes;
 
 import pvz.Models.Games.Levels.Level;
+import pvz.Models.Games.Modes.variants.BeghouledMode;
+import pvz.Models.Games.Modes.variants.ConveyorBeltMode;
+import pvz.Models.Games.Modes.variants.DeadLineMode;
+import pvz.Models.Games.Modes.variants.NormalMode;
+import pvz.Models.Games.Modes.variants.VasebreakerMode;
 
 public class GameModeFactory {
     public static GameMode createGameMode(Level level) {

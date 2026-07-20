@@ -1,4 +1,4 @@
-package pvz.Models.Games.Modes;
+package pvz.Models.Games.Modes.variants;
 
 import java.util.List;
 
@@ -8,9 +8,10 @@ import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Capabilities.PlantPlacer;
-import pvz.Models.Games.Levels.DeadLineLevel;
 import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Levels.Wave;
+import pvz.Models.Games.Levels.variants.DeadLineLevel;
+import pvz.Models.Games.Modes.GameMode;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
 
@@ -175,19 +176,16 @@ public class DeadLineMode implements GameMode, PlantPlacer {
         StringBuilder sb = new StringBuilder();
         sb.append("\n=== TICK: ").append(context.getCurrentTick()).append(" | DEADLINE AT COLUMN: ").append(deadlineColumn).append(" ===\n");
         
-        // چاپ هدر ستون‌ها
         sb.append("\n     ");
         for (int c = 0; c < context.getColumns(); c++) sb.append(String.format(" C%-2d ", c));
         sb.append("\n");
 
-        // چاپ خطوط نقشه
         appendDivider(sb, context);
         for (int lane = 0; lane < context.getLanes(); lane++) {
             sb.append(lawnMower[lane] ? "[!]" : "[M]").append(" |");
             for (int col = 0; col < context.getColumns(); col++) {
                 sb.append(getCellContent(col, context, lane));
                 
-                // افکت جادویی: قرار دادن خط دو تایی متمایز کننده مرز ددلاین
                 if (col == deadlineColumn) {
                     sb.append("║"); // خط مرگ!
                 } else {
@@ -203,7 +201,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
     private void appendDivider(StringBuilder sb, GameContext context) {
         sb.append("    +");
         for (int c = 0; c < context.getColumns(); c++) {
-            sb.append(c == deadlineColumn ? "====+" : "----+");
+            sb.append("----+");
         }
         sb.append("\n");
     }

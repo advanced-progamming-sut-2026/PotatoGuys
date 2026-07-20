@@ -1,7 +1,9 @@
-package pvz.Models.Games.Levels;
+package pvz.Models.Games.Levels.variants;
 
 import java.util.List;
 
+import pvz.Models.Games.Levels.Level;
+import pvz.Models.Games.Levels.LevelType;
 import pvz.Models.Games.Modes.GameModeType;
 import pvz.Models.Games.map.GameMap;
 import pvz.Models.User.MyPlant;

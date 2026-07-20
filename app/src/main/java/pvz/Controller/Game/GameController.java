@@ -14,7 +14,7 @@ import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Capabilities.PlantPlacer;
 import pvz.Models.Games.Capabilities.ZombiePlacer;
 import pvz.Models.Games.Modes.GameMode;
-import pvz.Models.Games.Modes.PlantWhatYouGetMode;
+import pvz.Models.Games.Modes.variants.PlantWhatYouGetMode;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.card.ZombieCard;

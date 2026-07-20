@@ -1,4 +1,4 @@
-package pvz.Models.Games.Modes;
+package pvz.Models.Games.Modes.variants;
 
 import java.util.List;
 import java.util.Random;
@@ -10,9 +10,10 @@ import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Capabilities.PlantPlacer;
-import pvz.Models.Games.Levels.ConveyorBeltLevel;
 import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Levels.Wave;
+import pvz.Models.Games.Levels.variants.ConveyorBeltLevel;
+import pvz.Models.Games.Modes.GameMode;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.User.MyPlant;
@@ -118,16 +119,13 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
             return;
         }
 
-        // ایجاد و اسپان گیاه روی تایل نقشه
         Plant plant = new PlantFactory().create(
                 plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context
         );
         context.spawnPlant(plant);
         
-        // حذف کارت از روی نوار نقاله پس از کاشت موفق
         context.removeCard(card);
-        
         context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
     }
 
