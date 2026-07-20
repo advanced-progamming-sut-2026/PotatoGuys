@@ -58,6 +58,18 @@
           {
             "message": "MUMMY has been unlocked!",
             "unread": true
+          },
+          {
+            "message": "CONEHEAD has been unlocked!",
+            "unread": true
+          },
+          {
+            "message": "BUCKETHEAD has been unlocked!",
+            "unread": true
+          },
+          {
+            "message": "IMP has been unlocked!",
+            "unread": true
           }
         ]
       },
@@ -90,7 +102,7 @@
           "Type": "Repeater",
           "level": 1,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "TwinSunflower",
@@ -113,7 +125,10 @@
       ],
       "unlockedZombies": [
         "BASIC",
-        "MUMMY"
+        "MUMMY",
+        "CONEHEAD",
+        "BUCKETHEAD",
+        "IMP"
       ]
     },
     "news": {
@@ -340,7 +355,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 3000,
-          "currentAmount": 75
+          "currentAmount": 1075
         },
         "active": true,
         "claimed": false,
@@ -355,7 +370,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 4000,
-          "currentAmount": 75
+          "currentAmount": 1075
         },
         "active": true,
         "claimed": false,
@@ -370,7 +385,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 5000,
-          "currentAmount": 75
+          "currentAmount": 1075
         },
         "active": true,
         "claimed": false,

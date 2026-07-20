@@ -23,12 +23,12 @@ import pvz.Models.Games.map.tile.TileTags;
  * Standard game mode implementation.
  * Manages waves and standard win/loss conditions.
  */
-public class NormalMode implements GameMode, PlantPlacer {
+public class IZombieMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
     private Boolean[] lawnMower;
 
-    public NormalMode(Level level) {
+    public IZombieMode(Level level) {
         if (level instanceof NormalLevel normalLevel) {
             waves = normalLevel.getWaves();
         }

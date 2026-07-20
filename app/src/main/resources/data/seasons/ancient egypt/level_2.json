@@ -1,0 +1,97 @@
+{
+  "gameType": "CONVEYORBELT",
+  "levelNumber": 2,
+  "levelType": "SPECIAL",
+  "initialSun": 0,
+  "gameMap": {
+    "rows": 5,
+    "columns": 9,
+    "specialTiles": []
+  },
+  "waves": [
+    {
+      "waveNumber": 1,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 200,
+      "lanes": 5,
+      "difficulty": 2,
+      "phases": [
+        {
+          "zombieCount": 2,
+          "intervalTicks": 100,
+          "allowedTypes": ["BASIC"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 2,
+          "intervalTicks": 80,
+          "allowedTypes": ["BASIC", "CONEHEAD"],
+          "isBurst": false
+        }
+      ]
+    },
+    {
+      "waveNumber": 2,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 500,
+      "lanes": 5,
+      "difficulty": 5,
+      "phases": [
+        {
+          "zombieCount": 3,
+          "intervalTicks": 70,
+          "allowedTypes": ["BASIC", "CONEHEAD", "FLAG"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 4,
+          "intervalTicks": 50,
+          "allowedTypes": ["CONEHEAD", "BUCKETHEAD"],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 3,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 900,
+      "lanes": 5,
+      "difficulty": 7,
+      "phases": [
+        {
+          "zombieCount": 4,
+          "intervalTicks": 55,
+          "allowedTypes": ["CONEHEAD", "BUCKETHEAD", "NEWSPAPER"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 5,
+          "intervalTicks": 40,
+          "allowedTypes": ["BUCKETHEAD", "IMP"],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 4,
+      "isFinalWave": true,
+      "baseTotalWaveCost": 1800,
+      "lanes": 5,
+      "difficulty": 10,
+      "phases": [
+        {
+          "zombieCount": 5,
+          "intervalTicks": 40,
+          "allowedTypes": ["CONEHEAD", "BUCKETHEAD", "BRICKHEAD", "FLAG"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 8,
+          "intervalTicks": 25,
+          "allowedTypes": ["BUCKETHEAD", "BRICKHEAD", "IMP", "GARGANTUAR"],
+          "isBurst": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,10 +1,12 @@
 package pvz.Models.Games.Modes;
-
 import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Modes.variants.BeghouledMode;
 import pvz.Models.Games.Modes.variants.ConveyorBeltMode;
 import pvz.Models.Games.Modes.variants.DeadLineMode;
+import pvz.Models.Games.Modes.variants.IZombieMode;
 import pvz.Models.Games.Modes.variants.NormalMode;
+import pvz.Models.Games.Modes.variants.PlantWhatYouGetMode;
+import pvz.Models.Games.Modes.variants.TimedWarMode;
 import pvz.Models.Games.Modes.variants.VasebreakerMode;
 
 public class GameModeFactory {
@@ -14,6 +16,12 @@ public class GameModeFactory {
                 return new NormalMode(level);
             case CONVEYORBELT:
                 return new ConveyorBeltMode(level);
+            case TIMEDWAR:
+                return new TimedWarMode(level);
+            case IZOMBIE:
+                return new IZombieMode(level);
+            case PLANTWHATYOUGET:
+                return new PlantWhatYouGetMode(level);
             case DEADLINE:
                 return new DeadLineMode(level);
             case VASEBREAKER:

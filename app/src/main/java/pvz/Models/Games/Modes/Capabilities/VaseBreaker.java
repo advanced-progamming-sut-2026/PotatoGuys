@@ -1,4 +1,4 @@
-package pvz.Models.Games.Capabilities;
+package pvz.Models.Games.Modes.Capabilities;
 
 import pvz.Models.Games.GameContext;
 
