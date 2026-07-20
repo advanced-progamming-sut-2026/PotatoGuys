@@ -1,9 +1,11 @@
-package pvz.View;
+package pvz.View.Game;
 
 import java.util.regex.Matcher;
 
 import pvz.Controller.ChapterSelectionController;
 import pvz.Enums.Commands.ChapterSelectionMenuCommand;
+import pvz.View.Menu;
+import pvz.View.Result;
 
 public class ChapterSelectionMenu implements Menu {
     ChapterSelectionController controller = new ChapterSelectionController();

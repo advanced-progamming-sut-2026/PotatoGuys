@@ -2,17 +2,17 @@ package pvz.View.Game;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.Game.variants.PreNormalGameController;
+import pvz.Controller.Game.PreGameController;
 import pvz.Enums.Commands.PreGameMenuCommand;
 import pvz.Models.Games.Levels.Level;
 import pvz.View.Menu;
 import pvz.View.Result;
 
 public class PreGameMenu implements Menu {
-    PreNormalGameController controller;
+    PreGameController controller;
 
     public PreGameMenu(Level level){
-        this.controller = new PreNormalGameController(level);
+        this.controller = new PreGameController(level);
     }
 
     @Override

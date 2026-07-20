@@ -2,7 +2,6 @@ package pvz.Enums.Commands;
 
 public enum GameModesMenuCommand implements MenuCommand {
     ADVENTURE("^1\\s*$"),
-    MINI_GAMES("^2\\s*$"),
     HELP("^\\s*help\\s*$");
 
     private final String pattern;

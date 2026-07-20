@@ -21,4 +21,9 @@ public class IZombieLevel extends Level {
         return basedPlants;
     }
 
+    @Override
+    public boolean hasPreGame() {
+        return false;
+    }
+
 }

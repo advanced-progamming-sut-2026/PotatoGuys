@@ -187,7 +187,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
                 sb.append(getCellContent(col, context, lane));
                 
                 if (col == deadlineColumn) {
-                    sb.append("║"); // خط مرگ!
+                    sb.append("║");
                 } else {
                     sb.append("|");
                 }
