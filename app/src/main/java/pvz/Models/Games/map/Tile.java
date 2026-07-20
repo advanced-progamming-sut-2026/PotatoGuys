@@ -5,25 +5,31 @@ import java.util.List;
 
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.Enums.PlantTag;
+import pvz.Models.Entities.Plants.data.PlantPropertySheet;
+import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Entities.Projectile.Projectile;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
+import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.map.behaviors.TileBehavior;
 
 public class Tile {
+    private List<TileTags> tags;
     private List<TileBehavior> behaviors = new ArrayList<>();
     private List<Plant> plants;
 
     public Tile(){
         plants=new ArrayList<>();
+        tags=new ArrayList<>();
     }
 
-    public boolean isPlantable(Plant newPlant) {
+    public boolean isPlantable(PlantCard newPlant) {
         for (TileBehavior b : behaviors) {
             if (!b.canPlant(newPlant, this)) return false;
         }
 
-        if(!plants.isEmpty() && !newPlant.getSheet().getTags().contains(PlantTag.STACK)){
+        PlantPropertySheet sheet= PlantRegistry.getInstance().getSheet(newPlant.getPlant().getType());
+        if(!plants.isEmpty() && !sheet.getTags().contains(PlantTag.STACK)){
             return false;
         }
         return true;
@@ -38,7 +44,6 @@ public class Tile {
     }
 
     public void addPlant(Plant plant) {
-        if(this.isPlantable(plant) && !plants.contains(plant))
             plants.add(plant);
     }
 
@@ -56,5 +61,9 @@ public class Tile {
 
     public void onTick(GameContext ctx) {
         for (TileBehavior b : behaviors) b.onTick(ctx, this);
+    }
+
+    public List<TileTags> getTags(){
+        return tags;
     }
 }

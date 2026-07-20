@@ -19,6 +19,7 @@ import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.card.ZombieCard;
 import pvz.Models.Games.map.Tile;
+import pvz.Models.Games.map.TileTags;
 import pvz.Models.Quests.QuestEvaluator;
 import pvz.Models.User.User;
 import pvz.View.MainMenu;
@@ -252,6 +253,12 @@ public class GameController {
 
         Tile tile = context.getMap().getMap()[x][y];
         StringBuilder status = new StringBuilder("Tile Status at (").append(x).append(",").append(y).append("):");
+
+        //--- Tile:
+        status.append("\nTags:");
+        for (TileTags tag: tile.getTags()){
+            status.append("\n  ").append(tag.toString());
+        }
 
         //--- Plant:
         if (tile.getPlants() != null && !tile.getPlants().isEmpty()) {

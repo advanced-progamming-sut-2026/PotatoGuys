@@ -13,11 +13,7 @@ import pvz.Models.Entities.Plants.data.PlantPropertySheet;
 import pvz.Models.Entities.Plants.data.PlantRegistry;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.Levels.LevelFactory;
-import pvz.Models.Games.Levels.LevelLoader;
-import pvz.Models.Games.Levels.variants.NormalLevel;
 import pvz.Models.Games.card.PlantCard;
-import pvz.Models.Games.map.GameMap;
 import pvz.Models.User.MyPlant;
 import pvz.View.Result;
 import pvz.View.Game.GameMenu;
@@ -153,6 +149,7 @@ public class PreNormalGameController extends PreGameController {
 
         GameEngine engine = GameEngine.getInstance();
         engine.reset();
+
 
         StringBuilder output=new StringBuilder("Starting game with:");
         for (PlantCard p : selectedPlants){

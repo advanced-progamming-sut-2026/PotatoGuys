@@ -1,6 +1,6 @@
 package pvz.Models.Games.map;
 
-public enum TileType {
+public enum TileTags {
     NORMAL("Normal"),
     GRAVE("Grave"),
     ICE("Ice"),
@@ -12,7 +12,7 @@ public enum TileType {
 
     public final String typeName;
 
-    TileType(String typeName){
+    TileTags(String typeName){
         this.typeName=typeName;
     }
 }

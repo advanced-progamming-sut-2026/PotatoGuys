@@ -19,6 +19,8 @@ import pvz.Models.Entities.Zombies.fsm.WalkState;
 import pvz.Models.Entities.Zombies.fsm.ZombieState;
 import pvz.Models.Entities.Zombies.skills.ZombieSkill;
 import pvz.Models.Games.GameContext;
+import pvz.Models.Games.map.Tile;
+import pvz.Models.Games.map.behaviors.TileBehavior;
 
 
 /**
@@ -59,6 +61,8 @@ public class Zombie implements TickAware {
     private final GameContext context;
 
     // ── Grid position ─────────────────────────────────────────────────────────
+    private int lastX;
+    private int lastLane;
     private float x;
     private final int lane;
 
@@ -101,6 +105,7 @@ public class Zombie implements TickAware {
                   GameContext ctx, int waveIndex, int difficulty) {
         this.sheet = sheet;
         this.x = startX;
+        lastX=(int)startX;
         this.lane = lane;
         this.armors = new ArrayList<>(armors);
         this.skills = new ArrayList<>(skills);
@@ -137,6 +142,16 @@ public class Zombie implements TickAware {
             currentState.onExit(this, context);
             next.onEnter(this, context);
             currentState = next;
+        }
+
+        //check if Zombie entered new tile
+        if (Math.floor(x)!=lastX || lane!=lastLane){
+            lastX=(int)Math.floor(x);
+            lastLane=lane;
+            Tile tile=context.getTileAt(lastX,lane);
+            for (TileBehavior b: tile.getBehaviors()){
+                b.onZombieEnter(this,tile);
+            }
         }
     }
 
