@@ -1,5 +1,5 @@
 {
-  "type": "NORMAL",
+  "gameType": "NORMAL",
   "levelNumber": 1,
   "initialSun": 200,
   "map": {

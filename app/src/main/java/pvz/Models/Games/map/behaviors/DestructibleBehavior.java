@@ -3,8 +3,8 @@ package pvz.Models.Games.map.behaviors;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Projectile.Projectile;
 import pvz.Models.Games.card.PlantCard;
-import pvz.Models.Games.map.Tile;
-import pvz.Models.Games.map.TileTags;
+import pvz.Models.Games.map.tile.Tile;
+import pvz.Models.Games.map.tile.TileTags;
 
 public class DestructibleBehavior implements TileBehavior {
     private float hp;

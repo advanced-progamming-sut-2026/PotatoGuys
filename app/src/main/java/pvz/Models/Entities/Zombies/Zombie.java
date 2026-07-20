@@ -19,8 +19,8 @@ import pvz.Models.Entities.Zombies.fsm.WalkState;
 import pvz.Models.Entities.Zombies.fsm.ZombieState;
 import pvz.Models.Entities.Zombies.skills.ZombieSkill;
 import pvz.Models.Games.GameContext;
-import pvz.Models.Games.map.Tile;
 import pvz.Models.Games.map.behaviors.TileBehavior;
+import pvz.Models.Games.map.tile.Tile;
 
 
 /**

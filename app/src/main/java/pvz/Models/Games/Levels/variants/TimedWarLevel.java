@@ -6,12 +6,12 @@ import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Levels.LevelType;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.Modes.GameModeType;
-import pvz.Models.Games.map.GameMap;
+import pvz.Models.Games.map.data.GameMapDefinition;
 
 public class TimedWarLevel extends Level {
     private final List<Wave> waves;
     
-    public TimedWarLevel(GameMap gameMap, int levelNumber, LevelType type, int initialSun, List<Wave> waves) {
+    public TimedWarLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun, List<Wave> waves) {
         super(GameModeType.NORMAL, gameMap, levelNumber, type, initialSun);
         this.waves = waves;
     }

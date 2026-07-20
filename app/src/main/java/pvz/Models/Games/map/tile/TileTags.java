@@ -1,4 +1,4 @@
-package pvz.Models.Games.map;
+package pvz.Models.Games.map.tile;
 
 public enum TileTags {
     NORMAL("Normal"),

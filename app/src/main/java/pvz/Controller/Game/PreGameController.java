@@ -162,5 +162,4 @@ public class PreGameController{
         return new Result(output.toString() , new GameMenu(new GameController(context)));
     }
 
-
 }

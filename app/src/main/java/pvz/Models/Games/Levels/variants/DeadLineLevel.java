@@ -6,13 +6,13 @@ import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Levels.LevelType;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.Modes.GameModeType;
-import pvz.Models.Games.map.GameMap;
+import pvz.Models.Games.map.data.GameMapDefinition;
 
 public class DeadLineLevel extends Level {
     private final List<Wave> waves;
     private final int deadlineColumn;
 
-    public DeadLineLevel(GameMap gameMap, int levelNumber, LevelType type, int initialSun, List<Wave> waves, int deadlineColumn) {
+    public DeadLineLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun, List<Wave> waves, int deadlineColumn) {
         super(GameModeType.DEADLINE, gameMap, levelNumber, type, initialSun);
         this.waves = waves;
         this.deadlineColumn = deadlineColumn;
