@@ -16,7 +16,7 @@ public class Quest {
     private boolean active;
     private boolean claimed;
     private boolean repeatable;
-    private String variable;
+    private String variable; // Stores dynamic 'n', family, or chapter targets
 
     public Quest() {
         this.rewards = new ArrayList<>();
@@ -46,18 +46,12 @@ public class Quest {
     public QuestCategory getCategory() { return category; }
     public QuestPriority getPriority() { return priority; }
     public List<Reward> getRewards() { return rewards; }
+    public Progress getProgress() { return progress; }
     public boolean isActive() { return active; }
     public boolean isClaimed() { return claimed; }
     public boolean isRepeatable() { return repeatable; }
-    public Progress getProgress() { return progress; }
     public String getVariable() { return variable; }
 
-    public void setId(String id) { this.id = id; }
-    public void setTitle(String title) { this.title = title; }
-    public void setDescription(String description) { this.description = description; }
-    public void setCategory(QuestCategory category) { this.category = category; }
-    public void setPriority(QuestPriority priority) { this.priority = priority; }
-    public void setRewards(List<Reward> rewards) { this.rewards = rewards; }
     public void setActive(boolean active) { this.active = active; }
     public void setClaimed(boolean claimed) { this.claimed = claimed; }
     public void setRepeatable(boolean repeatable) { this.repeatable = repeatable; }

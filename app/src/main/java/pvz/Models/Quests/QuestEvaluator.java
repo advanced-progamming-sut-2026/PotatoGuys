@@ -1,230 +1,147 @@
 package pvz.Models.Quests;
 
-import java.util.Set;
-
 import pvz.Models.Entities.Plants.Enums.PlantType;
+import pvz.Models.Games.GameContext;
 import pvz.Models.Games.GameStats;
+import pvz.Models.Games.map.GameMap;
+import pvz.Models.Games.map.tile.Tile;
 import pvz.Models.User.User;
 
 public class QuestEvaluator {
 
-    public static void evaluateAll(QuestLog questLog, GameStats stats, boolean levelWon, int currentSun, int difficulty) {
+    public static void evaluateAll(QuestLog questLog, GameStats stats, boolean levelWon,
+                                   int currentSun, int difficulty, User user, GameContext context) {
         for (Quest quest : questLog.getAllQuests()) {
             if (!quest.isActive() || quest.isClaimed()) continue;
-            evaluateQuest(quest, stats, levelWon, currentSun, difficulty);
+            evaluateQuest(quest, stats, levelWon, currentSun, difficulty, context);
+            if (quest.isCompleted() && !quest.isClaimed()) {
+                quest.claim(user);
+            }
         }
     }
 
-    private static void evaluateQuest(Quest quest, GameStats stats, boolean levelWon, int currentSun, int difficulty) {
+    private static void evaluateQuest(Quest quest, GameStats stats, boolean levelWon,
+                                      int currentSun, int difficulty, GameContext context) {
         String id = quest.getId();
         Progress progress = quest.getProgress();
 
-        switch (id) {
-            case "daily_sun_catcher_3000":
-            case "daily_sun_catcher_4000":
-            case "daily_sun_catcher_5000":
-                progress.addProgress(stats.getSunCollected());
-                break;
+        if (id.startsWith("daily_sun_catcher_")) {
+            progress.addProgress(stats.getSunCollected());
 
-            case "daily_pro_plant_player":
-                progress.addProgress(stats.getZombiesKilledByPlant());
-                break;
+        } else if (id.startsWith("main_chapter_hunter_")) {
+            String chapter = quest.getVariable();
+            progress.addProgress(stats.getZombiesKilledBySeasonMap().getOrDefault(chapter, 0));
 
-            case "daily_only_cactus":
-                progress.addProgress(stats.getZombiesKilledByCactus());
-                break;
+        } else if (id.startsWith("daily_pro_plant_player_")) {
+            String plantName = quest.getVariable();
+            progress.addProgress(stats.getZombiesKilledByPlantType(plantName));
 
-            case "daily_professional_destroyer":
-                progress.addProgress(stats.getExplosivePlantsUsed());
-                break;
+        } else if (id.equals("daily_only_cactus")) {
+            progress.addProgress(stats.getZombiesKilledByCactus());
 
-            case "daily_symmetry":
-                if (levelWon && isGardenSymmetric()) {
-                    progress.addProgress(1);
-                }
-                break;
+        } else if (id.startsWith("main_economical_vegetarian_")) {
+            int maxLoss = Integer.parseInt(quest.getVariable());
+            if (levelWon && stats.getPlantsLost() <= maxLoss) {
+                progress.addProgress(1);
+            }
 
-            case "daily_family_slaughter_peashooter":
-                if (levelWon && stats.getPlantsUsedToKill().size() > 0 && isOnlyFamily(stats, "SHOOTER")) {
-                    progress.addProgress(1);
-                }
-                break;
+        } else if (id.equals("epic_defense_master")) {
+            if (levelWon && currentSun == 0) {
+                progress.addProgress(1);
+            }
 
-            case "daily_family_slaughter_sunflower":
-                if (levelWon && stats.getPlantsUsedToKill().size() > 0 && isOnlyFamily(stats, "SUN_PRODUCER")) {
-                    progress.addProgress(1);
-                }
-                break;
+        } else if (id.equals("main_quick_reflexes")) {
+            progress.addProgress(stats.getZombiesKilledAfterFirstWaveIn30Sec());
 
-            case "daily_blooming_constraints_shooter":
-                if (levelWon && !stats.getPlantFamiliesUsed().contains("SHOOTER")) {
-                    progress.addProgress(1);
-                }
-                break;
+        } else if (id.equals("daily_professional_destroyer")) {
+            progress.addProgress(stats.getExplosivePlantsUsed());
 
-            case "daily_blooming_constraints_explosive":
-                if (levelWon && !stats.getPlantFamiliesUsed().contains("EXPLOSIVE")) {
-                    progress.addProgress(1);
-                }
-                break;
+        } else if (id.equals("daily_symmetry")) {
+            if (levelWon && context != null && isGardenSymmetric(context)) {
+                progress.addProgress(1);
+            }
 
-            case "daily_win_after_win":
-                if (levelWon && difficulty >= 5) {
-                    stats.setConsecutiveWinsOnHighDiff(stats.getConsecutiveWinsOnHighDiff() + 1);
-                    progress.addProgress(1);
-                } else if (!levelWon) {
-                    stats.setConsecutiveWinsOnHighDiff(0);
-                }
-                break;
+        } else if (id.startsWith("daily_family_slaughter_")) {
+            String family = quest.getVariable();
+            if (levelWon && stats.getKillingFamiliesUsed().size() == 1
+                    && stats.getKillingFamiliesUsed().contains(family)) {
+                progress.addProgress(1);
+            }
 
-            case "daily_almost_victorious":
-                progress.addProgress(stats.getZombiesKilledInCol0NoMower());
-                break;
+        } else if (id.startsWith("daily_blooming_constraints_")) {
+            String bannedFamily = quest.getVariable();
+            if (levelWon && !stats.getPlantFamiliesUsed().contains(bannedFamily)) {
+                progress.addProgress(1);
+            }
 
-            case "daily_anti_ocd":
-                if (levelWon && !isGardenSymmetricExceptMiddle()) {
-                    progress.addProgress(1);
-                }
-                break;
+        } else if (id.equals("epic_night_or_morning")) {
+            if (levelWon && stats.isUsesNightPlants()) {
+                progress.addProgress(1);
+            }
 
-            case "daily_cloudy_day":
-                if (levelWon && stats.getSunProducerCount() <= 3) {
-                    progress.addProgress(1);
-                }
-                break;
+        } else if (id.equals("daily_win_after_win")) {
+            if (levelWon && difficulty >= 5) {
+                stats.setConsecutiveWinsOnHighDiff(stats.getConsecutiveWinsOnHighDiff() + 1);
+                progress.addProgress(1);
+            } else if (!levelWon) {
+                stats.setConsecutiveWinsOnHighDiff(0);
+            }
 
-            case "daily_one_less_column_2":
-                if (levelWon && !stats.getColumnsUsedForPlanting().contains(2)) {
-                    progress.addProgress(1);
-                }
-                break;
+        } else if (id.equals("daily_almost_victorious")) {
+            progress.addProgress(stats.getZombiesKilledInCol0NoMower());
 
-            case "daily_one_less_column_3":
-                if (levelWon && !stats.getColumnsUsedForPlanting().contains(3)) {
-                    progress.addProgress(1);
-                }
-                break;
+        } else if (id.equals("daily_anti_ocd")) {
+            if (levelWon && context != null && !isGardenSymmetric(context)) {
+                progress.addProgress(1);
+            }
 
-            case "daily_defenseless_row_1":
-                if (levelWon && !stats.getRowsUsedForPlanting().contains(1)) {
-                    progress.addProgress(1);
-                }
-                break;
+        } else if (id.equals("daily_cloudy_day")) {
+            if (levelWon && stats.getSunProducerCount() <= 3) {
+                progress.addProgress(1);
+            }
 
-            case "daily_defenseless_row_3":
-                if (levelWon && !stats.getRowsUsedForPlanting().contains(3)) {
-                    progress.addProgress(1);
-                }
-                break;
+        } else if (id.startsWith("daily_one_less_column_")) {
+            int col = Integer.parseInt(quest.getVariable());
+            if (levelWon && !stats.getColumnsUsedForPlanting().contains(col)) {
+                progress.addProgress(1);
+            }
 
-            case "daily_defenseless_cross_2_2":
-                if (levelWon && !stats.getRowsUsedForPlanting().contains(2)
-                        && !stats.getColumnsUsedForPlanting().contains(2)) {
-                    progress.addProgress(1);
-                }
-                break;
+        } else if (id.startsWith("daily_defenseless_row_")) {
+            int row = Integer.parseInt(quest.getVariable());
+            if (levelWon && !stats.getRowsUsedForPlanting().contains(row)) {
+                progress.addProgress(1);
+            }
 
-            case "main_chapter_hunter_egypt":
-                progress.addProgress(stats.getZombiesKilledBySeasonMap().getOrDefault("Ancient Egypt", 0));
-                break;
-            case "main_chapter_hunter_caves":
-                progress.addProgress(stats.getZombiesKilledBySeasonMap().getOrDefault("Frostbite Caves", 0));
-                break;
-            case "main_chapter_hunter_ages":
-                progress.addProgress(stats.getZombiesKilledBySeasonMap().getOrDefault("Dark Ages", 0));
-                break;
-            case "main_chapter_hunter_beach":
-                progress.addProgress(stats.getZombiesKilledBySeasonMap().getOrDefault("Big Wave Beach", 0));
-                break;
+        } else if (id.startsWith("daily_defenseless_cross_")) {
+            int idx = Integer.parseInt(quest.getVariable());
+            if (levelWon && !stats.getRowsUsedForPlanting().contains(idx)
+                    && !stats.getColumnsUsedForPlanting().contains(idx)) {
+                progress.addProgress(1);
+            }
 
-            case "main_economical_0":
-            case "main_economical_1":
-            case "main_economical_2":
-            case "main_economical_3":
-            case "main_economical_4":
-            case "main_economical_5":
-                if (levelWon) {
-                    int maxLoss = Integer.parseInt(id.split("_")[2]);
-                    if (stats.getPlantsLost() <= maxLoss) {
-                        progress.addProgress(1);
-                    }
-                }
-                break;
-
-            case "main_quick_reflexes":
-                if (stats.isFirstWaveStarted()) {
-                    progress.addProgress(stats.getZombiesKilledAfterFirstWaveIn30Sec());
-                }
-                break;
-
-            case "epic_defense_master":
-                if (levelWon && currentSun == 0) {
-                    progress.addProgress(1);
-                }
-                break;
-
-            case "epic_night_or_morning":
-                if (levelWon && stats.isUsesNightPlants()) {
-                    progress.addProgress(1);
-                }
-                break;
-
-            case "epic_lawnmowing_10":
-            case "epic_lawnmowing_20":
-            case "epic_lawnmowing_30":
-            case "epic_lawnmowing_40":
-            case "epic_lawnmowing_50":
-                progress.addProgress(stats.getLawnmowerKills());
-                break;
+        } else if (id.startsWith("epic_lawnmowing_")) {
+            progress.addProgress(stats.getLawnmowerKills());
         }
     }
 
-    private static boolean isGardenSymmetric() {
-        return false;
-    }
-
-    private static boolean isGardenSymmetricExceptMiddle() {
-        return false;
-    }
-
-    private static boolean isOnlyFamily(GameStats stats, String family) {
-        Set<PlantType> used = stats.getPlantsUsedToKill();
-        for (PlantType pt : used) {
-            String cat = getPlantCategory(pt);
-            if (cat != null && !cat.equals(family)) return false;
+    private static boolean isGardenSymmetric(GameContext context) {
+        GameMap map = context.getMap();
+        int rows = map.getRows();
+        int cols = map.getColumns();
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols / 2; c++) {
+                String left = getPlantTypeAt(map, c, r);
+                String right = getPlantTypeAt(map, cols - 1 - c, r);
+                if (!java.util.Objects.equals(left, right)) return false;
+            }
         }
         return true;
     }
 
-    private static String getPlantCategory(PlantType type) {
-        switch (type) {
-            case Peashooter: case Repeater: case Threepeater: case SnowPea:
-            case Rotobaga: case PeaPod: case SplitPea: case Citron:
-            case Caulipower: case ElectricBlueberry: case BowlingBulb:
-            case Cactus: case FirePeashooter: case Starfruit: case GooPeashooter:
-            case MegaGatlingPea:
-                return "SHOOTER";
-            case Sunflower: case TwinSunflower: case Sunshroom: case PrimalSunflower:
-            case GoldBloom:
-                return "SUN_PRODUCER";
-            case Cabbagepult: case Kernelpult: case Melonpult: case WinterMelon:
-            case Pepperpult:
-                return "LOBBER";
-            case CherryBomb: case Jalapeno: case Doomshroom: case Grapeshot:
-            case PotatoMine: case PrimalPotatoMine:
-                return "EXPLOSIVE";
-            case BonkChoy: case Chomper: case WasabiWhip: case Kiwibeast:
-                return "MELEE";
-            case Wallnut: case Tallnut: case Endurian: case Garlic:
-            case SweetPotato: case Pumpkin:
-                return "WALL_NUT";
-            case Seashroom: case Puffshroom: case Fumeshroom: case Magnetshroom:
-            case Hypnoshroom: case Iceshroom: case Cattail: case TangleKelp:
-            case IcebergLettuce: case Torchwood: case SunBean: case Explodeonut:
-            case GraveBuster: case HotPotato: case LilyPad: case Imitater:
-                return "MODIFIER";
-            default:
-                return null;
-        }
+    private static String getPlantTypeAt(GameMap map, int col, int row) {
+        if (col < 0 || col >= map.getColumns() || row < 0 || row >= map.getRows()) return null;
+        Tile tile = map.getTile(col, row);
+        if (tile.getPlants().isEmpty()) return null;
+        return tile.getPlants().getLast().getType().name();
     }
 }
