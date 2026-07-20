@@ -145,11 +145,11 @@ public class Zombie implements TickAware {
         }
 
         //check if Zombie entered new tile
-        if (Math.floor(x)!=lastX || lane!=lastLane){
-            lastX=(int)Math.floor(x);
-            lastLane=lane;
-            Tile tile=context.getTileAt(lastX,lane);
-            for (TileBehavior b: tile.getBehaviors()){
+        if (Math.floor(x) != lastX || lane != lastLane){
+            lastX = (int)Math.floor(x);
+            lastLane = lane;
+            Tile tile = context.getTileAt(lastX,lane);
+            for (TileBehavior b : tile.getBehaviors()){
                 b.onZombieEnter(this,tile);
             }
         }

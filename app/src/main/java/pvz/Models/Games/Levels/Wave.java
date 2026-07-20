@@ -22,7 +22,7 @@ public class Wave{
     private int remainingInPhase;
     private int ticksUntilNextSpawn;
     private boolean done;
-    private transient Random rand;
+    private static Random rand = new Random();
 
     public Wave(int waveNumber, boolean isFinalWave, int totalWaveCost, List<WavePhase> phases,
                  int lanes, int difficulty) {
@@ -36,7 +36,6 @@ public class Wave{
         this.remainingInPhase = phases.get(currentPhase).getZombieCount();
         this.ticksUntilNextSpawn = phases.get(currentPhase  ).getIntervalTicks();
         this.done = false;
-        this.rand = new Random();
     }
 
     public int getWaveNumber() {
