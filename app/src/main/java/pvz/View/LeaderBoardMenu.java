@@ -10,14 +10,10 @@ public class LeaderBoardMenu implements Menu {
     public Result handleInput(String input) {
         LeaderBoardController controller = new LeaderBoardController();
         Matcher matcher;
-        if ((matcher = LeaderBoardCommands.SHOW.getMatcher(input)) != null)
-            return controller.show(matcher);
-        if ((matcher = LeaderBoardCommands.SORT.getMatcher(input)) != null)
-            return controller.sort(matcher);
-        if ((matcher = LeaderBoardCommands.EXIT.getMatcher(input)) != null)
-            return controller.exit(matcher);
-        if ((matcher = LeaderBoardCommands.HELP.getMatcher(input)) != null)
-            return new Result(LeaderBoardCommands.getHelp());
+        if ((matcher = LeaderBoardCommands.SHOW.getMatcher(input)) != null) return controller.show(matcher);
+        if ((matcher = LeaderBoardCommands.SORT.getMatcher(input)) != null) return controller.sort(matcher);
+        if ((matcher = LeaderBoardCommands.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
+        if ((matcher = LeaderBoardCommands.HELP.getMatcher(input)) != null) return new Result(LeaderBoardCommands.getHelp());
         return new Result("Invalid command. Use: leaderboard, leaderboard sort -s <field> -o <asc|desc>, menu exit", this);
     }
 
