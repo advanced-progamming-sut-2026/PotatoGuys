@@ -13,6 +13,8 @@ public abstract class Level {
     protected final LevelType levelType;
     protected final int initialSun;
     protected final int levelNumber;
+    protected String seasonName;
+    protected List<pvz.Models.Games.Levels.Data.EffectDefinition> effects;
     
 
     public Level(GameModeType gameMode, GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun){
@@ -21,6 +23,24 @@ public abstract class Level {
         this.levelNumber=levelNumber;
         this.levelType=type;
         this.initialSun=initialSun;
+        this.seasonName = "";
+        this.effects = new java.util.ArrayList<>();
+    }
+
+    public List<pvz.Models.Games.Levels.Data.EffectDefinition> getEffects() {
+        return effects;
+    }
+    
+    public void setEffects(List<pvz.Models.Games.Levels.Data.EffectDefinition> effects) {
+        this.effects = effects;
+    }
+
+    public String getSeasonName() {
+        return seasonName;
+    }
+
+    public void setSeasonName(String seasonName) {
+        this.seasonName = seasonName;
     }
 
     public boolean hasPreGame() {

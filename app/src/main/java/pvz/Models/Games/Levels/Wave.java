@@ -37,6 +37,17 @@ public class Wave{
         this.ticksUntilNextSpawn = phases.get(currentPhase  ).getIntervalTicks();
         this.done = false;
     }
+    
+    public Wave() {}
+
+    private void ensureInitialized() {
+        if (this.remainingInPhase == 0 && this.ticksUntilNextSpawn == 0 && !done) {
+             this.currentPhase = 0;
+             this.remainingInPhase = phases.get(currentPhase).getZombieCount();
+             this.ticksUntilNextSpawn = phases.get(currentPhase).getIntervalTicks();
+        }
+    }
+
 
     public int getWaveNumber() {
         return waveNumber;
@@ -55,6 +66,7 @@ public class Wave{
     }
 
     public void startWave(GameContext context) {
+        ensureInitialized();
         context.log("Wave " + waveNumber + " started" + (isFinalWave ? " — FINAL WAVE!" : ""));
         if (phases.get(currentPhase).isBurst()) {
             context.log("Wave " + waveNumber + " phase " + (currentPhase + 1) + " [BURST]");
@@ -62,6 +74,7 @@ public class Wave{
     }
 
     public void updateWave(GameContext context) {
+        ensureInitialized();
         if (done) return;
 
         ticksUntilNextSpawn--;
@@ -97,6 +110,19 @@ public class Wave{
         ZombieType type = allowed.get(rand.nextInt(allowed.size()));
         int lane = rand.nextInt(lanes);
         int col = context.getColumns() - 1;
+
+        // Sandstorm: during final wave burst in Ancient Egypt, zombies are carried
+        // deeper into the map (1-4 columns from the right edge)
+        boolean isSandstorm = isFinalWave && phase.isBurst()
+                && "ancient egypt".equalsIgnoreCase(context.getSeasonName());
+        
+        context.log("DEBUG: Checking sandstorm: isFinalWave=" + isFinalWave + ", isBurst=" + phase.isBurst() + ", season=" + context.getSeasonName() + ", isSandstorm=" + isSandstorm);
+        
+        if (isSandstorm) {
+            col = context.getColumns() - 2 - rand.nextInt(4);
+            context.log("A sandstorm carries a " + type.getAlias() + " to column " + col + "!");
+        }
+
         Zombie newZombie = new ZombieFactory().create(type.getAlias(), col, lane, context, waveNumber, difficulty);
         context.spawnZombie(newZombie);
 
