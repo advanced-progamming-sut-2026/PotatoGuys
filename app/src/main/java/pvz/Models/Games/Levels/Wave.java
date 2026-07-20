@@ -18,8 +18,8 @@ public class Wave{
     private int lanes;
     private int difficulty;
 
-    int currentPhase;
-    int remainingInPhase;
+    private int currentPhase;
+    private int remainingInPhase;
     private int ticksUntilNextSpawn;
     private boolean done;
     private transient Random rand;

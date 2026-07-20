@@ -9,9 +9,7 @@ import pvz.Enums.Commands.ChapterMenuCommand;
 import pvz.Models.AppContext;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.Levels.LevelFactory;
 import pvz.Models.Games.Levels.LevelLoader;
-import pvz.Models.Games.Levels.Data.LevelDefinition;
 import pvz.Models.Games.Seasons.Season;
 import pvz.View.Menu;
 import pvz.View.Result;
@@ -33,8 +31,7 @@ public class ChapterMenu implements Menu{
         Matcher matcher;
         if ((matcher = ChapterMenuCommand.SELECT_LEVEL.getMatcher(input)) != null) {
             int levelNumber = Integer.parseInt(matcher.group("level"));
-            LevelDefinition levelDef = LevelLoader.loadLevel(season.getName(), levelNumber);
-            Level level = LevelFactory.createLevel(levelDef);
+            Level level = LevelLoader.loadLevel(season.getName(), levelNumber);
             if(level.hasPreGame())
                 return new Result(new PreGameMenu(level));
             GameContext context = new GameContext(level);

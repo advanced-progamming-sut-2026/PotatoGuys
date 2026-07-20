@@ -16,8 +16,8 @@ import pvz.Models.Games.Levels.variants.NormalLevel;
 import pvz.Models.Games.Modes.GameMode;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
-import pvz.Models.Games.map.Tile;
-import pvz.Models.Games.map.TileTags;
+import pvz.Models.Games.map.tile.Tile;
+import pvz.Models.Games.map.tile.TileTags;
 
 /**
  * Standard game mode implementation.

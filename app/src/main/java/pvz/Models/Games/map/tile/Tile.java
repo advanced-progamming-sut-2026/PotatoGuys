@@ -1,4 +1,4 @@
-package pvz.Models.Games.map;
+package pvz.Models.Games.map.tile;
 
 import java.util.ArrayList;
 import java.util.List;

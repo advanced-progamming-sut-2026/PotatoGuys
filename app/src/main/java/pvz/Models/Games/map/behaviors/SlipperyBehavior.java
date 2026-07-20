@@ -1,7 +1,7 @@
 package pvz.Models.Games.map.behaviors;
 
 import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.map.Tile;
+import pvz.Models.Games.map.tile.Tile;
 
 public class SlipperyBehavior implements TileBehavior {
     private final int laneDelta;

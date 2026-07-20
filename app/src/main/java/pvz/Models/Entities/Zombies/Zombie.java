@@ -19,8 +19,8 @@ import pvz.Models.Entities.Zombies.fsm.WalkState;
 import pvz.Models.Entities.Zombies.fsm.ZombieState;
 import pvz.Models.Entities.Zombies.skills.ZombieSkill;
 import pvz.Models.Games.GameContext;
-import pvz.Models.Games.map.Tile;
 import pvz.Models.Games.map.behaviors.TileBehavior;
+import pvz.Models.Games.map.tile.Tile;
 
 
 /**
@@ -148,10 +148,12 @@ public class Zombie implements TickAware {
         if (Math.floor(x)!=lastX || lane!=lastLane){
             lastX=(int)Math.floor(x);
             lastLane=lane;
-            Tile tile=context.getTileAt(lastX,lane);
-            for (TileBehavior b: tile.getBehaviors()){
-                b.onZombieEnter(this,tile);
-            }
+            try {
+                Tile tile = context.getTileAt(lastX, lane);
+                for (TileBehavior b : tile.getBehaviors()) {
+                    b.onZombieEnter(this, tile);
+                }
+            } catch (IndexOutOfBoundsException ignored){ }
         }
     }
 

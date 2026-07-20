@@ -17,8 +17,8 @@ public class VasebreakerMode implements GameMode, VaseBreaker {
     private final boolean[][] vases;
 
     public VasebreakerMode(Level level) {
-        int lanes = level.getGameMap().getRows();
-        int cols = level.getGameMap().getColumns();
+        int lanes = level.getGameMapDefinition().rows;
+        int cols = level.getGameMapDefinition().columns;
         this.vases = new boolean[lanes][cols];
         for (boolean[] row : vases) {
             Arrays.fill(row, true);

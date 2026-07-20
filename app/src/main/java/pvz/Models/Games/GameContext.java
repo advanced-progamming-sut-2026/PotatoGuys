@@ -15,7 +15,8 @@ import pvz.Models.Games.Modes.GameMode;
 import pvz.Models.Games.Modes.GameModeFactory;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.map.GameMap;
-import pvz.Models.Games.map.Tile;
+import pvz.Models.Games.map.GameMapFactory;
+import pvz.Models.Games.map.tile.Tile;
 
 
 public class GameContext implements TickAware {
@@ -44,7 +45,7 @@ public class GameContext implements TickAware {
         this.projectiles    = new ArrayList<>();
         this.suns           = new ArrayList<>();
         this.cards          = new ArrayList<>();
-        this.map = currentLevel.getGameMap();
+        this.map = GameMapFactory.createGameMap(currentLevel.getGameMapDefinition());
         this.mode = GameModeFactory.createGameMode(currentLevel);
         this.setLevelNumber(currentLevel.getLevelNumber());
         this.plantFoodCount=0;

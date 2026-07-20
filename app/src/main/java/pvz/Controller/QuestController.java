@@ -7,9 +7,7 @@ import pvz.Controller.Game.GameController;
 import pvz.Models.AppContext;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.Levels.LevelFactory;
 import pvz.Models.Games.Levels.LevelLoader;
-import pvz.Models.Games.Levels.Data.LevelDefinition;
 import pvz.Models.Quests.Quest;
 import pvz.Models.Quests.QuestCategory;
 import pvz.Models.Quests.QuestLog;
@@ -140,8 +138,7 @@ public class QuestController {
     public Result startMiniGame(Matcher matcher){
         String miniGameName = matcher.group("miniGameName");
         int levelNumber = Integer.parseInt(matcher.group("level"));
-        LevelDefinition levelDef = LevelLoader.loadLevel(miniGameName, levelNumber);
-        Level level = LevelFactory.createLevel(levelDef);
+        Level level = LevelLoader.loadLevel(miniGameName, levelNumber);
         if(level.hasPreGame())
             return new Result(new PreGameMenu(level));
         GameContext context = new GameContext(level);

@@ -20,8 +20,8 @@ public class BeghouledMode implements GameMode, BoardSwapper {
     private final int[][] board; // [lane][col] -> gem type id
 
     public BeghouledMode(Level level) {
-        int lanes = level.getGameMap().getRows();
-        int cols = level.getGameMap().getColumns();
+        int lanes = level.getGameMapDefinition().rows;
+        int cols = level.getGameMapDefinition().columns;
         this.board = new int[lanes][cols];
         Random random = new Random();
         for (int[] row : board) {

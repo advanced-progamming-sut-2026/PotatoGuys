@@ -3,9 +3,9 @@ package pvz.Models.Entities.Plants.actions;
 import pvz.Models.Entities.Plants.Enums.PlantTag;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Games.GameContext;
+import pvz.Models.Games.map.tile.TileTags;
 import pvz.Models.Entities.Projectile.Projectile;
 import pvz.Models.Entities.Projectile.ProjectileType;
-import pvz.Models.Games.map.TileTags;
 
 /**
  * Behaviour for {@code SHOOTER} (and, by extension, {@code STRIKE_THROUGH})
