@@ -5,6 +5,7 @@ import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Entities.Projectile.Projectile;
 import pvz.Models.Entities.Projectile.ProjectileType;
+import pvz.Models.Games.map.TileTags;
 
 /**
  * Behaviour for {@code SHOOTER} (and, by extension, {@code STRIKE_THROUGH})
@@ -24,7 +25,11 @@ public class ShooterAction extends CooldownPlantAction {
 
     @Override
     protected boolean canUse(Plant plant, GameContext ctx) {
-        return !ctx.getZombiesInLane(plant.getLane()).isEmpty();
+        boolean isGraveOrIceInLane=false;
+        for (int i = plant.getCol()+1; i < ctx.getMap().getColumns(); i++) {
+            if (ctx.getTileAt(i,plant.getLane()).getTags().contains(TileTags.GRAVE)) isGraveOrIceInLane=true;
+        }
+        return (!ctx.getZombiesInLane(plant.getLane()).isEmpty()) || isGraveOrIceInLane;
     }
 
     @Override

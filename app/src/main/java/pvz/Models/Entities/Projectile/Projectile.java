@@ -6,6 +6,8 @@ import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Entities.Zombies.effects.EffectType;
 import pvz.Models.Entities.Zombies.effects.StatusEffect;
 import pvz.Models.Games.GameContext;
+import pvz.Models.Games.map.Tile;
+import pvz.Models.Games.map.behaviors.TileBehavior;
 
 /**
  * A single, data-configured travelling projectile fired by a plant.
@@ -25,7 +27,9 @@ public class Projectile implements TickAware {
 
     private final GameContext context;
     private final ProjectileType type;
+    private int lastLane;
     private final int lane;
+    private int lastCol;
     private float col;
     private final float damage;
     private final boolean poisonous;
@@ -66,14 +70,23 @@ public class Projectile implements TickAware {
             return;
         }
         col += COLS_PER_TICK;
-        
-        // Notify tile of potential hit
-        if (col >= 0 && col < context.getColumns()) {
-            context.getTileAt(col, lane).processHit(this);
+
+        //check if projectile entered new tile
+        if (Math.floor(col)!=lastCol || lane!=lastLane){
+            lastCol=(int)Math.floor(col);
+            lastLane=lane;
+            Tile tile;
+            try {
+                tile = context.getTileAt(lastCol, lane);
+            } catch (IndexOutOfBoundsException ex){
+                // if projectile is outside of map, remove it and return
+                spent=true;
+                return;
+            }
+            tile.processHit(this);
             if (spent) return;
         }
 
-        if (col > context.getColumns() + 1) { spent = true; return; }
         Zombie nearest = null;
         float bestDistance = Float.MAX_VALUE;
         for (Zombie z : context.getZombiesInLane(lane)) {

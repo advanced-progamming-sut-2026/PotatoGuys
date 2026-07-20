@@ -52,15 +52,15 @@ public class Tile {
     }
 
     public void processHit(Projectile p) {
-        for (TileBehavior b : behaviors) b.onProjectileHit(p, this);
+        for (TileBehavior b : new ArrayList<>(behaviors)) b.onProjectileHit(p, this);
     }
 
     public void onZombieEnter(Zombie z) {
-        for (TileBehavior b : behaviors) b.onZombieEnter(z, this);
+        for (TileBehavior b : new ArrayList<>(behaviors)) b.onZombieEnter(z, this);
     }
 
     public void onTick(GameContext ctx) {
-        for (TileBehavior b : behaviors) b.onTick(ctx, this);
+        for (TileBehavior b : new ArrayList<>(behaviors)) b.onTick(ctx, this);
     }
 
     public List<TileTags> getTags(){

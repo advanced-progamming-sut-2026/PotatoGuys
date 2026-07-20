@@ -14,9 +14,16 @@
         "tags": ["GRAVE"]
       },
       {
+        "x": 3, "y": 0,
+        "behaviors": [
+          { "type": "DESTRUCTIBLE", "hp": 700, "name": "Grave" }
+        ],
+        "tags": ["GRAVE"]
+      },
+      {
         "x": 5, "y": 1,
         "behaviors": [
-          { "type": "DESTRUCTIBLE", "hp": 500, "name": "Ice" }
+          { "type": "DESTRUCTIBLE", "hp": 500, "name": "Grave" }
         ],
         "tags": ["GRAVE"]
       }

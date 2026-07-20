@@ -20,6 +20,7 @@ import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.card.ZombieCard;
 import pvz.Models.Games.map.Tile;
 import pvz.Models.Games.map.TileTags;
+import pvz.Models.Games.map.behaviors.TileBehavior;
 import pvz.Models.Quests.QuestEvaluator;
 import pvz.Models.User.User;
 import pvz.View.MainMenu;
@@ -251,13 +252,23 @@ public class GameController {
              return new Result("Invalid coordinates.");
         }
 
-        Tile tile = context.getMap().getMap()[x][y];
+        Tile tile = context.getMap().getMap()[y][x];
         StringBuilder status = new StringBuilder("Tile Status at (").append(x).append(",").append(y).append("):");
 
         //--- Tile:
-        status.append("\nTags:");
-        for (TileTags tag: tile.getTags()){
-            status.append("\n  ").append(tag.toString());
+        if (tile.getTags().isEmpty()) status.append("\n  Tags: Normal");
+        else {
+            status.append("\n  Tags:");
+            for (TileTags tag : tile.getTags()) {
+                status.append("\n    ").append(tag.toString());
+            }
+        }
+
+        if (!tile.getBehaviors().isEmpty()) {
+            status.append("\n  Status:");
+            for (TileBehavior tb : tile.getBehaviors()) {
+                status.append(tb.getStatus());
+            }
         }
 
         //--- Plant:
