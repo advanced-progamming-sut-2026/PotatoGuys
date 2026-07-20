@@ -22,6 +22,7 @@ public class App {
                 if (id != null) {
                     User user = SaveManager.getInstance().load("users/" + id + ".json", User.class);
                     if (user != null) {
+                        user.refreshQuestLog();
                         AppContext.getInstance().setCurrentUser(user);
                         menuManager.setCurrentMenu(new MainMenu());
                         System.out.println("Welcome back, " + user.getNickName() + "!");

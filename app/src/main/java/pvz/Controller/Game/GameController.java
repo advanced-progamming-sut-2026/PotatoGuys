@@ -53,7 +53,9 @@ public class GameController {
                     context.getGameStats(),
                     won,
                     context.getCurrentSun(),
-                    user.getSetting().getDifficulty()
+                    user.getSetting().getDifficulty(),
+                    user,
+                    context
                 );
                 if (won) {
                     user.getScore().setLastLevel(context.getLevelNumber());

@@ -152,8 +152,8 @@ public class QuestFactory {
         // 19. Defenseless Cross
         int minSize = Math.min(5, 9); // min of rows and cols
         for (int i = 0; i < minSize; i++) {
-            Quest q = new Quest("daily_defenseless_cross_" + i, "Defenseless Cross",
-                    "Win a level provided that column " + i + " and row " + i + " are empty.",
+            Quest q = new Quest("daily_defenseless_cross_" + i, "Defenseless Cross (" + i + "," + i + ")",
+                    "Win a level without planting in row " + i + " or column " + i + ".",
                     QuestCategory.DAILY, QuestPriority.HIGH,
                     List.of(new CurrencyReward(CurrencyKind.GEM, 25)), 1);
             q.setVariable(String.valueOf(i));
@@ -171,5 +171,14 @@ public class QuestFactory {
         }
 
         return log;
+    }
+
+    public static List<Reward> findRewardsById(String questId) {
+        for (Quest q : createDefaultQuests().getAllQuests()) {
+            if (q.getId().equals(questId)) {
+                return q.getRewards();
+            }
+        }
+        return new ArrayList<>();
     }
 }

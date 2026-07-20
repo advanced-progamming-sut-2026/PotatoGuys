@@ -93,10 +93,17 @@ public class Quest {
     }
 
     public String getRewardDescription() {
+        List<Reward> current = rewards;
+        if (current == null || current.isEmpty()) {
+            current = QuestFactory.findRewardsById(id);
+        }
+        if (current == null || current.isEmpty()) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < rewards.size(); i++) {
+        for (int i = 0; i < current.size(); i++) {
             if (i > 0) sb.append(", ");
-            sb.append(rewards.get(i).getDescription());
+            sb.append(current.get(i).getDescription());
         }
         return sb.toString();
     }

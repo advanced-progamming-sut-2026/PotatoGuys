@@ -31,6 +31,8 @@ public class GameStats {
     private Map<String, Integer> zombiesKilledBySeasonMap;
     private int consecutiveWinsOnHighDiff;
     private int lastPlantsLostCount;
+    private Map<String, Integer> zombiesKilledByPlantType;
+    private Set<String> killingFamiliesUsed;
 
     public GameStats() {
         this.columnsUsedForPlanting = new HashSet<>();
@@ -38,6 +40,8 @@ public class GameStats {
         this.plantsUsedToKill = new HashSet<>();
         this.plantFamiliesUsed = new HashSet<>();
         this.zombiesKilledBySeasonMap = new HashMap<>();
+        this.zombiesKilledByPlantType = new HashMap<>();
+        this.killingFamiliesUsed = new HashSet<>();
     }
 
     public void reset() {
@@ -61,6 +65,8 @@ public class GameStats {
         zombiesKilledInCol0NoMower = 0;
         zombiesKilledBySeason = 0;
         lastPlantsLostCount = 0;
+        zombiesKilledByPlantType.clear();
+        killingFamiliesUsed.clear();
     }
 
     public void onSunCollected(int amount) { sunCollected += amount; }
@@ -68,6 +74,9 @@ public class GameStats {
     public void onZombieKilledByPlant(PlantType type) {
         zombiesKilledByPlant++;
         plantsUsedToKill.add(type);
+        zombiesKilledByPlantType.merge(type.name(), 1, Integer::sum);
+        String family = getPlantFamily(type);
+        if (family != null) killingFamiliesUsed.add(family);
         if (type == PlantType.Cactus) zombiesKilledByCactus++;
     }
     public void onPlantLost() { plantsLost++; }
@@ -127,4 +136,41 @@ public class GameStats {
     public void setCurrentSeasonName(String name) { this.currentSeasonName = name; }
     public void setConsecutiveWinsOnHighDiff(int val) { this.consecutiveWinsOnHighDiff = val; }
     public void setLastPlantsLostCount(int val) { this.lastPlantsLostCount = val; }
+
+    public int getZombiesKilledByPlantType(String plantName) {
+        return zombiesKilledByPlantType.getOrDefault(plantName, 0);
+    }
+    public Set<String> getKillingFamiliesUsed() { return killingFamiliesUsed; }
+
+    public static String getPlantFamily(PlantType type) {
+        switch (type) {
+            case Peashooter: case Repeater: case Threepeater: case SnowPea:
+            case Rotobaga: case PeaPod: case SplitPea: case Citron:
+            case Caulipower: case ElectricBlueberry: case BowlingBulb:
+            case Cactus: case FirePeashooter: case Starfruit: case GooPeashooter:
+            case MegaGatlingPea:
+                return "SHOOTER";
+            case Sunflower: case TwinSunflower: case Sunshroom: case PrimalSunflower:
+            case GoldBloom:
+                return "SUN_PRODUCER";
+            case Cabbagepult: case Kernelpult: case Melonpult: case WinterMelon:
+            case Pepperpult:
+                return "LOBBER";
+            case CherryBomb: case Jalapeno: case Doomshroom: case Grapeshot:
+            case PotatoMine: case PrimalPotatoMine:
+                return "EXPLOSIVE";
+            case BonkChoy: case Chomper: case WasabiWhip: case Kiwibeast:
+                return "MELEE";
+            case Wallnut: case Tallnut: case Endurian: case Garlic:
+            case SweetPotato: case Pumpkin:
+                return "WALL_NUT";
+            case Seashroom: case Puffshroom: case Fumeshroom: case Magnetshroom:
+            case Hypnoshroom: case Iceshroom: case Cattail: case TangleKelp:
+            case IcebergLettuce: case Torchwood: case SunBean: case Explodeonut:
+            case GraveBuster: case HotPotato: case LilyPad: case Imitater:
+                return "NIGHT_PLANT";
+            default:
+                return null;
+        }
+    }
 }
