@@ -11,9 +11,9 @@ import pvz.Models.Entities.Zombies.data.ZombieRegistry;
 import pvz.Models.User.Collection;
 import pvz.Models.User.MyPlant;
 import pvz.Models.User.Profile;
-import pvz.View.ChapterSelectionMenu;
 import pvz.View.Menu;
 import pvz.View.Result;
+import pvz.View.Game.ChapterSelectionMenu;
 
 public class CollectionController {
     private static final int PURCHASE_COST = 100;

@@ -2,6 +2,7 @@ package pvz.Models.Games.Levels;
 
 import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.Games.Levels.Data.*;
+import pvz.Models.Games.Levels.variants.NormalLevel;
 import pvz.Models.Games.map.GameMap;
 import pvz.Models.Games.map.TileTags;
 import pvz.Models.Games.map.behaviors.DestructibleBehavior;

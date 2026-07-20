@@ -1,6 +1,7 @@
 package pvz.Enums.Commands;
 
 public enum MiniGamesMenuCommand implements MenuCommand {
+    MINI_GAME("^mini\\s+game\\s+(IZombie|Vasebreaker|WallnutBowling)\\s*$"),
     HELP("^\\s*help\\s*$");
 
     private final String pattern;

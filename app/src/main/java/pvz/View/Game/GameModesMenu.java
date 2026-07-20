@@ -1,8 +1,10 @@
-package pvz.View;
+package pvz.View.Game;
 
 import java.util.regex.Matcher;
 
 import pvz.Enums.Commands.GameModesMenuCommand;
+import pvz.View.Menu;
+import pvz.View.Result;
 
 public class GameModesMenu implements Menu{
     @Override
@@ -10,8 +12,6 @@ public class GameModesMenu implements Menu{
         Matcher matcher;
         if ((matcher = GameModesMenuCommand.ADVENTURE.getMatcher(input)) != null)
             return new Result("", new ChapterSelectionMenu());
-        if ((matcher = GameModesMenuCommand.MINI_GAMES.getMatcher(input)) != null)
-            return new Result("", new MiniGamesMenu());
         if ((matcher = GameModesMenuCommand.HELP.getMatcher(input)) != null)
             return new Result(GameModesMenuCommand.getHelp());
         return new Result("Invalid Command");
@@ -24,6 +24,6 @@ public class GameModesMenu implements Menu{
 
     @Override
     public Result onEnter() {
-        return new Result("Select Game Mode:\n1.Adventure\n2.Mini Games");
+        return new Result("Select Game Mode:\n1.Adventure");
     }
 }

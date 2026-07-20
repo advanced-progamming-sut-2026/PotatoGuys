@@ -1,5 +1,9 @@
 package pvz.Models.Games.Levels;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Games.Modes.GameModeType;
 import pvz.Models.Games.map.GameMap;
 
@@ -17,6 +21,18 @@ public abstract class Level {
         this.levelNumber=levelNumber;
         this.type=type;
         this.initialSun=initialSun;
+    }
+
+    public boolean hasPreGame() {
+        return true;
+    }
+
+    public boolean isPlantAllowed(PlantType type) {
+        return true;
+    }
+
+    public List<PlantType> getForcedPlants() {
+        return new ArrayList<>();
     }
 
     public GameMap getGameMap() {

@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import pvz.Controller.QuestController;
 import pvz.Enums.Commands.QuestMenuCommands;
 
+
 public class QuestMenu implements Menu {
     private final QuestController controller;
 
@@ -15,9 +16,11 @@ public class QuestMenu implements Menu {
     @Override
     public Result handleInput(String input) {
         Matcher matcher;
+        if ((matcher = QuestMenuCommands.MINI_GAME.getMatcher(input)) != null)
+            return controller.startMiniGame(matcher);
         if ((matcher = QuestMenuCommands.SHOW_PAGE.getMatcher(input)) != null)
             return controller.showPage(matcher);
-        if ((matcher = QuestMenuCommands.CLAIM_REWARD.getMatcher(input)) != null)
+        if ((matcher =  QuestMenuCommands.CLAIM_REWARD.getMatcher(input)) != null)
             return controller.claimReward(matcher);
         if ((matcher = QuestMenuCommands.SHOW_QUEST.getMatcher(input)) != null)
             return controller.showQuest(matcher);

@@ -5,8 +5,6 @@ import java.util.regex.Matcher;
 import pvz.Models.AppContext;
 import pvz.Models.Games.Seasons.Season;
 import pvz.Models.User.Profile;
-import pvz.View.ChapterMenu;
-import pvz.View.ChapterSelectionMenu;
 import pvz.View.CollectionMenu;
 import pvz.View.GreenHouseMenu;
 import pvz.View.LeaderBoardMenu;
@@ -14,6 +12,8 @@ import pvz.View.MainMenu;
 import pvz.View.Menu;
 import pvz.View.QuestMenu;
 import pvz.View.Result;
+import pvz.View.Game.ChapterMenu;
+import pvz.View.Game.ChapterSelectionMenu;
 
 public class ChapterSelectionController {
     public Result enterMenu(Matcher matcher) {

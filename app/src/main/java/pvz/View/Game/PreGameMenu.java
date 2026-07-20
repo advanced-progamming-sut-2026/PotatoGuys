@@ -1,18 +1,18 @@
 package pvz.View.Game;
 
-import pvz.Controller.Game.PreNormalGameController;
+import java.util.regex.Matcher;
+
+import pvz.Controller.Game.PreGameController;
 import pvz.Enums.Commands.PreGameMenuCommand;
-import pvz.Models.Games.Seasons.Season;
+import pvz.Models.Games.Levels.Level;
 import pvz.View.Menu;
 import pvz.View.Result;
 
-import java.util.regex.Matcher;
-
 public class PreGameMenu implements Menu {
-    PreNormalGameController controller;
+    PreGameController controller;
 
-    public PreGameMenu(Season season, int levelNumber){
-        this.controller = new PreNormalGameController(season, levelNumber);
+    public PreGameMenu(Level level){
+        this.controller = new PreGameController(level);
     }
 
     @Override

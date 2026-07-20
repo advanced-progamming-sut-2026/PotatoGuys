@@ -3,13 +3,21 @@ package pvz.Controller;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import pvz.Controller.Game.GameController;
 import pvz.Models.AppContext;
+import pvz.Models.Games.GameContext;
+import pvz.Models.Games.Levels.Level;
+import pvz.Models.Games.Levels.LevelFactory;
+import pvz.Models.Games.Levels.LevelLoader;
+import pvz.Models.Games.Levels.Data.LevelDefinition;
 import pvz.Models.Quests.Quest;
 import pvz.Models.Quests.QuestCategory;
 import pvz.Models.Quests.QuestLog;
 import pvz.Models.User.User;
 import pvz.View.MainMenu;
 import pvz.View.Result;
+import pvz.View.Game.GameMenu;
+import pvz.View.Game.PreGameMenu;
 
 public class QuestController {
 
@@ -127,6 +135,18 @@ public class QuestController {
         }
         user.saveUser();
         return new Result("Rewards claimed for quest: " + quest.getTitle() + "!");
+    }
+
+    public Result startMiniGame(Matcher matcher){
+        String miniGameName = matcher.group("miniGameName");
+        int levelNumber = Integer.parseInt(matcher.group("level"));
+        LevelDefinition levelDef = LevelLoader.loadLevel(miniGameName, levelNumber);
+        Level level = LevelFactory.createLevel(levelDef);
+        if(level.hasPreGame())
+            return new Result(new PreGameMenu(level));
+        GameContext context = new GameContext(level);
+        AppContext.getInstance().setGameContext(context);
+        return new Result("Game started!" , new GameMenu(new GameController(context)));
     }
 
     public Result exit(Matcher matcher) {
