@@ -144,7 +144,6 @@ public class Zombie implements TickAware {
             currentState = next;
         }
 
-        //check if Zombie entered new tile
         if (Math.floor(x)!=lastX || lane!=lastLane){
             lastX=(int)Math.floor(x);
             lastLane=lane;

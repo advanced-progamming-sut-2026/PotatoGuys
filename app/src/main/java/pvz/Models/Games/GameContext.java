@@ -24,7 +24,7 @@ public class GameContext implements TickAware {
     private int currentTick;
     private int levelNumber;
     private boolean gameOver;
-    int plantFoodCount;
+    private int plantFoodCount;
 
     private final GameEngine engine;
     private List<Projectile> projectiles;

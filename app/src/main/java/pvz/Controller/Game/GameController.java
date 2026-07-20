@@ -11,10 +11,10 @@ import pvz.Models.Entities.Projectile.Projectile;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Capabilities.PlantPlacer;
-import pvz.Models.Games.Capabilities.ZombiePlacer;
 import pvz.Models.Games.Modes.GameMode;
-import pvz.Models.Games.Modes.variants.PlantWhatYouGetMode;
+import pvz.Models.Games.Modes.Capabilities.PlantPlacer;
+import pvz.Models.Games.Modes.Capabilities.StartWaves;
+import pvz.Models.Games.Modes.Capabilities.ZombiePlacer;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.card.ZombieCard;
@@ -173,11 +173,14 @@ public class GameController {
     public Result startZombieWavesCommand(Matcher matcher) {
         GameContext context = AppContext.getInstance().getGameContext();
         
-        if (context.getMode() instanceof PlantWhatYouGetMode pwygMode) {
-            pwygMode.startZombieWaves(context);
+        if (context.getMode() instanceof StartWaves mode) {
+            if(!mode.isPreparationPhase()) {
+                return new Result("Zombie waves have already started!");
+            }
+            mode.startZombieWaves(context);
             return new Result("Zombie waves started successfully!");
         } else {
-            return new Result("This command is only available in 'Plant What You Get' mode.");
+            return new Result("This command is only available in modes that support starting zombie waves.");
         }
     }
 

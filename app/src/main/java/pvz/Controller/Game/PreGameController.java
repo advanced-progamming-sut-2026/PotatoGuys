@@ -40,6 +40,7 @@ public class PreGameController{
     public Result showAvailablePlants(Matcher matcher){
         StringBuilder output=new StringBuilder();
         for (MyPlant p : AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
+            if(!level.isPlantAllowed(p.getType())) continue;
             output.append("\n- ").append(p.getType());
             output.append(" | Level: ").append(p.getLevel());
             output.append(" | Sun Cost: ").append(PlantRegistry.getInstance().getSheet(p.getType()).getSunCost());
@@ -63,7 +64,11 @@ public class PreGameController{
             }
         }
         if (plantType == null){
-            return new Result("Plant not found.");
+            return new Result("Invalid plant type.");
+        }
+
+        if(!level.isPlantAllowed(plantType)){
+            return new Result("This plant is not allowed in this game mode!");
         }
 
         MyPlant owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(plantType);
@@ -98,7 +103,7 @@ public class PreGameController{
             }
         }
         if (plantType == null){
-            return new Result("Plant not found.");
+            return new Result("Invalid plant type.");
         }
 
         for (int i = 0; i < selectedPlants.size(); i++){
@@ -125,7 +130,7 @@ public class PreGameController{
             }
         }
         if (plantType == null){
-            return new Result("Plant not found.");
+            return new Result("Invalid plant type.");
         }
 
         for (PlantCard p : selectedPlants){

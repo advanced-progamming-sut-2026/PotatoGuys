@@ -4,7 +4,6 @@ import java.util.regex.Matcher;
 
 import pvz.Models.AppContext;
 import pvz.Models.Games.Seasons.Season;
-import pvz.Models.User.Profile;
 import pvz.Models.User.User;
 import pvz.View.CollectionMenu;
 import pvz.View.GreenHouseMenu;

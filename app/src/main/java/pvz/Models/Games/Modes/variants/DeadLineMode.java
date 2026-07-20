@@ -7,11 +7,11 @@ import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Capabilities.PlantPlacer;
 import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Levels.Wave;
 import pvz.Models.Games.Levels.variants.DeadLineLevel;
 import pvz.Models.Games.Modes.GameMode;
+import pvz.Models.Games.Modes.Capabilities.PlantPlacer;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
 
@@ -186,7 +186,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
             for (int col = 0; col < context.getColumns(); col++) {
                 sb.append(getCellContent(col, context, lane));
                 
-                if (col == deadlineColumn) {
+                if (col == deadlineColumn - 1) {
                     sb.append("║");
                 } else {
                     sb.append("|");

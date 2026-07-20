@@ -1,7 +1,7 @@
 package pvz.Enums.Commands;
 
 public enum ChapterMenuCommand implements MenuCommand {
-    SELECT_LEVEL("^select\\s+level\\s+-l\\s+(?<level>[1-3])\\s*$"),
+    SELECT_LEVEL("^select\\s+level\\s+-l\\s+(?<level>[1-5])\\s*$"),
     HELP("^\\s*help\\s*$");
 
     private final String pattern;

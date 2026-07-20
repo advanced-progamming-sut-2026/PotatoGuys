@@ -1,52 +1,30 @@
 {
-  "gameType": "NORMAL",
-  "levelNumber": 1,
-  "levelType": "NORMAL",
-  "initialSun": 200,
+  "gameType": "CONVEYORBELT",
+  "levelNumber": 2,
+  "levelType": "SPECIAL",
+  "initialSun": 0,
   "gameMap": {
     "rows": 5,
     "columns": 9,
-    "specialTiles": [
-      {
-        "x": 2, "y": 3,
-        "behaviors": [
-          { "type": "DESTRUCTIBLE", "hp": 700.0, "name": "Grave", "laneDelta": 0 }
-        ],
-        "tags": ["GRAVE"]
-      },
-      {
-        "x": 3, "y": 0,
-        "behaviors": [
-          { "type": "DESTRUCTIBLE", "hp": 700.0, "name": "Grave", "laneDelta": 0 }
-        ],
-        "tags": ["GRAVE"]
-      },
-      {
-        "x": 5, "y": 1,
-        "behaviors": [
-          { "type": "DESTRUCTIBLE", "hp": 500.0, "name": "Grave", "laneDelta": 0 }
-        ],
-        "tags": ["GRAVE"]
-      }
-    ]
+    "specialTiles": []
   },
   "waves": [
     {
       "waveNumber": 1,
       "isFinalWave": false,
-      "baseTotalWaveCost": 300,
+      "baseTotalWaveCost": 200,
       "lanes": 5,
-      "difficulty": 3,
+      "difficulty": 2,
       "phases": [
         {
           "zombieCount": 2,
-          "intervalTicks": 80,
+          "intervalTicks": 100,
           "allowedTypes": ["BASIC"],
           "isBurst": false
         },
         {
           "zombieCount": 2,
-          "intervalTicks": 60,
+          "intervalTicks": 80,
           "allowedTypes": ["BASIC", "CONEHEAD"],
           "isBurst": false
         }
@@ -61,13 +39,13 @@
       "phases": [
         {
           "zombieCount": 3,
-          "intervalTicks": 60,
+          "intervalTicks": 70,
           "allowedTypes": ["BASIC", "CONEHEAD", "FLAG"],
           "isBurst": false
         },
         {
           "zombieCount": 4,
-          "intervalTicks": 45,
+          "intervalTicks": 50,
           "allowedTypes": ["CONEHEAD", "BUCKETHEAD"],
           "isBurst": true
         }
@@ -76,13 +54,13 @@
     {
       "waveNumber": 3,
       "isFinalWave": false,
-      "baseTotalWaveCost": 800,
+      "baseTotalWaveCost": 900,
       "lanes": 5,
       "difficulty": 7,
       "phases": [
         {
           "zombieCount": 4,
-          "intervalTicks": 50,
+          "intervalTicks": 55,
           "allowedTypes": ["CONEHEAD", "BUCKETHEAD", "NEWSPAPER"],
           "isBurst": false
         },
@@ -97,7 +75,7 @@
     {
       "waveNumber": 4,
       "isFinalWave": true,
-      "baseTotalWaveCost": 1500,
+      "baseTotalWaveCost": 1800,
       "lanes": 5,
       "difficulty": 10,
       "phases": [
@@ -108,8 +86,8 @@
           "isBurst": false
         },
         {
-          "zombieCount": 6,
-          "intervalTicks": 30,
+          "zombieCount": 8,
+          "intervalTicks": 25,
           "allowedTypes": ["BUCKETHEAD", "BRICKHEAD", "IMP", "GARGANTUAR"],
           "isBurst": true
         }

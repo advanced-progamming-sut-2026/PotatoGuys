@@ -2,10 +2,10 @@ package pvz.Models.Games.Modes.variants;
 
 import java.util.Arrays;
 
-import pvz.Models.Games.Capabilities.VaseBreaker;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Modes.GameMode;
+import pvz.Models.Games.Modes.Capabilities.VaseBreaker;
 
 /**
  * "Vasebreaker" mini-game skeleton: the board starts covered in vases that

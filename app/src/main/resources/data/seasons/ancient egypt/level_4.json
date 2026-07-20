@@ -1,0 +1,119 @@
+{
+  "gameType": "DEADLINE",
+  "levelNumber": 4,
+  "levelType": "SPECIAL",
+  "initialSun": 300,
+  "deadlineColumn": 3,
+  "gameMap": {
+    "rows": 5,
+    "columns": 9,
+    "specialTiles": [
+      {
+        "x": 2, "y": 1,
+        "behaviors": [
+          { "type": "DESTRUCTIBLE", "hp": 600, "name": "Grave" }
+        ],
+        "tags": ["GRAVE"]
+      },
+      {
+        "x": 2, "y": 3,
+        "behaviors": [
+          { "type": "DESTRUCTIBLE", "hp": 600, "name": "Grave" }
+        ],
+        "tags": ["GRAVE"]
+      }
+    ]
+  },
+  "waves": [
+    {
+      "waveNumber": 1,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 300,
+      "lanes": 5,
+      "difficulty": 3,
+      "phases": [
+        {
+          "zombieCount": 3,
+          "intervalTicks": 90,
+          "allowedTypes": ["BASIC"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 2,
+          "intervalTicks": 60,
+          "allowedTypes": ["CONEHEAD"],
+          "isBurst": false
+        }
+      ]
+    },
+    {
+      "waveNumber": 2,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 700,
+      "lanes": 5,
+      "difficulty": 6,
+      "phases": [
+        {
+          "zombieCount": 3,
+          "intervalTicks": 50,
+          "allowedTypes": ["NEWSPAPER"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 5,
+          "intervalTicks": 20,
+          "allowedTypes": ["IMP"],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 3,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 1300,
+      "lanes": 5,
+      "difficulty": 9,
+      "phases": [
+        {
+          "zombieCount": 4,
+          "intervalTicks": 70,
+          "allowedTypes": ["BUCKETHEAD"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 6,
+          "intervalTicks": 30,
+          "allowedTypes": ["IMP", "CONEHEAD", "FLAG"],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 4,
+      "isFinalWave": true,
+      "baseTotalWaveCost": 2600,
+      "lanes": 5,
+      "difficulty": 15,
+      "phases": [
+        {
+          "zombieCount": 1,
+          "intervalTicks": 100,
+          "allowedTypes": ["GARGANTUAR"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 4,
+          "intervalTicks": 40,
+          "allowedTypes": ["BRICKHEAD", "BUCKETHEAD"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 10,
+          "intervalTicks": 15,
+          "allowedTypes": ["IMP", "NEWSPAPER", "FLAG"],
+          "isBurst": true
+        }
+      ]
+    }
+  ]
+}

@@ -6,7 +6,6 @@ import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Entities.Zombies.effects.EffectType;
 import pvz.Models.Entities.Zombies.effects.StatusEffect;
 import pvz.Models.Games.GameContext;
-import pvz.Models.Games.map.behaviors.TileBehavior;
 import pvz.Models.Games.map.tile.Tile;
 
 /**
