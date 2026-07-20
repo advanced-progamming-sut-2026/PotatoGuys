@@ -2,9 +2,9 @@ package pvz.Enums.Commands;
 
 public enum GreenHouseMenuCommands implements MenuCommand {
     ENTER_MENU("^show\\s+greenhouse$"),
-    PLANT("^plant\\s+pot\\s+at\\s+\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*)$"),
-    COLLECT("^collect\\s+\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*)$"),
-    GROW("^grow\\s+\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*)$"),
+    PLANT("^plant\\s+pot\\s+at\\s+\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*\\)$"),
+    COLLECT("^collect\\s+\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*\\)$"),
+    GROW("^grow\\s+\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*\\)$"),
     ENTER_SHOP("^enter\\s+shop$"),
     EXIT("^menu\\s+exit\\s*$"),
     HELP("^\\s*help\\s*$");
