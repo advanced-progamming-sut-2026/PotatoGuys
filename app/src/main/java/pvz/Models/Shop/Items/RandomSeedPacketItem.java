@@ -46,7 +46,7 @@ public class RandomSeedPacketItem extends ShopItem {
         for (int i = 0; i < totalPackets; i++) {
             int idx = random.nextInt(unlocked.size());
             MyPlant target = unlocked.get(idx);
-            target.setSeed(target.getSeed() + 1);
+            target.setSeed(target.getSeed() + 5);
         }
 
         user.saveUser();

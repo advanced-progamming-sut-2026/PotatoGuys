@@ -9,9 +9,9 @@
   "securityAnswer": "hamid",
   "profile": {
     "gamePlayed": 0,
-    "coins": 0,
-    "diamonds": 0,
-    "plantFood": 0,
+    "coins": 47400,
+    "diamonds": 5014,
+    "plantFood": 2,
     "collection": {
       "news": {
         "messages": [
@@ -63,7 +63,7 @@
         {
           "Type": "Sunflower",
           "level": 1,
-          "seed": 0,
+          "seed": 2,
           "isBoosted": false
         },
         {
@@ -81,14 +81,14 @@
         {
           "Type": "Repeater",
           "level": 1,
-          "seed": 0,
+          "seed": 10,
           "isBoosted": false
         },
         {
           "Type": "TwinSunflower",
           "level": 1,
-          "seed": 0,
-          "isBoosted": false
+          "seed": 3,
+          "isBoosted": true
         },
         {
           "Type": "PeaPod",
@@ -175,9 +175,9 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": null,
-    "dailyOfferDate": null,
-    "dailyOfferPurchased": false
+    "dailyOfferPlantType": "Rotobaga",
+    "dailyOfferDate": "2026-07-20",
+    "dailyOfferPurchased": true
   },
   "setting": {
     "difficulty": 3
@@ -225,7 +225,7 @@
       {
         "x": 1,
         "y": 2,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
