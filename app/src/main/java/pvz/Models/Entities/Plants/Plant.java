@@ -66,6 +66,11 @@ public class Plant implements TickAware {
     private PlantState currentState;
     private boolean dead;
 
+    private int freezeLevel = 0; // 0, 1, 2, 3
+    private boolean isFrozen = false;
+    private float iceHp = 0f;
+    private static final float MAX_ICE_HP = 600f;
+
     /**
      * @param context world adapter, or {@code null} for an "unplaced" record
      *                (e.g. a catalog/collection entry that is never registered
@@ -114,14 +119,53 @@ public class Plant implements TickAware {
         // no owned resources to release
     }
 
+    // ── Cold Wind / Freezing ──────────────────────────────────────────────────
+
+    public void incrementFreezeLevel() {
+        if (isFrozen) return;
+        freezeLevel++;
+        if (freezeLevel >= 3) {
+            isFrozen = true;
+            iceHp = MAX_ICE_HP;
+            context.log("[ColdWind] " + sheet.getName() + " is frozen!");
+        }
+    }
+
+    public void takeIceDamage(float amount, boolean isFire) {
+        if (!isFrozen) return;
+        if (isFire) {
+            iceHp = 0f;
+        } else {
+            iceHp = Math.max(0f, iceHp - amount);
+        }
+
+        if (iceHp <= 0f) {
+            isFrozen = false;
+            freezeLevel = 0;
+            context.log("[ColdWind] Ice on " + sheet.getName() + " melted!");
+        }
+    }
+
+    public boolean isFrozen() { return isFrozen; }
+    public float getIceHp() { return iceHp; }
+
     // ── Damage / health ────────────────────────────────────────────────────────
 
     /** Plants have no armour layer (rule: any "armor" text just adjusts HP), so damage is direct. */
-    public void takeDamage(float amount) {
+    public void takeDamage(float amount, DamageKind kind) {
         if (dead || amount <= 0f) return;
+
+        // If frozen, ice takes damage first
+        if (isFrozen) {
+            boolean isFire = (kind == DamageKind.FIRE); // Need to define/check Fire damage
+            takeIceDamage(amount, isFire);
+            return; // Ice absorbed the damage
+        }
+
         hp = Math.max(0f, hp - amount);
         if (hp <= 0f) kill();
     }
+
 
     /** Permanently raises max HP (and current HP) — used by armor-flavored Plant Food effects. */
     public void boostMaxHp(float amount) {

@@ -53,6 +53,12 @@ public class Tile {
 
     public void processHit(Projectile p) {
         for (TileBehavior b : new ArrayList<>(behaviors)) b.onProjectileHit(p, this);
+        // Damage frozen plant if exists
+        for (Plant plant : plants) {
+             if (plant.isFrozen()) {
+                 plant.takeIceDamage(p.getDamage(), p.isFire());
+             }
+        }
     }
 
     public void onZombieEnter(Zombie z) {

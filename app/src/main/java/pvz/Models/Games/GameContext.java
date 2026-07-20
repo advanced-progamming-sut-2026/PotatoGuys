@@ -268,10 +268,36 @@ public class GameContext implements TickAware {
 
     @Override
     public void update() {
+        applyFireAuras();
         for (ChapterEffect effect : activeEffects) {
             effect.onTick(this);
         }
         mode.updateMode(this);
+    }
+    
+    private void applyFireAuras() {
+        for (Plant p : plants) {
+            if (p.getSheet().hasTag(pvz.Models.Entities.Plants.Enums.PlantTag.FIRE)) {
+                // Find neighbors
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dy = -1; dy <= 1; dy++) {
+                        if (dx == 0 && dy == 0) continue;
+                        int neighborCol = p.getCol() + dx;
+                        int neighborLane = p.getLane() + dy;
+                        if (neighborCol >= 0 && neighborCol < getColumns() &&
+                            neighborLane >= 0 && neighborLane < getLanes()) {
+                            
+                            List<Plant> neighbors = getPlantsAt(neighborCol, neighborLane);
+                            for (Plant neighbor : neighbors) {
+                                if (neighbor.isFrozen()) {
+                                    neighbor.takeIceDamage(60f / Plant.TICKS_PER_SECOND, true);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 

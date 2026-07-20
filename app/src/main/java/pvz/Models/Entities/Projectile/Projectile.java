@@ -33,13 +33,14 @@ public class Projectile implements TickAware {
     private final float damage;
     private final boolean poisonous;
     private final boolean chills;
+    private final boolean fire;
     private int pierceRemaining;
     private final Zombie homingTarget; // non-null = always-hit, ignores lane travel
 
     private boolean spent;
 
     public Projectile(GameContext context, ProjectileType type, int lane, float startCol,
-                       float damage, boolean poisonous, boolean chills, int pierceCount,
+                       float damage, boolean poisonous, boolean chills, boolean fire, int pierceCount,
                        Zombie homingTarget) {
         this.context = context;
         this.type = type;
@@ -48,9 +49,11 @@ public class Projectile implements TickAware {
         this.damage = damage;
         this.poisonous = poisonous;
         this.chills = chills;
+        this.fire = fire;
         this.pierceRemaining = Math.max(0, pierceCount);
         this.homingTarget = homingTarget;
     }
+
 
     @Override
     public void enter() { }
@@ -122,4 +125,5 @@ public class Projectile implements TickAware {
     public int getLane()            { return lane; }
     public float getCol()           { return col; }
     public float getDamage()        { return damage; }
+    public boolean isFire()         { return fire; }
 }

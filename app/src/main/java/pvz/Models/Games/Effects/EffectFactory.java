@@ -8,6 +8,8 @@ public class EffectFactory {
         switch (def.type) {
             case "SAND_STORM":
                 return new SandStormEffect(def.intervalTicks);
+            case "COLD_WIND":
+                return new ColdWindEffect(def.intervalTicks);
             default:
                 return null;
         }

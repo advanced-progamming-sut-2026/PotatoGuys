@@ -542,7 +542,7 @@
           "targetAmount": 1,
           "currentAmount": 1
         },
-        "active": true,
+        "active": false,
         "claimed": true,
         "repeatable": false,
         "variable": "0"
@@ -557,7 +557,7 @@
           "targetAmount": 1,
           "currentAmount": 1
         },
-        "active": true,
+        "active": false,
         "claimed": true,
         "repeatable": false,
         "variable": "1"
@@ -572,7 +572,7 @@
           "targetAmount": 1,
           "currentAmount": 1
         },
-        "active": true,
+        "active": false,
         "claimed": true,
         "repeatable": false,
         "variable": "2"
@@ -587,7 +587,7 @@
           "targetAmount": 1,
           "currentAmount": 1
         },
-        "active": true,
+        "active": false,
         "claimed": true,
         "repeatable": false,
         "variable": "3"
@@ -602,7 +602,7 @@
           "targetAmount": 1,
           "currentAmount": 1
         },
-        "active": true,
+        "active": false,
         "claimed": true,
         "repeatable": false,
         "variable": "4"
@@ -617,7 +617,7 @@
           "targetAmount": 1,
           "currentAmount": 1
         },
-        "active": true,
+        "active": false,
         "claimed": true,
         "repeatable": false,
         "variable": "5"

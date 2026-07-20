@@ -45,7 +45,7 @@ public class ShooterAction extends CooldownPlantAction {
 
         for (int i = 0; i < pellets; i++) {
             Projectile bolt = new Projectile(ctx, ProjectileType.PEA, plant.getLane(), plant.getCol(),
-                    plant.getEffectiveDamage(), poisonous, chills, pierce, null);
+                    plant.getEffectiveDamage(), poisonous, chills, plant.getSheet().hasTag(PlantTag.FIRE), pierce, null);
             ctx.spawnProjectile(bolt);
         }
         ctx.log("[Action] " + plant.getSheet().getName() + " fired " + pellets
