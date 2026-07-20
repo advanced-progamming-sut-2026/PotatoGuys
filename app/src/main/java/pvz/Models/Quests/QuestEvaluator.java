@@ -4,7 +4,7 @@ import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.GameStats;
 import pvz.Models.Games.map.GameMap;
-import pvz.Models.Games.map.Tile;
+import pvz.Models.Games.map.tile.Tile;
 import pvz.Models.User.User;
 
 public class QuestEvaluator {
