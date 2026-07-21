@@ -60,6 +60,10 @@ public class GameController {
                 if (won) {
                     user.getScore().setLastLevel(context.getLevelNumber());
                     user.getScore().setLastSeason(0);
+                    
+                    // Unlock next level
+                    pvz.Models.Games.Seasons.SeasonManager manager = new pvz.Models.Games.Seasons.SeasonManager();
+                    manager.unlockNextLevel(user, context.getSeasonName(), context.getLevelNumber());
                 }
                 user.saveUser();
             }

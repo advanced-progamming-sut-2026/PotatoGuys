@@ -188,25 +188,21 @@
       {
         "name": "Ancient Egypt",
         "locked": false,
-        "levels": [],
         "levelUnlocked": {}
       },
       {
         "name": "Frostbite Caves",
         "locked": true,
-        "levels": [],
         "levelUnlocked": {}
       },
       {
         "name": "Dark Ages",
         "locked": true,
-        "levels": [],
         "levelUnlocked": {}
       },
       {
         "name": "Big Wave Beach",
         "locked": true,
-        "levels": [],
         "levelUnlocked": {}
       }
     ],
