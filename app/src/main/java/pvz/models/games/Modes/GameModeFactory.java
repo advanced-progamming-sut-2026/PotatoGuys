@@ -25,7 +25,7 @@ public class GameModeFactory {
             case DEADLINE:
                 return new DeadLineMode(level);
             case VASEBREAKER:
-                return new VasebreakerMode(level);
+                return new VaseBreakerMode(level);
             case BEGHOULED:
                 return new BeghouledMode(level);
             default:

@@ -61,7 +61,7 @@ public class Tile {
         }
         // Damage IceBlockBehavior if exists
         for (TileBehavior b : behaviors) {
-             if (b instanceof pvz.Models.Games.map.behaviors.IceBlockBehavior ice) {
+             if (b instanceof pvz.models.games.map.behaviors.IceBlockBehavior ice) {
                  ice.takeDamage(p.getDamage(), p.isFire());
              }
         }

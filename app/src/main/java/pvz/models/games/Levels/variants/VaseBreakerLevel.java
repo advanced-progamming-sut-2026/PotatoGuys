@@ -10,12 +10,12 @@ import pvz.models.games.map.data.GameMapDefinition;
 import pvz.models.games.modes.GameModeType;
 import pvz.models.user.MyPlant;
 
-public class VasebreakerLevel extends Level {
+public class VaseBreakerLevel extends Level {
     private List<MyPlant> basedPlants;
     private List<ZombieType> basedZombies;
     private List<VaseDefinition> vases;
 
-    public VasebreakerLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun,
+    public VaseBreakerLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun,
                             List<MyPlant> basedPlants, List<ZombieType> basedZombies,
                             List<VaseDefinition> vases) {
         super(GameModeType.VASEBREAKER, gameMap, levelNumber, type, initialSun);

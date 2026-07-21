@@ -1,10 +1,9 @@
-package pvz.Models.Games.map.behaviors;
+package pvz.models.games.map.behaviors;
 
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.map.tile.Tile;
-import pvz.Models.Entities.Projectile.Projectile;
+import pvz.models.entities.Plants.Plant;
+import pvz.models.entities.Zombies.Zombie;
+import pvz.models.games.map.tile.Tile;
+import pvz.models.entities.Projectile.Projectile;
 
 public class IceBlockBehavior implements TileBehavior {
     private float iceHp = 600f;
@@ -32,8 +31,8 @@ public class IceBlockBehavior implements TileBehavior {
         if (iceHp <= 0f) {
             tile.removeBehavior(this);
             // Release entity
-            if (entityInside instanceof Plant p) {
-                p.takeIceDamage(0f, true); // Melts it
+            if (entityInside instanceof Plant plant) {
+                plant.takeIceDamage(0f, true); // Melts it
             }
             // For Zombie, the paralysis effect will expire naturally
         }

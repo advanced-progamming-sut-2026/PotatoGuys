@@ -54,6 +54,17 @@ public class GameContext implements TickAware {
         this.mode = GameModeFactory.createGameMode(currentLevel);
         this.setLevelNumber(currentLevel.getLevelNumber());
         this.seasonName     = currentLevel.getSeasonName();
+
+        // Spawn pre-planted plants
+        if (currentLevel.getGameMapDefinition().prePlantedPlants != null) {
+            for (PrePlantedPlant pDef : currentLevel.getGameMapDefinition().prePlantedPlants) {
+                Plant p = new PlantFactory().create(
+                    pDef.type, pDef.col, pDef.lane, 1, false, this
+                );
+                this.spawnPlant(p);
+            }
+        }
+
         this.log("DEBUG: GameContext initialized with season: '" + this.seasonName + "'");
         this.plantFoodCount=0;
         this.gameStats=new GameStats();
@@ -298,8 +309,8 @@ public class GameContext implements TickAware {
                             }
                             
                             // 2. Damage IceBlockBehaviors
-                            for (pvz.Models.Games.map.behaviors.TileBehavior b : tile.getBehaviors()) {
-                                if (b instanceof pvz.Models.Games.map.behaviors.IceBlockBehavior ice) {
+                            for (pvz.models.games.map.behaviors.TileBehavior b : tile.getBehaviors()) {
+                                if (b instanceof pvz.models.games.map.behaviors.IceBlockBehavior ice) {
                                     ice.takeDamage(60f / Plant.TICKS_PER_SECOND, true);
                                 }
                             }

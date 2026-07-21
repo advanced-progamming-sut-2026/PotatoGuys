@@ -14,7 +14,7 @@ import pvz.models.games.GameContext;
 import pvz.models.games.card.Card;
 import pvz.models.games.card.PlantCard;
 import pvz.models.games.card.ZombieCard;
-import pvz.models.games.levels.variants.VasebreakerLevel;
+import pvz.models.games.levels.variants.VaseBreakerLevel;
 import pvz.models.games.map.behaviors.TileBehavior;
 import pvz.models.games.map.tile.Tile;
 import pvz.models.games.map.tile.TileTags;
@@ -22,7 +22,6 @@ import pvz.models.games.modes.GameMode;
 import pvz.models.games.modes.capabilities.PlantPlacer;
 import pvz.models.games.modes.capabilities.StartWaves;
 import pvz.models.games.modes.capabilities.ZombiePlacer;
-import pvz.models.games.modes.variants.VasebreakerMode;
 import pvz.models.quests.QuestEvaluator;
 import pvz.models.user.User;
 import pvz.view.MainMenu;
@@ -121,7 +120,7 @@ public class GameController {
         int col = Integer.parseInt(matcher.group("vaseX"));
         int lane = Integer.parseInt(matcher.group("vaseY"));
 
-        if(mode instanceof VasebreakerMode vasemode){
+        if(mode instanceof VaseBreakerMode vasemode){
             vasemode.breakVase(context, col, lane);
             return new Result("");
         }

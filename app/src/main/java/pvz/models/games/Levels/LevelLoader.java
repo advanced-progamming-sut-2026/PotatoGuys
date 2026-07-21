@@ -43,7 +43,7 @@ public class LevelLoader {
                     break;
 
                 case "VASEBREAKER":
-                    level = gson.fromJson(jsonObject, VasebreakerLevel.class);
+                    level = gson.fromJson(jsonObject, VaseBreakerLevel.class);
                     break;
 
                 case "DEADLINE":

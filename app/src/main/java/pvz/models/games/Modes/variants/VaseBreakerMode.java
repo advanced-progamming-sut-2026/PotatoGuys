@@ -1,27 +1,27 @@
-package pvz.models.games.modes.variants;
+package pvz.models.games.Modes.variants;
 
 import java.util.List;
 import java.util.Random;
 
 import pvz.models.Constants;
-import pvz.models.entities.plants.Plant;
-import pvz.models.entities.plants.PlantFactory;
-import pvz.models.entities.zombies.Zombie;
-import pvz.models.entities.zombies.ZombieFactory;
-import pvz.models.entities.zombies.ZombieType;
+import pvz.models.entities.Plants.Plant;
+import pvz.models.entities.Plants.PlantFactory;
+import pvz.models.entities.Zombies.Zombie;
+import pvz.models.entities.Zombies.ZombieFactory;
+import pvz.models.entities.Zombies.ZombieType;
 import pvz.models.games.GameContext;
+import pvz.models.games.Levels.Level;
+import pvz.models.games.Levels.Data.VaseDefinition;
+import pvz.models.games.Levels.Data.VaseType;
+import pvz.models.games.Levels.variants.VaseBreakerLevel;
+import pvz.models.games.Modes.GameMode;
+import pvz.models.games.Modes.Capabilities.PlantPlacer;
+import pvz.models.games.Modes.Capabilities.VaseBreaker;
 import pvz.models.games.card.Card;
 import pvz.models.games.card.PlantCard;
-import pvz.models.games.levels.Level;
-import pvz.models.games.levels.data.VaseDefinition;
-import pvz.models.games.levels.data.VaseType;
-import pvz.models.games.levels.variants.VasebreakerLevel;
-import pvz.models.games.modes.GameMode;
-import pvz.models.games.modes.capabilities.PlantPlacer;
-import pvz.models.games.modes.capabilities.VaseBreaker;
-import pvz.models.user.MyPlant;
+import pvz.models.User.MyPlant;
 
-public class VasebreakerMode implements GameMode, VaseBreaker, PlantPlacer {
+public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
     private static class VaseTile {
         VaseType type;
@@ -36,15 +36,15 @@ public class VasebreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     private final VaseTile[][] vaseGrid;
     private final List<MyPlant> plantPool;
     private final List<ZombieType> zombiePool;
-    // private final Boolean[] lawnMower;
+    private final Boolean[] lawnMower;
     private final Random random = new Random();
 
-    public VasebreakerMode(Level level) {
+    public VaseBreakerMode(Level level) {
         int rows = level.getGameMapDefinition().rows;
         int cols = level.getGameMapDefinition().columns;
         this.vaseGrid = new VaseTile[rows][cols];
 
-        if (level instanceof VasebreakerLevel vaseLevel) {
+        if (level instanceof VaseBreakerLevel vaseLevel) {
             this.plantPool = vaseLevel.getBasedPlants();
             this.zombiePool = vaseLevel.getBasedZombies();
             
@@ -60,10 +60,10 @@ public class VasebreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             this.zombiePool = List.of();
         }
 
-        // this.lawnMower = new Boolean[rows];
-        // for (int i = 0; i < rows; i++) {
-        //     this.lawnMower[i] = false;
-        // }
+        this.lawnMower = new Boolean[rows];
+        for (int i = 0; i < rows; i++) {
+            this.lawnMower[i] = false;
+        }
     }
 
     @Override
@@ -73,18 +73,27 @@ public class VasebreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
     @Override
     public void updateMode(GameContext context) {
+        // شرط پایان بازی و پیروزی
         if (!anyVasesRemain() && context.getZombies().isEmpty()) {
             context.setGameOver(true);
             context.log("VICTORY! All vases cleared and all zombies defeated!");
             return;
         }
 
+        // بررسی ورود زامبی‌ها به انتهای خانه و چمن‌زن
         for (int i = 0; i < context.getZombies().size(); i++) {
             Zombie z = context.getZombies().get(i);
             if (z.getX() <= 0f) {
-                context.setGameOver(true);
-                context.log("The zombie ate your brain; LOOSER!!!");
-                context.removeZombie(z);
+                if (!lawnMower[z.getLane()]) {
+                    runLawnMowers(context, z.getLane());
+                    i--;
+                    continue;
+                }
+                if (lawnMower[z.getLane()]) {
+                    context.setGameOver(true);
+                    context.log("The zombie ate your brain; LOOSER!!!");
+                    context.removeZombie(z);
+                }
             }
         }
 
@@ -180,6 +189,16 @@ public class VasebreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             }
         }
         return false;
+    }
+
+    private void runLawnMowers(GameContext context, int lane) {
+        if (lawnMower[lane]) return;
+        context.getZombiesInLane(lane).forEach(z -> {
+            z.takeDamage(Float.MAX_VALUE);
+            context.removeZombie(z);
+            context.log("Lawn mower in lane " + lane + " ran over a zombie!");
+        });
+        lawnMower[lane] = true;
     }
 
     // ── قابلیت PlantPlacer ───────────────────────────────────────────────────
@@ -281,7 +300,7 @@ public class VasebreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     }
 
     private void appendLaneRow(StringBuilder sb, GameContext context, int lane) {
-        sb.append("   ").append(" |");
+        sb.append(lawnMower[lane] ? MOWER_USED : MOWER_OK).append(" |");
         for (int col = 0; col < context.getColumns(); col++) {
             sb.append(getCellContent(col, context, lane)).append('|');
         }

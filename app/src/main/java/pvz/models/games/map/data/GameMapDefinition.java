@@ -6,4 +6,5 @@ public class GameMapDefinition {
     public int rows = 5;
     public int columns = 9;
     public List<TileDefinition> specialTiles;
+    public List<PrePlantedPlant> prePlantedPlants;
 }
