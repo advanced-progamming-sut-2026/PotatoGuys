@@ -1,4 +1,4 @@
-package pvz.Enums.Commands;
+package pvz.enums.commands;
 
 public enum PreGameMenuCommand implements MenuCommand{
     SHOW_ALL_PLANTS("^\\s*show\\s+all\\s+plants\\s*$"),

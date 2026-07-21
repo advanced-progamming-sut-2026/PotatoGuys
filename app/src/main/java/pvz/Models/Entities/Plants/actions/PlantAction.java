@@ -1,16 +1,16 @@
-package pvz.Models.Entities.Plants.actions;
+package pvz.models.entities.plants.actions;
 
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.plants.Plant;
+import pvz.models.games.GameContext;
 
 /**
  * A discrete, re-usable plant behaviour plug-in — the Strategy-pattern
- * counterpart of {@link pvz.Models.Entities.Zombies.skills.ZombieSkill}.
+ * counterpart of {@link pvz.models.entities.zombies.skills.ZombieSkill}.
  *
- * <p>Attached to a {@link Plant} instance by {@link pvz.Models.Entities.Plants.PlantFactory}.
- * On every tick, {@link pvz.Models.Entities.Plants.fsm.PlantIdleState} asks the
+ * <p>Attached to a {@link Plant} instance by {@link pvz.models.entities.plants.PlantFactory}.
+ * On every tick, {@link pvz.models.entities.plants.fsm.PlantIdleState} asks the
  * action whether it is ready; if so, the plant transitions to
- * {@link pvz.Models.Entities.Plants.fsm.PlantActionState}, which fires it.
+ * {@link pvz.models.entities.plants.fsm.PlantActionState}, which fires it.
  */
 public interface PlantAction {
 

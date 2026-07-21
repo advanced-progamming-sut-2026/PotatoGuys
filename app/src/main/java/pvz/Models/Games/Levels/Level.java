@@ -1,11 +1,11 @@
-package pvz.Models.Games.Levels;
+package pvz.models.games.levels;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Games.Modes.GameModeType;
-import pvz.Models.Games.map.data.GameMapDefinition;
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.games.map.data.GameMapDefinition;
+import pvz.models.games.modes.GameModeType;
 
 public abstract class Level {
     protected GameModeType gameType;
@@ -14,7 +14,7 @@ public abstract class Level {
     protected final int initialSun;
     protected final int levelNumber;
     protected String seasonName;
-    protected List<pvz.Models.Games.Levels.Data.EffectDefinition> effects;
+    protected List<pvz.models.games.levels.data.EffectDefinition> effects;
     
 
     public Level(GameModeType gameMode, GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun){
@@ -27,11 +27,11 @@ public abstract class Level {
         this.effects = new java.util.ArrayList<>();
     }
 
-    public List<pvz.Models.Games.Levels.Data.EffectDefinition> getEffects() {
+    public List<pvz.models.games.levels.data.EffectDefinition> getEffects() {
         return effects;
     }
     
-    public void setEffects(List<pvz.Models.Games.Levels.Data.EffectDefinition> effects) {
+    public void setEffects(List<pvz.models.games.levels.data.EffectDefinition> effects) {
         this.effects = effects;
     }
 

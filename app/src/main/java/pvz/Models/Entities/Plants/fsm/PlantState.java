@@ -1,12 +1,12 @@
-package pvz.Models.Entities.Plants.fsm;
+package pvz.models.entities.plants.fsm;
 
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.plants.Plant;
+import pvz.models.games.GameContext;
 
 
 /**
  * One node in the plant's Finite State Machine — the structural mirror of
- * {@link pvz.Models.Entities.Zombies.fsm.ZombieState}.
+ * {@link pvz.models.entities.zombies.fsm.ZombieState}.
  *
  * <p><b>Contract</b>:
  * <ol>

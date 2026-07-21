@@ -1,8 +1,9 @@
-package pvz.Models.Entities.Sun;
+package pvz.models.entities.sun;
 
-import pvz.Models.Engine.TickAware;
-import pvz.Models.Games.GameContext;
 import java.util.Random;
+
+import pvz.models.engine.TickAware;
+import pvz.models.games.GameContext;
 
 public class SunManager implements TickAware {
     private final GameContext gameContext;

@@ -1,9 +1,9 @@
-package pvz.View;
+package pvz.view;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.LeaderBoardController;
-import pvz.Enums.Commands.LeaderBoardCommands;
+import pvz.controller.LeaderBoardController;
+import pvz.enums.commands.LeaderBoardCommands;
 
 public class LeaderBoardMenu implements Menu {
     @Override

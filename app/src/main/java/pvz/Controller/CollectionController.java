@@ -1,20 +1,20 @@
-package pvz.Controller;
+package pvz.controller;
 
 import java.util.regex.Matcher;
 
-import pvz.Models.AppContext;
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Entities.Plants.data.PlantPropertySheet;
-import pvz.Models.Entities.Plants.data.PlantRegistry;
-import pvz.Models.Entities.Zombies.ZombieType;
-import pvz.Models.Entities.Zombies.data.ZombieRegistry;
-import pvz.Models.User.Collection;
-import pvz.Models.User.MyPlant;
-import pvz.Models.User.Profile;
-import pvz.View.Menu;
-import pvz.View.Result;
-import pvz.View.Game.GameMenu;
-import pvz.View.Game.modals.GameModesModal;
+import pvz.models.AppContext;
+import pvz.models.entities.plants.data.PlantPropertySheet;
+import pvz.models.entities.plants.data.PlantRegistry;
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.entities.zombies.ZombieType;
+import pvz.models.entities.zombies.data.ZombieRegistry;
+import pvz.models.user.Collection;
+import pvz.models.user.MyPlant;
+import pvz.models.user.Profile;
+import pvz.view.Menu;
+import pvz.view.Result;
+import pvz.view.game.GameMenu;
+import pvz.view.game.modals.GameModesModal;
 
 public class CollectionController {
     private static final int PURCHASE_COST = 100;

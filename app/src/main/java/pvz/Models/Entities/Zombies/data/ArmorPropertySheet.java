@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Zombies.data;
+package pvz.models.entities.zombies.data;
 
 import java.util.List;
 
@@ -6,9 +6,9 @@ import java.util.List;
  * Immutable POJO for a JSON {@code ArmorPropertySheet} object.
  *
  * <p>Stored in {@link ZombieRegistry} keyed by alias (e.g. {@code "ConeDefault"}).
- * The {@link pvz.Models.Entities.Zombies.ZombieFactory} resolves each zombie's
+ * The {@link pvz.models.entities.zombies.ZombieFactory} resolves each zombie's
  * {@code ZombieArmorProps} strings against this registry to build runtime
- * {@link pvz.Models.Entities.Zombies.armor.ArmorPiece} components.
+ * {@link pvz.models.entities.zombies.armor.ArmorPiece} components.
  */
 public final class ArmorPropertySheet {
 

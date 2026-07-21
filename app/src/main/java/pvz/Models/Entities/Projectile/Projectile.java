@@ -1,12 +1,12 @@
-package pvz.Models.Entities.Projectile;
+package pvz.models.entities.projectile;
 
-import pvz.Models.Engine.TickAware;
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.effects.EffectType;
-import pvz.Models.Entities.Zombies.effects.StatusEffect;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.map.tile.Tile;
+import pvz.models.engine.TickAware;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.entities.zombies.effects.EffectType;
+import pvz.models.entities.zombies.effects.StatusEffect;
+import pvz.models.games.GameContext;
+import pvz.models.games.map.tile.Tile;
 
 /**
  * A single, data-configured travelling projectile fired by a plant.

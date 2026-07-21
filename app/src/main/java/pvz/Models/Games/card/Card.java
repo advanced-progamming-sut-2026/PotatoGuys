@@ -1,6 +1,6 @@
-package pvz.Models.Games.card;
+package pvz.models.games.card;
 
-import pvz.Models.Engine.TickAware;
+import pvz.models.engine.TickAware;
 
 public abstract class Card implements TickAware{
 

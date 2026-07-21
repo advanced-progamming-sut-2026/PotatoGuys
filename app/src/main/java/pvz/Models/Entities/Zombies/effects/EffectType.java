@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Zombies.effects;
+package pvz.models.entities.zombies.effects;
 
 /**
  * Every possible status condition that can be applied to a zombie.

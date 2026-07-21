@@ -22,14 +22,35 @@
     "IMP"
   ],
   "vases": [
+    { "lane": 0, "col": 4, "vaseType": "NORMAL" },
     { "lane": 0, "col": 5, "vaseType": "NORMAL" },
     { "lane": 0, "col": 6, "vaseType": "PLANT" },
+    { "lane": 0, "col": 7, "vaseType": "NORMAL" },
+    { "lane": 0, "col": 8, "vaseType": "PLANT" },
+
+    { "lane": 1, "col": 4, "vaseType": "PLANT" },
+    { "lane": 1, "col": 5, "vaseType": "NORMAL" },
     { "lane": 1, "col": 6, "vaseType": "GARGANTUAR" },
     { "lane": 1, "col": 7, "vaseType": "NORMAL" },
+    { "lane": 1, "col": 8, "vaseType": "PLANT" },
+
+    { "lane": 2, "col": 4, "vaseType": "NORMAL" },
     { "lane": 2, "col": 5, "vaseType": "PLANT" },
+    { "lane": 2, "col": 6, "vaseType": "NORMAL" },
+    { "lane": 2, "col": 7, "vaseType": "PLANT" },
     { "lane": 2, "col": 8, "vaseType": "NORMAL" },
+
+    { "lane": 3, "col": 4, "vaseType": "PLANT" },
+    { "lane": 3, "col": 5, "vaseType": "NORMAL" },
     { "lane": 3, "col": 6, "vaseType": "NORMAL" },
-    { "lane": 4, "col": 7, "vaseType": "PLANT" }
+    { "lane": 3, "col": 7, "vaseType": "GARGANTUAR" },
+    { "lane": 3, "col": 8, "vaseType": "PLANT" },
+
+    { "lane": 4, "col": 4, "vaseType": "NORMAL" },
+    { "lane": 4, "col": 5, "vaseType": "PLANT" },
+    { "lane": 4, "col": 6, "vaseType": "NORMAL" },
+    { "lane": 4, "col": 7, "vaseType": "PLANT" },
+    { "lane": 4, "col": 8, "vaseType": "NORMAL" }
   ],
   "effects": []
 }

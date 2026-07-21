@@ -1,4 +1,4 @@
-package pvz.Enums.Commands;
+package pvz.enums.commands;
 
 public enum QuestMenuCommands implements MenuCommand {
     MINI_GAME("^mini\\s+game\\s+-t\\s+(?<miniGameNumber>\\d+)\\s+-l\\s+(?<level>\\d+)\\s*$"),

@@ -1,14 +1,14 @@
-package pvz.Controller;
+package pvz.controller;
 
 import java.util.List;
 import java.util.regex.Matcher;
 
-import pvz.Models.LeaderBoard.LeaderBoard;
-import pvz.Models.LeaderBoard.LeaderBoard.LeaderBoardEntry;
-import pvz.Models.LeaderBoard.LeaderBoardSortField;
-import pvz.Models.LeaderBoard.SortType;
-import pvz.View.MainMenu;
-import pvz.View.Result;
+import pvz.models.leaderboard.LeaderBoard;
+import pvz.models.leaderboard.LeaderBoardSortField;
+import pvz.models.leaderboard.SortType;
+import pvz.models.leaderboard.LeaderBoard.LeaderBoardEntry;
+import pvz.view.MainMenu;
+import pvz.view.Result;
 
 public class LeaderBoardController {
     private LeaderBoardSortField currentField = LeaderBoardSortField.HIGHEST_SCORING_GAME_SCORE;

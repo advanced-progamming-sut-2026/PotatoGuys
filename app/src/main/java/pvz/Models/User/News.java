@@ -1,4 +1,4 @@
-package pvz.Models.User;
+package pvz.models.user;
 
 import java.util.ArrayList;
 

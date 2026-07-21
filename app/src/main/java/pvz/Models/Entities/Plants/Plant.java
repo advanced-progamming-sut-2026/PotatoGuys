@@ -1,20 +1,20 @@
-package pvz.Models.Entities.Plants;
+package pvz.models.entities.plants;
 
 import java.util.List;
 
-import pvz.Models.Engine.TickAware;
-import pvz.Models.Entities.Plants.actions.PlantAction;
-import pvz.Models.Entities.Plants.data.DamageKind;
-import pvz.Models.Entities.Plants.data.GrowthProfile;
-import pvz.Models.Entities.Plants.data.PlantFoodExecutor;
-import pvz.Models.Entities.Plants.data.PlantFoodProfile;
-import pvz.Models.Entities.Plants.data.PlantPropertySheet;
-import pvz.Models.Entities.Plants.data.PlantStatResolver;
-import pvz.Models.Entities.Plants.data.PlantStatResolver.ResolvedStats;
-import pvz.Models.Entities.Plants.data.ProductionKind;
-import pvz.Models.Entities.Plants.fsm.PlantIdleState;
-import pvz.Models.Entities.Plants.fsm.PlantState;
-import pvz.Models.Games.GameContext;
+import pvz.models.engine.TickAware;
+import pvz.models.entities.plants.actions.PlantAction;
+import pvz.models.entities.plants.data.DamageKind;
+import pvz.models.entities.plants.data.GrowthProfile;
+import pvz.models.entities.plants.data.PlantFoodExecutor;
+import pvz.models.entities.plants.data.PlantFoodProfile;
+import pvz.models.entities.plants.data.PlantPropertySheet;
+import pvz.models.entities.plants.data.PlantStatResolver;
+import pvz.models.entities.plants.data.ProductionKind;
+import pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
+import pvz.models.entities.plants.fsm.PlantIdleState;
+import pvz.models.entities.plants.fsm.PlantState;
+import pvz.models.games.GameContext;
 
 /**
  * Concrete, data-driven plant entity.
@@ -74,7 +74,7 @@ public class Plant implements TickAware {
     /**
      * @param context world adapter, or {@code null} for an "unplaced" record
      *                (e.g. a catalog/collection entry that is never registered
-     *                with a {@link pvz.Models.Engine.GameEngine} and never has
+     *                with a {@link pvz.models.engine.GameEngine} and never has
      *                {@link #enter()}/{@link #update()} invoked)
      */
     public Plant(PlantPropertySheet sheet, PlantAction action, int col, int lane,
@@ -183,7 +183,7 @@ public class Plant implements TickAware {
     public void kill() {
         if (dead) return;
         dead = true;
-        currentState = new pvz.Models.Entities.Plants.fsm.PlantDeadState();
+        currentState = new pvz.models.entities.plants.fsm.PlantDeadState();
         context.log("[Plant] " + sheet.getName() + " at (" + col + "," + lane + ") was destroyed.");
     }
 
@@ -242,7 +242,7 @@ public class Plant implements TickAware {
     public PlantPropertySheet getSheet()   { return sheet; }
     public GameContext getContext()       { return context; }
     public PlantAction getAction()         { return action; }
-    public pvz.Models.Entities.Plants.Enums.PlantType getType() { return sheet.getType(); }
+    public pvz.models.entities.plants.enums.PlantType getType() { return sheet.getType(); }
     public int getCol()                    { return col; }
     public int getLane()                   { return lane; }
     public int getLevel()                  { return level; }

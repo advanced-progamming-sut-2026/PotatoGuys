@@ -1,19 +1,19 @@
-package pvz.Controller.user;
+package pvz.controller.user;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
 
-import pvz.Models.AppContext;
-import pvz.Models.User.User;
-import pvz.Utils.PasswordUtils;
-import pvz.Utils.SaveManager;
-import pvz.View.ForgotPasswordMenu;
-import pvz.View.LoginMenu;
-import pvz.View.MainMenu;
-import pvz.View.Menu;
-import pvz.View.RegisterMenu;
-import pvz.View.ResetPasswordMenu;
-import pvz.View.Result;
+import pvz.models.AppContext;
+import pvz.models.user.User;
+import pvz.utils.PasswordUtils;
+import pvz.utils.SaveManager;
+import pvz.view.ForgotPasswordMenu;
+import pvz.view.LoginMenu;
+import pvz.view.MainMenu;
+import pvz.view.Menu;
+import pvz.view.RegisterMenu;
+import pvz.view.ResetPasswordMenu;
+import pvz.view.Result;
 
 public class LoginController {
     private User currentUser;

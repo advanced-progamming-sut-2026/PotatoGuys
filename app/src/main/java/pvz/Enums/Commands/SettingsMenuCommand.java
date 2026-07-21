@@ -1,4 +1,4 @@
-package pvz.Enums.Commands;
+package pvz.enums.commands;
 
 public enum SettingsMenuCommand implements MenuCommand {
     CHANGE_DIFFICULTY("^menu\\s+settings\\s+change-difficulty\\s+-l\\s+(?<difficulty>\\d+)\\s*$"),

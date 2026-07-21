@@ -1,6 +1,6 @@
-package pvz.Models.Games.Effects;
+package pvz.models.games.effects;
 
-import pvz.Models.Games.Levels.Data.EffectDefinition;
+import pvz.models.games.levels.data.EffectDefinition;
 
 public class EffectFactory {
     public static ChapterEffect createEffect(EffectDefinition def) {

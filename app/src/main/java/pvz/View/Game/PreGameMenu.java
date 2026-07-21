@@ -1,12 +1,12 @@
-package pvz.View.Game;
+package pvz.view.game;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.Game.PreGameController;
-import pvz.Enums.Commands.PreGameMenuCommand;
-import pvz.Models.Games.Levels.Level;
-import pvz.View.Menu;
-import pvz.View.Result;
+import pvz.controller.game.PreGameController;
+import pvz.enums.commands.PreGameMenuCommand;
+import pvz.models.games.levels.Level;
+import pvz.view.Menu;
+import pvz.view.Result;
 
 public class PreGameMenu implements Menu {
     PreGameController controller;

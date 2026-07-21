@@ -1,12 +1,12 @@
-package pvz.Models.Entities.Plants.fsm;
+package pvz.models.entities.plants.fsm;
 
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.actions.PlantAction;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.plants.actions.PlantAction;
+import pvz.models.games.GameContext;
 
 /**
  * Generic action-execution state — the plant counterpart of
- * {@link pvz.Models.Entities.Zombies.fsm.SpecialActionState}.
+ * {@link pvz.models.entities.zombies.fsm.SpecialActionState}.
  *
  * <p>Fires the action once on {@link #onEnter}, pauses for {@link #pauseTicksRemaining}
  * ticks (0 = instantaneous), then returns to {@link PlantIdleState} — unless

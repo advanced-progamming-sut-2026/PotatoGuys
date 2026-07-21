@@ -1,8 +1,8 @@
-    package pvz.Models.Games.Modes.Capabilities;
+    package pvz.models.games.modes.capabilities;
 
-    import pvz.Models.Games.GameContext;
-    import pvz.Models.Games.card.Card;
-    import pvz.Models.Games.card.ZombieCard;
+    import pvz.models.games.GameContext;
+import pvz.models.games.card.Card;
+import pvz.models.games.card.ZombieCard;
 
     public interface ZombiePlacer {
 

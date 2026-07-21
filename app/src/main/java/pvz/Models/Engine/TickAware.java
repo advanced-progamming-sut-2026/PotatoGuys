@@ -1,4 +1,4 @@
-package pvz.Models.Engine;
+package pvz.models.engine;
 
 public interface TickAware {
     void enter();

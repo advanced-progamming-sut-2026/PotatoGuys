@@ -1,9 +1,9 @@
-package pvz.View;
+package pvz.view;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.user.SettingsController;
-import pvz.Enums.Commands.SettingsMenuCommand;
+import pvz.controller.user.SettingsController;
+import pvz.enums.commands.SettingsMenuCommand;
 
 public class SettingsMenu implements Menu {
     SettingsController controller=new SettingsController();

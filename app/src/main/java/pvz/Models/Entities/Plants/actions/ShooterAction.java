@@ -1,17 +1,17 @@
-package pvz.Models.Entities.Plants.actions;
+package pvz.models.entities.plants.actions;
 
-import pvz.Models.Entities.Plants.Enums.PlantTag;
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.map.tile.TileTags;
-import pvz.Models.Entities.Projectile.Projectile;
-import pvz.Models.Entities.Projectile.ProjectileType;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.plants.enums.PlantTag;
+import pvz.models.entities.projectile.Projectile;
+import pvz.models.entities.projectile.ProjectileType;
+import pvz.models.games.GameContext;
+import pvz.models.games.map.tile.TileTags;
 
 /**
  * Behaviour for {@code SHOOTER} (and, by extension, {@code STRIKE_THROUGH})
  * plants: fires straight down its own lane whenever a zombie is present.
  *
- * <p>{@link pvz.Models.Entities.Plants.data.DamageProfile#getCount()} drives
+ * <p>{@link pvz.models.entities.plants.data.DamageProfile#getCount()} drives
  * multi-pellet plants (Repeater "20x2", Threepeater/Rotobaga/Mega Gatling
  * Pea) — each pellet is spawned as its own {@link Projectile}. Tags drive
  * flavor: {@code ICE} chills on impact, {@code POISON} bypasses armour and
@@ -39,7 +39,7 @@ public class ShooterAction extends CooldownPlantAction {
         boolean chills = plant.getSheet().hasTag(PlantTag.ICE);
         int pierce = plant.getPierceCount();
         // Strike-through plants get a small base pierce beyond their level upgrades.
-        if (plant.getSheet().getCategory() == pvz.Models.Entities.Plants.Enums.PlantCategory.STRIKE_THROUGH) {
+        if (plant.getSheet().getCategory() == pvz.models.entities.plants.enums.PlantCategory.STRIKE_THROUGH) {
             pierce += 2;
         }
 

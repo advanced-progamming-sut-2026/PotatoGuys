@@ -1,8 +1,9 @@
-package pvz.Models.Quests;
+package pvz.models.quests;
 
 import java.util.ArrayList;
 import java.util.List;
-import pvz.Models.Entities.Plants.Enums.PlantType;
+
+import pvz.models.entities.plants.enums.PlantType;
 
 public class QuestFactory {
 

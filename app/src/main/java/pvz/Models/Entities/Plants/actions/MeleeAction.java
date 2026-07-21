@@ -1,10 +1,10 @@
-package pvz.Models.Entities.Plants.actions;
+package pvz.models.entities.plants.actions;
 
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Entities.Plants.Enums.PlantTag;
-import pvz.Models.Entities.Plants.data.DamageKind;
-import pvz.Models.Entities.Zombies.Zombie;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.plants.data.DamageKind;
+import pvz.models.entities.plants.enums.PlantTag;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
 
 /**
  * Behaviour for {@code MELEE} plants: strikes the zombie directly in front of

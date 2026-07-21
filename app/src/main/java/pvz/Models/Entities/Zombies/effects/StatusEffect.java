@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Zombies.effects;
+package pvz.models.entities.zombies.effects;
 
 /**
  * A live status condition attached to a zombie at runtime.

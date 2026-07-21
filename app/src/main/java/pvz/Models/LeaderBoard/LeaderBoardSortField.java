@@ -1,4 +1,4 @@
-package pvz.Models.LeaderBoard;
+package pvz.models.leaderboard;
 
 public enum LeaderBoardSortField {
     LAST_LEVEL_AND_SEASON,

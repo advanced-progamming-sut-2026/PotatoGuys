@@ -1,13 +1,13 @@
-package pvz.Models.Shop.Items;
+package pvz.models.shop.items;
 
 import java.util.List;
 import java.util.Random;
 
-import pvz.Models.Shop.Currency;
-import pvz.Models.Shop.Price;
-import pvz.Models.Shop.ShopItem;
-import pvz.Models.User.MyPlant;
-import pvz.Models.User.User;
+import pvz.models.shop.Currency;
+import pvz.models.shop.Price;
+import pvz.models.shop.ShopItem;
+import pvz.models.user.MyPlant;
+import pvz.models.user.User;
 
 public class RandomSeedPacketItem extends ShopItem {
     private final Random random = new Random();

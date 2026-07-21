@@ -1,13 +1,13 @@
-package pvz.View.Game.modals;
+package pvz.view.game.modals;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.GameMenuController;
-import pvz.Enums.Commands.GameMenuCommands;
-import pvz.Models.AppContext;
-import pvz.Models.Games.Seasons.Season;
-import pvz.View.Menu;
-import pvz.View.Result;
+import pvz.controller.GameMenuController;
+import pvz.enums.commands.GameMenuCommands;
+import pvz.models.AppContext;
+import pvz.models.games.seasons.Season;
+import pvz.view.Menu;
+import pvz.view.Result;
 
 public class SelectLevelModal implements Menu{
     private Season season;

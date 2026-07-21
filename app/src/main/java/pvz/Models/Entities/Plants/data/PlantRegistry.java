@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Plants.data;
+package pvz.models.entities.plants.data;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -7,18 +7,18 @@ import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
 
-import pvz.Models.Constants;
-import pvz.Models.Entities.Plants.PlantFactory;
-import pvz.Models.Entities.Plants.Enums.PlantCategory;
-import pvz.Models.Entities.Plants.Enums.PlantTag;
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Utils.SaveManager;
+import pvz.models.Constants;
+import pvz.models.entities.plants.PlantFactory;
+import pvz.models.entities.plants.enums.PlantCategory;
+import pvz.models.entities.plants.enums.PlantTag;
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.utils.SaveManager;
 
 /**
  * Singleton registry that loads every {@link PlantPropertySheet} from the
  * data-driven {@code plant_profiles.json} resource via {@link SaveManager}
  * (Gson) at startup — the plant-side counterpart of
- * {@link pvz.Models.Entities.Zombies.data.ZombieRegistry}.
+ * {@link pvz.models.entities.zombies.data.ZombieRegistry}.
  *
  * <p>Unlike the zombie registry (which hard-codes sheets in Java because the
  * project spec treats zombie JSON as reference documentation), plants are

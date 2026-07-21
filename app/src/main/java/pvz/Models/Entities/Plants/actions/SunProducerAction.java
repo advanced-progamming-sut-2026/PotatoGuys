@@ -1,10 +1,10 @@
-package pvz.Models.Entities.Plants.actions;
+package pvz.models.entities.plants.actions;
 
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.data.ProductionKind;
-import pvz.Models.Entities.Sun.Sun;
-import pvz.Models.Entities.Sun.SunType;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.plants.data.ProductionKind;
+import pvz.models.entities.sun.Sun;
+import pvz.models.entities.sun.SunType;
+import pvz.models.games.GameContext;
 
 /**
  * Behaviour for {@code SUN_PRODUCER} plants: periodically spawns a collectible

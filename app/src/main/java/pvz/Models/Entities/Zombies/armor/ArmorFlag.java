@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Zombies.armor;
+package pvz.models.entities.zombies.armor;
 
 /**
  * Behaviour flags attached to an armour piece.

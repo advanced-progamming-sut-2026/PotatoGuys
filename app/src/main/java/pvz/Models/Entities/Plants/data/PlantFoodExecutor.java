@@ -1,18 +1,18 @@
-package pvz.Models.Entities.Plants.data;
+package pvz.models.entities.plants.data;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.Enums.PlantCategory;
-import pvz.Models.Entities.Plants.actions.CooldownPlantAction;
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.plants.actions.CooldownPlantAction;
+import pvz.models.entities.plants.enums.PlantCategory;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
 
 /**
  * Interprets a plant's {@link PlantFoodProfile} at the moment its Plant Food
  * is consumed (either fed directly, or broadcast by a Mint's
- * {@link pvz.Models.Entities.Plants.actions.FamilyBuffAction}).
+ * {@link pvz.models.entities.plants.actions.FamilyBuffAction}).
  *
  * <p>Dispatches on the bounded {@link PlantFoodKind} vocabulary — never on
  * plant identity — so every current and future plant automatically gets a

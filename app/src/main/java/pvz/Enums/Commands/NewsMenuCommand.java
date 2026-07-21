@@ -1,4 +1,4 @@
-package pvz.Enums.Commands;
+package pvz.enums.commands;
 
 public enum NewsMenuCommand implements MenuCommand {
     SHOW_UNREAD("^menu\\s+news\\s+show-unread\\s*$"),

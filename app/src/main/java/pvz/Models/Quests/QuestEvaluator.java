@@ -1,11 +1,11 @@
-package pvz.Models.Quests;
+package pvz.models.quests;
 
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.GameStats;
-import pvz.Models.Games.map.GameMap;
-import pvz.Models.Games.map.tile.Tile;
-import pvz.Models.User.User;
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.games.GameContext;
+import pvz.models.games.GameStats;
+import pvz.models.games.map.GameMap;
+import pvz.models.games.map.tile.Tile;
+import pvz.models.user.User;
 
 public class QuestEvaluator {
 

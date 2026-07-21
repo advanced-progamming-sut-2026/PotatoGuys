@@ -1,11 +1,11 @@
-package pvz.Models.Shop.Items;
+package pvz.models.shop.items;
 
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Shop.Currency;
-import pvz.Models.Shop.Price;
-import pvz.Models.Shop.ShopItem;
-import pvz.Models.User.MyPlant;
-import pvz.Models.User.User;
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.shop.Currency;
+import pvz.models.shop.Price;
+import pvz.models.shop.ShopItem;
+import pvz.models.user.MyPlant;
+import pvz.models.user.User;
 
 public class SelectableSeedPacketItem extends ShopItem {
 

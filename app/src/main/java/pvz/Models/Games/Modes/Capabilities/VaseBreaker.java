@@ -1,6 +1,6 @@
-package pvz.Models.Games.Modes.Capabilities;
+package pvz.models.games.modes.capabilities;
 
-import pvz.Models.Games.GameContext;
+import pvz.models.games.GameContext;
 
 /**
  * Capability trait for game modes that support smashing vases open

@@ -1,4 +1,4 @@
-package pvz.View;
+package pvz.view;
 
 public interface Menu {
     Result handleInput(String input);

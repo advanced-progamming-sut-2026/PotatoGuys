@@ -1,10 +1,10 @@
-package pvz.Controller;
+package pvz.controller;
 
 import java.util.regex.Matcher;
 
-import pvz.View.MainMenu;
-import pvz.View.Menu;
-import pvz.View.Result;
+import pvz.view.MainMenu;
+import pvz.view.Menu;
+import pvz.view.Result;
 
 public class NetworkController {
     public Result connect(Matcher matcher) { return null; }

@@ -1,8 +1,10 @@
-package pvz.Models.Games.Seasons;
+package pvz.models.games.seasons;
 
-import pvz.Models.User.User;
-import pvz.Models.User.Profile;
 import java.util.List;
+
+import pvz.models.user.Profile;
+import pvz.models.user.User;
+
 import java.io.File;
 
 public class SeasonManager {

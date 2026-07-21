@@ -1,22 +1,22 @@
-package pvz.Models.Games.Modes.variants;
+package pvz.models.games.modes.variants;
 
 import java.util.List;
 import java.util.Random;
 
-import pvz.Models.Constants;
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantFactory;
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieFactory;
-import pvz.Models.Entities.Zombies.ZombieType;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.Levels.variants.IZombieLevel;
-import pvz.Models.Games.Modes.GameMode;
-import pvz.Models.Games.Modes.Capabilities.ZombiePlacer;
-import pvz.Models.Games.card.Card;
-import pvz.Models.Games.card.ZombieCard;
-import pvz.Models.User.MyPlant;
+import pvz.models.Constants;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.plants.PlantFactory;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.entities.zombies.ZombieFactory;
+import pvz.models.entities.zombies.ZombieType;
+import pvz.models.games.GameContext;
+import pvz.models.games.card.Card;
+import pvz.models.games.card.ZombieCard;
+import pvz.models.games.levels.Level;
+import pvz.models.games.levels.variants.IZombieLevel;
+import pvz.models.games.modes.GameMode;
+import pvz.models.games.modes.capabilities.ZombiePlacer;
+import pvz.models.user.MyPlant;
 
 public class IZombieMode implements GameMode, ZombiePlacer {
     private final List<MyPlant> basedPlants;

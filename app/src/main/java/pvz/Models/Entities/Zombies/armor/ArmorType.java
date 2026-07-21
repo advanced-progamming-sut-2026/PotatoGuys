@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Zombies.armor;
+package pvz.models.entities.zombies.armor;
 
 /**
  * Armour types directly mapped from the JSON {@code ArmorType} field.

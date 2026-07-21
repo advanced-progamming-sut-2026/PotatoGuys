@@ -1,16 +1,16 @@
-package pvz.Controller;
+package pvz.controller;
 
 import java.util.regex.Matcher;
 
-import pvz.Models.AppContext;
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Shop.DailyOffer;
-import pvz.Models.Shop.Shop;
-import pvz.Models.Shop.ShopItem;
-import pvz.Models.User.User;
-import pvz.View.MainMenu;
-import pvz.View.Menu;
-import pvz.View.Result;
+import pvz.models.AppContext;
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.shop.DailyOffer;
+import pvz.models.shop.Shop;
+import pvz.models.shop.ShopItem;
+import pvz.models.user.User;
+import pvz.view.MainMenu;
+import pvz.view.Menu;
+import pvz.view.Result;
 
 public class ShopController {
     private Menu previousMenu;
@@ -74,7 +74,7 @@ public class ShopController {
             return new Result("Invalid item ID.");
         }
 
-        if (item instanceof pvz.Models.Shop.Items.SelectableSeedPacketItem) {
+        if (item instanceof pvz.models.shop.items.SelectableSeedPacketItem) {
             if (plantType == null || plantType.isBlank()) {
                 return new Result("For Selectable Seed Packet, the -t parameter is mandatory.");
             }
@@ -95,12 +95,12 @@ public class ShopController {
 
         if (!item.canBuy(currentUser, count, plantType)) {
             if (currentUser.getProfile().getCoins() < item.getPrice().getAmount() * count
-                    && item.getPrice().getCurrency() == pvz.Models.Shop.Currency.COIN) {
+                    && item.getPrice().getCurrency() == pvz.models.shop.Currency.COIN) {
                 return new Result("Insufficient coins. Need " + (item.getPrice().getAmount() * count)
                         + " coins, have " + currentUser.getProfile().getCoins() + ".");
             }
             if (currentUser.getProfile().getDiamonds() < item.getPrice().getAmount() * count
-                    && item.getPrice().getCurrency() == pvz.Models.Shop.Currency.DIAMOND) {
+                    && item.getPrice().getCurrency() == pvz.models.shop.Currency.DIAMOND) {
                 return new Result("Insufficient diamonds. Need " + (item.getPrice().getAmount() * count)
                         + " diamonds, have " + currentUser.getProfile().getDiamonds() + ".");
             }

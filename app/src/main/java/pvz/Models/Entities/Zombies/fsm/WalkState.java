@@ -1,9 +1,9 @@
-package pvz.Models.Entities.Zombies.fsm;
+package pvz.models.entities.zombies.fsm;
 
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.skills.ZombieSkill;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Modes.variants.NormalMode;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.entities.zombies.skills.ZombieSkill;
+import pvz.models.games.GameContext;
+import pvz.models.games.modes.variants.NormalMode;
 
 /**
  * Default movement state — the zombie walks left across the lawn.

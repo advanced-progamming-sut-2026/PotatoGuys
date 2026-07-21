@@ -1,13 +1,13 @@
-package pvz.Models.Entities.Sun;
+package pvz.models.entities.sun;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pvz.Models.Engine.TickAware;
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.data.DamageKind;
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.GameContext;
+import pvz.models.engine.TickAware;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.plants.data.DamageKind;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
 
 public class Sun implements TickAware {
 

@@ -1,4 +1,4 @@
-package pvz.Models.Quests;
+package pvz.models.quests;
 
 import java.util.ArrayList;
 import java.util.Comparator;

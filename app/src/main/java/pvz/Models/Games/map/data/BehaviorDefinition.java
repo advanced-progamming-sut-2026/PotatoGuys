@@ -1,6 +1,6 @@
-package pvz.Models.Games.map.data;
+package pvz.models.games.map.data;
 
-import pvz.Models.Games.map.behaviors.BehaviorType;
+import pvz.models.games.map.behaviors.BehaviorType;
 
 public class BehaviorDefinition {
     public BehaviorType type;

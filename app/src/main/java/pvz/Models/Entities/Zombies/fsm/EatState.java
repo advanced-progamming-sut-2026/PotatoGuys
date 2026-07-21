@@ -1,8 +1,8 @@
-package pvz.Models.Entities.Zombies.fsm;
+package pvz.models.entities.zombies.fsm;
 
-import pvz.Models.Entities.Plants.data.DamageKind;
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.plants.data.DamageKind;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
 
 /**
  * The zombie is eating a plant at a fixed grid cell.

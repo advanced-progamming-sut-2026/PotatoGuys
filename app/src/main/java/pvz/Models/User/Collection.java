@@ -1,11 +1,11 @@
-package pvz.Models.User;
+package pvz.models.user;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pvz.Models.AppContext;
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Entities.Zombies.ZombieType;
+import pvz.models.AppContext;
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.entities.zombies.ZombieType;
 
 public class Collection {
     private News news;

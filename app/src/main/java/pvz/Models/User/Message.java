@@ -1,4 +1,4 @@
-package pvz.Models.User;
+package pvz.models.user;
 
 public class Message {
     private String message;

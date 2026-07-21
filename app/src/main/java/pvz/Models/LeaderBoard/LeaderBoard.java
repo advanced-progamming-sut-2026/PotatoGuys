@@ -1,13 +1,13 @@
-package pvz.Models.LeaderBoard;
+package pvz.models.leaderboard;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import pvz.Models.Constants;
-import pvz.Models.User.User;
-import pvz.Utils.SaveManager;
+import pvz.models.Constants;
+import pvz.models.user.User;
+import pvz.utils.SaveManager;
 
 public class LeaderBoard {
 

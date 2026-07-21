@@ -1,4 +1,4 @@
-package pvz.Models.Games.Levels;
+package pvz.models.games.levels;
 
 public enum LevelType {
     NORMAL,

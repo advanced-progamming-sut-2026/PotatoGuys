@@ -1,4 +1,4 @@
-package pvz.Enums.Commands;
+package pvz.enums.commands;
 
 public enum MainMenuCommand implements MenuCommand {
     ENTER_MENU("^menu\\s+enter\\s+(?<menuName>\\w+)\\s*$"),

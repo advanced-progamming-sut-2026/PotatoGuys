@@ -1,8 +1,9 @@
-package pvz.Models.Games.Effects;
+package pvz.models.games.effects;
 
-import pvz.Models.Games.GameContext;
-import pvz.Models.Entities.Plants.Plant;
 import java.util.Random;
+
+import pvz.models.entities.plants.Plant;
+import pvz.models.games.GameContext;
 
 public class ColdWindEffect implements ChapterEffect {
     private final int intervalTicks;

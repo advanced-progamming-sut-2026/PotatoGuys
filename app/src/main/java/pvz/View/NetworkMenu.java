@@ -1,9 +1,9 @@
-package pvz.View;
+package pvz.view;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.NetworkController;
-import pvz.Enums.Commands.NetworkMenuCommand;
+import pvz.controller.NetworkController;
+import pvz.enums.commands.NetworkMenuCommand;
 
 public class NetworkMenu implements Menu {
     @Override

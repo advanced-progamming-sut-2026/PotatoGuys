@@ -1,4 +1,4 @@
-package pvz.Enums.Commands;
+package pvz.enums.commands;
 
 public enum LeaderBoardCommands implements MenuCommand {
     SHOW("^leaderboard(?:\\s+list)?\\s*$"),

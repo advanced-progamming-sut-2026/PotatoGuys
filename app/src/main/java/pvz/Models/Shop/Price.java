@@ -1,4 +1,4 @@
-package pvz.Models.Shop;
+package pvz.models.shop;
 
 public class Price {
     private final Currency currency;

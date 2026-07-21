@@ -1,13 +1,13 @@
-package pvz.Models.Entities.Plants.fsm;
+package pvz.models.entities.plants.fsm;
 
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.plants.Plant;
+import pvz.models.games.GameContext;
 
 
 /**
  * Default resting state — the plant waits for its {@link
- * pvz.Models.Entities.Plants.actions.PlantAction} to become ready, mirroring
- * {@link pvz.Models.Entities.Zombies.fsm.WalkState}'s per-tick skill check.
+ * pvz.models.entities.plants.actions.PlantAction} to become ready, mirroring
+ * {@link pvz.models.entities.zombies.fsm.WalkState}'s per-tick skill check.
  */
 public class PlantIdleState implements PlantState {
 

@@ -1,4 +1,4 @@
-package pvz.Models.Games.Levels.Data;
+package pvz.models.games.levels.data;
 
 public class EffectDefinition {
     public String type;

@@ -1,9 +1,9 @@
-package pvz.Models.Quests;
+package pvz.models.quests;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pvz.Models.User.User;
+import pvz.models.user.User;
 
 public class Quest {
     private String id;

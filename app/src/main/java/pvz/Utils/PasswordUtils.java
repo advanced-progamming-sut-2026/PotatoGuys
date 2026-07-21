@@ -1,4 +1,4 @@
-package pvz.Utils;
+package pvz.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

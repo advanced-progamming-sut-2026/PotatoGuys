@@ -1,7 +1,7 @@
-package pvz.Models.Entities.LawnMower;
+package pvz.models.entities.lawnmower;
 
-import pvz.Models.Engine.TickAware;
-import pvz.Models.Entities.Zombies.Zombie;
+import pvz.models.engine.TickAware;
+import pvz.models.entities.zombies.Zombie;
 
 public class LawnMower implements TickAware{
     private int y;

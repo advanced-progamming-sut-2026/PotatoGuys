@@ -1,17 +1,17 @@
-package pvz.Models.Entities.Zombies.skills;
+package pvz.models.entities.zombies.skills;
 
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
 
 
 /**
  * A discrete, re-usable special ability plug-in.
  *
  * <p>Skills are attached to a {@link Zombie} instance by the {@link
- * pvz.Models.Entities.Zombies.ZombieFactory}. On every tick inside
- * {@link pvz.Models.Entities.Zombies.fsm.WalkState}, the zombie iterates
+ * pvz.models.entities.zombies.ZombieFactory}. On every tick inside
+ * {@link pvz.models.entities.zombies.fsm.WalkState}, the zombie iterates
  * its skill list and transitions to {@link
- * pvz.Models.Entities.Zombies.fsm.SpecialActionState} as soon as any skill
+ * pvz.models.entities.zombies.fsm.SpecialActionState} as soon as any skill
  * reports {@code shouldTrigger == true}.
  *
  * <p><b>Design note:</b> Skills are stateful (they track cooldowns, ammo, etc.)
@@ -29,7 +29,7 @@ public interface ZombieSkill {
 
     /**
      * Performs the skill's game-world effect.
-     * Called once by {@link pvz.Models.Entities.Zombies.fsm.SpecialActionState#onEnter}.
+     * Called once by {@link pvz.models.entities.zombies.fsm.SpecialActionState#onEnter}.
      */
     void execute(Zombie zombie, GameContext ctx);
 

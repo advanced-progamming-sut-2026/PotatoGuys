@@ -1,7 +1,7 @@
-package pvz.Models.Entities.Zombies.skills;
+package pvz.models.entities.zombies.skills;
 
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
 
 /**
  * Abstract base for skills that fire on a repeating cooldown.
@@ -14,7 +14,7 @@ import pvz.Models.Games.GameContext;
  *
  * <p>The cooldown counter is incremented every call to {@link #shouldTrigger}.
  * This means it must be called every tick to count correctly — {@link
- * pvz.Models.Entities.Zombies.fsm.WalkState} already does this.
+ * pvz.models.entities.zombies.fsm.WalkState} already does this.
  */
 public abstract class CooldownSkill implements ZombieSkill {
 

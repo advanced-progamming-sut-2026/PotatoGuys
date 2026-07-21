@@ -1,9 +1,9 @@
-package pvz.View;
+package pvz.view;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.CollectionController;
-import pvz.Enums.Commands.CollectionMenuCommand;
+import pvz.controller.CollectionController;
+import pvz.enums.commands.CollectionMenuCommand;
 
 public class CollectionMenu implements Menu {
     @Override

@@ -1,11 +1,11 @@
-package pvz.Models.Games.map;
+package pvz.models.games.map;
 
-import pvz.Models.Games.map.behaviors.DestructibleBehavior;
-import pvz.Models.Games.map.behaviors.SlipperyBehavior;
-import pvz.Models.Games.map.data.BehaviorDefinition;
-import pvz.Models.Games.map.data.GameMapDefinition;
-import pvz.Models.Games.map.data.TileDefinition;
-import pvz.Models.Games.map.tile.TileTags;
+import pvz.models.games.map.behaviors.DestructibleBehavior;
+import pvz.models.games.map.behaviors.SlipperyBehavior;
+import pvz.models.games.map.data.BehaviorDefinition;
+import pvz.models.games.map.data.GameMapDefinition;
+import pvz.models.games.map.data.TileDefinition;
+import pvz.models.games.map.tile.TileTags;
 
 public class GameMapFactory {
     public static GameMap createGameMap(GameMapDefinition def) {

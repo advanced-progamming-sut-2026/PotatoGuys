@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Plants.Enums;
+package pvz.models.entities.plants.enums;
 
 public enum PlantCategory {
     SUN_PRODUCER,

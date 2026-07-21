@@ -1,4 +1,4 @@
-package pvz.Enums.Commands;
+package pvz.enums.commands;
 
 public enum ProfileMenuCommand implements MenuCommand {
     CHANGE_USERNAME("^menu\\s+profile\\s+change-username\\s+-u\\s+(?<username>\\S+)\\s*$"),

@@ -1,8 +1,8 @@
-package pvz.Models.Games.Levels;
-
-import pvz.Models.Entities.Zombies.ZombieType;
+package pvz.models.games.levels;
 
 import java.util.List;
+
+import pvz.models.entities.zombies.ZombieType;
 
 public class WavePhase {
     private int zombieCount;

@@ -1,7 +1,7 @@
-package pvz.Models.Games.map;
+package pvz.models.games.map;
 
-import pvz.Models.Constants;
-import pvz.Models.Games.map.tile.Tile;
+import pvz.models.Constants;
+import pvz.models.games.map.tile.Tile;
 
 public class GameMap {
     private int rows;

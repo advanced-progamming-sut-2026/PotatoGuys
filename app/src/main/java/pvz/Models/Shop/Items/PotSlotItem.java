@@ -1,12 +1,12 @@
-package pvz.Models.Shop.Items;
+package pvz.models.shop.items;
 
-import pvz.Models.AppContext;
-import pvz.Models.GreenHouse.GreenHouse;
-import pvz.Models.GreenHouse.GreenHousePot;
-import pvz.Models.Shop.Currency;
-import pvz.Models.Shop.Price;
-import pvz.Models.Shop.ShopItem;
-import pvz.Models.User.User;
+import pvz.models.AppContext;
+import pvz.models.greenhouse.GreenHouse;
+import pvz.models.greenhouse.GreenHousePot;
+import pvz.models.shop.Currency;
+import pvz.models.shop.Price;
+import pvz.models.shop.ShopItem;
+import pvz.models.user.User;
 
 public class PotSlotItem extends ShopItem {
 

@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Zombies;
+package pvz.models.entities.zombies;
 
 public enum ZombieEffect {
     CHILL,

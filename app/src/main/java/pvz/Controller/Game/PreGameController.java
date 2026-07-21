@@ -1,20 +1,20 @@
-package pvz.Controller.Game;
+package pvz.controller.game;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import pvz.Models.AppContext;
-import pvz.Models.Engine.GameEngine;
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Entities.Plants.data.PlantPropertySheet;
-import pvz.Models.Entities.Plants.data.PlantRegistry;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.card.PlantCard;
-import pvz.Models.User.MyPlant;
-import pvz.View.Result;
-import pvz.View.Game.RunningGameMenu;
+import pvz.models.AppContext;
+import pvz.models.engine.GameEngine;
+import pvz.models.entities.plants.data.PlantPropertySheet;
+import pvz.models.entities.plants.data.PlantRegistry;
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.games.GameContext;
+import pvz.models.games.card.PlantCard;
+import pvz.models.games.levels.Level;
+import pvz.models.user.MyPlant;
+import pvz.view.Result;
+import pvz.view.game.RunningGameMenu;
 
 public class PreGameController{
     private static final int MAX_PLANTS = 7;

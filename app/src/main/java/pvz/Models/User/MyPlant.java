@@ -1,6 +1,6 @@
-package pvz.Models.User;
+package pvz.models.user;
 
-import pvz.Models.Entities.Plants.Enums.PlantType;
+import pvz.models.entities.plants.enums.PlantType;
 
 public class MyPlant {
     private PlantType Type;

@@ -1,7 +1,7 @@
-package pvz.Models.Games.Effects;
+package pvz.models.games.effects;
 
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Levels.Wave;
+import pvz.models.games.GameContext;
+import pvz.models.games.levels.Wave;
 
 public interface ChapterEffect {
     default void onTick(GameContext ctx) {}
