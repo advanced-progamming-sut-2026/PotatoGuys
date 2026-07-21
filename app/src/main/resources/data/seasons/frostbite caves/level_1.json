@@ -8,8 +8,8 @@
     "rows": 5,
     "columns": 9,
     "specialTiles": [
-      { "x": 5, "y": 2, "behaviors": [{ "type": "SLIPPERY", "hp": 0, "name": "Ice" }], "tags": ["SLIPPERY"] },
-      { "x": 6, "y": 1, "behaviors": [{ "type": "SLIPPERY", "hp": 0, "name": "Ice" }], "tags": ["SLIPPERY"] }
+      { "x": 5, "y": 2, "behaviors": [{ "type": "SLIPPERY", "hp": 0, "name": "Ice" }], "tags": ["SLIP_DOWN"] },
+      { "x": 6, "y": 1, "behaviors": [{ "type": "SLIPPERY", "hp": 0, "name": "Ice" }], "tags": ["SLIP_UP"] }
     ]
   },
   "waves": [
