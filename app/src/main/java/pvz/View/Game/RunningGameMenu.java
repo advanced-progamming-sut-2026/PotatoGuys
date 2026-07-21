@@ -36,6 +36,7 @@ public class RunningGameMenu implements Menu {
         if ((matcher = RunningGameCommand.SHOW_CARDS.getMatcher(input)) != null) return gameController.showCards(matcher);
         if ((matcher = RunningGameCommand.START_ZOMBIE_WAVE.getMatcher(input)) != null) return gameController.startZombieWavesCommand(matcher);
         if ((matcher = RunningGameCommand.PLANT.getMatcher(input)) != null) return gameController.plantPlant(matcher);
+        if ((matcher = RunningGameCommand.PLANT_ZOMBIE.getMatcher(input)) != null) return gameController.plantZombie(matcher);
         if ((matcher = RunningGameCommand.PLUCK_PLANT.getMatcher(input)) != null) return gameController.pluckPlant(matcher);
         if ((matcher = RunningGameCommand.HELP.getMatcher(input)) != null) return new Result(RunningGameCommand.getHelp());
         return new Result("Command not found!");

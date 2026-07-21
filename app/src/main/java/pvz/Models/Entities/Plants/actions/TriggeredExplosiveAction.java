@@ -41,7 +41,7 @@ public class TriggeredExplosiveAction implements PlantAction {
             return false;
         }
         boolean isTrap = plant.getSheet().hasTag(PlantTag.TRAP);
-        return !isTrap || !ctx.getZombiesInLane(plant.getLane()).isEmpty();
+        return !isTrap || !ctx.getZombiesAt(plant.getCol() , plant.getLane()).isEmpty();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TriggeredExplosiveAction implements PlantAction {
                 }
             }
         } else {
-            for (Zombie z : ctx.getZombiesInLane(plant.getLane())) {
+            for (Zombie z : ctx.getZombiesAt(plant.getCol(), plant.getLane())) {
                 z.takeDamage(dmg, false);
                 hit++;
                 break; // a trap only takes out the zombie that triggered it
