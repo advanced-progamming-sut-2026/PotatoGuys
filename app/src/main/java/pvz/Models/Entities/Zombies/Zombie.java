@@ -64,7 +64,7 @@ public class Zombie implements TickAware {
     private int lastX;
     private int lastLane;
     private float x;
-    private final int lane;
+    private int lane;
 
     // ── Runtime stats (scaled at spawn) ───────────────────────────────────────
     private final float maxHp;
@@ -212,6 +212,7 @@ public class Zombie implements TickAware {
     public float getX()                         { return x; }
     public void setX(float newX)               { this.x = newX; }
     public int getLane()                        { return lane; }
+    public void setLane(int newLane)            { this.lane = newLane; }
     public float getHp()                        { return hp; }
     public float getMaxHp()                     { return maxHp; }
     public float getEatDpsPerTick()             { return eatDpsPerTick; }
