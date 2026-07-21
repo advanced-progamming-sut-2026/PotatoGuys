@@ -197,6 +197,9 @@ public class CollectionController {
         getCollection().consumeSeedPackets(plantType, PURCHASE_PACKET_COST);
         getCollection().unlockPlant(plantType);
 
+        // ---> FIX: SAVE THE USER <---
+        AppContext.getInstance().getCurrentUser().saveUser();
+
         return new Result("Successfully purchased and unlocked " + plantType.toString() + "!\n"
                 + "Remaining Coins: " + getProfile().getCoins() + "\n"
                 + "Remaining Seed Packets: " + getCollection().getSeedPackets(plantType));
@@ -244,6 +247,9 @@ public class CollectionController {
         getProfile().setCoins(coins - coinCost);
         getCollection().consumeSeedPackets(plantType, packetCost);
         owned.setLevel(currentLevel + 1);
+
+        // ---> FIX: SAVE THE USER <---
+        AppContext.getInstance().getCurrentUser().saveUser();
 
         return new Result(plantType.toString() + " upgraded successfully to level " + (currentLevel + 1) + "!\n"
                 + "Remaining Coins: " + getProfile().getCoins() + "\n"

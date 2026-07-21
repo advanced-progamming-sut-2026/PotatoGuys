@@ -11,7 +11,10 @@ public class Quest {
     private String description;
     private QuestCategory category;
     private QuestPriority priority;
+
+    // Because this is transient, it becomes NULL when loaded from a save file!
     private transient List<Reward> rewards;
+
     private Progress progress;
     private boolean active;
     private boolean claimed;
@@ -61,11 +64,22 @@ public class Quest {
     public void activate() { this.active = true; }
     public void deactivate() { this.active = false; }
 
+    // --- FIX: Safely re-hydrate rewards if they were lost during JSON loading ---
     public void claim(User user) {
         if (progress.isComplete() && !claimed) {
-            for (Reward reward : rewards) {
-                reward.grant(user);
+
+            List<Reward> currentRewards = rewards;
+            // If the rewards are null because of JSON saving, reload them from the Factory!
+            if (currentRewards == null || currentRewards.isEmpty()) {
+                currentRewards = QuestFactory.findRewardsById(id);
             }
+
+            if (currentRewards != null) {
+                for (Reward reward : currentRewards) {
+                    reward.grant(user);
+                }
+            }
+
             this.claimed = true;
             if (repeatable) {
                 this.active = false;
