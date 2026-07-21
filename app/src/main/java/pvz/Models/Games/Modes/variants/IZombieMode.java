@@ -98,7 +98,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
                 continue;
             }
 
-            if (findCard(context, randomZombieType.getAlias()) != null) {
+            if (findCard(context, randomZombieType.toString()) != null) {
                 continue;
             }
 
