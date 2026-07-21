@@ -34,7 +34,7 @@ public class HomingAction extends CooldownPlantAction {
         float dmg = instaKill ? Float.MAX_VALUE : plant.getEffectiveDamage();
 
         Projectile bolt = new Projectile(ctx, ProjectileType.HOMING_BOLT, plant.getLane(),
-                plant.getCol(), dmg, false, false, 0, target);
+                plant.getCol(), dmg, false, false, false,0, target);
         ctx.spawnProjectile(bolt);
         ctx.log("[Action] " + plant.getSheet().getName() + " locked onto a zombie in lane "
                 + target.getLane() + ".");

@@ -19,5 +19,6 @@ public enum DamageKind {
     FIXED,
     MULTI_SHOT,
     STAGED,
+    FIRE,
     INSTA_KILL
 }

@@ -1,5 +1,6 @@
 package pvz.Models.Entities.Zombies.fsm;
 
+import pvz.Models.Entities.Plants.data.DamageKind;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
 
@@ -42,7 +43,7 @@ public class EatState implements ZombieState {
             return new WalkState();
         }
         // Deal eat-DPS damage (not poisonous — regular bite)
-        ctx.getPlantsAt(targetCol, targetLane).get(0).takeDamage(zombie.getEatDpsPerTick());
+        ctx.getPlantsAt(targetCol, targetLane).get(0).takeDamage(zombie.getEatDpsPerTick(), DamageKind.FIXED);
         return this;
     }
 

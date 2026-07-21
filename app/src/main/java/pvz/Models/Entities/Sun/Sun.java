@@ -5,6 +5,7 @@ import java.util.List;
 
 import pvz.Models.Engine.TickAware;
 import pvz.Models.Entities.Plants.Plant;
+import pvz.Models.Entities.Plants.data.DamageKind;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
 
@@ -93,7 +94,7 @@ public class Sun implements TickAware {
             }
         }
         for (Zombie z : zombiesHit) z.takeDamage(150);
-        for (Plant p : plantsHit) p.takeDamage(150);
+        for (Plant p : plantsHit) p.takeDamage(150, DamageKind.FIXED);
 
         List<Zombie> zombiesCenter = new ArrayList<>();
         List<Plant> plantsCenter = new ArrayList<>();
@@ -106,7 +107,7 @@ public class Sun implements TickAware {
             }
         }
         for (Zombie z : zombiesCenter) z.takeDamage(80);
-        for (Plant p : plantsCenter) p.takeDamage(80);
+        for (Plant p : plantsCenter) p.takeDamage(80, DamageKind.FIXED);
     }
 
     private void convertToNormal() {
