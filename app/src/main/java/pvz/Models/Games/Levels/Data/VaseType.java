@@ -1,4 +1,4 @@
-package pvz.Models.Games.Levels.Data;
+package pvz.models.games.levels.data;
 
 public enum VaseType {
     NORMAL,      // کوزه معمولی (شانس تصادفی زامبی، گیاه، خورشید یا پوچ)

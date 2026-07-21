@@ -1,11 +1,11 @@
-package pvz.Controller.user;
+package pvz.controller.user;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import pvz.Enums.Commands.RegisterMenuCommand;
-import pvz.Models.User.User;
-import pvz.Utils.SaveManager;
+import pvz.enums.commands.RegisterMenuCommand;
+import pvz.models.user.User;
+import pvz.utils.SaveManager;
 
 public class PatternManager {
 

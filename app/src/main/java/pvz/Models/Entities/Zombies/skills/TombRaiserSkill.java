@@ -1,9 +1,9 @@
-package pvz.Models.Entities.Zombies.skills;
+package pvz.models.entities.zombies.skills;
 
 import javax.imageio.IIOException;
 
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
 
 /**
  * TombRaiser Zombie — throws bones to raise tombs on random grid cells.

@@ -1,9 +1,9 @@
-package pvz.Models.Entities.Zombies;
+package pvz.models.entities.zombies;
 
 /**
  * Enum of all zombie types defined in the game.
  * Each constant corresponds to a JSON alias registered in
- * {@link pvz.Models.Entities.Zombies.data.ZombieRegistry}.
+ * {@link pvz.models.entities.zombies.data.ZombieRegistry}.
  *
  * <p>The {@link #alias} field is the exact string used for registry lookups
  * via {@link ZombieFactory#create(String, float, int, ZombieGameContext, int, int)}.

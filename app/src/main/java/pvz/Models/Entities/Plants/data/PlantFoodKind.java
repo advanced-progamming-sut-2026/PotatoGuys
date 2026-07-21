@@ -1,9 +1,9 @@
-package pvz.Models.Entities.Plants.data;
+package pvz.models.entities.plants.data;
 
 /**
  * The archetype of a plant's Plant-Food-triggered burst effect.
  *
- * <p>This is a bounded, data-driven vocabulary: {@link pvz.Models.Entities.Plants.Plant#triggerPlantFood}
+ * <p>This is a bounded, data-driven vocabulary: {@link pvz.models.entities.plants.Plant#triggerPlantFood}
  * dispatches on this enum rather than on individual plant IDs, so any new
  * plant added to {@code plant_profiles.json} automatically gets a working
  * Plant Food effect simply by picking one of these kinds — no new Java code

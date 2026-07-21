@@ -1,8 +1,8 @@
-package pvz.Models.Entities.Zombies.skills;
+package pvz.models.entities.zombies.skills;
 
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieFactory;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.entities.zombies.ZombieFactory;
+import pvz.models.games.GameContext;
 
 /**
  * Gargantuar — throws an Imp when the zombie drops to 50 % HP.
@@ -15,7 +15,7 @@ import pvz.Models.Games.GameContext;
  * </ul>
  *
  * <p>The Gargantuar also smashes plants it walks into instead of eating them.
- * That is modelled inside {@link pvz.Models.Entities.Zombies.fsm.EatState}
+ * That is modelled inside {@link pvz.models.entities.zombies.fsm.EatState}
  * by setting the eat-DPS to {@code smashDamage} in one hit.
  */
 public class GargantuarSkill implements ZombieSkill {

@@ -1,9 +1,9 @@
-package pvz.View;
+package pvz.view;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.user.LoginController;
-import pvz.Enums.Commands.LoginMenuCommand;
+import pvz.controller.user.LoginController;
+import pvz.enums.commands.LoginMenuCommand;
 
 public class ForgotPasswordMenu implements Menu {
     private final LoginController controller;

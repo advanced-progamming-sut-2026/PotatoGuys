@@ -1,13 +1,13 @@
-package pvz.Controller.user;
+package pvz.controller.user;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 
-import pvz.Models.AppContext;
-import pvz.Models.User.Message;
-import pvz.View.MainMenu;
-import pvz.View.Menu;
-import pvz.View.Result;
+import pvz.models.AppContext;
+import pvz.models.user.Message;
+import pvz.view.MainMenu;
+import pvz.view.Menu;
+import pvz.view.Result;
 
 public class NewsController {
     public Result showUnread(Matcher matcher) {

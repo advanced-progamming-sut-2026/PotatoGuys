@@ -1,9 +1,9 @@
-package pvz.View;
+package pvz.view;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
-import pvz.Enums.Commands.MainMenuCommand;
+import pvz.enums.commands.MainMenuCommand;
 
 public class MenuManager {
     private Menu currentMenu;

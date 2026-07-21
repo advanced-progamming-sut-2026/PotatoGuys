@@ -1,4 +1,4 @@
-package pvz.Enums.Commands;
+package pvz.enums.commands;
 
 public enum ShopMenuCommands implements MenuCommand {
     ENTER_MENU("^shop\\s+list$"),

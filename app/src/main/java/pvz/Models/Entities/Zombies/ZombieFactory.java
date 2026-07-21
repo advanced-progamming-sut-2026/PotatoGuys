@@ -1,24 +1,24 @@
-package pvz.Models.Entities.Zombies;
+package pvz.models.entities.zombies;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import pvz.Models.Entities.Zombies.armor.ArmorFlag;
-import pvz.Models.Entities.Zombies.armor.ArmorPiece;
-import pvz.Models.Entities.Zombies.armor.ArmorType;
-import pvz.Models.Entities.Zombies.data.ArmorPropertySheet;
-import pvz.Models.Entities.Zombies.data.ZombiePropertySheet;
-import pvz.Models.Entities.Zombies.data.ZombieRegistry;
-import pvz.Models.Entities.Zombies.skills.ExplorerTorchSkill;
-import pvz.Models.Entities.Zombies.skills.GargantuarSkill;
-import pvz.Models.Entities.Zombies.skills.HunterSnowballSkill;
-import pvz.Models.Entities.Zombies.skills.RaStealSunSkill;
-import pvz.Models.Entities.Zombies.skills.TombRaiserSkill;
-import pvz.Models.Entities.Zombies.skills.WizardZapSkill;
-import pvz.Models.Entities.Zombies.skills.ZombieSkill;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.zombies.armor.ArmorFlag;
+import pvz.models.entities.zombies.armor.ArmorPiece;
+import pvz.models.entities.zombies.armor.ArmorType;
+import pvz.models.entities.zombies.data.ArmorPropertySheet;
+import pvz.models.entities.zombies.data.ZombiePropertySheet;
+import pvz.models.entities.zombies.data.ZombieRegistry;
+import pvz.models.entities.zombies.skills.ExplorerTorchSkill;
+import pvz.models.entities.zombies.skills.GargantuarSkill;
+import pvz.models.entities.zombies.skills.HunterSnowballSkill;
+import pvz.models.entities.zombies.skills.RaStealSunSkill;
+import pvz.models.entities.zombies.skills.TombRaiserSkill;
+import pvz.models.entities.zombies.skills.WizardZapSkill;
+import pvz.models.entities.zombies.skills.ZombieSkill;
+import pvz.models.games.GameContext;
 
 /**
  * Creates fully configured {@link Zombie} instances from a registry alias string.

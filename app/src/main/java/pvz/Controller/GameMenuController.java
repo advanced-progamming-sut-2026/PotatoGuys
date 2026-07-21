@@ -1,26 +1,26 @@
-package pvz.Controller;
+package pvz.controller;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.Game.GameController;
-import pvz.Models.AppContext;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.Levels.LevelLoader;
-import pvz.Models.Games.Seasons.Season;
-import pvz.Models.User.User;
-import pvz.View.CollectionMenu;
-import pvz.View.GreenHouseMenu;
-import pvz.View.LeaderBoardMenu;
-import pvz.View.MainMenu;
-import pvz.View.Menu;
-import pvz.View.QuestMenu;
-import pvz.View.Result;
-import pvz.View.Game.GameMenu;
-import pvz.View.Game.PreGameMenu;
-import pvz.View.Game.RunningGameMenu;
-import pvz.View.Game.modals.ChapterSellectionModal;
-import pvz.View.Game.modals.SelectLevelModal;
+import pvz.controller.game.GameController;
+import pvz.models.AppContext;
+import pvz.models.games.GameContext;
+import pvz.models.games.levels.Level;
+import pvz.models.games.levels.LevelLoader;
+import pvz.models.games.seasons.Season;
+import pvz.models.user.User;
+import pvz.view.CollectionMenu;
+import pvz.view.GreenHouseMenu;
+import pvz.view.LeaderBoardMenu;
+import pvz.view.MainMenu;
+import pvz.view.Menu;
+import pvz.view.QuestMenu;
+import pvz.view.Result;
+import pvz.view.game.GameMenu;
+import pvz.view.game.PreGameMenu;
+import pvz.view.game.RunningGameMenu;
+import pvz.view.game.modals.ChapterSellectionModal;
+import pvz.view.game.modals.SelectLevelModal;
 
 public class GameMenuController {
     public Result enterMenu(Matcher matcher) {

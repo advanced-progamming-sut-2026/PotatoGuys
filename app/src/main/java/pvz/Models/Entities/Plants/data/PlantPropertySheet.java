@@ -1,20 +1,20 @@
-package pvz.Models.Entities.Plants.data;
+package pvz.models.entities.plants.data;
 
 import java.util.List;
 
-import pvz.Models.Entities.Plants.Enums.PlantCategory;
-import pvz.Models.Entities.Plants.Enums.PlantTag;
-import pvz.Models.Entities.Plants.Enums.PlantType;
+import pvz.models.entities.plants.enums.PlantCategory;
+import pvz.models.entities.plants.enums.PlantTag;
+import pvz.models.entities.plants.enums.PlantType;
 
 /**
  * Immutable, data-driven description of one plant kind, loaded from
  * {@code plant_profiles.json} by {@link PlantRegistry}.
  *
  * <p>This is the direct structural counterpart of
- * {@link pvz.Models.Entities.Zombies.data.ZombiePropertySheet}: all 69 plant
- * kinds share the single {@link pvz.Models.Entities.Plants.Plant} class, and
+ * {@link pvz.models.entities.zombies.data.ZombiePropertySheet}: all 69 plant
+ * kinds share the single {@link pvz.models.entities.plants.Plant} class, and
  * their unique behaviour comes entirely from the sheet plugged in by
- * {@link pvz.Models.Entities.Plants.PlantFactory} — never from per-ID
+ * {@link pvz.models.entities.plants.PlantFactory} — never from per-ID
  * branching in Java code.
  *
  * <p>{@link #getCategory()} doubles as the plant's "family" for Mint plants

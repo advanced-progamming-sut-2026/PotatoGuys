@@ -1,25 +1,25 @@
-package pvz.Models.Games;
+package pvz.models.games;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pvz.Models.Engine.GameEngine;
-import pvz.Models.Engine.TickAware;
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Projectile.Projectile;
-import pvz.Models.Entities.Sun.Sun;
-import pvz.Models.Entities.Sun.SunManager;
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.Modes.GameMode;
-import pvz.Models.Games.Modes.GameModeFactory;
-import pvz.Models.Games.card.Card;
-import pvz.Models.Games.Effects.ChapterEffect;
-import pvz.Models.Games.Effects.EffectFactory;
-import pvz.Models.Games.Levels.Data.EffectDefinition;
-import pvz.Models.Games.map.GameMap;
-import pvz.Models.Games.map.GameMapFactory;
-import pvz.Models.Games.map.tile.Tile;
+import pvz.models.engine.GameEngine;
+import pvz.models.engine.TickAware;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.projectile.Projectile;
+import pvz.models.entities.sun.Sun;
+import pvz.models.entities.sun.SunManager;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.card.Card;
+import pvz.models.games.effects.ChapterEffect;
+import pvz.models.games.effects.EffectFactory;
+import pvz.models.games.levels.Level;
+import pvz.models.games.levels.data.EffectDefinition;
+import pvz.models.games.map.GameMap;
+import pvz.models.games.map.GameMapFactory;
+import pvz.models.games.map.tile.Tile;
+import pvz.models.games.modes.GameMode;
+import pvz.models.games.modes.GameModeFactory;
 
 
 public class GameContext implements TickAware {
@@ -277,7 +277,7 @@ public class GameContext implements TickAware {
     
     private void applyFireAuras() {
         for (Plant p : plants) {
-            if (p.getSheet().hasTag(pvz.Models.Entities.Plants.Enums.PlantTag.FIRE)) {
+            if (p.getSheet().hasTag(pvz.models.entities.plants.enums.PlantTag.FIRE)) {
                 // Find neighbors
                 for (int dx = -1; dx <= 1; dx++) {
                     for (int dy = -1; dy <= 1; dy++) {

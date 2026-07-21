@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Sun;
+package pvz.models.entities.sun;
 
 public enum SunType {
     NORMAL(25),

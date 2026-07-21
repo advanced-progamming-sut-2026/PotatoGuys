@@ -1,10 +1,10 @@
-package pvz.Models.Entities.Plants.actions;
+package pvz.models.entities.plants.actions;
 
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Entities.Projectile.Projectile;
-import pvz.Models.Entities.Projectile.ProjectileType;
-import pvz.Models.Entities.Zombies.Zombie;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.projectile.Projectile;
+import pvz.models.entities.projectile.ProjectileType;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
 
 /**
  * Behaviour for {@code HOMING} plants: locks onto a zombie anywhere on the
@@ -30,7 +30,7 @@ public class HomingAction extends CooldownPlantAction {
         if (target == null) return;
 
         boolean instaKill = plant.getSheet().getDamage().getKind()
-                == pvz.Models.Entities.Plants.data.DamageKind.INSTA_KILL;
+                == pvz.models.entities.plants.data.DamageKind.INSTA_KILL;
         float dmg = instaKill ? Float.MAX_VALUE : plant.getEffectiveDamage();
 
         Projectile bolt = new Projectile(ctx, ProjectileType.HOMING_BOLT, plant.getLane(),

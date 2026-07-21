@@ -1,6 +1,6 @@
-package pvz.Models.Quests;
+package pvz.models.quests;
 
-import pvz.Models.User.User;
+import pvz.models.user.User;
 
 public class InventoryReward extends Reward {
     private String itemId;

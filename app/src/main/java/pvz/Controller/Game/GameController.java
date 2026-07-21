@@ -1,32 +1,32 @@
-package pvz.Controller.Game;
+package pvz.controller.game;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import pvz.Models.AppContext;
-import pvz.Models.Engine.TickAware;
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Projectile.Projectile;
-import pvz.Models.Entities.Sun.Sun;
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Levels.variants.VasebreakerLevel;
-import pvz.Models.Games.Modes.GameMode;
-import pvz.Models.Games.Modes.Capabilities.PlantPlacer;
-import pvz.Models.Games.Modes.Capabilities.StartWaves;
-import pvz.Models.Games.Modes.Capabilities.ZombiePlacer;
-import pvz.Models.Games.Modes.variants.VasebreakerMode;
-import pvz.Models.Games.card.Card;
-import pvz.Models.Games.card.PlantCard;
-import pvz.Models.Games.card.ZombieCard;
-import pvz.Models.Games.map.behaviors.TileBehavior;
-import pvz.Models.Games.map.tile.Tile;
-import pvz.Models.Games.map.tile.TileTags;
-import pvz.Models.Quests.QuestEvaluator;
-import pvz.Models.User.User;
-import pvz.View.MainMenu;
-import pvz.View.Result;
+import pvz.models.AppContext;
+import pvz.models.engine.TickAware;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.projectile.Projectile;
+import pvz.models.entities.sun.Sun;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
+import pvz.models.games.card.Card;
+import pvz.models.games.card.PlantCard;
+import pvz.models.games.card.ZombieCard;
+import pvz.models.games.levels.variants.VasebreakerLevel;
+import pvz.models.games.map.behaviors.TileBehavior;
+import pvz.models.games.map.tile.Tile;
+import pvz.models.games.map.tile.TileTags;
+import pvz.models.games.modes.GameMode;
+import pvz.models.games.modes.capabilities.PlantPlacer;
+import pvz.models.games.modes.capabilities.StartWaves;
+import pvz.models.games.modes.capabilities.ZombiePlacer;
+import pvz.models.games.modes.variants.VasebreakerMode;
+import pvz.models.quests.QuestEvaluator;
+import pvz.models.user.User;
+import pvz.view.MainMenu;
+import pvz.view.Result;
 
 public class GameController {
     
@@ -64,7 +64,7 @@ public class GameController {
                     user.getScore().setLastSeason(0);
                     
                     // Unlock next level
-                    pvz.Models.Games.Seasons.SeasonManager manager = new pvz.Models.Games.Seasons.SeasonManager();
+                    pvz.models.games.seasons.SeasonManager manager = new pvz.models.games.seasons.SeasonManager();
                     manager.unlockNextLevel(user, context.getSeasonName(), context.getLevelNumber());
                 }
                 user.saveUser();

@@ -1,4 +1,4 @@
-package pvz.View;
+package pvz.view;
 
 public class Result {
     private String message;

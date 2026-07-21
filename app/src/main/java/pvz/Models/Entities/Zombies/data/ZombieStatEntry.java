@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Zombies.data;
+package pvz.models.entities.zombies.data;
 
 /**
  * Maps one entry in the JSON {@code ZombieStats} array, for example:

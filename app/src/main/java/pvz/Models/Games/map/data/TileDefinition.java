@@ -1,8 +1,8 @@
-package pvz.Models.Games.map.data;
+package pvz.models.games.map.data;
 
 import java.util.List;
 
-import pvz.Models.Games.map.tile.TileTags;
+import pvz.models.games.map.tile.TileTags;
 
 public class TileDefinition {
     public int x;

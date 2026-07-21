@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Zombies;
+package pvz.models.entities.zombies;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,20 +7,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import pvz.Models.Engine.TickAware;
-import pvz.Models.Entities.Zombies.armor.ArmorFlag;
-import pvz.Models.Entities.Zombies.armor.ArmorPiece;
-import pvz.Models.Entities.Zombies.data.ScaledProp;
-import pvz.Models.Entities.Zombies.data.ZombiePropertySheet;
-import pvz.Models.Entities.Zombies.effects.EffectType;
-import pvz.Models.Entities.Zombies.effects.StatusEffect;
-import pvz.Models.Entities.Zombies.fsm.DeadState;
-import pvz.Models.Entities.Zombies.fsm.WalkState;
-import pvz.Models.Entities.Zombies.fsm.ZombieState;
-import pvz.Models.Entities.Zombies.skills.ZombieSkill;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.map.behaviors.TileBehavior;
-import pvz.Models.Games.map.tile.Tile;
+import pvz.models.engine.TickAware;
+import pvz.models.entities.zombies.armor.ArmorFlag;
+import pvz.models.entities.zombies.armor.ArmorPiece;
+import pvz.models.entities.zombies.data.ScaledProp;
+import pvz.models.entities.zombies.data.ZombiePropertySheet;
+import pvz.models.entities.zombies.effects.EffectType;
+import pvz.models.entities.zombies.effects.StatusEffect;
+import pvz.models.entities.zombies.fsm.DeadState;
+import pvz.models.entities.zombies.fsm.WalkState;
+import pvz.models.entities.zombies.fsm.ZombieState;
+import pvz.models.entities.zombies.skills.ZombieSkill;
+import pvz.models.games.GameContext;
+import pvz.models.games.map.behaviors.TileBehavior;
+import pvz.models.games.map.tile.Tile;
 
 
 /**

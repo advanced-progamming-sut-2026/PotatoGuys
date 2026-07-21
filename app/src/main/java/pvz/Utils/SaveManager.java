@@ -1,4 +1,4 @@
-package pvz.Utils;
+package pvz.utils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import pvz.Models.Constants;
+import pvz.models.Constants;
 
 public class SaveManager {
     

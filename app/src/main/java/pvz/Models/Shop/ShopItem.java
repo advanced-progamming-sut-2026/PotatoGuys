@@ -1,6 +1,6 @@
-package pvz.Models.Shop;
+package pvz.models.shop;
 
-import pvz.Models.User.User;
+import pvz.models.user.User;
 
 public abstract class ShopItem {
 

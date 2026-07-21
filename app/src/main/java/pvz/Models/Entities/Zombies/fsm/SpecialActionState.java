@@ -1,8 +1,8 @@
-package pvz.Models.Entities.Zombies.fsm;
+package pvz.models.entities.zombies.fsm;
 
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.skills.ZombieSkill;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.entities.zombies.skills.ZombieSkill;
+import pvz.models.games.GameContext;
 
 /**
  * Generic skill-execution state.

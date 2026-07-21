@@ -1,17 +1,17 @@
-package pvz.Models.Games.Levels.variants;
+package pvz.models.games.levels.variants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pvz.Models.Entities.Plants.Enums.PlantCategory;
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Entities.Plants.data.PlantPropertySheet;
-import pvz.Models.Entities.Plants.data.PlantRegistry;
-import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.Levels.LevelType;
-import pvz.Models.Games.Levels.Wave;
-import pvz.Models.Games.Modes.GameModeType;
-import pvz.Models.Games.map.data.GameMapDefinition;
+import pvz.models.entities.plants.data.PlantPropertySheet;
+import pvz.models.entities.plants.data.PlantRegistry;
+import pvz.models.entities.plants.enums.PlantCategory;
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.games.levels.Level;
+import pvz.models.games.levels.LevelType;
+import pvz.models.games.levels.Wave;
+import pvz.models.games.map.data.GameMapDefinition;
+import pvz.models.games.modes.GameModeType;
 
 public class PlantWhatYouGetLevel extends Level {
     private final List<Wave> waves;

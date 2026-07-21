@@ -1,9 +1,9 @@
-package pvz.View;
+package pvz.view;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.QuestController;
-import pvz.Enums.Commands.QuestMenuCommands;
+import pvz.controller.QuestController;
+import pvz.enums.commands.QuestMenuCommands;
 
 
 public class QuestMenu implements Menu {

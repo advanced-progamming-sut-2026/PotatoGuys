@@ -1,13 +1,13 @@
-package pvz.Models.Games.Modes;
-import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.Modes.variants.BeghouledMode;
-import pvz.Models.Games.Modes.variants.ConveyorBeltMode;
-import pvz.Models.Games.Modes.variants.DeadLineMode;
-import pvz.Models.Games.Modes.variants.IZombieMode;
-import pvz.Models.Games.Modes.variants.NormalMode;
-import pvz.Models.Games.Modes.variants.PlantWhatYouGetMode;
-import pvz.Models.Games.Modes.variants.TimedWarMode;
-import pvz.Models.Games.Modes.variants.VasebreakerMode;
+package pvz.models.games.modes;
+import pvz.models.games.levels.Level;
+import pvz.models.games.modes.variants.BeghouledMode;
+import pvz.models.games.modes.variants.ConveyorBeltMode;
+import pvz.models.games.modes.variants.DeadLineMode;
+import pvz.models.games.modes.variants.IZombieMode;
+import pvz.models.games.modes.variants.NormalMode;
+import pvz.models.games.modes.variants.PlantWhatYouGetMode;
+import pvz.models.games.modes.variants.TimedWarMode;
+import pvz.models.games.modes.variants.VasebreakerMode;
 
 public class GameModeFactory {
     public static GameMode createGameMode(Level level) {

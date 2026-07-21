@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Plants.data;
+package pvz.models.entities.plants.data;
 
 /**
  * How a {@code SUN_PRODUCER} plant generates sun over time.

@@ -1,17 +1,17 @@
-package pvz.Models.Games.Levels;
+package pvz.models.games.levels;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import pvz.Models.Games.Levels.variants.BeghouledLevel;
-import pvz.Models.Games.Levels.variants.ConveyorBeltLevel;
-import pvz.Models.Games.Levels.variants.DeadLineLevel;
-import pvz.Models.Games.Levels.variants.IZombieLevel;
-import pvz.Models.Games.Levels.variants.NormalLevel;
-import pvz.Models.Games.Levels.variants.PlantWhatYouGetLevel;
-import pvz.Models.Games.Levels.variants.TimedWarLevel;
-import pvz.Models.Games.Levels.variants.VasebreakerLevel;
-import pvz.Utils.SaveManager;
+import pvz.models.games.levels.variants.BeghouledLevel;
+import pvz.models.games.levels.variants.ConveyorBeltLevel;
+import pvz.models.games.levels.variants.DeadLineLevel;
+import pvz.models.games.levels.variants.IZombieLevel;
+import pvz.models.games.levels.variants.NormalLevel;
+import pvz.models.games.levels.variants.PlantWhatYouGetLevel;
+import pvz.models.games.levels.variants.TimedWarLevel;
+import pvz.models.games.levels.variants.VasebreakerLevel;
+import pvz.utils.SaveManager;
 
 public class LevelLoader {
     private static final String BASE_PATH = "app/src/main/resources/data/seasons/";

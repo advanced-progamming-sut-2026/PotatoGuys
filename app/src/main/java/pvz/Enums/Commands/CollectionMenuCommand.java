@@ -1,4 +1,4 @@
-package pvz.Enums.Commands;
+package pvz.enums.commands;
 
 public enum CollectionMenuCommand implements MenuCommand {
     SHOW_PLANTS("^menu\\s+collection\\s+show-plants\\s*$"),

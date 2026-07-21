@@ -1,23 +1,23 @@
-package pvz.Models.Entities.Plants;
+package pvz.models.entities.plants;
 
-import pvz.Models.Entities.Plants.Enums.PlantTag;
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Entities.Plants.actions.FamilyBuffAction;
-import pvz.Models.Entities.Plants.actions.HomingAction;
-import pvz.Models.Entities.Plants.actions.LobberAction;
-import pvz.Models.Entities.Plants.actions.MeleeAction;
-import pvz.Models.Entities.Plants.actions.PassiveAction;
-import pvz.Models.Entities.Plants.actions.PlantAction;
-import pvz.Models.Entities.Plants.actions.ShooterAction;
-import pvz.Models.Entities.Plants.actions.SunProducerAction;
-import pvz.Models.Entities.Plants.actions.TriggeredExplosiveAction;
-import pvz.Models.Entities.Plants.data.PlantPropertySheet;
-import pvz.Models.Entities.Plants.data.PlantRegistry;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.plants.actions.FamilyBuffAction;
+import pvz.models.entities.plants.actions.HomingAction;
+import pvz.models.entities.plants.actions.LobberAction;
+import pvz.models.entities.plants.actions.MeleeAction;
+import pvz.models.entities.plants.actions.PassiveAction;
+import pvz.models.entities.plants.actions.PlantAction;
+import pvz.models.entities.plants.actions.ShooterAction;
+import pvz.models.entities.plants.actions.SunProducerAction;
+import pvz.models.entities.plants.actions.TriggeredExplosiveAction;
+import pvz.models.entities.plants.data.PlantPropertySheet;
+import pvz.models.entities.plants.data.PlantRegistry;
+import pvz.models.entities.plants.enums.PlantTag;
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.games.GameContext;
 
 /**
  * Creates fully configured {@link Plant} instances from a {@link PlantType},
- * the plant-side mirror of {@link pvz.Models.Entities.Zombies.ZombieFactory}.
+ * the plant-side mirror of {@link pvz.models.entities.zombies.ZombieFactory}.
  *
  * <p>The factory performs two steps:
  * <ol>
@@ -48,7 +48,7 @@ public class PlantFactory {
      * Builds an "unplaced" record — a {@link Plant} with no grid position and
      * no {@link GameContext}, used by catalog/collection UIs that only need
      * type/level/boosted/cost bookkeeping. Must never be registered with a
-     * {@link pvz.Models.Engine.GameEngine}.
+     * {@link pvz.models.engine.GameEngine}.
      */
     public Plant createUnplaced(PlantType type, int level, boolean boosted) {
         PlantPropertySheet sheet = REGISTRY.getSheet(type);

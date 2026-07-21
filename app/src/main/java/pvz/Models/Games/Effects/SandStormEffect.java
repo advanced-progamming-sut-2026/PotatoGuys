@@ -1,6 +1,6 @@
-package pvz.Models.Games.Effects;
+package pvz.models.games.effects;
 
-import pvz.Models.Games.GameContext;
+import pvz.models.games.GameContext;
 
 public class SandStormEffect implements ChapterEffect {
     private final int intervalTicks;

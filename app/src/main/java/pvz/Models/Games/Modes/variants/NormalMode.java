@@ -1,24 +1,24 @@
-package pvz.Models.Games.Modes.variants;
+package pvz.models.games.modes.variants;
 
 import java.util.List;
 
-import pvz.Models.Constants;
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.PlantFactory;
-import pvz.Models.Entities.Plants.data.PlantPropertySheet;
-import pvz.Models.Entities.Plants.data.PlantRegistry;
-import pvz.Models.Entities.Sun.Sun;
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.Levels.Wave;
-import pvz.Models.Games.Levels.variants.NormalLevel;
-import pvz.Models.Games.Modes.GameMode;
-import pvz.Models.Games.Modes.Capabilities.PlantPlacer;
-import pvz.Models.Games.card.Card;
-import pvz.Models.Games.card.PlantCard;
-import pvz.Models.Games.map.tile.Tile;
-import pvz.Models.Games.map.tile.TileTags;
+import pvz.models.Constants;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.plants.PlantFactory;
+import pvz.models.entities.plants.data.PlantPropertySheet;
+import pvz.models.entities.plants.data.PlantRegistry;
+import pvz.models.entities.sun.Sun;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
+import pvz.models.games.card.Card;
+import pvz.models.games.card.PlantCard;
+import pvz.models.games.levels.Level;
+import pvz.models.games.levels.Wave;
+import pvz.models.games.levels.variants.NormalLevel;
+import pvz.models.games.map.tile.Tile;
+import pvz.models.games.map.tile.TileTags;
+import pvz.models.games.modes.GameMode;
+import pvz.models.games.modes.capabilities.PlantPlacer;
 
 /**
  * Standard game mode implementation.

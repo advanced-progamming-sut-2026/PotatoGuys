@@ -1,7 +1,7 @@
-package pvz.Models.Quests;
+package pvz.models.quests;
 
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.User.User;
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.user.User;
 
 public class UnlockableReward extends Reward {
     private UnlockTargetType targetType;

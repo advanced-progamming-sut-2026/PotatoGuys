@@ -1,11 +1,11 @@
-package pvz.Models.Games;
+package pvz.models.games;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import pvz.Models.Entities.Plants.Enums.PlantType;
+import pvz.models.entities.plants.enums.PlantType;
 
 public class GameStats {
     private int sunCollected;

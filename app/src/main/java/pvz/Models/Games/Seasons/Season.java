@@ -1,4 +1,4 @@
-package pvz.Models.Games.Seasons;
+package pvz.models.games.seasons;
 
 import java.util.HashMap;
 import java.util.Map;

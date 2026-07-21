@@ -1,11 +1,11 @@
-package pvz.View.Game;
+package pvz.view.game;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.GameMenuController;
-import pvz.Enums.Commands.GameMenuCommands;
-import pvz.View.Menu;
-import pvz.View.Result;
+import pvz.controller.GameMenuController;
+import pvz.enums.commands.GameMenuCommands;
+import pvz.view.Menu;
+import pvz.view.Result;
 
 public class GameMenu implements Menu {
     private GameMenuController controller = new GameMenuController();

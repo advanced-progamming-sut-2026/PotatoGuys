@@ -1,8 +1,8 @@
-package pvz.Models;
+package pvz.models;
 
-import pvz.Models.Games.GameContext;
-import pvz.Models.GreenHouse.GreenHouse;
-import pvz.Models.User.User;
+import pvz.models.games.GameContext;
+import pvz.models.greenhouse.GreenHouse;
+import pvz.models.user.User;
 
 public class AppContext {
     private static AppContext instance;

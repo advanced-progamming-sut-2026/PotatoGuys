@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Plants.data;
+package pvz.models.entities.plants.data;
 
 /**
  * Shape of the {@code Damage} column parsed from the plant dataset.

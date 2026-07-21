@@ -1,6 +1,6 @@
-package pvz.Models.Games.Modes;
+package pvz.models.games.modes;
 
-import pvz.Models.Games.GameContext;
+import pvz.models.games.GameContext;
 
 /**
  * Interface representing a specific game mode (e.g., Standard, Vasebreaker, Beghouled).

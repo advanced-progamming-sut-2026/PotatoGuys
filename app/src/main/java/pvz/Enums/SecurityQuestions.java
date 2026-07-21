@@ -1,4 +1,4 @@
-package pvz.Enums;
+package pvz.enums;
 
 import java.util.ArrayList;
 

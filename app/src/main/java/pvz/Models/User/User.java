@@ -1,12 +1,12 @@
-package pvz.Models.User;
+package pvz.models.user;
 
 import java.util.UUID;
 
-import pvz.Models.GreenHouse.GreenHouse;
-import pvz.Models.Quests.Quest;
-import pvz.Models.Quests.QuestFactory;
-import pvz.Models.Quests.QuestLog;
-import pvz.Utils.SaveManager;
+import pvz.models.greenhouse.GreenHouse;
+import pvz.models.quests.Quest;
+import pvz.models.quests.QuestFactory;
+import pvz.models.quests.QuestLog;
+import pvz.utils.SaveManager;
 
 
 public class User {

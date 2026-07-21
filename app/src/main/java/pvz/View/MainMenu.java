@@ -1,9 +1,9 @@
-package pvz.View;
+package pvz.view;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.MainController;
-import pvz.Enums.Commands.MainMenuCommand;
+import pvz.controller.MainController;
+import pvz.enums.commands.MainMenuCommand;
 
 public class MainMenu implements Menu {
     MainController controller=new MainController();

@@ -1,4 +1,4 @@
-package pvz.Enums.Commands;
+package pvz.enums.commands;
 
 public enum NetworkMenuCommand implements MenuCommand {
     CONNECT("(?i)connect\\s+(?<host>\\S+)\\s+(?<port>\\d+)\\s*$"),

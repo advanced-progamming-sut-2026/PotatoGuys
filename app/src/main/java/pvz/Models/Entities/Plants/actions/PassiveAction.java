@@ -1,7 +1,7 @@
-package pvz.Models.Entities.Plants.actions;
+package pvz.models.entities.plants.actions;
 
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.plants.Plant;
+import pvz.models.games.GameContext;
 
 /**
  * No-op action for passive plants ({@code WALL_NUT} tanks, purely reactive

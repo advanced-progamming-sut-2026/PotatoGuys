@@ -1,6 +1,6 @@
-package pvz.Models.Games.card;
+package pvz.models.games.card;
 
-import pvz.Models.Entities.Zombies.ZombieType;
+import pvz.models.entities.zombies.ZombieType;
 
 public class ZombieCard extends Card {
     private final ZombieType zombieType;

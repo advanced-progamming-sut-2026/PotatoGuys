@@ -1,9 +1,9 @@
-package pvz.View;
+package pvz.view;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.user.NewsController;
-import pvz.Enums.Commands.NewsMenuCommand;
+import pvz.controller.user.NewsController;
+import pvz.enums.commands.NewsMenuCommand;
 
 public class NewsMenu implements Menu {
     NewsController controller=new NewsController();

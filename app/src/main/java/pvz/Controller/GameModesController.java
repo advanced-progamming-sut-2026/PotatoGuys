@@ -1,4 +1,4 @@
-package pvz.Controller;
+package pvz.controller;
 
 public class GameModesController {
 

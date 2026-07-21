@@ -1,4 +1,4 @@
-package pvz.Models.Games.map.behaviors;
+package pvz.models.games.map.behaviors;
 
 public enum BehaviorType {
     DESTRUCTIBLE,

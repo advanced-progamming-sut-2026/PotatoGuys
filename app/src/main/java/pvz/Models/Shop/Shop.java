@@ -1,17 +1,17 @@
-package pvz.Models.Shop;
+package pvz.models.shop;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Shop.Items.CurrencyExchangeItem;
-import pvz.Models.Shop.Items.PlantFoodItem;
-import pvz.Models.Shop.Items.PotSlotItem;
-import pvz.Models.Shop.Items.RandomSeedPacketItem;
-import pvz.Models.Shop.Items.SelectableSeedPacketItem;
-import pvz.Models.User.User;
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.shop.items.CurrencyExchangeItem;
+import pvz.models.shop.items.PlantFoodItem;
+import pvz.models.shop.items.PotSlotItem;
+import pvz.models.shop.items.RandomSeedPacketItem;
+import pvz.models.shop.items.SelectableSeedPacketItem;
+import pvz.models.user.User;
 
 public class Shop {
     private List<ShopItem> permanentItems;

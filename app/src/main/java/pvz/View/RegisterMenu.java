@@ -1,9 +1,9 @@
-package pvz.View;
+package pvz.view;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.user.RegisterController;
-import pvz.Enums.Commands.RegisterMenuCommand;
+import pvz.controller.user.RegisterController;
+import pvz.enums.commands.RegisterMenuCommand;
 
 public class RegisterMenu implements Menu {
     RegisterController controller=new RegisterController();

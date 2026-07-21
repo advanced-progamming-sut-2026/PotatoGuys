@@ -1,4 +1,4 @@
-package pvz.Enums.Commands;
+package pvz.enums.commands;
 
 public enum RunningGameCommand implements MenuCommand {
     ADVANCE_TIME("^advance\\s+time\\s+-t\\s+(?<ticks>\\d+)\\s+ticks\\s*$"),

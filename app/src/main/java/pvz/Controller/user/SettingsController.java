@@ -1,12 +1,12 @@
-package pvz.Controller.user;
+package pvz.controller.user;
 
 import java.util.regex.Matcher;
 
-import pvz.Models.AppContext;
-import pvz.Utils.SaveManager;
-import pvz.View.MainMenu;
-import pvz.View.Menu;
-import pvz.View.Result;
+import pvz.models.AppContext;
+import pvz.utils.SaveManager;
+import pvz.view.MainMenu;
+import pvz.view.Menu;
+import pvz.view.Result;
 
 public class SettingsController {
     public Result changeDifficulty(Matcher matcher) { 

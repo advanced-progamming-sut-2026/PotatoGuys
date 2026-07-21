@@ -1,17 +1,17 @@
-package pvz.Models.Games.map.tile;
+package pvz.models.games.map.tile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Entities.Plants.Enums.PlantTag;
-import pvz.Models.Entities.Plants.data.PlantPropertySheet;
-import pvz.Models.Entities.Plants.data.PlantRegistry;
-import pvz.Models.Entities.Projectile.Projectile;
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.card.PlantCard;
-import pvz.Models.Games.map.behaviors.TileBehavior;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.plants.data.PlantPropertySheet;
+import pvz.models.entities.plants.data.PlantRegistry;
+import pvz.models.entities.plants.enums.PlantTag;
+import pvz.models.entities.projectile.Projectile;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
+import pvz.models.games.card.PlantCard;
+import pvz.models.games.map.behaviors.TileBehavior;
 
 public class Tile {
     private List<TileTags> tags;

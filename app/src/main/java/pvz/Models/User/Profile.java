@@ -1,9 +1,9 @@
-package pvz.Models.User;
-
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Games.Seasons.Season;
+package pvz.models.user;
 
 import java.util.ArrayList;
+
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.games.seasons.Season;
 
 public class Profile {
     private int gamePlayed;

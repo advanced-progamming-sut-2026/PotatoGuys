@@ -1,7 +1,7 @@
-package pvz.Models.Entities.Zombies.skills;
+package pvz.models.entities.zombies.skills;
 
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
 
 /**
  * Ra Zombie — magnetically steals sun from the player's reserve.

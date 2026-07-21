@@ -1,12 +1,12 @@
-package pvz.Models.Entities.Zombies.data;
+package pvz.models.entities.zombies.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pvz.Models.Constants;
-import pvz.Utils.SaveManager;
+import pvz.models.Constants;
+import pvz.utils.SaveManager;
 
 /**
  * Singleton registry holding all {@link ZombiePropertySheet} and
@@ -14,7 +14,7 @@ import pvz.Utils.SaveManager;
  *
  * <p>Data is loaded at startup from the data-driven {@code zombie_profiles.json}
  * resource via {@link SaveManager} (Gson) — the zombie-side counterpart of
- * {@link pvz.Models.Entities.Plants.data.PlantRegistry}. Rebalancing or adding
+ * {@link pvz.models.entities.plants.data.PlantRegistry}. Rebalancing or adding
  * a zombie means editing that JSON file only; this class never hard-codes any
  * zombie's stats.
  *

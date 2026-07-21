@@ -1,4 +1,4 @@
-package pvz.Models.Quests;
+package pvz.models.quests;
 
 public enum CurrencyKind {
     COIN,

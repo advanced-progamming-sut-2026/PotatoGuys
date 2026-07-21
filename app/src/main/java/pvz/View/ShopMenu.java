@@ -1,9 +1,9 @@
-package pvz.View;
+package pvz.view;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.ShopController;
-import pvz.Enums.Commands.ShopMenuCommands;
+import pvz.controller.ShopController;
+import pvz.enums.commands.ShopMenuCommands;
 
 public class ShopMenu implements Menu {
     private Menu previousMenu;

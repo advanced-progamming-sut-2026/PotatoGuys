@@ -1,10 +1,10 @@
-package pvz.Models.Games.map.behaviors;
+package pvz.models.games.map.behaviors;
 
-import pvz.Models.Entities.Projectile.Projectile;
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Games.card.PlantCard;
-import pvz.Models.Games.map.tile.Tile;
+import pvz.models.entities.projectile.Projectile;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
+import pvz.models.games.card.PlantCard;
+import pvz.models.games.map.tile.Tile;
 
 public interface TileBehavior {
     default void onProjectileHit(Projectile p, Tile tile) {}

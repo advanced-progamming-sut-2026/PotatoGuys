@@ -1,4 +1,4 @@
-package pvz.Models.Shop;
+package pvz.models.shop;
 
 public enum Currency {
     COIN,

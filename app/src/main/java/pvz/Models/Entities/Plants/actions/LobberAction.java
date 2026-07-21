@@ -1,11 +1,11 @@
-package pvz.Models.Entities.Plants.actions;
+package pvz.models.entities.plants.actions;
 
 import java.util.List;
 
-import pvz.Models.Entities.Plants.Enums.PlantTag;
-import pvz.Models.Entities.Plants.Plant;
-import pvz.Models.Games.GameContext;
-import pvz.Models.Entities.Zombies.Zombie;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.plants.enums.PlantTag;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
 
 /**
  * Behaviour for {@code LOBBER} plants: arcs damage into the lane, splashing
@@ -39,8 +39,8 @@ public class LobberAction extends CooldownPlantAction {
             if (hit >= targets) break;
             z.takeDamage(plant.getEffectiveDamage() , false);
             if (chills) {
-                z.applyEffect(new pvz.Models.Entities.Zombies.effects.StatusEffect(
-                        pvz.Models.Entities.Zombies.effects.EffectType.CHILL, 3 * Plant.TICKS_PER_SECOND));
+                z.applyEffect(new pvz.models.entities.zombies.effects.StatusEffect(
+                        pvz.models.entities.zombies.effects.EffectType.CHILL, 3 * Plant.TICKS_PER_SECOND));
             }
             hit++;
         }

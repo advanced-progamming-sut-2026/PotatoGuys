@@ -1,22 +1,22 @@
-package pvz.Controller;
+package pvz.controller;
 
 import java.util.regex.Matcher;
 
-import pvz.Utils.SaveManager;
-import pvz.View.CollectionMenu;
-import pvz.View.GreenHouseMenu;
-import pvz.View.LeaderBoardMenu;
-import pvz.View.MainMenu;
-import pvz.View.Menu;
-import pvz.View.NetworkMenu;
-import pvz.View.NewsMenu;
-import pvz.View.ProfileMenu;
-import pvz.View.QuestMenu;
-import pvz.View.RegisterMenu;
-import pvz.View.Result;
-import pvz.View.SettingsMenu;
-import pvz.View.Game.GameMenu;
-import pvz.View.Game.modals.GameModesModal;
+import pvz.utils.SaveManager;
+import pvz.view.CollectionMenu;
+import pvz.view.GreenHouseMenu;
+import pvz.view.LeaderBoardMenu;
+import pvz.view.MainMenu;
+import pvz.view.Menu;
+import pvz.view.NetworkMenu;
+import pvz.view.NewsMenu;
+import pvz.view.ProfileMenu;
+import pvz.view.QuestMenu;
+import pvz.view.RegisterMenu;
+import pvz.view.Result;
+import pvz.view.SettingsMenu;
+import pvz.view.game.GameMenu;
+import pvz.view.game.modals.GameModesModal;
 
 public class MainController {
     public Result enterMenu(Matcher matcher) {

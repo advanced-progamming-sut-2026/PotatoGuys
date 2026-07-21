@@ -1,4 +1,4 @@
-package pvz.Models.Games.Modes;
+package pvz.models.games.modes;
 
 public enum GameModeType {
     IZOMBIE,

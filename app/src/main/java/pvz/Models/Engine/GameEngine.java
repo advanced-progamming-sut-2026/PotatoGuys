@@ -1,9 +1,9 @@
-package pvz.Models.Engine;
+package pvz.models.engine;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pvz.Models.AppContext;
+import pvz.models.AppContext;
 
 public class GameEngine {
     public static GameEngine instance;

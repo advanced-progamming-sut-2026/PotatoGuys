@@ -1,22 +1,22 @@
-package pvz.Controller.user;
+package pvz.controller.user;
 
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.regex.Matcher;
 
-import pvz.Enums.SecurityQuestions;
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.Games.Seasons.Season;
-import pvz.Models.User.Gender;
-import pvz.Models.User.Message;
-import pvz.Models.User.User;
-import pvz.Utils.PasswordUtils;
-import pvz.Utils.SaveManager;
-import pvz.View.LoginMenu;
-import pvz.View.Menu;
-import pvz.View.PickSecurityQuestionMenu;
-import pvz.View.RegisterMenu;
-import pvz.View.Result;
+import pvz.enums.SecurityQuestions;
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.games.seasons.Season;
+import pvz.models.user.Gender;
+import pvz.models.user.Message;
+import pvz.models.user.User;
+import pvz.utils.PasswordUtils;
+import pvz.utils.SaveManager;
+import pvz.view.LoginMenu;
+import pvz.view.Menu;
+import pvz.view.PickSecurityQuestionMenu;
+import pvz.view.RegisterMenu;
+import pvz.view.Result;
 
 public class RegisterController {
     private User currentUser;

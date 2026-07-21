@@ -1,14 +1,14 @@
-package pvz.Models.Games.Levels.variants;
+package pvz.models.games.levels.variants;
 
 import java.util.List;
 
-import pvz.Models.Entities.Zombies.ZombieType;
-import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.Levels.LevelType;
-import pvz.Models.Games.Levels.Data.VaseDefinition;
-import pvz.Models.Games.Modes.GameModeType;
-import pvz.Models.Games.map.data.GameMapDefinition;
-import pvz.Models.User.MyPlant;
+import pvz.models.entities.zombies.ZombieType;
+import pvz.models.games.levels.Level;
+import pvz.models.games.levels.LevelType;
+import pvz.models.games.levels.data.VaseDefinition;
+import pvz.models.games.map.data.GameMapDefinition;
+import pvz.models.games.modes.GameModeType;
+import pvz.models.user.MyPlant;
 
 public class VasebreakerLevel extends Level {
     private List<MyPlant> basedPlants;

@@ -1,4 +1,4 @@
-package pvz.Models.Games.map.data;
+package pvz.models.games.map.data;
 
 import java.util.List;
 

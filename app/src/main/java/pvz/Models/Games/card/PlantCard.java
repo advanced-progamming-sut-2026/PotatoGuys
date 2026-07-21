@@ -1,6 +1,6 @@
-package pvz.Models.Games.card;
+package pvz.models.games.card;
 
-import pvz.Models.User.MyPlant;
+import pvz.models.user.MyPlant;
 
 public class PlantCard extends Card {
     private final MyPlant plant;

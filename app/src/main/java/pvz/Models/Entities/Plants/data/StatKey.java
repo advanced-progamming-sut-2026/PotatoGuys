@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Plants.data;
+package pvz.models.entities.plants.data;
 
 /**
  * The finite set of numeric plant stats that a {@link LevelUpgrade} entry can

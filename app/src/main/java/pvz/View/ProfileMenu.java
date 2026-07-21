@@ -1,9 +1,9 @@
-package pvz.View;
+package pvz.view;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.user.ProfileController;
-import pvz.Enums.Commands.ProfileMenuCommand;
+import pvz.controller.user.ProfileController;
+import pvz.enums.commands.ProfileMenuCommand;
 
 public class ProfileMenu implements Menu {
     ProfileController controller=new ProfileController();

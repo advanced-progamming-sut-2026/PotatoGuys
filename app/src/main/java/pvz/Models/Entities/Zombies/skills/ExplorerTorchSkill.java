@@ -1,7 +1,7 @@
-package pvz.Models.Entities.Zombies.skills;
+package pvz.models.entities.zombies.skills;
 
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Games.GameContext;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.games.GameContext;
 
 /**
  * Explorer Zombie — carries a torch that instantly destroys torch-vulnerable

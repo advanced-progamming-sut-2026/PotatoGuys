@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Plants.data;
+package pvz.models.entities.plants.data;
 
 /**
  * Optional growth timeline for {@code wramp-up}-tagged plants (Sun-shroom,

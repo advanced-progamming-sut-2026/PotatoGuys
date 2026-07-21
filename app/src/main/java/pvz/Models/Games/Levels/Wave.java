@@ -1,14 +1,14 @@
-package pvz.Models.Games.Levels;
+package pvz.models.games.levels;
 
 import java.util.List;
 import java.util.Random;
 
-import pvz.Models.AppContext;
-import pvz.Models.Entities.Zombies.Zombie;
-import pvz.Models.Entities.Zombies.ZombieFactory;
-import pvz.Models.Entities.Zombies.ZombieType;
-import pvz.Models.Games.GameContext;
-import pvz.Models.User.Collection;
+import pvz.models.AppContext;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.entities.zombies.ZombieFactory;
+import pvz.models.entities.zombies.ZombieType;
+import pvz.models.games.GameContext;
+import pvz.models.user.Collection;
 
 public class Wave{
     private int waveNumber;

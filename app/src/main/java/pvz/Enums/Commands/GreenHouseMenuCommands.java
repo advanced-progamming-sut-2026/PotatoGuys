@@ -1,4 +1,4 @@
-package pvz.Enums.Commands;
+package pvz.enums.commands;
 
 public enum GreenHouseMenuCommands implements MenuCommand {
     ENTER_MENU("^show\\s+greenhouse$"),

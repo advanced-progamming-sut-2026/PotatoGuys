@@ -1,9 +1,9 @@
-package pvz.View;
+package pvz.view;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.GreenHouseController;
-import pvz.Enums.Commands.GreenHouseMenuCommands;
+import pvz.controller.GreenHouseController;
+import pvz.enums.commands.GreenHouseMenuCommands;
 
 public class GreenHouseMenu implements Menu {
     @Override

@@ -1,10 +1,10 @@
-package pvz.Models.Entities.Zombies.armor;
+package pvz.models.entities.zombies.armor;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A runtime armour component attached to a {@link pvz.Models.Entities.Zombies.Zombie}.
+ * A runtime armour component attached to a {@link pvz.models.entities.zombies.Zombie}.
  *
  * <p>Mapped from a JSON {@code ArmorPropertySheet}. The armour tracks its own HP
  * across three visual damage layers (intact → damaged → critical) using the

@@ -1,4 +1,4 @@
-package pvz.Models.Entities.Zombies.data;
+package pvz.models.entities.zombies.data;
 
 /**
  * Maps one entry in the JSON {@code ScaledProps} array and implements the
@@ -21,7 +21,7 @@ package pvz.Models.Entities.Zombies.data;
  * </dl>
  *
  * <p>The {@code tier} value is derived from the current wave index inside
- * {@link pvz.Models.Entities.Zombies.Zombie#TICKS_PER_SECOND} calculation logic.
+ * {@link pvz.models.entities.zombies.Zombie#TICKS_PER_SECOND} calculation logic.
  */
 public final class ScaledProp {
 

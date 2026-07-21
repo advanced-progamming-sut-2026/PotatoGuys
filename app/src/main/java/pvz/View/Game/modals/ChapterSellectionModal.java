@@ -1,11 +1,11 @@
-package pvz.View.Game.modals;
+package pvz.view.game.modals;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.GameMenuController;
-import pvz.Enums.Commands.GameMenuCommands;
-import pvz.View.Menu;
-import pvz.View.Result;
+import pvz.controller.GameMenuController;
+import pvz.enums.commands.GameMenuCommands;
+import pvz.view.Menu;
+import pvz.view.Result;
 
 public class ChapterSellectionModal implements Menu {
     GameMenuController controller = new GameMenuController();

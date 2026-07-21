@@ -1,11 +1,11 @@
-package pvz.Models.Shop;
-
-import pvz.Models.Entities.Plants.Enums.PlantType;
-import pvz.Models.User.MyPlant;
-import pvz.Models.User.User;
+package pvz.models.shop;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.user.MyPlant;
+import pvz.models.user.User;
 
 public class DailyOffer extends ShopItem {
 
