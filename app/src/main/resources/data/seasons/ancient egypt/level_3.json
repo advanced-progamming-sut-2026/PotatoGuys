@@ -4,8 +4,8 @@
   "levelType": "SPECIAL",
   "initialSun": 150,
   "timeLimitSeconds": 60,
-  "targetKills": 12,
-  "windowSeconds": 5,
+  "targetKills": 5,
+  "windowSeconds": 8,
   "gameMap": {
     "rows": 5,
     "columns": 9,

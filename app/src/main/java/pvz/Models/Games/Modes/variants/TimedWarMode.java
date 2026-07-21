@@ -29,8 +29,8 @@ public class TimedWarMode implements GameMode, PlantPlacer {
     private Boolean[] lawnMower;
 
     private final int TICKS_PER_SECOND = 10; // هر چند تیک معادل یک ثانیه است (با انجین خود هماهنگ کنید)
-    private final int WINDOW_SECONDS = 5;    // بازه زمانی بررسی (۵ ثانیه)
-    private final int TARGET_KILLS = 12;     // تعداد زامبی هدف برای برد
+    private final int WINDOW_SECONDS = 8;    // بازه زمانی بررسی (۵ ثانیه)
+    private final int TARGET_KILLS = 5;     // تعداد زامبی هدف برای برد
     private final int TOTAL_TIME_LIMIT_SECONDS = 60; // زمان کل مرحله (مثلاً ۱ دقیقه)
 
     private final List<Integer> killedZombieTicks = new ArrayList<>();
