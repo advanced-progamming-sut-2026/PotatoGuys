@@ -1,0 +1,20 @@
+{
+  "gameType": "NORMAL",
+  "levelNumber": 1,
+  "levelType": "NORMAL",
+  "initialSun": 250,
+  "gameMap": {
+    "rows": 5,
+    "columns": 9,
+    "specialTiles": [
+      { "x": 0, "y": 2, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }], "tags": ["WATER"] },
+      { "x": 1, "y": 2, "behaviors": [{ "type": "LOW_TIDE", "hp": 0, "name": "LowTide" }], "tags": ["LOW_TIDE"] }
+    ]
+  },
+  "waves": [
+    { "waveNumber": 1, "isFinalWave": false, "baseTotalWaveCost": 100, "lanes": 5, "difficulty": 2, "phases": [{"zombieCount": 2, "intervalTicks": 100, "allowedTypes": ["BASIC", "SNORKEL_ZOMBIE"], "isBurst": false}] },
+    { "waveNumber": 2, "isFinalWave": false, "baseTotalWaveCost": 120, "lanes": 5, "difficulty": 3, "phases": [{"zombieCount": 3, "intervalTicks": 90, "allowedTypes": ["BASIC", "CONEHEAD", "SNORKEL_ZOMBIE"], "isBurst": false}] },
+    { "waveNumber": 3, "isFinalWave": false, "baseTotalWaveCost": 144, "lanes": 5, "difficulty": 4, "phases": [{"zombieCount": 4, "intervalTicks": 80, "allowedTypes": ["CONEHEAD", "BUCKETHEAD", "OCTOPUS_ZOMBIE"], "isBurst": false}] },
+    { "waveNumber": 4, "isFinalWave": true, "baseTotalWaveCost": 288, "lanes": 5, "difficulty": 7, "phases": [{"zombieCount": 6, "intervalTicks": 60, "allowedTypes": ["BUCKETHEAD", "SNORKEL_ZOMBIE", "OCTOPUS_ZOMBIE", "BRICKHEAD"], "isBurst": true}] }
+  ]
+}
