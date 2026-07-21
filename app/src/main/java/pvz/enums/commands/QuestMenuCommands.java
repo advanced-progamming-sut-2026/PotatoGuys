@@ -1,0 +1,26 @@
+package pvz.enums.commands;
+
+public enum QuestMenuCommands implements MenuCommand {
+    MINI_GAME("^mini\\s+game\\s+-t\\s+(?<miniGameNumber>\\d+)\\s+-l\\s+(?<level>\\d+)\\s*$"),
+    SHOW_PAGE("^travel\\s+log\\s+page\\s+(\\w+)\\s*$"),
+    CLAIM_REWARD("^claim\\s+quest\\s+(\\S+)\\s*$"),
+    SHOW_QUEST("^show\\s+quest\\s+(\\S+)\\s*$"),
+    SHOW_ALL("^travel\\s+log\\s*$"),
+    EXIT("^menu\\s+exit\\s*$"),
+    HELP("^\\s*help\\s*$");
+
+    private final String pattern;
+
+    QuestMenuCommands(String pattern) {
+        this.pattern = pattern;
+    }
+
+    @Override
+    public String getPattern() {
+        return this.pattern;
+    }
+
+    public static String getHelp() {
+        return MenuCommand.generateHelp(QuestMenuCommands.class, "Quest");
+    }
+}

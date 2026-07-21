@@ -1,0 +1,79 @@
+{
+  "gameType": "TIMEDWAR",
+  "levelNumber": 3,
+  "levelType": "SPECIAL",
+  "initialSun": 150,
+  "timeLimitSeconds": 60,
+  "targetKills": 5,
+  "windowSeconds": 8,
+  "gameMap": {
+    "rows": 5,
+    "columns": 9,
+    "specialTiles": []
+  },
+  "waves": [
+    {
+      "waveNumber": 1,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 300,
+      "lanes": 5,
+      "difficulty": 3,
+      "phases": [
+        {
+          "zombieCount": 4,
+          "intervalTicks": 60,
+          "allowedTypes": ["BASIC"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 3,
+          "intervalTicks": 40,
+          "allowedTypes": ["BASIC", "CONEHEAD"],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 2,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 600,
+      "lanes": 5,
+      "difficulty": 6,
+      "phases": [
+        {
+          "zombieCount": 5,
+          "intervalTicks": 45,
+          "allowedTypes": ["BASIC", "CONEHEAD", "FLAG"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 6,
+          "intervalTicks": 30,
+          "allowedTypes": ["CONEHEAD", "BUCKETHEAD"],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 3,
+      "isFinalWave": true,
+      "baseTotalWaveCost": 1500,
+      "lanes": 5,
+      "difficulty": 9,
+      "phases": [
+        {
+          "zombieCount": 6,
+          "intervalTicks": 35,
+          "allowedTypes": ["CONEHEAD", "BUCKETHEAD", "NEWSPAPER"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 10,
+          "intervalTicks": 20,
+          "allowedTypes": ["BUCKETHEAD", "IMP", "GARGANTUAR"],
+          "isBurst": true
+        }
+      ]
+    }
+  ]
+}
