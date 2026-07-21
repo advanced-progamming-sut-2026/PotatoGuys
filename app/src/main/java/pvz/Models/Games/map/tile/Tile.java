@@ -59,6 +59,12 @@ public class Tile {
                  plant.takeIceDamage(p.getDamage(), p.isFire());
              }
         }
+        // Damage IceBlockBehavior if exists
+        for (TileBehavior b : behaviors) {
+             if (b instanceof pvz.Models.Games.map.behaviors.IceBlockBehavior ice) {
+                 ice.takeDamage(p.getDamage(), p.isFire());
+             }
+        }
     }
 
     public void onZombieEnter(Zombie z) {

@@ -17,6 +17,13 @@ public class GameMapFactory {
                         switch (behDef.type) {
                             case DESTRUCTIBLE -> map.getTile(tileDef.x, tileDef.y).addBehavior(new DestructibleBehavior(behDef.hp, behDef.name));
                             case SLIPPERY -> map.getTile(tileDef.x, tileDef.y).addBehavior(new SlipperyBehavior(behDef.laneDelta));
+                            case ICE_BLOCK -> {
+                                // Ice blocks need to contain something, this might need more data in JSON
+                                // For now, assume it freezes the plant on the tile
+                                for (Plant p : map.getTile(tileDef.x, tileDef.y).getPlants()) {
+                                    map.getTile(tileDef.x, tileDef.y).addBehavior(new IceBlockBehavior(p));
+                                }
+                            }
                         }
                     }
                 }

@@ -287,10 +287,20 @@ public class GameContext implements TickAware {
                         if (neighborCol >= 0 && neighborCol < getColumns() &&
                             neighborLane >= 0 && neighborLane < getLanes()) {
                             
-                            List<Plant> neighbors = getPlantsAt(neighborCol, neighborLane);
+                            Tile tile = getTileAt(neighborCol, neighborLane);
+                            
+                            // 1. Damage frozen plants
+                            List<Plant> neighbors = tile.getPlants();
                             for (Plant neighbor : neighbors) {
                                 if (neighbor.isFrozen()) {
                                     neighbor.takeIceDamage(60f / Plant.TICKS_PER_SECOND, true);
+                                }
+                            }
+                            
+                            // 2. Damage IceBlockBehaviors
+                            for (pvz.Models.Games.map.behaviors.TileBehavior b : tile.getBehaviors()) {
+                                if (b instanceof pvz.Models.Games.map.behaviors.IceBlockBehavior ice) {
+                                    ice.takeDamage(60f / Plant.TICKS_PER_SECOND, true);
                                 }
                             }
                         }

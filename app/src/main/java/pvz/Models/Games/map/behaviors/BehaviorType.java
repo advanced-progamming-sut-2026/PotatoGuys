@@ -2,5 +2,6 @@ package pvz.Models.Games.map.behaviors;
 
 public enum BehaviorType {
     DESTRUCTIBLE,
-    SLIPPERY;
+    SLIPPERY,
+    ICE_BLOCK;
 }
