@@ -28,6 +28,22 @@ public class QuestController {
         if (user == null) return new Result("No user logged in.");
 
         String pageName = matcher.group(1).toLowerCase();
+
+        if(pageName.equals("daily") || pageName.equals("main") || pageName.equals("epic")) {
+            return showQuestsByCategory(user, pageName);
+        } else if(pageName.equals("minigames")) {
+            return showMiniGames(matcher);
+        }else {
+            return new Result("Invalid page. Available pages: daily, main, epic.");
+        }
+
+    }
+
+    public Result showMiniGames(Matcher matcher) {
+        return new Result("Mini games:\n1. Vasebreaker\n2. Wallnut Bowling\n3. I, Zombie\n4. Beghouled\n5. Zombotany\nUsing 'mini game -t <miniGameNumber> -l <level>' to start a mini game.");
+    }
+
+    private Result showQuestsByCategory(User user, String pageName) {
         QuestCategory category;
         try {
             category = QuestCategory.valueOf(pageName.toUpperCase());
@@ -136,9 +152,29 @@ public class QuestController {
     }
 
     public Result startMiniGame(Matcher matcher){
-        String miniGameName = matcher.group("miniGameName");
+        int miniGameNumber = Integer.parseInt(matcher.group("miniGameNumber"));
+        String miniGame = null;
+        switch (miniGameNumber) {
+            case 1:
+                miniGame = "Vasebreaker";
+                break;
+            case 2:
+                miniGame = "Wallnut Bowling";
+                break;
+            case 3:
+                miniGame = "IZombie";
+                break;
+            // case 4:
+            //     miniGame = "Beghouled";
+            //     break; 
+            // case 5:
+            //     miniGame = "Zombotany";
+            //     break;
+            default:
+                return new Result("Invalid mini game number!");
+        }
         int levelNumber = Integer.parseInt(matcher.group("level"));
-        Level level = LevelLoader.loadLevel(miniGameName, levelNumber);
+        Level level = LevelLoader.loadLevel(miniGame, levelNumber);
         if(level.hasPreGame())
             return new Result(new PreGameMenu(level));
         GameContext context = new GameContext(level);

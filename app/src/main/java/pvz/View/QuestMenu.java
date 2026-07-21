@@ -33,6 +33,6 @@ public class QuestMenu implements Menu {
 
     @Override
     public Result onEnter() {
-        return new Result("Entered Travel Log. Use 'travel log page <daily|main|epic>' to view quests.");
+        return new Result("Entered Travel Log. Use 'travel log page <daily|main|epic|minigames>' to view quests or mini games.\n");
     }
 }
