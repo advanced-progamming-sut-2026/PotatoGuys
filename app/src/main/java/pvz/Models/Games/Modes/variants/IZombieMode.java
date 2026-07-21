@@ -1,135 +1,220 @@
 package pvz.Models.Games.Modes.variants;
 
 import java.util.List;
+import java.util.Random;
 
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
-import pvz.Models.Entities.Plants.data.PlantPropertySheet;
-import pvz.Models.Entities.Plants.data.PlantRegistry;
-import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Zombies.Zombie;
+import pvz.Models.Entities.Zombies.ZombieFactory;
+import pvz.Models.Entities.Zombies.ZombieType;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
-import pvz.Models.Games.Levels.Wave;
-import pvz.Models.Games.Levels.variants.NormalLevel;
+import pvz.Models.Games.Levels.variants.IZombieLevel;
 import pvz.Models.Games.Modes.GameMode;
-import pvz.Models.Games.Modes.Capabilities.PlantPlacer;
+import pvz.Models.Games.Modes.Capabilities.ZombiePlacer;
 import pvz.Models.Games.card.Card;
-import pvz.Models.Games.card.PlantCard;
-import pvz.Models.Games.map.tile.Tile;
-import pvz.Models.Games.map.tile.TileTags;
+import pvz.Models.Games.card.ZombieCard;
+import pvz.Models.User.MyPlant;
 
-/**
- * Standard game mode implementation.
- * Manages waves and standard win/loss conditions.
- */
-public class IZombieMode implements GameMode, PlantPlacer {
-    private Wave currentWave;
-    private List<Wave> waves;
-    private Boolean[] lawnMower;
+public class IZombieMode implements GameMode, ZombiePlacer {
+    private final List<MyPlant> basedPlants;
+    private final List<ZombieType> basedZombies;
+    private final boolean[] brainsEaten;
+    private int redLineColumn = 4;
+    
+    private int ticksElapsed = 0;
+    private int sunZombieInterval = 150;
 
     public IZombieMode(Level level) {
-        if (level instanceof NormalLevel normalLevel) {
-            waves = normalLevel.getWaves();
+        if (level instanceof IZombieLevel iZombieLevel) {
+            this.basedPlants = iZombieLevel.getBasedPlants();
+            this.basedZombies = iZombieLevel.getBasedZombies();
+            this.redLineColumn = iZombieLevel.getRedLineColumn();
+        } else {
+            throw new IllegalArgumentException("Level must be an instance of IZombieLevel.");
         }
-        currentWave = waves.getFirst();
-        SetupLawnMowers();
+
+        this.brainsEaten = new boolean[5];
+        for (int i = 0; i < 5; i++) {
+            brainsEaten[i] = false;
+        }
+    }
+
+    @Override
+    public boolean supportsFallingSuns() {
+        return false;
     }
 
     @Override
     public void initMode(GameContext context) {
+        context.log("\n=========================================================");
+        context.log("  I, ZOMBIE MODE ACTIVATED!");
+        context.log("• Deploy zombies to eat all 5 brains!");
+        context.log(        "• Placement: You can only place zombies to the right of Column " + (redLineColumn - 1));
+        context.log("=========================================================\n");
 
+        Random random = new Random();
+
+        if (basedPlants != null && !basedPlants.isEmpty()) {
+            for (int col = 0; col < redLineColumn; col++) {
+                for (int lane = 0; lane < context.getLanes(); lane++) {
+                    MyPlant randomPlant = basedPlants.get(random.nextInt(basedPlants.size()));
+
+                    Plant plant = new PlantFactory().create(
+                            randomPlant.getType(),
+                            col,
+                            lane,
+                            randomPlant.getLevel(),
+                            randomPlant.isBoosted(),
+                            context
+                    );
+                    context.spawnPlant(plant);
+                }
+            }
+            context.log("Plants have been randomly spawned on the board!");
+        }
+
+        setupRandomZombieCards(context, random);
+    }
+
+
+    private void setupRandomZombieCards(GameContext context, Random random) {
+        if (basedZombies == null || basedZombies.isEmpty()) {
+            context.log("⚠️ No base zombies defined for this level!");
+            return;
+        }
+
+        int targetCards = Math.min(7, basedZombies.size());
+        int addedCards = 0;
+        int maxAttempts = 100; 
+
+        while (addedCards < targetCards && maxAttempts > 0) {
+            maxAttempts--;
+
+            ZombieType randomZombieType = basedZombies.get(random.nextInt(basedZombies.size()));
+
+            if (randomZombieType == null || randomZombieType.getAlias() == null) {
+                continue;
+            }
+
+            if (findCard(context, randomZombieType.getAlias()) != null) {
+                continue;
+            }
+
+            ZombieCard zombieCard = new ZombieCard(randomZombieType, 50, 5.0f);
+            context.addCard(zombieCard);
+            addedCards++;
+        }
+
+        context.log("🧟 " + addedCards + " Random Zombie cards selected for this match!");
     }
 
     @Override
     public void updateMode(GameContext context) {
+        ticksElapsed++;
 
-        if (currentWave.isDone() && context.getZombies().isEmpty()) {
-            int nextWaveIndex = waves.indexOf(currentWave) + 1;
-            if (nextWaveIndex < waves.size()) {
-                currentWave = waves.get(nextWaveIndex);
-                currentWave.startWave(context);
-                context.log("Wave " + currentWave.getWaveNumber() + " started.");
-            } else {
-                context.setGameOver(true);
-                context.log("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
-            }
-            return;
+        if (ticksElapsed % 200 == 0 && sunZombieInterval > 40) {
+            sunZombieInterval -= 10; 
         }
 
-        if (!currentWave.isDone()) {
-            currentWave.updateWave(context);
-        }
+        // if (ticksElapsed % sunZombieInterval == 0) {
+        //     long aliveSunZombies = context.getZombies().stream()
+        //             .filter(z -> !z.isDead() && z.getType().toString().equalsIgnoreCase("SUN_ZOMBIE"))
+        //             .count();
+        //     if (aliveSunZombies > 0) {
+        //         int sunProduced = (int) (aliveSunZombies * 25);
+        //         context.addSun(sunProduced);
+        //         context.log("☀️ Sun Zombies generated " + sunProduced + " Sun! Total Sun: " + context.getCurrentSun());
+        //     }
+        // }
 
-        for (int i = 0; i < context.getZombies().size(); i++) {
-            Zombie z = context.getZombies().get(i);
-
-            if (z.getX() <= 0f) {
-                if (!lawnMower[z.getLane()]) {
-                    runLawnMowers(context, z.getLane());
-                    i--;
-                    continue;
-                }
-                if (lawnMower[z.getLane()]) {
-                    context.setGameOver(true);
-                    context.log("The zombie ate your brain; LOOSER!!!");
+        // ─── ۲. بررسی رسیدن زامبی‌ها به انتهای لاین (خوردن مغز) ─────────────────
+        for (Zombie z : context.getZombies()) {
+            if (!z.isDead() && z.getX() <= 0f) {
+                int lane = z.getLane();
+                if (!brainsEaten[lane]) {
+                    brainsEaten[lane] = true;
+                    context.log("🧠 BRAIN EATEN in Lane " + lane + "! Yummy!");
                     context.removeZombie(z);
                 }
             }
         }
-        for (int i = 0; i < context.getSuns().size(); i++) {
-            Sun sun = context.getSuns().get(i);
-            if (sun.isDone()) {
-                context.removeSun(sun);
-                i--;
+
+        // ─── ۳. بررسی شرط برد (خورده شدن تمامی ۵ مغز) ─────────────────────────
+        boolean allBrainsEaten = true;
+        for (boolean eaten : brainsEaten) {
+            if (!eaten) {
+                allBrainsEaten = false;
+                break;
+            }
+        }
+
+        if (allBrainsEaten) {
+            context.setGameOver(true);
+            context.log("🎉 VICTORY! You ate all the brains! Humanz are defeated! 🎉");
+            return;
+        }
+
+        // ─── ۴. بررسی شرط باخت (عدم توانایی خرید زامبی + نبود زامبی در زمین) ───
+        if (context.getZombies().isEmpty()) {
+            int minZombieCost = getCheapestZombieCost(context);
+            if (context.getCurrentSun() < minZombieCost) {
+                context.setGameOver(true);
+                context.log("❌ GAME OVER! Out of Sun and no zombies left on the field! ❌");
             }
         }
     }
 
+    // ─── پیاده‌سازی ZombiePlacer ──────────────────────────────────────────────
+
     @Override
-    public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
-        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
-            return false;
-        }
-        if (!context.getPlantsAt(col, lane).isEmpty()) {
-            return false;
-        }
-        if (!context.getTileAt(col, lane).isPlantable(card)) {
-            return false;
-        }
-        if (card == null || !card.canUse()) {
+    public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
+        if (col < redLineColumn || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+            context.log("Must place zombies to the right of Column " + (redLineColumn - 1) + "!");
             return false;
         }
 
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
-        return context.getCurrentSun() >= sheet.getSunCost();
+        if (!(card instanceof ZombieCard zombieCard)) {
+            return false;
+        }
+
+        if (!zombieCard.canUse()) {
+            context.log("Zombie card is on cooldown!");
+            return false;
+        }
+
+        if (context.getCurrentSun() < zombieCard.getCost()) {
+            context.log("Not enough sun! Requires " + zombieCard.getCost() + " sun.");
+            return false;
+        }
+
+        return true;
     }
 
     @Override
-    public void handlePlacement(GameContext context, int col, int lane, PlantCard card) {
-        if (!(card instanceof PlantCard plantCard)) {
-            context.log("Error: card is not a plant card.");
+    public void handlePlacement(GameContext context, int col, int lane, Card card) {
+        if (!(card instanceof ZombieCard zombieCard)) return;
+
+        if (!context.spendSun(zombieCard.getCost())) {
+            context.log("Error: Not enough sun.");
             return;
         }
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(plantCard.getPlant().getType());
-        if (!context.spendSun(sheet.getSunCost())) {
-            context.log("Not enough sun.");
-            return;
-        }
-        Plant plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
-                plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
-        context.spawnPlant(plant);
-        context.getGameStats().onPlantPlaced(col, lane);
-        plantCard.use();
-        context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
+
+        Zombie zombie = new ZombieFactory().create(zombieCard.getZombieType().getAlias(), col, lane,context , 1, 1);
+        context.spawnZombie(zombie);
+
+        zombieCard.use();
+        context.log(zombieCard.getZombieType() + " deployed at (" + col + ", " + lane + ").");
     }
 
     @Override
-    public PlantCard findCard(GameContext context, String plantType) {
+    public ZombieCard findCard(GameContext context, String zombieType) {
         for (Card card : context.getCards()) {
-            PlantCard plantCard = (PlantCard) card;
-            if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
-                return plantCard;
+            if (card instanceof ZombieCard zombieCard) {
+                if (zombieCard.getZombieType().toString().equalsIgnoreCase(zombieType)) {
+                    return zombieCard;
+                }
             }
         }
         return null;
@@ -137,90 +222,80 @@ public class IZombieMode implements GameMode, PlantPlacer {
 
     @Override
     public String getCardsStatus(GameContext context) {
-        StringBuilder result = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         List<Card> cards = context.getCards();
 
         if (cards == null || cards.isEmpty()) {
-            result.append("No plant cards available.");
+            sb.append("No zombie cards available.");
         } else {
-            result.append("=== SEED PACKETS ===");
-
+            sb.append("=== ZOMBIE CARDS ===");
             int cardWidth = 40;
 
-            for (int i = 0; i < cards.size(); i++) {
-                PlantCard ps = (PlantCard) cards.get(i);
-
-                String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | Cooldown:%.1f%s",
-                        ps.getPlant().getType(),
-                        ps.getCost(),
-                        ps.getPlant().getLevel(),
-                        ps.getCooldown(),
-                        ps.getPlant().isBoosted() ? " | ⚡B" : ""
-                );
-
-                result.append("\n");
-                result.append(String.format("%-" + cardWidth + "s", cardInfo));
+            for (Card card : cards) {
+                if (card instanceof ZombieCard zc) {
+                    String cardInfo = String.format("- %s | Cost:%d | Cooldown:%.1f",
+                            zc.getZombieType(),
+                            zc.getCost(),
+                            zc.getCooldown()
+                    );
+                    sb.append("\n").append(String.format("%-" + cardWidth + "s", cardInfo));
+                }
             }
-        }
-        return result.toString();
-    }
-
-    private void SetupLawnMowers() {
-        int lanes = 5;
-        lawnMower = new Boolean[lanes];
-        for (int i = 0; i < lanes; i++) {
-            lawnMower[i] = false;
-        }
-    }
-
-    private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane]) return;
-
-        context.getZombiesInLane(lane).forEach(zombie -> {
-            zombie.takeDamage(Float.MAX_VALUE);
-            context.removeZombie(zombie);
-            context.log("Lawn mower in lane " + lane + " ran over a zombie!");
-        });
-        lawnMower[lane] = true;
-    }
-
-
-    private static final String CELL_EMPTY = "    ";
-    private static final String MOWER_OK = "[M]";
-    private static final String MOWER_USED = "[!]";
-
-    @Override
-    public String renderMap(GameContext context) {
-        StringBuilder sb = new StringBuilder();
-        appendHeader(sb, context);
-        appendColumnHeaders(sb, context);
-        appendDivider(sb, context);
-        for (int lane = 0; lane < context.getLanes(); lane++) {
-            appendLaneRow(sb, context, lane);
-            appendDivider(sb, context);
         }
         return sb.toString();
     }
 
-    // ── Private rendering helpers ─────────────────────────────────────────────
-
-    private void appendHeader(StringBuilder sb, GameContext context) {
-        sb.append("\n=== Tick: ").append(context.getCurrentTick())
-                .append(" | Sun: ").append(context.getCurrentSun())
-                .append(" | Zombies: ").append(context.getZombies().size())
-                .append(" | Plants: ").append(context.getPlants().size())
-                .append(" | Projectiles: ").append(context.getProjectiles().size())
-                .append(" | Suns: ").append(context.getSuns().size())
-                .append(" | Plant foods: ").append(context.getPlantFoodCount())
-                .append(" ===\n");
+    private int getCheapestZombieCost(GameContext context) {
+        int minCost = Integer.MAX_VALUE;
+        for (Card card : context.getCards()) {
+            if (card instanceof ZombieCard zc) {
+                minCost = Math.min(minCost, zc.getCost());
+            }
+        }
+        return minCost == Integer.MAX_VALUE ? 50 : minCost;
     }
 
-    private void appendColumnHeaders(StringBuilder sb, GameContext context) {
+    // =========================================================================
+    // ─── سیستم رندر اختصاصی نقشه همراه با مغزها و خط قرمز ──────────────────────
+    // =========================================================================
+
+    private static final String CELL_EMPTY = "    ";
+    private static final String BRAIN_OK = "[B]";
+    private static final String BRAIN_EATEN = "[!]";
+
+    @Override
+    public String renderMap(GameContext context) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("\n=== TICK: ").append(context.getCurrentTick())
+          .append(" | SUN: ").append(context.getCurrentSun())
+          .append(" | ACTIVE ZOMBIES: ").append(context.getZombies().size())
+          .append(" | PLANTS LEFT: ").append(context.getPlants().size())
+          .append(" ===\n");
+
         sb.append("\n     ");
         for (int c = 0; c < context.getColumns(); c++) {
             sb.append(String.format(" C%-2d ", c));
         }
         sb.append("\n");
+
+        appendDivider(sb, context);
+        for (int lane = 0; lane < context.getLanes(); lane++) {
+            sb.append(brainsEaten[lane] ? BRAIN_EATEN : BRAIN_OK).append(" |");
+
+            for (int col = 0; col < context.getColumns(); col++) {
+                sb.append(getCellContent(col, context, lane));
+
+                if (col == redLineColumn - 1) {
+                    sb.append("║");
+                } else {
+                    sb.append("|");
+                }
+            }
+            sb.append("  Lane ").append(lane).append("\n");
+            appendDivider(sb, context);
+        }
+        return sb.toString();
     }
 
     private void appendDivider(StringBuilder sb, GameContext context) {
@@ -231,37 +306,16 @@ public class IZombieMode implements GameMode, PlantPlacer {
         sb.append("\n");
     }
 
-    private void appendLaneRow(StringBuilder sb, GameContext context, int lane) {
-        sb.append(lawnMower[lane] ? MOWER_USED : MOWER_OK).append(" |");
-        for (int col = 0; col < context.getColumns(); col++) {
-            sb.append(getCellContent(col, context, lane)).append('|');
-        }
-        sb.append("  Lane ").append(lane).append("\n");
-    }
-
     private String getCellContent(int col, GameContext context, int lane) {
-        List<Plant> plantsAtCell = context.getPlantsAt(col, lane);
-        boolean hasPlant = !plantsAtCell.isEmpty();
+        List<Plant> plants = context.getPlantsAt(col, lane);
+        List<Zombie> zombies = context.getZombiesAt(col, lane);
 
-        List<Zombie> zombiesAtCell = context.getZombiesAt(col, lane);
-        boolean hasZombie = !zombiesAtCell.isEmpty();
+        boolean hasPlant = !plants.isEmpty();
+        boolean hasZombie = !zombies.isEmpty();
 
-        Tile tile = context.getTileAt(col, lane);
-        if (tile!=null){
-            if (tile.getTags().contains(TileTags.GRAVE)){
-                if (hasZombie) return String.format("G/Z%-1d",zombiesAtCell.size());
-                return " G  ";
-            }
-        }
-
-        if (hasPlant && hasZombie) {
-            return String.format("P/Z%-1d", plantsAtCell.size(), zombiesAtCell.size());
-        } else if (hasPlant) {
-            return String.format(" P  ", plantsAtCell.size());
-        } else if (hasZombie) {
-            return String.format(" Z%-2d", zombiesAtCell.size());
-        }
-
+        if (hasPlant && hasZombie) return "P/Z ";
+        if (hasPlant) return " P  ";
+        if (hasZombie) return String.format(" Z%-2d", zombies.size());
         return CELL_EMPTY;
     }
 }

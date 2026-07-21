@@ -106,7 +106,13 @@ public class Plant implements TickAware {
         if (dead) return;
         tickGrowth();
         tickBoost();
-        PlantState next = currentState.tick(this, context);
+        PlantState next;
+        if (this.currentState != null) {
+            next = currentState.tick(this, context);
+        } else {
+            this.currentState = new PlantIdleState(); 
+            next = currentState.tick(this, context);
+        }
         if (next != currentState) {
             currentState.onExit(this, context);
             next.onEnter(this, context);

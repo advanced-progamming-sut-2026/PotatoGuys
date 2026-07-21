@@ -5,7 +5,7 @@ import pvz.Models.Entities.Zombies.ZombieType;
 public class ZombieCard extends Card {
     private final ZombieType zombieType;
 
-    public ZombieCard(ZombieType zombieType, int cost, int cooldown) {
+    public ZombieCard(ZombieType zombieType, int cost, float cooldown) {
         super(cost, cooldown);
         this.zombieType = zombieType;
     }
