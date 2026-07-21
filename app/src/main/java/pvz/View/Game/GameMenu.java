@@ -8,8 +8,9 @@ import pvz.View.Menu;
 import pvz.View.Result;
 
 public class GameMenu implements Menu {
-    GameMenuController controller = new GameMenuController();
-    Menu modalMenu;
+    private GameMenuController controller = new GameMenuController();
+    private Menu modalMenu;
+
     public GameMenu(Menu modalMenu){
         this.modalMenu = modalMenu;
     }
@@ -17,7 +18,7 @@ public class GameMenu implements Menu {
     public Result handleInput(String input) {
         Matcher matcher;
         if ((matcher = GameMenuCommands.ENTER_MENU.getMatcher(input)) != null) return controller.enterMenu(matcher);
-        if ((matcher = GameMenuCommands.ENTER_CHAPTER.getMatcher(input)) != null) return controller.enterChapter(matcher);
+        if ((matcher = GameMenuCommands.ENTER_CHAPTER.getMatcher(input)) != null) return controller.selectChapter(matcher);
         if ((matcher = GameMenuCommands.GREENHOUSE.getMatcher(input)) != null) return controller.greenhouse(matcher);
         if ((matcher = GameMenuCommands.TRAVEL_LOG.getMatcher(input)) != null) return controller.travelLog(matcher);
         if ((matcher = GameMenuCommands.LEADERBOARD.getMatcher(input)) != null) return controller.leaderboard(matcher);

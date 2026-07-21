@@ -178,7 +178,7 @@
       {
         "name": "Ancient Egypt",
         "locked": false,
-        "levelUnlocked": {}
+        "levelUnlocked": { "1" : "true"}
       },
       {
         "name": "Frostbite Caves",

@@ -13,7 +13,7 @@ public class ChapterSellectionModal implements Menu {
     @Override
     public Result handleInput(String input) {
         Matcher matcher;
-        if ((matcher = GameMenuCommands.ENTER_CHAPTER.getMatcher(input)) != null) return controller.enterChapter(matcher);
+        if ((matcher = GameMenuCommands.ENTER_CHAPTER.getMatcher(input)) != null) return controller.selectChapter(matcher);
         if ((matcher = GameMenuCommands.HELP.getMatcher(input)) != null) return new Result(GameMenuCommands.getHelp());
         return new Result("Invalid command in Chapter Selection Modal.", this);
     }
@@ -25,6 +25,9 @@ public class ChapterSellectionModal implements Menu {
 
     @Override
     public Result onEnter() {
-        return new Result("Select Chapter");
+        return new Result("Select Chapter:\n1. Ancient Egypt\n" + //
+                        "2. Frostbite Caves\n" + //
+                        "3. Dark Ages\n" + //
+                        "4. Big Wave Beach ");
     }
 }

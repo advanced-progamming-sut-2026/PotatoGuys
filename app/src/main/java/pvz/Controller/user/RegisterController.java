@@ -118,6 +118,7 @@ public class RegisterController {
         user.getProfile().getCollection().unlockPlant(PlantType.SnowPea);
         Season ancientEgypt=new Season("Ancient Egypt");
         ancientEgypt.unlock();
+        ancientEgypt.unlockLevel(1);
         user.getProfile().getSeasons().add(ancientEgypt);
         user.getProfile().getSeasons().add(new Season("Frostbite Caves"));
         user.getProfile().getSeasons().add(new Season("Dark Ages"));
