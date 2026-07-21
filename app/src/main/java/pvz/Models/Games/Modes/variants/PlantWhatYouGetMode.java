@@ -2,6 +2,7 @@ package pvz.Models.Games.Modes.variants;
 
 import java.util.List;
 
+import pvz.Models.Constants;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
@@ -189,7 +190,7 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
         
             for (Card card : cards) {
                 PlantCard ps = (PlantCard) card;
-                String cooldownStatus = preparationPhase ? "0.0 (PREP FREE)" : String.format("%.1f", ps.getCooldown());
+                String cooldownStatus = preparationPhase ? "0.0 (PREP FREE)" : String.format("%.1f", (float)ps.getCooldown() / (float)Constants.TICK_PER_SECOND);
                 
                 String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | CD:%s%s",
                         ps.getPlant().getType(),

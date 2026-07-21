@@ -10,7 +10,7 @@ import pvz.Models.Games.Levels.variants.IZombieLevel;
 import pvz.Models.Games.Levels.variants.NormalLevel;
 import pvz.Models.Games.Levels.variants.PlantWhatYouGetLevel;
 import pvz.Models.Games.Levels.variants.TimedWarLevel;
-import pvz.Models.Games.Levels.variants.VaseBreakerLevel;
+import pvz.Models.Games.Levels.variants.VasebreakerLevel;
 import pvz.Utils.SaveManager;
 
 public class LevelLoader {
@@ -43,7 +43,7 @@ public class LevelLoader {
                     break;
 
                 case "VASEBREAKER":
-                    level = gson.fromJson(jsonObject, VaseBreakerLevel.class);
+                    level = gson.fromJson(jsonObject, VasebreakerLevel.class);
                     break;
 
                 case "DEADLINE":

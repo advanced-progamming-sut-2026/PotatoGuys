@@ -3,6 +3,7 @@ package pvz.Models.Games.Modes.variants;
 import java.util.ArrayList;
 import java.util.List;
 
+import pvz.Models.Constants;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
@@ -12,7 +13,6 @@ import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.Levels.Wave;
-import pvz.Models.Games.Levels.variants.NormalLevel;
 import pvz.Models.Games.Levels.variants.TimedWarLevel;
 import pvz.Models.Games.Modes.GameMode;
 import pvz.Models.Games.Modes.Capabilities.PlantPlacer;
@@ -28,15 +28,12 @@ public class TimedWarMode implements GameMode, PlantPlacer {
     private List<Wave> waves;
     private Boolean[] lawnMower;
 
-    // ── تنظیمات مود زماندار ───────────────────────────────────────
     private final int TICKS_PER_SECOND = 10; // هر چند تیک معادل یک ثانیه است (با انجین خود هماهنگ کنید)
     private final int WINDOW_SECONDS = 8;    // بازه زمانی بررسی (۵ ثانیه)
     private final int TARGET_KILLS = 5;     // تعداد زامبی هدف برای برد
     private final int TOTAL_TIME_LIMIT_SECONDS = 60; // زمان کل مرحله (مثلاً ۱ دقیقه)
 
-    // لیست ذخیره تیکِ زمان مرگ زامبی‌ها (پنجره لغزان)
     private final List<Integer> killedZombieTicks = new ArrayList<>();
-    // لیست کمکی برای تشخیص زامبی‌هایی که در این تیک نابود شده‌اند
     private List<Zombie> lastTickZombies = new ArrayList<>();
 
     public TimedWarMode(Level level) {
@@ -58,7 +55,6 @@ public class TimedWarMode implements GameMode, PlantPlacer {
     public void updateMode(GameContext context) {
         int currentTick = context.getCurrentTick();
 
-        // ۱. الگوریتم تشخیص زامبی‌های کشته شده (Sliding Window Trigger)
         List<Zombie> currentZombies = context.getZombies();
         for (Zombie oldZombie : lastTickZombies) {
             // اگر زامبی در تیک قبل بود ولی الان نیست، یعنی حذف شده
@@ -185,7 +181,7 @@ public class TimedWarMode implements GameMode, PlantPlacer {
                 PlantCard ps = (PlantCard) card;
                 String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | Cooldown:%.1f%s",
                         ps.getPlant().getType(), ps.getCost(), ps.getPlant().getLevel(),
-                        ps.getCooldown(), ps.getPlant().isBoosted() ? " | ⚡B" : "");
+                        (float)ps.getCooldown() / (float)Constants.TICK_PER_SECOND, ps.getPlant().isBoosted() ? " | ⚡B" : "");
                 result.append("\n").append(String.format("%-" + cardWidth + "s", cardInfo));
             }
         }

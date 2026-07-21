@@ -2,6 +2,7 @@ package pvz.Models.Games.Modes.variants;
 
 import java.util.List;
 
+import pvz.Models.Constants;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Plants.data.PlantPropertySheet;
@@ -154,7 +155,7 @@ public class NormalMode implements GameMode, PlantPlacer {
                         ps.getPlant().getType(),
                         ps.getCost(),
                         ps.getPlant().getLevel(),
-                        ps.getCooldown(),
+                        (float)ps.getCooldown() / (float)Constants.TICK_PER_SECOND,
                         ps.getPlant().isBoosted() ? " | ⚡B" : ""
                 );
 
