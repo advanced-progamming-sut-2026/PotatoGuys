@@ -14,7 +14,7 @@ import pvz.Models.Games.Levels.Level;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.User.MyPlant;
 import pvz.View.Result;
-import pvz.View.Game.GameMenu;
+import pvz.View.Game.RunningGameMenu;
 
 public class PreGameController{
     private static final int MAX_PLANTS = 7;
@@ -164,7 +164,7 @@ public class PreGameController{
          selectedPlants.forEach(context::addCard);
         AppContext.getInstance().setGameContext(context);
 
-        return new Result(output.toString() , new GameMenu(new GameController(context)));
+        return new Result(output.toString() , new RunningGameMenu(new GameController(context)));
     }
 
 }

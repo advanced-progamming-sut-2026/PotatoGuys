@@ -2,52 +2,42 @@ package pvz.View.Game;
 
 import java.util.regex.Matcher;
 
-import pvz.Controller.Game.GameController;
-import pvz.Enums.Commands.GameMenuCommand;
+import pvz.Controller.GameMenuController;
+import pvz.Enums.Commands.GameMenuCommands;
 import pvz.View.Menu;
 import pvz.View.Result;
 
 public class GameMenu implements Menu {
-    GameController gameController;
-    Matcher matcher;
-
-    public GameMenu(GameController gameController){
-        this.matcher = null;
-        this.gameController = gameController;
+    GameMenuController controller = new GameMenuController();
+    Menu modalMenu;
+    public GameMenu(Menu modalMenu){
+        this.modalMenu = modalMenu;
     }
-
     @Override
     public Result handleInput(String input) {
-        if ((matcher = GameMenuCommand.ADVANCE_TIME.getMatcher(input)) != null) return gameController.advanceTime(matcher);
-        if ((matcher = GameMenuCommand.RELEASE_NUKE.getMatcher(input)) != null) return gameController.releaseNuke(matcher);
-        if ((matcher = GameMenuCommand.CHEAT_COOLDOWN.getMatcher(input)) != null) return gameController.cheatCooldown(matcher);
-        if ((matcher = GameMenuCommand.FEED_PLANT.getMatcher(input)) != null) return gameController.feedPlant(matcher);
-        if ((matcher = GameMenuCommand.CHEAT_PLANT_FOOD.getMatcher(input)) != null) return gameController.cheatPlantFood(matcher);
-        if ((matcher = GameMenuCommand.SHOW_MAP.getMatcher(input)) != null) return gameController.showMap(matcher);
-        if ((matcher = GameMenuCommand.SHOW_PLANTS.getMatcher(input)) != null) return gameController.showPlants(matcher);
-        if ((matcher = GameMenuCommand.SHOW_ZOMBIES.getMatcher(input)) != null) return gameController.showZombies(matcher);
-        if ((matcher = GameMenuCommand.SHOW_PROJECTILE.getMatcher(input)) != null) return gameController.showProjectiles(matcher);
-        if ((matcher = GameMenuCommand.SHOW_SUNS.getMatcher(input)) != null) return gameController.showSuns(matcher);
-        if ((matcher = GameMenuCommand.SHOW_TILE_STATUS.getMatcher(input)) != null) return gameController.showTileStatus(matcher);
-        if ((matcher = GameMenuCommand.CHEAT_SPAWN_ZOMBIE.getMatcher(input)) != null) return gameController.cheatSpawnZombie(matcher);
-        if ((matcher = GameMenuCommand.COLLECT_SUN.getMatcher(input)) != null) return gameController.collectSun(matcher);
-        if ((matcher = GameMenuCommand.SHOW_SUN.getMatcher(input)) != null) return gameController.showSun(matcher);
-        if ((matcher = GameMenuCommand.CHEAT_SUN.getMatcher(input)) != null) return gameController.cheatSun(matcher);
-        if ((matcher = GameMenuCommand.SHOW_CARDS.getMatcher(input)) != null) return gameController.showCards(matcher);
-        if ((matcher = GameMenuCommand.START_ZOMBIE_WAVE.getMatcher(input)) != null) return gameController.startZombieWavesCommand(matcher);
-        if ((matcher = GameMenuCommand.PLANT.getMatcher(input)) != null) return gameController.plantPlant(matcher);
-        if ((matcher = GameMenuCommand.PLUCK_PLANT.getMatcher(input)) != null) return gameController.pluckPlant(matcher);
-        if ((matcher = GameMenuCommand.HELP.getMatcher(input)) != null) return new Result(GameMenuCommand.getHelp());
-        return new Result("Command not found!");
+        Matcher matcher;
+        if ((matcher = GameMenuCommands.ENTER_MENU.getMatcher(input)) != null) return controller.enterMenu(matcher);
+        if ((matcher = GameMenuCommands.ENTER_CHAPTER.getMatcher(input)) != null) return controller.enterChapter(matcher);
+        if ((matcher = GameMenuCommands.GREENHOUSE.getMatcher(input)) != null) return controller.greenhouse(matcher);
+        if ((matcher = GameMenuCommands.TRAVEL_LOG.getMatcher(input)) != null) return controller.travelLog(matcher);
+        if ((matcher = GameMenuCommands.LEADERBOARD.getMatcher(input)) != null) return controller.leaderboard(matcher);
+        if ((matcher = GameMenuCommands.COIN_WALLET.getMatcher(input)) != null) return controller.coinWallet(matcher);
+        if ((matcher = GameMenuCommands.GEM_WALLET.getMatcher(input)) != null) return controller.gemWallet(matcher);
+        if ((matcher = GameMenuCommands.CHEAT_ADD.getMatcher(input)) != null) return controller.cheatAdd(matcher);
+        if ((matcher = GameMenuCommands.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
+        if ((matcher = GameMenuCommands.HELP.getMatcher(input)) != null) return new Result(GameMenuCommands.getHelp());
+        if (modalMenu != null) return modalMenu.handleInput(input);
+        return new Result("Invalid command in Game Menu.", this);
     }
 
     @Override
     public String getName(){
-        return "Game menu";
+        return "Game Menu" + (modalMenu != null ? ": " + modalMenu.getName() : "");
     }
 
     @Override
     public Result onEnter() {
-        return null;
+        if (modalMenu != null) return modalMenu.onEnter();
+        return new Result("Select Chapter");
     }
 }

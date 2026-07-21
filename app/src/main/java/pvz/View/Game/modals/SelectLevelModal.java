@@ -1,11 +1,9 @@
-package pvz.View.Game;
+package pvz.View.Game.modals;
 
-
-import java.util.List;
 import java.util.regex.Matcher;
 
 import pvz.Controller.Game.GameController;
-import pvz.Enums.Commands.ChapterMenuCommand;
+import pvz.Enums.Commands.GameMenuCommands;
 import pvz.Models.AppContext;
 import pvz.Models.Games.GameContext;
 import pvz.Models.Games.Levels.Level;
@@ -13,39 +11,37 @@ import pvz.Models.Games.Levels.LevelLoader;
 import pvz.Models.Games.Seasons.Season;
 import pvz.View.Menu;
 import pvz.View.Result;
+import pvz.View.Game.PreGameMenu;
+import pvz.View.Game.RunningGameMenu;
 
-public class ChapterMenu implements Menu{
+public class SelectLevelModal implements Menu{
     private Season season;
 
-    public ChapterMenu(String seasonName){
-        List<Season> seasons = AppContext.getInstance().getCurrentUser().getProfile().getSeasons();
-        for (Season s : seasons){
-            if (s.getName().equalsIgnoreCase(seasonName)){
-                season = s;
-            }
-        }
+    public SelectLevelModal(String seasonName){
+        season = AppContext.getInstance().getCurrentUser().getProfile().getSeasonByName(seasonName);
     }
 
     @Override
     public Result handleInput(String input) {
         Matcher matcher;
-        if ((matcher = ChapterMenuCommand.SELECT_LEVEL.getMatcher(input)) != null) {
+        if ((matcher = GameMenuCommands.SELECT_LEVEL.getMatcher(input)) != null) {
             int levelNumber = Integer.parseInt(matcher.group("level"));
+            if(!season.isLevelUnlocked(levelNumber)){
+                return new Result("This level is locked! select another level.");
+            }
             Level level = LevelLoader.loadLevel(season.getName(), levelNumber);
             if(level.hasPreGame())
                 return new Result(new PreGameMenu(level));
             GameContext context = new GameContext(level);
             AppContext.getInstance().setGameContext(context);
-            return new Result("Game started!" , new GameMenu(new GameController(context)));
+            return new Result("Game started!" , new RunningGameMenu(new GameController(context)));
         }
-        if ((matcher = ChapterMenuCommand.HELP.getMatcher(input)) != null)
-            return new Result(ChapterMenuCommand.getHelp());
-        return new Result("Invalid command in Chapter Menu");
+        return new Result("Invalid command in Select Level Menu");
     }
 
     @Override
     public String getName() {
-        return "Chapter Menu";
+        return "Select Level Menu";
     }
 
     @Override

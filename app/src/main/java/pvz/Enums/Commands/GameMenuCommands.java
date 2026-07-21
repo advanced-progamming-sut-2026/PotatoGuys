@@ -1,8 +1,10 @@
 package pvz.Enums.Commands;
 
-public enum ChapterSelectionMenuCommand implements MenuCommand {
+public enum GameMenuCommands implements MenuCommand {
     ENTER_MENU("^menu\\s+enter\\s+(?<menuName>\\w+)\\s*$"),
     ENTER_CHAPTER("^menu\\s+enter\\s+chapter\\s+-c\\s+(?<chapterName>.+)\\s*$"),
+    ADVENTURE("^select\\s+game-mode\\s+-m\\s+adventure\\s*$"),
+    SELECT_LEVEL("^select\\s+level\\s+-l\\s+(?<level>[1-5])\\s*$"),
     GREENHOUSE("^menu\\s+greenhouse\\s*$"),
     TRAVEL_LOG("^menu\\s+travel-log\\s*$"),
     LEADERBOARD("^menu\\s+leaderboard\\s*$"),
@@ -13,10 +15,10 @@ public enum ChapterSelectionMenuCommand implements MenuCommand {
     HELP("^\\s*help\\s*$");
 
     private final String pattern;
-    ChapterSelectionMenuCommand(String pattern) { this.pattern = pattern; }
+    GameMenuCommands(String pattern) { this.pattern = pattern; }
     @Override public String getPattern() { return this.pattern; }
 
     public static String getHelp() {
-        return MenuCommand.generateHelp(ChapterSelectionMenuCommand.class, "Chapter Selection");
+        return MenuCommand.generateHelp(GameMenuCommands.class, "Game Menu");
     }
 }

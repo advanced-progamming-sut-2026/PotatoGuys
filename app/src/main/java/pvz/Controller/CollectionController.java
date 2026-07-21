@@ -13,7 +13,8 @@ import pvz.Models.User.MyPlant;
 import pvz.Models.User.Profile;
 import pvz.View.Menu;
 import pvz.View.Result;
-import pvz.View.Game.ChapterSelectionMenu;
+import pvz.View.Game.GameMenu;
+import pvz.View.Game.modals.GameModesModal;
 
 public class CollectionController {
     private static final int PURCHASE_COST = 100;
@@ -200,7 +201,7 @@ public class CollectionController {
     }
 
     public Result exit(Matcher matcher) {
-        Menu nextMenu = new ChapterSelectionMenu();
+        Menu nextMenu = new GameMenu(new GameModesModal());
         return new Result("Exited to " + nextMenu.getName(), nextMenu);
     }
 }

@@ -12,10 +12,10 @@ import pvz.View.MainMenu;
 import pvz.View.Menu;
 import pvz.View.QuestMenu;
 import pvz.View.Result;
-import pvz.View.Game.ChapterMenu;
-import pvz.View.Game.ChapterSelectionMenu;
+import pvz.View.Game.GameMenu;
+import pvz.View.Game.modals.SelectLevelModal;
 
-public class ChapterSelectionController {
+public class GameMenuController {
     public Result enterMenu(Matcher matcher) {
         String menuName = matcher.group("menuName");
         menuName = menuName.replaceAll("  ", "");
@@ -25,8 +25,7 @@ public class ChapterSelectionController {
                 nextMenu = new CollectionMenu();
                 break;
             default:
-                nextMenu = new ChapterSelectionMenu();
-                return new Result("You cannot enter this menu." , nextMenu);
+                return new Result("You cannot enter this menu.");
         }
         
         return new Result("Entered " + nextMenu.getName() , nextMenu);
@@ -36,7 +35,7 @@ public class ChapterSelectionController {
         Season season = AppContext.getInstance().getCurrentUser().getProfile().getSeasonByName(chapter);
         if (season == null) return new Result("Invalid chapter name");
         else if (season.isLocked()) return new Result("This Chapter is locked!");
-        else return new Result("Entering Chapter: " + season.getName() + " ...", new ChapterMenu(season.getName()));
+        else return new Result("Entering Chapter: " + season.getName() + " ...", new GameMenu(new SelectLevelModal(season.getName())));
     }
 
     public Result travelLog(Matcher matcher) {

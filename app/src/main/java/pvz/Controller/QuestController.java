@@ -14,7 +14,7 @@ import pvz.Models.Quests.QuestLog;
 import pvz.Models.User.User;
 import pvz.View.MainMenu;
 import pvz.View.Result;
-import pvz.View.Game.GameMenu;
+import pvz.View.Game.RunningGameMenu;
 import pvz.View.Game.PreGameMenu;
 
 public class QuestController {
@@ -143,7 +143,7 @@ public class QuestController {
             return new Result(new PreGameMenu(level));
         GameContext context = new GameContext(level);
         AppContext.getInstance().setGameContext(context);
-        return new Result("Game started!" , new GameMenu(new GameController(context)));
+        return new Result("Game started!" , new RunningGameMenu(new GameController(context)));
     }
 
     public Result exit(Matcher matcher) {

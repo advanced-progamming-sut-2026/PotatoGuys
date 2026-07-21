@@ -1,6 +1,6 @@
 package pvz.Enums.Commands;
 
-public enum GameMenuCommand implements MenuCommand {
+public enum RunningGameCommand implements MenuCommand {
     ADVANCE_TIME("^advance\\s+time\\s+-t\\s+(?<ticks>\\d+)\\s+ticks\\s*$"),
     COLLECT_SUN("^collect\\s+sun\\s+-l\\s+\\(\\s*(?<sunX>\\d+)\\s*,\\s*(?<sunY>\\d+)\\s*\\)\\s*$"),
     SHOW_SUN("^show\\s+sun\\s+amount\\s*$"),
@@ -23,10 +23,10 @@ public enum GameMenuCommand implements MenuCommand {
     HELP("^\\s*help\\s*$");
 
     private final String pattern;
-    GameMenuCommand(String pattern) { this.pattern = pattern; }
+    RunningGameCommand(String pattern) { this.pattern = pattern; }
     @Override public String getPattern() { return this.pattern; }
     
     public static String getHelp() {
-        return MenuCommand.generateHelp(GameMenuCommand.class, "Game");
+        return MenuCommand.generateHelp(RunningGameCommand.class, "Game");
     }
 }
