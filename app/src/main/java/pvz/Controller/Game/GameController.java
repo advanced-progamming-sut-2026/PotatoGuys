@@ -11,10 +11,12 @@ import pvz.Models.Entities.Projectile.Projectile;
 import pvz.Models.Entities.Sun.Sun;
 import pvz.Models.Entities.Zombies.Zombie;
 import pvz.Models.Games.GameContext;
+import pvz.Models.Games.Levels.variants.VasebreakerLevel;
 import pvz.Models.Games.Modes.GameMode;
 import pvz.Models.Games.Modes.Capabilities.PlantPlacer;
 import pvz.Models.Games.Modes.Capabilities.StartWaves;
 import pvz.Models.Games.Modes.Capabilities.ZombiePlacer;
+import pvz.Models.Games.Modes.variants.VasebreakerMode;
 import pvz.Models.Games.card.Card;
 import pvz.Models.Games.card.PlantCard;
 import pvz.Models.Games.card.ZombieCard;
@@ -112,6 +114,19 @@ public class GameController {
             return new Result("You cannot place zombies in this game mode!");
         }
         return new Result(zombieType + " placed at (" + col + ", " + lane + ").");
+    }
+
+    public Result breakVase(Matcher matcher){
+        GameMode mode = context.getMode();
+        int col = Integer.parseInt(matcher.group("vaseX"));
+        int lane = Integer.parseInt(matcher.group("vaseY"));
+
+        if(mode instanceof VasebreakerMode vasemode){
+            vasemode.breakVase(context, col, lane);
+            return new Result("");
+        }
+        
+        return new Result("You cannot break vase in this game mode!");
     }
 
     public Result pluckPlant(Matcher matcher) {

@@ -12,7 +12,7 @@ public abstract class Card implements TickAware{
     protected Card(int cost, float cooldown) {
         this.cost = cost;
         this.baseCooldown = cooldown * 10;
-        this.cooldown = 0;
+        this.cooldown = baseCooldown;
         cooldownEnable = true;
     }
 

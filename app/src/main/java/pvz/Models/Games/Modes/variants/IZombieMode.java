@@ -3,6 +3,7 @@ package pvz.Models.Games.Modes.variants;
 import java.util.List;
 import java.util.Random;
 
+import pvz.Models.Constants;
 import pvz.Models.Entities.Plants.Plant;
 import pvz.Models.Entities.Plants.PlantFactory;
 import pvz.Models.Entities.Zombies.Zombie;
@@ -236,7 +237,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
                     String cardInfo = String.format("- %s | Cost:%d | Cooldown:%.1f",
                             zc.getZombieType(),
                             zc.getCost(),
-                            zc.getCooldown()
+                            (float)zc.getCooldown() / (float)Constants.TICK_PER_SECOND
                     );
                     sb.append("\n").append(String.format("%-" + cardWidth + "s", cardInfo));
                 }

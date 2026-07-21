@@ -102,7 +102,7 @@
           "Type": "Repeater",
           "level": 1,
           "seed": 0,
-          "isBoosted": true
+          "isBoosted": false
         },
         {
           "Type": "TwinSunflower",
@@ -353,7 +353,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 3000,
-          "currentAmount": 1075
+          "currentAmount": 1125
         },
         "active": true,
         "claimed": false,
@@ -368,7 +368,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 4000,
-          "currentAmount": 1075
+          "currentAmount": 1125
         },
         "active": true,
         "claimed": false,
@@ -383,7 +383,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 5000,
-          "currentAmount": 1075
+          "currentAmount": 1125
         },
         "active": true,
         "claimed": false,
