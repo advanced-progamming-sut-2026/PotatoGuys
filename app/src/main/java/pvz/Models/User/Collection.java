@@ -1,61 +1,69 @@
 package pvz.Models.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import pvz.Models.AppContext;
+import java.util.Map;
 import pvz.Models.Entities.Plants.Enums.PlantType;
 import pvz.Models.Entities.Zombies.ZombieType;
 
 public class Collection {
-    private News news;
-    private List<MyPlant> unlockedPlants;
-    private List<ZombieType> unlockedZombies;
+    private List<MyPlant> unlockedPlants = new ArrayList<>();
+    private List<ZombieType> unlockedZombies = new ArrayList<>();
 
-    public Collection(News news){
-        this.news=news;
-        this.unlockedPlants=new ArrayList<>();
-        this.unlockedZombies=new ArrayList<>();
+    // Tracks the amount of seed packets owned for each specific plant
+    private Map<PlantType, Integer> seedPackets = new HashMap<>();
+
+    // --- FIX 1: Restored the constructor that your Profile class expects ---
+    private transient News news;
+
+    public Collection() {}
+
+    public Collection(News news) {
+        this.news = news;
     }
 
-    public List<MyPlant> getUnlockedPlants() {
-        return unlockedPlants;
-    }
+    public List<MyPlant> getUnlockedPlants() { return unlockedPlants; }
+    public List<ZombieType> getUnlockedZombies() { return unlockedZombies; }
 
-    public void setUnlockedPlants(List<MyPlant> unlockedPlants) {
-        this.unlockedPlants = unlockedPlants;
-    }
-
-    public void unlockPlant(PlantType plant){
-        if(unlockedPlants.stream().anyMatch(p->p.getType()==plant)) return;
-        MyPlant newPlant = new MyPlant();
-        newPlant.setType(plant);
-        newPlant.setLevel(1);
-        newPlant.setBoosted(false);
-        unlockedPlants.add(newPlant);
-        news.getMessages().add(new Message(plant.toString()+" has been unlocked!"));
-    }
-
-    public void unlockZombie(ZombieType type){
-        if (unlockedZombies.contains(type)) return;
-        unlockedZombies.add(type);
-        news.getMessages().add(new Message(type.toString()+" has been unlocked!"));
-    }
-
-    public MyPlant getPlant(PlantType type){
-        for (MyPlant p : unlockedPlants){
-            if (p.getType() == type){
-                return p;
-            }
+    public MyPlant getPlant(PlantType type) {
+        for (MyPlant p : unlockedPlants) {
+            if (p.getType() == type) return p;
         }
         return null;
     }
 
-    public List<ZombieType> getUnlockedZombies() {
-        return unlockedZombies;
+    public void unlockPlant(PlantType type) {
+        if (getPlant(type) == null) {
+            // --- FIX 2: Using the empty constructor for MyPlant to match your existing class ---
+            MyPlant newPlant = new MyPlant();
+            newPlant.setType(type);
+            newPlant.setLevel(1);
+            newPlant.setBoosted(false);
+            unlockedPlants.add(newPlant);
+        }
     }
 
-    public void setUnlockedZombies(List<ZombieType> unlockedZombies) {
-        this.unlockedZombies = unlockedZombies;
+    public void unlockZombie(ZombieType type) {
+        if (!unlockedZombies.contains(type)) {
+            unlockedZombies.add(type);
+            // If you originally added a news message here, you can do:
+            // if (news != null) news.getMessages().add(new Message("You encountered a new zombie: " + type));
+        }
+    }
+
+    // --- Seed Packet Management ---
+
+    public int getSeedPackets(PlantType type) {
+        return seedPackets.getOrDefault(type, 0);
+    }
+
+    public void addSeedPackets(PlantType type, int amount) {
+        seedPackets.put(type, getSeedPackets(type) + amount);
+    }
+
+    public void consumeSeedPackets(PlantType type, int amount) {
+        int current = getSeedPackets(type);
+        seedPackets.put(type, Math.max(0, current - amount));
     }
 }
