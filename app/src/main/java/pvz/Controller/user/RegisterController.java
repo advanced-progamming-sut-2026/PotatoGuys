@@ -90,6 +90,9 @@ public class RegisterController {
     }
 
     public Result pickQuestion(Matcher matcher) {
+        if (currentUser == null) {
+            return new Result("Please register first before picking a security question.");
+        }
         String question = matcher.group("questionId");
         String answer = matcher.group("answer");
         String confirmAnswer = matcher.group("confirmAnswer");
@@ -116,6 +119,8 @@ public class RegisterController {
         user.getProfile().getCollection().unlockPlant(PlantType.TwinSunflower);
         user.getProfile().getCollection().unlockPlant(PlantType.PeaPod);
         user.getProfile().getCollection().unlockPlant(PlantType.SnowPea);
+        user.getProfile().getCollection().unlockPlant(PlantType.CherryBomb);
+        user.getProfile().getCollection().unlockPlant(PlantType.Wallnut);
         Season ancientEgypt=new Season("Ancient Egypt");
         ancientEgypt.unlock();
         ancientEgypt.unlockLevel(1);

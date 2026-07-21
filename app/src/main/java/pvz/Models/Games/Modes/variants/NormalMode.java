@@ -119,7 +119,7 @@ public class NormalMode implements GameMode, PlantPlacer {
         Plant plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
-        context.getGameStats().onPlantPlaced(col, lane);
+        context.getGameStats().onPlantPlaced(col, lane, plantCard.getPlant().getType());
         plantCard.use();
         context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
     }

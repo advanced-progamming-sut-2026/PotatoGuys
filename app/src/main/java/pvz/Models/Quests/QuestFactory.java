@@ -9,7 +9,7 @@ public class QuestFactory {
     public static QuestLog createDefaultQuests() {
         QuestLog log = new QuestLog();
 
-        // 1. Daily Sun Catcher (3000, 4000, 5000)
+        // 1. Daily Sun Catcher
         for (int amount : new int[]{3000, 4000, 5000}) {
             Quest q = new Quest("daily_sun_catcher_" + amount, "Daily Sun Catcher",
                     "Collect " + amount + " units of sun during one day.",
@@ -19,7 +19,7 @@ public class QuestFactory {
             log.addQuest(q);
         }
 
-        // 2. Chapter Hunter (Defeat 50 zombies in specific chapters)
+        // 2. Chapter Hunter
         String[] chapters = {"Ancient Egypt", "Frostbite Caves", "Big Wave Beach", "Dark Ages"};
         for (String chapter : chapters) {
             Quest q = new Quest("main_chapter_hunter_" + chapter.replace(" ", "_"), "Chapter Hunter: " + chapter,
@@ -47,7 +47,7 @@ public class QuestFactory {
                 QuestCategory.DAILY, QuestPriority.HIGH,
                 List.of(new CurrencyReward(CurrencyKind.GEM, 20)), 10));
 
-        // 5. Economical Vegetarian (Victory without losing more than n plants: 0 to 5)
+        // 5. Economical Vegetarian
         for (int n = 0; n <= 5; n++) {
             Quest q = new Quest("main_economical_vegetarian_" + n, "Economical Vegetarian",
                     "Victory in a level without losing more than " + n + " plants.",
@@ -129,7 +129,7 @@ public class QuestFactory {
                 QuestCategory.DAILY, QuestPriority.HIGH,
                 List.of(new CurrencyReward(CurrencyKind.GEM, 10)), 1));
 
-        // 17. One Less Column (0 to 8 columns)
+        // 17. One Less Column
         for (int c = 0; c < 9; c++) {
             Quest q = new Quest("daily_one_less_column_" + c, "One Less Column",
                     "Win a level provided that no plant is planted in column " + c + ".",
@@ -139,7 +139,7 @@ public class QuestFactory {
             log.addQuest(q);
         }
 
-        // 18. Defenseless Row (0 to 4 rows)
+        // 18. Defenseless Row
         for (int r = 0; r < 5; r++) {
             Quest q = new Quest("daily_defenseless_row_" + r, "Defenseless Row",
                     "Win a level provided that no plant is planted in row " + r + ".",
@@ -150,17 +150,17 @@ public class QuestFactory {
         }
 
         // 19. Defenseless Cross
-        int minSize = Math.min(5, 9); // min of rows and cols
+        int minSize = Math.min(5, 9);
         for (int i = 0; i < minSize; i++) {
-            Quest q = new Quest("daily_defenseless_cross_" + i, "Defenseless Cross (" + i + "," + i + ")",
-                    "Win a level without planting in row " + i + " or column " + i + ".",
+            Quest q = new Quest("daily_defenseless_cross_" + i, "Defenseless Cross",
+                    "Win a level provided that column " + i + " and row " + i + " are empty.",
                     QuestCategory.DAILY, QuestPriority.HIGH,
                     List.of(new CurrencyReward(CurrencyKind.GEM, 25)), 1);
             q.setVariable(String.valueOf(i));
             log.addQuest(q);
         }
 
-        // 20. Lawnmowing Time (10, 20, 30, 40, 50)
+        // 20. Lawnmowing Time
         for (int n = 10; n <= 50; n += 10) {
             Quest q = new Quest("epic_lawnmowing_" + n, "Lawnmowing Time",
                     "Kill at least " + n + " zombies with a lawnmower.",
@@ -172,7 +172,6 @@ public class QuestFactory {
 
         return log;
     }
-
     public static List<Reward> findRewardsById(String questId) {
         for (Quest q : createDefaultQuests().getAllQuests()) {
             if (q.getId().equals(questId)) {

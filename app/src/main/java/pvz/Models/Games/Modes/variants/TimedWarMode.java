@@ -156,7 +156,7 @@ public class TimedWarMode implements GameMode, PlantPlacer {
         Plant plant = new PlantFactory().create(card.getPlant().getType(), col, lane,
                 card.getPlant().getLevel(), card.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
-        context.getGameStats().onPlantPlaced(col, lane);
+        context.getGameStats().onPlantPlaced(col, lane, card.getPlant().getType());
         card.use();
         context.log(card.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
     }

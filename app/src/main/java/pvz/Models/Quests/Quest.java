@@ -16,7 +16,7 @@ public class Quest {
     private boolean active;
     private boolean claimed;
     private boolean repeatable;
-    private String variable; // Stores dynamic 'n', family, or chapter targets
+    private String variable;
 
     public Quest() {
         this.rewards = new ArrayList<>();
