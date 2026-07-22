@@ -1,7 +1,15 @@
 package pvz.models.entities.zombies.skills;
 
+import pvz.models.Constants;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;
+import pvz.models.games.map.behaviors.DestructibleBehavior;
+import pvz.models.games.map.tile.Tile;
+import pvz.models.games.map.tile.TileTags;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * TombRaiser Zombie — throws bones to raise tombs on random grid cells.
@@ -17,6 +25,8 @@ public class TombRaiserSkill extends CooldownSkill {
 
     private final int tombsPerCast;
     private int ammoLeft;
+    private final Random random = new Random();
+
 
     /**
      * @param castIntervalSeconds seconds between casts (JSON {@code TimeBetweenRaisings})
@@ -48,10 +58,41 @@ public class TombRaiserSkill extends CooldownSkill {
     }
 
     private int[] getRandomEmptyCell(GameContext ctx){
-        return null;
+        List<int[]> emptyCells = new ArrayList<>();
+        
+        for (int lane = 0; lane < ctx.getLanes(); lane++) {
+            for (int col = 0; col < ctx.getColumns(); col++) {
+                if (isCellEmpty(ctx, col, lane)) {
+                    emptyCells.add(new int[]{col, lane});
+                }
+            }
+        }
+        
+        if (emptyCells.isEmpty()) {
+            return null;
+        }
+        
+        return emptyCells.get(random.nextInt(emptyCells.size()));
+    }
+    
+    private boolean isCellEmpty(GameContext ctx, int col, int lane) {
+        // Check for plants
+        if (ctx.isPlantAt(col, lane)) {
+            return false;
+        }
+        
+        // Check for graves (tile tags)
+        if (ctx.getTileAt(col, lane).getTags().contains(TileTags.GRAVE)) {
+            return false;
+        }
+        
+        return true;
     }
 
     private void raiseTomb(GameContext ctx , int[] cell){
+        Tile tile=ctx.getTileAt(cell[0],cell[1]);
+        tile.getTags().add(TileTags.GRAVE);
+        tile.addBehavior(new DestructibleBehavior(Constants.DEFAULT_GRAVE_HP,"Grave"));
     }
 
     @Override
