@@ -1,5 +1,10 @@
 package pvz.models.quests;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
+import pvz.models.entities.plants.enums.PlantType;
 import pvz.models.user.User;
 
 public class InventoryReward extends Reward {
@@ -25,11 +30,24 @@ public class InventoryReward extends Reward {
     @Override
     public void grant(User user) {
         if (user == null) return;
-        user.getProfile().setPlantFood(user.getProfile().getPlantFood() + quantity);
+
+        List<PlantType> unlocked = new ArrayList<>();
+        for (PlantType pt : PlantType.values()) {
+            if (user.getProfile().getCollection().getPlant(pt) != null) {
+                unlocked.add(pt);
+            }
+        }
+        if (unlocked.isEmpty()) {
+            PlantType fallback = PlantType.values()[ThreadLocalRandom.current().nextInt(PlantType.values().length)];
+            user.getProfile().getCollection().addSeedPackets(fallback, quantity);
+        } else {
+            PlantType target = unlocked.get(ThreadLocalRandom.current().nextInt(unlocked.size()));
+            user.getProfile().getCollection().addSeedPackets(target, quantity);
+        }
     }
 
     @Override
     public String getDescription() {
-        return quantity + "x " + itemId;
+        return quantity + " Seed Packets";
     }
 }

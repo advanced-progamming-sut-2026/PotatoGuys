@@ -69,7 +69,8 @@ public class QuestController {
             sb.append(" | Status: ").append(q.getStatus());
             sb.append("\n  Reward: ").append(q.getRewardDescription());
             if (q.isCompleted() && !q.isClaimed()) {
-                sb.append("\n  >> Use 'claim quest ").append(q.getId()).append("' to claim reward!");
+                sb.append("\n  >> Reward not granted yet. Use 'claim quest ")
+                        .append(q.getId()).append("' to claim it manually.");
             }
         }
         return new Result(sb.toString());
@@ -87,7 +88,7 @@ public class QuestController {
             sb.append("\n\n--- ").append(cat.name()).append(" (").append(quests.size()).append(" quests) ---");
             for (Quest q : quests) {
                 sb.append("\n [").append(q.getPriority()).append("] ")
-                  .append(q.getTitle()).append(" - ").append(q.getStatus());
+                        .append(q.getTitle()).append(" - ").append(q.getStatus());
             }
         }
         return new Result(sb.toString());
@@ -118,7 +119,8 @@ public class QuestController {
         }
 
         if (quest.isCompleted() && !quest.isClaimed()) {
-            sb.append("\n>> Use 'claim quest ").append(questId).append("' to claim your reward!");
+            sb.append("\n>> Reward not granted yet. Use 'claim quest ")
+                    .append(questId).append("' to claim it manually.");
         }
         return new Result(sb.toString());
     }

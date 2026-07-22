@@ -16,8 +16,9 @@ public class QuestEvaluator {
 
             evaluateQuest(quest, stats, levelWon, currentSun, difficulty, context);
 
-            // NOTE: We no longer auto-claim here! The quest will naturally transition
-            // to "COMPLETED" status so the user can claim it manually in the Travel Log.
+            if (quest.isCompleted() && !quest.isClaimed()) {
+                quest.claim(user);
+            }
         }
     }
 

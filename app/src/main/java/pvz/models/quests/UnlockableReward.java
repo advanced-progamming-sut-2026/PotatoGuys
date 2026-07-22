@@ -1,5 +1,9 @@
 package pvz.models.quests;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
 import pvz.models.entities.plants.enums.PlantType;
 import pvz.models.user.User;
 
@@ -27,15 +31,28 @@ public class UnlockableReward extends Reward {
     public void grant(User user) {
         if (user == null) return;
         if (targetType == UnlockTargetType.PLANT) {
-            PlantType plantType = PlantType.getTypeByName(targetId);
-            if (plantType != null && user.getProfile().getCollection().getPlant(plantType) == null) {
-                user.getProfile().getCollection().unlockPlant(plantType);
+            if ("Random".equalsIgnoreCase(targetId)) {
+                List<PlantType> locked = new ArrayList<>();
+                for (PlantType pt : PlantType.values()) {
+                    if (user.getProfile().getCollection().getPlant(pt) == null) {
+                        locked.add(pt);
+                    }
+                }
+                if (!locked.isEmpty()) {
+                    PlantType random = locked.get(ThreadLocalRandom.current().nextInt(locked.size()));
+                    user.getProfile().getCollection().unlockPlant(random);
+                }
+            } else {
+                PlantType plantType = PlantType.getTypeByName(targetId);
+                if (plantType != null && user.getProfile().getCollection().getPlant(plantType) == null) {
+                    user.getProfile().getCollection().unlockPlant(plantType);
+                }
             }
         }
     }
 
     @Override
     public String getDescription() {
-        return "Unlock " + targetId;
+        return "Random Plant Unlock";
     }
 }

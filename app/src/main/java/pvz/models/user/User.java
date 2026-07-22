@@ -104,9 +104,14 @@ public class User {
         this.greenHouse = greenHouse;
     }
 
+    private boolean questLogRefreshed = false;
+
     public QuestLog getQuestLog() {
         if (questLog == null) {
             questLog = QuestFactory.createDefaultQuests();
+        } else if (!questLogRefreshed) {
+            refreshQuestLog();
+            questLogRefreshed = true;
         }
         return questLog;
     }
@@ -118,10 +123,9 @@ public class User {
                 Quest existing = questLog.findById(freshQuest.getId());
                 if (existing != null) {
                     freshQuest.getProgress().setCurrentAmount(
-                        existing.getProgress().getCurrentAmount()
+                            existing.getProgress().getCurrentAmount()
                     );
                     freshQuest.setClaimed(existing.isClaimed());
-                    if (existing.isClaimed()) freshQuest.deactivate();
                 }
             }
         }

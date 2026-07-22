@@ -80,10 +80,14 @@ public class Quest {
                 }
             }
 
-            this.claimed = true;
-            if (repeatable) {
-                this.active = false;
+            // Increment quest completion counters
+            if (category == QuestCategory.DAILY) {
+                user.getScore().setDailyQuests(user.getScore().getDailyQuests() + 1);
+            } else {
+                user.getScore().setNonDailyQuests(user.getScore().getNonDailyQuests() + 1);
             }
+
+            this.claimed = true;
         }
     }
 
