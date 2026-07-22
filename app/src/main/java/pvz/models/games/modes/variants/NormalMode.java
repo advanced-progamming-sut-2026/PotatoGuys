@@ -2,6 +2,7 @@ package pvz.models.games.modes.variants;
 
 import java.util.List;
 
+import pvz.enums.AnsiColors;
 import pvz.models.Constants;
 import pvz.models.entities.plants.Plant;
 import pvz.models.entities.plants.PlantFactory;
@@ -250,25 +251,25 @@ public class NormalMode implements GameMode, PlantPlacer {
         Tile tile = context.getTileAt(col, lane);
         if (tile!=null){
             if (tile.getTags().contains(TileTags.GRAVE)){
-                if (hasZombie) return String.format("G/Z%-1d",zombiesAtCell.size());
-                return " G  ";
+                if (hasZombie) return String.format(AnsiColors.BRIGHT_BLACK+"G"+AnsiColors.RESET+"/Z%-1d",zombiesAtCell.size());
+                return AnsiColors.BRIGHT_BLACK+" G  "+AnsiColors.RESET;
             } else if (tile.getTags().contains(TileTags.SLIP_UP)){
-                if (hasZombie) return String.format("↑/Z%-1d",zombiesAtCell.size());
-                return " S↑ ";
+                if (hasZombie) return String.format(AnsiColors.BLUE+"↑"+AnsiColors.RESET+"/Z%-1d",zombiesAtCell.size());
+                return AnsiColors.BLUE+" S↑ "+AnsiColors.RESET;
             } else if (tile.getTags().contains(TileTags.SLIP_DOWN)){
-                if (hasZombie) return String.format("↓/Z%-1d",zombiesAtCell.size());
-                return " S↓ ";
+                if (hasZombie) return String.format(AnsiColors.BLUE+"↓"+AnsiColors.RESET+"/Z%-1d",zombiesAtCell.size());
+                return AnsiColors.BLUE+" S↓ "+AnsiColors.RESET;
             } else if(tile .getTags().contains(TileTags.ICE_BLOCK)){
-                if (hasZombie) return String.format("I/Z%-1d",zombiesAtCell.size());
-                else if(hasPlant) return "I/P ";
-                return " I  ";
+                if (hasZombie) return String.format(AnsiColors.BLUE+"I"+AnsiColors.RESET+"/Z%-1d",zombiesAtCell.size());
+                else if(hasPlant) return AnsiColors.BLUE+"I/P "+AnsiColors.RESET;
+                return AnsiColors.BLUE+" I  "+AnsiColors.RESET;
             }
         }
 
         if (hasPlant && hasZombie) {
-            return String.format("P/Z%-1d", plantsAtCell.size(), zombiesAtCell.size());
+            return String.format(AnsiColors.GREEN+"P"+AnsiColors.RESET+"/Z%-1d", plantsAtCell.size(), zombiesAtCell.size());
         } else if (hasPlant) {
-            return String.format(" P  ", plantsAtCell.size());
+            return String.format(AnsiColors.GREEN+" P  "+AnsiColors.RESET, plantsAtCell.size());
         } else if (hasZombie) {
             return String.format(" Z%-2d", zombiesAtCell.size());
         }
