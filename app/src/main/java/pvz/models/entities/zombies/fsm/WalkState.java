@@ -59,7 +59,7 @@ public class WalkState implements ZombieState {
     /** Returns {@link EatState} if a plant is at the zombie's current column, else null. */
     private ZombieState checkForPlant(Zombie zombie, GameContext ctx) {
         int col = (int) zombie.getX();
-        if (ctx.isPlantAt(col, zombie.getLane())) {
+        if (ctx.isPlantAt(col, zombie.getLane()) && !ctx.getPlantsAt(col,zombie.getLane()).getLast().isFrozen()) {
             return new EatState(col, zombie.getLane());
         }
         return null;
