@@ -5,7 +5,6 @@ import java.util.HashMap;
 import pvz.models.AppContext;
 import pvz.models.user.User;
 import pvz.utils.SaveManager;
-import pvz.view.LoginMenu;
 import pvz.view.MainMenu;
 import pvz.view.MenuManager;
 import pvz.view.RegisterMenu;

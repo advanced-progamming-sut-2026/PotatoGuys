@@ -83,7 +83,7 @@ public class Zombie implements TickAware {
     // ── Flags ─────────────────────────────────────────────────────────────────
     private boolean dead;
     private final boolean glowing;
-    private boolean impAlreadyThrown;
+    private boolean impAlreadyThrown = false;
     private int stolenSun;
 
     // ─────────────────────────────────────────────────────────────────────────

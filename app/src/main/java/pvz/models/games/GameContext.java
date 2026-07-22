@@ -225,7 +225,7 @@ public class GameContext implements TickAware {
     }
 
     public boolean removeProjectile(Projectile p) {
-        engine.unRegister(p);
+        engine.unRegister(p); 
         return projectiles.remove(p);
     }
 
