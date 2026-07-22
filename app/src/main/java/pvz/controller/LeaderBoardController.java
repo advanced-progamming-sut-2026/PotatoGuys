@@ -3,20 +3,20 @@ package pvz.controller;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import pvz.models.leaderboard.LeaderBoard;
-import pvz.models.leaderboard.LeaderBoardSortField;
-import pvz.models.leaderboard.SortType;
-import pvz.models.leaderboard.LeaderBoard.LeaderBoardEntry;
+import pvz.models.leaderboard.Leaderboard;
+import pvz.models.leaderboard.LeaderboardSortField;
+import pvz.models.leaderboard.SortTypes;
+import pvz.models.leaderboard.Leaderboard.LeaderBoardEntry;
 import pvz.view.MainMenu;
 import pvz.view.Result;
 
 public class LeaderBoardController {
-    private LeaderBoardSortField currentField = LeaderBoardSortField.HIGHEST_SCORING_GAME_SCORE;
-    private SortType currentSortType = SortType.DESCENDING;
+    private LeaderboardSortField currentField = LeaderboardSortField.HIGHEST_SCORING_GAME_SCORE;
+    private SortTypes currentSortTypes = SortTypes.DESCENDING;
 
     public Result show(Matcher matcher) {
-        List<LeaderBoardEntry> all = LeaderBoard.loadAll();
-        String output = LeaderBoard.format(all, currentField, currentSortType);
+        List<LeaderBoardEntry> all = Leaderboard.loadAll();
+        String output = Leaderboard.format(all, currentField, currentSortTypes);
         return new Result(output);
     }
 
@@ -25,21 +25,21 @@ public class LeaderBoardController {
         String orderStr = matcher.group(2);
 
         try {
-            currentField = LeaderBoardSortField.valueOf(fieldStr.toUpperCase());
+            currentField = LeaderboardSortField.valueOf(fieldStr.toUpperCase());
         } catch (IllegalArgumentException e) {
             return new Result("Invalid sort field. Valid fields: LAST_LEVEL_AND_SEASON, MINI_GAMES_PASSED, DAILY_QUESTS_COMPLETED, NON_DAILY_QUESTS_COMPLETED, HIGHEST_SCORING_GAME_SCORE");
         }
 
         if (orderStr != null) {
             try {
-                currentSortType = SortType.valueOf(orderStr.toUpperCase());
+                currentSortTypes = SortTypes.valueOf(orderStr.toUpperCase());
             } catch (IllegalArgumentException e) {
                 return new Result("Invalid order. Use ASCENDING or DESCENDING.");
             }
         }
 
-        List<LeaderBoardEntry> all = LeaderBoard.loadAll();
-        String output = LeaderBoard.format(all, currentField, currentSortType);
+        List<LeaderBoardEntry> all = Leaderboard.loadAll();
+        String output = Leaderboard.format(all, currentField, currentSortTypes);
         return new Result(output);
     }
 

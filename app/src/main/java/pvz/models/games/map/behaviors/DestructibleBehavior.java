@@ -22,7 +22,7 @@ public class DestructibleBehavior implements TileBehavior {
         if (this.hp <= 0) {
             tile.removeBehavior(this);
             tile.getTags().remove(TileTags.GRAVE);
-            tile.getTags().remove(TileTags.ICE);
+            tile.getTags().remove(TileTags.ICE_BLOCK);
         }
     }
 

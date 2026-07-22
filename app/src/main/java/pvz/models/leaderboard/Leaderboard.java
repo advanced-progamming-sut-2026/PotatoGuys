@@ -9,7 +9,7 @@ import pvz.models.Constants;
 import pvz.models.user.User;
 import pvz.utils.SaveManager;
 
-public class LeaderBoard {
+public class Leaderboard {
 
     public static List<LeaderBoardEntry> loadAll() {
         List<LeaderBoardEntry> entries = new ArrayList<>();
@@ -25,7 +25,7 @@ public class LeaderBoard {
         return entries;
     }
 
-    public static List<LeaderBoardEntry> sort(List<LeaderBoardEntry> entries, LeaderBoardSortField field, SortType sortType) {
+    public static List<LeaderBoardEntry> sort(List<LeaderBoardEntry> entries, LeaderboardSortField field, SortTypes sortTypes) {
         Comparator<LeaderBoardEntry> comp = switch (field) {
             case LAST_LEVEL_AND_SEASON -> Comparator
                     .comparingInt(LeaderBoardEntry::getLastLevel)
@@ -35,7 +35,7 @@ public class LeaderBoard {
             case NON_DAILY_QUESTS_COMPLETED -> Comparator.comparingInt(LeaderBoardEntry::getNonDailyQuests);
             case HIGHEST_SCORING_GAME_SCORE -> Comparator.comparingInt(LeaderBoardEntry::getHighestScore);
         };
-        if (sortType == SortType.DESCENDING) {
+        if (sortTypes == SortTypes.DESCENDING) {
             comp = comp.reversed();
         }
         comp = comp.thenComparing(LeaderBoardEntry::getUsername);
@@ -44,10 +44,10 @@ public class LeaderBoard {
         return sorted;
     }
 
-    public static String format(List<LeaderBoardEntry> entries, LeaderBoardSortField field, SortType sortType) {
+    public static String format(List<LeaderBoardEntry> entries, LeaderboardSortField field, SortTypes sortTypes) {
         StringBuilder sb = new StringBuilder();
         sb.append("=== LEADERBOARD ===");
-        sb.append("\nSorted by: ").append(field.name()).append(" (").append(sortType.name()).append(")");
+        sb.append("\nSorted by: ").append(field.name()).append(" (").append(sortTypes.name()).append(")");
         sb.append("\n---");
         if (entries.isEmpty()) {
             sb.append("\nNo players found.");
