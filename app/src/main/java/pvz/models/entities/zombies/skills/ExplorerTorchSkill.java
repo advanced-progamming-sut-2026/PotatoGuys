@@ -1,5 +1,10 @@
 package pvz.models.entities.zombies.skills;
 
+import java.util.List;
+
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.plants.data.DamageKind;
+import pvz.models.entities.plants.enums.PlantTag;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;
 
@@ -55,12 +60,12 @@ public class ExplorerTorchSkill implements ZombieSkill {
     public void execute(Zombie zombie, GameContext ctx) {
         if (!torchLit) return;
         int col = (int) zombie.getX();
-        for (int c = col; c >= Math.max(0, col - REACH_CELLS); c--) {
-            // if (ctx.isTorchVulnerablePlantAt(c, zombie.getLane())) {
-            //     ctx.burnPlant(c, zombie.getLane());
-            //     ctx.log("Explorer Zombie burned plant at ("
-            //             + c + "," + zombie.getLane() + ") with torch!");
-            // }
+        int row = zombie.getLane();
+        Plant plant = ctx.getPlantsAt(col , row).getFirst();
+        if (isTorchVulnerablePlantAt(plant, ctx)) {
+            plant.takeDamage(999f, DamageKind.INSTA_KILL);
+            ctx.log("Explorer Zombie burned plant at ("
+                    + col + "," + row + ") with torch!");
         }
     }
 
@@ -73,9 +78,18 @@ public class ExplorerTorchSkill implements ZombieSkill {
 
     private boolean hasTorchVulnerablePlantAhead(Zombie zombie, GameContext ctx) {
         int col = (int) zombie.getX();
-        // for (int c = col; c >= Math.max(0, col - REACH_CELLS); c--) {
-        //     if (ctx.isTorchVulnerablePlantAt(c, zombie.getLane())) return true;
-        // }
-        return false;
+        return ctx.isPlantAt(col, zombie.getLane());
+    }
+
+    private boolean isTorchVulnerablePlantAt(Plant plant, GameContext ctx) {
+
+        if (plant == null) return false;
+
+        if (plant.getSheet().hasTag(PlantTag.ICE)) {
+            extinguish();
+            return false;
+        }
+
+        return true; 
     }
 }
