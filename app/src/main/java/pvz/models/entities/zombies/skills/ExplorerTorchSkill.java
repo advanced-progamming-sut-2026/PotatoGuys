@@ -1,7 +1,5 @@
 package pvz.models.entities.zombies.skills;
 
-import java.util.List;
-
 import pvz.models.entities.plants.Plant;
 import pvz.models.entities.plants.data.DamageKind;
 import pvz.models.entities.plants.enums.PlantTag;
@@ -25,8 +23,6 @@ import pvz.models.games.GameContext;
  */
 public class ExplorerTorchSkill implements ZombieSkill {
 
-    /** Number of cells ahead that the torch can reach (≈1 based on MaxTorchReach). */
-    private static final int REACH_CELLS = 1;
 
     private boolean torchLit;
 
