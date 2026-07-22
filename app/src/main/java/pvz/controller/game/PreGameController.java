@@ -39,7 +39,8 @@ public class PreGameController{
 
     public Result showAvailablePlants(Matcher matcher){
         StringBuilder output=new StringBuilder();
-        for (MyPlant p : AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants()){
+        List<MyPlant> unlockedPlants=AppContext.getInstance().getCurrentUser().getProfile().getCollection().getUnlockedPlants();
+        for (MyPlant p : unlockedPlants){
             if(!level.isPlantAllowed(p.getType())) continue;
             output.append("\n- ").append(p.getType());
             output.append(" | Level: ").append(p.getLevel());
