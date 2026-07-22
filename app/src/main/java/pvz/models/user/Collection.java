@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pvz.models.AppContext;
 import pvz.models.entities.plants.enums.PlantType;
 import pvz.models.entities.zombies.ZombieType;
 
