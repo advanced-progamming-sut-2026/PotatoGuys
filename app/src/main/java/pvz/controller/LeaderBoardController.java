@@ -12,17 +12,12 @@ import pvz.view.Result;
 
 public class LeaderBoardController {
     private LeaderboardSortField currentField = LeaderboardSortField.HIGHEST_SCORING_GAME_SCORE;
-    private SortTypes currentSortTypes = SortTypes.DESCENDING;
+    private SortTypes currentSortType = SortTypes.DESCENDING;
 
     public Result show(Matcher matcher) {
-<<<<<<< HEAD
-        List<LeaderBoardEntry> all = LeaderBoard.loadAll();
-        all = LeaderBoard.sort(all, currentField, currentSortType);
-        String output = LeaderBoard.format(all, currentField, currentSortType);
-=======
         List<LeaderBoardEntry> all = Leaderboard.loadAll();
-        String output = Leaderboard.format(all, currentField, currentSortTypes);
->>>>>>> ee9f758a11028279a7549dd7a76ab4fb05ff6b42
+        all = Leaderboard.sort(all, currentField, currentSortType);
+        String output = Leaderboard.format(all, currentField, currentSortType);
         return new Result(output);
     }
 
@@ -38,20 +33,15 @@ public class LeaderBoardController {
 
         if (orderStr != null) {
             try {
-                currentSortTypes = SortTypes.valueOf(orderStr.toUpperCase());
+                currentSortType = SortTypes.valueOf(orderStr.toUpperCase());
             } catch (IllegalArgumentException e) {
                 return new Result("Invalid order. Use ASCENDING or DESCENDING.");
             }
         }
 
-<<<<<<< HEAD
-        List<LeaderBoardEntry> all = LeaderBoard.loadAll();
-        all = LeaderBoard.sort(all, currentField, currentSortType);
-        String output = LeaderBoard.format(all, currentField, currentSortType);
-=======
         List<LeaderBoardEntry> all = Leaderboard.loadAll();
-        String output = Leaderboard.format(all, currentField, currentSortTypes);
->>>>>>> ee9f758a11028279a7549dd7a76ab4fb05ff6b42
+        all = Leaderboard.sort(all, currentField, currentSortType);
+        String output = Leaderboard.format(all, currentField, currentSortType);
         return new Result(output);
     }
 

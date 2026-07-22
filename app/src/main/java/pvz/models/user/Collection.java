@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-<<<<<<< HEAD
 import pvz.models.AppContext;
-=======
-
->>>>>>> ee9f758a11028279a7549dd7a76ab4fb05ff6b42
 import pvz.models.entities.plants.enums.PlantType;
 import pvz.models.entities.zombies.ZombieType;
 
