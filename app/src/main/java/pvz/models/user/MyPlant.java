@@ -3,7 +3,7 @@ package pvz.models.user;
 import pvz.models.entities.plants.enums.PlantType;
 
 public class MyPlant {
-    private PlantType Type;
+    private PlantType type;
     private int level;
     private int seed;
     private boolean isBoosted;
@@ -19,11 +19,11 @@ public class MyPlant {
 
 
     public PlantType getType() {
-        return Type;
+        return type;
     }
 
     public void setType(PlantType type) {
-        Type = type;
+        this.type = type;
     }
 
     public int getLevel() {

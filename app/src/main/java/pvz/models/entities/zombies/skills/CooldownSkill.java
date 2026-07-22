@@ -51,4 +51,6 @@ public abstract class CooldownSkill implements ZombieSkill {
 
     /** Perform the skill's game-world side-effect. */
     protected abstract void doExecute(Zombie zombie, GameContext ctx);
+
+    // protected abstract void onDeath(Zombie zombie, GameContext ctx);
 }

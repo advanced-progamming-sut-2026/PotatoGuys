@@ -15,8 +15,14 @@ public class LeaderBoardController {
     private SortTypes currentSortTypes = SortTypes.DESCENDING;
 
     public Result show(Matcher matcher) {
+<<<<<<< HEAD
+        List<LeaderBoardEntry> all = LeaderBoard.loadAll();
+        all = LeaderBoard.sort(all, currentField, currentSortType);
+        String output = LeaderBoard.format(all, currentField, currentSortType);
+=======
         List<LeaderBoardEntry> all = Leaderboard.loadAll();
         String output = Leaderboard.format(all, currentField, currentSortTypes);
+>>>>>>> ee9f758a11028279a7549dd7a76ab4fb05ff6b42
         return new Result(output);
     }
 
@@ -38,8 +44,14 @@ public class LeaderBoardController {
             }
         }
 
+<<<<<<< HEAD
+        List<LeaderBoardEntry> all = LeaderBoard.loadAll();
+        all = LeaderBoard.sort(all, currentField, currentSortType);
+        String output = LeaderBoard.format(all, currentField, currentSortType);
+=======
         List<LeaderBoardEntry> all = Leaderboard.loadAll();
         String output = Leaderboard.format(all, currentField, currentSortTypes);
+>>>>>>> ee9f758a11028279a7549dd7a76ab4fb05ff6b42
         return new Result(output);
     }
 
