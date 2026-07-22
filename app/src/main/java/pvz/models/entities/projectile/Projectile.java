@@ -20,7 +20,7 @@ import pvz.models.games.map.tile.Tile;
  */
 public class Projectile implements TickAware {
 
-    private static final float COLS_PER_TICK = 1.0f;
+    private static final float COLS_PER_TICK = 0.4f;
     private static final float HIT_RADIUS = 0.5f;
     private static final int CHILL_DURATION_TICKS = 3 * Plant.TICKS_PER_SECOND;
 
@@ -82,7 +82,8 @@ public class Projectile implements TickAware {
                 tile = context.getTileAt(lastCol, lane);
             } catch (IndexOutOfBoundsException ex){
                 // if projectile is outside of map, remove it and return
-                spent=true;
+                spent = true;
+                context.removeProjectile(this);
                 return;
             }
             tile.processHit(this);
@@ -113,6 +114,7 @@ public class Projectile implements TickAware {
         } else {
             spent = true;
         }
+        context.removeProjectile(this);
     }
 
     public void spend() { spent = true; }

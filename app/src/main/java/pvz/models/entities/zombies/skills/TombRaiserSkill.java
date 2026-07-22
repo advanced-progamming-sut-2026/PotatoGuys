@@ -1,7 +1,5 @@
 package pvz.models.entities.zombies.skills;
 
-import javax.imageio.IIOException;
-
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;
 

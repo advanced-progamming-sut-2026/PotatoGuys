@@ -10,11 +10,12 @@ import pvz.models.entities.plants.Plant;
 import pvz.models.entities.projectile.Projectile;
 import pvz.models.entities.sun.Sun;
 import pvz.models.entities.zombies.Zombie;
+import pvz.models.entities.zombies.ZombieFactory;
+import pvz.models.entities.zombies.ZombieType;
 import pvz.models.games.GameContext;
 import pvz.models.games.card.Card;
 import pvz.models.games.card.PlantCard;
 import pvz.models.games.card.ZombieCard;
-import pvz.models.games.levels.variants.VaseBreakerLevel;
 import pvz.models.games.map.behaviors.TileBehavior;
 import pvz.models.games.map.tile.Tile;
 import pvz.models.games.map.tile.TileTags;
@@ -247,8 +248,22 @@ public class GameController {
     }
 
     public Result cheatSpawnZombie(Matcher matcher) {
-        // متد هنوز پیاده‌سازی نشده است
-        return new Result("");
+        String zombieType = matcher.group("zombieType");
+        int col = Integer.parseInt(matcher.group("zombieX"));
+        int lane = Integer.parseInt(matcher.group("zombieY"));
+
+        ZombieType type = ZombieType.fromTypeString(zombieType);
+        if (type == null) {
+            return new Result("No such zombie type '" + zombieType + "'.");
+        }
+
+        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+            return new Result("The position is uncorrent!");
+        }
+
+        Zombie zombie = new ZombieFactory().create(type.getAlias(), col, lane, context , 0 , 2);
+        context.spawnZombie(zombie);
+        return new Result("Zombie spawned!");
     }
 
 
@@ -353,17 +368,17 @@ public class GameController {
         int count = 0;
         for (TickAware entity : context.getEngine().getEntities()) {
             if (entity instanceof Zombie zombie) {
-                String stateLabel = zombie.getCurrentState() != null ? zombie.getCurrentState().getLabel() : "Unknown";
-                
-                sb.append(String.format("- %s | Position: (%.1f, %d) | HP: %.0f/%.0f | State: %s%s\n",
-                        zombie.getSheet().getAlias(),
-                        zombie.getX(),
-                        zombie.getLane(),
-                        zombie.getHp(),
-                        zombie.getMaxHp(),
-                        stateLabel,
-                        zombie.isGlowing() ? " [GLOWING]" : ""
-                ));
+                // String stateLabel = zombie.getCurrentState() != null ? zombie.getCurrentState().getLabel() : "Unknown";
+                // sb.append(String.format("- %s | Position: (%.1f, %d) | HP: %.0f/%.0f | State: %s%s\n",
+                //         zombie.getSheet().getAlias(),
+                //         zombie.getX(),
+                //         zombie.getLane(),
+                //         zombie.getHp(),
+                //         zombie.getMaxHp(),
+                //         stateLabel,
+                //         zombie.isGlowing() ? " [GLOWING]" : ""
+                // ));
+                sb.append("\n" + zombie.toInfoString());
                 count++;
             }
         }
