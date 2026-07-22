@@ -61,20 +61,40 @@ public class GameController {
                     context
                 );
                 if (won) {
-                    user.getScore().setLastLevel(context.getLevelNumber());
-                    user.getScore().setLastSeason(0);
+                    boolean isMiniGame = (context.getMode() instanceof pvz.models.games.modes.variants.VaseBreakerMode ||
+                            context.getMode() instanceof pvz.models.games.modes.variants.IZombieMode ||
+                            context.getMode() instanceof pvz.models.games.modes.variants.BeghouledMode);
 
-                    // Unlock next level
-                    pvz.models.games.seasons.SeasonManager manager = new pvz.models.games.seasons.SeasonManager();
-                    manager.unlockNextLevel(user, context.getSeasonName(), context.getLevelNumber());
+                    if (isMiniGame) {
+                        user.getScore().setMiniGamesPassed(user.getScore().getMiniGamesPassed() + 1);
+                        user.getProfile().getNews().getMessages().add(
+                                new pvz.models.user.Message("New Mini-Game Completed: " + context.getSeasonName() + " Level " + context.getLevelNumber() + "!")
+                        );
+                    } else {
+                        user.getScore().setLastLevel(context.getLevelNumber());
 
-                    // ---> FIXED: Explicitly announce the NEW unlocked level/minigame! <---
-                    int nextLevelNumber = context.getLevelNumber() + 1;
-                    user.getProfile().getNews().getMessages().add(
-                            new pvz.models.user.Message("New Level Unlocked: Level " + nextLevelNumber + " in " + context.getSeasonName() + "!")
-                    );
+                        // Convert String season names to Integers for the Leaderboard
+                        int chapterNum = 1;
+                        String season = context.getSeasonName();
+                        if (season != null) {
+                            if (season.equalsIgnoreCase("Ancient Egypt")) chapterNum = 1;
+                            else if (season.equalsIgnoreCase("Frostbite Caves")) chapterNum = 2;
+                            else if (season.equalsIgnoreCase("Dark Ages")) chapterNum = 3;
+                            else if (season.equalsIgnoreCase("Big Wave Beach")) chapterNum = 4;
+                        }
+                        user.getScore().setLastSeason(chapterNum);
+
+                        // Unlock next level
+                        pvz.models.games.seasons.SeasonManager manager = new pvz.models.games.seasons.SeasonManager();
+                        manager.unlockNextLevel(user, context.getSeasonName(), context.getLevelNumber());
+
+                        int nextLevelNumber = context.getLevelNumber() + 1;
+                        user.getProfile().getNews().getMessages().add(
+                                new pvz.models.user.Message("New Level Unlocked: Level " + nextLevelNumber + " in " + context.getSeasonName() + "!")
+                        );
+                    }
                 }
-                user.saveUser(); // Saves the game state, quest progress, AND the new messages!
+                user.saveUser(); // Saves the game state, quest progress, scores, AND the new messages! // Saves the game state, quests, scores, AND the new messages! // Saves the game state, quest progress, AND the new messages!
             }
             return new Result("Game Over", new MainMenu());
         }

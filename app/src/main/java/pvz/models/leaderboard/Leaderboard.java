@@ -7,99 +7,112 @@ import java.util.List;
 
 import pvz.models.Constants;
 import pvz.models.user.User;
+import pvz.models.quests.Quest;
+import pvz.models.quests.QuestCategory;
 import pvz.utils.SaveManager;
 
 public class Leaderboard {
 
+    public static class LeaderBoardEntry {
+        public String username;
+        public int lastSeason;
+        public int lastLevel;
+        public int miniGamesPassed;
+        public int dailyQuestsCompleted;
+        public int nonDailyQuestsCompleted;
+        public int highestScore;
+
+        public LeaderBoardEntry(String username, int lastSeason, int lastLevel, int miniGamesPassed,
+                                int dailyQuestsCompleted, int nonDailyQuestsCompleted, int highestScore) {
+            this.username = username;
+            this.lastSeason = lastSeason;
+            this.lastLevel = lastLevel;
+            this.miniGamesPassed = miniGamesPassed;
+            this.dailyQuestsCompleted = dailyQuestsCompleted;
+            this.nonDailyQuestsCompleted = nonDailyQuestsCompleted;
+            this.highestScore = highestScore;
+        }
+    }
+
     public static List<LeaderBoardEntry> loadAll() {
         List<LeaderBoardEntry> entries = new ArrayList<>();
-        File dir = new File(Constants.SAVE_PATH + "users");
-        File[] files = dir.listFiles((d, name) -> name.endsWith(".json") && !name.equals("username.json"));
-        if (files == null) return entries;
+        File dir = new File(Constants.SAVE_PATH + "users/");
 
-        for (File file : files) {
-            User user = SaveManager.getInstance().loadAbsolute(file.getAbsolutePath(), User.class);
-            if (user == null) continue;
-            entries.add(new LeaderBoardEntry(user));
+        if (dir.exists() && dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    if (f.getName().endsWith(".json") && !f.getName().equals("username.json")) {
+                        User u = SaveManager.getInstance().loadAbsolute(f.getAbsolutePath(), User.class);
+                        if (u != null) {
+
+                            // Dynamically count completed quests to prevent desync bugs
+                            int daily = 0;
+                            int nonDaily = 0;
+                            if (u.getQuestLog() != null) {
+                                for (Quest q : u.getQuestLog().getAllQuests()) {
+                                    if (q.isCompleted() || q.isClaimed()) {
+                                        if (q.getCategory() == QuestCategory.DAILY) {
+                                            daily++;
+                                        } else {
+                                            nonDaily++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            int season = u.getScore() != null ? u.getScore().getLastSeason() : 0;
+                            int level = u.getScore() != null ? u.getScore().getLastLevel() : 0;
+                            int miniGames = u.getScore() != null ? u.getScore().getMiniGamesPassed() : 0;
+                            int highScore = u.getScore() != null ? u.getScore().getHighestScore() : 0;
+
+                            entries.add(new LeaderBoardEntry(
+                                    u.getUsername(), season, level, miniGames, daily, nonDaily, highScore
+                            ));
+                        }
+                    }
+                }
+            }
         }
         return entries;
     }
 
-    public static List<LeaderBoardEntry> sort(List<LeaderBoardEntry> entries, LeaderboardSortField field, SortTypes sortTypes) {
-        Comparator<LeaderBoardEntry> comp = switch (field) {
-            case LAST_LEVEL_AND_SEASON -> Comparator
-                    .comparingInt(LeaderBoardEntry::getLastLevel)
-                    .thenComparingInt(LeaderBoardEntry::getLastSeason);
-            case MINI_GAMES_PASSED -> Comparator.comparingInt(LeaderBoardEntry::getNumMiniGames);
-            case DAILY_QUESTS_COMPLETED -> Comparator.comparingInt(LeaderBoardEntry::getDailyQuests);
-            case NON_DAILY_QUESTS_COMPLETED -> Comparator.comparingInt(LeaderBoardEntry::getNonDailyQuests);
-            case HIGHEST_SCORING_GAME_SCORE -> Comparator.comparingInt(LeaderBoardEntry::getHighestScore);
+    public static List<LeaderBoardEntry> sort(List<LeaderBoardEntry> list, LeaderboardSortField field, SortTypes order) {
+        Comparator<LeaderBoardEntry> comp = switch(field) {
+            case LAST_LEVEL_AND_SEASON -> Comparator.comparingInt((LeaderBoardEntry e) -> e.lastSeason)
+                    .thenComparingInt(e -> e.lastLevel);
+            case MINI_GAMES_PASSED -> Comparator.comparingInt(e -> e.miniGamesPassed);
+            case DAILY_QUESTS_COMPLETED -> Comparator.comparingInt(e -> e.dailyQuestsCompleted);
+            case NON_DAILY_QUESTS_COMPLETED -> Comparator.comparingInt(e -> e.nonDailyQuestsCompleted);
+            case HIGHEST_SCORING_GAME_SCORE -> Comparator.comparingInt(e -> e.highestScore);
         };
-        if (sortTypes == SortTypes.DESCENDING) {
+
+        if (order == SortTypes.DESCENDING) {
             comp = comp.reversed();
         }
-        comp = comp.thenComparing(LeaderBoardEntry::getUsername);
-        List<LeaderBoardEntry> sorted = new ArrayList<>(entries);
-        sorted.sort(comp);
-        return sorted;
+
+        // Tie-breaker: Alphabetical username sorting
+        comp = comp.thenComparing(e -> e.username);
+        list.sort(comp);
+        return list;
     }
 
-    public static String format(List<LeaderBoardEntry> entries, LeaderboardSortField field, SortTypes sortTypes) {
+    public static String format(List<LeaderBoardEntry> list, LeaderboardSortField field, SortTypes order) {
+        if (list.isEmpty()) return "No players found on the leaderboard.";
+
         StringBuilder sb = new StringBuilder();
-        sb.append("=== LEADERBOARD ===");
-        sb.append("\nSorted by: ").append(field.name()).append(" (").append(sortTypes.name()).append(")");
-        sb.append("\n---");
-        if (entries.isEmpty()) {
-            sb.append("\nNo players found.");
-            return sb.toString();
-        }
-        for (int i = 0; i < entries.size(); i++) {
-            LeaderBoardEntry e = entries.get(i);
-            sb.append("\n").append(i + 1).append(". ");
-            sb.append(e.getUsername());
-            sb.append(" | Chapter: ").append(e.getLastSeasonName() != null ? e.getLastSeasonName() : "N/A")
-              .append(" Lv.").append(e.getLastLevel());
-            sb.append(" | MiniGames: ").append(e.getNumMiniGames());
-            sb.append(" | Daily: ").append(e.getDailyQuests());
-            sb.append(" | Non-Daily: ").append(e.getNonDailyQuests());
-            sb.append(" | Best Score: ").append(e.getHighestScore());
+        sb.append("\n=== LEADERBOARD (Sorted by ").append(field).append(" ").append(order).append(") ===\n");
+        sb.append(String.format("%-15s | %-22s | %-10s | %-12s | %-16s | %-13s\n",
+                "Username", "Story Mode", "Minigames", "Daily Quests", "Non-Daily Quests", "Highest Score"));
+        sb.append("-".repeat(102)).append("\n");
+
+        for (LeaderBoardEntry e : list) {
+            String levelStr = "Level " + e.lastLevel + " of Chapter " + e.lastSeason;
+            if (e.lastSeason == 0 || e.lastLevel == 0) levelStr = "None";
+
+            sb.append(String.format("%-15s | %-22s | %-10d | %-12d | %-16d | %-13d\n",
+                    e.username, levelStr, e.miniGamesPassed, e.dailyQuestsCompleted, e.nonDailyQuestsCompleted, e.highestScore));
         }
         return sb.toString();
-    }
-
-    public static class LeaderBoardEntry {
-        private final String username;
-        private final int lastLevel;
-        private final int lastSeason;
-        private final String lastSeasonName;
-        private final int numMiniGames;
-        private final int dailyQuests;
-        private final int nonDailyQuests;
-        private final int highestScore;
-
-        public LeaderBoardEntry(User user) {
-            this.username = user.getNickName() != null ? user.getNickName() : user.getUsername();
-            this.lastLevel = user.getScore().getLastLevel();
-            this.lastSeason = user.getScore().getLastSeason();
-            String seasonName = null;
-            if (user.getProfile() != null && user.getProfile().getSeasons() != null
-                    && lastSeason >= 0 && lastSeason < user.getProfile().getSeasons().size()) {
-                seasonName = user.getProfile().getSeasons().get(lastSeason).getName();
-            }
-            this.lastSeasonName = seasonName;
-            this.numMiniGames = user.getScore().getNumMiniGames();
-            this.dailyQuests = user.getScore().getDailyQuests();
-            this.nonDailyQuests = user.getScore().getNonDailyQuests();
-            this.highestScore = user.getScore().getHighestScore();
-        }
-
-        public String getUsername() { return username; }
-        public int getLastLevel() { return lastLevel; }
-        public int getLastSeason() { return lastSeason; }
-        public String getLastSeasonName() { return lastSeasonName; }
-        public int getNumMiniGames() { return numMiniGames; }
-        public int getDailyQuests() { return dailyQuests; }
-        public int getNonDailyQuests() { return nonDailyQuests; }
-        public int getHighestScore() { return highestScore; }
     }
 }
