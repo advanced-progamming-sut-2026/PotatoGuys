@@ -78,6 +78,18 @@
           {
             "message": "FLAG has been unlocked!",
             "unread": true
+          },
+          {
+            "message": "DODO has been unlocked!",
+            "unread": true
+          },
+          {
+            "message": "HUNTER has been unlocked!",
+            "unread": true
+          },
+          {
+            "message": "BRICKHEAD has been unlocked!",
+            "unread": true
           }
         ]
       },
@@ -138,7 +150,10 @@
         "EXPLORER",
         "BUCKETHEAD",
         "TOMB_RAISER",
-        "FLAG"
+        "FLAG",
+        "DODO",
+        "HUNTER",
+        "BRICKHEAD"
       ]
     },
     "news": {
@@ -362,7 +377,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 3000,
-          "currentAmount": 700
+          "currentAmount": 725
         },
         "active": true,
         "claimed": false,
@@ -377,7 +392,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 4000,
-          "currentAmount": 700
+          "currentAmount": 725
         },
         "active": true,
         "claimed": false,
@@ -392,7 +407,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 5000,
-          "currentAmount": 700
+          "currentAmount": 725
         },
         "active": true,
         "claimed": false,

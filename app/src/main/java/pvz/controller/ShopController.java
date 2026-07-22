@@ -32,9 +32,9 @@ public class ShopController {
         StringBuilder sb = new StringBuilder("Permanent Items:");
         for (ShopItem item : shop.getPermanentItems()) {
             sb.append("\n").append(item.getId()).append(": ").append(item.getName())
-              .append(" - ").append(item.getPrice().getAmount()).append(" ")
-              .append(item.getPrice().getCurrency())
-              .append(" | Unit: ").append(item.getUnitAmount());
+                    .append(" - ").append(item.getPrice().getAmount()).append(" ")
+                    .append(item.getPrice().getCurrency())
+                    .append(" | Unit: ").append(item.getUnitAmount());
         }
         return new Result(sb.toString());
     }
@@ -66,7 +66,7 @@ public class ShopController {
 
         int itemId = Integer.parseInt(matcher.group(1));
         int count = Integer.parseInt(matcher.group(2));
-        String plantType = matcher.group(3);
+        String plantTypeStr = matcher.group(3);
 
         Shop shop = new Shop(currentUser);
         ShopItem item = findItem(shop, itemId);
@@ -74,26 +74,28 @@ public class ShopController {
             return new Result("Invalid item ID.");
         }
 
+        // Lifted to be accessible after applyEffect
+        PlantType selectedType = null;
+
         if (item instanceof pvz.models.shop.items.SelectableSeedPacketItem) {
-            if (plantType == null || plantType.isBlank()) {
+            if (plantTypeStr == null || plantTypeStr.isBlank()) {
                 return new Result("For Selectable Seed Packet, the -t parameter is mandatory.");
             }
-            PlantType selectedType = null;
             for (PlantType pt : PlantType.values()) {
-                if (pt.name().equalsIgnoreCase(plantType)) {
+                if (pt.name().equalsIgnoreCase(plantTypeStr)) {
                     selectedType = pt;
                     break;
                 }
             }
             if (selectedType == null) {
-                return new Result("Invalid plant type: " + plantType);
+                return new Result("Invalid plant type: " + plantTypeStr);
             }
             if (currentUser.getProfile().getCollection().getPlant(selectedType) == null) {
-                return new Result("Plant " + plantType + " is not unlocked yet.");
+                return new Result("Plant " + plantTypeStr + " is not unlocked yet.");
             }
         }
 
-        if (!item.canBuy(currentUser, count, plantType)) {
+        if (!item.canBuy(currentUser, count, plantTypeStr)) {
             if (currentUser.getProfile().getCoins() < item.getPrice().getAmount() * count
                     && item.getPrice().getCurrency() == pvz.models.shop.Currency.COIN) {
                 return new Result("Insufficient coins. Need " + (item.getPrice().getAmount() * count)
@@ -107,8 +109,14 @@ public class ShopController {
             return new Result("Cannot buy this item (capacity limit reached or invalid parameters).");
         }
 
-        boolean success = item.applyEffect(currentUser, count, plantType);
+        boolean success = item.applyEffect(currentUser, count, plantTypeStr);
         if (success) {
+            // Explicitly force the seed packets into the collection upon purchase
+            if (selectedType != null) {
+                int totalPackets = item.getUnitAmount() * count;
+                currentUser.getProfile().getCollection().addSeedPackets(selectedType, totalPackets);
+                currentUser.saveUser();
+            }
             return new Result("Successfully purchased " + item.getName() + " x" + count + ".");
         } else {
             return new Result("Purchase failed.");

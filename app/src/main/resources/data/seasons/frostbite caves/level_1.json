@@ -9,7 +9,13 @@
     "columns": 9,
     "specialTiles": [
       { "x": 5, "y": 2, "behaviors": [{ "type": "SLIPPERY", "laneDelta": 1, "name": "Ice" }], "tags": ["SLIP_DOWN"] },
-      { "x": 6, "y": 1, "behaviors": [{ "type": "SLIPPERY", "laneDelta": -1, "name": "Ice" }], "tags": ["SLIP_UP"] }
+      { "x": 6, "y": 1, "behaviors": [{ "type": "SLIPPERY", "laneDelta": -1, "name": "Ice" }], "tags": ["SLIP_UP"] },
+      { "x": 0, "y": 0, "behaviors": [{ "type": "ICE_BLOCK", "name": "FrozenPlant" }], "tags": ["ICE_BLOCK"] },
+      { "x": 0, "y": 4, "behaviors": [{ "type": "ICE_BLOCK", "name": "FrozenPlant" }], "tags": ["ICE_BLOCK"] }
+    ],
+    "prePlantedPlants": [
+      { "type": "Repeater", "col": 0, "lane": 0 },
+      { "type": "Repeater", "col": 0, "lane": 4 }
     ]
   },
   "waves": [

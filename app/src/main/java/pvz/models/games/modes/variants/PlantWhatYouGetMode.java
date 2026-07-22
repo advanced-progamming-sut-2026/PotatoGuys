@@ -159,7 +159,7 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
         Plant plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
-        context.getGameStats().onPlantPlaced(col, lane);
+        context.getGameStats().onPlantPlaced(col, lane, plantCard.getPlant().getType());
 
         // مدیریت زمان شارژ (Recharge / Cooldown)
         if (preparationPhase) {

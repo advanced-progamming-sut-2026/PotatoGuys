@@ -120,7 +120,7 @@ public class NormalMode implements GameMode, PlantPlacer {
         Plant plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
-        context.getGameStats().onPlantPlaced(col, lane);
+        context.getGameStats().onPlantPlaced(col, lane, plantCard.getPlant().getType());
         plantCard.use();
         context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
     }
@@ -258,6 +258,10 @@ public class NormalMode implements GameMode, PlantPlacer {
             } else if (tile.getTags().contains(TileTags.SLIP_DOWN)){
                 if (hasZombie) return String.format("↓/Z%-1d",zombiesAtCell.size());
                 return " S↓ ";
+            } else if(tile .getTags().contains(TileTags.ICE_BLOCK)){
+                if (hasZombie) return String.format("I/Z%-1d",zombiesAtCell.size());
+                else if(hasPlant) return "I/P ";
+                return " I  ";
             }
         }
 

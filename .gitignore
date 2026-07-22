@@ -4,3 +4,16 @@
 
 # Ignore Gradle build output directory
 build
+
+# IDE
+.idea/
+
+# Save data
+app/src/main/java/pvz/saves/
+
+# Temp merge files
+MergedProject.txt
+Merged_Project.txt
+
+# Duplicate directory
+plantsvszombies2/

@@ -18,42 +18,17 @@ public class LevelLoader {
         Level level;
 
         if (type != null) {
-            switch (type) {
-                case "NORMAL":
-                    level = gson.fromJson(jsonObject, NormalLevel.class);
-                    break;
-
-                case "IZOMBIE":
-                    level = gson.fromJson(jsonObject, IZombieLevel.class);
-                    break;
-
-                case "CONVEYORBELT":
-                    level = gson.fromJson(jsonObject, ConveyorBeltLevel.class);
-                    break;
-
-                case "TIMEDWAR":
-                    level = gson.fromJson(jsonObject, TimedWarLevel.class);
-                    break;
-
-                case "VASEBREAKER":
-                    level = gson.fromJson(jsonObject, VaseBreakerLevel.class);
-                    break;
-
-                case "DEADLINE":
-                    level = gson.fromJson(jsonObject, DeadLineLevel.class);
-                    break;
-
-                case "PLANTWHATYOUGET":
-                    level = gson.fromJson(jsonObject, PlantWhatYouGetLevel.class);
-                    break;
-
-                case "BEGHOULED":
-                    level = gson.fromJson(jsonObject, BeghouledLevel.class);
-                    break;
-
-                default:
-                    throw new IllegalArgumentException("Unknown game mode type: " + type);
-            }
+            level = switch (type) {
+                case "NORMAL" -> gson.fromJson(jsonObject, NormalLevel.class);
+                case "IZOMBIE" -> gson.fromJson(jsonObject, IZombieLevel.class);
+                case "CONVEYORBELT" -> gson.fromJson(jsonObject, ConveyorBeltLevel.class);
+                case "TIMEDWAR" -> gson.fromJson(jsonObject, TimedWarLevel.class);
+                case "VASEBREAKER" -> gson.fromJson(jsonObject, VaseBreakerLevel.class);
+                case "DEADLINE" -> gson.fromJson(jsonObject, DeadLineLevel.class);
+                case "PLANTWHATYOUGET" -> gson.fromJson(jsonObject, PlantWhatYouGetLevel.class);
+                case "BEGHOULED" -> gson.fromJson(jsonObject, BeghouledLevel.class);
+                default -> throw new IllegalArgumentException("Unknown game mode type: " + type);
+            };
         } else {
             return null;
         }

@@ -81,6 +81,12 @@ public class GameStats {
     }
     public void onPlantLost() { plantsLost++; }
     public void onExplosivePlantUsed() { explosivePlantsUsed++; }
+
+    private boolean isExplosivePlant(PlantType type) {
+        return type == PlantType.CherryBomb || type == PlantType.Jalapeno || type == PlantType.Doomshroom
+            || type == PlantType.Squash || type == PlantType.Grapeshot || type == PlantType.PotatoMine
+            || type == PlantType.PrimalPotatoMine || type == PlantType.TangleKelp || type == PlantType.Explodeonut;
+    }
     public void onLawnmowerKill(int count) { lawnmowerKills += count; }
     public void onFirstWaveStart(int tick) {
         if (!firstWaveStarted) {
@@ -88,9 +94,10 @@ public class GameStats {
             tickOfFirstWave = tick;
         }
     }
-    public void onPlantPlaced(int col, int row) {
+    public void onPlantPlaced(int col, int row, PlantType type) {
         columnsUsedForPlanting.add(col);
         rowsUsedForPlanting.add(row);
+        if (isExplosivePlant(type)) onExplosivePlantUsed();
     }
     public void onSunProducerPlaced() { sunProducerCount++; usedSunProducers = true; }
     public void onPlantUsedToKill(PlantType type) { plantsUsedToKill.add(type); }

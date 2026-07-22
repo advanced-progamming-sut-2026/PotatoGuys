@@ -1,6 +1,7 @@
 package pvz.models.leaderboard;
 
-public enum SortType {
+public enum SortTypes {
     ASCENDING,
     DESCENDING
+
 }
