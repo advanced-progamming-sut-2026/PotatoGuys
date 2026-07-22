@@ -15,17 +15,20 @@ import pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
 import pvz.models.entities.plants.fsm.PlantIdleState;
 import pvz.models.entities.plants.fsm.PlantState;
 import pvz.models.games.GameContext;
+import pvz.models.games.map.behaviors.IceBlockBehavior;
+import pvz.models.games.map.tile.Tile;
+import pvz.models.games.map.tile.TileTags;
 
 /**
  * Concrete, data-driven plant entity.
  *
- * <p>All 69 plant kinds share this single class. Unique behaviour comes from:
+ * <p>All 69 plant kinds share this single class. Unique behavior comes from:
  * <ol>
  *   <li>A {@link PlantPropertySheet} — immutable parsed stats loaded from JSON.</li>
  *   <li>A resolved {@link ResolvedStats} snapshot — base stats plus every level
  *       upgrade unlocked at {@link #level}, computed once at construction
  *       (mirrors {@code Zombie}'s wave-scaling, generalized to plant leveling).</li>
- *   <li>A single {@link PlantAction} plug-in — the Strategy-pattern behaviour
+ *   <li>A single {@link PlantAction} plug-in — the Strategy-pattern behavior
  *       (shoot / produce sun / explode / buff family / ...) chosen by
  *       {@link PlantFactory} from the sheet's category.</li>
  * </ol>
@@ -103,7 +106,7 @@ public class Plant implements TickAware {
 
     @Override
     public void update() {
-        if (dead) return;
+        if (dead || isFrozen) return;
         tickGrowth();
         tickBoost();
         PlantState next;
@@ -133,7 +136,10 @@ public class Plant implements TickAware {
         if (freezeLevel >= 3) {
             isFrozen = true;
             iceHp = MAX_ICE_HP;
-            context.log("[ColdWind] " + sheet.getName() + " is frozen!");
+            Tile tile=context.getTileAt(col,lane);
+            if (!tile.getTags().contains(TileTags.ICE_BLOCK)) tile.getTags().add(TileTags.ICE_BLOCK);
+            context.getTileAt(col,lane).addBehavior(new IceBlockBehavior(this));
+            context.log("[Freeze] " + sheet.getName() + " is frozen!");
         }
     }
 
@@ -157,7 +163,7 @@ public class Plant implements TickAware {
 
     // ── Damage / health ────────────────────────────────────────────────────────
 
-    /** Plants have no armour layer (rule: any "armor" text just adjusts HP), so damage is direct. */
+    /** Plants have no armor layer (rule: any "armor" text just adjusts HP), so damage is direct. */
     public void takeDamage(float amount, DamageKind kind) {
         if (dead || amount <= 0f) return;
 

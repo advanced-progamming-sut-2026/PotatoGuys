@@ -47,7 +47,7 @@ public class HunterSnowballSkill extends CooldownSkill {
         if (targetCol < 0) return;
 
         for (int shot = 0; shot < snowballsPerBarrage; shot++) {
-            // ctx.applyFrostToPlant(targetCol, zombie.getLane());
+             ctx.getPlantsAt(targetCol,zombie.getLane()).getLast().incrementFreezeLevel();
         }
         ctx.log("Hunter Zombie threw " + snowballsPerBarrage
                 + " snowball(s) at (" + targetCol + "," + zombie.getLane()

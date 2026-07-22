@@ -7,6 +7,8 @@ import pvz.models.entities.projectile.ProjectileType;
 import pvz.models.games.GameContext;
 import pvz.models.games.map.tile.TileTags;
 
+import java.util.List;
+
 /**
  * Behaviour for {@code SHOOTER} (and, by extension, {@code STRIKE_THROUGH})
  * plants: fires straight down its own lane whenever a zombie is present.
@@ -27,7 +29,8 @@ public class ShooterAction extends CooldownPlantAction {
     protected boolean canUse(Plant plant, GameContext ctx) {
         boolean isGraveOrIceInLane=false;
         for (int i = plant.getCol()+1; i < ctx.getMap().getColumns(); i++) {
-            if (ctx.getTileAt(i,plant.getLane()).getTags().contains(TileTags.GRAVE)) isGraveOrIceInLane=true;
+            List<TileTags> tileTags=ctx.getTileAt(i,plant.getLane()).getTags();
+            if (tileTags.contains(TileTags.GRAVE) || tileTags.contains(TileTags.ICE_BLOCK)) isGraveOrIceInLane=true;
         }
         return (!ctx.getZombiesInLane(plant.getLane()).isEmpty()) || isGraveOrIceInLane;
     }

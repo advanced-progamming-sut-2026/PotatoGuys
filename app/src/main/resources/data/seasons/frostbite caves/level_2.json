@@ -10,7 +10,13 @@
     "specialTiles": [
       { "x": 4, "y": 0, "behaviors": [{ "type": "SLIPPERY", "laneDelta": 1, "name": "Ice" }], "tags": ["SLIP_DOWN"] },
       { "x": 4, "y": 4, "behaviors": [{ "type": "SLIPPERY", "laneDelta": -1, "name": "Ice" }], "tags": ["SLIP_UP"] },
-      { "x": 6, "y": 2, "behaviors": [{ "type": "SLIPPERY", "laneDelta": 1, "name": "Ice" }], "tags": ["SLIP_DOWN"] }
+      { "x": 6, "y": 2, "behaviors": [{ "type": "SLIPPERY", "laneDelta": 1, "name": "Ice" }], "tags": ["SLIP_DOWN"] },
+      { "x": 2, "y": 1, "behaviors": [{ "type": "ICE_BLOCK", "name": "FrozenPlant" }], "tags": ["ICE_BLOCK"] },
+      { "x": 2, "y": 3, "behaviors": [{ "type": "ICE_BLOCK", "name": "FrozenPlant" }], "tags": ["ICE_BLOCK"] }
+    ],
+    "prePlantedPlants": [
+      { "type": "Repeater", "col": 2, "lane": 1 },
+      { "type": "Repeater", "col": 2, "lane": 3 }
     ]
   },
   "waves": [

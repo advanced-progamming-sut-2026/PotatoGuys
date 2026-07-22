@@ -3,7 +3,6 @@ package pvz.models.entities.zombies.fsm;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.entities.zombies.skills.ZombieSkill;
 import pvz.models.games.GameContext;
-import pvz.models.games.modes.variants.NormalMode;
 
 /**
  * Default movement state — the zombie walks left across the lawn.
@@ -60,7 +59,7 @@ public class WalkState implements ZombieState {
     /** Returns {@link EatState} if a plant is at the zombie's current column, else null. */
     private ZombieState checkForPlant(Zombie zombie, GameContext ctx) {
         int col = (int) zombie.getX();
-        if (ctx.isPlantAt(col, zombie.getLane())) {
+        if (ctx.isPlantAt(col, zombie.getLane()) && !ctx.getPlantsAt(col,zombie.getLane()).getLast().isFrozen()) {
             return new EatState(col, zombie.getLane());
         }
         return null;

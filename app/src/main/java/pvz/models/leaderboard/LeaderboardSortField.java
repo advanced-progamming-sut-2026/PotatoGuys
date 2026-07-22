@@ -1,6 +1,6 @@
 package pvz.models.leaderboard;
 
-public enum LeaderBoardSortField {
+public enum LeaderboardSortField {
     LAST_LEVEL_AND_SEASON,
     MINI_GAMES_PASSED,
     DAILY_QUESTS_COMPLETED,

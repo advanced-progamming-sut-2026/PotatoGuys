@@ -1,5 +1,6 @@
 package pvz.models.entities.zombies.skills;
 
+import pvz.models.entities.sun.Sun;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;
 
@@ -28,21 +29,30 @@ public class RaStealSunSkill extends CooldownSkill {
 
     @Override
     protected boolean canUse(Zombie zombie, GameContext ctx) {
-        return ctx.getCurrentSun() > 0 && zombie.getStolenSun() < maxStealable;
+        return ctx.getSuns().size() > 0 && zombie.getStolenSun() < maxStealable;
     }
 
     @Override
     protected void doExecute(Zombie zombie, GameContext ctx) {
         int headroom = maxStealable - zombie.getStolenSun();
-        int toSteal = Math.min(SUN_PER_STEAL, Math.min(headroom, ctx.getCurrentSun()));
-        ctx.decreaseSun(toSteal);
+        Sun sun = getRandomSun(ctx);
+        if (sun == null) return;
+        int toSteal = Math.min(SUN_PER_STEAL, Math.min(headroom, sun.getAmount()));
         zombie.addStolenSun(toSteal);
-        ctx.log("Ra Zombie stole " + toSteal + " sun! (total stolen: "
+        ctx.removeSun(sun);
+        ctx.log("Ra Zombie stole sun at (" + sun.getCol() + "," + sun.getLane() + ") (total stolen: "
                 + zombie.getStolenSun() + "/" + maxStealable + ")");
     }
 
     @Override
     public String getName() {
         return "StealSun";
+    }
+
+    private Sun getRandomSun(GameContext ctx) {
+        var suns = ctx.getSuns();
+        if (suns.isEmpty()) return null;
+        int idx = (int) (Math.random() * suns.size());
+        return suns.get(idx);
     }
 }

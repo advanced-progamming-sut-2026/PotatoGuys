@@ -20,6 +20,7 @@ import pvz.models.games.map.GameMap;
 import pvz.models.games.map.GameMapFactory;
 import pvz.models.games.map.data.PrePlantedPlant;
 import pvz.models.games.map.tile.Tile;
+import pvz.models.games.map.tile.TileTags;
 import pvz.models.games.modes.GameMode;
 import pvz.models.games.modes.GameModeFactory;
 
@@ -63,6 +64,12 @@ public class GameContext implements TickAware {
                 Plant p = new PlantFactory().create(
                     pDef.type, pDef.col, pDef.lane, 1, false, this
                 );
+                if (currentLevel.getGameMapDefinition().specialTiles.stream().anyMatch(t->(
+                        t.tags.contains(TileTags.ICE_BLOCK) && t.x==p.getCol() && t.y==p.getLane()))){
+                    p.incrementFreezeLevel();
+                    p.incrementFreezeLevel();
+                    p.incrementFreezeLevel();
+                }
                 this.spawnPlant(p);
             }
         }
@@ -218,7 +225,7 @@ public class GameContext implements TickAware {
     }
 
     public boolean removeProjectile(Projectile p) {
-        engine.unRegister(p);
+        engine.unRegister(p); 
         return projectiles.remove(p);
     }
 

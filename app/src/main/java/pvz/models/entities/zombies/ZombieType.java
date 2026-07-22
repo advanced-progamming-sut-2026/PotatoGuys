@@ -91,4 +91,11 @@ public enum ZombieType {
         }
         return null;
     }
+
+    public static ZombieType fromTypeString(String type){
+        for (ZombieType t : values()) {
+            if (t.toString().equalsIgnoreCase(type)) return t;
+        }
+        return null;
+    }
 }

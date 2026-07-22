@@ -3,7 +3,7 @@ package pvz.models.games.map.tile;
 public enum TileTags {
     NORMAL("Normal"),
     GRAVE("Grave"),
-    ICE("Ice"),
+    ICE_BLOCK("Ice Block"),
     SLIP_UP("Slip up"),
     SLIP_DOWN("Slip down"),
     WATER("Water"),

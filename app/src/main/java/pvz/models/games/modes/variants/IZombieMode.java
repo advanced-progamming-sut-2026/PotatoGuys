@@ -142,7 +142,6 @@ public class IZombieMode implements GameMode, ZombiePlacer {
             }
         }
 
-        // ─── ۳. بررسی شرط برد (خورده شدن تمامی ۵ مغز) ─────────────────────────
         boolean allBrainsEaten = true;
         for (boolean eaten : brainsEaten) {
             if (!eaten) {
@@ -157,7 +156,6 @@ public class IZombieMode implements GameMode, ZombiePlacer {
             return;
         }
 
-        // ─── ۴. بررسی شرط باخت (عدم توانایی خرید زامبی + نبود زامبی در زمین) ───
         if (context.getZombies().isEmpty()) {
             int minZombieCost = getCheapestZombieCost(context);
             if (context.getCurrentSun() < minZombieCost) {
@@ -167,7 +165,6 @@ public class IZombieMode implements GameMode, ZombiePlacer {
         }
     }
 
-    // ─── پیاده‌سازی ZombiePlacer ──────────────────────────────────────────────
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {

@@ -21,7 +21,7 @@ public enum RunningGameCommand implements MenuCommand {
     SHOW_SUNS("^show\\s+suns\\s*$"),
     START_ZOMBIE_WAVE("^start\\s+zombie\\s+waves\\s*$"),
     SHOW_TILE_STATUS("^show\\s+tile\\s+status\\s+-l\\s+\\(\\s*(?<tileX>\\d+)\\s*,\\s*(?<tileY>\\d+)\\s*\\)\\s*$"),
-    CHEAT_SPAWN_ZOMBIE("^cheat\\s+spawn-zombie\\s+-t\\s+(?<zombieType>\\w+)\\s+-l\\s+<\\s*(?<zombieX>\\d+)\\s*,\\s*(?<zombieY>\\d+)\\s*>\\s*$"),
+    CHEAT_SPAWN_ZOMBIE("^cheat\\s+spawn-zombie\\s+-t\\s+(?<zombieType>\\w+)\\s+-l\\s+\\(\\s*(?<zombieX>\\d+)\\s*,\\s*(?<zombieY>\\d+)\\s*\\)\\s*$"),
     HELP("^\\s*help\\s*$");
 
     private final String pattern;

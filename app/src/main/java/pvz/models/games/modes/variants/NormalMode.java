@@ -258,6 +258,10 @@ public class NormalMode implements GameMode, PlantPlacer {
             } else if (tile.getTags().contains(TileTags.SLIP_DOWN)){
                 if (hasZombie) return String.format("↓/Z%-1d",zombiesAtCell.size());
                 return " S↓ ";
+            } else if(tile .getTags().contains(TileTags.ICE_BLOCK)){
+                if (hasZombie) return String.format("I/Z%-1d",zombiesAtCell.size());
+                else if(hasPlant) return "I/P ";
+                return " I  ";
             }
         }
 

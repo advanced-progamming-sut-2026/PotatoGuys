@@ -1,7 +1,6 @@
 package pvz.models.games.modes.capabilities;
 
 import pvz.models.games.GameContext;
-import pvz.models.games.card.Card;
 import pvz.models.games.card.PlantCard;
 
 /**
