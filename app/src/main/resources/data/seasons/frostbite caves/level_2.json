@@ -8,9 +8,9 @@
     "rows": 5,
     "columns": 9,
     "specialTiles": [
-      { "x": 4, "y": 0, "behaviors": [{ "type": "SLIPPERY", "hp": 0, "name": "Ice" }], "tags": ["SLIPPERY"] },
-      { "x": 4, "y": 4, "behaviors": [{ "type": "SLIPPERY", "hp": 0, "name": "Ice" }], "tags": ["SLIPPERY"] },
-      { "x": 6, "y": 2, "behaviors": [{ "type": "SLIPPERY", "hp": 0, "name": "Ice" }], "tags": ["SLIPPERY"] }
+      { "x": 4, "y": 0, "behaviors": [{ "type": "SLIPPERY", "laneDelta": 1, "name": "Ice" }], "tags": ["SLIP_DOWN"] },
+      { "x": 4, "y": 4, "behaviors": [{ "type": "SLIPPERY", "laneDelta": -1, "name": "Ice" }], "tags": ["SLIP_UP"] },
+      { "x": 6, "y": 2, "behaviors": [{ "type": "SLIPPERY", "laneDelta": 1, "name": "Ice" }], "tags": ["SLIP_DOWN"] }
     ]
   },
   "waves": [

@@ -1,0 +1,129 @@
+package pvz.models.entities.projectile;
+
+import pvz.models.engine.TickAware;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.entities.zombies.effects.EffectType;
+import pvz.models.entities.zombies.effects.StatusEffect;
+import pvz.models.games.GameContext;
+import pvz.models.games.map.tile.Tile;
+
+/**
+ * A single, data-configured travelling projectile fired by a plant.
+ *
+ * <p>Mirrors the "one concrete class, behaviour from data" philosophy used by
+ * {@code Zombie}/{@code Plant}: every plant bullet (Pea, Snow Pea, Fire
+ * Peashooter, Cactus spike, homing bolt, ...) is this same class, configured
+ * with a damage amount, an optional pierce count, an optional chill effect,
+ * and an optional homing lock — rather than one Java subclass per bullet
+ * flavor.
+ */
+public class Projectile implements TickAware {
+
+    private static final float COLS_PER_TICK = 1.0f;
+    private static final float HIT_RADIUS = 0.5f;
+    private static final int CHILL_DURATION_TICKS = 3 * Plant.TICKS_PER_SECOND;
+
+    private final GameContext context;
+    private final ProjectileType type;
+    private int lastLane;
+    private final int lane;
+    private int lastCol;
+    private float col;
+    private final float damage;
+    private final boolean poisonous;
+    private final boolean chills;
+    private final boolean fire;
+    private int pierceRemaining;
+    private final Zombie homingTarget; // non-null = always-hit, ignores lane travel
+
+    private boolean spent;
+
+    public Projectile(GameContext context, ProjectileType type, int lane, float startCol,
+                       float damage, boolean poisonous, boolean chills, boolean fire, int pierceCount,
+                       Zombie homingTarget) {
+        this.context = context;
+        this.type = type;
+        this.lane = lane;
+        this.col = startCol;
+        this.damage = damage;
+        this.poisonous = poisonous;
+        this.chills = chills;
+        this.fire = fire;
+        this.pierceRemaining = Math.max(0, pierceCount);
+        this.homingTarget = homingTarget;
+    }
+
+
+    @Override
+    public void enter() { }
+
+    @Override
+    public void update() {
+        advance();
+    }
+
+    /** Moves the projectile one tick forward and resolves any collision. */
+    public void advance() {
+        if (spent) return;
+        if (homingTarget != null) {
+            if (homingTarget.isDead()) { spent = true; return; }
+            onCollide(homingTarget);
+            return;
+        }
+        col += COLS_PER_TICK;
+
+        //check if projectile entered new tile
+        if (Math.floor(col)!=lastCol || lane!=lastLane){
+            lastCol=(int)Math.floor(col);
+            lastLane=lane;
+            Tile tile;
+            try {
+                tile = context.getTileAt(lastCol, lane);
+            } catch (IndexOutOfBoundsException ex){
+                // if projectile is outside of map, remove it and return
+                spent=true;
+                return;
+            }
+            tile.processHit(this);
+            if (spent) return;
+        }
+
+        Zombie nearest = null;
+        float bestDistance = Float.MAX_VALUE;
+        for (Zombie z : context.getZombiesInLane(lane)) {
+            float distance = Math.abs(z.getX() - col);
+            if (distance < bestDistance) {
+                bestDistance = distance;
+                nearest = z;
+            }
+        }
+        if (nearest != null && bestDistance <= HIT_RADIUS) {
+            onCollide(nearest);
+        }
+    }
+
+    private void onCollide(Zombie zombie) {
+        zombie.takeDamage(damage, poisonous);
+        if (chills) {
+            zombie.applyEffect(new StatusEffect(EffectType.CHILL, CHILL_DURATION_TICKS));
+        }
+        if (pierceRemaining > 0) {
+            pierceRemaining--;
+        } else {
+            spent = true;
+        }
+    }
+
+    public void spend() { spent = true; }
+
+    @Override
+    public void dispose() { }
+
+    public boolean isSpent()        { return spent; }
+    public ProjectileType getType() { return type; }
+    public int getLane()            { return lane; }
+    public float getCol()           { return col; }
+    public float getDamage()        { return damage; }
+    public boolean isFire()         { return fire; }
+}

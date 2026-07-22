@@ -1,0 +1,16 @@
+Index: app/src/main/java/pvz/Models/Games/map/data/PrePlantedPlant.java
+===================================================================
+diff --git a/app/src/main/java/pvz/Models/Games/map/data/PrePlantedPlant.java b/app/src/main/java/pvz/Models/Games/map/data/PrePlantedPlant.java
+deleted file mode 100644
+--- a/app/src/main/java/pvz/Models/Games/map/data/PrePlantedPlant.java	(revision 9700f26c8efe690af762d5a234671b5768aefa77)
++++ /dev/null	(revision 9700f26c8efe690af762d5a234671b5768aefa77)
+@@ -1,9 +0,0 @@
+-package pvz.models.games.map.data;
+-
+-import pvz.models.entities.Plants.Enums.PlantType;
+-
+-public class PrePlantedPlant {
+-    public PlantType type;
+-    public int col;
+-    public int lane;
+-}

@@ -2,13 +2,13 @@ package pvz;
 
 import java.util.HashMap;
 
-import pvz.Models.AppContext;
-import pvz.Models.User.User;
-import pvz.Utils.SaveManager;
-import pvz.View.LoginMenu;
-import pvz.View.MainMenu;
-import pvz.View.MenuManager;
-import pvz.View.RegisterMenu;
+import pvz.models.AppContext;
+import pvz.models.user.User;
+import pvz.utils.SaveManager;
+import pvz.view.LoginMenu;
+import pvz.view.MainMenu;
+import pvz.view.MenuManager;
+import pvz.view.RegisterMenu;
 
 public class App {
     public static void main(String[] args) {
