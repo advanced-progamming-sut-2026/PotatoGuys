@@ -14,8 +14,8 @@
       { "x": 1, "y": 4, "behaviors": [{ "type": "ICE_BLOCK", "name": "FrozenPlant" }], "tags": ["ICE_BLOCK"] }
     ],
     "prePlantedPlants": [
-      { "type": "Repeater", "col": 1, "lane": 0 },
-      { "type": "Repeater", "col": 1, "lane": 4 }
+      { "type": "Peashooter", "col": 1, "lane": 0 },
+      { "type": "Peashooter", "col": 1, "lane": 4 }
     ]
   },
   "waves": [
