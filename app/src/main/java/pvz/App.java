@@ -36,5 +36,4 @@ public class App {
         menuManager.setCurrentMenu(new RegisterMenu());
         menuManager.handleInput(null);
     }
-
 }
