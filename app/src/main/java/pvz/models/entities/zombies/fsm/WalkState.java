@@ -30,11 +30,11 @@ public class WalkState implements ZombieState {
     public ZombieState tick(Zombie zombie, GameContext ctx) {
         advancePosition(zombie);
 
-        ZombieState eatTransition = checkForPlant(zombie, ctx);
-        if (eatTransition != null) return eatTransition;
-
         ZombieState skillTransition = checkForSkill(zombie, ctx);
         if (skillTransition != null) return skillTransition;
+        
+        ZombieState eatTransition = checkForPlant(zombie, ctx);
+        if (eatTransition != null) return eatTransition;
 
         return this;
     }

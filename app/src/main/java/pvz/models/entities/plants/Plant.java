@@ -190,6 +190,7 @@ public class Plant implements TickAware {
         if (dead) return;
         dead = true;
         currentState = new pvz.models.entities.plants.fsm.PlantDeadState();
+        context.removePlant(this);
         context.log("[Plant] " + sheet.getName() + " at (" + col + "," + lane + ") was destroyed.");
     }
 
