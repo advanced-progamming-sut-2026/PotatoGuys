@@ -3,14 +3,7 @@ package pvz.models.games.levels;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import pvz.models.games.levels.variants.BeghouledLevel;
-import pvz.models.games.levels.variants.ConveyorBeltLevel;
-import pvz.models.games.levels.variants.DeadLineLevel;
-import pvz.models.games.levels.variants.IZombieLevel;
-import pvz.models.games.levels.variants.NormalLevel;
-import pvz.models.games.levels.variants.PlantWhatYouGetLevel;
-import pvz.models.games.levels.variants.TimedWarLevel;
-import pvz.models.games.levels.variants.VasebreakerLevel;
+import pvz.models.games.levels.variants.*;
 import pvz.utils.SaveManager;
 
 public class LevelLoader {

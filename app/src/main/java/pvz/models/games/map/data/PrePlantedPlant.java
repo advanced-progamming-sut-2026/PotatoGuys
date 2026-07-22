@@ -1,6 +1,6 @@
 package pvz.models.games.map.data;
 
-import pvz.models.entities.Plants.Enums.PlantType;
+import pvz.models.entities.plants.enums.PlantType;
 
 public class PrePlantedPlant {
     public PlantType type;

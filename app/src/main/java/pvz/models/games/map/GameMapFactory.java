@@ -1,6 +1,8 @@
 package pvz.models.games.map;
 
+import pvz.models.entities.plants.Plant;
 import pvz.models.games.map.behaviors.DestructibleBehavior;
+import pvz.models.games.map.behaviors.IceBlockBehavior;
 import pvz.models.games.map.behaviors.SlipperyBehavior;
 import pvz.models.games.map.data.BehaviorDefinition;
 import pvz.models.games.map.data.GameMapDefinition;

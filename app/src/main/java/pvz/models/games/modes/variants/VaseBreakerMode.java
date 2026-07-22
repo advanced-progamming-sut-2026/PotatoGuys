@@ -1,25 +1,25 @@
-package pvz.models.games.Modes.variants;
+package pvz.models.games.modes.variants;
 
 import java.util.List;
 import java.util.Random;
 
 import pvz.models.Constants;
-import pvz.models.entities.Plants.Plant;
-import pvz.models.entities.Plants.PlantFactory;
-import pvz.models.entities.Zombies.Zombie;
-import pvz.models.entities.Zombies.ZombieFactory;
-import pvz.models.entities.Zombies.ZombieType;
+import pvz.models.entities.plants.Plant;
+import pvz.models.entities.plants.PlantFactory;
+import pvz.models.entities.zombies.Zombie;
+import pvz.models.entities.zombies.ZombieFactory;
+import pvz.models.entities.zombies.ZombieType;
 import pvz.models.games.GameContext;
-import pvz.models.games.Levels.Level;
-import pvz.models.games.Levels.Data.VaseDefinition;
-import pvz.models.games.Levels.Data.VaseType;
-import pvz.models.games.Levels.variants.VaseBreakerLevel;
-import pvz.models.games.Modes.GameMode;
-import pvz.models.games.Modes.Capabilities.PlantPlacer;
-import pvz.models.games.Modes.Capabilities.VaseBreaker;
+import pvz.models.games.levels.Level;
+import pvz.models.games.levels.data.VaseDefinition;
+import pvz.models.games.levels.data.VaseType;
+import pvz.models.games.levels.variants.VaseBreakerLevel;
+import pvz.models.games.modes.GameMode;
+import pvz.models.games.modes.capabilities.PlantPlacer;
+import pvz.models.games.modes.capabilities.VaseBreaker;
 import pvz.models.games.card.Card;
 import pvz.models.games.card.PlantCard;
-import pvz.models.User.MyPlant;
+import pvz.models.user.MyPlant;
 
 public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 

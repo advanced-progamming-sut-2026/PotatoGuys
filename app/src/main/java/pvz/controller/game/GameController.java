@@ -22,6 +22,7 @@ import pvz.models.games.modes.GameMode;
 import pvz.models.games.modes.capabilities.PlantPlacer;
 import pvz.models.games.modes.capabilities.StartWaves;
 import pvz.models.games.modes.capabilities.ZombiePlacer;
+import pvz.models.games.modes.variants.VaseBreakerMode;
 import pvz.models.quests.QuestEvaluator;
 import pvz.models.user.User;
 import pvz.view.MainMenu;

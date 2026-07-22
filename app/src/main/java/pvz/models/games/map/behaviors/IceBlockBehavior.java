@@ -1,9 +1,8 @@
 package pvz.models.games.map.behaviors;
 
-import pvz.models.entities.Plants.Plant;
-import pvz.models.entities.Zombies.Zombie;
+import pvz.models.entities.plants.Plant;
 import pvz.models.games.map.tile.Tile;
-import pvz.models.entities.Projectile.Projectile;
+import pvz.models.entities.projectile.Projectile;
 
 public class IceBlockBehavior implements TileBehavior {
     private float iceHp = 600f;
