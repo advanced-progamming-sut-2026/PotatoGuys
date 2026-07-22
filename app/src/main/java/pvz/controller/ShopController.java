@@ -117,7 +117,14 @@ public class ShopController {
                 currentUser.getProfile().getCollection().addSeedPackets(selectedType, totalPackets);
                 currentUser.saveUser();
             }
-            return new Result("Successfully purchased " + item.getName() + " x" + count + ".");
+            String msg = "Successfully purchased " + item.getName() + " x" + count + ".";
+            if (item instanceof pvz.models.shop.items.RandomSeedPacketItem) {
+                String details = ((pvz.models.shop.items.RandomSeedPacketItem) item).getLastPurchaseDetails();
+                if (details != null) {
+                    msg += " Seeds awarded: " + details;
+                }
+            }
+            return new Result(msg);
         } else {
             return new Result("Purchase failed.");
         }

@@ -16,6 +16,7 @@ public class LeaderBoardController {
 
     public Result show(Matcher matcher) {
         List<LeaderBoardEntry> all = LeaderBoard.loadAll();
+        all = LeaderBoard.sort(all, currentField, currentSortType);
         String output = LeaderBoard.format(all, currentField, currentSortType);
         return new Result(output);
     }
@@ -39,6 +40,7 @@ public class LeaderBoardController {
         }
 
         List<LeaderBoardEntry> all = LeaderBoard.loadAll();
+        all = LeaderBoard.sort(all, currentField, currentSortType);
         String output = LeaderBoard.format(all, currentField, currentSortType);
         return new Result(output);
     }

@@ -62,12 +62,18 @@ public class GameController {
                 if (won) {
                     user.getScore().setLastLevel(context.getLevelNumber());
                     user.getScore().setLastSeason(0);
-                    
+
                     // Unlock next level
                     pvz.models.games.seasons.SeasonManager manager = new pvz.models.games.seasons.SeasonManager();
                     manager.unlockNextLevel(user, context.getSeasonName(), context.getLevelNumber());
+
+                    // ---> FIXED: Explicitly announce the NEW unlocked level/minigame! <---
+                    int nextLevelNumber = context.getLevelNumber() + 1;
+                    user.getProfile().getNews().getMessages().add(
+                            new pvz.models.user.Message("New Level Unlocked: Level " + nextLevelNumber + " in " + context.getSeasonName() + "!")
+                    );
                 }
-                user.saveUser();
+                user.saveUser(); // Saves the game state, quest progress, AND the new messages!
             }
             return new Result("Game Over", new MainMenu());
         }
