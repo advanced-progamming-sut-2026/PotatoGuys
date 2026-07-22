@@ -6,4 +6,5 @@ public enum LeaderBoardSortField {
     DAILY_QUESTS_COMPLETED,
     NON_DAILY_QUESTS_COMPLETED,
     HIGHEST_SCORING_GAME_SCORE
+
 }
