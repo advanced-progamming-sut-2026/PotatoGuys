@@ -3,19 +3,19 @@
   "levelNumber": 1,
   "levelType": "NORMAL",
   "initialSun": 250,
-  "effects": [{"type": "COLD_WIND", "intervalTicks": 300, "strength": 1.0}],
+  "effects": [{"type": "COLD_WIND", "intervalTicks": 200, "strength": 1.0}],
   "gameMap": {
     "rows": 5,
     "columns": 9,
     "specialTiles": [
       { "x": 5, "y": 2, "behaviors": [{ "type": "SLIPPERY", "laneDelta": 1, "name": "Ice" }], "tags": ["SLIP_DOWN"] },
       { "x": 6, "y": 1, "behaviors": [{ "type": "SLIPPERY", "laneDelta": -1, "name": "Ice" }], "tags": ["SLIP_UP"] },
-      { "x": 0, "y": 0, "behaviors": [{ "type": "ICE_BLOCK", "name": "FrozenPlant" }], "tags": ["ICE_BLOCK"] },
-      { "x": 0, "y": 4, "behaviors": [{ "type": "ICE_BLOCK", "name": "FrozenPlant" }], "tags": ["ICE_BLOCK"] }
+      { "x": 1, "y": 0, "behaviors": [{ "type": "ICE_BLOCK", "name": "FrozenPlant" }], "tags": ["ICE_BLOCK"] },
+      { "x": 1, "y": 4, "behaviors": [{ "type": "ICE_BLOCK", "name": "FrozenPlant" }], "tags": ["ICE_BLOCK"] }
     ],
     "prePlantedPlants": [
-      { "type": "Repeater", "col": 0, "lane": 0 },
-      { "type": "Repeater", "col": 0, "lane": 4 }
+      { "type": "Repeater", "col": 1, "lane": 0 },
+      { "type": "Repeater", "col": 1, "lane": 4 }
     ]
   },
   "waves": [
