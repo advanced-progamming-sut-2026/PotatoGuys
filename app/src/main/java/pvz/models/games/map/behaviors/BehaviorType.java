@@ -5,5 +5,6 @@ public enum BehaviorType {
     SLIPPERY,
     ICE_BLOCK,
     WATER,
+    LOW_TIDE,
     NECROMANCY;
 }

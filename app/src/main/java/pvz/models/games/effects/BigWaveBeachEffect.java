@@ -8,6 +8,7 @@ import pvz.models.entities.zombies.ZombieFactory;
 import pvz.models.entities.zombies.ZombieType;
 import pvz.models.games.GameContext;
 import pvz.models.games.levels.Wave;
+import pvz.models.games.map.behaviors.TileBehavior;
 import pvz.models.games.map.behaviors.WaterBehavior;
 import pvz.models.games.map.tile.Tile;
 import pvz.models.games.map.tile.TileTags;
@@ -36,6 +37,19 @@ public class BigWaveBeachEffect implements ChapterEffect {
         int span = Math.abs(minWaterCol - maxWaterCol) + 1;
         currentWaterCol = Math.min(minWaterCol, maxWaterCol) + rand.nextInt(span);
         ctx.log("[BigWaveBeach] Water tide shifts! Water level rises to column " + currentWaterCol);
+
+        //clear all waters from map before updating them
+        for (int i = 0; i < ctx.getMap().getColumns(); i++) {
+            for (int j = 0; j < ctx.getMap().getRows(); j++) {
+                Tile tile=ctx.getMap().getTile(i,j);
+                tile.getTags().removeAll(tile.getTags().stream().filter(t->t.equals(TileTags.WATER)).toList());
+                for (TileBehavior behavior:new ArrayList<>(tile.getBehaviors())){
+                    if (behavior instanceof WaterBehavior waterBehavior){
+                        tile.removeBehavior(waterBehavior);
+                    }
+                }
+            }
+        }
 
         updateWaterAndTides(wave, ctx);
     }
@@ -71,10 +85,12 @@ public class BigWaveBeachEffect implements ChapterEffect {
                         }
                     }
 
-                    // Low tide zombie emergence
-                    if (tile.getTags().contains(TileTags.LOW_TIDE)) {
-                        if (rand.nextFloat() < 0.6f) {
-                            spawnLowTideZombie(ctx, col, lane, wave);
+                    if (wave.getWaveNumber()>1) {
+                        // Low tide zombie emergence
+                        if (tile.getTags().contains(TileTags.LOW_TIDE)) {
+                            if (rand.nextFloat() < 0.6f) {
+                                spawnLowTideZombie(ctx, col, lane, wave);
+                            }
                         }
                     }
                 }

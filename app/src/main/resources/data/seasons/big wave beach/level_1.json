@@ -13,6 +13,16 @@
       { "x": 6, "y": 2, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }, { "type": "LOW_TIDE", "hp": 0, "name": "LowTide" }], "tags": ["WATER", "LOW_TIDE"] },
       { "x": 6, "y": 3, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }], "tags": ["WATER"] },
       { "x": 6, "y": 4, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }], "tags": ["WATER"] },
+      { "x": 7, "y": 0, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }], "tags": ["WATER"] },
+      { "x": 7, "y": 1, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }], "tags": ["WATER"] },
+      { "x": 7, "y": 2, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }], "tags": ["WATER"] },
+      { "x": 7, "y": 3, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }], "tags": ["WATER"] },
+      { "x": 7, "y": 4, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }], "tags": ["WATER"] },
+      { "x": 8, "y": 0, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }], "tags": ["WATER"] },
+      { "x": 8, "y": 1, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }], "tags": ["WATER"] },
+      { "x": 8, "y": 2, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }], "tags": ["WATER"] },
+      { "x": 8, "y": 3, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }], "tags": ["WATER"] },
+      { "x": 8, "y": 4, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }], "tags": ["WATER"] },
       { "x": 5, "y": 2, "behaviors": [{ "type": "LOW_TIDE", "hp": 0, "name": "LowTide" }], "tags": ["LOW_TIDE"] }
     ]
   },

@@ -165,7 +165,7 @@ public class NormalMode implements GameMode, PlantPlacer {
                         ps.getPlant().getType(),
                         ps.getCost(),
                         ps.getPlant().getLevel(),
-                        (float)ps.getCooldown() / (float)Constants.TICK_PER_SECOND,
+                        (float) ps.getCooldown() / (float) Constants.TICK_PER_SECOND,
                         ps.getPlant().isBoosted() ? " | ⚡B" : ""
                 );
 
@@ -258,8 +258,8 @@ public class NormalMode implements GameMode, PlantPlacer {
         boolean hasZombie = !zombiesAtCell.isEmpty();
 
         Tile tile = context.getTileAt(col, lane);
-        if (tile!=null){
-            if (tile.getTags().contains(TileTags.GRAVE)){
+        if (tile != null) {
+            if (tile.getTags().contains(TileTags.GRAVE)) {
                 String graveDisplay = " G  ";
                 for (pvz.models.games.map.behaviors.TileBehavior b : tile.getBehaviors()) {
                     if (b instanceof pvz.models.games.map.behaviors.DestructibleBehavior db) {
@@ -270,28 +270,38 @@ public class NormalMode implements GameMode, PlantPlacer {
                         }
                     }
                 }
-                if (hasZombie) return String.format(AnsiColors.BRIGHT_BLACK+"G"+AnsiColors.RESET+"/Z%-1d",zombiesAtCell.size());
+                if (hasZombie)
+                    return String.format(AnsiColors.BRIGHT_BLACK + "G" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
                 return AnsiColors.BRIGHT_BLACK + graveDisplay + AnsiColors.RESET;
-            } else if (tile.getTags().contains(TileTags.SLIP_UP)){
-                if (hasZombie) return String.format(AnsiColors.BLUE+"↑"+AnsiColors.RESET+"/Z%-1d",zombiesAtCell.size());
-                return AnsiColors.BLUE+" S↑ "+AnsiColors.RESET;
-            } else if (tile.getTags().contains(TileTags.SLIP_DOWN)){
-                if (hasZombie) return String.format(AnsiColors.BLUE+"↓"+AnsiColors.RESET+"/Z%-1d",zombiesAtCell.size());
-                return AnsiColors.BLUE+" S↓ "+AnsiColors.RESET;
-            } else if(tile .getTags().contains(TileTags.ICE_BLOCK)){
-                if (hasZombie) return String.format(AnsiColors.BLUE+"I"+AnsiColors.RESET+"/Z%-1d",zombiesAtCell.size());
-                else if(hasPlant) return AnsiColors.BLUE+"I/P "+AnsiColors.RESET;
-                return AnsiColors.BLUE+" I  "+AnsiColors.RESET;
+            } else if (tile.getTags().contains(TileTags.SLIP_UP)) {
+                if (hasZombie)
+                    return String.format(AnsiColors.BLUE + "↑" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
+                return AnsiColors.BLUE + " S↑ " + AnsiColors.RESET;
+            } else if (tile.getTags().contains(TileTags.SLIP_DOWN)) {
+                if (hasZombie)
+                    return String.format(AnsiColors.BLUE + "↓" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
+                return AnsiColors.BLUE + " S↓ " + AnsiColors.RESET;
+            } else if (tile.getTags().contains(TileTags.ICE_BLOCK)) {
+                if (hasZombie)
+                    return String.format(AnsiColors.BLUE + "I" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
+                else if (hasPlant) return AnsiColors.BLUE + "I/P " + AnsiColors.RESET;
+                return AnsiColors.BLUE + " I  " + AnsiColors.RESET;
             }
         }
 
+        StringBuilder output=new StringBuilder();
+        if (tile.getTags().contains(TileTags.WATER)) output.append(AnsiColors.BLUE_BG);
         if (hasPlant && hasZombie) {
-            return String.format(AnsiColors.GREEN+"P"+AnsiColors.RESET+"/Z%-1d", plantsAtCell.size(), zombiesAtCell.size());
+            output.append(String.format(AnsiColors.GREEN + "P" + AnsiColors.RESET + "/Z%-1d", plantsAtCell.size(), zombiesAtCell.size()));
         } else if (hasPlant) {
-            return String.format(AnsiColors.GREEN+" P  "+AnsiColors.RESET, plantsAtCell.size());
+            output.append(String.format(AnsiColors.GREEN + " P  " + AnsiColors.RESET, plantsAtCell.size()));
         } else if (hasZombie) {
-            return String.format(" Z%-2d", zombiesAtCell.size());
+            output.append(String.format(" Z%-2d", zombiesAtCell.size()));
+        } else {
+            output.append(CELL_EMPTY);
         }
+        if (tile.getTags().contains(TileTags.WATER)) output.append(AnsiColors.RESET);
+        if (!output.isEmpty()) return output.toString();
 
         return CELL_EMPTY;
     }
