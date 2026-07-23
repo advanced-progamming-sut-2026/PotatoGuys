@@ -5,21 +5,12 @@ import java.util.List;
 import pvz.models.entities.plants.enums.PlantCategory;
 import pvz.models.entities.plants.enums.PlantTag;
 import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.entities.plants.actions.shooters.ShooterPattern;
+import pvz.models.entities.projectile.ProjectileType;
 
 /**
  * Immutable, data-driven description of one plant kind, loaded from
  * {@code plant_profiles.json} by {@link PlantRegistry}.
- *
- * <p>This is the direct structural counterpart of
- * {@link pvz.models.entities.zombies.data.ZombiePropertySheet}: all 69 plant
- * kinds share the single {@link pvz.models.entities.plants.Plant} class, and
- * their unique behaviour comes entirely from the sheet plugged in by
- * {@link pvz.models.entities.plants.PlantFactory} — never from per-ID
- * branching in Java code.
- *
- * <p>{@link #getCategory()} doubles as the plant's "family" for Mint plants
- * (IDs 61-69): a Mint's own category names the family it buffs, since it is
- * itself planted like a member of that family in the source dataset.
  */
 public final class PlantPropertySheet {
 
@@ -33,6 +24,10 @@ public final class PlantPropertySheet {
     private final int sunCost;
     private final float baseHp;
     private final DamageProfile damage;
+
+    // --- Shooter Specifics ---
+    private final ProjectileType projectileType;
+    private final ShooterPattern shooterPattern;
 
     /** {@code null} means the plant has no autonomous repeating action. */
     private final Float actionIntervalSeconds;
@@ -55,6 +50,8 @@ public final class PlantPropertySheet {
         this.sunCost = b.sunCost;
         this.baseHp = b.baseHp;
         this.damage = b.damage;
+        this.projectileType = b.projectileType;
+        this.shooterPattern = b.shooterPattern;
         this.actionIntervalSeconds = b.actionIntervalSeconds;
         this.rechargeSeconds = b.rechargeSeconds;
         this.production = b.production;
@@ -73,6 +70,8 @@ public final class PlantPropertySheet {
     public int getSunCost()                        { return sunCost; }
     public float getBaseHp()                       { return baseHp; }
     public DamageProfile getDamage()               { return damage; }
+    public ProjectileType getProjectileType()      { return projectileType; }
+    public ShooterPattern getShooterPattern()      { return shooterPattern; }
     public Float getActionIntervalSeconds()        { return actionIntervalSeconds; }
     public Float getRechargeSeconds()              { return rechargeSeconds; }
     public SunProduction getProduction()           { return production; }
@@ -100,6 +99,8 @@ public final class PlantPropertySheet {
         private int sunCost = 0;
         private float baseHp = 300f;
         private DamageProfile damage = new DamageProfile(DamageKind.NONE, 0, 1, null);
+        private ProjectileType projectileType = null;
+        private ShooterPattern shooterPattern = null;
         private Float actionIntervalSeconds = null;
         private Float rechargeSeconds = null;
         private SunProduction production = null;
@@ -120,6 +121,8 @@ public final class PlantPropertySheet {
         public Builder sunCost(int v)                          { sunCost = v; return this; }
         public Builder baseHp(float v)                         { baseHp = v; return this; }
         public Builder damage(DamageProfile v)                 { damage = v; return this; }
+        public Builder projectileType(ProjectileType v)        { projectileType = v; return this; }
+        public Builder shooterPattern(ShooterPattern v)        { shooterPattern = v; return this; }
         public Builder actionIntervalSeconds(Float v)          { actionIntervalSeconds = v; return this; }
         public Builder rechargeSeconds(Float v)                { rechargeSeconds = v; return this; }
         public Builder production(SunProduction v)             { production = v; return this; }

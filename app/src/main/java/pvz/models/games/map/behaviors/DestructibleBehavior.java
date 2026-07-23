@@ -18,7 +18,7 @@ public class DestructibleBehavior implements TileBehavior {
     @Override
     public void onProjectileHit(Projectile p, Tile tile) {
         this.hp -= p.getDamage();
-        p.spend(); // Projectile is consumed by grave/ice
+        p.destroy(); // Projectile is consumed by grave/ice
         if (this.hp <= 0) {
             tile.removeBehavior(this);
             tile.getTags().remove(TileTags.GRAVE);

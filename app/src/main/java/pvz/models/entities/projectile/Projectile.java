@@ -1,131 +1,242 @@
 package pvz.models.entities.projectile;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import pvz.models.engine.TickAware;
-import pvz.models.entities.plants.Plant;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.entities.zombies.effects.EffectType;
 import pvz.models.entities.zombies.effects.StatusEffect;
 import pvz.models.games.GameContext;
 import pvz.models.games.map.tile.Tile;
 
-/**
- * A single, data-configured travelling projectile fired by a plant.
- *
- * <p>Mirrors the "one concrete class, behaviour from data" philosophy used by
- * {@code Zombie}/{@code Plant}: every plant bullet (Pea, Snow Pea, Fire
- * Peashooter, Cactus spike, homing bolt, ...) is this same class, configured
- * with a damage amount, an optional pierce count, an optional chill effect,
- * and an optional homing lock — rather than one Java subclass per bullet
- * flavor.
- */
 public class Projectile implements TickAware {
 
-    private static final float COLS_PER_TICK = 0.4f;
-    private static final float HIT_RADIUS = 0.5f;
-    private static final int CHILL_DURATION_TICKS = 3 * Plant.TICKS_PER_SECOND;
-
-    private final GameContext context;
+    private final GameContext ctx;
     private final ProjectileType type;
-    private int lastLane;
-    private final int lane;
+
+    private float x;        
+    private float y;        
+
     private int lastCol;
-    private float col;
+    private int lastLane;
+
+    private float dirX = 1.0f;
+    private float dirY = 0.0f;
+    private float speed;
+
     private final float damage;
-    private final boolean poisonous;
-    private final boolean chills;
+    private final boolean poison;
+    private final boolean ice;
     private final boolean fire;
-    private int pierceRemaining;
-    private final Zombie homingTarget; // non-null = always-hit, ignores lane travel
+    private int pierceCount;
+    private boolean bouncing;
+    private boolean isDead = false;
 
-    private boolean spent;
+    // شعاع برخورد تیر بر حسب خانه/کاشی
+    private static final float HIT_RADIUS = 0.45f;
 
-    public Projectile(GameContext context, ProjectileType type, int lane, float startCol,
-                       float damage, boolean poisonous, boolean chills, boolean fire, int pierceCount,
-                       Zombie homingTarget) {
-        this.context = context;
+    // ثبت زامبی‌های برخورد کرده برای جلوگیری از دمیج مکرر در یک فریم (در حالت نفوذی/کمانه)
+    private final Set<Zombie> hitZombies = new HashSet<>();
+
+    public Projectile(GameContext ctx, ProjectileType type, float lane, float col, 
+                      float damage, boolean poison, boolean ice, boolean fire, 
+                      int pierceCount, Object target) {
+        this.ctx = ctx;
         this.type = type;
-        this.lane = lane;
-        this.col = startCol;
+        this.y = lane;
+        this.x = col;
+        
+        // مقداردهی اولیه موقعیت کاشی
+        this.lastCol = (int) Math.floor(col);
+        this.lastLane = (int) Math.floor(lane);
+        
         this.damage = damage;
-        this.poisonous = poisonous;
-        this.chills = chills;
+        this.poison = poison;
+        this.ice = ice;
         this.fire = fire;
-        this.pierceRemaining = Math.max(0, pierceCount);
-        this.homingTarget = homingTarget;
+        this.pierceCount = pierceCount;
+        this.speed = type.getSpeed();
     }
 
+    // ─── Setters & Direction Vector ──────────────────────────────────────────
+
+    /**
+     * تنظیم بردار جهت حرکت (پشتیبانی از تمام جهت‌ها: چپ، راست، بالا، پایین و قطری)
+     */
+    public void setVelocityVector(float dx, float dy) {
+        float length = (float) Math.hypot(dx, dy);
+        if (length != 0) {
+            // نرمال‌سازی بردار جهت برای یکنواخت ماندن سرعت حرکت در تمام زوایا
+            this.dirX = dx / length;
+            this.dirY = dy / length;
+        }
+    }
+
+    public void setBouncing(boolean bouncing) {
+        this.bouncing = bouncing;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    // ─── Tick Update Logic ───────────────────────────────────────────────────
 
     @Override
-    public void enter() { }
+    public void enter() {}
 
     @Override
     public void update() {
-        advance();
-    }
+        if (isDead) return;
 
-    /** Moves the projectile one tick forward and resolves any collision. */
-    public void advance() {
-        if (spent) return;
-        if (homingTarget != null) {
-            if (homingTarget.isDead()) { spent = true; return; }
-            onCollide(homingTarget);
+        // ۱. جابه‌جایی دوبعدی پرتابه در محیط بازی
+        x += dirX * speed;
+        y += dirY * speed;
+
+        // ۲. چک کردن خروج تیر از مرزهای نقشه
+        if (x < -0.5f || x >= ctx.getColumns() + 0.5f || y < -0.5f || y >= ctx.getLanes() + 0.5f) {
+            destroy();
             return;
         }
-        col += COLS_PER_TICK;
 
-        //check if projectile entered new tile
-        if (Math.floor(col)!=lastCol || lane!=lastLane){
-            lastCol=(int)Math.floor(col);
-            lastLane=lane;
-            Tile tile;
+        // ۳. چک کردن ورود به کاشی (Tile) جدید
+        int currentCol = (int) Math.floor(x);
+        int currentLane = (int) Math.floor(y);
+
+        if (currentCol != lastCol || currentLane != lastLane) {
+            lastCol = currentCol;
+            lastLane = currentLane;
+            
             try {
-                tile = context.getTileAt(lastCol, lane);
-            } catch (IndexOutOfBoundsException ex){
-                // if projectile is outside of map, remove it and return
-                spent = true;
-                context.removeProjectile(this);
+                Tile tile = ctx.getTileAt(lastCol, lastLane);
+                tile.processHit(this);
+            } catch (IndexOutOfBoundsException ex) {
+                // اگر تیر از آرایه مپ خارج شد (با وجود چک قبلی به عنوان یک لایه امنیتی)
+                destroy();
                 return;
             }
-            tile.processHit(this);
-            if (spent) return;
+            
+            // اگر با برخورد به Tile تیر از بین رفت (مثلاً برخورد به مشعل یا موانع)، ادامه نده
+            if (isDead) return;
         }
 
-        Zombie nearest = null;
-        float bestDistance = Float.MAX_VALUE;
-        for (Zombie z : context.getZombiesInLane(lane)) {
-            float distance = Math.abs(z.getX() - col);
-            if (distance < bestDistance) {
-                bestDistance = distance;
-                nearest = z;
-            }
-        }
-        if (nearest != null && bestDistance <= HIT_RADIUS) {
-            onCollide(nearest);
-        }
+        // ۴. بررسی برخورد دوبعدی با تمام زامبی‌های فعال
+        checkCollisions2D();
     }
-
-    private void onCollide(Zombie zombie) {
-        zombie.takeDamage(damage, poisonous);
-        if (chills) {
-            zombie.applyEffect(new StatusEffect(EffectType.CHILL, CHILL_DURATION_TICKS));
-        }
-        if (pierceRemaining > 0) {
-            pierceRemaining--;
-        } else {
-            spent = true;
-        }
-        context.removeProjectile(this);
-    }
-
-    public void spend() { spent = true; }
 
     @Override
-    public void dispose() { }
+    public void dispose() {}
 
-    public boolean isSpent()        { return spent; }
+    // ─── 2D Collision & Bounce Logic ─────────────────────────────────────────
+
+    private void checkCollisions2D() {
+        // بررسی تمام زامبی‌های موجود در بازی (برای پشتیبانی از تیرهای چندلاین و مورب)
+        for (Zombie z : ctx.getZombies()) {
+            if (z.isDead() || hitZombies.contains(z)) continue;
+
+            float zX = z.getX();
+            float zY = z.getLane();
+
+            // محاسبه فاصله اقلیدسی دوبعدی بین پرتابه و زامبی
+            double distance = Math.hypot(zX - this.x, zY - this.y);
+
+            if (distance <= HIT_RADIUS) {
+                onHitZombie(z);
+                if (isDead) break;
+            }
+        }
+    }
+
+    private void onHitZombie(Zombie zombie) {
+        hitZombies.add(zombie);
+
+        // اعمال دمیج به زامبی 
+        // در متد takeDamage کلاس Zombie، آرگومان poison تعیین می‌کند که دمیج از آرمور عبور کند یا خیر.
+        zombie.takeDamage(damage, poison);
+
+        // اعمال افکت‌های وضعیتی (Slow, Unfreeze, Poison)
+        applyStatusEffects(zombie);
+
+        ctx.log("[Projectile] " + type + " hit zombie at (" + zombie.getX() + ", " + zombie.getLane() + ")");
+
+        // ۱. مدیریت کمانه کردن (برای پیاز بولینگ / Bowling Bulb)
+        if (bouncing) {
+            handleBounce();
+            return;
+        }
+
+        // ۲. مدیریت نفوذ تیر (برای کاکتوس، قارچ دودزا و تیرهای Strike-through)
+        if (pierceCount > 0) {
+            pierceCount--;
+        } else {
+            destroy();
+        }
+    }
+
+    private void applyStatusEffects(Zombie zombie) {
+        // توجه: مقادیر Duration در این بخش (مثل 100 یا 50) تیک‌های بازی هستند (هر 10 تیک = 1 ثانیه)
+        // بر اساس سازنده‌ی (Constructor) کلاس StatusEffect در پروژه خود، ممکن است پارامترهای دیگری نیز نیاز باشد.
+        
+        if (ice) {
+            // اعمال کندی؛ به طور مثال برای 10 ثانیه (100 تیک)
+            zombie.applyEffect(new StatusEffect(EffectType.CHILL, 100)); 
+        }
+        if (fire) {
+            // اعمال آتش؛ طبق متد applyEffect در Zombie، اعمال BURNING خودکار باعث حذف CHILL و FROZEN می‌شود.
+            zombie.applyEffect(new StatusEffect(EffectType.BURNING, 20));   
+
+        }
+        if (poison) {
+            // اعمال سم تدریجی؛ به طور مثال برای 5 ثانیه (50 تیک)
+            // (اگر دمیج مستقیم مد نظر نیست و قصد اعمال DoT از طریق کامپوننت را دارید)
+            zombie.applyEffect(new StatusEffect(EffectType.POISONED, 50)); 
+        }
+    }
+
+    private void handleBounce() {
+        Zombie nearestNextZombie = null;
+        double minDistance = Double.MAX_VALUE;
+
+        // پیدا کردن نزدیک‌ترین زامبی زنده که تیر هنوز به آن برخورد نکرده است
+        for (Zombie z : ctx.getZombies()) {
+            if (z.isDead() || hitZombies.contains(z)) continue;
+
+            double dist = Math.hypot(z.getX() - this.x, z.getLane() - this.y);
+            if (dist < minDistance) {
+                minDistance = dist;
+                nearestNextZombie = z;
+            }
+        }
+
+        // اگر زامبی دیگری در محیط وجود داشت، تیر به سمت او تغییر جهت می‌دهد
+        if (nearestNextZombie != null) {
+            float targetX = nearestNextZombie.getX();
+            float targetY = nearestNextZombie.getLane();
+            
+            // تغییر بردار جهت پرتابه به سمت زامبی جدید
+            setVelocityVector(targetX - this.x, targetY - this.y);
+            ctx.log("[Projectile] " + type + " bounced towards target at (" + targetX + ", " + targetY + ")");
+        } else {
+            // اگر زامبی دیگری در صفحه نبود، تیر نابود می‌شود
+            destroy();
+        }
+    }
+
+    public void destroy() {
+        if (isDead) return;
+        this.isDead = true;
+        ctx.removeProjectile(this);
+    }
+
+    // ─── Getters ─────────────────────────────────────────────────────────────
+
+    public float getX() { return x; }
+    public float getY() { return y; }
+    public float getDamage() {return damage;}
     public ProjectileType getType() { return type; }
-    public int getLane()            { return lane; }
-    public float getCol()           { return col; }
-    public float getDamage()        { return damage; }
-    public boolean isFire()         { return fire; }
 }

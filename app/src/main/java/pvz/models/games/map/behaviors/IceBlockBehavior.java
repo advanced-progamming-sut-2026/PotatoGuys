@@ -3,6 +3,7 @@ package pvz.models.games.map.behaviors;
 import pvz.models.entities.plants.Plant;
 import pvz.models.games.map.tile.Tile;
 import pvz.models.entities.projectile.Projectile;
+import pvz.models.entities.projectile.ProjectileType;
 import pvz.models.games.map.tile.TileTags;
 
 public class IceBlockBehavior implements TileBehavior {
@@ -19,7 +20,7 @@ public class IceBlockBehavior implements TileBehavior {
 
     @Override
     public void onProjectileHit(Projectile p, Tile tile) {
-        boolean isFire = p.isFire();
+        boolean isFire = p.getType() == ProjectileType.FIRE_PEA;
         float damage = p.getDamage();
         
         if (isFire) {

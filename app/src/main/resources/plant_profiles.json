@@ -356,6 +356,8 @@
       "count": 1,
       "stages": []
     },
+    "projectileType": "PEA",
+    "shooterPattern": "FORWARD",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -419,6 +421,8 @@
       "count": 2,
       "stages": []
     },
+    "projectileType": "PEA",
+    "shooterPattern": "FORWARD",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -484,6 +488,8 @@
       "count": 1,
       "stages": []
     },
+    "projectileType": "PEA",
+    "shooterPattern": "THREE_LANE",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -548,6 +554,8 @@
       "count": 1,
       "stages": []
     },
+    "projectileType": "SNOW_PEA",
+    "shooterPattern": "FORWARD",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -606,6 +614,8 @@
       "count": 3,
       "stages": []
     },
+    "projectileType": "ROTOBAGA_PROJECTILE",
+    "shooterPattern": "DIAGONAL_FOUR",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -676,6 +686,8 @@
         100.0
       ]
     },
+    "projectileType": "PEA",
+    "shooterPattern": "FORWARD",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -739,6 +751,8 @@
       "count": 1,
       "stages": []
     },
+    "projectileType": "PEA",
+    "shooterPattern": "BIDIRECTIONAL",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -802,6 +816,8 @@
       "count": 1,
       "stages": []
     },
+    "projectileType": "CITRON_BALL",
+    "shooterPattern": "FORWARD",
     "actionIntervalSeconds": 9.0,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -995,6 +1011,8 @@
         180.0
       ]
     },
+    "projectileType": "BULB_CYAN",
+    "shooterPattern": "FORWARD",
     "actionIntervalSeconds": 2.0,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -1053,6 +1071,8 @@
       "count": 1,
       "stages": []
     },
+    "projectileType": "SPIKE",
+    "shooterPattern": "FORWARD",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -1117,6 +1137,8 @@
       "count": 1,
       "stages": []
     },
+    "projectileType": "FIRE_PEA",
+    "shooterPattern": "FORWARD",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -1178,6 +1200,8 @@
       "count": 1,
       "stages": []
     },
+    "projectileType": "STAR",
+    "shooterPattern": "FIVE_WAY_STAR",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -1241,6 +1265,8 @@
       "count": 1,
       "stages": []
     },
+    "projectileType": "GOO_PEA",
+    "shooterPattern": "FORWARD",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -1301,6 +1327,8 @@
       "count": 4,
       "stages": []
     },
+    "projectileType": "PEA",
+    "shooterPattern": "FORWARD",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -1362,6 +1390,8 @@
       "count": 1,
       "stages": []
     },
+    "projectileType": "SPORE",
+    "shooterPattern": "FORWARD",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 15.0,
     "production": null,
@@ -1424,6 +1454,8 @@
       "count": 1,
       "stages": []
     },
+    "projectileType": "SPORE",
+    "shooterPattern": "FORWARD",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -1486,6 +1518,8 @@
       "count": 1,
       "stages": []
     },
+    "projectileType": "FUME",
+    "shooterPattern": "FORWARD",
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "production": null,
@@ -3636,669 +3670,14 @@
         "level": 4,
         "stats": [
           {
-            "stat": "RECHARGE_SECONDS",
-            "delta": -2.0
+            "stat": "MAX_HP",
+            "delta": 300.0
           }
         ],
         "flags": []
       }
     ],
     "growth": null,
-    "description": "بستر کاشت سایر گیاهان روی آب (ضروری برای ساحل)."
-  },
-  {
-    "id": 59,
-    "name": "Hot Potato",
-    "type": "HotPotato",
-    "category": "EXPLOSIVE",
-    "tags": [
-      "FIRE"
-    ],
-    "isMint": false,
-    "sunCost": 0,
-    "baseHp": 0,
-    "damage": {
-      "kind": "NONE",
-      "value": 0,
-      "count": 1,
-      "stages": []
-    },
-    "actionIntervalSeconds": null,
-    "rechargeSeconds": 5.0,
-    "production": null,
-    "plantFood": {
-      "kind": "NONE",
-      "amount": 0,
-      "count": 0,
-      "durationSeconds": 0,
-      "flags": [],
-      "description": "ندارد (مصرفی آنی)"
-    },
-    "levelUpgrades": [
-      {
-        "level": 2,
-        "stats": [
-          {
-            "stat": "RECHARGE_SECONDS",
-            "delta": -2.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 3,
-        "stats": [],
-        "flags": [
-          "Melt Area 3x3"
-        ]
-      },
-      {
-        "level": 4,
-        "stats": [],
-        "flags": [
-          "Explode on Finish"
-        ]
-      }
-    ],
-    "growth": null,
-    "description": "کاشت روی یخ برای آب کردن فوری آن (ضروری برای غار یخ‌زده)."
-  },
-  {
-    "id": 60,
-    "name": "Grave Buster",
-    "type": "GraveBuster",
-    "category": "EXPLOSIVE",
-    "tags": [],
-    "isMint": false,
-    "sunCost": 0,
-    "baseHp": 0,
-    "damage": {
-      "kind": "INSTA_KILL",
-      "value": 0,
-      "count": 1,
-      "stages": []
-    },
-    "actionIntervalSeconds": null,
-    "rechargeSeconds": 10.0,
-    "production": null,
-    "plantFood": {
-      "kind": "NONE",
-      "amount": 0,
-      "count": 0,
-      "durationSeconds": 0,
-      "flags": [],
-      "description": "ندارد (مصرفی آنی)"
-    },
-    "levelUpgrades": [
-      {
-        "level": 2,
-        "stats": [
-          {
-            "stat": "ACTION_INTERVAL_SECONDS",
-            "delta": -1.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 3,
-        "stats": [
-          {
-            "stat": "RECHARGE_SECONDS",
-            "delta": -2.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 4,
-        "stats": [],
-        "flags": [
-          "Explode on Finish"
-        ]
-      }
-    ],
-    "growth": null,
-    "description": "از بین بردن قبرها. (ضروری برای مراحل مصر باستان و قرون تاریک)."
-  },
-  {
-    "id": 61,
-    "name": "Enlighten-mint",
-    "type": "Enlightenmint",
-    "category": "SUN_PRODUCER",
-    "tags": [],
-    "isMint": true,
-    "sunCost": 0,
-    "baseHp": 0,
-    "damage": {
-      "kind": "NONE",
-      "value": 0,
-      "count": 1,
-      "stages": []
-    },
-    "actionIntervalSeconds": null,
-    "rechargeSeconds": 85.0,
-    "production": null,
-    "plantFood": {
-      "kind": "NONE",
-      "flags": [
-        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
-      ],
-      "amount": 0,
-      "count": 0,
-      "durationSeconds": 0,
-      "description": "ندارد (مصرفی آنی)"
-    },
-    "levelUpgrades": [
-      {
-        "level": 2,
-        "stats": [
-          {
-            "stat": "EFFECT_DURATION_SECONDS",
-            "delta": 1.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 3,
-        "stats": [
-          {
-            "stat": "RECHARGE_SECONDS",
-            "delta": -5.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 4,
-        "stats": [],
-        "flags": [
-          "reset family cooldowns"
-        ]
-      }
-    ],
-    "growth": null,
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
-  },
-  {
-    "id": 62,
-    "name": "Appease-mint",
-    "type": "Appeasemint",
-    "category": "SHOOTER",
-    "tags": [],
-    "isMint": true,
-    "sunCost": 0,
-    "baseHp": 0,
-    "damage": {
-      "kind": "NONE",
-      "value": 0,
-      "count": 1,
-      "stages": []
-    },
-    "actionIntervalSeconds": null,
-    "rechargeSeconds": 85.0,
-    "production": null,
-    "plantFood": {
-      "kind": "NONE",
-      "flags": [
-        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
-      ],
-      "amount": 0,
-      "count": 0,
-      "durationSeconds": 0,
-      "description": "ندارد (مصرفی آنی)"
-    },
-    "levelUpgrades": [
-      {
-        "level": 2,
-        "stats": [
-          {
-            "stat": "EFFECT_DURATION_SECONDS",
-            "delta": 1.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 3,
-        "stats": [
-          {
-            "stat": "RECHARGE_SECONDS",
-            "delta": -5.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 4,
-        "stats": [],
-        "flags": [
-          "reset family cooldowns"
-        ]
-      }
-    ],
-    "growth": null,
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
-  },
-  {
-    "id": 63,
-    "name": "Arma-mint",
-    "type": "Armamint",
-    "category": "LOBBER",
-    "tags": [],
-    "isMint": true,
-    "sunCost": 0,
-    "baseHp": 0,
-    "damage": {
-      "kind": "NONE",
-      "value": 0,
-      "count": 1,
-      "stages": []
-    },
-    "actionIntervalSeconds": null,
-    "rechargeSeconds": 85.0,
-    "production": null,
-    "plantFood": {
-      "kind": "NONE",
-      "flags": [
-        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
-      ],
-      "amount": 0,
-      "count": 0,
-      "durationSeconds": 0,
-      "description": "ندارد (مصرفی آنی)"
-    },
-    "levelUpgrades": [
-      {
-        "level": 2,
-        "stats": [
-          {
-            "stat": "EFFECT_DURATION_SECONDS",
-            "delta": 1.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 3,
-        "stats": [
-          {
-            "stat": "RECHARGE_SECONDS",
-            "delta": -5.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 4,
-        "stats": [],
-        "flags": [
-          "reset family cooldowns"
-        ]
-      }
-    ],
-    "growth": null,
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
-  },
-  {
-    "id": 64,
-    "name": "Bombard-mint",
-    "type": "Bombardmint",
-    "category": "EXPLOSIVE",
-    "tags": [],
-    "isMint": true,
-    "sunCost": 0,
-    "baseHp": 0,
-    "damage": {
-      "kind": "NONE",
-      "value": 0,
-      "count": 1,
-      "stages": []
-    },
-    "actionIntervalSeconds": null,
-    "rechargeSeconds": 85.0,
-    "production": null,
-    "plantFood": {
-      "kind": "NONE",
-      "flags": [
-        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
-      ],
-      "amount": 0,
-      "count": 0,
-      "durationSeconds": 0,
-      "description": "ندارد (مصرفی آنی)"
-    },
-    "levelUpgrades": [
-      {
-        "level": 2,
-        "stats": [
-          {
-            "stat": "EFFECT_DURATION_SECONDS",
-            "delta": 1.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 3,
-        "stats": [
-          {
-            "stat": "RECHARGE_SECONDS",
-            "delta": -5.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 4,
-        "stats": [],
-        "flags": [
-          "reset family cooldowns"
-        ]
-      }
-    ],
-    "growth": null,
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
-  },
-  {
-    "id": 65,
-    "name": "Enforce-mint",
-    "type": "Enforcemint",
-    "category": "MELEE",
-    "tags": [],
-    "isMint": true,
-    "sunCost": 0,
-    "baseHp": 0,
-    "damage": {
-      "kind": "NONE",
-      "value": 0,
-      "count": 1,
-      "stages": []
-    },
-    "actionIntervalSeconds": null,
-    "rechargeSeconds": 85.0,
-    "production": null,
-    "plantFood": {
-      "kind": "NONE",
-      "flags": [
-        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
-      ],
-      "amount": 0,
-      "count": 0,
-      "durationSeconds": 0,
-      "description": "ندارد (مصرفی آنی)"
-    },
-    "levelUpgrades": [
-      {
-        "level": 2,
-        "stats": [
-          {
-            "stat": "EFFECT_DURATION_SECONDS",
-            "delta": 1.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 3,
-        "stats": [
-          {
-            "stat": "RECHARGE_SECONDS",
-            "delta": -5.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 4,
-        "stats": [],
-        "flags": [
-          "reset family cooldowns"
-        ]
-      }
-    ],
-    "growth": null,
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
-  },
-  {
-    "id": 66,
-    "name": "Reinforce-mint",
-    "type": "Reinforcemint",
-    "category": "WALL_NUT",
-    "tags": [],
-    "isMint": true,
-    "sunCost": 0,
-    "baseHp": 0,
-    "damage": {
-      "kind": "NONE",
-      "value": 0,
-      "count": 1,
-      "stages": []
-    },
-    "actionIntervalSeconds": null,
-    "rechargeSeconds": 85.0,
-    "production": null,
-    "plantFood": {
-      "kind": "NONE",
-      "flags": [
-        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
-      ],
-      "amount": 0,
-      "count": 0,
-      "durationSeconds": 0,
-      "description": "ندارد (مصرفی آنی)"
-    },
-    "levelUpgrades": [
-      {
-        "level": 2,
-        "stats": [
-          {
-            "stat": "EFFECT_DURATION_SECONDS",
-            "delta": 1.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 3,
-        "stats": [
-          {
-            "stat": "RECHARGE_SECONDS",
-            "delta": -5.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 4,
-        "stats": [],
-        "flags": [
-          "reset family cooldowns"
-        ]
-      }
-    ],
-    "growth": null,
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
-  },
-  {
-    "id": 67,
-    "name": "Enchant-mint",
-    "type": "Enchantmint",
-    "category": "MODIFIER",
-    "tags": [],
-    "isMint": true,
-    "sunCost": 0,
-    "baseHp": 0,
-    "damage": {
-      "kind": "NONE",
-      "value": 0,
-      "count": 1,
-      "stages": []
-    },
-    "actionIntervalSeconds": null,
-    "rechargeSeconds": 85.0,
-    "production": null,
-    "plantFood": {
-      "kind": "NONE",
-      "flags": [
-        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
-      ],
-      "amount": 0,
-      "count": 0,
-      "durationSeconds": 0,
-      "description": "ندارد (مصرفی آنی)"
-    },
-    "levelUpgrades": [
-      {
-        "level": 2,
-        "stats": [
-          {
-            "stat": "EFFECT_DURATION_SECONDS",
-            "delta": 1.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 3,
-        "stats": [
-          {
-            "stat": "RECHARGE_SECONDS",
-            "delta": -5.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 4,
-        "stats": [],
-        "flags": [
-          "reset family cooldowns"
-        ]
-      }
-    ],
-    "growth": null,
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
-  },
-  {
-    "id": 68,
-    "name": "Pierce-mint",
-    "type": "Piercemint",
-    "category": "STRIKE_THROUGH",
-    "tags": [],
-    "isMint": true,
-    "sunCost": 0,
-    "baseHp": 0,
-    "damage": {
-      "kind": "NONE",
-      "value": 0,
-      "count": 1,
-      "stages": []
-    },
-    "actionIntervalSeconds": null,
-    "rechargeSeconds": 85.0,
-    "production": null,
-    "plantFood": {
-      "kind": "NONE",
-      "flags": [
-        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
-      ],
-      "amount": 0,
-      "count": 0,
-      "durationSeconds": 0,
-      "description": "ندارد (مصرفی آنی)"
-    },
-    "levelUpgrades": [
-      {
-        "level": 2,
-        "stats": [
-          {
-            "stat": "EFFECT_DURATION_SECONDS",
-            "delta": 1.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 3,
-        "stats": [
-          {
-            "stat": "RECHARGE_SECONDS",
-            "delta": -5.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 4,
-        "stats": [],
-        "flags": [
-          "reset family cooldowns"
-        ]
-      }
-    ],
-    "growth": null,
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
-  },
-  {
-    "id": 69,
-    "name": "catTail-mint",
-    "type": "catTailmint",
-    "category": "HOMING",
-    "tags": [],
-    "isMint": true,
-    "sunCost": 0,
-    "baseHp": 0,
-    "damage": {
-      "kind": "NONE",
-      "value": 0,
-      "count": 1,
-      "stages": []
-    },
-    "actionIntervalSeconds": null,
-    "rechargeSeconds": 85.0,
-    "production": null,
-    "plantFood": {
-      "kind": "NONE",
-      "flags": [
-        "CONSUMED_AS_FAMILY_BUFF_TRIGGER"
-      ],
-      "amount": 0,
-      "count": 0,
-      "durationSeconds": 0,
-      "description": "ندارد (مصرفی آنی)"
-    },
-    "levelUpgrades": [
-      {
-        "level": 2,
-        "stats": [
-          {
-            "stat": "EFFECT_DURATION_SECONDS",
-            "delta": 1.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 3,
-        "stats": [
-          {
-            "stat": "RECHARGE_SECONDS",
-            "delta": -5.0
-          }
-        ],
-        "flags": []
-      },
-      {
-        "level": 4,
-        "stats": [],
-        "flags": [
-          "reset family cooldowns"
-        ]
-      }
-    ],
-    "growth": null,
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خود"
+    "description": "امکان کاشت گیاهان غیرآبی روی آب."
   }
 ]
