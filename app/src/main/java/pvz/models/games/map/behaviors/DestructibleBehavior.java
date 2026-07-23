@@ -1,5 +1,6 @@
 package pvz.models.games.map.behaviors;
 
+import pvz.models.AppContext;
 import pvz.models.entities.plants.enums.PlantType;
 import pvz.models.entities.projectile.Projectile;
 import pvz.models.games.GameContext;
@@ -35,12 +36,7 @@ public class DestructibleBehavior implements TileBehavior {
         this.hp -= p.getDamage();
         p.destroy(); // Projectile is consumed by grave/ice
         if (this.hp <= 0) {
-            // We don't have direct GameContext in onProjectileHit, but projectiles have context or we can add context access if needed.
-            // Wait, does Projectile have GameContext? Let's check Projectile.java.
-            // Actually, we can grant rewards or log via GameContext if available, or just check tile.
-            tile.removeBehavior(this);
-            tile.getTags().remove(TileTags.GRAVE);
-            tile.getTags().remove(TileTags.ICE_BLOCK);
+            destroyGrave(tile, AppContext.getInstance().getGameContext());
         }
     }
 
