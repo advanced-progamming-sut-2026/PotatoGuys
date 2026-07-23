@@ -21,6 +21,12 @@ public class GameMapFactory {
                             case DESTRUCTIBLE -> map.getTile(tileDef.x, tileDef.y).addBehavior(new DestructibleBehavior(behDef.hp, behDef.name));
                             case SLIPPERY -> map.getTile(tileDef.x, tileDef.y).addBehavior(new SlipperyBehavior(behDef.laneDelta));
                             case WATER -> map.getTile(tileDef.x, tileDef.y).addBehavior(new WaterBehavior());
+                            case NECROMANCY -> {
+                                map.getTile(tileDef.x, tileDef.y).getTags().add(TileTags.NECROMANCY);
+                                if (behDef.hp > 0) {
+                                    map.getTile(tileDef.x, tileDef.y).addBehavior(new DestructibleBehavior(behDef.hp, behDef.name != null ? behDef.name : "Grave"));
+                                }
+                            }
                             case ICE_BLOCK -> {
                                 // Ice blocks need to contain something, this might need more data in JSON
                                 // For now, assume it freezes the plant on the tile

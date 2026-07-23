@@ -26,6 +26,7 @@ public class SunManager implements TickAware {
         ticksSinceLastDrop++;
 
         if (!gameContext.getMode().supportsFallingSuns()) return;
+        if ("dark ages".equalsIgnoreCase(gameContext.getSeasonName())) return;
 
         double timeInSeconds = totalTicks / 10.0;
         double x_seconds = Math.min(6 + 0.05 * timeInSeconds, 12);

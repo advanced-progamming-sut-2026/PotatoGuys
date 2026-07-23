@@ -49,6 +49,13 @@ public class Tile {
 
     public void addPlant(Plant plant) {
             plants.add(plant);
+            if (plant.getType() == PlantType.GraveBuster) {
+                for (TileBehavior b : new ArrayList<>(behaviors)) {
+                    if (b instanceof pvz.models.games.map.behaviors.DestructibleBehavior db) {
+                        db.destroyGrave(this, plant.getContext());
+                    }
+                }
+            }
     }
 
     public void removePlant(Plant plant) {

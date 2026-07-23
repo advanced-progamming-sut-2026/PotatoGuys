@@ -12,6 +12,9 @@ public class EffectFactory {
                 return new ColdWindEffect(def.intervalTicks);
             case "BIG_WAVE_BEACH":
                 return new BigWaveBeachEffect(def.minWaterColumn, def.maxWaterColumn);
+            case "DARK_AGES":
+            case "DARK_AGES_EFFECT":
+                return new DarkAgesEffect(def.intervalTicks);
             default:
                 return null;
         }

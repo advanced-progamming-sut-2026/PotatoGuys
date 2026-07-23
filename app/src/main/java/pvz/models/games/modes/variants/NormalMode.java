@@ -260,8 +260,18 @@ public class NormalMode implements GameMode, PlantPlacer {
         Tile tile = context.getTileAt(col, lane);
         if (tile!=null){
             if (tile.getTags().contains(TileTags.GRAVE)){
+                String graveDisplay = " G  ";
+                for (pvz.models.games.map.behaviors.TileBehavior b : tile.getBehaviors()) {
+                    if (b instanceof pvz.models.games.map.behaviors.DestructibleBehavior db) {
+                        if (db.getReward() == pvz.models.games.map.behaviors.DestructibleBehavior.GraveReward.SUN_50) {
+                            graveDisplay = " G$ ";
+                        } else if (db.getReward() == pvz.models.games.map.behaviors.DestructibleBehavior.GraveReward.PLANT_FOOD) {
+                            graveDisplay = " G! ";
+                        }
+                    }
+                }
                 if (hasZombie) return String.format(AnsiColors.BRIGHT_BLACK+"G"+AnsiColors.RESET+"/Z%-1d",zombiesAtCell.size());
-                return AnsiColors.BRIGHT_BLACK+" G  "+AnsiColors.RESET;
+                return AnsiColors.BRIGHT_BLACK + graveDisplay + AnsiColors.RESET;
             } else if (tile.getTags().contains(TileTags.SLIP_UP)){
                 if (hasZombie) return String.format(AnsiColors.BLUE+"↑"+AnsiColors.RESET+"/Z%-1d",zombiesAtCell.size());
                 return AnsiColors.BLUE+" S↑ "+AnsiColors.RESET;

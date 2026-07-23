@@ -4,5 +4,6 @@ public enum BehaviorType {
     DESTRUCTIBLE,
     SLIPPERY,
     ICE_BLOCK,
-    WATER;
+    WATER,
+    NECROMANCY;
 }
