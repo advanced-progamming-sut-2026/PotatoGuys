@@ -3679,5 +3679,65 @@
     ],
     "growth": null,
     "description": "امکان کاشت گیاهان غیرآبی روی آب."
+  },
+  {
+    "id": 59,
+    "name": "Grave Buster",
+    "type": "GraveBuster",
+    "category": "EXPLOSIVE",
+    "tags": [
+      "EXPLOSIVE"
+    ],
+    "isMint": false,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 10.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "ACTION_INTERVAL_SECONDS",
+            "delta": -10.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -20.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 1800.0
+          }
+        ],
+        "flags": [
+          "Explode on Finish"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "امکان کاشت گیاهان غیرآبی روی آب."
   }
 ]

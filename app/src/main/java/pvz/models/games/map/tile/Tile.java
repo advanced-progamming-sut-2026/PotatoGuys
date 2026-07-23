@@ -25,6 +25,11 @@ public class Tile {
     }
 
     public boolean isPlantable(PlantCard newPlant) {
+        if (newPlant.getPlant().getType() == PlantType.GraveBuster) {
+            boolean hasGrave = tags.contains(TileTags.GRAVE) || behaviors.stream().anyMatch(b -> b instanceof pvz.models.games.map.behaviors.DestructibleBehavior);
+            if (!hasGrave) return false;
+        }
+
         for (TileBehavior b : behaviors) {
             if (!b.canPlant(newPlant, this)) return false;
         }
@@ -49,13 +54,6 @@ public class Tile {
 
     public void addPlant(Plant plant) {
             plants.add(plant);
-            if (plant.getType() == PlantType.GraveBuster) {
-                for (TileBehavior b : new ArrayList<>(behaviors)) {
-                    if (b instanceof pvz.models.games.map.behaviors.DestructibleBehavior db) {
-                        db.destroyGrave(this, plant.getContext());
-                    }
-                }
-            }
     }
 
     public void removePlant(Plant plant) {
