@@ -3,6 +3,7 @@ package pvz.models.entities.plants.actions;
 import java.util.List;
 
 import pvz.models.entities.plants.Plant;
+import pvz.models.entities.plants.actions.shooters.ShooterAction;
 import pvz.models.entities.plants.enums.PlantTag;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;

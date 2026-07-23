@@ -33,7 +33,7 @@ public class DestructibleBehavior implements TileBehavior {
     @Override
     public void onProjectileHit(Projectile p, Tile tile) {
         this.hp -= p.getDamage();
-        p.spend();
+        p.destroy(); // Projectile is consumed by grave/ice
         if (this.hp <= 0) {
             // We don't have direct GameContext in onProjectileHit, but projectiles have context or we can add context access if needed.
             // Wait, does Projectile have GameContext? Let's check Projectile.java.
@@ -66,7 +66,7 @@ public class DestructibleBehavior implements TileBehavior {
 
     @Override
     public String getStatus() {
-        return "\n    HP: " + hp;
+        return "\n    HP: "+hp;
     }
 
     @Override

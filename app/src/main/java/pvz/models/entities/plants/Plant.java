@@ -199,7 +199,7 @@ public class Plant implements TickAware {
     // ── Plant Food ────────────────────────────────────────────────────────────
 
     /** Triggers this plant's own Plant-Food effect immediately. */
-    public void triggerPlantFood(GameContext ctx) {
+    public void  triggerPlantFood(GameContext ctx) {
         PlantFoodProfile pf = sheet.getPlantFood();
         boosted = true;
         boostedTicksRemaining = Math.max(1, Math.round(pf.getDurationSeconds() * TICKS_PER_SECOND));
