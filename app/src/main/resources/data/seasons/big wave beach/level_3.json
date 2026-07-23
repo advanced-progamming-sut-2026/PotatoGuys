@@ -1,12 +1,15 @@
 {
   "gameType": "PLANTWHATYOUGET",
-  "levelNumber": 5,
+  "levelNumber": 3,
   "levelType": "SPECIAL",
   "initialSun": 1000,
+  "effects": [{"type": "BIG_WAVE_BEACH", "minWaterColumn": 5, "maxWaterColumn": 3}],
   "gameMap": {
     "rows": 5,
     "columns": 9,
-    "specialTiles": []
+    "specialTiles": [
+      { "x": 4, "y": 2, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }, { "type": "LOW_TIDE", "hp": 0, "name": "LowTide" }], "tags": ["WATER", "LOW_TIDE"] }
+    ]
   },
   "waves": [
     {
@@ -19,7 +22,7 @@
         {
           "zombieCount": 3,
           "intervalTicks": 100,
-          "allowedTypes": ["BASIC"],
+          "allowedTypes": ["BASIC", "SNORKEL"],
           "isBurst": false
         },
         {
@@ -40,7 +43,7 @@
         {
           "zombieCount": 4,
           "intervalTicks": 60,
-          "allowedTypes": ["CONEHEAD", "NEWSPAPER"],
+          "allowedTypes": ["CONEHEAD", "NEWSPAPER", "OCTOPUS"],
           "isBurst": false
         },
         {
@@ -61,7 +64,7 @@
         {
           "zombieCount": 4,
           "intervalTicks": 50,
-          "allowedTypes": ["BUCKETHEAD", "BRICKHEAD"],
+          "allowedTypes": ["BUCKETHEAD", "BRICKHEAD", "SNORKEL"],
           "isBurst": false
         },
         {
