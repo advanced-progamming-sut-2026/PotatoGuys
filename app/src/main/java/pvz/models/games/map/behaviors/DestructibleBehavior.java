@@ -46,7 +46,7 @@ public class DestructibleBehavior implements TileBehavior {
 
     public void destroyGrave(Tile tile, GameContext ctx) {
         tile.removeBehavior(this);
-        tile.getTags().remove(TileTags.GRAVE);
+        tile.getTags().removeAll(tile.getTags().stream().filter(t->t.equals(TileTags.GRAVE)).toList());
         tile.getTags().remove(TileTags.ICE_BLOCK);
 
         if (ctx != null) {
