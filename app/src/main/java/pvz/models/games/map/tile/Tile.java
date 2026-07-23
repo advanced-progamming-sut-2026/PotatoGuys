@@ -7,6 +7,7 @@ import pvz.models.entities.plants.Plant;
 import pvz.models.entities.plants.data.PlantPropertySheet;
 import pvz.models.entities.plants.data.PlantRegistry;
 import pvz.models.entities.plants.enums.PlantTag;
+import pvz.models.entities.plants.enums.PlantType;
 import pvz.models.entities.projectile.Projectile;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;
@@ -30,7 +31,10 @@ public class Tile {
 
         PlantPropertySheet sheet= PlantRegistry.getInstance().getSheet(newPlant.getPlant().getType());
         if(!plants.isEmpty() && !sheet.getTags().contains(PlantTag.STACK)){
-            return false;
+            boolean hasLilyPad = plants.stream().anyMatch(p -> p.getType() == PlantType.LilyPad);
+            if (!hasLilyPad) {
+                return false;
+            }
         }
         return true;
     }

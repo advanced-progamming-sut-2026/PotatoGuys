@@ -13,6 +13,7 @@ import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;
 import pvz.models.games.card.Card;
 import pvz.models.games.card.PlantCard;
+import pvz.models.games.effects.ChapterEffect;
 import pvz.models.games.levels.Level;
 import pvz.models.games.levels.Wave;
 import pvz.models.games.levels.variants.NormalLevel;
@@ -40,7 +41,12 @@ public class NormalMode implements GameMode, PlantPlacer {
 
     @Override
     public void initMode(GameContext context) {
-
+        if (currentWave != null) {
+            currentWave.startWave(context);
+            for (ChapterEffect effect : context.getActiveEffects()) {
+                effect.onWaveStart(currentWave, context);
+            }
+        }
     }
 
     @Override
@@ -51,6 +57,9 @@ public class NormalMode implements GameMode, PlantPlacer {
             if (nextWaveIndex < waves.size()) {
                 currentWave = waves.get(nextWaveIndex);
                 currentWave.startWave(context);
+                for (ChapterEffect effect : context.getActiveEffects()) {
+                    effect.onWaveStart(currentWave, context);
+                }
                 context.log("Wave " + currentWave.getWaveNumber() + " started.");
             } else {
                 context.setGameOver(true);

@@ -346,6 +346,10 @@ public class GameContext implements TickAware {
         return seasonName;
     }
 
+    public List<ChapterEffect> getActiveEffects() {
+        return activeEffects;
+    }
+
     public int getPlantFoodCount(){
         return plantFoodCount;
     }

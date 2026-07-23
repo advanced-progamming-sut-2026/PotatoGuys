@@ -10,6 +10,8 @@ public class EffectFactory {
                 return new SandStormEffect(def.intervalTicks);
             case "COLD_WIND":
                 return new ColdWindEffect(def.intervalTicks);
+            case "BIG_WAVE_BEACH":
+                return new BigWaveBeachEffect(def.minWaterColumn, def.maxWaterColumn);
             default:
                 return null;
         }
