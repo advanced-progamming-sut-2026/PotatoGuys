@@ -8,23 +8,17 @@ import java.util.Map;
 import com.google.gson.annotations.SerializedName;
 
 import pvz.models.Constants;
-import pvz.models.entities.plants.PlantFactory;
+import pvz.models.entities.plants.actions.shooters.ShooterPattern;
 import pvz.models.entities.plants.enums.PlantCategory;
 import pvz.models.entities.plants.enums.PlantTag;
 import pvz.models.entities.plants.enums.PlantType;
+import pvz.models.entities.projectile.ProjectileType;
 import pvz.utils.SaveManager;
 
 /**
  * Singleton registry that loads every {@link PlantPropertySheet} from the
  * data-driven {@code plant_profiles.json} resource via {@link SaveManager}
- * (Gson) at startup — the plant-side counterpart of
- * {@link pvz.models.entities.zombies.data.ZombieRegistry}.
- *
- * <p>Unlike the zombie registry (which hard-codes sheets in Java because the
- * project spec treats zombie JSON as reference documentation), plants are
- * required to be fully data-driven: adding or rebalancing a plant means
- * editing {@code plant_profiles.json} only, never touching {@link PlantFactory}
- * or this class.
+ * (Gson) at startup.
  */
 public final class PlantRegistry {
 
@@ -71,6 +65,9 @@ public final class PlantRegistry {
             for (String t : dto.tags) tags.add(PlantTag.valueOf(t));
         }
 
+        ProjectileType projType = dto.projectileType != null ? ProjectileType.valueOf(dto.projectileType) : null;
+        ShooterPattern shootPat = dto.shooterPattern != null ? ShooterPattern.valueOf(dto.shooterPattern) : null;
+
         return new PlantPropertySheet.Builder(dto.id, dto.name, type)
                 .category(category)
                 .tags(tags)
@@ -78,6 +75,8 @@ public final class PlantRegistry {
                 .sunCost(dto.sunCost)
                 .baseHp(dto.baseHp)
                 .damage(toDamage(dto.damage))
+                .projectileType(projType)
+                .shooterPattern(shootPat)
                 .actionIntervalSeconds(dto.actionIntervalSeconds)
                 .rechargeSeconds(dto.rechargeSeconds)
                 .production(toProduction(dto.production))
@@ -137,6 +136,8 @@ public final class PlantRegistry {
         int sunCost;
         float baseHp;
         DamageDto damage;
+        String projectileType;
+        String shooterPattern;
         Float actionIntervalSeconds;
         Float rechargeSeconds;
         ProductionDto production;

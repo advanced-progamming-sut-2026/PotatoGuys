@@ -3,5 +3,8 @@ package pvz.models.games.map.behaviors;
 public enum BehaviorType {
     DESTRUCTIBLE,
     SLIPPERY,
-    ICE_BLOCK;
+    ICE_BLOCK,
+    WATER,
+    LOW_TIDE,
+    NECROMANCY;
 }

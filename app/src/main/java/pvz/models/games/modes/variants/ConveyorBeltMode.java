@@ -3,6 +3,7 @@ package pvz.models.games.modes.variants;
 import java.util.List;
 import java.util.Random;
 
+import pvz.enums.AnsiColors;
 import pvz.models.AppContext;
 import pvz.models.entities.plants.Plant;
 import pvz.models.entities.plants.PlantFactory;
@@ -260,9 +261,9 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         boolean hasZombie = !zombiesAtCell.isEmpty();
 
         if (hasPlant && hasZombie) {
-            return String.format("P/Z%-1d", plantsAtCell.size(), zombiesAtCell.size());
+            return String.format(AnsiColors.GREEN+"P"+AnsiColors.RESET+"/Z%-1d", plantsAtCell.size(), zombiesAtCell.size());
         } else if (hasPlant) {
-            return String.format(" P  ", plantsAtCell.size());
+            return String.format(AnsiColors.GREEN+" P  "+AnsiColors.RESET, plantsAtCell.size());
         } else if (hasZombie) {
             return String.format(" Z%-2d", zombiesAtCell.size());
         }

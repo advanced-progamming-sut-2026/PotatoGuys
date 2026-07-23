@@ -26,6 +26,8 @@ import pvz.models.games.modes.capabilities.ZombiePlacer;
 import pvz.models.games.modes.variants.VaseBreakerMode;
 import pvz.models.quests.QuestEvaluator;
 import pvz.models.user.User;
+import pvz.utils.SaveManager;
+import pvz.utils.UserSaveManager;
 import pvz.view.MainMenu;
 import pvz.view.Result;
 
@@ -96,6 +98,7 @@ public class GameController {
                 }
                 user.saveUser(); // Saves the game state, quest progress, scores, AND the new messages! // Saves the game state, quests, scores, AND the new messages! // Saves the game state, quest progress, AND the new messages!
             }
+            AppContext.getInstance().getCurrentUser().saveUser();
             return new Result("Game Over", new MainMenu());
         }
         return new Result("Time advanced by " + ticks + " ticks.\n" + map);
@@ -419,15 +422,13 @@ public class GameController {
         int count = 0;
         for (TickAware entity : context.getEngine().getEntities()) {
             if (entity instanceof Projectile projectile) {
-                if (!projectile.isSpent()) {
-                    sb.append(String.format("- %s | Position: (%.1f, %d) | Damage: %.1f | State: Active\n",
-                            projectile.getType(),
-                            projectile.getCol(),
-                            projectile.getLane(),
-                            projectile.getDamage()
-                    ));
-                    count++;
-                }
+                sb.append(String.format("- %s | Position: (%.1f, %.1f) | Damage: %.1f | State: Active\n",
+                        projectile.getType(),
+                        projectile.getX(),
+                        projectile.getY(),
+                        projectile.getDamage()
+                ));
+                count++;
             }
         }
         if (count == 0) {

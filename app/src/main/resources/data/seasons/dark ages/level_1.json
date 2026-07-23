@@ -3,11 +3,12 @@
   "levelNumber": 1,
   "levelType": "NORMAL",
   "initialSun": 250,
+  "effects": [{"type": "DARK_AGES", "intervalTicks": 300}],
   "gameMap": {
     "rows": 5,
     "columns": 9,
     "specialTiles": [
-      { "x": 5, "y": 2, "behaviors": [{ "type": "NECROMANCY", "hp": 0, "name": "Necro" }], "tags": ["NECROMANCY"] },
+      { "x": 5, "y": 2, "behaviors": [{ "type": "NECROMANCY", "hp": 500.0, "name": "Grave" }], "tags": ["NECROMANCY", "GRAVE"] },
       { "x": 7, "y": 1, "behaviors": [{ "type": "DESTRUCTIBLE", "hp": 500.0, "name": "Grave" }], "tags": ["GRAVE"] }
     ]
   },

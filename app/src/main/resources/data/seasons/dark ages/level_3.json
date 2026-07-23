@@ -1,9 +1,10 @@
 {
   "gameType": "DEADLINE",
-  "levelNumber": 4,
+  "levelNumber": 3,
   "levelType": "SPECIAL",
   "initialSun": 300,
   "deadlineColumn": 3,
+  "effects": [{"type": "DARK_AGES", "intervalTicks": 300}],
   "gameMap": {
     "rows": 5,
     "columns": 9,

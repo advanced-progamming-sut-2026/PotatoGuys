@@ -8,7 +8,7 @@ public enum TileTags {
     SLIP_DOWN("Slip down"),
     WATER("Water"),
     LOW_TIDE("Low tide"),
-    NECROMANCY_POTENTIAL("Necromancy");
+    NECROMANCY("Necromancy");
 
     public final String typeName;
 
