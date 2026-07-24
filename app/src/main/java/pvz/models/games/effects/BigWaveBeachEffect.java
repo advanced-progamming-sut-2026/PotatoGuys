@@ -31,20 +31,21 @@ public class BigWaveBeachEffect implements ChapterEffect {
 
     @Override
     public void onWaveStart(Wave wave, GameContext ctx) {
-        if (!"big wave beach".equalsIgnoreCase(ctx.getSeasonName())) return;
+        if (!"big wave beach".equalsIgnoreCase(ctx.getSeasonName()))
+            return;
 
         // Randomly shift water level between maxWaterCol and minWaterCol
         int span = Math.abs(minWaterCol - maxWaterCol) + 1;
         currentWaterCol = Math.min(minWaterCol, maxWaterCol) + rand.nextInt(span);
         ctx.log("[BigWaveBeach] Water tide shifts! Water level rises to column " + currentWaterCol);
 
-        //clear all waters from map before updating them
+        // clear all waters from map before updating them
         for (int i = 0; i < ctx.getMap().getColumns(); i++) {
             for (int j = 0; j < ctx.getMap().getRows(); j++) {
-                Tile tile=ctx.getMap().getTile(i,j);
-                tile.getTags().removeAll(tile.getTags().stream().filter(t->t.equals(TileTags.WATER)).toList());
-                for (TileBehavior behavior:new ArrayList<>(tile.getBehaviors())){
-                    if (behavior instanceof WaterBehavior waterBehavior){
+                Tile tile = ctx.getMap().getTile(i, j);
+                tile.getTags().removeAll(tile.getTags().stream().filter(t -> t.equals(TileTags.WATER)).toList());
+                for (TileBehavior behavior : new ArrayList<>(tile.getBehaviors())) {
+                    if (behavior instanceof WaterBehavior waterBehavior) {
                         tile.removeBehavior(waterBehavior);
                     }
                 }
@@ -62,7 +63,8 @@ public class BigWaveBeachEffect implements ChapterEffect {
             boolean isWaterColumn = (col >= currentWaterCol);
             for (int lane = 0; lane < lanes; lane++) {
                 Tile tile = ctx.getTileAt(col, lane);
-                if (tile == null) continue;
+                if (tile == null)
+                    continue;
 
                 if (isWaterColumn) {
                     if (!tile.getTags().contains(TileTags.WATER)) {
@@ -77,15 +79,17 @@ public class BigWaveBeachEffect implements ChapterEffect {
                     for (Plant p : new ArrayList<>(plantsAt)) {
                         boolean hasWaterTag = p.getSheet().getTags().contains(PlantTag.WATER);
                         boolean hasLilyPad = p.getType() == PlantType.LilyPad;
-                        boolean hasLilyPadUnderneath = tile.getPlants().stream().anyMatch(pl -> pl.getType() == PlantType.LilyPad);
+                        boolean hasLilyPadUnderneath = tile.getPlants().stream()
+                                .anyMatch(pl -> pl.getType() == PlantType.LilyPad);
 
                         if (!hasWaterTag && !hasLilyPad && !hasLilyPadUnderneath) {
                             ctx.removePlant(p);
-                            ctx.log("Water tide rose and washed away " + p.getSheet().getName() + " at (" + col + "," + lane + ")!");
+                            ctx.log("Water tide rose and washed away " + p.getSheet().getName() + " at (" + col + ","
+                                    + lane + ")!");
                         }
                     }
 
-                    if (wave.getWaveNumber()>1) {
+                    if (wave.getWaveNumber() > 1) {
                         // Low tide zombie emergence
                         if (tile.getTags().contains(TileTags.LOW_TIDE)) {
                             if (rand.nextFloat() < 0.6f) {

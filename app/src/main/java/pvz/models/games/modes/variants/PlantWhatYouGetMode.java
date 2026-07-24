@@ -23,9 +23,9 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
     private Wave currentWave;
     private List<Wave> waves;
     private Boolean[] lawnMower;
-    
+
     // فاز آمادگی در ابتدا فعال است
-    private boolean preparationPhase = true; 
+    private boolean preparationPhase = true;
 
     public PlantWhatYouGetMode(Level level) {
         if (level instanceof PlantWhatYouGetLevel pwygLevel) {
@@ -34,7 +34,7 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
         if (waves != null && !waves.isEmpty()) {
             currentWave = waves.get(0);
         }
-        SetupLawnMowers();
+        setupLawnMowers();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
         }
         this.preparationPhase = false;
         context.log("\n🧟 The zombies are coming! Defense mode activated! Cooldowns are now active! 🧟\n");
-        
+
         // شروع اولین موج زامبی‌ها
         if (currentWave != null) {
             currentWave.startWave(context);
@@ -73,7 +73,8 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
 
     @Override
     public void updateMode(GameContext context) {
-        // ۱. قطع باران آفتاب: هر خورشیدی که در محیط بازی ساخته شود (از آسمان تولید شود) فوراً حذف می‌گردد
+        // ۱. قطع باران آفتاب: هر خورشیدی که در محیط بازی ساخته شود (از آسمان تولید شود)
+        // فوراً حذف می‌گردد
         for (int i = 0; i < context.getSuns().size(); i++) {
             Sun sun = context.getSuns().get(i);
             context.removeSun(sun);
@@ -82,7 +83,7 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
 
         // ۲. اگر در فاز آمادگی باشیم، زامبی‌ها جلو نمی‌آیند و موج‌ها آپدیت نمی‌شوند
         if (preparationPhase) {
-            return; 
+            return;
         }
 
         // ۳. مدیریت موج زامبی‌ها پس از اتمام فاز آمادگی
@@ -123,9 +124,12 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
-        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) return false;
-        if (!context.getPlantsAt(col, lane).isEmpty()) return false;
-        if (!(card instanceof PlantCard plantCard)) return false;
+        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes())
+            return false;
+        if (!context.getPlantsAt(col, lane).isEmpty())
+            return false;
+        if (!(card instanceof PlantCard plantCard))
+            return false;
 
         // بررسی اینکه آیا بازیکن آفتاب کافی برای کاشت این گیاه دارد یا خیر
         PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(plantCard.getPlant().getType());
@@ -145,10 +149,11 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
 
     @Override
     public void handlePlacement(GameContext context, int col, int lane, PlantCard card) {
-        if (!(card instanceof PlantCard plantCard)) return;
+        if (!(card instanceof PlantCard plantCard))
+            return;
 
         PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(plantCard.getPlant().getType());
-        
+
         // کسر هزینه آفتاب
         if (!context.spendSun(sheet.getSunCost())) {
             context.log("Error: Not enough sun.");
@@ -163,8 +168,10 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
 
         // مدیریت زمان شارژ (Recharge / Cooldown)
         if (preparationPhase) {
-            // در فاز آمادگی، کارت مصرف نمی‌شود و به کول‌داون نمی‌رود تا بازیکن بدون وقفه بکارد
-            context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane + ") [PREP BONUS: No Cooldown].");
+            // در فاز آمادگی، کارت مصرف نمی‌شود و به کول‌داون نمی‌رود تا بازیکن بدون وقفه
+            // بکارد
+            context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane
+                    + ") [PREP BONUS: No Cooldown].");
         } else {
             // در فاز اصلی، کارت وارد Cooldown می‌شود
             plantCard.use();
@@ -181,25 +188,25 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
     public String getCardsStatus(GameContext context) {
         StringBuilder sb = new StringBuilder();
         List<Card> cards = context.getCards();
-            
+
         if (cards == null || cards.isEmpty()) {
             sb.append("No plant cards available.");
         } else {
             sb.append("=== SEED PACKETS ===");
             int cardWidth = 45;
-        
+
             for (Card card : cards) {
                 PlantCard ps = (PlantCard) card;
-                String cooldownStatus = preparationPhase ? "0.0 (PREP FREE)" : String.format("%.1f", (float)ps.getCooldown() / (float)Constants.TICK_PER_SECOND);
-                
+                String cooldownStatus = preparationPhase ? "0.0 (PREP FREE)"
+                        : String.format("%.1f", (float) ps.getCooldown() / (float) Constants.TICK_PER_SECOND);
+
                 String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | CD:%s%s",
                         ps.getPlant().getType(),
                         ps.getCost(),
                         ps.getPlant().getLevel(),
                         cooldownStatus,
-                        ps.getPlant().isBoosted() ? " | ⚡B" : "" 
-                );
-            
+                        ps.getPlant().isBoosted() ? " | ⚡B" : "");
+
                 sb.append("\n");
                 sb.append(String.format("%-" + cardWidth + "s", cardInfo));
             }
@@ -219,13 +226,15 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
         return null;
     }
 
-    private void SetupLawnMowers() {
+    private void setupLawnMowers() {
         lawnMower = new Boolean[5];
-        for (int i = 0; i < 5; i++) lawnMower[i] = false;
+        for (int i = 0; i < 5; i++)
+            lawnMower[i] = false;
     }
 
     private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane]) return;
+        if (lawnMower[lane])
+            return;
         context.getZombiesInLane(lane).forEach(zombie -> {
             zombie.takeDamage(Float.MAX_VALUE, true);
             context.removeZombie(zombie);
@@ -245,7 +254,7 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
     @Override
     public String renderMap(GameContext context) {
         StringBuilder sb = new StringBuilder();
-        
+
         // هدر اختصاصی وضعیت خورشید ثابت و فاز آمادگی
         sb.append("\n=================================================================================\n");
         if (preparationPhase) {
@@ -256,11 +265,11 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
         }
         sb.append(String.format(" ☀️  REMAINING SUN: %d  (No more suns will drop!)\n", context.getCurrentSun()));
         sb.append("=================================================================================\n");
-        
+
         sb.append("Tick: ").append(context.getCurrentTick())
-          .append(" | Zombies: ").append(context.getZombies().size())
-          .append(" | Plants: ").append(context.getPlants().size())
-          .append("\n");
+                .append(" | Zombies: ").append(context.getZombies().size())
+                .append(" | Plants: ").append(context.getPlants().size())
+                .append("\n");
 
         appendColumnHeaders(sb, context);
         appendDivider(sb, context);

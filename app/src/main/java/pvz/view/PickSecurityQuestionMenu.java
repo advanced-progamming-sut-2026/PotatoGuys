@@ -15,10 +15,13 @@ public class PickSecurityQuestionMenu implements Menu {
     @Override
     public Result handleInput(String input) {
         Matcher matcher;
-        
-        if ((matcher = RegisterMenuCommand.PICK_QUESTION.getMatcher(input)) != null) return controller.pickQuestion(matcher);
-        if ((matcher = RegisterMenuCommand.EXIT.getMatcher(input)) != null) return new Result("Exited to Register Menu.", new RegisterMenu());
-        if ((matcher = RegisterMenuCommand.HELP.getMatcher(input)) != null) return new Result(RegisterMenuCommand.getHelp());
+
+        if ((matcher = RegisterMenuCommand.PICK_QUESTION.getMatcher(input)) != null)
+            return controller.pickQuestion(matcher);
+        if ((matcher = RegisterMenuCommand.EXIT.getMatcher(input)) != null)
+            return new Result("Exited to Register Menu.", new RegisterMenu());
+        if ((matcher = RegisterMenuCommand.HELP.getMatcher(input)) != null)
+            return new Result(RegisterMenuCommand.getHelp());
         return new Result("Invalid command. Please pick the security question or type 'exit'.", this);
     }
 

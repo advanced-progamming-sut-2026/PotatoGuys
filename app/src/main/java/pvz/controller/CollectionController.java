@@ -47,7 +47,8 @@ public class CollectionController {
             output.append(" | Level: ").append(p.getLevel());
             output.append(" | Sun Cost: ").append(sheet.getSunCost());
             output.append(" | Seed Packets: ").append(getCollection().getSeedPackets(p.getType()));
-            if (p.isBoosted()) output.append(" [BOOSTED]");
+            if (p.isBoosted())
+                output.append(" [BOOSTED]");
         }
         return new Result(output.toString());
     }
@@ -56,7 +57,8 @@ public class CollectionController {
         StringBuilder output = new StringBuilder("All defined plants in the game:");
         for (PlantType pt : PlantType.values()) {
             PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(pt);
-            if (sheet == null) continue;
+            if (sheet == null)
+                continue;
             output.append("\n- ").append(sheet.getType().toString());
             output.append(" | ").append(sheet.getCategory().toString());
             output.append(" | Sun: ").append(sheet.getSunCost());
@@ -187,9 +189,9 @@ public class CollectionController {
 
         if (coins < PURCHASE_COIN_COST || packets < PURCHASE_PACKET_COST) {
             return new Result(String.format(
-                    "Not enough resources to unlock! Need %d coins and %d seed packets. You currently have %d coins and %d packets.",
-                    PURCHASE_COIN_COST, PURCHASE_PACKET_COST, coins, packets
-            ));
+                    "Not enough resources to unlock! Need %d coins and %d seed packets. " +
+                    "You currently have %d coins and %d packets.",
+                    PURCHASE_COIN_COST, PURCHASE_PACKET_COST, coins, packets));
         }
 
         // Deduct costs and unlock
@@ -238,9 +240,9 @@ public class CollectionController {
 
         if (coins < coinCost || packets < packetCost) {
             return new Result(String.format(
-                    "Not enough resources to upgrade! Need %d coins and %d seed packets. You currently have %d coins and %d packets.",
-                    coinCost, packetCost, coins, packets
-            ));
+                    "Not enough resources to upgrade! Need %d coins and %d seed packets." +
+                     " You currently have %d coins and %d packets.",
+                    coinCost, packetCost, coins, packets));
         }
 
         // Deduct costs and upgrade

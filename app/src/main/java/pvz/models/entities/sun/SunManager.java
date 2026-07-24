@@ -18,21 +18,26 @@ public class SunManager implements TickAware {
     }
 
     @Override
-    public void enter() {}
+    public void enter() {
+    }
 
     @Override
     public void update() {
         totalTicks++;
         ticksSinceLastDrop++;
 
-        if (!gameContext.getMode().supportsFallingSuns()) return;
-        if ("dark ages".equalsIgnoreCase(gameContext.getSeasonName())) return;
+        if (!gameContext.getMode().supportsFallingSuns()) {
+            return;
+        }
+        if ("dark ages".equalsIgnoreCase(gameContext.getSeasonName())) {
+            return;
+        }
 
         double timeInSeconds = totalTicks / 10.0;
-        double x_seconds = Math.min(6 + 0.05 * timeInSeconds, 12);
-        int x_ticks = (int) (x_seconds * 10);
+        double xSeconds = Math.min(6 + 0.05 * timeInSeconds, 12);
+        int xTicks = (int) (xSeconds * 10);
 
-        if (ticksSinceLastDrop >= x_ticks) {
+        if (ticksSinceLastDrop >= xTicks) {
             spawnSun();
             ticksSinceLastDrop = 0;
         }
@@ -44,13 +49,16 @@ public class SunManager implements TickAware {
 
         SunType type = SunType.NORMAL;
         double rand = random.nextDouble();
-        if (rand < 0.05) type = SunType.RADIOACTIVE;
-        else if (rand < 0.20) type = SunType.SPECIAL;
+        if (rand < 0.05) {
+            type = SunType.RADIOACTIVE;
+        } else if (rand < 0.20) {
+            type = SunType.SPECIAL;
+        }
 
         String typeName = switch (type) {
             case RADIOACTIVE -> "radioactive";
-            case SPECIAL     -> "special";
-            case NORMAL      -> "regular";
+            case SPECIAL -> "special";
+            case NORMAL -> "regular";
         };
 
         gameContext.log("New " + typeName + " sun is dropping at position (" + col + ", " + lane + ")");
@@ -60,5 +68,6 @@ public class SunManager implements TickAware {
     }
 
     @Override
-    public void dispose() {}
+    public void dispose() {
+    }
 }

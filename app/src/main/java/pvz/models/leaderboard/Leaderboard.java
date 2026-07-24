@@ -23,7 +23,7 @@ public class Leaderboard {
         public int highestScore;
 
         public LeaderBoardEntry(String username, int lastSeason, int lastLevel, int miniGamesPassed,
-                                int dailyQuestsCompleted, int nonDailyQuestsCompleted, int highestScore) {
+                int dailyQuestsCompleted, int nonDailyQuestsCompleted, int highestScore) {
             this.username = username;
             this.lastSeason = lastSeason;
             this.lastLevel = lastLevel;
@@ -67,8 +67,7 @@ public class Leaderboard {
                             int highScore = u.getScore() != null ? u.getScore().getHighestScore() : 0;
 
                             entries.add(new LeaderBoardEntry(
-                                    u.getUsername(), season, level, miniGames, daily, nonDaily, highScore
-                            ));
+                                    u.getUsername(), season, level, miniGames, daily, nonDaily, highScore));
                         }
                     }
                 }
@@ -77,8 +76,9 @@ public class Leaderboard {
         return entries;
     }
 
-    public static List<LeaderBoardEntry> sort(List<LeaderBoardEntry> list, LeaderboardSortField field, SortTypes order) {
-        Comparator<LeaderBoardEntry> comp = switch(field) {
+    public static List<LeaderBoardEntry> sort(List<LeaderBoardEntry> list, LeaderboardSortField field,
+            SortTypes order) {
+        Comparator<LeaderBoardEntry> comp = switch (field) {
             case LAST_LEVEL_AND_SEASON -> Comparator.comparingInt((LeaderBoardEntry e) -> e.lastSeason)
                     .thenComparingInt(e -> e.lastLevel);
             case MINI_GAMES_PASSED -> Comparator.comparingInt(e -> e.miniGamesPassed);
@@ -98,7 +98,8 @@ public class Leaderboard {
     }
 
     public static String format(List<LeaderBoardEntry> list, LeaderboardSortField field, SortTypes order) {
-        if (list.isEmpty()) return "No players found on the leaderboard.";
+        if (list.isEmpty())
+            return "No players found on the leaderboard.";
 
         StringBuilder sb = new StringBuilder();
         sb.append("\n=== LEADERBOARD (Sorted by ").append(field).append(" ").append(order).append(") ===\n");
@@ -108,10 +109,12 @@ public class Leaderboard {
 
         for (LeaderBoardEntry e : list) {
             String levelStr = "Level " + e.lastLevel + " of Chapter " + e.lastSeason;
-            if (e.lastSeason == 0 || e.lastLevel == 0) levelStr = "None";
+            if (e.lastSeason == 0 || e.lastLevel == 0)
+                levelStr = "None";
 
             sb.append(String.format("%-15s | %-22s | %-10d | %-12d | %-16d | %-13d\n",
-                    e.username, levelStr, e.miniGamesPassed, e.dailyQuestsCompleted, e.nonDailyQuestsCompleted, e.highestScore));
+                    e.username, levelStr, e.miniGamesPassed, e.dailyQuestsCompleted, e.nonDailyQuestsCompleted,
+                    e.highestScore));
         }
         return sb.toString();
     }

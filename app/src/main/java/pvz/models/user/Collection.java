@@ -14,18 +14,25 @@ public class Collection {
     private Map<PlantType, Integer> seedPackets = new HashMap<>();
     private transient News news;
 
-    public Collection() {}
+    public Collection() {
+    }
 
     public Collection(News news) {
         this.news = news;
     }
 
-    public List<MyPlant> getUnlockedPlants() { return unlockedPlants; }
-    public List<ZombieType> getUnlockedZombies() { return unlockedZombies; }
+    public List<MyPlant> getUnlockedPlants() {
+        return unlockedPlants;
+    }
+
+    public List<ZombieType> getUnlockedZombies() {
+        return unlockedZombies;
+    }
 
     public MyPlant getPlant(PlantType type) {
         for (MyPlant p : unlockedPlants) {
-            if (p.getType() == type) return p;
+            if (p.getType() == type)
+                return p;
         }
         return null;
     }
@@ -40,10 +47,9 @@ public class Collection {
 
             // ---> NEW: Send a News Message! <---
             User user = AppContext.getInstance().getCurrentUser();
-            if(user != null && user.getProfile().getNews() != null) {
+            if (user != null && user.getProfile().getNews() != null) {
                 user.getProfile().getNews().getMessages().add(
-                        new Message("New Plant Unlocked: " + type.name() + "!")
-                );
+                        new Message("New Plant Unlocked: " + type.name() + "!"));
             }
         }
     }
@@ -54,17 +60,25 @@ public class Collection {
 
             // ---> NEW: Send a News Message! <---
             User user = AppContext.getInstance().getCurrentUser();
-            if(user != null && user.getProfile().getNews() != null) {
+            if (user != null && user.getProfile().getNews() != null) {
                 user.getProfile().getNews().getMessages().add(
-                        new Message("New Zombie Encountered: " + type.name() + "!")
-                );
+                        new Message("New Zombie Encountered: " + type.name() + "!"));
                 // We purposefully do NOT call user.saveUser() here because this happens
-                // mid-game, and we want to avoid disk-lag. The game naturally saves on Win/Loss.
+                // mid-game, and we want to avoid disk-lag. The game naturally saves on
+                // Win/Loss.
             }
         }
     }
 
-    public int getSeedPackets(PlantType type) { return seedPackets.getOrDefault(type, 0); }
-    public void addSeedPackets(PlantType type, int amount) { seedPackets.put(type, getSeedPackets(type) + amount); }
-    public void consumeSeedPackets(PlantType type, int amount) { seedPackets.put(type, Math.max(0, getSeedPackets(type) - amount)); }
+    public int getSeedPackets(PlantType type) {
+        return seedPackets.getOrDefault(type, 0);
+    }
+
+    public void addSeedPackets(PlantType type, int amount) {
+        seedPackets.put(type, getSeedPackets(type) + amount);
+    }
+
+    public void consumeSeedPackets(PlantType type, int amount) {
+        seedPackets.put(type, Math.max(0, getSeedPackets(type) - amount));
+    }
 }

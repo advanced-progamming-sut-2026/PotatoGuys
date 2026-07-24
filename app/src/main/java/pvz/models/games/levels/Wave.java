@@ -10,7 +10,7 @@ import pvz.models.entities.zombies.ZombieType;
 import pvz.models.games.GameContext;
 import pvz.models.user.Collection;
 
-public class Wave{
+public class Wave {
     private int waveNumber;
     private boolean isFinalWave;
     private int baseTotalWaveCost;
@@ -25,7 +25,7 @@ public class Wave{
     private static Random rand = new Random();
 
     public Wave(int waveNumber, boolean isFinalWave, int totalWaveCost, List<WavePhase> phases,
-                 int lanes, int difficulty) {
+            int lanes, int difficulty) {
         this.waveNumber = waveNumber;
         this.isFinalWave = isFinalWave;
         this.baseTotalWaveCost = totalWaveCost;
@@ -34,20 +34,20 @@ public class Wave{
         this.difficulty = difficulty;
         this.currentPhase = 0;
         this.remainingInPhase = phases.get(currentPhase).getZombieCount();
-        this.ticksUntilNextSpawn = phases.get(currentPhase  ).getIntervalTicks();
+        this.ticksUntilNextSpawn = phases.get(currentPhase).getIntervalTicks();
         this.done = false;
     }
-    
-    public Wave() {}
+
+    public Wave() {
+    }
 
     private void ensureInitialized() {
         if (this.remainingInPhase == 0 && this.ticksUntilNextSpawn == 0 && !done) {
-             this.currentPhase = 0;
-             this.remainingInPhase = phases.get(currentPhase).getZombieCount();
-             this.ticksUntilNextSpawn = phases.get(currentPhase).getIntervalTicks();
+            this.currentPhase = 0;
+            this.remainingInPhase = phases.get(currentPhase).getZombieCount();
+            this.ticksUntilNextSpawn = phases.get(currentPhase).getIntervalTicks();
         }
     }
-
 
     public int getWaveNumber() {
         return waveNumber;
@@ -75,10 +75,12 @@ public class Wave{
 
     public void updateWave(GameContext context) {
         ensureInitialized();
-        if (done) return;
+        if (done)
+            return;
 
         ticksUntilNextSpawn--;
-        if (ticksUntilNextSpawn > 0) return;
+        if (ticksUntilNextSpawn > 0)
+            return;
 
         WavePhase phase = phases.get(currentPhase);
         int spawnCount = phase.isBurst() ? 3 : 1;
@@ -105,7 +107,8 @@ public class Wave{
 
     private void spawnZombie(GameContext context, WavePhase phase) {
         List<ZombieType> allowed = phase.getAllowedTypes();
-        if (allowed == null || allowed.isEmpty()) return;
+        if (allowed == null || allowed.isEmpty())
+            return;
 
         ZombieType type = allowed.get(rand.nextInt(allowed.size()));
         int lane = rand.nextInt(lanes);
@@ -115,9 +118,10 @@ public class Wave{
         // deeper into the map (1-4 columns from the right edge)
         boolean isSandstorm = isFinalWave && phase.isBurst()
                 && "ancient egypt".equalsIgnoreCase(context.getSeasonName());
-        
-        context.log("DEBUG: Checking sandstorm: isFinalWave=" + isFinalWave + ", isBurst=" + phase.isBurst() + ", season=" + context.getSeasonName() + ", isSandstorm=" + isSandstorm);
-        
+
+        context.log("DEBUG: Checking sandstorm: isFinalWave=" + isFinalWave + ", isBurst=" + phase.isBurst()
+                + ", season=" + context.getSeasonName() + ", isSandstorm=" + isSandstorm);
+
         if (isSandstorm) {
             col = context.getColumns() - 2 - rand.nextInt(4);
             context.log("A sandstorm carries a " + type.getAlias() + " to column " + col + "!");
@@ -126,9 +130,10 @@ public class Wave{
         Zombie newZombie = new ZombieFactory().create(type.getAlias(), col, lane, context, waveNumber, difficulty);
         context.spawnZombie(newZombie);
 
-        //Adding this zombie type to user collection if user hasn't seen this type of zombie yet
-        Collection collection=AppContext.getInstance().getCurrentUser().getProfile().getCollection();
-        if (!collection.getUnlockedZombies().contains(type)){
+        // Adding this zombie type to user collection if user hasn't seen this type of
+        // zombie yet
+        Collection collection = AppContext.getInstance().getCurrentUser().getProfile().getCollection();
+        if (!collection.getUnlockedZombies().contains(type)) {
             collection.unlockZombie(type);
         }
     }

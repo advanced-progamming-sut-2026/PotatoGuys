@@ -19,19 +19,15 @@ import pvz.models.games.levels.variants.TimedWarLevel;
 import pvz.models.games.modes.GameMode;
 import pvz.models.games.modes.capabilities.PlantPlacer;
 
-/**
- * Timed War game mode implementation.
- * Tracks rolling window zombie kills individually and enforces a level timer.
- */
 public class TimedWarMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
     private Boolean[] lawnMower;
 
-    private final int TICKS_PER_SECOND = 10; // هر چند تیک معادل یک ثانیه است (با انجین خود هماهنگ کنید)
-    private final int WINDOW_SECONDS = 8;    // بازه زمانی بررسی (۵ ثانیه)
-    private final int TARGET_KILLS = 5;     // تعداد زامبی هدف برای برد
-    private final int TOTAL_TIME_LIMIT_SECONDS = 60; // زمان کل مرحله (مثلاً ۱ دقیقه)
+    private static final int TICKS_PER_SECOND = 10;
+    private static final int WINDOW_SECONDS = 8;
+    private static final int TARGET_KILLS = 5;
+    private static final int TOTAL_TIME_LIMIT_SECONDS = 60;
 
     private final List<Integer> killedZombieTicks = new ArrayList<>();
     private List<Zombie> lastTickZombies = new ArrayList<>();
@@ -41,7 +37,7 @@ public class TimedWarMode implements GameMode, PlantPlacer {
             waves = timedWarLevel.getWaves();
         }
         currentWave = waves.getFirst();
-        SetupLawnMowers();
+        setupLawnMowers();
     }
 
     @Override
@@ -54,49 +50,64 @@ public class TimedWarMode implements GameMode, PlantPlacer {
     @Override
     public void updateMode(GameContext context) {
         int currentTick = context.getCurrentTick();
+        trackZombieKills(context);
+        cleanupExpiredKills(currentTick);
 
+        if (checkVictoryCondition(context)) {
+            return;
+        }
+
+        if (checkGameOverCondition(context, currentTick)) {
+            return;
+        }
+
+        updateWaveAndEntities(context, currentTick);
+    }
+
+    private void trackZombieKills(GameContext context) {
+        int currentTick = context.getCurrentTick();
         List<Zombie> currentZombies = context.getZombies();
         for (Zombie oldZombie : lastTickZombies) {
-            // اگر زامبی در تیک قبل بود ولی الان نیست، یعنی حذف شده
             if (!currentZombies.contains(oldZombie)) {
-                // مطمئن می‌شویم زامبی از خانه رد نشده باشد (کشته شده باشد یا با ماشین چمن‌زنی له شده باشد)
                 if (oldZombie.getX() > 0f) {
-                    killedZombieTicks.add(currentTick); // ثبت زمان دقیق مرگ
+                    killedZombieTicks.add(currentTick);
                 }
             }
         }
         lastTickZombies = new ArrayList<>(currentZombies);
+    }
 
-        // ۲. پاکسازی زامبی‌های منقضی شده (هر زامبی جداگانه پس از ۵ ثانیه از لیست خارج می‌شود)
+    private void cleanupExpiredKills(int currentTick) {
         int windowTicks = WINDOW_SECONDS * TICKS_PER_SECOND;
         killedZombieTicks.removeIf(deathTick -> (currentTick - deathTick) > windowTicks);
+    }
 
-        // ۳. بررسی شرایط برد
+    private boolean checkVictoryCondition(GameContext context) {
         if (killedZombieTicks.size() >= TARGET_KILLS) {
             context.setGameOver(true);
-            context.log(" VICTORY! You successfully killed " + TARGET_KILLS + " zombies in a " + WINDOW_SECONDS + " second window!");
-            return;
+            context.log(" VICTORY! You successfully killed " + TARGET_KILLS + " zombies in a " + WINDOW_SECONDS
+                    + " second window!");
+            return true;
         }
+        return false;
+    }
 
-        // ۴. بررسی شرایط باخت (اتمام زمان کل مرحله)
+    private boolean checkGameOverCondition(GameContext context, int currentTick) {
         if (currentTick >= TOTAL_TIME_LIMIT_SECONDS * TICKS_PER_SECOND) {
             context.setGameOver(true);
             context.log(" GAME OVER! Time ran out. You failed to reach the target kill streak.");
-            return;
+            return true;
         }
+        return false;
+    }
 
-        // ۵. مدیریت موج‌ها و لاجیک‌های پیش‌فرض بازی
+    private void updateWaveAndEntities(GameContext context, int currentTick) {
         if (currentWave.isDone() && context.getZombies().isEmpty()) {
             int nextWaveIndex = waves.indexOf(currentWave) + 1;
             if (nextWaveIndex < waves.size()) {
                 currentWave = waves.get(nextWaveIndex);
                 currentWave.startWave(context);
                 context.log("Wave " + currentWave.getWaveNumber() + " started.");
-            } else {
-                // در این مود تا زمان تمام نشود بازی ادامه دارد تا بازیکن شانس برد داشته باشد
-                if (currentTick < TOTAL_TIME_LIMIT_SECONDS * TICKS_PER_SECOND) {
-                    // زامبی‌های کمکی اسپان کنید یا منتظر اتمام تایمر بمانید
-                }
             }
             return;
         }
@@ -105,7 +116,11 @@ public class TimedWarMode implements GameMode, PlantPlacer {
             currentWave.updateWave(context);
         }
 
-        // مدیریت ماشین‌های چمن‌زنی
+        updateLawnMowersAndZombies(context);
+        updateSuns(context);
+    }
+
+    private void updateLawnMowersAndZombies(GameContext context) {
         for (int i = 0; i < context.getZombies().size(); i++) {
             Zombie z = context.getZombies().get(i);
             if (z.getX() <= 0f) {
@@ -121,8 +136,9 @@ public class TimedWarMode implements GameMode, PlantPlacer {
                 }
             }
         }
+    }
 
-        // مدیریت خورشیدها
+    private void updateSuns(GameContext context) {
         for (int i = 0; i < context.getSuns().size(); i++) {
             Sun sun = context.getSuns().get(i);
             if (sun.isDone()) {
@@ -134,10 +150,16 @@ public class TimedWarMode implements GameMode, PlantPlacer {
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
-        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) return false;
-        if (!context.getPlantsAt(col, lane).isEmpty()) return false;
-        if (card == null || !card.canUse()) return false;
-        
+        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+            return false;
+        }
+        if (!context.getPlantsAt(col, lane).isEmpty()) {
+            return false;
+        }
+        if (card == null || !card.canUse()) {
+            return false;
+        }
+
         PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
         return context.getCurrentSun() >= sheet.getSunCost();
     }
@@ -181,20 +203,25 @@ public class TimedWarMode implements GameMode, PlantPlacer {
                 PlantCard ps = (PlantCard) card;
                 String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | Cooldown:%.1f%s",
                         ps.getPlant().getType(), ps.getCost(), ps.getPlant().getLevel(),
-                        (float)ps.getCooldown() / (float)Constants.TICK_PER_SECOND, ps.getPlant().isBoosted() ? " | ⚡B" : "");
+                        (float) ps.getCooldown() / (float) Constants.TICK_PER_SECOND,
+                        ps.getPlant().isBoosted() ? " | ⚡B" : "");
                 result.append("\n").append(String.format("%-" + cardWidth + "s", cardInfo));
             }
         }
         return result.toString();
     }
 
-    private void SetupLawnMowers() {
+    private void setupLawnMowers() {
         lawnMower = new Boolean[5];
-        for (int i = 0; i < 5; i++) lawnMower[i] = false;
+        for (int i = 0; i < 5; i++) {
+            lawnMower[i] = false;
+        }
     }
 
     private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane]) return;
+        if (lawnMower[lane]) {
+            return;
+        }
         context.getZombiesInLane(lane).forEach(zombie -> {
             zombie.takeDamage(Float.MAX_VALUE);
             context.removeZombie(zombie);
@@ -203,8 +230,6 @@ public class TimedWarMode implements GameMode, PlantPlacer {
         lawnMower[lane] = true;
     }
 
-    // ── بخش رندر نقشه با اطلاعات پنجره ۵ ثانیه‌ای لغزان ───────────────────
-
     private static final String CELL_EMPTY = "    ";
     private static final String MOWER_OK = "[M]";
     private static final String MOWER_USED = "[!]";
@@ -212,7 +237,7 @@ public class TimedWarMode implements GameMode, PlantPlacer {
     @Override
     public String renderMap(GameContext context) {
         StringBuilder sb = new StringBuilder();
-        appendTimedWarHeader(sb, context); // هدر اختصاصی مود زماندار
+        appendTimedWarHeader(sb, context);
         appendColumnHeaders(sb, context);
         appendDivider(sb, context);
         for (int lane = 0; lane < context.getLanes(); lane++) {
@@ -223,16 +248,18 @@ public class TimedWarMode implements GameMode, PlantPlacer {
     }
 
     private void appendTimedWarHeader(StringBuilder sb, GameContext context) {
-        double totalTimeRemaining = Math.max(0, TOTAL_TIME_LIMIT_SECONDS - ((double) context.getCurrentTick() / TICKS_PER_SECOND));
+        double totalTimeRemaining = Math.max(0,
+                TOTAL_TIME_LIMIT_SECONDS - ((double) context.getCurrentTick() / TICKS_PER_SECOND));
         int currentKillsInWindow = killedZombieTicks.size();
 
         sb.append("\n=================================================================================\n");
         sb.append(String.format("  TIMED WAR MODE  |  Time Remaining: %.1f seconds\n", totalTimeRemaining));
-        sb.append(String.format("  OBJECTIVE: Kill %d zombies within a %d-second rolling window\n", TARGET_KILLS, WINDOW_SECONDS));
-        sb.append(String.format("  CURRENT STREAK (Last %d seconds): %d / %d zombies\n", WINDOW_SECONDS, currentKillsInWindow, TARGET_KILLS));
+        sb.append(String.format("  OBJECTIVE: Kill %d zombies within a %d-second rolling window\n", TARGET_KILLS,
+                WINDOW_SECONDS));
+        sb.append(String.format("  CURRENT STREAK (Last %d seconds): %d / %d zombies\n", WINDOW_SECONDS,
+                currentKillsInWindow, TARGET_KILLS));
         sb.append("=================================================================================\n");
-        
-        // اطلاعات استاندارد تیک‌ها
+
         sb.append("Tick: ").append(context.getCurrentTick())
                 .append(" | Sun: ").append(context.getCurrentSun())
                 .append(" | Zombies Alive: ").append(context.getZombies().size())

@@ -35,11 +35,11 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
     public ConveyorBeltMode(Level level) {
         if (level instanceof ConveyorBeltLevel normalLevel) {
             waves = normalLevel.getWaves();
-        }else{
+        } else {
             return;
         }
         currentWave = waves.get(0);
-        SetupLawnMowers();
+        setupLawnMowers();
     }
 
     @Override
@@ -122,10 +122,9 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
 
         Plant plant = new PlantFactory().create(
                 plantCard.getPlant().getType(), col, lane,
-                plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context
-        );
+                plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
-        
+
         context.removeCard(card);
         context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
     }
@@ -141,7 +140,7 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         for (int i = 0; i < currentCards.size(); i++) {
             if (currentCards.get(i) instanceof PlantCard pc) {
                 String boostLabel = pc.getPlant().isBoosted() ? " [BOOSTED]" : "";
-                sb.append(String.format("[%d] %s (Lv: %d) | Cost: Free%s\n", 
+                sb.append(String.format("[%d] %s (Lv: %d) | Cost: Free%s\n",
                         i, pc.getPlant().getType().toString(), pc.getPlant().getLevel(), boostLabel));
             }
         }
@@ -160,10 +159,10 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         return null;
     }
 
-
     private void addRandomCard(GameContext context) {
         var currentUser = AppContext.getInstance().getCurrentUser();
-        if (currentUser == null || currentUser.getProfile() == null || currentUser.getProfile().getCollection() == null) {
+        if (currentUser == null || currentUser.getProfile() == null
+                || currentUser.getProfile().getCollection() == null) {
             context.log("Error: User profiles or collection is not loaded.");
             return;
         }
@@ -178,12 +177,12 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         MyPlant randomPlant = unlockedPlants.get(random.nextInt(unlockedPlants.size()));
 
         PlantCard conveyorCard = new PlantCard(randomPlant, 0, 0);
-        
+
         context.addCard(conveyorCard);
         context.log("Conveyor delivered a new card: " + randomPlant.getType().toString());
     }
 
-    private void SetupLawnMowers() {
+    private void setupLawnMowers() {
         int lanes = 5;
         lawnMower = new Boolean[lanes];
         for (int i = 0; i < lanes; i++) {
@@ -192,7 +191,8 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
     }
 
     private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane]) return;
+        if (lawnMower[lane])
+            return;
 
         context.getZombiesInLane(lane).forEach(zombie -> {
             zombie.takeDamage(Float.MAX_VALUE, true);
@@ -261,9 +261,10 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         boolean hasZombie = !zombiesAtCell.isEmpty();
 
         if (hasPlant && hasZombie) {
-            return String.format(AnsiColors.GREEN+"P"+AnsiColors.RESET+"/Z%-1d", plantsAtCell.size(), zombiesAtCell.size());
+            return String.format(AnsiColors.GREEN + "P" + AnsiColors.RESET + "/Z%-1d", plantsAtCell.size(),
+                    zombiesAtCell.size());
         } else if (hasPlant) {
-            return String.format(AnsiColors.GREEN+" P  "+AnsiColors.RESET, plantsAtCell.size());
+            return String.format(AnsiColors.GREEN + " P  " + AnsiColors.RESET, plantsAtCell.size());
         } else if (hasZombie) {
             return String.format(" Z%-2d", zombiesAtCell.size());
         }
