@@ -16,13 +16,10 @@ public class QuestEvaluator {
             }
 
             evaluateQuest(quest, stats, levelWon, currentSun, difficulty, context);
-<<<<<<< HEAD
 
             if (quest.isCompleted() && !quest.isClaimed()) {
                 quest.claim(user);
             }
-=======
->>>>>>> 9819651bd321fe5676a2f2b734a709d90c8bbaad
         }
     }
 

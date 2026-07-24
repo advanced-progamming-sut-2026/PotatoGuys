@@ -50,6 +50,38 @@ public class GreenHouse {
         return true;
     }
 
+    /**
+     * Unlocks one random still-locked pot (used for the zombie "free pot" drop).
+     *
+     * @return the pot that was unlocked, or {@code null} if every pot is already unlocked.
+     */
+    public GreenHousePot unlockRandomPot() {
+        List<GreenHousePot> lockedPots = new ArrayList<>();
+        for (GreenHousePot pot : greenHousePots) {
+            if (pot.isLocked()) {
+                lockedPots.add(pot);
+            }
+        }
+
+        if (lockedPots.isEmpty()) {
+            return null;
+        }
+
+        GreenHousePot chosen = lockedPots.get(random.nextInt(lockedPots.size()));
+        chosen.unlock();
+        return chosen;
+    }
+
+    public int getUnlockedPotCount() {
+        int count = 0;
+        for (GreenHousePot pot : greenHousePots) {
+            if (!pot.isLocked()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public boolean plantPotAt(int x, int y, GreenHousePlant plant) {
         GreenHousePot pot = getPot(x, y);
 
@@ -103,8 +135,7 @@ public class GreenHouse {
     private GreenHousePlant createRandomPlant(List<String> unlockedPlantTypesWithPlantFood) {
         boolean shouldPlantMariGold = random.nextBoolean();
 
-        if (shouldPlantMariGold || unlockedPlantTypesWithPlantFood == null
-                || unlockedPlantTypesWithPlantFood.isEmpty()) {
+        if (shouldPlantMariGold || unlockedPlantTypesWithPlantFood == null || unlockedPlantTypesWithPlantFood.isEmpty()) {
             return GreenHousePlant.createMariGold();
         }
 
