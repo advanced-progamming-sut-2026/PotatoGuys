@@ -1,6 +1,5 @@
 package pvz.models.entities.plants.data;
 
-/** Parsed shape of a {@code SUN_PRODUCER} plant's autonomous sun output. */
 public final class SunProduction {
     private final ProductionKind kind;
     private final float amount;

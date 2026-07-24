@@ -21,19 +21,13 @@ public class ShooterAction extends CooldownPlantAction {
     @Override
     protected boolean canUse(Plant plant, GameContext ctx) {
         ShooterPattern pattern = plant.getSheet().getShooterPattern();
-        // int maxRange = plant.getSheet().getMaxRange(); // -1 یعنی بی‌نهایت (کل لاین)
 
-        return hasValidTarget(plant, ctx, pattern, -1); // -1 یعنی بی‌نهایت (کل لاین)
+        return hasValidTarget(plant, ctx, pattern, -1); 
     }
 
     @Override
     protected void doExecute(Plant plant, GameContext ctx) {
         int count = Math.max(1, plant.getSheet().getDamage().getCount());
-
-        // // پشتیبانی از گیاهان استکی (مثل Pea Pod)
-        // if (plant.getStackCount() > 1) {
-        // count = plant.getStackCount();
-        // }
 
         boolean poisonous = plant.getSheet().hasTag(PlantTag.POISON);
         boolean chills = plant.getSheet().hasTag(PlantTag.ICE);
@@ -41,7 +35,7 @@ public class ShooterAction extends CooldownPlantAction {
 
         int pierce = plant.getPierceCount();
         if (plant.getSheet().getCategory() == PlantCategory.STRIKE_THROUGH) {
-            pierce += 2; // پایه نفوذ برای گیاهان Strike-through
+            pierce += 2; 
         }
 
         ProjectileType type = plant.getSheet().getProjectileType();
@@ -76,7 +70,6 @@ public class ShooterAction extends CooldownPlantAction {
                         isZombieInDirection(ctx, row + 1, col, 1, maxRange);
             }
             case FIVE_WAY_STAR, DIAGONAL_FOUR -> {
-                // برای گیاهان چندجهته، وجود هر زامبی زنده در بازی باعث شلیک می‌شود
                 return !ctx.getZombies().isEmpty();
             }
             default -> {
@@ -94,7 +87,6 @@ public class ShooterAction extends CooldownPlantAction {
                 continue;
 
             float zX = z.getX();
-            // بررسی وجود زامبی در جهت جلو (dx > 0) یا عقب (dx < 0)
             if (dx > 0 && zX >= startCol) {
                 if (maxRange < 0 || (zX - startCol) <= maxRange)
                     return true;
@@ -162,7 +154,7 @@ public class ShooterAction extends CooldownPlantAction {
     private void spawnProjectile(GameContext ctx, ProjectileType type, float row, float col,
             float dx, float dy, float dmg, boolean poison, boolean ice, boolean fire, int pierce) {
         Projectile bolt = new Projectile(ctx, type, row, col, dmg, poison, ice, fire, pierce, null);
-        bolt.setVelocityVector(dx, dy); // مقداردهی بردار حرکت دوبعدی
+        bolt.setVelocityVector(dx, dy); 
         ctx.spawnProjectile(bolt);
     }
 }

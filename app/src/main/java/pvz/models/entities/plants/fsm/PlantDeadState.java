@@ -4,12 +4,6 @@ import pvz.models.entities.plants.Plant;
 import pvz.models.games.GameContext;
 
 
-/**
- * Terminal FSM state — the plant is destroyed. Mirrors
- * {@link pvz.models.entities.zombies.fsm.DeadState}; present mainly so a
- * {@code plants info} CLI command can display "Dead" for a plant that died
- * mid-tick before the engine processes removals.
- */
 public class PlantDeadState implements PlantState {
 
     @Override

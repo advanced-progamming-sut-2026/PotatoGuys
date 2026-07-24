@@ -3,14 +3,6 @@ package pvz.models.entities.plants.actions;
 import pvz.models.entities.plants.Plant;
 import pvz.models.games.GameContext;
 
-/**
- * Abstract base for actions that fire on a repeating cooldown — the plant
- * counterpart of {@link pvz.models.entities.zombies.skills.CooldownSkill}.
- *
- * <p>The cooldown is the plant's own (level-resolved) action interval, so it
- * is supplied per-instance by {@link pvz.models.entities.plants.PlantFactory}
- * rather than hard-coded per plant kind.
- */
 public abstract class CooldownPlantAction implements PlantAction {
 
     private final int cooldownTicks;

@@ -6,12 +6,6 @@ import pvz.models.entities.plants.enums.PlantTag;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;
 
-/**
- * Behaviour for {@code MELEE} plants: strikes the zombie directly in front of
- * (or, per {@code DamageKind.INSTA_KILL}, swallows) the plant's own cell.
- * {@code AOE}-tagged melee plants (Phat Beet, Kiwibeast) hit every zombie in
- * range instead of just the front-most one.
- */
 public class MeleeAction extends CooldownPlantAction {
 
     public MeleeAction(float intervalSeconds) {

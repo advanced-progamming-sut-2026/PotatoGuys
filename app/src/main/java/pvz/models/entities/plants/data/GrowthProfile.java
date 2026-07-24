@@ -1,10 +1,5 @@
 package pvz.models.entities.plants.data;
 
-/**
- * Optional growth timeline for {@code wramp-up}-tagged plants (Sun-shroom,
- * Kiwibeast): the plant starts weak and ramps up to full strength over the
- * given number of seconds per stage, independent of its action cooldown.
- */
 public final class GrowthProfile {
     private final float[] stageSeconds;
 

@@ -4,15 +4,6 @@ import pvz.models.entities.plants.Plant;
 import pvz.models.entities.plants.actions.PlantAction;
 import pvz.models.games.GameContext;
 
-/**
- * Generic action-execution state — the plant counterpart of
- * {@link pvz.models.entities.zombies.fsm.SpecialActionState}.
- *
- * <p>Fires the action once on {@link #onEnter}, pauses for {@link #pauseTicksRemaining}
- * ticks (0 = instantaneous), then returns to {@link PlantIdleState} — unless
- * the plant killed itself during the action (single-use Explosives/Mints),
- * in which case the FSM simply stops mattering (the engine removes it).
- */
 public class PlantActionState implements PlantState {
 
     private final PlantAction action;

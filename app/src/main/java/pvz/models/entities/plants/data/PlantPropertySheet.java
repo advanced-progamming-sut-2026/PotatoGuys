@@ -8,10 +8,6 @@ import pvz.models.entities.plants.enums.PlantType;
 import pvz.models.entities.plants.actions.shooters.ShooterPattern;
 import pvz.models.entities.projectile.ProjectileType;
 
-/**
- * Immutable, data-driven description of one plant kind, loaded from
- * {@code plant_profiles.json} by {@link PlantRegistry}.
- */
 public final class PlantPropertySheet {
 
     private final int id;

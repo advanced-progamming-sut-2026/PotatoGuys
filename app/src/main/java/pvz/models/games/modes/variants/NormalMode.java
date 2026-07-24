@@ -3,7 +3,6 @@ package pvz.models.games.modes.variants;
 import java.util.List;
 
 import pvz.enums.AnsiColors;
-import pvz.models.AppContext;
 import pvz.models.Constants;
 import pvz.models.entities.plants.Plant;
 import pvz.models.entities.plants.PlantFactory;

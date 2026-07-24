@@ -6,12 +6,6 @@ import pvz.models.entities.sun.Sun;
 import pvz.models.entities.sun.SunType;
 import pvz.models.games.GameContext;
 
-/**
- * Behaviour for {@code SUN_PRODUCER} plants: periodically spawns a collectible
- * {@link Sun} at the plant's own cell. Handles fixed (Sunflower), staged
- * (Sun-shroom growth), and one-shot (Gold Bloom) production kinds uniformly
- * via {@link Plant#getEffectiveProductionAmount()}.
- */
 public class SunProducerAction extends CooldownPlantAction {
 
     public SunProducerAction(float intervalSeconds) {

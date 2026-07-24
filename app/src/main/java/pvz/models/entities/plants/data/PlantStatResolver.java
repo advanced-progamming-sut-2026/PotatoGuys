@@ -3,13 +3,6 @@ package pvz.models.entities.plants.data;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Applies a plant's {@link LevelUpgrade} list up to a given level and
- * produces the final, resolved runtime stats.
- *
- * <p>Mirrors {@code Zombie.computeScaledStats}, generalized to the richer set
- * of stats plants can level up (HP, damage, cost, timing, range, pierce...).
- */
 public final class PlantStatResolver {
 
     private PlantStatResolver() { }

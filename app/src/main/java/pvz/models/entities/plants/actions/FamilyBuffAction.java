@@ -7,19 +7,6 @@ import pvz.models.entities.plants.data.PlantFoodExecutor;
 import pvz.models.entities.plants.enums.PlantCategory;
 import pvz.models.games.GameContext;
 
-/**
- * Single-use behaviour for Mint plants (IDs 61-69, rule #5): rather than
- * inventing a bespoke buff payload, a Mint simply re-triggers every currently
- * planted member of its target family's <em>own</em> Plant-Food effect —
- * i.e. it mass-activates {@link Plant#triggerPlantFood} across the family.
- *
- * <p>This is the key design decision that keeps Mints from needing any new
- * data or Java code per family: {@link pvz.models.entities.plants.data.PlantFoodExecutor}
- * already knows how to apply every {@code PlantFoodKind}, so a Mint is just a
- * broadcaster. The Mint's own {@code category} field in the JSON names the
- * family it buffs (matching the source dataset, where a Mint is itself
- * catalogued under that family's category).
- */
 public class FamilyBuffAction implements PlantAction {
 
     private boolean used;

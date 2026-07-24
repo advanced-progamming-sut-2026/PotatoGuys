@@ -1,6 +1,5 @@
 package pvz.models.entities.plants.data;
 
-/** A single numeric stat delta contributed by one {@link LevelUpgrade}. */
 public final class StatModifier {
     private final StatKey stat;
     private final float delta;

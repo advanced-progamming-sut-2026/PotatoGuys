@@ -1,8 +1,5 @@
 package pvz.models.entities.plants.data;
 
-/**
- * Parsed shape of a plant's {@code Damage} column (see {@link DamageKind}).
- */
 public final class DamageProfile {
     private final DamageKind kind;
     private final float value;

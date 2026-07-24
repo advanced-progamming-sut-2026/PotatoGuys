@@ -1,18 +1,5 @@
 package pvz.models.entities.plants.data;
 
-/**
- * The archetype of a plant's Plant-Food-triggered burst effect.
- *
- * <p>This is a bounded, data-driven vocabulary: {@link pvz.models.entities.plants.Plant#triggerPlantFood}
- * dispatches on this enum rather than on individual plant IDs, so any new
- * plant added to {@code plant_profiles.json} automatically gets a working
- * Plant Food effect simply by picking one of these kinds — no new Java code
- * required (rule: no per-ID hard-coding).
- *
- * <p>Per project rule #4, plants have no separate armor system, so any
- * "receive permanent armor" flavor text (Wall-nut family) is modeled as
- * {@link #PERMANENT_HP_BOOST}, a direct, permanent increase of {@code maxHp}/{@code hp}.
- */
 public enum PlantFoodKind {
     /** No special effect (already a single-use consumable, or family-buff trigger). */
     NONE,

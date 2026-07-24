@@ -2,7 +2,6 @@ package pvz.models.entities.plants.data;
 
 import java.util.List;
 
-/** Parsed shape of a plant's Plant-Food effect (see {@link PlantFoodKind}). */
 public final class PlantFoodProfile {
     private final PlantFoodKind kind;
     private final float amount;
