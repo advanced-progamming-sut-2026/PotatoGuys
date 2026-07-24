@@ -1,9 +1,14 @@
 package pvz.models.user;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Score {
     private int lastSeason = 0;
     private int lastLevel = 0;
+
+    @SerializedName("numMiniGames")
     private int miniGamesPassed = 0;
+
     private int dailyQuests = 0;
     private int nonDailyQuests = 0;
     private int highestScore = 0;

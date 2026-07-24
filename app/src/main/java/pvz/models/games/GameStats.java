@@ -149,6 +149,14 @@ public class GameStats {
     }
     public Set<String> getKillingFamiliesUsed() { return killingFamiliesUsed; }
 
+    public int calculateScore(boolean won) {
+        int score = zombiesKilled * 100;
+        score += sunCollected;
+        score += lawnmowerKills * 50;
+        if (won) score += 500;
+        return score;
+    }
+
     public static String getPlantFamily(PlantType type) {
         switch (type) {
             case Peashooter: case Repeater: case Threepeater: case SnowPea:

@@ -71,12 +71,17 @@ public class GameController {
                 user,
                 context);
 
-        if (won) {
-            handleLevelOrMiniGameWin(user);
+        int gameScore = context.getGameStats().calculateScore(won);
+        if (gameScore > user.getScore().getHighestScore()) {
+            user.getScore().setHighestScore(gameScore);
         }
+
+        handleLevelOrMiniGameWin(user, won);
     }
 
-    private void handleLevelOrMiniGameWin(User user) {
+    private void handleLevelOrMiniGameWin(User user, boolean won) {
+        if (!won) return;
+
         boolean isMiniGame = (context.getMode() instanceof pvz.models.games.modes.variants.VaseBreakerMode
                 || context.getMode() instanceof pvz.models.games.modes.variants.IZombieMode
                 || context.getMode() instanceof pvz.models.games.modes.variants.BeghouledMode);

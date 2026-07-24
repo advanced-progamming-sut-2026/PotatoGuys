@@ -52,13 +52,13 @@ public final class ZombieLootService {
     private static void dropCoins(GameContext context, User user) {
         Profile profile = user.getProfile();
         profile.addCoins(COIN_REWARD);
-        context.log("A zombie dropeed a coin; you have " + profile.getCoins() + " coins now.");
+        context.log("A zombie droped 50 coins; you have " + profile.getCoins() + " coins now.");
     }
 
     private static void dropDiamond(GameContext context, User user) {
         Profile profile = user.getProfile();
         profile.addDiamonds(DIAMOND_REWARD);
-        context.log("A zombie dropeed a diamond; you have " + profile.getDiamonds() + " diamonds now.");
+        context.log("A zombie droped a diamond; you have " + profile.getDiamonds() + " diamonds now.");
     }
 
     private static void dropPot(GameContext context, User user) {
@@ -71,7 +71,7 @@ public final class ZombieLootService {
             return;
         }
 
-        context.log("A zombie dropeed a pot; you have " + greenHouse.getUnlockedPotCount() + " pots now.");
+        context.log("A zombie droped a pot; you have " + greenHouse.getUnlockedPotCount() + " pots now.");
     }
 
     /** Mirrors GreenHouseController's own resolution so the drop always touches the live instance. */

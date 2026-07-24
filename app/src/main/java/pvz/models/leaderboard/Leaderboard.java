@@ -108,9 +108,14 @@ public class Leaderboard {
         sb.append("-".repeat(102)).append("\n");
 
         for (LeaderBoardEntry e : list) {
-            String levelStr = "Level " + e.lastLevel + " of Chapter " + e.lastSeason;
-            if (e.lastSeason == 0 || e.lastLevel == 0)
+            String levelStr;
+            if (e.lastLevel > 0 && e.lastSeason > 0) {
+                levelStr = "Level " + e.lastLevel + " of Chapter " + e.lastSeason;
+            } else if (e.lastLevel > 0) {
+                levelStr = "Level " + e.lastLevel;
+            } else {
                 levelStr = "None";
+            }
 
             sb.append(String.format("%-15s | %-22s | %-10d | %-12d | %-16d | %-13d\n",
                     e.username, levelStr, e.miniGamesPassed, e.dailyQuestsCompleted, e.nonDailyQuestsCompleted,
