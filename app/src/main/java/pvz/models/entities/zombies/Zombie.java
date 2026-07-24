@@ -206,6 +206,7 @@ public class Zombie implements TickAware {
         return e != null && e.isActive();
     }
 
+
     // ── Speed helper ──────────────────────────────────────────────────────────
 
     /** Effective speed per tick: halved under CHILL, unchanged otherwise. */
