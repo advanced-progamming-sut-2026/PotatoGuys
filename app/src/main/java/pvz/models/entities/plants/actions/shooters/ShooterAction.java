@@ -6,7 +6,6 @@ import pvz.models.entities.plants.Plant;
 import pvz.models.entities.plants.actions.CooldownPlantAction;
 import pvz.models.entities.plants.enums.PlantCategory;
 import pvz.models.entities.plants.enums.PlantTag;
-import pvz.models.entities.plants.actions.shooters.ShooterPattern;
 import pvz.models.entities.projectile.Projectile;
 import pvz.models.entities.projectile.ProjectileType;
 import pvz.models.entities.zombies.Zombie;

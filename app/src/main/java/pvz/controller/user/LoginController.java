@@ -39,6 +39,9 @@ public class LoginController {
         String password = matcher.group("password");
 
         HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+        if(usernames == null) {
+            return new Result("No users found. Please register first.");
+        }
         String id = usernames.get(username);
         if (id == null) {
             return new Result("Username is incorrect!");

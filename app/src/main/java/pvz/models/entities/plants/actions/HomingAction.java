@@ -6,12 +6,6 @@ import pvz.models.entities.projectile.ProjectileType;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;
 
-/**
- * Behaviour for {@code HOMING} plants: locks onto a zombie anywhere on the
- * board (not just its own lane) and always connects, mirroring the "magic
- * bullet ignores obstacles" flavor of Caulipower / Electric Blueberry /
- * Cat-tail / Magnet-shroom.
- */
 public class HomingAction extends CooldownPlantAction {
 
     public HomingAction(float intervalSeconds) {
