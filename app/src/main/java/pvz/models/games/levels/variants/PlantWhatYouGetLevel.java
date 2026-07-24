@@ -16,7 +16,8 @@ import pvz.models.games.modes.GameModeType;
 public class PlantWhatYouGetLevel extends Level {
     private final List<Wave> waves;
 
-    public PlantWhatYouGetLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun, List<Wave> waves) {
+    public PlantWhatYouGetLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun,
+            List<Wave> waves) {
         super(GameModeType.PLANTWHATYOUGET, gameMap, levelNumber, type, initialSun);
         this.waves = waves;
     }
@@ -28,7 +29,7 @@ public class PlantWhatYouGetLevel extends Level {
     @Override
     public boolean isPlantAllowed(PlantType type) {
         PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
-        if(sheet.getCategory() == PlantCategory.SUN_PRODUCER){
+        if (sheet.getCategory() == PlantCategory.SUN_PRODUCER) {
             return false;
         }
         return true;

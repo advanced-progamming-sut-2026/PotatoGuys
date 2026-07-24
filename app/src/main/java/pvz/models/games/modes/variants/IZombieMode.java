@@ -23,7 +23,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
     private final List<ZombieType> basedZombies;
     private final boolean[] brainsEaten;
     private int redLineColumn = 4;
-    
+
     private int ticksElapsed = 0;
     private int sunZombieInterval = 150;
 
@@ -52,7 +52,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
         context.log("\n=========================================================");
         context.log("  I, ZOMBIE MODE ACTIVATED!");
         context.log("• Deploy zombies to eat all 5 brains!");
-        context.log(        "• Placement: You can only place zombies to the right of Column " + (redLineColumn - 1));
+        context.log("• Placement: You can only place zombies to the right of Column " + (redLineColumn - 1));
         context.log("=========================================================\n");
 
         Random random = new Random();
@@ -68,8 +68,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
                             lane,
                             randomPlant.getLevel(),
                             randomPlant.isBoosted(),
-                            context
-                    );
+                            context);
                     context.spawnPlant(plant);
                 }
             }
@@ -79,7 +78,6 @@ public class IZombieMode implements GameMode, ZombiePlacer {
         setupRandomZombieCards(context, random);
     }
 
-
     private void setupRandomZombieCards(GameContext context, Random random) {
         if (basedZombies == null || basedZombies.isEmpty()) {
             context.log("⚠️ No base zombies defined for this level!");
@@ -88,7 +86,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
 
         int targetCards = Math.min(7, basedZombies.size());
         int addedCards = 0;
-        int maxAttempts = 100; 
+        int maxAttempts = 100;
 
         while (addedCards < targetCards && maxAttempts > 0) {
             maxAttempts--;
@@ -116,19 +114,8 @@ public class IZombieMode implements GameMode, ZombiePlacer {
         ticksElapsed++;
 
         if (ticksElapsed % 200 == 0 && sunZombieInterval > 40) {
-            sunZombieInterval -= 10; 
+            sunZombieInterval -= 10;
         }
-
-        // if (ticksElapsed % sunZombieInterval == 0) {
-        //     long aliveSunZombies = context.getZombies().stream()
-        //             .filter(z -> !z.isDead() && z.getType().toString().equalsIgnoreCase("SUN_ZOMBIE"))
-        //             .count();
-        //     if (aliveSunZombies > 0) {
-        //         int sunProduced = (int) (aliveSunZombies * 25);
-        //         context.addSun(sunProduced);
-        //         context.log("☀️ Sun Zombies generated " + sunProduced + " Sun! Total Sun: " + context.getCurrentSun());
-        //     }
-        // }
 
         // ─── ۲. بررسی رسیدن زامبی‌ها به انتهای لاین (خوردن مغز) ─────────────────
         for (Zombie z : context.getZombies()) {
@@ -165,7 +152,6 @@ public class IZombieMode implements GameMode, ZombiePlacer {
         }
     }
 
-
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
         if (col < redLineColumn || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
@@ -192,14 +178,15 @@ public class IZombieMode implements GameMode, ZombiePlacer {
 
     @Override
     public void handlePlacement(GameContext context, int col, int lane, Card card) {
-        if (!(card instanceof ZombieCard zombieCard)) return;
+        if (!(card instanceof ZombieCard zombieCard))
+            return;
 
         if (!context.spendSun(zombieCard.getCost())) {
             context.log("Error: Not enough sun.");
             return;
         }
 
-        Zombie zombie = new ZombieFactory().create(zombieCard.getZombieType().getAlias(), col, lane,context , 1, 1);
+        Zombie zombie = new ZombieFactory().create(zombieCard.getZombieType().getAlias(), col, lane, context, 1, 1);
         context.spawnZombie(zombie);
 
         zombieCard.use();
@@ -234,8 +221,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
                     String cardInfo = String.format("- %s | Cost:%d | Cooldown:%.1f",
                             zc.getZombieType(),
                             zc.getCost(),
-                            (float)zc.getCooldown() / (float)Constants.TICK_PER_SECOND
-                    );
+                            (float) zc.getCooldown() / (float) Constants.TICK_PER_SECOND);
                     sb.append("\n").append(String.format("%-" + cardWidth + "s", cardInfo));
                 }
             }
@@ -266,10 +252,10 @@ public class IZombieMode implements GameMode, ZombiePlacer {
         StringBuilder sb = new StringBuilder();
 
         sb.append("\n=== TICK: ").append(context.getCurrentTick())
-          .append(" | SUN: ").append(context.getCurrentSun())
-          .append(" | ACTIVE ZOMBIES: ").append(context.getZombies().size())
-          .append(" | PLANTS LEFT: ").append(context.getPlants().size())
-          .append(" ===\n");
+                .append(" | SUN: ").append(context.getCurrentSun())
+                .append(" | ACTIVE ZOMBIES: ").append(context.getZombies().size())
+                .append(" | PLANTS LEFT: ").append(context.getPlants().size())
+                .append(" ===\n");
 
         sb.append("\n     ");
         for (int c = 0; c < context.getColumns(); c++) {
@@ -311,9 +297,12 @@ public class IZombieMode implements GameMode, ZombiePlacer {
         boolean hasPlant = !plants.isEmpty();
         boolean hasZombie = !zombies.isEmpty();
 
-        if (hasPlant && hasZombie) return "P/Z ";
-        if (hasPlant) return " P  ";
-        if (hasZombie) return String.format(" Z%-2d", zombies.size());
+        if (hasPlant && hasZombie)
+            return "P/Z ";
+        if (hasPlant)
+            return " P  ";
+        if (hasZombie)
+            return String.format(" Z%-2d", zombies.size());
         return CELL_EMPTY;
     }
 }

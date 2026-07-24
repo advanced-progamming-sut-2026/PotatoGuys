@@ -103,7 +103,8 @@ public class GreenHouse {
     private GreenHousePlant createRandomPlant(List<String> unlockedPlantTypesWithPlantFood) {
         boolean shouldPlantMariGold = random.nextBoolean();
 
-        if (shouldPlantMariGold || unlockedPlantTypesWithPlantFood == null || unlockedPlantTypesWithPlantFood.isEmpty()) {
+        if (shouldPlantMariGold || unlockedPlantTypesWithPlantFood == null
+                || unlockedPlantTypesWithPlantFood.isEmpty()) {
             return GreenHousePlant.createMariGold();
         }
 

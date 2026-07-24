@@ -87,17 +87,22 @@ public class GreenHouseController {
         int y = Integer.parseInt(matcher.group(2));
         GreenHouse greenHouse = getGreenHouse();
 
-        if (!greenHouse.isValidCoordinate(x, y)) return new Result("Invalid coordinates.");
+        if (!greenHouse.isValidCoordinate(x, y))
+            return new Result("Invalid coordinates.");
         GreenHousePot pot = greenHouse.getPot(x, y);
-        if (pot == null) return new Result("Invalid coordinates.");
-        if (pot.isLocked()) return new Result("Pot is locked.");
-        if (!pot.isEmpty()) return new Result("Pot is not empty.");
+        if (pot == null)
+            return new Result("Invalid coordinates.");
+        if (pot.isLocked())
+            return new Result("Pot is locked.");
+        if (!pot.isEmpty())
+            return new Result("Pot is not empty.");
 
         List<String> unlockedPlants = getUnlockedPlantNames();
         greenHouse.plantRandomPotAt(x, y, unlockedPlants);
 
         User user = getCurrentUser();
-        if (user != null) user.saveUser();
+        if (user != null)
+            user.saveUser();
         return new Result("Plant placed successfully.");
     }
 
@@ -106,15 +111,19 @@ public class GreenHouseController {
         int y = Integer.parseInt(matcher.group(2));
         GreenHouse greenHouse = getGreenHouse();
 
-        if (!greenHouse.isValidCoordinate(x, y)) return new Result("Invalid coordinates.");
+        if (!greenHouse.isValidCoordinate(x, y))
+            return new Result("Invalid coordinates.");
         GreenHousePot pot = greenHouse.getPot(x, y);
-        if (pot == null) return new Result("Invalid coordinates.");
+        if (pot == null)
+            return new Result("Invalid coordinates.");
 
         GreenHousePlant plant = greenHouse.collect(x, y);
-        if (plant == null) return new Result("No ready plant found.");
+        if (plant == null)
+            return new Result("No ready plant found.");
 
         User user = getCurrentUser();
-        if (user == null) return new Result("No user logged in.");
+        if (user == null)
+            return new Result("No user logged in.");
 
         if (plant.isMariGold()) {
             user.getProfile().setCoins(user.getProfile().getCoins() + GreenHousePlant.MARIGOLD_REWARD);
@@ -134,7 +143,8 @@ public class GreenHouseController {
                 if (myPlant != null && !myPlant.isBoosted()) {
                     myPlant.setBoosted(true);
                     user.saveUser();
-                    return new Result("Harvested " + plantTypeName + ". A boost has been stored for " + plantTypeName + ".");
+                    return new Result(
+                            "Harvested " + plantTypeName + ". A boost has been stored for " + plantTypeName + ".");
                 } else {
                     user.saveUser();
                     return new Result("Harvested " + plantTypeName + ". Boost already stored. Pot emptied.");
@@ -150,20 +160,26 @@ public class GreenHouseController {
         int y = Integer.parseInt(matcher.group(2));
         GreenHouse greenHouse = getGreenHouse();
 
-        if (!greenHouse.isValidCoordinate(x, y)) return new Result("Invalid coordinates.");
+        if (!greenHouse.isValidCoordinate(x, y))
+            return new Result("Invalid coordinates.");
         GreenHousePot pot = greenHouse.getPot(x, y);
-        if (pot == null) return new Result("Invalid coordinates.");
-        if (pot.isLocked() || pot.isEmpty()) return new Result("No plant to grow.");
+        if (pot == null)
+            return new Result("Invalid coordinates.");
+        if (pot.isLocked() || pot.isEmpty())
+            return new Result("No plant to grow.");
 
         GreenHousePlant plant = pot.getPlant();
-        if (plant.isReady()) return new Result("Plant is already ready.");
+        if (plant.isReady())
+            return new Result("Plant is already ready.");
 
         int cost = plant.remainingHours();
         User user = getCurrentUser();
-        if (user == null) return new Result("No user logged in.");
+        if (user == null)
+            return new Result("No user logged in.");
 
         if (user.getProfile().getDiamonds() < cost) {
-            return new Result("Not enough diamonds. Need " + cost + " diamonds, have " + user.getProfile().getDiamonds() + ".");
+            return new Result(
+                    "Not enough diamonds. Need " + cost + " diamonds, have " + user.getProfile().getDiamonds() + ".");
         }
 
         user.getProfile().setDiamonds(user.getProfile().getDiamonds() - cost);

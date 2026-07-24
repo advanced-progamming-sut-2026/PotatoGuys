@@ -12,7 +12,8 @@ public class DeadLineLevel extends Level {
     private final List<Wave> waves;
     private final int deadlineColumn;
 
-    public DeadLineLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun, List<Wave> waves, int deadlineColumn) {
+    public DeadLineLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun, List<Wave> waves,
+            int deadlineColumn) {
         super(GameModeType.DEADLINE, gameMap, levelNumber, type, initialSun);
         this.waves = waves;
         this.deadlineColumn = deadlineColumn;

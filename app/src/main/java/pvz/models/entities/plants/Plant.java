@@ -22,25 +22,29 @@ import pvz.models.games.map.tile.TileTags;
 /**
  * Concrete, data-driven plant entity.
  *
- * <p>All 69 plant kinds share this single class. Unique behavior comes from:
+ * <p>
+ * All 69 plant kinds share this single class. Unique behavior comes from:
  * <ol>
- *   <li>A {@link PlantPropertySheet} — immutable parsed stats loaded from JSON.</li>
- *   <li>A resolved {@link ResolvedStats} snapshot — base stats plus every level
- *       upgrade unlocked at {@link #level}, computed once at construction
- *       (mirrors {@code Zombie}'s wave-scaling, generalized to plant leveling).</li>
- *   <li>A single {@link PlantAction} plug-in — the Strategy-pattern behavior
- *       (shoot / produce sun / explode / buff family / ...) chosen by
- *       {@link PlantFactory} from the sheet's category.</li>
+ * <li>A {@link PlantPropertySheet} — immutable parsed stats loaded from
+ * JSON.</li>
+ * <li>A resolved {@link ResolvedStats} snapshot — base stats plus every level
+ * upgrade unlocked at {@link #level}, computed once at construction
+ * (mirrors {@code Zombie}'s wave-scaling, generalized to plant leveling).</li>
+ * <li>A single {@link PlantAction} plug-in — the Strategy-pattern behavior
+ * (shoot / produce sun / explode / buff family / ...) chosen by
+ * {@link PlantFactory} from the sheet's category.</li>
  * </ol>
  *
  * <h3>Tick lifecycle</h3>
+ * 
  * <pre>
  *   enter()      – set initial PlantIdleState, log placement
  *   update() × N – tick FSM (cooldown countdown -&gt; action -&gt; idle) + growth timer
  *   dispose()    – cleanup on engine removal
  * </pre>
  *
- * <p>Plants are stationary, so unlike {@code Zombie} there is no float x /
+ * <p>
+ * Plants are stationary, so unlike {@code Zombie} there is no float x /
  * velocity — just an integer (col, lane) grid cell.
  */
 public class Plant implements TickAware {
@@ -81,7 +85,7 @@ public class Plant implements TickAware {
      *                {@link #enter()}/{@link #update()} invoked)
      */
     public Plant(PlantPropertySheet sheet, PlantAction action, int col, int lane,
-                 int level, boolean boosted, GameContext context) {
+            int level, boolean boosted, GameContext context) {
         this.sheet = sheet;
         this.action = action;
         this.col = col;
@@ -106,14 +110,15 @@ public class Plant implements TickAware {
 
     @Override
     public void update() {
-        if (dead || isFrozen) return;
+        if (dead || isFrozen)
+            return;
         tickGrowth();
         tickBoost();
         PlantState next;
         if (this.currentState != null) {
             next = currentState.tick(this, context);
         } else {
-            this.currentState = new PlantIdleState(); 
+            this.currentState = new PlantIdleState();
             next = currentState.tick(this, context);
         }
         if (next != currentState) {
@@ -131,20 +136,23 @@ public class Plant implements TickAware {
     // ── Cold Wind / Freezing ──────────────────────────────────────────────────
 
     public void incrementFreezeLevel() {
-        if (isFrozen) return;
+        if (isFrozen)
+            return;
         freezeLevel++;
         if (freezeLevel >= 3) {
             isFrozen = true;
             iceHp = MAX_ICE_HP;
-            Tile tile=context.getTileAt(col,lane);
-            if (!tile.getTags().contains(TileTags.ICE_BLOCK)) tile.getTags().add(TileTags.ICE_BLOCK);
-            context.getTileAt(col,lane).addBehavior(new IceBlockBehavior(this));
+            Tile tile = context.getTileAt(col, lane);
+            if (!tile.getTags().contains(TileTags.ICE_BLOCK))
+                tile.getTags().add(TileTags.ICE_BLOCK);
+            context.getTileAt(col, lane).addBehavior(new IceBlockBehavior(this));
             context.log("[Freeze] " + sheet.getName() + " is frozen!");
         }
     }
 
     public void takeIceDamage(float amount, boolean isFire) {
-        if (!isFrozen) return;
+        if (!isFrozen)
+            return;
         if (isFire) {
             iceHp = 0f;
         } else {
@@ -158,14 +166,23 @@ public class Plant implements TickAware {
         }
     }
 
-    public boolean isFrozen() { return isFrozen; }
-    public float getIceHp() { return iceHp; }
+    public boolean isFrozen() {
+        return isFrozen;
+    }
+
+    public float getIceHp() {
+        return iceHp;
+    }
 
     // ── Damage / health ────────────────────────────────────────────────────────
 
-    /** Plants have no armor layer (rule: any "armor" text just adjusts HP), so damage is direct. */
+    /**
+     * Plants have no armor layer (rule: any "armor" text just adjusts HP), so
+     * damage is direct.
+     */
     public void takeDamage(float amount, DamageKind kind) {
-        if (dead || amount <= 0f) return;
+        if (dead || amount <= 0f)
+            return;
 
         // If frozen, ice takes damage first
         if (isFrozen) {
@@ -175,36 +192,44 @@ public class Plant implements TickAware {
         }
 
         hp = Math.max(0f, hp - amount);
-        if (hp <= 0f) kill();
+        if (hp <= 0f)
+            kill();
     }
 
-
-    /** Permanently raises max HP (and current HP) — used by armor-flavored Plant Food effects. */
+    /**
+     * Permanently raises max HP (and current HP) — used by armor-flavored Plant
+     * Food effects.
+     */
     public void boostMaxHp(float amount) {
-        if (amount <= 0f) return;
+        if (amount <= 0f)
+            return;
         maxHpBonus += amount;
         hp += amount;
     }
 
     public void kill() {
-        if (dead) return;
+        if (dead)
+            return;
         dead = true;
         currentState = new pvz.models.entities.plants.fsm.PlantDeadState();
         context.removePlant(this);
         context.log("[Plant] " + sheet.getName() + " at (" + col + "," + lane + ") was destroyed.");
     }
 
-    public void heal(float amount) { hp = Math.min(getMaxHp(), hp + Math.max(0, amount)); }
+    public void heal(float amount) {
+        hp = Math.min(getMaxHp(), hp + Math.max(0, amount));
+    }
 
     // ── Plant Food ────────────────────────────────────────────────────────────
 
     /** Triggers this plant's own Plant-Food effect immediately. */
-    public void  triggerPlantFood(GameContext ctx) {
+    public void triggerPlantFood(GameContext ctx) {
         PlantFoodProfile pf = sheet.getPlantFood();
         boosted = true;
         boostedTicksRemaining = Math.max(1, Math.round(pf.getDurationSeconds() * TICKS_PER_SECOND));
         PlantFoodExecutor.execute(this, ctx);
-        ctx.log("[PlantFood] " + sheet.getName() + " is boosted for " + String.format("%.1f", pf.getDurationSeconds()) + "s!");
+        ctx.log("[PlantFood] " + sheet.getName() + " is boosted for " + String.format("%.1f", pf.getDurationSeconds())
+                + "s!");
     }
 
     // ── Growth (wramp-up plants) ───────────────────────────────────────────────
@@ -217,7 +242,8 @@ public class Plant implements TickAware {
     }
 
     private void tickBoost() {
-        if (boostedTicksRemaining <= 0) return;
+        if (boostedTicksRemaining <= 0)
+            return;
         boostedTicksRemaining--;
         if (boostedTicksRemaining <= 0) {
             boosted = false;
@@ -225,7 +251,9 @@ public class Plant implements TickAware {
         }
     }
 
-    /** Damage for the plant's current growth stage (flat for non wramp-up plants). */
+    /**
+     * Damage for the plant's current growth stage (flat for non wramp-up plants).
+     */
     public float getEffectiveDamage() {
         float base = sheet.getDamage().getKind() == DamageKind.STAGED && growth != null
                 ? sheet.getDamage().valueAtStage(growthStageIndex)
@@ -234,10 +262,14 @@ public class Plant implements TickAware {
         return base + levelDelta;
     }
 
-    /** Sun amount for the plant's current growth stage (flat for non-staged producers). */
+    /**
+     * Sun amount for the plant's current growth stage (flat for non-staged
+     * producers).
+     */
     public float getEffectiveProductionAmount() {
         var production = sheet.getProduction();
-        if (production == null) return 0f;
+        if (production == null)
+            return 0f;
         if (production.getKind() == ProductionKind.STAGED) {
             return production.amountAtStage(growthStageIndex);
         }
@@ -246,35 +278,99 @@ public class Plant implements TickAware {
 
     // ── Accessors ─────────────────────────────────────────────────────────────
 
-    public PlantPropertySheet getSheet()   { return sheet; }
-    public GameContext getContext()       { return context; }
-    public PlantAction getAction()         { return action; }
-    public pvz.models.entities.plants.enums.PlantType getType() { return sheet.getType(); }
-    public int getCol()                    { return col; }
-    public int getLane()                   { return lane; }
-    public int getLevel()                  { return level; }
-    public boolean isBoosted()             { return boosted; }
-    public void setBoosted(boolean boosted){ this.boosted = boosted; }
+    public PlantPropertySheet getSheet() {
+        return sheet;
+    }
 
-    /** Re-resolves every level-scaled stat (mirrors leveling up a card in the Collection UI). */
+    public GameContext getContext() {
+        return context;
+    }
+
+    public PlantAction getAction() {
+        return action;
+    }
+
+    public pvz.models.entities.plants.enums.PlantType getType() {
+        return sheet.getType();
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public int getLane() {
+        return lane;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public boolean isBoosted() {
+        return boosted;
+    }
+
+    public void setBoosted(boolean boosted) {
+        this.boosted = boosted;
+    }
+
+    /**
+     * Re-resolves every level-scaled stat (mirrors leveling up a card in the
+     * Collection UI).
+     */
     public void setLevel(int level) {
         this.level = Math.max(1, Math.min(4, level));
         this.stats = PlantStatResolver.resolve(sheet, this.level);
         this.hp = getMaxHp();
     }
 
-    public float getHp()                   { return hp; }
-    public float getMaxHp()                { return stats.getMaxHp() + maxHpBonus; }
-    public int getSunCost()                { return stats.getSunCost(); }
-    public Float getActionIntervalSeconds(){ return stats.getActionIntervalSeconds(); }
-    public Float getRechargeSeconds()      { return stats.getRechargeSeconds(); }
-    public int getRangeTiles()             { return stats.getRangeTiles(); }
-    public int getPierceCount()            { return stats.getPierceCount(); }
-    public float getEffectDurationBonusSeconds() { return stats.getEffectDurationBonusSeconds(); }
-    public List<String> getUnlockedFlags() { return stats.getUnlockedFlags(); }
-    public int getGrowthStageIndex()       { return growthStageIndex; }
-    public boolean isDead()                { return dead; }
-    public PlantState getCurrentState()    { return currentState; }
+    public float getHp() {
+        return hp;
+    }
+
+    public float getMaxHp() {
+        return stats.getMaxHp() + maxHpBonus;
+    }
+
+    public int getSunCost() {
+        return stats.getSunCost();
+    }
+
+    public Float getActionIntervalSeconds() {
+        return stats.getActionIntervalSeconds();
+    }
+
+    public Float getRechargeSeconds() {
+        return stats.getRechargeSeconds();
+    }
+
+    public int getRangeTiles() {
+        return stats.getRangeTiles();
+    }
+
+    public int getPierceCount() {
+        return stats.getPierceCount();
+    }
+
+    public float getEffectDurationBonusSeconds() {
+        return stats.getEffectDurationBonusSeconds();
+    }
+
+    public List<String> getUnlockedFlags() {
+        return stats.getUnlockedFlags();
+    }
+
+    public int getGrowthStageIndex() {
+        return growthStageIndex;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public PlantState getCurrentState() {
+        return currentState;
+    }
 
     // ── CLI display ────────────────────────────────────────────────────────────
 

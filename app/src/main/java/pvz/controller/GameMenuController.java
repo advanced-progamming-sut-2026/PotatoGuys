@@ -34,13 +34,13 @@ public class GameMenuController {
             default:
                 return new Result("You cannot enter this menu.");
         }
-        
-        return new Result("Entered " + nextMenu.getName() , nextMenu);
+
+        return new Result("Entered " + nextMenu.getName(), nextMenu);
     }
 
-    public Result selectGameMode(Matcher matcher){
+    public Result selectGameMode(Matcher matcher) {
         int mode = Integer.parseInt(matcher.group("mode"));
-        switch (mode){
+        switch (mode) {
             case 1:
                 return new Result("Entering Adventure Mode ...", new GameMenu(new ChapterSellectionModal()));
             default:
@@ -69,22 +69,29 @@ public class GameMenuController {
                 return new Result("Invalid chapter number!");
         }
         Season season = AppContext.getInstance().getCurrentUser().getProfile().getSeasonByName(chapter);
-        if (season == null) return new Result("Invalid chapter name");
-        else if (season.isLocked()) return new Result("This Chapter is locked!");
-        else return new Result("Entering Chapter: " + season.getName() + " ...", new GameMenu(new SelectLevelModal(season.getName())));
+        if (season == null)
+            return new Result("Invalid chapter name");
+        else if (season.isLocked())
+            return new Result("This Chapter is locked!");
+        else
+            return new Result("Entering Chapter: " + season.getName() + " ...",
+                    new GameMenu(new SelectLevelModal(season.getName())));
     }
 
-    public Result selectLevel(Matcher matcher , Season season) {
+    public Result selectLevel(Matcher matcher, Season season) {
         int levelNumber = Integer.parseInt(matcher.group("level"));
-        if (season == null) return new Result("Invalid chapter name");
-        else if (season.isLocked()) return new Result("This Chapter is locked!");
-        else if (!season.isLevelUnlocked(levelNumber)) return new Result("This Level is locked!");
+        if (season == null)
+            return new Result("Invalid chapter name");
+        else if (season.isLocked())
+            return new Result("This Chapter is locked!");
+        else if (!season.isLevelUnlocked(levelNumber))
+            return new Result("This Level is locked!");
         Level level = LevelLoader.loadLevel(season.getName(), levelNumber);
-        if(level.hasPreGame())
+        if (level.hasPreGame())
             return new Result(new PreGameMenu(level));
         GameContext context = new GameContext(level);
         AppContext.getInstance().setGameContext(context);
-        return new Result("Game started!" , new RunningGameMenu(new GameController(context)));
+        return new Result("Game started!", new RunningGameMenu(new GameController(context)));
     }
 
     public Result travelLog(Matcher matcher) {
@@ -96,32 +103,32 @@ public class GameMenuController {
     }
 
     public Result coinWallet(Matcher matcher) {
-        return new Result("Coins: "+ AppContext.getInstance().getCurrentUser().getProfile().getCoins());
+        return new Result("Coins: " + AppContext.getInstance().getCurrentUser().getProfile().getCoins());
     }
 
     public Result gemWallet(Matcher matcher) {
-        return new Result("Gems: "+ AppContext.getInstance().getCurrentUser().getProfile().getDiamonds());
+        return new Result("Gems: " + AppContext.getInstance().getCurrentUser().getProfile().getDiamonds());
     }
 
     public Result cheatAdd(Matcher matcher) {
-        User user=AppContext.getInstance().getCurrentUser();
-        String amountStr=matcher.group("amount").trim();
-        String currency=matcher.group("currency");
+        User user = AppContext.getInstance().getCurrentUser();
+        String amountStr = matcher.group("amount").trim();
+        String currency = matcher.group("currency");
         int amount;
         try {
-            amount=Integer.parseInt(amountStr);
-        } catch (Exception ex){
+            amount = Integer.parseInt(amountStr);
+        } catch (Exception ex) {
             return new Result("Invalid amount");
         }
-        switch (currency){
-            case "coin"-> user.getProfile().addCoins(amount);
-            case "diamond"-> user.getProfile().addDiamonds(amount);
+        switch (currency) {
+            case "coin" -> user.getProfile().addCoins(amount);
+            case "diamond" -> user.getProfile().addDiamonds(amount);
             default -> {
                 return new Result("Invalid Currency");
             }
         }
         user.saveUser();
-        return new Result("Added "+amount+" "+currency+"s to current user");
+        return new Result("Added " + amount + " " + currency + "s to current user");
     }
 
     public Result exit(Matcher matcher) {

@@ -66,6 +66,9 @@ public class PlantFactory {
     // ── Action construction (driven by category, never by plant ID) ──────────
 
     private PlantAction buildAction(PlantPropertySheet sheet) {
+        if (sheet.getType() == PlantType.GraveBuster) {
+            return new pvz.models.entities.plants.actions.GraveBusterAction();
+        }
         if (sheet.isMint()) {
             return new FamilyBuffAction();
         }

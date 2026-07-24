@@ -17,6 +17,7 @@ import pvz.models.entities.zombies.effects.StatusEffect;
 import pvz.models.entities.zombies.fsm.DeadState;
 import pvz.models.entities.zombies.fsm.WalkState;
 import pvz.models.entities.zombies.fsm.ZombieState;
+import pvz.models.entities.zombies.skills.ExplorerTorchSkill;
 import pvz.models.entities.zombies.skills.ZombieSkill;
 import pvz.models.games.GameContext;
 import pvz.models.games.map.behaviors.TileBehavior;
@@ -174,6 +175,14 @@ public class Zombie implements TickAware {
         float remaining = poisonous ? amount : processArmorChain(amount);
         hp = Math.max(0f, hp - remaining);
         if (hp <= 0f && !dead) triggerDeath();
+    }
+
+    public void fire(){
+        for(ZombieSkill s : skills){
+            if(s instanceof ExplorerTorchSkill sk){
+                sk.relight();
+            }
+        }
     }
 
     /** Convenience: non-poisonous damage. */
