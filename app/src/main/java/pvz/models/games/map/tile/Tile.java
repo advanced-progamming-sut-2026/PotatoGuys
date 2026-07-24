@@ -25,6 +25,9 @@ public class Tile {
     }
 
     public boolean isPlantable(PlantCard newPlant) {
+        if (newPlant.getPlant().getType() == PlantType.HotPotato) {
+            return true;
+        }
         if (newPlant.getPlant().getType() == PlantType.GraveBuster) {
             boolean hasGrave = tags.contains(TileTags.GRAVE) || behaviors.stream().anyMatch(b -> b instanceof pvz.models.games.map.behaviors.DestructibleBehavior);
             if (!hasGrave) return false;

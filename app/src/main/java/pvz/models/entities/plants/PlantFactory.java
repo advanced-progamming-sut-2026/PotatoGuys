@@ -69,6 +69,9 @@ public class PlantFactory {
         if (sheet.getType() == PlantType.GraveBuster) {
             return new pvz.models.entities.plants.actions.GraveBusterAction();
         }
+        if (sheet.getType() == PlantType.HotPotato) {
+            return new pvz.models.entities.plants.actions.HotPotatoAction();
+        }
         if (sheet.isMint()) {
             return new FamilyBuffAction();
         }

@@ -13,6 +13,9 @@ public class SlipperyBehavior implements TileBehavior {
 
     @Override
     public boolean canPlant(PlantCard p, Tile tile) {
+        if (p != null && p.getPlant().getType() == pvz.models.entities.plants.enums.PlantType.HotPotato) {
+            return true;
+        }
         return false;
     }
 

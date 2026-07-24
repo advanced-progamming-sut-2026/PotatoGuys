@@ -3739,5 +3739,63 @@
     ],
     "growth": null,
     "description": "امکان کاشت گیاهان غیرآبی روی آب."
+  },
+  {
+    "id": 60,
+    "name": "Hot Potato",
+    "type": "HotPotato",
+    "category": "EXPLOSIVE",
+    "tags": [
+      "FIRE"
+    ],
+    "isMint": false,
+    "sunCost": 0,
+    "baseHp": 0,
+    "damage": {
+      "kind": "NONE",
+      "value": 0,
+      "count": 1,
+      "stages": []
+    },
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 10.0,
+    "production": null,
+    "plantFood": {
+      "kind": "NONE"
+    },
+    "levelUpgrades": [
+      {
+        "level": 2,
+        "stats": [
+          {
+            "stat": "RECHARGE_SECONDS",
+            "delta": -20.0
+          }
+        ],
+        "flags": []
+      },
+      {
+        "level": 3,
+        "stats": [],
+        "flags": [
+          "Melt 3x3 Area"
+        ]
+      },
+      {
+        "level": 4,
+        "stats": [
+          {
+            "stat": "DAMAGE",
+            "delta": 1800.0
+          }
+        ],
+        "flags": [
+          "Melt 3x3 Area",
+          "Explode on Finish"
+        ]
+      }
+    ],
+    "growth": null,
+    "description": "امکان کاشت گیاهان غیرآبی روی آب."
   }
 ]
