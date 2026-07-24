@@ -18,6 +18,8 @@ public class GreenHouseMenu implements Menu {
             return controller.collect(matcher);
         if ((matcher = GreenHouseMenuCommands.GROW.getMatcher(input)) != null)
             return controller.grow(matcher);
+        if ((matcher = GreenHouseMenuCommands.INSPECT.getMatcher(input)) != null)
+            return controller.inspect(matcher);
         if ((matcher = GreenHouseMenuCommands.ENTER_SHOP.getMatcher(input)) != null)
             return controller.enterShop(matcher);
         if ((matcher = GreenHouseMenuCommands.EXIT.getMatcher(input)) != null)

@@ -265,7 +265,7 @@ public class Zombie implements TickAware {
         }
         sb.append(":\n  position: ").append(String.format("%.1f", x)).append(", ").append(lane);
         sb.append("\n  health: ").append(String.format("%.0f", hp))
-          .append(" / ").append(String.format("%.0f", maxHp));
+                .append(" / ").append(String.format("%.0f", maxHp));
         appendArmorDetails(sb);
         appendEffectDetails(sb);
         sb.append("\n  state: ").append(currentState != null ? currentState.getLabel() : "?");
@@ -315,6 +315,7 @@ public class Zombie implements TickAware {
             context.log(sheet.getAlias() + " dropped " + stolenSun + " stolen sun on death!");
             stolenSun = 0;
         }
+        ZombieLootService.rollAndApplyLoot(context);
         context.getGameStats().onZombieKilled();
         context.getGameStats().onZombieKilledInSeason(context.getSeasonName());
         context.removeZombie(this);
@@ -328,8 +329,8 @@ public class Zombie implements TickAware {
 
     private boolean isParalysed() {
         return hasEffect(EffectType.FROZEN)
-            || hasEffect(EffectType.TRANSFORMED)
-            || hasEffect(EffectType.STUN);
+                || hasEffect(EffectType.TRANSFORMED)
+                || hasEffect(EffectType.STUN);
     }
 
     private void appendArmorDetails(StringBuilder sb) {
@@ -339,7 +340,7 @@ public class Zombie implements TickAware {
         for (ArmorPiece a : armors) {
             if (!a.isDestroyed()) {
                 sb.append("\n    ").append(a.getType().name().toLowerCase())
-                  .append(": ").append(String.format("%.0f", a.getCurrentHealth()));
+                        .append(": ").append(String.format("%.0f", a.getCurrentHealth()));
             }
         }
     }
@@ -348,7 +349,7 @@ public class Zombie implements TickAware {
         sb.append("\n  effects:");
         if (activeEffects.isEmpty()) { sb.append(" (none)"); return; }
         activeEffects.forEach((type, eff) ->
-            sb.append("\n    ").append(type.name().toLowerCase())
-              .append(": ").append(String.format("%.1f", eff.getSecondsRemaining())).append("s"));
+                sb.append("\n    ").append(type.name().toLowerCase())
+                        .append(": ").append(String.format("%.1f", eff.getSecondsRemaining())).append("s"));
     }
 }
