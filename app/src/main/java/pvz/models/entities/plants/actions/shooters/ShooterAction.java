@@ -41,7 +41,6 @@ public class ShooterAction extends CooldownPlantAction {
         ProjectileType type = plant.getSheet().getProjectileType();
         ShooterPattern pattern = plant.getSheet().getShooterPattern();
 
-        // اجرای الگوی شلیک
         firePattern(plant, ctx, pattern, count, type, poisonous, chills, fire, pierce);
     }
 
