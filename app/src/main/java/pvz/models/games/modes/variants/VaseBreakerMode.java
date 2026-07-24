@@ -47,7 +47,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         if (level instanceof VaseBreakerLevel vaseLevel) {
             this.plantPool = vaseLevel.getBasedPlants();
             this.zombiePool = vaseLevel.getBasedZombies();
-            
+
             if (vaseLevel.getVases() != null) {
                 for (VaseDefinition def : vaseLevel.getVases()) {
                     if (def.getLane() >= 0 && def.getLane() < rows && def.getCol() >= 0 && def.getCol() < cols) {
@@ -97,9 +97,9 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             }
         }
 
-        for(int i = 0 ; i < context.getCards().size() ; i++){
-            Card card = context .getCards().get(i);
-            if(card.getCooldown() <= 0.01f){
+        for (int i = 0; i < context.getCards().size(); i++) {
+            Card card = context.getCards().get(i);
+            if (card.getCooldown() <= 0.01f) {
                 context.removeCard(card);
                 i--;
             }
@@ -121,7 +121,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
         vase.isBroken = true;
         context.log("Vase at (" + col + ", " + lane + ") shattered!");
-        
+
         spawnRandomContent(context, vase.type, col, lane);
     }
 
@@ -164,7 +164,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     private void spawnRandomPlantCard(GameContext context) {
         if (!plantPool.isEmpty()) {
             MyPlant myPlant = plantPool.get(random.nextInt(plantPool.size()));
-            PlantCard card = new PlantCard(myPlant , 0, 6);
+            PlantCard card = new PlantCard(myPlant, 0, 6);
             context.addCard(card);
             context.log("REWARD: Received " + myPlant.getType() + " seed packet!");
         }
@@ -185,14 +185,16 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     private boolean anyVasesRemain() {
         for (VaseTile[] row : vaseGrid) {
             for (VaseTile tile : row) {
-                if (tile != null && !tile.isBroken) return true;
+                if (tile != null && !tile.isBroken)
+                    return true;
             }
         }
         return false;
     }
 
     private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane]) return;
+        if (lawnMower[lane])
+            return;
         context.getZombiesInLane(lane).forEach(z -> {
             z.takeDamage(Float.MAX_VALUE);
             context.removeZombie(z);
@@ -205,9 +207,12 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
-        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) return false;
-        if (!context.getPlantsAt(col, lane).isEmpty()) return false;
-        if (vaseGrid[lane][col] != null && !vaseGrid[lane][col].isBroken) return false; // روی کوزه سالم نمی‌شود کاشت
+        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes())
+            return false;
+        if (!context.getPlantsAt(col, lane).isEmpty())
+            return false;
+        if (vaseGrid[lane][col] != null && !vaseGrid[lane][col].isBroken)
+            return false; // روی کوزه سالم نمی‌شود کاشت
         return card != null && card.canUse();
     }
 
@@ -241,7 +246,8 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             result.append("=== HELD SEED PACKETS ===");
             for (Card card : cards) {
                 if (card instanceof PlantCard ps) {
-                    result.append(String.format("\n- %s | Lvl:%d | Expires in:%.1fs" , ps.getPlant().getType(), ps.getPlant().getLevel(), (float)ps.getCooldown() / (float)Constants.TICK_PER_SECOND));
+                    result.append(String.format("\n- %s | Lvl:%d | Expires in:%.1fs", ps.getPlant().getType(),
+                            ps.getPlant().getLevel(), (float) ps.getCooldown() / (float) Constants.TICK_PER_SECOND));
                 }
             }
         }
@@ -271,7 +277,8 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         int remainingVases = 0;
         for (VaseTile[] row : vaseGrid) {
             for (VaseTile v : row) {
-                if (v != null && !v.isBroken) remainingVases++;
+                if (v != null && !v.isBroken)
+                    remainingVases++;
             }
         }
 

@@ -18,13 +18,16 @@ public class GameMapFactory {
                 if (tileDef.behaviors != null) {
                     for (BehaviorDefinition behDef : tileDef.behaviors) {
                         switch (behDef.type) {
-                            case DESTRUCTIBLE -> map.getTile(tileDef.x, tileDef.y).addBehavior(new DestructibleBehavior(behDef.hp, behDef.name));
-                            case SLIPPERY -> map.getTile(tileDef.x, tileDef.y).addBehavior(new SlipperyBehavior(behDef.laneDelta));
+                            case DESTRUCTIBLE -> map.getTile(tileDef.x, tileDef.y)
+                                    .addBehavior(new DestructibleBehavior(behDef.hp, behDef.name));
+                            case SLIPPERY ->
+                                map.getTile(tileDef.x, tileDef.y).addBehavior(new SlipperyBehavior(behDef.laneDelta));
                             case WATER -> map.getTile(tileDef.x, tileDef.y).addBehavior(new WaterBehavior());
                             case NECROMANCY -> {
                                 map.getTile(tileDef.x, tileDef.y).getTags().add(TileTags.NECROMANCY);
                                 if (behDef.hp > 0) {
-                                    map.getTile(tileDef.x, tileDef.y).addBehavior(new DestructibleBehavior(behDef.hp, behDef.name != null ? behDef.name : "Grave"));
+                                    map.getTile(tileDef.x, tileDef.y).addBehavior(new DestructibleBehavior(behDef.hp,
+                                            behDef.name != null ? behDef.name : "Grave"));
                                 }
                             }
                             case ICE_BLOCK -> {
@@ -37,9 +40,9 @@ public class GameMapFactory {
                         }
                     }
                 }
-                if (tileDef.tags !=null){
-                    for (TileTags tag: tileDef.tags){
-                        map.getTile(tileDef.x,tileDef.y).getTags().add(tag);
+                if (tileDef.tags != null) {
+                    for (TileTags tag : tileDef.tags) {
+                        map.getTile(tileDef.x, tileDef.y).getTags().add(tag);
                     }
                 }
             }

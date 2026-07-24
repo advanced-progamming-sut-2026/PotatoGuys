@@ -26,7 +26,8 @@ public class DarkAgesEffect implements ChapterEffect {
 
     @Override
     public void onTick(GameContext ctx) {
-        if (!"dark ages".equalsIgnoreCase(ctx.getSeasonName())) return;
+        if (!"dark ages".equalsIgnoreCase(ctx.getSeasonName()))
+            return;
 
         tickCounter++;
         if (tickCounter >= intervalTicks) {
@@ -37,9 +38,10 @@ public class DarkAgesEffect implements ChapterEffect {
 
     @Override
     public void onWaveStart(Wave wave, GameContext ctx) {
-        if (!"dark ages".equalsIgnoreCase(ctx.getSeasonName())) return;
+        if (!"dark ages".equalsIgnoreCase(ctx.getSeasonName()))
+            return;
 
-        if (wave != null && wave.getWaveNumber()>1) {
+        if (wave != null && wave.getWaveNumber() > 1) {
             triggerNecromancy(ctx, wave);
         }
     }
@@ -53,12 +55,13 @@ public class DarkAgesEffect implements ChapterEffect {
             for (int c = 0; c < cols; c++) {
                 Tile tile = ctx.getTileAt(c, l);
                 if (tile != null && tile.getPlants().isEmpty() && !tile.getTags().contains(TileTags.GRAVE)) {
-                    emptyTiles.add(new int[]{c, l});
+                    emptyTiles.add(new int[] { c, l });
                 }
             }
         }
 
-        if (emptyTiles.isEmpty()) return;
+        if (emptyTiles.isEmpty())
+            return;
 
         int[] cell = emptyTiles.get(rand.nextInt(emptyTiles.size()));
         int col = cell[0];
@@ -88,8 +91,9 @@ public class DarkAgesEffect implements ChapterEffect {
         for (int l = 0; l < lanes; l++) {
             for (int c = 0; c < cols; c++) {
                 Tile tile = ctx.getTileAt(c, l);
-                if (tile != null && tile.getTags().contains(TileTags.NECROMANCY) && tile.getTags().contains(TileTags.GRAVE)) {
-                    int difficulty= AppContext.getInstance().getCurrentUser().getSetting().getDifficulty();
+                if (tile != null && tile.getTags().contains(TileTags.NECROMANCY)
+                        && tile.getTags().contains(TileTags.GRAVE)) {
+                    int difficulty = AppContext.getInstance().getCurrentUser().getSetting().getDifficulty();
                     ZombieType type = ZombieType.BASIC;
                     Zombie z = new ZombieFactory().create(type.getAlias(), c, l, ctx, wave.getWaveNumber(), difficulty);
                     if (z != null) {

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ruleset name="Custom Rules"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+           http://pmd.sourceforge.net/ruleset/2.0.0
+           http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+
+    <description>
+        Custom Java linting rules
+    </description>
+
+    <!-- Unused variables -->
+    <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
+
+    <!-- Unused private fields -->
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateField"/>
+
+    <!-- Unused private methods -->
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod"/>
+
+    <!-- Long methods / excessive complexity -->
+    <rule ref="category/java/design.xml/ExcessiveMethodLength">
+        <properties>
+            <property name="minimum" value="50"/>
+        </properties>
+    </rule>
+
+    <!-- Excessive class size -->
+    <rule ref="category/java/design.xml/ExcessiveClassLength">
+        <properties>
+            <property name="minimum" value="500"/>
+        </properties>
+    </rule>
+
+</ruleset>

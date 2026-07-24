@@ -3,18 +3,10 @@ package pvz.models.entities.plants.actions;
 import java.util.List;
 
 import pvz.models.entities.plants.Plant;
-import pvz.models.entities.plants.actions.shooters.ShooterAction;
 import pvz.models.entities.plants.enums.PlantTag;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;
 
-/**
- * Behaviour for {@code LOBBER} plants: arcs damage into the lane, splashing
- * onto multiple zombies when tagged {@code AOE} (Melon-pult, Winter Melon,
- * Pepper-pult). Lobbers ignore line-of-sight in the real game (they clear
- * obstacles); this simplified grid has no obstacle-blocking model, so the
- * only observable difference from {@link ShooterAction} is the splash.
- */
 public class LobberAction extends CooldownPlantAction {
 
     private static final int DEFAULT_SPLASH_TARGETS = 3;

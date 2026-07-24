@@ -15,9 +15,11 @@ public class ProjectMerger {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 if (file.toString().endsWith(".java") && !file.toString().contains("ProjectMerger")) {
-                    Files.writeString(outputFile, "\n\n======================================================\n", StandardOpenOption.APPEND);
+                    Files.writeString(outputFile, "\n\n======================================================\n",
+                            StandardOpenOption.APPEND);
                     Files.writeString(outputFile, "FILE: " + file.getFileName() + "\n", StandardOpenOption.APPEND);
-                    Files.writeString(outputFile, "======================================================\n\n", StandardOpenOption.APPEND);
+                    Files.writeString(outputFile, "======================================================\n\n",
+                            StandardOpenOption.APPEND);
 
                     String content = Files.readString(file);
                     Files.writeString(outputFile, content, StandardOpenOption.APPEND);

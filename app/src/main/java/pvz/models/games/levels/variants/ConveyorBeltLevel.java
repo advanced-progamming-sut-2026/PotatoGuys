@@ -10,12 +10,13 @@ import pvz.models.games.modes.GameModeType;
 
 public class ConveyorBeltLevel extends Level {
     private final List<Wave> waves;
-    
-    public ConveyorBeltLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun, List<Wave> waves) {
+
+    public ConveyorBeltLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun,
+            List<Wave> waves) {
         super(GameModeType.CONVEYORBELT, gameMap, levelNumber, type, initialSun);
         this.waves = waves;
     }
-    
+
     public List<Wave> getWaves() {
         return waves;
     }

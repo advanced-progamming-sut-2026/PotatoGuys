@@ -3,25 +3,12 @@ package pvz.models.entities.plants.actions;
 import pvz.models.entities.plants.Plant;
 import pvz.models.entities.plants.data.DamageKind;
 import pvz.models.entities.plants.enums.PlantTag;
+import pvz.models.entities.plants.enums.PlantType;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;
 
-/**
- * Single-use behaviour for {@code EXPLOSIVE} plants (rule: "Action Interval"
- * is {@code "-"} for this whole category — they are consumables, not
- * repeating attackers).
- *
- * <p>Two dataset patterns are unified here:
- * <ul>
- *   <li><b>Contact mines</b> ({@code TRAP} tag: Potato Mine, Squash, Tangle
- *       Kelp, Iceberg Lettuce) — arm after {@code armSeconds}, then detonate
- *       the instant a zombie steps on their cell.</li>
- *   <li><b>Instant blasts</b> (no {@code TRAP} tag: Cherry Bomb, Jalapeno,
- *       Grapeshot, Doom-shroom, Ice-shroom) — detonate immediately, hitting
- *       every zombie in range.</li>
- * </ul>
- * Either way the plant self-destructs immediately after firing once.
- */
+import java.util.ArrayList;
+
 public class TriggeredExplosiveAction implements PlantAction {
 
     private static final float DEFAULT_ARM_SECONDS = 15f;
@@ -41,34 +28,61 @@ public class TriggeredExplosiveAction implements PlantAction {
             return false;
         }
         boolean isTrap = plant.getSheet().hasTag(PlantTag.TRAP);
-        return !isTrap || !ctx.getZombiesAt(plant.getCol() , plant.getLane()).isEmpty();
+        return !isTrap || !ctx.getZombiesAt(plant.getCol(), plant.getLane()).isEmpty();
     }
 
     @Override
     public void execute(Plant plant, GameContext ctx) {
         boolean instaKill = plant.getSheet().getDamage().getKind() == DamageKind.INSTA_KILL;
         float dmg = instaKill ? Float.MAX_VALUE : plant.getEffectiveDamage();
-        boolean wholeBoard = !plant.getSheet().hasTag(PlantTag.TRAP);
+        boolean isTrap = plant.getSheet().hasTag(PlantTag.TRAP);
 
         int hit = 0;
-        if (wholeBoard) {
-            for (int lane = 0; lane < ctx.getMap().getRows(); lane++) {
-                for (Zombie z : ctx.getZombiesInLane(lane)) {
+
+        if (isTrap) {
+            for (Zombie z : ctx.getZombiesAt(plant.getCol(), plant.getLane())) {
+                z.takeDamage(dmg, false);
+                hit++;
+                
+                if (plant.getType() == PlantType.Squash) {
+                }
+                break; 
+            }
+        } else {
+            PlantType type = plant.getType(); 
+            int plantCol = plant.getCol();
+            int plantLane = plant.getLane();
+
+            for (Zombie z : new ArrayList<>(ctx.getZombies())) {
+                boolean inRange = false;
+
+                if (type == PlantType.Doomshroom) {
+                    inRange = true; 
+                } else if (type == PlantType.Jalapeno) {
+                    inRange = (z.getLane() == plantLane); 
+                    if (inRange) {
+                        z.fire(); 
+                    }
+                } else {
+                    int zCol = (int)z.getX();
+                    int zLane = z.getLane();
+
+                    inRange = Math.abs(zCol - plantCol) <= 1 && Math.abs(zLane - plantLane) <= 1;
+                }
+
+                if (inRange) {
                     z.takeDamage(dmg, false);
                     hit++;
                 }
             }
-        } else {
-            for (Zombie z : ctx.getZombiesAt(plant.getCol(), plant.getLane())) {
-                z.takeDamage(dmg, false);
-                hit++;
-                break; // a trap only takes out the zombie that triggered it
-            }
         }
+
         ctx.log("[Action] " + plant.getSheet().getName() + " exploded, hitting " + hit + " zombie(s).");
         plant.kill();
     }
 
     @Override
-    public String getName() { return "Explode"; }
+    public String getName() {
+        return "Explode";
+    }
 }

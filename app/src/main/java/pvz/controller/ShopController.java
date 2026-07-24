@@ -74,60 +74,94 @@ public class ShopController {
             return new Result("Invalid item ID.");
         }
 
-        // Lifted to be accessible after applyEffect
-        PlantType selectedType = null;
-
-        if (item instanceof pvz.models.shop.items.SelectableSeedPacketItem) {
-            if (plantTypeStr == null || plantTypeStr.isBlank()) {
-                return new Result("For Selectable Seed Packet, the -t parameter is mandatory.");
-            }
-            for (PlantType pt : PlantType.values()) {
-                if (pt.name().equalsIgnoreCase(plantTypeStr)) {
-                    selectedType = pt;
-                    break;
-                }
-            }
-            if (selectedType == null) {
+        PlantType selectedType = validateAndGetPlantType(item, currentUser, plantTypeStr);
+        if (selectedType == null && item instanceof pvz.models.shop.items.SelectableSeedPacketItem
+                && (plantTypeStr == null || plantTypeStr.isBlank())) {
+            return new Result("For Selectable Seed Packet, the -t parameter is mandatory.");
+        }
+        if (selectedType == null && item instanceof pvz.models.shop.items.SelectableSeedPacketItem) {
+            // If validation failed for selectable item, return error
+            if (findPlantType(plantTypeStr) == null) {
                 return new Result("Invalid plant type: " + plantTypeStr);
             }
-            if (currentUser.getProfile().getCollection().getPlant(selectedType) == null) {
-                return new Result("Plant " + plantTypeStr + " is not unlocked yet.");
-            }
+            return new Result("Plant " + plantTypeStr + " is not unlocked yet.");
         }
 
+        Result purchaseCheckResult = checkAffordabilityAndLimits(item, currentUser, count, plantTypeStr);
+        if (purchaseCheckResult != null) {
+            return purchaseCheckResult;
+        }
+
+        return executePurchase(item, currentUser, count, plantTypeStr, selectedType);
+    }
+
+    private PlantType findPlantType(String plantTypeStr) {
+        if (plantTypeStr == null || plantTypeStr.isBlank()) {
+            return null;
+        }
+        for (PlantType pt : PlantType.values()) {
+            if (pt.name().equalsIgnoreCase(plantTypeStr)) {
+                return pt;
+            }
+        }
+        return null;
+    }
+
+    private PlantType validateAndGetPlantType(ShopItem item, User currentUser, String plantTypeStr) {
+        if (!(item instanceof pvz.models.shop.items.SelectableSeedPacketItem)) {
+            return null;
+        }
+        if (plantTypeStr == null || plantTypeStr.isBlank()) {
+            return null;
+        }
+        PlantType selectedType = findPlantType(plantTypeStr);
+        if (selectedType == null) {
+            return null;
+        }
+        if (currentUser.getProfile().getCollection().getPlant(selectedType) == null) {
+            return null;
+        }
+        return selectedType;
+    }
+
+    private Result checkAffordabilityAndLimits(ShopItem item, User currentUser, int count, String plantTypeStr) {
         if (!item.canBuy(currentUser, count, plantTypeStr)) {
-            if (currentUser.getProfile().getCoins() < item.getPrice().getAmount() * count
+            long totalPrice = (long) item.getPrice().getAmount() * count;
+            if (currentUser.getProfile().getCoins() < totalPrice
                     && item.getPrice().getCurrency() == pvz.models.shop.Currency.COIN) {
-                return new Result("Insufficient coins. Need " + (item.getPrice().getAmount() * count)
+                return new Result("Insufficient coins. Need " + totalPrice
                         + " coins, have " + currentUser.getProfile().getCoins() + ".");
             }
-            if (currentUser.getProfile().getDiamonds() < item.getPrice().getAmount() * count
+            if (currentUser.getProfile().getDiamonds() < totalPrice
                     && item.getPrice().getCurrency() == pvz.models.shop.Currency.DIAMOND) {
-                return new Result("Insufficient diamonds. Need " + (item.getPrice().getAmount() * count)
+                return new Result("Insufficient diamonds. Need " + totalPrice
                         + " diamonds, have " + currentUser.getProfile().getDiamonds() + ".");
             }
             return new Result("Cannot buy this item (capacity limit reached or invalid parameters).");
         }
+        return null;
+    }
 
+    private Result executePurchase(ShopItem item, User currentUser, int count, String plantTypeStr,
+            PlantType selectedType) {
         boolean success = item.applyEffect(currentUser, count, plantTypeStr);
-        if (success) {
-            // Explicitly force the seed packets into the collection upon purchase
-            if (selectedType != null) {
-                int totalPackets = item.getUnitAmount() * count;
-                currentUser.getProfile().getCollection().addSeedPackets(selectedType, totalPackets);
-                currentUser.saveUser();
-            }
-            String msg = "Successfully purchased " + item.getName() + " x" + count + ".";
-            if (item instanceof pvz.models.shop.items.RandomSeedPacketItem) {
-                String details = ((pvz.models.shop.items.RandomSeedPacketItem) item).getLastPurchaseDetails();
-                if (details != null) {
-                    msg += " Seeds awarded: " + details;
-                }
-            }
-            return new Result(msg);
-        } else {
+        if (!success) {
             return new Result("Purchase failed.");
         }
+
+        if (selectedType != null) {
+            int totalPackets = item.getUnitAmount() * count;
+            currentUser.getProfile().getCollection().addSeedPackets(selectedType, totalPackets);
+            currentUser.saveUser();
+        }
+        String msg = "Successfully purchased " + item.getName() + " x" + count + ".";
+        if (item instanceof pvz.models.shop.items.RandomSeedPacketItem randomItem) {
+            String details = randomItem.getLastPurchaseDetails();
+            if (details != null) {
+                msg += " Seeds awarded: " + details;
+            }
+        }
+        return new Result(msg);
     }
 
     public Result exit(Matcher matcher) {

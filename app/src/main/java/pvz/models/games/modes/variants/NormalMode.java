@@ -36,7 +36,7 @@ public class NormalMode implements GameMode, PlantPlacer {
             waves = normalLevel.getWaves();
         }
         currentWave = waves.getFirst();
-        SetupLawnMowers();
+        setupLawnMowers();
     }
 
     @Override
@@ -166,8 +166,7 @@ public class NormalMode implements GameMode, PlantPlacer {
                         ps.getCost(),
                         ps.getPlant().getLevel(),
                         (float) ps.getCooldown() / (float) Constants.TICK_PER_SECOND,
-                        ps.getPlant().isBoosted() ? " | ⚡B" : ""
-                );
+                        ps.getPlant().isBoosted() ? " | ⚡B" : "");
 
                 result.append("\n");
                 result.append(String.format("%-" + cardWidth + "s", cardInfo));
@@ -176,7 +175,7 @@ public class NormalMode implements GameMode, PlantPlacer {
         return result.toString();
     }
 
-    private void SetupLawnMowers() {
+    private void setupLawnMowers() {
         int lanes = 5;
         lawnMower = new Boolean[lanes];
         for (int i = 0; i < lanes; i++) {
@@ -185,7 +184,8 @@ public class NormalMode implements GameMode, PlantPlacer {
     }
 
     private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane]) return;
+        if (lawnMower[lane])
+            return;
 
         context.getZombiesInLane(lane).forEach(zombie -> {
             zombie.takeDamage(Float.MAX_VALUE);
@@ -194,7 +194,6 @@ public class NormalMode implements GameMode, PlantPlacer {
         });
         lawnMower[lane] = true;
     }
-
 
     private static final String CELL_EMPTY = "    ";
     private static final String MOWER_OK = "[M]";
@@ -252,47 +251,71 @@ public class NormalMode implements GameMode, PlantPlacer {
 
     private String getCellContent(int col, GameContext context, int lane) {
         List<Plant> plantsAtCell = context.getPlantsAt(col, lane);
-        boolean hasPlant = !plantsAtCell.isEmpty();
-
         List<Zombie> zombiesAtCell = context.getZombiesAt(col, lane);
-        boolean hasZombie = !zombiesAtCell.isEmpty();
-
         Tile tile = context.getTileAt(col, lane);
+
         if (tile != null) {
-            if (tile.getTags().contains(TileTags.GRAVE)) {
-                String graveDisplay = " G  ";
-                for (pvz.models.games.map.behaviors.TileBehavior b : tile.getBehaviors()) {
-                    if (b instanceof pvz.models.games.map.behaviors.DestructibleBehavior db) {
-                        if (db.getReward() == pvz.models.games.map.behaviors.DestructibleBehavior.GraveReward.SUN_50) {
-                            graveDisplay = " G$ ";
-                        } else if (db.getReward() == pvz.models.games.map.behaviors.DestructibleBehavior.GraveReward.PLANT_FOOD) {
-                            graveDisplay = " G! ";
-                        }
-                    }
-                }
-                if (hasZombie)
-                    return String.format(AnsiColors.BRIGHT_BLACK + "G" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
-                return AnsiColors.BRIGHT_BLACK + graveDisplay + AnsiColors.RESET;
-            } else if (tile.getTags().contains(TileTags.SLIP_UP)) {
-                if (hasZombie)
-                    return String.format(AnsiColors.BLUE + "↑" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
-                return AnsiColors.BLUE + " S↑ " + AnsiColors.RESET;
-            } else if (tile.getTags().contains(TileTags.SLIP_DOWN)) {
-                if (hasZombie)
-                    return String.format(AnsiColors.BLUE + "↓" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
-                return AnsiColors.BLUE + " S↓ " + AnsiColors.RESET;
-            } else if (tile.getTags().contains(TileTags.ICE_BLOCK)) {
-                if (hasZombie)
-                    return String.format(AnsiColors.BLUE + "I" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
-                else if (hasPlant) return AnsiColors.BLUE + "I/P " + AnsiColors.RESET;
-                return AnsiColors.BLUE + " I  " + AnsiColors.RESET;
+            String specialContent = getSpecialTileContent(tile, !plantsAtCell.isEmpty(), zombiesAtCell);
+            if (specialContent != null) {
+                return specialContent;
             }
         }
 
-        StringBuilder output=new StringBuilder();
-        if (tile.getTags().contains(TileTags.WATER)) output.append(AnsiColors.BLUE_BG);
+        return getStandardCellContent(tile, plantsAtCell, zombiesAtCell);
+    }
+
+    private String getSpecialTileContent(Tile tile, boolean hasPlant, List<Zombie> zombiesAtCell) {
+        boolean hasZombie = !zombiesAtCell.isEmpty();
+
+        if (tile.getTags().contains(TileTags.GRAVE)) {
+            String graveDisplay = " G  ";
+            for (pvz.models.games.map.behaviors.TileBehavior b : tile.getBehaviors()) {
+                if (b instanceof pvz.models.games.map.behaviors.DestructibleBehavior db) {
+                    if (db.getReward() == pvz.models.games.map.behaviors.DestructibleBehavior.GraveReward.SUN_50) {
+                        graveDisplay = " G$ ";
+                    } else if (db.getReward() == pvz.models.games.map.behaviors.
+                            DestructibleBehavior.GraveReward.PLANT_FOOD) {
+                        graveDisplay = " G! ";
+                    }
+                }
+            }
+            if (hasZombie) {
+                return String.format(AnsiColors.BRIGHT_BLACK + "G" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
+            }
+            return AnsiColors.BRIGHT_BLACK + graveDisplay + AnsiColors.RESET;
+        } else if (tile.getTags().contains(TileTags.SLIP_UP)) {
+            if (hasZombie) {
+                return String.format(AnsiColors.BLUE + "↑" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
+            }
+            return AnsiColors.BLUE + " S↑ " + AnsiColors.RESET;
+        } else if (tile.getTags().contains(TileTags.SLIP_DOWN)) {
+            if (hasZombie) {
+                return String.format(AnsiColors.BLUE + "↓" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
+            }
+            return AnsiColors.BLUE + " S↓ " + AnsiColors.RESET;
+        } else if (tile.getTags().contains(TileTags.ICE_BLOCK)) {
+            if (hasZombie) {
+                return String.format(AnsiColors.BLUE + "I" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
+            } else if (hasPlant) {
+                return AnsiColors.BLUE + "I/P " + AnsiColors.RESET;
+            }
+            return AnsiColors.BLUE + " I  " + AnsiColors.RESET;
+        }
+        return null;
+    }
+
+    private String getStandardCellContent(Tile tile, List<Plant> plantsAtCell, List<Zombie> zombiesAtCell) {
+        boolean hasPlant = !plantsAtCell.isEmpty();
+        boolean hasZombie = !zombiesAtCell.isEmpty();
+
+        StringBuilder output = new StringBuilder();
+        if (tile != null && tile.getTags().contains(TileTags.WATER)) {
+            output.append(AnsiColors.BLUE_BG);
+        }
+
         if (hasPlant && hasZombie) {
-            output.append(String.format(AnsiColors.GREEN + "P" + AnsiColors.RESET + "/Z%-1d", plantsAtCell.size(), zombiesAtCell.size()));
+            output.append(String.format(AnsiColors.GREEN + "P" + AnsiColors.RESET + "/Z%-1d", plantsAtCell.size(),
+                    zombiesAtCell.size()));
         } else if (hasPlant) {
             output.append(String.format(AnsiColors.GREEN + " P  " + AnsiColors.RESET, plantsAtCell.size()));
         } else if (hasZombie) {
@@ -300,8 +323,14 @@ public class NormalMode implements GameMode, PlantPlacer {
         } else {
             output.append(CELL_EMPTY);
         }
-        if (tile.getTags().contains(TileTags.WATER)) output.append(AnsiColors.RESET);
-        if (!output.isEmpty()) return output.toString();
+
+        if (tile != null && tile.getTags().contains(TileTags.WATER)) {
+            output.append(AnsiColors.RESET);
+        }
+
+        if (!output.isEmpty()) {
+            return output.toString();
+        }
 
         return CELL_EMPTY;
     }

@@ -26,22 +26,16 @@ import pvz.models.games.modes.capabilities.ZombiePlacer;
 import pvz.models.games.modes.variants.VaseBreakerMode;
 import pvz.models.quests.QuestEvaluator;
 import pvz.models.user.User;
-import pvz.utils.SaveManager;
-import pvz.utils.UserSaveManager;
 import pvz.view.MainMenu;
 import pvz.view.Result;
 
 public class GameController {
-    
+
     private final GameContext context;
 
     public GameController(GameContext context) {
         this.context = context;
     }
-
-    // =========================================================================
-    // ─── CORE GAMEPLAY COMMANDS ──────────────────────────
-    // =========================================================================
 
     public Result advanceTime(Matcher matcher) {
         int ticks = Integer.parseInt(matcher.group("ticks"));
@@ -50,58 +44,79 @@ public class GameController {
 
         String map = context.getMode().renderMap(context);
         if (context.isGameOver()) {
-            User user = AppContext.getInstance().getCurrentUser();
-            if (user != null) {
-                boolean won = context.getZombies().isEmpty();
-                QuestEvaluator.evaluateAll(
-                    user.getQuestLog(),
-                    context.getGameStats(),
-                    won,
-                    context.getCurrentSun(),
-                    user.getSetting().getDifficulty(),
-                    user,
-                    context
-                );
-                if (won) {
-                    boolean isMiniGame = (context.getMode() instanceof pvz.models.games.modes.variants.VaseBreakerMode ||
-                            context.getMode() instanceof pvz.models.games.modes.variants.IZombieMode ||
-                            context.getMode() instanceof pvz.models.games.modes.variants.BeghouledMode);
-
-                    if (isMiniGame) {
-                        user.getScore().setMiniGamesPassed(user.getScore().getMiniGamesPassed() + 1);
-                        user.getProfile().getNews().getMessages().add(
-                                new pvz.models.user.Message("New Mini-Game Completed: " + context.getSeasonName() + " Level " + context.getLevelNumber() + "!")
-                        );
-                    } else {
-                        user.getScore().setLastLevel(context.getLevelNumber());
-
-                        // Convert String season names to Integers for the Leaderboard
-                        int chapterNum = 1;
-                        String season = context.getSeasonName();
-                        if (season != null) {
-                            if (season.equalsIgnoreCase("Ancient Egypt")) chapterNum = 1;
-                            else if (season.equalsIgnoreCase("Frostbite Caves")) chapterNum = 2;
-                            else if (season.equalsIgnoreCase("Dark Ages")) chapterNum = 3;
-                            else if (season.equalsIgnoreCase("Big Wave Beach")) chapterNum = 4;
-                        }
-                        user.getScore().setLastSeason(chapterNum);
-
-                        // Unlock next level
-                        pvz.models.games.seasons.SeasonManager manager = new pvz.models.games.seasons.SeasonManager();
-                        manager.unlockNextLevel(user, context.getSeasonName(), context.getLevelNumber());
-
-                        int nextLevelNumber = context.getLevelNumber() + 1;
-                        user.getProfile().getNews().getMessages().add(
-                                new pvz.models.user.Message("New Level Unlocked: Level " + nextLevelNumber + " in " + context.getSeasonName() + "!")
-                        );
-                    }
-                }
-                user.saveUser(); // Saves the game state, quest progress, scores, AND the new messages! // Saves the game state, quests, scores, AND the new messages! // Saves the game state, quest progress, AND the new messages!
-            }
-            AppContext.getInstance().getCurrentUser().saveUser();
+            handleGameOverState();
             return new Result("Game Over", new MainMenu());
         }
         return new Result("Time advanced by " + ticks + " ticks.\n" + map);
+    }
+
+    private void handleGameOverState() {
+        User user = AppContext.getInstance().getCurrentUser();
+        if (user == null) {
+            return;
+        }
+
+        boolean won = context.getZombies().isEmpty();
+        evaluateQuestsAndScore(user, won);
+        user.saveUser();
+    }
+
+    private void evaluateQuestsAndScore(User user, boolean won) {
+        QuestEvaluator.evaluateAll(
+                user.getQuestLog(),
+                context.getGameStats(),
+                won,
+                context.getCurrentSun(),
+                user.getSetting().getDifficulty(),
+                user,
+                context);
+
+        if (won) {
+            handleLevelOrMiniGameWin(user);
+        }
+    }
+
+    private void handleLevelOrMiniGameWin(User user) {
+        boolean isMiniGame = (context.getMode() instanceof pvz.models.games.modes.variants.VaseBreakerMode
+                || context.getMode() instanceof pvz.models.games.modes.variants.IZombieMode
+                || context.getMode() instanceof pvz.models.games.modes.variants.BeghouledMode);
+
+        if (isMiniGame) {
+            user.getScore().setMiniGamesPassed(user.getScore().getMiniGamesPassed() + 1);
+            user.getProfile().getNews().getMessages().add(
+                    new pvz.models.user.Message("New Mini-Game Completed: " + context.getSeasonName()
+                            + " Level " + context.getLevelNumber() + "!"));
+        } else {
+            user.getScore().setLastLevel(context.getLevelNumber());
+            user.getScore().setLastSeason(resolveChapterNumber(context.getSeasonName()));
+
+            pvz.models.games.seasons.SeasonManager manager = new pvz.models.games.seasons.SeasonManager();
+            manager.unlockNextLevel(user, context.getSeasonName(), context.getLevelNumber());
+
+            int nextLevelNumber = context.getLevelNumber() + 1;
+            user.getProfile().getNews().getMessages().add(
+                    new pvz.models.user.Message("New Level Unlocked: Level " + nextLevelNumber + " in "
+                            + context.getSeasonName() + "!"));
+        }
+    }
+
+    private int resolveChapterNumber(String season) {
+        if (season == null) {
+            return 1;
+        }
+        if (season.equalsIgnoreCase("Ancient Egypt")) {
+            return 1;
+        }
+        if (season.equalsIgnoreCase("Frostbite Caves")) {
+            return 2;
+        }
+        if (season.equalsIgnoreCase("Dark Ages")) {
+            return 3;
+        }
+        if (season.equalsIgnoreCase("Big Wave Beach")) {
+            return 4;
+        }
+        return 1;
     }
 
     public Result plantPlant(Matcher matcher) {
@@ -146,27 +161,27 @@ public class GameController {
         return new Result(zombieType + " placed at (" + col + ", " + lane + ").");
     }
 
-    public Result breakVase(Matcher matcher){
+    public Result breakVase(Matcher matcher) {
         GameMode mode = context.getMode();
         int col = Integer.parseInt(matcher.group("vaseX"));
         int lane = Integer.parseInt(matcher.group("vaseY"));
 
-        if(mode instanceof VaseBreakerMode vasemode){
+        if (mode instanceof VaseBreakerMode vasemode) {
             vasemode.breakVase(context, col, lane);
             return new Result("");
         }
-        
+
         return new Result("You cannot break vase in this game mode!");
     }
 
     public Result pluckPlant(Matcher matcher) {
         int x = Integer.parseInt(matcher.group("pluckX"));
         int y = Integer.parseInt(matcher.group("pluckY"));
-        
+
         if (x < 0 || x >= context.getMap().getColumns() || y < 0 || y >= context.getMap().getRows()) {
-             return new Result("Invalid coordinates.");
+            return new Result("Invalid coordinates.");
         }
-        
+
         Tile tile = context.getMap().getTile(x, y);
         if (tile.getPlants().isEmpty()) {
             return new Result("No plant to pluck at (" + x + ", " + y + ").");
@@ -177,14 +192,14 @@ public class GameController {
             i--;
         }
         tile.getPlants().clear();
-        
+
         return new Result("Plant plucked from (" + x + ", " + y + ").");
     }
 
     public Result collectSun(Matcher matcher) {
         int x = Integer.parseInt(matcher.group("sunX"));
         int y = Integer.parseInt(matcher.group("sunY"));
-        
+
         for (Sun sun : new ArrayList<>(context.getSuns())) {
             if (sun.getCol() == x && sun.getLane() == y && !sun.isDone()) {
                 sun.collect(context);
@@ -221,9 +236,9 @@ public class GameController {
 
     public Result startZombieWavesCommand(Matcher matcher) {
         GameContext context = AppContext.getInstance().getGameContext();
-        
+
         if (context.getMode() instanceof StartWaves mode) {
-            if(!mode.isPreparationPhase()) {
+            if (!mode.isPreparationPhase()) {
                 return new Result("Zombie waves have already started!");
             }
             mode.startZombieWaves(context);
@@ -232,11 +247,6 @@ public class GameController {
             return new Result("This command is only available in modes that support starting zombie waves.");
         }
     }
-
-
-    // =========================================================================
-    // ─── CHEAT & DEBUG COMMANDS ─────────────────
-    // =========================================================================
 
     public Result releaseNuke(Matcher matcher) {
         int killed = 0;
@@ -290,15 +300,10 @@ public class GameController {
             return new Result("The position is uncorrent!");
         }
 
-        Zombie zombie = new ZombieFactory().create(type.getAlias(), col, lane, context , 0 , 2);
+        Zombie zombie = new ZombieFactory().create(type.getAlias(), col, lane, context, 0, 2);
         context.spawnZombie(zombie);
         return new Result("Zombie spawned!");
     }
-
-
-    // =========================================================================
-    // ─── ۳. SHOW & QUERY COMMANDS (دستورات نمایشی و گزارش‌گیری) ──────────────────
-    // =========================================================================
 
     public Result showMap(Matcher matcher) {
         return new Result(context.getMode().renderMap(context));
@@ -317,14 +322,14 @@ public class GameController {
         int y = Integer.parseInt(matcher.group("tileY"));
 
         if (x < 0 || x >= context.getMap().getColumns() || y < 0 || y >= context.getMap().getRows()) {
-             return new Result("Invalid coordinates.");
+            return new Result("Invalid coordinates.");
         }
 
         Tile tile = context.getMap().getMap()[y][x];
         StringBuilder status = new StringBuilder("Tile Status at (").append(x).append(",").append(y).append("):");
 
-        //--- Tile:
-        if (tile.getTags().isEmpty()) status.append("\n  Tags: Normal");
+        if (tile.getTags().isEmpty())
+            status.append("\n  Tags: Normal");
         else {
             status.append("\n  Tags:");
             for (TileTags tag : tile.getTags()) {
@@ -339,15 +344,13 @@ public class GameController {
             }
         }
 
-        //--- Plant:
         if (tile.getPlants() != null && !tile.getPlants().isEmpty()) {
             status.append("\n").append("  Plant: ").append(tile.getPlants().getLast().getType());
         } else {
             status.append("\n").append("  Plant: None");
         }
 
-        //-- Zombies:
-        if (!context.getZombiesAt(x,y).isEmpty()) {
+        if (!context.getZombiesAt(x, y).isEmpty()) {
             status.append("\n").append("  Zombies: ");
             for (Zombie z : context.getZombiesAt(x, y)) {
                 status.append("\n  ").append(z.getSheet().getAlias());
@@ -364,23 +367,23 @@ public class GameController {
         int count = 0;
         int rows = context.getMap().getRows();
         int cols = context.getMap().getColumns();
-        
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 Tile tile = context.getMap().getMap()[i][j];
                 if (tile.getPlants() != null && !tile.getPlants().isEmpty()) {
                     Plant plant = tile.getPlants().get(tile.getPlants().size() - 1);
                     if (plant != null && !plant.isDead()) {
-                        String stateLabel = plant.getCurrentState() != null ? plant.getCurrentState().getLabel() : "Unknown";
-                        
+                        String stateLabel = plant.getCurrentState() != null ? plant.getCurrentState().getLabel()
+                                : "Unknown";
+
                         sb.append(String.format("- %s | Position: (%d, %d) | HP: %.0f/%.0f | State: %s\n",
                                 plant.getSheet().getName(),
                                 plant.getCol(),
                                 plant.getLane(),
                                 plant.getHp(),
                                 plant.getMaxHp(),
-                                stateLabel
-                        ));
+                                stateLabel));
                         count++;
                     }
                 }
@@ -397,16 +400,6 @@ public class GameController {
         int count = 0;
         for (TickAware entity : context.getEngine().getEntities()) {
             if (entity instanceof Zombie zombie) {
-                // String stateLabel = zombie.getCurrentState() != null ? zombie.getCurrentState().getLabel() : "Unknown";
-                // sb.append(String.format("- %s | Position: (%.1f, %d) | HP: %.0f/%.0f | State: %s%s\n",
-                //         zombie.getSheet().getAlias(),
-                //         zombie.getX(),
-                //         zombie.getLane(),
-                //         zombie.getHp(),
-                //         zombie.getMaxHp(),
-                //         stateLabel,
-                //         zombie.isGlowing() ? " [GLOWING]" : ""
-                // ));
                 sb.append("\n" + zombie.toInfoString());
                 count++;
             }
@@ -426,8 +419,7 @@ public class GameController {
                         projectile.getType(),
                         projectile.getX(),
                         projectile.getY(),
-                        projectile.getDamage()
-                ));
+                        projectile.getDamage()));
                 count++;
             }
         }
@@ -448,8 +440,7 @@ public class GameController {
                             sun.getCol(),
                             sun.getLane(),
                             sun.getAmount(),
-                            sun.getSecondsRemaining()
-                    ));
+                            sun.getSecondsRemaining()));
                     count++;
                 }
             }

@@ -20,7 +20,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
     private Boolean[] lawnMower;
-    private int deadlineColumn; // زامبی از این ستون بگذرد بازیکن می‌بازد
+    private int deadlineColumn;
 
     public DeadLineMode(Level level) {
         if (level instanceof DeadLineLevel deadLineLevel) {
@@ -30,7 +30,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
         if (waves != null && !waves.isEmpty()) {
             currentWave = waves.get(0);
         }
-        SetupLawnMowers();
+        setupLawnMowers();
     }
 
     @Override
@@ -40,17 +40,29 @@ public class DeadLineMode implements GameMode, PlantPlacer {
 
     @Override
     public void updateMode(GameContext context) {
-        // ─── ۱. بررسی شرط باخت فوری (عبور از ددلاین) ──────────────────────────
+        if (checkDeadlineLoss(context)) {
+            return;
+        }
+
+        if (updateWaves(context)) {
+            return;
+        }
+
+        updateLawnMowersAndSuns(context);
+    }
+
+    private boolean checkDeadlineLoss(GameContext context) {
         for (Zombie z : context.getZombies()) {
-            // زامبی‌ها از راست به چپ می‌آیند؛ پس اگر X کمتر یا مساوی خط ددلاین شد یعنی عبور کرده‌اند
             if (!z.isDead() && z.getX() <= deadlineColumn) {
                 context.setGameOver(true);
                 context.log("💥 GAME OVER! A zombie crossed the Dead Line at Column " + deadlineColumn + "!");
-                return;
+                return true;
             }
         }
+        return false;
+    }
 
-        // ─── ۲. مدیریت موج‌ها ────────────────────────────────────────────────
+    private boolean updateWaves(GameContext context) {
         if (currentWave.isDone() && context.getZombies().isEmpty()) {
             int nextWaveIndex = waves.indexOf(currentWave) + 1;
             if (nextWaveIndex < waves.size()) {
@@ -61,14 +73,16 @@ public class DeadLineMode implements GameMode, PlantPlacer {
                 context.setGameOver(true);
                 context.log("Zombies defeated! You defended the Dead Line successfully!");
             }
-            return;
+            return true;
         }
 
         if (!currentWave.isDone()) {
             currentWave.updateWave(context);
         }
+        return false;
+    }
 
-        // ─── ۳. ماشین‌های چمن زنی (اگر ددلاین جلوتر باشد عملا این بخش برای زامبی‌های عبوری اجرا نمی‌شود) ───
+    private void updateLawnMowersAndSuns(GameContext context) {
         for (int i = 0; i < context.getZombies().size(); i++) {
             Zombie z = context.getZombies().get(i);
             if (z.getX() <= 0f) {
@@ -85,7 +99,6 @@ public class DeadLineMode implements GameMode, PlantPlacer {
             }
         }
 
-        // ─── ۴. پاکسازی خورشیدها ─────────────────────────────────────────────
         for (int i = 0; i < context.getSuns().size(); i++) {
             Sun sun = context.getSuns().get(i);
             if (sun.isDone()) {
@@ -97,14 +110,20 @@ public class DeadLineMode implements GameMode, PlantPlacer {
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
-        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) return false;
-        if (!context.getPlantsAt(col, lane).isEmpty()) return false;
+        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+            return false;
+        }
+        if (!context.getPlantsAt(col, lane).isEmpty()) {
+            return false;
+        }
         return card instanceof PlantCard;
     }
 
     @Override
     public void handlePlacement(GameContext context, int col, int lane, PlantCard card) {
-        if (!(card instanceof PlantCard plantCard)) return;
+        if (!(card instanceof PlantCard plantCard)) {
+            return;
+        }
 
         Plant plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
@@ -116,25 +135,24 @@ public class DeadLineMode implements GameMode, PlantPlacer {
     public String getCardsStatus(GameContext context) {
         StringBuilder result = new StringBuilder();
         List<Card> cards = context.getCards();
-            
+
         if (cards == null || cards.isEmpty()) {
             result.append("No plant cards available.");
         } else {
             result.append("=== SEED PACKETS ===");
-            
+
             int cardWidth = 40;
-        
+
             for (int i = 0; i < cards.size(); i++) {
                 PlantCard ps = (PlantCard) cards.get(i);
-                
+
                 String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | Cooldown:%.1f%s",
                         ps.getPlant().getType(),
                         ps.getCost(),
                         ps.getPlant().getLevel(),
-                        (float)ps.getCooldown() / (float)Constants.TICK_PER_SECOND,
-                        ps.getPlant().isBoosted() ? " | ⚡B" : "" 
-                );
-            
+                        (float) ps.getCooldown() / (float) Constants.TICK_PER_SECOND,
+                        ps.getPlant().isBoosted() ? " | ⚡B" : "");
+
                 result.append("\n");
                 result.append(String.format("%-" + cardWidth + "s", cardInfo));
             }
@@ -154,13 +172,17 @@ public class DeadLineMode implements GameMode, PlantPlacer {
         return null;
     }
 
-    private void SetupLawnMowers() {
+    private void setupLawnMowers() {
         lawnMower = new Boolean[5];
-        for (int i = 0; i < 5; i++) lawnMower[i] = false;
+        for (int i = 0; i < 5; i++) {
+            lawnMower[i] = false;
+        }
     }
 
     private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane]) return;
+        if (lawnMower[lane]) {
+            return;
+        }
         context.getZombiesInLane(lane).forEach(zombie -> {
             zombie.takeDamage(Float.MAX_VALUE, true);
             context.removeZombie(zombie);
@@ -168,17 +190,16 @@ public class DeadLineMode implements GameMode, PlantPlacer {
         lawnMower[lane] = true;
     }
 
-    // =========================================================================
-    // ─── رندر اختصاصی نقشه همراه با خط ددلاین ──────────────────────────────────
-    // =========================================================================
-
     @Override
     public String renderMap(GameContext context) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n=== TICK: ").append(context.getCurrentTick()).append(" | DEADLINE AT COLUMN: ").append(deadlineColumn).append(" ===\n");
-        
+        sb.append("\n=== TICK: ").append(context.getCurrentTick()).append(" | DEADLINE AT COLUMN: ")
+                .append(deadlineColumn).append(" ===\n");
+
         sb.append("\n     ");
-        for (int c = 0; c < context.getColumns(); c++) sb.append(String.format(" C%-2d ", c));
+        for (int c = 0; c < context.getColumns(); c++) {
+            sb.append(String.format(" C%-2d ", c));
+        }
         sb.append("\n");
 
         appendDivider(sb, context);
@@ -186,7 +207,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
             sb.append(lawnMower[lane] ? "[!]" : "[M]").append(" |");
             for (int col = 0; col < context.getColumns(); col++) {
                 sb.append(getCellContent(col, context, lane));
-                
+
                 if (col == deadlineColumn - 1) {
                     sb.append("║");
                 } else {
@@ -210,9 +231,15 @@ public class DeadLineMode implements GameMode, PlantPlacer {
     private String getCellContent(int col, GameContext context, int lane) {
         var plants = context.getPlantsAt(col, lane);
         var zombies = context.getZombiesAt(col, lane);
-        if (!plants.isEmpty() && !zombies.isEmpty()) return "P/Z ";
-        if (!plants.isEmpty()) return " P  ";
-        if (!zombies.isEmpty()) return String.format(" Z%-2d", zombies.size());
+        if (!plants.isEmpty() && !zombies.isEmpty()) {
+            return "P/Z ";
+        }
+        if (!plants.isEmpty()) {
+            return " P  ";
+        }
+        if (!zombies.isEmpty()) {
+            return String.format(" Z%-2d", zombies.size());
+        }
         return "    ";
     }
 }

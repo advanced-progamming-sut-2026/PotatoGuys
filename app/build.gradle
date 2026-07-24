@@ -5,9 +5,27 @@
  * For more details on building Java & JVM projects, please refer to https://docs.gradle.org/9.2.0/userguide/building_java_projects.html in the Gradle documentation.
  */
 
+
 plugins {
-    // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    id 'java'
+    id 'checkstyle'
+    id 'pmd'
+}
+
+// تنظیمات Checkstyle برای استفاده از فایل کانفیگ دانشگاه
+checkstyle {
+    toolVersion '10.12.5' // یا نسخه هماهنگ
+    configFile file("config/checkstyle.xml") // آدرس فایل کانفیگ چکسایل که بهت دادن
+    ignoreFailures = false // اگر خطایی بود بیلد متوقف بشه
+}
+
+// تنظیمات PMD برای استفاده از فایل کانفیگ دانشگاه
+pmd {
+    toolVersion '6.55.0'
+    ruleSetFiles = files("config/pmd.xml") 
+    ruleSets = [] // خالی گذاشتن برای استفاده صرفاً از فایل سفارشی
+    ignoreFailures = false
 }
 
 repositories {

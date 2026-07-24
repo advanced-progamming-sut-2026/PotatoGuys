@@ -10,12 +10,13 @@ import pvz.models.games.modes.GameModeType;
 
 public class BeghouledLevel extends Level {
     private final List<Wave> waves;
-    
-    public BeghouledLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun, List<Wave> waves) {
+
+    public BeghouledLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun,
+            List<Wave> waves) {
         super(GameModeType.NORMAL, gameMap, levelNumber, type, initialSun);
         this.waves = waves;
     }
-    
+
     public List<Wave> getWaves() {
         return waves;
     }

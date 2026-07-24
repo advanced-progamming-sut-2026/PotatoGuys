@@ -6,18 +6,22 @@ import pvz.controller.user.SettingsController;
 import pvz.enums.commands.SettingsMenuCommand;
 
 public class SettingsMenu implements Menu {
-    SettingsController controller=new SettingsController();
+    SettingsController controller = new SettingsController();
+
     @Override
     public Result handleInput(String input) {
         Matcher matcher;
-        if ((matcher = SettingsMenuCommand.CHANGE_DIFFICULTY.getMatcher(input)) != null) return controller.changeDifficulty(matcher);
-        if ((matcher = SettingsMenuCommand.EXIT.getMatcher(input)) != null) return controller.exit(matcher);
-        if ((matcher = SettingsMenuCommand.HELP.getMatcher(input)) != null) return new Result(SettingsMenuCommand.getHelp());
+        if ((matcher = SettingsMenuCommand.CHANGE_DIFFICULTY.getMatcher(input)) != null)
+            return controller.changeDifficulty(matcher);
+        if ((matcher = SettingsMenuCommand.EXIT.getMatcher(input)) != null)
+            return controller.exit(matcher);
+        if ((matcher = SettingsMenuCommand.HELP.getMatcher(input)) != null)
+            return new Result(SettingsMenuCommand.getHelp());
         return new Result("Invalid command in Settings Menu.", this);
     }
 
     @Override
-    public String getName(){
+    public String getName() {
         return "Settings menu";
     }
 

@@ -64,7 +64,8 @@ public class BeghouledMode implements GameMode, BoardSwapper {
 
     @Override
     public String renderMap(GameContext context) {
-        StringBuilder sb = new StringBuilder("\n=== Beghouled | Tick: ").append(context.getCurrentTick()).append(" ===\n");
+        StringBuilder sb = new StringBuilder("\n=== Beghouled | Tick: ").append(context.getCurrentTick())
+                .append(" ===\n");
         for (int[] row : board) {
             for (int gem : row) {
                 sb.append('[').append(gem).append(']');

@@ -25,22 +25,25 @@ public class QuestController {
 
     public Result showPage(Matcher matcher) {
         User user = getCurrentUser();
-        if (user == null) return new Result("No user logged in.");
+        if (user == null)
+            return new Result("No user logged in.");
 
         String pageName = matcher.group(1).toLowerCase();
 
-        if(pageName.equals("daily") || pageName.equals("main") || pageName.equals("epic")) {
+        if (pageName.equals("daily") || pageName.equals("main") || pageName.equals("epic")) {
             return showQuestsByCategory(user, pageName);
-        } else if(pageName.equals("minigames")) {
+        } else if (pageName.equals("minigames")) {
             return showMiniGames(matcher);
-        }else {
+        } else {
             return new Result("Invalid page. Available pages: daily, main, epic.");
         }
 
     }
 
     public Result showMiniGames(Matcher matcher) {
-        return new Result("Mini games:\n1. Vasebreaker\n2. Wallnut Bowling\n3. I, Zombie\n4. Beghouled\n5. Zombotany\nUsing 'mini game -t <miniGameNumber> -l <level>' to start a mini game.");
+        return new Result(
+                "Mini games:\n1. Vasebreaker\n2. Wallnut Bowling\n3. I, Zombie\n4. " +
+                 "Beghouled\n5. Zombotany\nUsing 'mini game -t <miniGameNumber> -l <level>' to start a mini game.");
     }
 
     private Result showQuestsByCategory(User user, String pageName) {
@@ -69,7 +72,8 @@ public class QuestController {
             sb.append(" | Status: ").append(q.getStatus());
             sb.append("\n  Reward: ").append(q.getRewardDescription());
             if (q.isCompleted() && !q.isClaimed()) {
-                sb.append("\n  >> Use 'claim quest ").append(q.getId()).append("' to claim reward!");
+                sb.append("\n  >> Reward not granted yet. Use 'claim quest ")
+                        .append(q.getId()).append("' to claim it manually.");
             }
         }
         return new Result(sb.toString());
@@ -77,7 +81,8 @@ public class QuestController {
 
     public Result showAllPages(Matcher matcher) {
         User user = getCurrentUser();
-        if (user == null) return new Result("No user logged in.");
+        if (user == null)
+            return new Result("No user logged in.");
 
         QuestLog log = user.getQuestLog();
         StringBuilder sb = new StringBuilder("=== Travel Log Summary ===");
@@ -87,7 +92,7 @@ public class QuestController {
             sb.append("\n\n--- ").append(cat.name()).append(" (").append(quests.size()).append(" quests) ---");
             for (Quest q : quests) {
                 sb.append("\n [").append(q.getPriority()).append("] ")
-                  .append(q.getTitle()).append(" - ").append(q.getStatus());
+                        .append(q.getTitle()).append(" - ").append(q.getStatus());
             }
         }
         return new Result(sb.toString());
@@ -95,7 +100,8 @@ public class QuestController {
 
     public Result showQuest(Matcher matcher) {
         User user = getCurrentUser();
-        if (user == null) return new Result("No user logged in.");
+        if (user == null)
+            return new Result("No user logged in.");
 
         String questId = matcher.group(1);
         QuestLog log = user.getQuestLog();
@@ -118,14 +124,16 @@ public class QuestController {
         }
 
         if (quest.isCompleted() && !quest.isClaimed()) {
-            sb.append("\n>> Use 'claim quest ").append(questId).append("' to claim your reward!");
+            sb.append("\n>> Reward not granted yet. Use 'claim quest ")
+                    .append(questId).append("' to claim it manually.");
         }
         return new Result(sb.toString());
     }
 
     public Result claimReward(Matcher matcher) {
         User user = getCurrentUser();
-        if (user == null) return new Result("No user logged in.");
+        if (user == null)
+            return new Result("No user logged in.");
 
         String questId = matcher.group(1);
         QuestLog log = user.getQuestLog();
@@ -151,7 +159,7 @@ public class QuestController {
         return new Result("Rewards claimed for quest: " + quest.getTitle() + "!");
     }
 
-    public Result startMiniGame(Matcher matcher){
+    public Result startMiniGame(Matcher matcher) {
         int miniGameNumber = Integer.parseInt(matcher.group("miniGameNumber"));
         String miniGame = null;
         switch (miniGameNumber) {
@@ -165,21 +173,21 @@ public class QuestController {
                 miniGame = "IZombie";
                 break;
             // case 4:
-            //     miniGame = "Beghouled";
-            //     break; 
+            // miniGame = "Beghouled";
+            // break;
             // case 5:
-            //     miniGame = "Zombotany";
-            //     break;
+            // miniGame = "Zombotany";
+            // break;
             default:
                 return new Result("Invalid mini game number!");
         }
         int levelNumber = Integer.parseInt(matcher.group("level"));
         Level level = LevelLoader.loadLevel(miniGame, levelNumber);
-        if(level.hasPreGame())
+        if (level.hasPreGame())
             return new Result(new PreGameMenu(level));
         GameContext context = new GameContext(level);
         AppContext.getInstance().setGameContext(context);
-        return new Result("Game started!" , new RunningGameMenu(new GameController(context)));
+        return new Result("Game started!", new RunningGameMenu(new GameController(context)));
     }
 
     public Result exit(Matcher matcher) {
