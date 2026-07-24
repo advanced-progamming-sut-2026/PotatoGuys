@@ -3,11 +3,13 @@ package pvz.models.games.modes.variants;
 import java.util.List;
 
 import pvz.enums.AnsiColors;
+import pvz.models.AppContext;
 import pvz.models.Constants;
 import pvz.models.entities.plants.Plant;
 import pvz.models.entities.plants.PlantFactory;
 import pvz.models.entities.plants.data.PlantPropertySheet;
 import pvz.models.entities.plants.data.PlantRegistry;
+import pvz.models.entities.projectile.Projectile;
 import pvz.models.entities.sun.Sun;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;
@@ -261,7 +263,7 @@ public class NormalMode implements GameMode, PlantPlacer {
             }
         }
 
-        return getStandardCellContent(tile, plantsAtCell, zombiesAtCell);
+        return getStandardCellContent(tile, plantsAtCell, zombiesAtCell, context, col, lane);
     }
 
     private String getSpecialTileContent(Tile tile, boolean hasPlant, List<Zombie> zombiesAtCell) {
@@ -304,9 +306,14 @@ public class NormalMode implements GameMode, PlantPlacer {
         return null;
     }
 
-    private String getStandardCellContent(Tile tile, List<Plant> plantsAtCell, List<Zombie> zombiesAtCell) {
+    private String getStandardCellContent(Tile tile, List<Plant> plantsAtCell, List<Zombie> zombiesAtCell, GameContext ctx, int col, int lane) {
         boolean hasPlant = !plantsAtCell.isEmpty();
         boolean hasZombie = !zombiesAtCell.isEmpty();
+        List<Projectile> projectiles=ctx.getProjectiles()
+                .stream()
+                .filter(p->((p.getX()<col+1 && p.getX()>=col) && (p.getY()<lane+1 && p.getY()>=lane)))
+                .toList();
+        boolean hasProjectile=!projectiles.isEmpty();
 
         StringBuilder output = new StringBuilder();
         if (tile != null && tile.getTags().contains(TileTags.WATER)) {
@@ -316,6 +323,12 @@ public class NormalMode implements GameMode, PlantPlacer {
         if (hasPlant && hasZombie) {
             output.append(String.format(AnsiColors.GREEN + "P" + AnsiColors.RESET + "/Z%-1d", plantsAtCell.size(),
                     zombiesAtCell.size()));
+        } else if(hasZombie && hasProjectile){
+            output.append(String.format("●/Z%-1d",zombiesAtCell.size()));
+        } else if (hasPlant && hasProjectile){
+            output.append(String.format(AnsiColors.GREEN + "P" + AnsiColors.RESET+"/●%-1d",projectiles.size()));
+        } else if (hasProjectile){
+            output.append(String.format(" ●%-1d ",projectiles.size()));
         } else if (hasPlant) {
             output.append(String.format(AnsiColors.GREEN + " P  " + AnsiColors.RESET, plantsAtCell.size()));
         } else if (hasZombie) {

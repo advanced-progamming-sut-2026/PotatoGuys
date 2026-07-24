@@ -2,9 +2,11 @@ package pvz.models.games.modes.variants;
 
 import java.util.List;
 
+import pvz.enums.AnsiColors;
 import pvz.models.Constants;
 import pvz.models.entities.plants.Plant;
 import pvz.models.entities.plants.PlantFactory;
+import pvz.models.entities.projectile.Projectile;
 import pvz.models.entities.sun.Sun;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;
@@ -13,6 +15,8 @@ import pvz.models.games.card.PlantCard;
 import pvz.models.games.levels.Level;
 import pvz.models.games.levels.Wave;
 import pvz.models.games.levels.variants.DeadLineLevel;
+import pvz.models.games.map.tile.Tile;
+import pvz.models.games.map.tile.TileTags;
 import pvz.models.games.modes.GameMode;
 import pvz.models.games.modes.capabilities.PlantPlacer;
 
@@ -21,6 +25,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
     private List<Wave> waves;
     private Boolean[] lawnMower;
     private int deadlineColumn;
+    private static final String CELL_EMPTY = "    ";
 
     public DeadLineMode(Level level) {
         if (level instanceof DeadLineLevel deadLineLevel) {
@@ -229,17 +234,99 @@ public class DeadLineMode implements GameMode, PlantPlacer {
     }
 
     private String getCellContent(int col, GameContext context, int lane) {
-        var plants = context.getPlantsAt(col, lane);
-        var zombies = context.getZombiesAt(col, lane);
-        if (!plants.isEmpty() && !zombies.isEmpty()) {
-            return "P/Z ";
+        List<Plant> plantsAtCell = context.getPlantsAt(col, lane);
+        List<Zombie> zombiesAtCell = context.getZombiesAt(col, lane);
+        Tile tile = context.getTileAt(col, lane);
+
+        if (tile != null) {
+            String specialContent = getSpecialTileContent(tile, !plantsAtCell.isEmpty(), zombiesAtCell);
+            if (specialContent != null) {
+                return specialContent;
+            }
         }
-        if (!plants.isEmpty()) {
-            return " P  ";
+
+        return getStandardCellContent(tile, plantsAtCell, zombiesAtCell, context, col, lane);
+    }
+
+    private String getSpecialTileContent(Tile tile, boolean hasPlant, List<Zombie> zombiesAtCell) {
+        boolean hasZombie = !zombiesAtCell.isEmpty();
+
+        if (tile.getTags().contains(TileTags.GRAVE)) {
+            String graveDisplay = " G  ";
+            for (pvz.models.games.map.behaviors.TileBehavior b : tile.getBehaviors()) {
+                if (b instanceof pvz.models.games.map.behaviors.DestructibleBehavior db) {
+                    if (db.getReward() == pvz.models.games.map.behaviors.DestructibleBehavior.GraveReward.SUN_50) {
+                        graveDisplay = " G$ ";
+                    } else if (db.getReward() == pvz.models.games.map.behaviors.
+                            DestructibleBehavior.GraveReward.PLANT_FOOD) {
+                        graveDisplay = " G! ";
+                    }
+                }
+            }
+            if (hasZombie) {
+                return String.format(AnsiColors.BRIGHT_BLACK + "G" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
+            }
+            return AnsiColors.BRIGHT_BLACK + graveDisplay + AnsiColors.RESET;
+        } else if (tile.getTags().contains(TileTags.SLIP_UP)) {
+            if (hasZombie) {
+                return String.format(AnsiColors.BLUE + "↑" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
+            }
+            return AnsiColors.BLUE + " S↑ " + AnsiColors.RESET;
+        } else if (tile.getTags().contains(TileTags.SLIP_DOWN)) {
+            if (hasZombie) {
+                return String.format(AnsiColors.BLUE + "↓" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
+            }
+            return AnsiColors.BLUE + " S↓ " + AnsiColors.RESET;
+        } else if (tile.getTags().contains(TileTags.ICE_BLOCK)) {
+            if (hasZombie) {
+                return String.format(AnsiColors.BLUE + "I" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
+            } else if (hasPlant) {
+                return AnsiColors.BLUE + "I/P " + AnsiColors.RESET;
+            }
+            return AnsiColors.BLUE + " I  " + AnsiColors.RESET;
         }
-        if (!zombies.isEmpty()) {
-            return String.format(" Z%-2d", zombies.size());
+        return null;
+    }
+
+    private String getStandardCellContent(Tile tile, List<Plant> plantsAtCell, List<Zombie> zombiesAtCell, GameContext ctx, int col, int lane) {
+        boolean hasPlant = !plantsAtCell.isEmpty();
+        boolean hasZombie = !zombiesAtCell.isEmpty();
+        List<Projectile> projectiles=ctx.getProjectiles()
+                .stream()
+                .filter(p->((p.getX()<col+1 && p.getX()>=col) && (p.getY()<lane+1 && p.getY()>=lane)))
+                .toList();
+        boolean hasProjectile=!projectiles.isEmpty();
+
+        StringBuilder output = new StringBuilder();
+        if (tile != null && tile.getTags().contains(TileTags.WATER)) {
+            output.append(AnsiColors.BLUE_BG);
         }
-        return "    ";
+
+        if (hasPlant && hasZombie) {
+            output.append(String.format(AnsiColors.GREEN + "P" + AnsiColors.RESET + "/Z%-1d", plantsAtCell.size(),
+                    zombiesAtCell.size()));
+        } else if(hasZombie && hasProjectile){
+            output.append(String.format("●/Z%-1d",zombiesAtCell.size()));
+        } else if (hasPlant && hasProjectile){
+            output.append(String.format(AnsiColors.GREEN + "P" + AnsiColors.RESET+"/●%-1d",projectiles.size()));
+        } else if (hasProjectile){
+            output.append(String.format(" ●%-1d ",projectiles.size()));
+        } else if (hasPlant) {
+            output.append(String.format(AnsiColors.GREEN + " P  " + AnsiColors.RESET, plantsAtCell.size()));
+        } else if (hasZombie) {
+            output.append(String.format(" Z%-2d", zombiesAtCell.size()));
+        } else {
+            output.append(CELL_EMPTY);
+        }
+
+        if (tile != null && tile.getTags().contains(TileTags.WATER)) {
+            output.append(AnsiColors.RESET);
+        }
+
+        if (!output.isEmpty()) {
+            return output.toString();
+        }
+
+        return CELL_EMPTY;
     }
 }
