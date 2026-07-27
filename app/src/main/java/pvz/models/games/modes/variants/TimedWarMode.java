@@ -193,7 +193,8 @@ public class TimedWarMode implements GameMode, PlantPlacer {
     @Override
     public void handlePlacement(GameContext context, int col, int lane, PlantCard card) {
         PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
-        if (!context.spendSun(sheet.getSunCost())) {
+        ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
+        if (!context.spendSun(stats.getSunCost())) {
             context.log("Not enough sun.");
             return;
         }

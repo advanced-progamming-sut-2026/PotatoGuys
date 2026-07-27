@@ -170,11 +170,10 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
         if (!(card instanceof PlantCard plantCard))
             return;
 
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(plantCard.getPlant().getType());
-
-        // کسر هزینه آفتاب
-        if (!context.spendSun(sheet.getSunCost())) {
-            context.log("Error: Not enough sun.");
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
+        if (!context.spendSun(stats.getSunCost())) {
+            context.log("Not enough sun.");
             return;
         }
 

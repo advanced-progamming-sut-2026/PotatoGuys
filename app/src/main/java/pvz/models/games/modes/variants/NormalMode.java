@@ -146,8 +146,9 @@ public class NormalMode implements GameMode, PlantPlacer {
             context.log("Error: card is not a plant card.");
             return;
         }
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(plantCard.getPlant().getType());
-        if (!context.spendSun(sheet.getSunCost())) {
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
+        if (!context.spendSun(stats.getSunCost())) {
             context.log("Not enough sun.");
             return;
         }

@@ -163,6 +163,13 @@ public class DeadLineMode implements GameMode, PlantPlacer {
             return;
         }
 
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
+        if (!context.spendSun(stats.getSunCost())) {
+            context.log("Not enough sun.");
+            return;
+        }
+
         Plant plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
