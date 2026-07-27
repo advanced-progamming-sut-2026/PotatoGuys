@@ -207,13 +207,39 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
-        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes())
+        if (card == null) {
+            context.log("[Placement Failed] Selected card is null.");
             return false;
-        if (!context.getPlantsAt(col, lane).isEmpty())
+        }
+
+        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+            context.log("[Placement Failed] Out of bounds: (" + col + ", " + lane + ")");
             return false;
-        if (vaseGrid[lane][col] != null && !vaseGrid[lane][col].isBroken)
-            return false; // روی کوزه سالم نمی‌شود کاشت
-        return card != null && card.canUse();
+        }
+
+        if (!context.getPlantsAt(col, lane).isEmpty()) {
+            context.log("[Placement Failed] Tile (" + col + ", " + lane + ") is already occupied by another plant.");
+            return false;
+        }
+
+        if (vaseGrid[lane][col] != null && !vaseGrid[lane][col].isBroken) {
+            context.log("[Placement Failed] Tile (" + col + ", " + lane + ") has an intact vase. Break it first!");
+            return false;
+        }
+
+        if (!context.getTileAt(col, lane).isPlantable(card)) {
+            context.log("[Placement Failed] Tile (" + col + ", " + lane + ") does not support planting "
+                        + card.getPlant().getType());
+            return false;
+        }
+
+        if (!card.canUse()) {
+            context.log("[Placement Failed] Card " + card.getPlant().getType() + " is on cooldown or locked.");
+            return false;
+        }
+
+        // VaseBreakerMode: Cards are earned by breaking vases and are free; no sun cost check needed.
+        return true;
     }
 
     @Override

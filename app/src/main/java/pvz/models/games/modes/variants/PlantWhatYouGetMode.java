@@ -7,6 +7,8 @@ import pvz.models.entities.plants.Plant;
 import pvz.models.entities.plants.PlantFactory;
 import pvz.models.entities.plants.data.PlantPropertySheet;
 import pvz.models.entities.plants.data.PlantRegistry;
+import pvz.models.entities.plants.data.PlantStatResolver;
+import pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
 import pvz.models.entities.sun.Sun;
 import pvz.models.entities.zombies.Zombie;
 import pvz.models.games.GameContext;
@@ -124,23 +126,39 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
-        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes())
-            return false;
-        if (!context.getPlantsAt(col, lane).isEmpty())
-            return false;
-        if (!(card instanceof PlantCard plantCard))
-            return false;
-
-        // بررسی اینکه آیا بازیکن آفتاب کافی برای کاشت این گیاه دارد یا خیر
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(plantCard.getPlant().getType());
-        if (context.getCurrentSun() < sheet.getSunCost()) {
-            context.log("Not enough sun! This plant costs " + sheet.getSunCost() + " sun.");
+        if (card == null) {
+            context.log("[Placement Failed] Selected card is null.");
             return false;
         }
 
-        // چک کردن کول‌داون کارت؛ فقط در صورتی که در فاز آمادگی نباشیم
-        if (!preparationPhase && !plantCard.canUse()) {
-            context.log("Card is on cooldown!");
+        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+            context.log("[Placement Failed] Out of bounds: (" + col + ", " + lane + ")");
+            return false;
+        }
+
+        if (!context.getPlantsAt(col, lane).isEmpty()) {
+            context.log("[Placement Failed] Tile (" + col + ", " + lane + ") is already occupied by another plant.");
+            return false;
+        }
+
+        if (!context.getTileAt(col, lane).isPlantable(card)) {
+            context.log("[Placement Failed] Tile (" + col + ", " + lane + ") does not support planting "
+                        + card.getPlant().getType());
+            return false;
+        }
+
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
+
+        if (context.getCurrentSun() < stats.getSunCost()) {
+            context.log("[Placement Failed] Not enough sun for " + sheet.getName()
+                        + "! Required: " + stats.getSunCost() + ", Current: " + context.getCurrentSun());
+            return false;
+        }
+
+        // During preparation phase, cooldowns are bypassed so the player can plant freely.
+        if (!preparationPhase && !card.canUse()) {
+            context.log("[Placement Failed] Card " + card.getPlant().getType() + " is on cooldown.");
             return false;
         }
 

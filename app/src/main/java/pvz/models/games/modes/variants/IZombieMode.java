@@ -154,22 +154,30 @@ public class IZombieMode implements GameMode, ZombiePlacer {
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
-        if (col < redLineColumn || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
-            context.log("Must place zombies to the right of Column " + (redLineColumn - 1) + "!");
+        if (card == null) {
+            context.log("[Placement Failed] Selected card is null.");
             return false;
         }
 
         if (!(card instanceof ZombieCard zombieCard)) {
+            context.log("[Placement Failed] Card is not a valid zombie card.");
+            return false;
+        }
+
+        if (col < redLineColumn || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+            context.log("[Placement Failed] Must place zombies to the right of Column " + (redLineColumn - 1)
+                        + "! Invalid position: (" + col + ", " + lane + ")");
             return false;
         }
 
         if (!zombieCard.canUse()) {
-            context.log("Zombie card is on cooldown!");
+            context.log("[Placement Failed] Zombie card " + zombieCard.getZombieType() + " is on cooldown.");
             return false;
         }
 
         if (context.getCurrentSun() < zombieCard.getCost()) {
-            context.log("Not enough sun! Requires " + zombieCard.getCost() + " sun.");
+            context.log("[Placement Failed] Not enough sun for " + zombieCard.getZombieType()
+                        + "! Required: " + zombieCard.getCost() + ", Current: " + context.getCurrentSun());
             return false;
         }
 

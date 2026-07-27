@@ -101,15 +101,29 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
+        if (card == null) {
+            context.log("[Placement Failed] Selected card is null.");
+            return false;
+        }
+
         if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+            context.log("[Placement Failed] Out of bounds: (" + col + ", " + lane + ")");
             return false;
         }
+
         if (!context.getPlantsAt(col, lane).isEmpty()) {
+            context.log("[Placement Failed] Tile (" + col + ", " + lane + ") is already occupied by another plant.");
             return false;
         }
-        if (card == null || !(card instanceof PlantCard)) {
+
+        if (!context.getTileAt(col, lane).isPlantable(card)) {
+            context.log("[Placement Failed] Tile (" + col + ", " + lane + ") does not support planting "
+                        + card.getPlant().getType());
             return false;
         }
+
+        // ConveyorBeltMode: Plants are free (delivered by conveyor belt), no sun cost check needed.
+        // Cards are also not subject to cooldown; they arrive on a timer.
         return true;
     }
 

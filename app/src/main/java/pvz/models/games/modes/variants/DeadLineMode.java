@@ -6,6 +6,10 @@ import pvz.enums.AnsiColors;
 import pvz.models.Constants;
 import pvz.models.entities.plants.Plant;
 import pvz.models.entities.plants.PlantFactory;
+import pvz.models.entities.plants.data.PlantPropertySheet;
+import pvz.models.entities.plants.data.PlantRegistry;
+import pvz.models.entities.plants.data.PlantStatResolver;
+import pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
 import pvz.models.entities.projectile.Projectile;
 import pvz.models.entities.sun.Sun;
 import pvz.models.entities.zombies.Zombie;
@@ -115,13 +119,42 @@ public class DeadLineMode implements GameMode, PlantPlacer {
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
+        if (card == null) {
+            context.log("[Placement Failed] Selected card is null.");
+            return false;
+        }
+
         if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+            context.log("[Placement Failed] Out of bounds: (" + col + ", " + lane + ")");
             return false;
         }
+
         if (!context.getPlantsAt(col, lane).isEmpty()) {
+            context.log("[Placement Failed] Tile (" + col + ", " + lane + ") is already occupied by another plant.");
             return false;
         }
-        return card instanceof PlantCard;
+
+        if (!context.getTileAt(col, lane).isPlantable(card)) {
+            context.log("[Placement Failed] Tile (" + col + ", " + lane + ") does not support planting "
+                        + card.getPlant().getType());
+            return false;
+        }
+
+        if (!card.canUse()) {
+            context.log("[Placement Failed] Card " + card.getPlant().getType() + " is on cooldown or locked.");
+            return false;
+        }
+
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
+
+        if (context.getCurrentSun() < stats.getSunCost()) {
+            context.log("[Placement Failed] Not enough sun for " + sheet.getName()
+                        + "! Required: " + stats.getSunCost() + ", Current: " + context.getCurrentSun());
+            return false;
+        }
+
+        return true;
     }
 
     @Override
