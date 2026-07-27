@@ -6,8 +6,11 @@ import java.util.regex.Matcher;
 
 import pvz.models.AppContext;
 import pvz.models.engine.GameEngine;
+import pvz.models.entities.plants.PlantFactory;
 import pvz.models.entities.plants.data.PlantPropertySheet;
 import pvz.models.entities.plants.data.PlantRegistry;
+import pvz.models.entities.plants.data.PlantStatResolver;
+import pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
 import pvz.models.entities.plants.enums.PlantType;
 import pvz.models.games.GameContext;
 import pvz.models.games.card.PlantCard;
@@ -88,7 +91,8 @@ public class PreGameController {
         }
 
         PlantPropertySheet propertySheet = PlantRegistry.getInstance().getSheet(plantType);
-        selectedPlants.add(new PlantCard(owned, propertySheet.getSunCost(), propertySheet.getRechargeSeconds()));
+        ResolvedStats stats = PlantStatResolver.resolve(propertySheet, owned.getLevel());
+        selectedPlants.add(new PlantCard(owned, stats.getSunCost(), stats.getRechargeSeconds()));
 
         StringBuilder output = new StringBuilder(
                 "Plant added. Selected Plants (" + selectedPlants.size() + "/" + MAX_PLANTS + "):");
