@@ -1,0 +1,64 @@
+{
+  "gameType": "VASEBREAKER",
+  "levelNumber": 3,
+  "levelType": "VASEBREAKER",
+  "initialSun": 0,
+  "seasonName": "Default",
+  "gameMap": {
+    "rows": 5,
+    "columns": 9,
+    "specialTiles": []
+  },
+  "basedPlants": [
+    { "Type": "Threepeater", "level": 1, "seed": 0, "isBoosted": false },
+    { "Type": "Melonpult", "level": 1, "seed": 0, "isBoosted": false },
+    { "Type": "Jalapeno", "level": 1, "seed": 0, "isBoosted": false },
+    { "Type": "Squash", "level": 1, "seed": 0, "isBoosted": false },
+    { "Type": "Kernelpult", "level": 1, "seed": 0, "isBoosted": false }
+  ],
+  "basedZombies": [
+    "MUMMY",
+    "MUMMY_CONE",
+    "MUMMY_BUCKET",
+    "EXPLORER",
+    "WIZARD",
+    "EGYPT_GARG"
+  ],
+  "vases": [
+    { "lane": 0, "col": 3, "vaseType": "PLANT" },
+    { "lane": 0, "col": 4, "vaseType": "NORMAL" },
+    { "lane": 0, "col": 5, "vaseType": "PLANT" },
+    { "lane": 0, "col": 6, "vaseType": "NORMAL" },
+    { "lane": 0, "col": 7, "vaseType": "NORMAL" },
+    { "lane": 0, "col": 8, "vaseType": "GARGANTUAR" },
+
+    { "lane": 1, "col": 3, "vaseType": "NORMAL" },
+    { "lane": 1, "col": 4, "vaseType": "PLANT" },
+    { "lane": 1, "col": 5, "vaseType": "NORMAL" },
+    { "lane": 1, "col": 6, "vaseType": "GARGANTUAR" },
+    { "lane": 1, "col": 7, "vaseType": "PLANT" },
+    { "lane": 1, "col": 8, "vaseType": "NORMAL" },
+
+    { "lane": 2, "col": 3, "vaseType": "PLANT" },
+    { "lane": 2, "col": 4, "vaseType": "NORMAL" },
+    { "lane": 2, "col": 5, "vaseType": "GARGANTUAR" },
+    { "lane": 2, "col": 6, "vaseType": "PLANT" },
+    { "lane": 2, "col": 7, "vaseType": "NORMAL" },
+    { "lane": 2, "col": 8, "vaseType": "PLANT" },
+
+    { "lane": 3, "col": 3, "vaseType": "NORMAL" },
+    { "lane": 3, "col": 4, "vaseType": "PLANT" },
+    { "lane": 3, "col": 5, "vaseType": "NORMAL" },
+    { "lane": 3, "col": 6, "vaseType": "NORMAL" },
+    { "lane": 3, "col": 7, "vaseType": "GARGANTUAR" },
+    { "lane": 3, "col": 8, "vaseType": "PLANT" },
+
+    { "lane": 4, "col": 3, "vaseType": "PLANT" },
+    { "lane": 4, "col": 4, "vaseType": "NORMAL" },
+    { "lane": 4, "col": 5, "vaseType": "PLANT" },
+    { "lane": 4, "col": 6, "vaseType": "NORMAL" },
+    { "lane": 4, "col": 7, "vaseType": "NORMAL" },
+    { "lane": 4, "col": 8, "vaseType": "GARGANTUAR" }
+  ],
+  "effects": []
+}

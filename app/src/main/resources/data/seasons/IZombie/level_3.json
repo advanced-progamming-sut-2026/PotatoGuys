@@ -1,0 +1,89 @@
+{
+  "gameType": "IZOMBIE",
+  "levelNumber": 3,
+  "levelType": "IZOMBIE",
+  "initialSun": 1000,
+  "seasonName": "Default",
+  "redLineColumn": 5,
+  "gameMap": {
+    "rows": 5,
+    "columns": 9,
+    "specialTiles": [
+      {
+        "x": 2,
+        "y": 0,
+        "behaviors": [
+          { "type": "DESTRUCTIBLE", "hp": 500.0, "name": "Grave", "laneDelta": 0 }
+        ],
+        "tags": ["GRAVE"]
+      },
+      {
+        "x": 2,
+        "y": 2,
+        "behaviors": [
+          { "type": "DESTRUCTIBLE", "hp": 500.0, "name": "Grave", "laneDelta": 0 }
+        ],
+        "tags": ["GRAVE"]
+      },
+      {
+        "x": 2,
+        "y": 4,
+        "behaviors": [
+          { "type": "DESTRUCTIBLE", "hp": 500.0, "name": "Grave", "laneDelta": 0 }
+        ],
+        "tags": ["GRAVE"]
+      }
+    ]
+  },
+  "basedPlants": [
+    {
+      "Type": "PrimalSunflower",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "Threepeater",
+      "level": 2,
+      "seed": 10,
+      "isBoosted": false
+    },
+    {
+      "Type": "Melonpult",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "Tallnut",
+      "level": 2,
+      "seed": 5,
+      "isBoosted": true
+    },
+    {
+      "Type": "Torchwood",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "PrimalPotatoMine",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    }
+  ],
+  "basedZombies": [
+    "MUMMY",
+    "MUMMY_CONE",
+    "MUMMY_BUCKET",
+    "EXPLORER",
+    "ICE_AGE",
+    "ICE_AGE_CONE",
+    "DODO",
+    "HUNTER",
+    "ICE_AGE_GARG",
+    "GARGANTUAR"
+  ],
+  "effects": []
+}

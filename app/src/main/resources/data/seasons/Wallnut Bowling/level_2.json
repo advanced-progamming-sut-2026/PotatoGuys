@@ -1,0 +1,152 @@
+{
+  "gameType": "WALLNUTBOWLING",
+  "levelNumber": 2,
+  "levelType": "MINIGAME",
+  "initialSun": 0,
+  "deadlineColumn": 4,
+  "gameMap": {
+    "rows": 5,
+    "columns": 9,
+    "specialTiles": []
+  },
+  "waves": [
+    {
+      "waveNumber": 1,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 150,
+      "lanes": 5,
+      "difficulty": 2,
+      "phases": [
+        {
+          "zombieCount": 3,
+          "intervalTicks": 100,
+          "allowedTypes": ["BASIC", "CONEHEAD"],
+          "isBurst": false
+        }
+      ]
+    },
+    {
+      "waveNumber": 2,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 300,
+      "lanes": 5,
+      "difficulty": 3,
+      "phases": [
+        {
+          "zombieCount": 4,
+          "intervalTicks": 80,
+          "allowedTypes": ["CONEHEAD", "NEWSPAPER"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 2,
+          "intervalTicks": 50,
+          "allowedTypes": ["IMP"],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 3,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 600,
+      "lanes": 5,
+      "difficulty": 5,
+      "phases": [
+        {
+          "zombieCount": 3,
+          "intervalTicks": 70,
+          "allowedTypes": ["BUCKETHEAD"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 5,
+          "intervalTicks": 40,
+          "allowedTypes": ["CONEHEAD", "NEWSPAPER", "IMP"],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 4,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 900,
+      "lanes": 5,
+      "difficulty": 7,
+      "phases": [
+        {
+          "zombieCount": 2,
+          "intervalTicks": 90,
+          "allowedTypes": ["FOOTBALL"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 4,
+          "intervalTicks": 50,
+          "allowedTypes": ["BUCKETHEAD", "CONEHEAD"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 6,
+          "intervalTicks": 25,
+          "allowedTypes": ["IMP", "NEWSPAPER", "FLAG"],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 5,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 1400,
+      "lanes": 5,
+      "difficulty": 10,
+      "phases": [
+        {
+          "zombieCount": 1,
+          "intervalTicks": 100,
+          "allowedTypes": ["GARGANTUAR"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 5,
+          "intervalTicks": 40,
+          "allowedTypes": ["BUCKETHEAD", "FOOTBALL", "CONEHEAD"],
+          "isBurst": false
+        }
+      ]
+    },
+    {
+      "waveNumber": 6,
+      "isFinalWave": true,
+      "baseTotalWaveCost": 2000,
+      "lanes": 5,
+      "difficulty": 14,
+      "phases": [
+        {
+          "zombieCount": 1,
+          "intervalTicks": 80,
+          "allowedTypes": ["GARGANTUAR"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 3,
+          "intervalTicks": 60,
+          "allowedTypes": ["FOOTBALL", "BUCKETHEAD"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 6,
+          "intervalTicks": 30,
+          "allowedTypes": ["CONEHEAD", "NEWSPAPER", "IMP"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 10,
+          "intervalTicks": 15,
+          "allowedTypes": ["BASIC", "CONEHEAD", "IMP", "FLAG"],
+          "isBurst": true
+        }
+      ]
+    }
+  ]
+}

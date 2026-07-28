@@ -1,0 +1,80 @@
+{
+  "gameType": "IZOMBIE",
+  "levelNumber": 2,
+  "levelType": "IZOMBIE",
+  "initialSun": 750,
+  "seasonName": "Default",
+  "redLineColumn": 6,
+  "gameMap": {
+    "rows": 5,
+    "columns": 9,
+    "specialTiles": [
+      {
+        "x": 3,
+        "y": 1,
+        "behaviors": [
+          { "type": "DESTRUCTIBLE", "hp": 500.0, "name": "Grave", "laneDelta": 0 }
+        ],
+        "tags": ["GRAVE"]
+      },
+      {
+        "x": 3,
+        "y": 3,
+        "behaviors": [
+          { "type": "DESTRUCTIBLE", "hp": 500.0, "name": "Grave", "laneDelta": 0 }
+        ],
+        "tags": ["GRAVE"]
+      }
+    ]
+  },
+  "basedPlants": [
+    {
+      "Type": "Sunshroom",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "Fumeshroom",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "Repeater",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "Wallnut",
+      "level": 2,
+      "seed": 5,
+      "isBoosted": false
+    },
+    {
+      "Type": "Magnetshroom",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "Chomper",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    }
+  ],
+  "basedZombies": [
+    "BASIC",
+    "CONEHEAD",
+    "BUCKETHEAD",
+    "NEWSPAPER",
+    "DARK",
+    "DARK_CONE",
+    "DARK_BUCKET",
+    "WIZARD",
+    "IMP"
+  ],
+  "effects": []
+}
