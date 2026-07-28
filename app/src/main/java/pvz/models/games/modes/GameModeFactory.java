@@ -21,6 +21,8 @@ public class GameModeFactory {
                 return new VaseBreakerMode(level);
             case BEGHOULED:
                 return new BeghouledMode(level);
+            case WALLNUTBOWLING:
+                return new WallnutBowlingMode(level);
             default:
                 throw new IllegalArgumentException("Unknown game mode: " + level.getGameMode().toString());
         }

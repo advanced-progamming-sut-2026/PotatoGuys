@@ -1,0 +1,113 @@
+{
+  "gameType": "WALLNUTBOWLING",
+  "levelNumber": 1,
+  "levelType": "MINIGAME",
+  "initialSun": 0,
+  "deadlineColumn": 5,
+  "gameMap": {
+    "rows": 5,
+    "columns": 9,
+    "specialTiles": []
+  },
+  "waves": [
+    {
+      "waveNumber": 1,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 100,
+      "lanes": 5,
+      "difficulty": 1,
+      "phases": [
+        {
+          "zombieCount": 2,
+          "intervalTicks": 120,
+          "allowedTypes": ["BASIC"],
+          "isBurst": false
+        }
+      ]
+    },
+    {
+      "waveNumber": 2,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 200,
+      "lanes": 5,
+      "difficulty": 2,
+      "phases": [
+        {
+          "zombieCount": 3,
+          "intervalTicks": 100,
+          "allowedTypes": ["BASIC", "CONEHEAD"],
+          "isBurst": false
+        }
+      ]
+    },
+    {
+      "waveNumber": 3,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 400,
+      "lanes": 5,
+      "difficulty": 4,
+      "phases": [
+        {
+          "zombieCount": 4,
+          "intervalTicks": 80,
+          "allowedTypes": ["CONEHEAD", "NEWSPAPER"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 2,
+          "intervalTicks": 60,
+          "allowedTypes": ["IMP"],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 4,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 700,
+      "lanes": 5,
+      "difficulty": 6,
+      "phases": [
+        {
+          "zombieCount": 3,
+          "intervalTicks": 70,
+          "allowedTypes": ["BUCKETHEAD"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 4,
+          "intervalTicks": 40,
+          "allowedTypes": ["CONEHEAD", "NEWSPAPER", "IMP"],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 5,
+      "isFinalWave": true,
+      "baseTotalWaveCost": 1200,
+      "lanes": 5,
+      "difficulty": 9,
+      "phases": [
+        {
+          "zombieCount": 2,
+          "intervalTicks": 80,
+          "allowedTypes": ["BUCKETHEAD", "FOOTBALL"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 5,
+          "intervalTicks": 50,
+          "allowedTypes": ["CONEHEAD", "BUCKETHEAD", "IMP"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 8,
+          "intervalTicks": 20,
+          "allowedTypes": ["BASIC", "CONEHEAD", "IMP", "FLAG"],
+          "isBurst": true
+        }
+      ]
+    }
+  ]
+}

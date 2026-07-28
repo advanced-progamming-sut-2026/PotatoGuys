@@ -8,5 +8,6 @@ public enum GameModeType {
     VASEBREAKER,
     DEADLINE,
     PLANTWHATYOUGET,
-    BEGHOULED;
+    BEGHOULED,
+    WALLNUTBOWLING;
 }

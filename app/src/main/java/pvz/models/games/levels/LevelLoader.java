@@ -27,6 +27,7 @@ public class LevelLoader {
                 case "DEADLINE" -> gson.fromJson(jsonObject, DeadLineLevel.class);
                 case "PLANTWHATYOUGET" -> gson.fromJson(jsonObject, PlantWhatYouGetLevel.class);
                 case "BEGHOULED" -> gson.fromJson(jsonObject, BeghouledLevel.class);
+                case "WALLNUTBOWLING" -> gson.fromJson(jsonObject, WallnutBowlingLevel.class);
                 default -> throw new IllegalArgumentException("Unknown game mode type: " + type);
             };
         } else {
