@@ -66,7 +66,15 @@ public class LoginController {
         String username = matcher.group("username");
         String email = matcher.group("email");
 
-        currentUser = SaveManager.getInstance().load("users/" + username + ".json", User.class);
+        HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+        if(usernames == null) {
+            return new Result("No users found. Please register first.");
+        }
+        String id = usernames.get(username);
+        if (id == null) {
+            return new Result("Username is incorrect!");
+        }
+        User currentUser = SaveManager.getInstance().load("users/" + id + ".json", User.class);
         if (!currentUser.getEmail().equals(email)) {
             return new Result("Email is incorrect!");
         }
