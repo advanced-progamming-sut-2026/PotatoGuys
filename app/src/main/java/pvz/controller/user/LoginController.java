@@ -95,7 +95,7 @@ public class LoginController {
     public Result resetPassword(Matcher matcher) {
         String newPassword = matcher.group("newPassword");
         currentUser.setPasswordHash(PasswordUtils.hashPassword(newPassword));
-        SaveManager.getInstance().save(currentUser, "users/" + currentUser.getUsername() + ".json");
+        SaveManager.getInstance().save(currentUser, "users/" + currentUser.getId() + ".json");
         return new Result("Password reset successfully!", new LoginMenu());
     }
 
