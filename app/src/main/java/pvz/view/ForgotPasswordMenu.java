@@ -4,12 +4,14 @@ import java.util.regex.Matcher;
 
 import pvz.controller.user.LoginController;
 import pvz.enums.commands.LoginMenuCommand;
+import pvz.models.user.User;
 
 public class ForgotPasswordMenu implements Menu {
     private final LoginController controller;
 
-    public ForgotPasswordMenu(LoginController controller) {
-        this.controller = controller;
+    public ForgotPasswordMenu(User user) {
+        this.controller = new LoginController();
+        controller.currentUser = user;
     }
 
     @Override
@@ -32,7 +34,6 @@ public class ForgotPasswordMenu implements Menu {
 
     @Override
     public Result onEnter() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'onEnter'");
+        return new Result("Use answer -a <answer> to answer the question!\n");
     }
 }

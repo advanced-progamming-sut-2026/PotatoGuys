@@ -3,6 +3,7 @@ package pvz.controller.user;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 
+import pvz.enums.SecurityQuestions;
 import pvz.models.AppContext;
 import pvz.models.user.User;
 import pvz.utils.PasswordUtils;
@@ -16,7 +17,7 @@ import pvz.view.ResetPasswordMenu;
 import pvz.view.Result;
 
 public class LoginController {
-    private User currentUser;
+    public User currentUser;
 
     public Result enterMenu(Matcher matcher) {
         String menuName = matcher.group("menuName");
@@ -79,7 +80,7 @@ public class LoginController {
             return new Result("Email is incorrect!");
         }
 
-        return new Result("Answer to this question:" + currentUser.getSecurityQuestion(), new ForgotPasswordMenu(this));
+        return new Result("Answer to this question:" + SecurityQuestions.QUESTIONS.get(Integer.parseInt(currentUser.getSecurityQuestion())), new ForgotPasswordMenu(currentUser));
     }
 
     public Result answer(Matcher matcher) {

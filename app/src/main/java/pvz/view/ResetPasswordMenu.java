@@ -32,7 +32,6 @@ public class ResetPasswordMenu implements Menu {
 
     @Override
     public Result onEnter() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'onEnter'");
+        return new Result("User reset password -p <newPassword> to change password!\n");
     }
 }

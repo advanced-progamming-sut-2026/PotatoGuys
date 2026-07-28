@@ -232,13 +232,6 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
                         + card.getPlant().getType());
             return false;
         }
-
-        if (!card.canUse()) {
-            context.log("[Placement Failed] Card " + card.getPlant().getType() + " is on cooldown or locked.");
-            return false;
-        }
-
-        // VaseBreakerMode: Cards are earned by breaking vases and are free; no sun cost check needed.
         return true;
     }
 
@@ -248,7 +241,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
                 card.getPlant().getLevel(), card.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
         card.use();
-        context.removeCard(card); // کارت‌های کوزه‌شکنی تک‌بار مصرف هستند
+        context.removeCard(card);
         context.log(card.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
     }
 
@@ -368,4 +361,12 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
         return CELL_EMPTY;
     }
+
+    @Override
+    public boolean supportsFallingSuns() {
+        return false;
+    }
+
+
+    
 }
