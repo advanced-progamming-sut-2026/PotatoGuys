@@ -4,31 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7fd54749-b0f8-4a89-ad5d-d24c03e69d49" name="Changes" comment="h_edit3">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-<<<<<<< HEAD
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/GreenHouseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/GreenHouseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/ShopController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/ShopController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Enums/Commands/GreenHouseMenuCommands.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Enums/Commands/GreenHouseMenuCommands.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/AppContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/AppContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/GreenHouse/GreenHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/GreenHouse/GreenHouse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/GreenHouse/GreenHousePlant.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/GreenHouse/GreenHousePlant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Shop/DailyOffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Shop/DailyOffer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Shop/Shop.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Shop/Shop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/GreenHouseCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/GreenHouseCollection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/User/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/GreenHouseMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/GreenHouseMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/View/ShopMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/View/ShopMenu.java" afterDir="false" />
-=======
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/NormalGameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Controller/Game/NormalGameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/actions/SunProducerAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Plants/actions/SunProducerAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/Sun.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/Sun.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/SunManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Entities/Sun/SunManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/GameContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/GameContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Modes/GameMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Modes/GameMode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Modes/NormalMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/pvz/Models/Games/Modes/NormalMode.java" afterDir="false" />
->>>>>>> 5c7e96cc24b314a2bddb93d60ce23a68ece0a68e
-    </list>
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,162 +15,49 @@
       <ProjectState />
     </projectState>
   </component>
-  <component name="ExternalProjectsManager">
-    <system id="GRADLE">
-      <state>
-        <projects_view>
-          <tree_state>
-            <expand>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="pvz" type="f1a62948:ProjectNode" />
-              </path>
-            </expand>
-            <select />
-          </tree_state>
-        </projects_view>
-      </state>
-    </system>
-  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
-        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GitLabMergeRequestFiltersHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPENED&quot;,
-    &quot;assignee&quot;: {
-      &quot;type&quot;: &quot;org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue&quot;,
-      &quot;username&quot;: &quot;sedhhn&quot;,
-      &quot;fullname&quot;: &quot;sedhhn&quot;
-    }
-  }
-}</component>
-  <component name="GitLabMergeRequestsSettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;first&quot;: &quot;https://hamgit.ir/sedhhn/plantsvszombies2.git&quot;,
-    &quot;second&quot;: &quot;83191278-9b68-4e33-a55d-f523d58ebe84&quot;
-  }
-}</component>
-  <component name="McpProjectServerCommands">
-    <commands />
-    <urls />
-  </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 7
+  &quot;associatedIndex&quot;: 6
 }</component>
-  <component name="ProjectId" id="3EhtQq7cdtR5etykGDiYWn2syZ2" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="1" id="Add" />
-  </component>
+  <component name="ProjectId" id="3HMhFDEJvcEAbZXO55kQ21Gz1r1" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-<<<<<<< HEAD
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;Application.App.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build PlantsVsZombies2.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build plantsvszombies2.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.plantsvszombies2 [:app:pvz.App.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.pvz2 [:lwjgl3:com.pvz.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/104/plantsvszombies2&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/media/sedhhn/CG_Files/Code/Java/AP Project/pvz2&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;H:/Code/Java/AP Project/PlantsVsZombies2/src/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-=======
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.App.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build PlantsVsZombies2.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build plantsvszombies2.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.PlantsVsZombies2 [:app:pvz.App.main()].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/104/plantsvszombies2&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;H:/Code/Java/AP Project/PlantsVsZombies2/src/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-  }
->>>>>>> 5c7e96cc24b314a2bddb93d60ce23a68ece0a68e
 }</component>
-  <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="Models.Plants.Strategies" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="H:\Code\Java\AP Project\PlantsVsZombies2" />
-      <recent name="H:\Code\Java\AP Project\PlantsVsZombies2\src\Models" />
-      <recent name="H:\Code\Java\AP Project\PlantsVsZombies2\src\Models\Quests" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="H:\Code\Java\AP Project\PlantsVsZombies2\src\Models" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="Models.Seasons.Levels" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Application.App">
-    <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="ALTERNATIVE_JRE_PATH" value="25" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-      <option name="MAIN_CLASS_NAME" value="pvz.App" />
-      <module name="pvz.app.main" />
+  <component name="RunManager">
+    <configuration name="Lwjgl3Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.pvz.lwjgl3.Lwjgl3Launcher" />
+      <module name="pvz2.lwjgl3.main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="pvz.*" />
+          <option name="PATTERN" value="com.pvz.lwjgl3.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -202,17 +65,9 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Main" />
-      <module name="PlantsVsZombies2" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.App" />
-        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Lwjgl3Launcher" />
       </list>
     </recent_temporary>
   </component>
@@ -220,65 +75,25 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="7fd54749-b0f8-4a89-ad5d-d24c03e69d49" name="Changes" comment="" />
-      <created>1780642625198</created>
+      <changelist id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="" />
+      <created>1785683739212</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1780642625198</updated>
-      <workItem from="1780642626620" duration="14477000" />
-      <workItem from="1780727383033" duration="14135000" />
-      <workItem from="1780804437258" duration="285000" />
-      <workItem from="1780925266895" duration="929000" />
-      <workItem from="1781073541845" duration="6364000" />
-      <workItem from="1781101092972" duration="19478000" />
-      <workItem from="1781247032363" duration="72000" />
-      <workItem from="1781271335831" duration="9143000" />
-      <workItem from="1781910195158" duration="2313000" />
-      <workItem from="1781946617001" duration="115000" />
-      <workItem from="1781966693070" duration="2800000" />
-      <workItem from="1781975412844" duration="4962000" />
-      <workItem from="1781986710773" duration="49000" />
-      <workItem from="1782487778184" duration="13935000" />
-      <workItem from="1782510561795" duration="23000" />
-      <workItem from="1782510607217" duration="3592000" />
-      <workItem from="1782570237495" duration="326000" />
-      <workItem from="1782837458977" duration="1143000" />
-      <workItem from="1783009235562" duration="633000" />
-      <workItem from="1783009979306" duration="799000" />
-      <workItem from="1783010994303" duration="5330000" />
-      <workItem from="1783024573960" duration="1995000" />
-      <workItem from="1783967805064" duration="3369000" />
-      <workItem from="1784005253170" duration="13538000" />
-      <workItem from="1784032908142" duration="9226000" />
-      <workItem from="1784043171457" duration="7411000" />
-      <workItem from="1784090699060" duration="3424000" />
-      <workItem from="1784099055451" duration="10462000" />
-      <workItem from="1784122842175" duration="14429000" />
-      <workItem from="1784191239323" duration="3758000" />
+      <updated>1785683739212</updated>
+      <workItem from="1785683740722" duration="1336000" />
+      <workItem from="1785699721851" duration="6627000" />
+      <workItem from="1785771751380" duration="8379000" />
+      <workItem from="1785793970805" duration="3771000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
   </component>
 </project>
