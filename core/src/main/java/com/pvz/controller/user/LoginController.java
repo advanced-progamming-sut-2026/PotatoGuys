@@ -36,6 +36,7 @@ public class LoginController {
         AppContext.getInstance().setCurrentUser(user);
         user.refreshQuestLog();
         user.saveUser();
+        SaveManager.getInstance().save(username, "session.json");
 
         return "Welcome " + user.getNickName() + "!";
     }

@@ -134,6 +134,7 @@ public class LoginMenu extends ScreenAdapter {
         AppContext.getInstance().setCurrentUser(user);
         user.refreshQuestLog();
         user.saveUser();
+        saveManager.save(username, "session.json");
 
         statusLabel.setText("Welcome " + user.getNickName() + "!");
         Gdx.app.postRunnable(() -> game.setScreen(new MainMenu(game)));

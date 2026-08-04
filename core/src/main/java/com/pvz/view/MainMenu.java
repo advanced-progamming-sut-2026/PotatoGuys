@@ -3,6 +3,7 @@ package com.pvz.view;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -114,13 +115,32 @@ public class MainMenu extends ScreenAdapter {
 
         stack.add(newsModal);
 
-        TextButton newsBtn = new TextButton("News",skin,"brown");
-        newsBtnWrapper.add(newsBtn).width(100).height(60);
+        // Stack the button and the badge so the (!) overlays the button's corner
+        // instead of sitting in its own cell next to it.
+        Stack newsBtnStack = new Stack();
+
+        TextButton newsBtn = new TextButton("News", skin, "brown");
+        newsBtnStack.add(newsBtn);
+
+        Label unreadBadge = new Label("(!)", skin);
+        unreadBadge.setColor(Color.RED);
+        unreadBadge.setFontScale(2f);
+        unreadBadge.setVisible(false);
+
+        Container<Label> badgeContainer = new Container<>(unreadBadge);
+        badgeContainer.top().right();
+        badgeContainer.padTop(-12).padRight(-12);
+        newsBtnStack.add(badgeContainer);
+
+        newsBtnWrapper.add(newsBtnStack).width(140).height(70);
+
+        newsModal.setUnreadBadge(unreadBadge);
+
         newsBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                newsModal.setVisible(!newsModal.isVisible());
+                newsModal.showNews();
             }
         });
     }
