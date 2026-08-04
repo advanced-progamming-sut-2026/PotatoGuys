@@ -3,6 +3,7 @@ package com.pvz.view;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
+import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
 public class SettingsMenu extends ScreenAdapter {
@@ -38,19 +40,21 @@ public class SettingsMenu extends ScreenAdapter {
         Image bgImage = new Image(bgTexture);
         stage.addActor(bgImage);
 
-        Table mainPanel = new Table();
-        mainPanel.setSize(600, 700);
-        mainPanel.defaults().space(20);
+        BorderedTable mainPanel = new BorderedTable();
+        mainPanel.setSize(550, 650);
+        mainPanel.setPosition((1920 - 550) / 2, (1080 - 650) / 2);
+        mainPanel.defaults().space(15);
         mainPanel.center();
-        mainPanel.setPosition((1920 - 600) / 2, (1080 - 700) / 2);
         stage.addActor(mainPanel);
 
         Label titleLabel = new Label("Settings", skin, "big");
         titleLabel.setFontScale(1.5f);
-        mainPanel.add(titleLabel).padBottom(40).row();
+        titleLabel.setColor(Color.BLACK);
+        mainPanel.add(titleLabel).padBottom(30).row();
 
         Label difficultyLabel = new Label("Difficulty:", skin);
-        difficultyLabel.setFontScale(1.3f);
+        difficultyLabel.setFontScale(1.2f);
+        difficultyLabel.setColor(Color.BLACK);
         mainPanel.add(difficultyLabel).left().row();
 
         TextButton[] diffButtons = new TextButton[5];
@@ -59,6 +63,7 @@ public class SettingsMenu extends ScreenAdapter {
             final int diff = i + 1;
             diffButtons[i] = new TextButton(String.valueOf(diff), skin, "purple");
             diffButtons[i].getLabel().setFontScale(1.3f);
+            diffButtons[i].getLabel().setColor(Color.BLACK);
             diffButtons[i].addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -74,7 +79,8 @@ public class SettingsMenu extends ScreenAdapter {
         mainPanel.add(diffTable).row();
 
         Label speedLabel = new Label("Game Speed:", skin);
-        speedLabel.setFontScale(1.3f);
+        speedLabel.setFontScale(1.2f);
+        speedLabel.setColor(Color.BLACK);
         mainPanel.add(speedLabel).left().row();
 
         TextButton[] speedButtons = new TextButton[3];
@@ -83,6 +89,7 @@ public class SettingsMenu extends ScreenAdapter {
             final int speed = i + 1;
             speedButtons[i] = new TextButton(String.valueOf(speed), skin, "brown");
             speedButtons[i].getLabel().setFontScale(1.3f);
+            speedButtons[i].getLabel().setColor(Color.BLACK);
             speedButtons[i].addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -103,6 +110,7 @@ public class SettingsMenu extends ScreenAdapter {
         gridStyle.font = skin.getFont("FBUSV8C6EI_3");
         CheckBox showGridCheckBox = new CheckBox("Show Grid", gridStyle);
         showGridCheckBox.getLabel().setFontScale(1.2f);
+        showGridCheckBox.getLabel().setColor(Color.BLACK);
         mainPanel.add(showGridCheckBox).left().row();
 
         CheckBox.CheckBoxStyle debugStyle = new CheckBox.CheckBoxStyle();
@@ -111,10 +119,12 @@ public class SettingsMenu extends ScreenAdapter {
         debugStyle.font = skin.getFont("FBUSV8C6EI_3");
         CheckBox debugModeCheckBox = new CheckBox("Debug Mode", debugStyle);
         debugModeCheckBox.getLabel().setFontScale(1.2f);
+        debugModeCheckBox.getLabel().setColor(Color.BLACK);
         mainPanel.add(debugModeCheckBox).left().row();
 
         TextButton backBtn = new TextButton("Back", skin, "purple");
         backBtn.getLabel().setFontScale(1.3f);
+        backBtn.getLabel().setColor(Color.BLACK);
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
