@@ -6,7 +6,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -14,16 +17,17 @@ import com.pvz.PvZ2;
 import com.pvz.enums.GameAsset;
 import pvz.skin.PvzSkin;
 
-public class GameModesMenu extends ScreenAdapter {
+public class AdventureMenu extends ScreenAdapter {
     Stage stage;
     PvZ2 game;
     Stack stack;
     Table rootTable;
-    TextButton adventureBtn;
-    TextButton pennyPursuitBtn;
-    TextButton arenaBtn;
+    TextButton ancientEgyptBtn;
+    TextButton frostbiteCavesBtn;
+    TextButton darkAgesBtn;
+    TextButton bigWaveBeachBtn;
     TextButton backBtn;
-    public GameModesMenu(PvZ2 game){
+    public AdventureMenu(PvZ2 game){
         this.game=game;
     }
 
@@ -49,19 +53,19 @@ public class GameModesMenu extends ScreenAdapter {
         rootTable.defaults().space(100);
         stack.add(rootTable);
 
-        //adventure button
-        adventureBtn=new TextButton("Adventure",PvzSkin.get(),"brown");
-        rootTable.add(adventureBtn).width(150).height(60);
+        //Ancient Egypt button
+        ancientEgyptBtn=new TextButton("Adventure", PvzSkin.get(),"brown");
+        rootTable.add(ancientEgyptBtn).width(150).height(60);
 
-        //penny's pursuit button
-        pennyPursuitBtn=new TextButton("Penny's Pursuit",PvzSkin.get(),"brown");
-        pennyPursuitBtn.setColor(1,1,1,0.3f);
-        rootTable.add(pennyPursuitBtn).width(150).height(60);
+        //Frostbite Caves button
+        frostbiteCavesBtn=new TextButton("Penny's Pursuit",PvzSkin.get(),"brown");
+        frostbiteCavesBtn.setColor(1,1,1,0.3f);
+        rootTable.add(frostbiteCavesBtn).width(150).height(60);
 
-        //arena button
-        arenaBtn=new TextButton("Arena",PvzSkin.get(),"brown");
-        arenaBtn.setColor(1,1,1,0.3f);
-        rootTable.add(arenaBtn).width(150).height(60);
+        //Dark Ages button
+        darkAgesBtn=new TextButton("Arena",PvzSkin.get(),"brown");
+        darkAgesBtn.setColor(1,1,1,0.3f);
+        rootTable.add(darkAgesBtn).width(150).height(60);
 
         //back button & wrapper
         Table backBtnWrapper=new Table();
