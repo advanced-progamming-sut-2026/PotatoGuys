@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -87,8 +88,24 @@ public class MainMenu extends ScreenAdapter {
         });
 
 
+        //settings button wrapper
+        Table settingsBtnWrapper = new Table();
+        settingsBtnWrapper.right().bottom();
+        settingsBtnWrapper.pad(20);
+        stack.add(settingsBtnWrapper);
+
+        ImageButton settingsBtn = new ImageButton(skin, "settings");
+        settingsBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new SettingsMenu(game));
+            }
+        });
+        settingsBtnWrapper.add(settingsBtn).size(64);
+
         //news button & news wrapper
-        Table newsBtnWrapper=new Table();
+        Table newsBtnWrapper = new Table();
         newsBtnWrapper.defaults().pad(50);
         newsBtnWrapper.left().bottom();
         stack.add(newsBtnWrapper);

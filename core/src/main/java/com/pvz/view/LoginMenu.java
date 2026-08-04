@@ -80,16 +80,6 @@ public class LoginMenu extends ScreenAdapter {
         });
         table.add(loginBtn).width(200).height(60).row();
 
-        TextButton registerBtn = new TextButton("Register", skin, "brown");
-        registerBtn.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                game.setScreen(new RegisterMenu(game));
-            }
-        });
-        table.add(registerBtn).width(200).height(60).row();
-
         TextButton forgotPasswordBtn = new TextButton("Forgot Password?", skin, "green");
         forgotPasswordBtn.addListener(new ClickListener() {
             @Override
@@ -100,7 +90,7 @@ public class LoginMenu extends ScreenAdapter {
         });
         table.add(forgotPasswordBtn).width(200).height(60).row();
 
-        TextButton backBtn = new TextButton("Back", skin, "purple");
+        TextButton backBtn = new TextButton("Back", skin, "brown");
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
