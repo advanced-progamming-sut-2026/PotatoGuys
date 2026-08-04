@@ -62,9 +62,29 @@ public class MainMenu extends ScreenAdapter {
         table.add(logoImage).row();
 
 
-        //start game button
-        TextButton startBtn = new TextButton("Start Game", skin, "purple");
-        table.add(startBtn).width(200).height(60).row();
+        //login button
+        TextButton loginBtn = new TextButton("Login", skin, "purple");
+        table.add(loginBtn).width(200).height(60).row();
+
+        //register button
+        TextButton registerBtn = new TextButton("Register", skin, "brown");
+        table.add(registerBtn).width(200).height(60).row();
+
+        loginBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new LoginMenu(game));
+            }
+        });
+
+        registerBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new RegisterMenu(game));
+            }
+        });
 
 
         //news button & news wrapper

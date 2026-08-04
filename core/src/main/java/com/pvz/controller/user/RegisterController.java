@@ -8,31 +8,15 @@ import com.pvz.enums.SecurityQuestions;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.seasons.Season;
 import com.pvz.models.user.Gender;
-import com.pvz.models.user.Message;
 import com.pvz.models.user.User;
 import com.pvz.utils.PasswordUtils;
 import com.pvz.utils.SaveManager;
 
 public class RegisterController {
-/*
+
     private User currentUser;
 
-    public Result enterMenu(Matcher matcher) {
-        String menuName = matcher.group("menuName");
-        menuName = menuName.replaceAll("  ", "");
-        Menu nextMenu = null;
-        switch (menuName.trim()) {
-            case "login":
-                nextMenu = new LoginMenu();
-                break;
-            default:
-                nextMenu = new RegisterMenu();
-                return new Result("You have to login!", nextMenu);
-        }
-        return new Result("Enterned " + nextMenu.getName(), nextMenu);
-    }
-
-    public Result register(Matcher matcher) {
+    public String register(Matcher matcher) {
         String username = matcher.group("username");
         String password = matcher.group("password");
         String passwordConfirm = matcher.group("passwordConfirm");
@@ -40,8 +24,7 @@ public class RegisterController {
         String email = matcher.group("email");
         String genderString = matcher.group("gender");
 
-        Result validationResult = validateRegistrationInputs(username, password, passwordConfirm, nickname, email,
-                genderString);
+        String validationResult = validateRegistrationInputs(username, password, passwordConfirm, nickname, email, genderString);
         if (validationResult != null) {
             return validationResult;
         }
@@ -52,64 +35,56 @@ public class RegisterController {
         User user = new User(username, passwordHash, nickname, email, gender);
         currentUser = user;
 
-        StringBuilder resultMessage = new StringBuilder();
-        resultMessage.append("User registered successfully! Please pick a security question:\n");
-        for (int i = 1; i <= SecurityQuestions.QUESTIONS.size(); i++) {
-            resultMessage.append((i) + ". " + SecurityQuestions.getQuestionByNumber(i)).append("\n");
-        }
-        resultMessage.append(
-                "\nPlease use the command 'pick question -q <questionId> -a <answer> -c <confirmAnswer>' " +
-                        "to pick a security question and set your answer.");
-        return new Result(resultMessage.toString(), new PickSecurityQuestionMenu(this));
+        return "User registered successfully! Please pick a security question.";
     }
 
-    private Result validateRegistrationInputs(String username, String password, String passwordConfirm,
-            String nickname, String email, String genderString) {
-        String usernameValidation = PatternManager.validateUsername(username);
-        if (usernameValidation != null) {
-            return new Result(usernameValidation);
-        }
-
-        String passwordValidation = PatternManager.validatePassword(password, passwordConfirm);
-        if (passwordValidation != null) {
-            return new Result(passwordValidation);
-        }
-
-        String nicknameValidation = PatternManager.validateNickname(nickname);
-        if (nicknameValidation != null) {
-            return new Result(nicknameValidation);
-        }
-
-        String emailValidation = PatternManager.validateEmail(email);
-        if (emailValidation != null) {
-            return new Result(emailValidation);
-        }
-
-        Gender gender = Gender.getGender(genderString);
-        if (gender == null) {
-            return new Result("Invalid gender");
-        }
-
-        return null;
-    }
-
-    public Result pickQuestion(Matcher matcher) {
+    public String pickQuestion(Matcher matcher) {
         if (currentUser == null) {
-            return new Result("Please register first before picking a security question.");
+            return "Please register first before picking a security question.";
         }
         String question = matcher.group("questionId");
         String answer = matcher.group("answer");
         String confirmAnswer = matcher.group("confirmAnswer");
 
         if (!answer.equals(confirmAnswer)) {
-            return new Result("Answer and its Confirm aren't equal!");
+            return "Answer and its Confirm aren't equal!";
         }
 
         currentUser.setSecurityQuestion(question);
         currentUser.setSecurityAnswer(answer);
         saveUser(currentUser);
 
-        return new Result("Security question and answer set successfully!\nUser saved successfully!", new LoginMenu());
+        return "Security question and answer set successfully! User saved successfully!";
+    }
+
+    private String validateRegistrationInputs(String username, String password, String passwordConfirm,
+            String nickname, String email, String genderString) {
+        String usernameValidation = PatternManager.validateUsername(username);
+        if (usernameValidation != null) {
+            return usernameValidation;
+        }
+
+        String passwordValidation = PatternManager.validatePassword(password, passwordConfirm);
+        if (passwordValidation != null) {
+            return passwordValidation;
+        }
+
+        String nicknameValidation = PatternManager.validateNickname(nickname);
+        if (nicknameValidation != null) {
+            return nicknameValidation;
+        }
+
+        String emailValidation = PatternManager.validateEmail(email);
+        if (emailValidation != null) {
+            return emailValidation;
+        }
+
+        Gender gender = Gender.getGender(genderString);
+        if (gender == null) {
+            return "Invalid gender";
+        }
+
+        return null;
     }
 
     public void saveUser(User user) {
@@ -133,7 +108,7 @@ public class RegisterController {
         user.getProfile().getSeasons().add(new Season("Dark Ages"));
         user.getProfile().getSeasons().add(new Season("Big Wave Beach"));
         user.getProfile().getNews().getMessages()
-                .add(new Message("Welcome to Plants vs Zombies 2 " + user.getNickName() + "!"));
+                .add(new com.pvz.models.user.Message("Welcome to Plants vs Zombies 2 " + user.getNickName() + "!"));
         HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
         if (usernames == null) {
             usernames = new HashMap<>();
@@ -142,9 +117,4 @@ public class RegisterController {
         SaveManager.getInstance().save(usernames, "users/username.json");
         SaveManager.getInstance().save(user, "users/" + user.getId() + ".json");
     }
-
-    public Result exit(Matcher matcher) {
-        return new Result("Exiting the program...", null);
-    }
-*/
 }

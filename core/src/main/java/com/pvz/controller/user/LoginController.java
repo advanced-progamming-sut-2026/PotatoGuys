@@ -10,92 +10,72 @@ import com.pvz.utils.PasswordUtils;
 import com.pvz.utils.SaveManager;
 
 public class LoginController {
-/*
+
     public User currentUser;
 
-    public Result enterMenu(Matcher matcher) {
-        String menuName = matcher.group("menuName");
-        menuName = menuName.replaceAll("  ", "");
-        Menu nextMenu = null;
-        switch (menuName.trim()) {
-            case "main":
-                nextMenu = new pvz.view.OldMainMenu();
-                break;
-            default:
-                nextMenu = new LoginMenu();
-                return new Result("You cannot enter this menu.", nextMenu);
-        }
-
-        return new Result("Enterned " + nextMenu.getName(), nextMenu);
-    }
-
-    public Result login(Matcher matcher) {
+    public String login(Matcher matcher) {
         String username = matcher.group("username");
         String password = matcher.group("password");
 
         HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
-        if(usernames == null) {
-            return new Result("No users found. Please register first.");
+        if (usernames == null) {
+            return "No users found. Please register first.";
         }
         String id = usernames.get(username);
         if (id == null) {
-            return new Result("Username is incorrect!");
+            return "Username is incorrect!";
         }
-        User currentUser = SaveManager.getInstance().load("users/" + id + ".json", User.class);
-        if (!PasswordUtils.verifyPassword(password, currentUser.getPasswordHash())) {
-            return new Result("Password is incorrect!");
+        User user = SaveManager.getInstance().load("users/" + id + ".json", User.class);
+        if (user == null) {
+            return "User data not found.";
         }
-
-        AppContext.getInstance().setCurrentUser(currentUser);
-        currentUser.refreshQuestLog();
-        currentUser.saveUser();
-
-        if (matcher.group("stayLoggedIn") != null) {
-            SaveManager.getInstance().save(username, "session.json");
+        if (!PasswordUtils.verifyPassword(password, user.getPasswordHash())) {
+            return "Password is incorrect!";
         }
 
-        return new Result("Welcome " + currentUser.getNickName() + ".", new pvz.view.OldMainMenu());
+        AppContext.getInstance().setCurrentUser(user);
+        user.refreshQuestLog();
+        user.saveUser();
+
+        return "Welcome " + user.getNickName() + "!";
     }
 
-    public Result forgetPassword(Matcher matcher) {
+    public String forgetPassword(Matcher matcher) {
         String username = matcher.group("username");
         String email = matcher.group("email");
 
         HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
-        if(usernames == null) {
-            return new Result("No users found. Please register first.");
+        if (usernames == null) {
+            return "No users found. Please register first.";
         }
         String id = usernames.get(username);
         if (id == null) {
-            return new Result("Username is incorrect!");
+            return "Username is incorrect!";
         }
-        User currentUser = SaveManager.getInstance().load("users/" + id + ".json", User.class);
-        if (!currentUser.getEmail().equals(email)) {
-            return new Result("Email is incorrect!");
+        User user = SaveManager.getInstance().load("users/" + id + ".json", User.class);
+        if (user == null) {
+            return "User data not found.";
+        }
+        if (!user.getEmail().equals(email)) {
+            return "Email is incorrect!";
         }
 
-        return new Result("Answer to this question:" + SecurityQuestions.QUESTIONS.get(Integer.parseInt(currentUser.getSecurityQuestion())), new ForgotPasswordMenu(currentUser));
+        return "Answer to this question: " + SecurityQuestions.QUESTIONS.get(Integer.parseInt(user.getSecurityQuestion()));
     }
 
-    public Result answer(Matcher matcher) {
+    public String answer(Matcher matcher) {
         String answer = matcher.group("answer");
 
         if (!currentUser.getSecurityAnswer().equals(answer)) {
-            return new Result("Answer is incorrect!");
+            return "Answer is incorrect!";
         }
-        return new Result("Answer is correct!", new ResetPasswordMenu(this));
+        return "Answer is correct!";
     }
 
-    public Result resetPassword(Matcher matcher) {
+    public String resetPassword(Matcher matcher) {
         String newPassword = matcher.group("newPassword");
         currentUser.setPasswordHash(PasswordUtils.hashPassword(newPassword));
         SaveManager.getInstance().save(currentUser, "users/" + currentUser.getId() + ".json");
-        return new Result("Password reset successfully!", new LoginMenu());
+        return "Password reset successfully!";
     }
-
-    public Result exit(Matcher matcher) {
-        Menu nextMenu = new RegisterMenu();
-        return new Result("Exited to " + nextMenu.getName(), nextMenu);
-    }
-*/
 }
