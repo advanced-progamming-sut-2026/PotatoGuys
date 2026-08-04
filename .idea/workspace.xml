@@ -5,15 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="added settings menu and some details for it">
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/enums/GameAsset.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GameModesMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/PvZ2.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/PvZ2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/session.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/9a6ebad3-ee90-468a-9dcd-0f221ef00678.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/9a6ebad3-ee90-468a-9dcd-0f221ef00678.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/LoginMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/LoginMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/26fb1474-5537-4b42-9671-97152d968bf8.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/26fb1474-5537-4b42-9671-97152d968bf8.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/MainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/MainMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/RegisterMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/RegisterMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +40,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>

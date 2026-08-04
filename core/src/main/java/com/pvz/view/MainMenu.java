@@ -66,21 +66,20 @@ public class MainMenu extends ScreenAdapter {
         table.add(logoImage).row();
 
 
-        //login button
-        TextButton loginBtn = new TextButton("Start Game", skin, "purple");
-        table.add(loginBtn).width(200).height(60).row();
-
-        //register button
-        TextButton registerBtn = new TextButton("Logout", skin, "brown");
-        table.add(registerBtn).width(200).height(60).row();
-
-        loginBtn.addListener(new ClickListener(){
+        //play button
+        TextButton playBtn = new TextButton("PLAY", skin, "purple");
+        table.add(playBtn).width(200).height(60).row();
+        playBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                game.setScreen(new GameModesMenu(game));
             }
         });
 
+        //logout button
+        TextButton registerBtn = new TextButton("Logout", skin, "brown");
+        table.add(registerBtn).width(200).height(60).row();
         registerBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
