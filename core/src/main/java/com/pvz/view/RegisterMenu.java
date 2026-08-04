@@ -20,7 +20,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
 import com.pvz.controller.user.PatternManager;
 import com.pvz.enums.SecurityQuestions;
+import com.pvz.models.entities.plants.enums.PlantType;
+import com.pvz.models.games.seasons.Season;
 import com.pvz.models.user.Gender;
+import com.pvz.models.user.Message;
 import com.pvz.models.user.User;
 import com.pvz.utils.PasswordUtils;
 import com.pvz.utils.SaveManager;
@@ -200,6 +203,11 @@ public class RegisterMenu extends ScreenAdapter {
         String id = UUID.randomUUID().toString();
         user.setId(id);
 
+        grantStarterProgress(user);
+
+        user.getProfile().getNews().getMessages()
+            .add(new Message("Welcome   to   Plants   vs   Zombies 2   " + user.getNickName() + " ! "));
+
         HashMap<String, String> usernames = saveManager.load("users/username.json", HashMap.class);
         if (usernames == null) {
             usernames = new HashMap<>();
@@ -210,6 +218,28 @@ public class RegisterMenu extends ScreenAdapter {
 
         statusLabel.setText("Registration successful! Please login.");
         Gdx.app.postRunnable(() -> game.setScreen(new LoginMenu(game)));
+    }
+
+    /** Unlocks the default starter plants and first chapter for a brand-new account. */
+    private void grantStarterProgress(User user) {
+        user.getProfile().getCollection().unlockPlant(PlantType.Peashooter);
+        user.getProfile().getCollection().unlockPlant(PlantType.Sunflower);
+        user.getProfile().getCollection().unlockPlant(PlantType.Cabbagepult);
+        user.getProfile().getCollection().unlockPlant(PlantType.BonkChoy);
+        user.getProfile().getCollection().unlockPlant(PlantType.Repeater);
+        user.getProfile().getCollection().unlockPlant(PlantType.TwinSunflower);
+        user.getProfile().getCollection().unlockPlant(PlantType.Jalapeno);
+        user.getProfile().getCollection().unlockPlant(PlantType.SnowPea);
+        user.getProfile().getCollection().unlockPlant(PlantType.CherryBomb);
+        user.getProfile().getCollection().unlockPlant(PlantType.Wallnut);
+
+        Season ancientEgypt = new Season("Ancient Egypt");
+        ancientEgypt.unlock();
+        ancientEgypt.unlockLevel(1);
+        user.getProfile().getSeasons().add(ancientEgypt);
+        user.getProfile().getSeasons().add(new Season("Frostbite Caves"));
+        user.getProfile().getSeasons().add(new Season("Dark Ages"));
+        user.getProfile().getSeasons().add(new Season("Big Wave Beach"));
     }
 
     @Override
