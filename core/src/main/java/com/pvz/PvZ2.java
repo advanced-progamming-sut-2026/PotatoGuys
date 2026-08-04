@@ -11,6 +11,7 @@ import com.pvz.models.AppContext;
 import com.pvz.models.user.User;
 import com.pvz.utils.SaveManager;
 import com.pvz.view.MainMenu;
+import com.pvz.view.RegisterMenu;
 import pvz.skin.PvzSkin;
 
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class PvZ2 extends Game {
         globalAssetManager=new AssetManager();
         globalAssetManager.load("textures/backgrounds/MainMenu.png", Texture.class);
         globalAssetManager.load("textures/pvz2_logo_horizontal.png", Texture.class);
-        /*String savedUsername = SaveManager.getInstance().load("session.json", String.class);
+        String savedUsername = SaveManager.getInstance().load("session.json", String.class);
         if (savedUsername != null) {
             HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
             if (usernames != null) {
@@ -38,12 +39,16 @@ public class PvZ2 extends Game {
                 }
             }
             SaveManager.getInstance().delete("session.json");
-        }*/
+        }
     }
     @Override
     public void create() {
         globalAssetManager.finishLoading();
-        setScreen(new MainMenu(this));
+        if (AppContext.getInstance().getCurrentUser()==null){
+            setScreen(new RegisterMenu(this));
+        } else {
+            setScreen(new MainMenu(this));
+        }
     }
 
     public AssetManager getGlobalAssetManager(){

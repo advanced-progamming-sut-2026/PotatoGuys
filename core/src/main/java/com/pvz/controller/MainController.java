@@ -6,8 +6,7 @@ import com.pvz.utils.SaveManager;
 
 public class MainController {
 
-    public String logout(Matcher matcher) {
+    public void logout() {
         SaveManager.getInstance().delete("session.json");
-        return "logged out";
     }
 }

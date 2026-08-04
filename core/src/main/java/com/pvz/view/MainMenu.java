@@ -15,9 +15,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
+import com.pvz.controller.MainController;
 import pvz.skin.PvzSkin;
 
 public class MainMenu extends ScreenAdapter {
+    MainController controller;
     private final PvZ2 game;
     private Stack stack;
     private Stage stage;
@@ -27,6 +29,7 @@ public class MainMenu extends ScreenAdapter {
     public MainMenu(PvZ2 game) {
         this.game = game;
         newsModal=new NewsModal();
+        controller=new MainController();
     }
 
 
@@ -64,18 +67,17 @@ public class MainMenu extends ScreenAdapter {
 
 
         //login button
-        TextButton loginBtn = new TextButton("Login", skin, "purple");
+        TextButton loginBtn = new TextButton("Start Game", skin, "purple");
         table.add(loginBtn).width(200).height(60).row();
 
         //register button
-        TextButton registerBtn = new TextButton("Register", skin, "brown");
+        TextButton registerBtn = new TextButton("Logout", skin, "brown");
         table.add(registerBtn).width(200).height(60).row();
 
         loginBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                game.setScreen(new LoginMenu(game));
             }
         });
 
@@ -83,6 +85,7 @@ public class MainMenu extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
+                controller.logout();
                 game.setScreen(new RegisterMenu(game));
             }
         });

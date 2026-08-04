@@ -1,333 +1,44 @@
 {
-  "id": "9a6ebad3-ee90-468a-9dcd-0f221ef00678",
-  "username": "sedsed4",
+  "id": "26fb1474-5537-4b42-9671-97152d968bf8",
+  "username": "libgdx",
   "passwordHash": "c731112cfdac04122988150d3e7d17da30173be84c3cd4c37a6961b0c4da6470",
-  "nickName": "sedsed",
-  "email": "sedsed@gmail.com",
+  "nickName": "liblib",
+  "email": "libgdx@gmail.com",
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "hamid",
   "profile": {
     "gamePlayed": 0,
-    "coins": 3120,
-    "diamonds": 5001017,
+    "coins": 0,
+    "diamonds": 0,
     "plantFood": 0,
     "collection": {
-      "unlockedPlants": [
-        {
-          "Type": "Repeater",
-          "level": 2,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "Peashooter",
-          "level": 2,
-          "seed": 0,
-          "isBoosted": true
-        },
-        {
-          "Type": "Sunflower",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": true
-        },
-        {
-          "Type": "PeaPod",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "SnowPea",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "BonkChoy",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "LilyPad",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "GraveBuster",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "Threepeater",
-          "level": 2,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "TwinSunflower",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "HotPotato",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "Cabbagepult",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "Caulipower",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        }
-      ],
-      "unlockedZombies": [
-        "BASIC",
-        "RA",
-        "CONEHEAD",
-        "BUCKETHEAD",
-        "TOMB_RAISER",
-        "EXPLORER",
-        "GARGANTUAR",
-        "DODO",
-        "HUNTER",
-        "BRICKHEAD",
-        "NEWSPAPER",
-        "FLAG",
-        "IMP",
-        "KNIGHT",
-        "DARK_IMP",
-        "SNORKEL"
-      ],
-      "seedPackets": {
-        "Sunflower": 10,
-        "Threepeater": 19,
-        "BonkChoy": 30,
-        "TwinSunflower": 34,
-        "Repeater": 7,
-        "Peashooter": 5,
-        "Caulipower": 0
-      }
+      "unlockedPlants": [],
+      "unlockedZombies": [],
+      "seedPackets": {}
     },
     "news": {
-      "messages": [
-        {
-          "message": "Welcome to Plants vs Zombies 2 sedsed!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: BASIC!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: RA!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: CONEHEAD!",
-          "unread": false
-        },
-        {
-          "message": "New Level Unlocked: Level 2 in Ancient Egypt!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: BUCKETHEAD!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: TOMB_RAISER!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: EXPLORER!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: GARGANTUAR!",
-          "unread": false
-        },
-        {
-          "message": "New Level Unlocked: Level 3 in Ancient Egypt!",
-          "unread": false
-        },
-        {
-          "message": "New Level Unlocked: Level 4 in Ancient Egypt!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: DODO!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: HUNTER!",
-          "unread": false
-        },
-        {
-          "message": "New Level Unlocked: Level 2 in Frostbite Caves!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: BRICKHEAD!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: NEWSPAPER!",
-          "unread": false
-        },
-        {
-          "message": "New Level Unlocked: Level 3 in Frostbite Caves!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: FLAG!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: IMP!",
-          "unread": false
-        },
-        {
-          "message": "New Level Unlocked: Level 3 in Frostbite Caves!",
-          "unread": false
-        },
-        {
-          "message": "New Level Unlocked: Level 3 in Frostbite Caves!",
-          "unread": false
-        },
-        {
-          "message": "New Level Unlocked: Level 4 in Frostbite Caves!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: KNIGHT!",
-          "unread": true
-        },
-        {
-          "message": "New Zombie Encountered: DARK_IMP!",
-          "unread": true
-        },
-        {
-          "message": "New Level Unlocked: Level 2 in Dark Ages!",
-          "unread": true
-        },
-        {
-          "message": "New Level Unlocked: Level 3 in Dark Ages!",
-          "unread": true
-        },
-        {
-          "message": "New Level Unlocked: Level 3 in Dark Ages!",
-          "unread": true
-        },
-        {
-          "message": "New Level Unlocked: Level 4 in Dark Ages!",
-          "unread": true
-        },
-        {
-          "message": "New Zombie Encountered: SNORKEL!",
-          "unread": true
-        },
-        {
-          "message": "New Level Unlocked: Level 2 in Big Wave Beach!",
-          "unread": true
-        },
-        {
-          "message": "New Level Unlocked: Level 2 in Ancient Egypt!",
-          "unread": true
-        },
-        {
-          "message": "New Level Unlocked: Level 2 in Frostbite Caves!",
-          "unread": true
-        },
-        {
-          "message": "New Level Unlocked: Level 2 in Frostbite Caves!",
-          "unread": true
-        },
-        {
-          "message": "New Level Unlocked: Level 2 in Dark Ages!",
-          "unread": true
-        },
-        {
-          "message": "New Level Unlocked: Level 2 in Dark Ages!",
-          "unread": true
-        },
-        {
-          "message": "New Plant Unlocked: Caulipower!",
-          "unread": true
-        },
-        {
-          "message": "New Mini-Game Completed: Vasebreaker Level 1!",
-          "unread": true
-        }
-      ]
+      "messages": []
     },
     "greenHouseCollection": {
       "plants": []
     },
-    "seasons": [
-      {
-        "name": "Ancient Egypt",
-        "locked": false,
-        "levelUnlocked": {
-          "1": true,
-          "2": true,
-          "3": true
-        }
-      },
-      {
-        "name": "Frostbite Caves",
-        "locked": false,
-        "levelUnlocked": {
-          "1": true,
-          "2": true,
-          "3": true
-        }
-      },
-      {
-        "name": "Dark Ages",
-        "locked": false,
-        "levelUnlocked": {
-          "1": true,
-          "2": true,
-          "3": true
-        }
-      },
-      {
-        "name": "Big Wave Beach",
-        "locked": false,
-        "levelUnlocked": {
-          "1": true,
-          "2": true
-        }
-      }
-    ],
+    "seasons": [],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": "Enchantmint",
-    "dailyOfferDate": "2026-07-28",
+    "dailyOfferPlantType": null,
+    "dailyOfferDate": null,
     "dailyOfferPurchased": false
   },
   "setting": {
     "difficulty": 3
   },
   "score": {
-    "lastSeason": 3,
-    "lastLevel": 1,
-    "numMiniGames": 1,
-    "dailyQuests": 31,
-    "nonDailyQuests": 10,
-    "highestScore": 52000
+    "lastSeason": 0,
+    "lastLevel": 0,
+    "numMiniGames": 0,
+    "dailyQuests": 0,
+    "nonDailyQuests": 0,
+    "highestScore": 0
   },
   "greenHouse": {
     "greenHousePots": [
@@ -335,12 +46,7 @@
         "x": 1,
         "y": 1,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "PeaPod",
-          "plantedTime": "2026-07-28T17:30:34.307953500",
-          "growthHours": 8
-        }
+        "greenHousePlant": null
       },
       {
         "x": 2,
@@ -358,23 +64,13 @@
         "x": 4,
         "y": 1,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "GraveBuster",
-          "plantedTime": "2026-07-28T17:30:48.388414137",
-          "growthHours": 8
-        }
+        "greenHousePlant": null
       },
       {
         "x": 5,
         "y": 1,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-07-28T17:30:50.979893769",
-          "growthHours": 2
-        }
+        "greenHousePlant": null
       },
       {
         "x": 1,
@@ -385,13 +81,8 @@
       {
         "x": 2,
         "y": 2,
-        "locked": false,
-        "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "Sunflower",
-          "plantedTime": "2026-07-28T19:13:08.993952146",
-          "growthHours": 8
-        }
+        "locked": true,
+        "greenHousePlant": null
       },
       {
         "x": 3,
@@ -483,10 +174,10 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 3000,
-          "currentAmount": 60225
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "3000"
       },
@@ -498,10 +189,10 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 4000,
-          "currentAmount": 60225
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "4000"
       },
@@ -513,10 +204,10 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 5000,
-          "currentAmount": 60225
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "5000"
       },
@@ -528,10 +219,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 50,
-          "currentAmount": 57
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": false,
         "variable": "Ancient Egypt"
       },
@@ -543,10 +234,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 50,
-          "currentAmount": 140
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": false,
         "variable": "Frostbite Caves"
       },
@@ -558,7 +249,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 50,
-          "currentAmount": 17
+          "currentAmount": 0
         },
         "active": true,
         "claimed": false,
@@ -573,10 +264,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 50,
-          "currentAmount": 108
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": false,
         "variable": "Dark Ages"
       },
@@ -663,10 +354,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": false,
         "variable": "0"
       },
@@ -678,10 +369,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": false,
         "variable": "1"
       },
@@ -693,10 +384,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": false,
         "variable": "2"
       },
@@ -708,10 +399,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": false,
         "variable": "3"
       },
@@ -723,10 +414,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": false,
         "variable": "4"
       },
@@ -738,10 +429,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": false,
         "variable": "5"
       },
@@ -753,10 +444,10 @@
         "priority": "CRITICAL",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": false,
         "variable": null
       },
@@ -798,10 +489,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": null
       },
@@ -828,10 +519,10 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 5,
-          "currentAmount": 5
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": null
       },
@@ -858,10 +549,10 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": null
       },
@@ -873,10 +564,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": null
       },
@@ -903,10 +594,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "SHOOTER"
       },
@@ -933,10 +624,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "LOBBER"
       },
@@ -963,10 +654,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "EXPLOSIVE"
       },
@@ -993,10 +684,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "WALL_NUT"
       },
@@ -1023,10 +714,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "MELEE"
       },
@@ -1038,10 +729,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "0"
       },
@@ -1053,10 +744,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "1"
       },
@@ -1068,10 +759,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "2"
       },
@@ -1083,10 +774,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "3"
       },
@@ -1098,10 +789,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "4"
       },
@@ -1113,10 +804,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "5"
       },
@@ -1128,10 +819,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "6"
       },
@@ -1143,10 +834,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "7"
       },
@@ -1158,10 +849,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "8"
       },
@@ -1173,10 +864,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "0"
       },
@@ -1188,10 +879,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "1"
       },
@@ -1203,10 +894,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "2"
       },
@@ -1218,10 +909,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "3"
       },
@@ -1233,10 +924,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "4"
       },
@@ -1248,10 +939,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "0"
       },
@@ -1263,10 +954,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "1"
       },
@@ -1278,10 +969,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "2"
       },
@@ -1293,10 +984,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "3"
       },
@@ -1308,10 +999,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "4"
       },
@@ -1391,7 +1082,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1785858645756
+    "lastDailyReset": 1785858797403
   },
-  "questLogRefreshed": true
+  "questLogRefreshed": false
 }

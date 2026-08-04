@@ -90,12 +90,12 @@ public class LoginMenu extends ScreenAdapter {
         });
         table.add(forgotPasswordBtn).width(200).height(60).row();
 
-        TextButton backBtn = new TextButton("Back", skin, "brown");
+        TextButton backBtn = new TextButton("Register", skin, "brown");
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                game.setScreen(new MainMenu(game));
+                game.setScreen(new RegisterMenu(game));
             }
         });
         table.add(backBtn).width(200).height(60).row();

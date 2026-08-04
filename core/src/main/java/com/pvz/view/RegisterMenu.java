@@ -130,17 +130,7 @@ public class RegisterMenu extends ScreenAdapter {
                 game.setScreen(new LoginMenu(game));
             }
         });
-        table.add(loginBtn).width(300).height(60).row();
-
-        TextButton backBtn = new TextButton("Back", skin);
-        backBtn.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                game.setScreen(new MainMenu(game));
-            }
-        });
-        table.add(backBtn).width(200).height(60).row();
+        table.add(loginBtn).width(300).height(60);
     }
 
     private void handleRegister() {
