@@ -4,6 +4,7 @@ import com.pvz.models.AppContext;
 import com.pvz.models.games.seasons.Season;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AdventureController {
@@ -11,11 +12,13 @@ public class AdventureController {
 
     }
 
-    public Map<String,Boolean> getSeasonsState(){
-        Map<String, Boolean> seasonsState=new HashMap<>();
-        for (Season s:AppContext.getInstance().getCurrentUser().getProfile().getSeasons()){
-            seasonsState.put(s.getName(),s.isLocked());
+    public boolean isSeasonLocked(String seasonName){
+        List<Season> seasons=AppContext.getInstance().getCurrentUser().getProfile().getSeasons();
+        for (Season s: seasons){
+            if (s.getName().equalsIgnoreCase(seasonName)){
+                return s.isLocked();
+            }
         }
-        return seasonsState;
+        return true;
     }
 }

@@ -52,6 +52,13 @@ public class GameModesMenu extends ScreenAdapter {
         //adventure button
         adventureBtn=new TextButton("Adventure",PvzSkin.get(),"brown");
         rootTable.add(adventureBtn).width(150).height(60);
+        adventureBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new AdventureMenu(game));
+            }
+        });
 
         //penny's pursuit button
         pennyPursuitBtn=new TextButton("Penny's Pursuit",PvzSkin.get(),"brown");

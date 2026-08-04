@@ -14,10 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
+import com.pvz.controller.AdventureController;
 import com.pvz.enums.GameAsset;
 import pvz.skin.PvzSkin;
 
 public class AdventureMenu extends ScreenAdapter {
+    AdventureController controller;
     Stage stage;
     PvZ2 game;
     Stack stack;
@@ -29,6 +31,7 @@ public class AdventureMenu extends ScreenAdapter {
     TextButton backBtn;
     public AdventureMenu(PvZ2 game){
         this.game=game;
+        controller=new AdventureController();
     }
 
     @Override
@@ -54,18 +57,24 @@ public class AdventureMenu extends ScreenAdapter {
         stack.add(rootTable);
 
         //Ancient Egypt button
-        ancientEgyptBtn=new TextButton("Adventure", PvzSkin.get(),"brown");
+        ancientEgyptBtn=new TextButton("Ancient Egypt", PvzSkin.get(),"brown");
         rootTable.add(ancientEgyptBtn).width(150).height(60);
 
+
         //Frostbite Caves button
-        frostbiteCavesBtn=new TextButton("Penny's Pursuit",PvzSkin.get(),"brown");
-        frostbiteCavesBtn.setColor(1,1,1,0.3f);
+        frostbiteCavesBtn=new TextButton("Frostbite Caves",PvzSkin.get(),"brown");
+        if (controller.isSeasonLocked("frostbite caves")) frostbiteCavesBtn.setColor(1,1,1,0.3f);
         rootTable.add(frostbiteCavesBtn).width(150).height(60);
 
         //Dark Ages button
-        darkAgesBtn=new TextButton("Arena",PvzSkin.get(),"brown");
-        darkAgesBtn.setColor(1,1,1,0.3f);
+        darkAgesBtn=new TextButton("Dark Ages",PvzSkin.get(),"brown");
+        if (controller.isSeasonLocked("dark ages")) darkAgesBtn.setColor(1,1,1,0.3f);
         rootTable.add(darkAgesBtn).width(150).height(60);
+
+        //Dark Ages button
+        bigWaveBeachBtn=new TextButton("Big Wave Beach",PvzSkin.get(),"brown");
+        if (controller.isSeasonLocked("big wave beach")) bigWaveBeachBtn.setColor(1,1,1,0.3f);
+        rootTable.add(bigWaveBeachBtn).width(150).height(60);
 
         //back button & wrapper
         Table backBtnWrapper=new Table();
@@ -78,7 +87,7 @@ public class AdventureMenu extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                game.setScreen(new MainMenu(game));
+                game.setScreen(new GameModesMenu(game));
             }
         });
         backBtnWrapper.add(backBtn).width(100).height(50);
