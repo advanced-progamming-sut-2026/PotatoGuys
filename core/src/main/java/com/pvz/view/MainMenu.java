@@ -8,10 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -21,11 +18,14 @@ import pvz.skin.PvzSkin;
 
 public class MainMenu extends ScreenAdapter {
     private final PvZ2 game;
+    private Stack stack;
     private Stage stage;
     private Skin skin;
+    private NewsModal newsModal;
 
     public MainMenu(PvZ2 game) {
         this.game = game;
+        newsModal=new NewsModal();
     }
 
 
@@ -37,9 +37,15 @@ public class MainMenu extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
         skin= PvzSkin.get();
 
+        //background
         Texture bgTexture=game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
         Image bgImage=new Image(bgTexture);
         stage.addActor(bgImage);
+
+        //stack
+        stack=new Stack();
+        stack.setFillParent(true);
+        stage.addActor(stack);
 
         // چیدمان با Table (دکمه در مرکز)
         Table table = new Table();
@@ -48,7 +54,7 @@ public class MainMenu extends ScreenAdapter {
         table.center();
         /*table.add(playButton).width(200).height(60).row();*/
 
-        stage.addActor(table);
+        stack.addActor(table);
 
         //logo
         Texture logoTexture=game.getGlobalAssetManager().get("textures/pvz2_logo_horizontal.png");
@@ -56,9 +62,28 @@ public class MainMenu extends ScreenAdapter {
         table.add(logoImage).row();
 
 
-        //btn
-        TextButton greenButton = new TextButton("Start Game", skin, "green");
-        table.add(greenButton).width(200).height(60);
+        //start game button
+        TextButton startBtn = new TextButton("Start Game", skin, "purple");
+        table.add(startBtn).width(200).height(60).row();
+
+
+        //news button & news wrapper
+        Table newsBtnWrapper=new Table();
+        newsBtnWrapper.defaults().pad(50);
+        newsBtnWrapper.left().bottom();
+        stack.add(newsBtnWrapper);
+
+        stack.add(newsModal);
+
+        TextButton newsBtn = new TextButton("News",skin,"brown");
+        newsBtnWrapper.add(newsBtn).width(100).height(60);
+        newsBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                newsModal.setVisible(!newsModal.isVisible());
+            }
+        });
     }
 
     @Override
