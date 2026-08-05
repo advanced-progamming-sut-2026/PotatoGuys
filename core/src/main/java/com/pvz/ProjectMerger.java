@@ -6,7 +6,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 public class ProjectMerger {
     public static void main(String[] args) throws IOException {
-        Path startingDir = Paths.get("core/src/main/java/pvz/"); // Looks in your src folder
+        Path startingDir = Paths.get("core/src/main/java/com/"); // Looks in your src folder
         Path outputFile = Paths.get("MergedProject.txt");
 
         Files.writeString(outputFile, "=== COMPLETE PVZ PROJECT ===\n\n");

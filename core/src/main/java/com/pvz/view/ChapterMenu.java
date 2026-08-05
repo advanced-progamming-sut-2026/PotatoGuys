@@ -62,6 +62,13 @@ public class ChapterMenu extends ScreenAdapter {
         //level 1
         level1Btn =new TextButton("1", PvzSkin.get(),"brown");
         rootTable.add(level1Btn).width(150).height(150);
+        level1Btn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new GameScreen());
+            }
+        });
 
 
         //level 2
