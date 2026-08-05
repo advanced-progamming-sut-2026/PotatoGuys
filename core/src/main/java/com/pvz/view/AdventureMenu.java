@@ -59,22 +59,50 @@ public class AdventureMenu extends ScreenAdapter {
         //Ancient Egypt button
         ancientEgyptBtn=new TextButton("Ancient Egypt", PvzSkin.get(),"brown");
         rootTable.add(ancientEgyptBtn).width(150).height(60);
+        ancientEgyptBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new ChapterMenu(game,"Ancient Egypt"));
+            }
+        });
 
 
         //Frostbite Caves button
         frostbiteCavesBtn=new TextButton("Frostbite Caves",PvzSkin.get(),"brown");
         if (controller.isSeasonLocked("frostbite caves")) frostbiteCavesBtn.setColor(1,1,1,0.3f);
         rootTable.add(frostbiteCavesBtn).width(150).height(60);
+        frostbiteCavesBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new ChapterMenu(game,"Frostbite Caves"));
+            }
+        });
 
         //Dark Ages button
         darkAgesBtn=new TextButton("Dark Ages",PvzSkin.get(),"brown");
         if (controller.isSeasonLocked("dark ages")) darkAgesBtn.setColor(1,1,1,0.3f);
         rootTable.add(darkAgesBtn).width(150).height(60);
+        darkAgesBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new ChapterMenu(game,"Dark Ages"));
+            }
+        });
 
         //Dark Ages button
         bigWaveBeachBtn=new TextButton("Big Wave Beach",PvzSkin.get(),"brown");
         if (controller.isSeasonLocked("big wave beach")) bigWaveBeachBtn.setColor(1,1,1,0.3f);
         rootTable.add(bigWaveBeachBtn).width(150).height(60);
+        darkAgesBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new ChapterMenu(game,"Big Wave Beach"));
+            }
+        });
 
         //back button & wrapper
         Table backBtnWrapper=new Table();
