@@ -56,49 +56,43 @@ public class ProfileMenu extends ScreenAdapter {
         titleLabel.setColor(Color.BLACK);
         mainPanel.add(titleLabel).padBottom(30).row();
 
+        Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+
         if (currentUser != null) {
-            Label usernameLabel = new Label("Username: " + currentUser.getUsername(), skin);
+            Label usernameLabel = new Label("Username: " + currentUser.getUsername(), descStyle);
             usernameLabel.setFontScale(1.3f);
-            usernameLabel.setColor(Color.BLACK);
             mainPanel.add(usernameLabel).left().row();
 
-            Label nicknameLabel = new Label("Nickname: " + currentUser.getNickName(), skin);
+            Label nicknameLabel = new Label("Nickname: " + currentUser.getNickName(), descStyle);
             nicknameLabel.setFontScale(1.3f);
-            nicknameLabel.setColor(Color.BLACK);
             mainPanel.add(nicknameLabel).left().row();
 
-            Label emailLabel = new Label("Email: " + currentUser.getEmail(), skin);
+            Label emailLabel = new Label("Email: " + currentUser.getEmail(), descStyle);
             emailLabel.setFontScale(1.3f);
-            emailLabel.setColor(Color.BLACK);
             mainPanel.add(emailLabel).left().row();
 
-            Label gamesLabel = new Label("Games Played: " + currentUser.getProfile().getGamePlayed(), skin);
+            Label gamesLabel = new Label("Games Played: " + currentUser.getProfile().getGamePlayed(), descStyle);
             gamesLabel.setFontScale(1.3f);
-            gamesLabel.setColor(Color.BLACK);
             mainPanel.add(gamesLabel).left().row();
 
-            Label coinsLabel = new Label("Coins: " + currentUser.getProfile().getCoins(), skin);
+            Label coinsLabel = new Label("Coins: " + currentUser.getProfile().getCoins(), descStyle);
             coinsLabel.setFontScale(1.3f);
-            coinsLabel.setColor(Color.BLACK);
             mainPanel.add(coinsLabel).left().row();
 
-            Label diamondsLabel = new Label("Diamonds: " + currentUser.getProfile().getDiamonds(), skin);
+            Label diamondsLabel = new Label("Diamonds: " + currentUser.getProfile().getDiamonds(), descStyle);
             diamondsLabel.setFontScale(1.3f);
-            diamondsLabel.setColor(Color.BLACK);
             mainPanel.add(diamondsLabel).left().row();
 
             int completedLevels = 0;
             for (Season season : currentUser.getProfile().getSeasons()) {
                 completedLevels += season.getUnlockedLevelCount();
             }
-            Label levelsLabel = new Label("Completed Levels: " + completedLevels, skin);
+            Label levelsLabel = new Label("Completed Levels: " + completedLevels, descStyle);
             levelsLabel.setFontScale(1.3f);
-            levelsLabel.setColor(Color.BLACK);
             mainPanel.add(levelsLabel).left().row();
 
-            Label miopointLabel = new Label("Highest Miopoint: " + currentUser.getProfile().getMaxMiopoint(), skin);
+            Label miopointLabel = new Label("Highest Miopoint: " + currentUser.getProfile().getMaxMiopoint(), descStyle);
             miopointLabel.setFontScale(1.3f);
-            miopointLabel.setColor(Color.BLACK);
             mainPanel.add(miopointLabel).left().row();
         }
 
