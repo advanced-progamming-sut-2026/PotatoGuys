@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.enums.GameAsset;
@@ -28,6 +29,10 @@ public class GameScreen extends ScreenAdapter {
     private final float transitionDuration = 3.0f;
     private float startX;
     private float endX;
+
+    private Stage stage;
+    private PlantSelectModal plantSelectModal;
+    private boolean modalShown = false;
 
     public GameScreen() {
 
@@ -58,6 +63,13 @@ public class GameScreen extends ScreenAdapter {
 
         camera.position.set(startX, 720f / 2f, 0);
         camera.update();
+
+        // Use a separate FitViewport for UI stage so it stays fixed and centered on screen
+        stage = new Stage(new FitViewport(1280, 720));
+        plantSelectModal = new PlantSelectModal(() -> {
+            Gdx.app.log("GameScreen", "Selected plants: " + plantSelectModal.getSelectedPlants());
+        });
+        stage.addActor(plantSelectModal);
     }
 
     @Override
@@ -68,6 +80,12 @@ public class GameScreen extends ScreenAdapter {
 
         float currentX = com.badlogic.gdx.math.MathUtils.lerp(startX, endX, smoothProgress);
         camera.position.set(currentX, 720f / 2f, 0);
+
+        if (!modalShown && stateTime >= transitionDuration) {
+            modalShown = true;
+            plantSelectModal.setVisible(true);
+            Gdx.input.setInputProcessor(stage);
+        }
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -89,16 +107,21 @@ public class GameScreen extends ScreenAdapter {
         batch.draw(right, x, y);
 
         batch.end();
+
+        stage.act(delta);
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
     public void dispose() {
         batch.dispose();
         assetManager.dispose();
+        stage.dispose();
     }
 }
