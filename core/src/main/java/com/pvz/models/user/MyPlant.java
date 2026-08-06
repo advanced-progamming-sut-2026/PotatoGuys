@@ -8,7 +8,6 @@ public class MyPlant {
     private int seed;
     private boolean isBoosted;
 
-
     public int getSeed() {
         return seed;
     }
@@ -16,7 +15,6 @@ public class MyPlant {
     public void setSeed(int seed) {
         this.seed = seed;
     }
-
 
     public PlantType getType() {
         return Type;

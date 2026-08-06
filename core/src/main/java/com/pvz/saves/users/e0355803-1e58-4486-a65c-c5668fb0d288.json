@@ -82,7 +82,7 @@
       "messages": [
         {
           "message": "Welcome   to   Plants   vs   Zombies 2   sednoob ! ",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -1171,7 +1171,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1785943256837
+    "lastDailyReset": 1785957363791
   },
   "questLogRefreshed": false
 }
