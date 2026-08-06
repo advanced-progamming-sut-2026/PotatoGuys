@@ -11,20 +11,26 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
+import com.pvz.controller.ChapterController;
 import com.pvz.enums.GameAsset;
 import pvz.skin.PvzSkin;
 
-public class GameModesMenu extends ScreenAdapter {
+public class ChapterMenu extends ScreenAdapter {
+    ChapterController controller;
+    String chapterName;
     Stage stage;
     PvZ2 game;
     Stack stack;
     Table rootTable;
-    TextButton adventureBtn;
-    TextButton pennyPursuitBtn;
-    TextButton arenaBtn;
+    TextButton level1Btn;
+    TextButton level2Btn;
+    TextButton level3Btn;
+    TextButton level4Btn;
     TextButton backBtn;
-    public GameModesMenu(PvZ2 game){
+    public ChapterMenu(PvZ2 game, String seasonName){
         this.game=game;
+        this.chapterName=seasonName;
+        controller=new ChapterController(seasonName);
     }
 
     @Override
@@ -49,26 +55,36 @@ public class GameModesMenu extends ScreenAdapter {
         rootTable.defaults().space(100);
         stack.add(rootTable);
 
-        //adventure button
-        adventureBtn=new TextButton("Adventure",PvzSkin.get(),"brown");
-        rootTable.add(adventureBtn).width(150).height(60);
-        adventureBtn.addListener(new ClickListener(){
+        //Chapter name label
+        Label chapterLabel=new Label(chapterName,PvzSkin.get(),"big");
+        rootTable.add(chapterLabel).row();
+
+        //level 1
+        level1Btn =new TextButton("1", PvzSkin.get(),"brown");
+        rootTable.add(level1Btn).width(150).height(150);
+        level1Btn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                game.setScreen(new AdventureMenu(game));
+                game.setScreen(new GameScreen());
             }
         });
 
-        //penny's pursuit button
-        pennyPursuitBtn=new TextButton("Penny's Pursuit",PvzSkin.get(),"brown");
-        pennyPursuitBtn.setColor(1,1,1,0.3f);
-        rootTable.add(pennyPursuitBtn).width(150).height(60);
 
-        //arena button
-        arenaBtn=new TextButton("Arena",PvzSkin.get(),"brown");
-        arenaBtn.setColor(1,1,1,0.3f);
-        rootTable.add(arenaBtn).width(150).height(60);
+        //level 2
+        level2Btn =new TextButton("2",PvzSkin.get(),"brown");
+        if (!controller.isLevelUnlocked(2)) level2Btn.setColor(1,1,1,0.3f);
+        rootTable.add(level2Btn).width(150).height(150);
+
+        //level 3
+        level3Btn =new TextButton("3",PvzSkin.get(),"brown");
+        if (!controller.isLevelUnlocked(3)) level3Btn.setColor(1,1,1,0.3f);
+        rootTable.add(level3Btn).width(150).height(150);
+
+        //level 4
+        level4Btn =new TextButton("4",PvzSkin.get(),"brown");
+        if (!controller.isLevelUnlocked(4)) level4Btn.setColor(1,1,1,0.3f);
+        rootTable.add(level4Btn).width(150).height(150);
 
         //back button & wrapper
         Table backBtnWrapper=new Table();
@@ -81,7 +97,7 @@ public class GameModesMenu extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                game.setScreen(new MainMenu(game));
+                game.setScreen(new GameModesMenu(game));
             }
         });
         backBtnWrapper.add(backBtn).width(100).height(50);

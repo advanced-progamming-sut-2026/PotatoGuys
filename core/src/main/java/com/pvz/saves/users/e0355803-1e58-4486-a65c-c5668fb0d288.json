@@ -1,9 +1,9 @@
 {
-  "id": "26fb1474-5537-4b42-9671-97152d968bf8",
-  "username": "libgdx",
+  "id": "e0355803-1e58-4486-a65c-c5668fb0d288",
+  "username": "sednoob",
   "passwordHash": "c731112cfdac04122988150d3e7d17da30173be84c3cd4c37a6961b0c4da6470",
-  "nickName": "liblib",
-  "email": "libgdx@gmail.com",
+  "nickName": "sednoob",
+  "email": "sednoob@gmail.com",
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "hamid",
@@ -13,17 +13,106 @@
     "diamonds": 0,
     "plantFood": 0,
     "collection": {
-      "unlockedPlants": [],
+      "unlockedPlants": [
+        {
+          "Type": "Peashooter",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Sunflower",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Cabbagepult",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "BonkChoy",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Repeater",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "TwinSunflower",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Jalapeno",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "SnowPea",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "CherryBomb",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Wallnut",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        }
+      ],
       "unlockedZombies": [],
       "seedPackets": {}
     },
     "news": {
-      "messages": []
+      "messages": [
+        {
+          "message": "Welcome   to   Plants   vs   Zombies 2   sednoob ! ",
+          "unread": true
+        }
+      ]
     },
     "greenHouseCollection": {
       "plants": []
     },
-    "seasons": [],
+    "seasons": [
+      {
+        "name": "Ancient Egypt",
+        "locked": false,
+        "levelUnlocked": {
+          "1": true
+        }
+      },
+      {
+        "name": "Frostbite Caves",
+        "locked": true,
+        "levelUnlocked": {}
+      },
+      {
+        "name": "Dark Ages",
+        "locked": true,
+        "levelUnlocked": {}
+      },
+      {
+        "name": "Big Wave Beach",
+        "locked": true,
+        "levelUnlocked": {}
+      }
+    ],
     "maxMiopoint": 0,
     "dailyOfferPlantType": null,
     "dailyOfferDate": null,
@@ -1082,7 +1171,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1785943071429
+    "lastDailyReset": 1785943256837
   },
   "questLogRefreshed": false
 }

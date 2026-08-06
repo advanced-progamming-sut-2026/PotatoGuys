@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Season {
-    private String name;
+    private final String name;
     private boolean locked;
     private Map<Integer,Boolean> levelUnlocked;
 

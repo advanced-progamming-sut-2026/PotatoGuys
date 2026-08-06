@@ -1,0 +1,9 @@
+background_ancient_egypt.png
+size:2048,1024
+repeat:none
+texture
+bounds:2,2,1024,768
+texture_left
+bounds:1703,2,278,768
+texture_right
+bounds:1028,2,673,768
