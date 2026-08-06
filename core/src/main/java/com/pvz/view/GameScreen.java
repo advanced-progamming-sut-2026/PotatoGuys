@@ -64,7 +64,8 @@ public class GameScreen extends ScreenAdapter {
         camera.position.set(startX, 720f / 2f, 0);
         camera.update();
 
-        stage = new Stage(viewport);
+        // Use a separate FitViewport for UI stage so it stays fixed and centered on screen
+        stage = new Stage(new FitViewport(1280, 720));
         plantSelectModal = new PlantSelectModal(() -> {
             Gdx.app.log("GameScreen", "Selected plants: " + plantSelectModal.getSelectedPlants());
         });
