@@ -17,7 +17,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
 import com.pvz.controller.MainController;
-import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
 public class MainMenu extends ScreenAdapter {
@@ -98,21 +97,18 @@ public class MainMenu extends ScreenAdapter {
         bottomRightWrapper.pad(20);
         stack.add(bottomRightWrapper);
 
-        //profile button: bordered table (from skin) with just the face icon
-        BorderedTable profilePanel = new BorderedTable();
-        profilePanel.pad(8);
-        profilePanel.setSize(96, 96);
+        //profile button: the zombie head icon itself (no border)
+        Image profileFace = new Image(skin.getDrawable("image_ui_hud_eventbutton_event_icon_luckothezombie_up"));
+        profileFace.setSize(75, 75);
 
-        Image profileFace = new Image(skin.getDrawable("image_ui_hud_eventbutton_event_icon_luckothezombie_up"));        profilePanel.add(profileFace).size(44, 50);
-
-        profilePanel.addListener(new ClickListener() {
+        profileFace.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 game.setScreen(new ProfileMenu(game));
             }
         });
-        bottomRightWrapper.add(profilePanel).size(96).padRight(15);
+        bottomRightWrapper.add(profileFace).size(64).padRight(15);
 
         ImageButton settingsBtn = new ImageButton(skin, "settings");
         settingsBtn.addListener(new ClickListener() {
