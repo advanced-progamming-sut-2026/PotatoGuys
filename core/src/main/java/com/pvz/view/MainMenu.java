@@ -103,8 +103,7 @@ public class MainMenu extends ScreenAdapter {
         profilePanel.pad(8);
         profilePanel.setSize(96, 96);
 
-        Image profileFace = new Image(skin.getDrawable("image_ui_mainmenu_mm_playericon"));
-        profilePanel.add(profileFace).size(44, 50);
+        Image profileFace = new Image(skin.getDrawable("image_ui_hud_eventbutton_event_icon_luckothezombie_up"));        profilePanel.add(profileFace).size(44, 50);
 
         profilePanel.addListener(new ClickListener() {
             @Override

@@ -7,7 +7,7 @@ import com.pvz.models.games.levels.variants.*;
 import com.pvz.utils.SaveManager;
 
 public class LevelLoader {
-    private static final String BASE_PATH = "app/src/main/resources/data/seasons/";
+    private static final String BASE_PATH = "core/src/main/java/com/resources/data/seasons/";
 
     public static Level loadLevel(String seasonName, int levelNumber) {
         String path = BASE_PATH + seasonName.toLowerCase() + "/level_" + levelNumber + ".json";

@@ -3,15 +3,30 @@ package com.pvz.view;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.enums.GameAsset;
+import com.pvz.models.AppContext;
+import com.pvz.models.engine.GameEngine;
+import com.pvz.models.entities.plants.data.PlantPropertySheet;
+import com.pvz.models.entities.plants.data.PlantRegistry;
+import com.pvz.models.entities.plants.enums.PlantType;
+import com.pvz.models.games.GameContext;
+import com.pvz.models.games.card.PlantCard;
+import com.pvz.models.games.levels.Level;
+import com.pvz.models.games.levels.LevelLoader;
+import com.pvz.models.user.MyPlant;
+import pvz.skin.PvzSkin;
 
 public class GameScreen extends ScreenAdapter {
 
@@ -32,9 +47,33 @@ public class GameScreen extends ScreenAdapter {
 
     private Stage stage;
     private PlantSelectModal plantSelectModal;
-    private boolean modalShown = false;
+    private GameUiModal gameUiModal;
+    private Label readyPlantLabel;
+
+    private enum State {
+        PANNING_FORWARD,
+        PLANT_SELECT,
+        PANNING_BACK,
+        READY_PLANT,
+        PLAYING
+    }
+    private State currentState = State.PANNING_FORWARD;
+    private float panBackTime = 0f;
+    private final float panBackDuration = 2.5f;
+    private float readyPlantTimer = 0f;
+    private final float readyPlantDuration = 2.0f;
+    private boolean gameStarted = false;
+
+    private final String seasonName;
+    private final int levelNumber;
 
     public GameScreen() {
+        this("Ancient Egypt", 1);
+    }
+
+    public GameScreen(String seasonName, int levelNumber) {
+        this.seasonName = seasonName;
+        this.levelNumber = levelNumber;
 
         batch = new SpriteBatch();
 
@@ -66,29 +105,122 @@ public class GameScreen extends ScreenAdapter {
 
         // Use a separate FitViewport for UI stage so it stays fixed and centered on screen
         stage = new Stage(new FitViewport(1280, 720));
+        
         plantSelectModal = new PlantSelectModal(() -> {
-            Gdx.app.log("GameScreen", "Selected plants: " + plantSelectModal.getSelectedPlants());
+            startGameSession();
         });
         stage.addActor(plantSelectModal);
+
+        gameUiModal = new GameUiModal();
+        stage.addActor(gameUiModal);
+
+        readyPlantLabel = new Label("Ready... Plant!", PvzSkin.get(), "big");
+        readyPlantLabel.setColor(Color.RED);
+        readyPlantLabel.setFontScale(1.5f);
+        readyPlantLabel.setAlignment(Align.center);
+        readyPlantLabel.setVisible(false);
+
+        Table labelTable = new Table();
+        labelTable.setFillParent(true);
+        labelTable.center();
+        labelTable.add(readyPlantLabel);
+        stage.addActor(labelTable);
+    }
+
+    private void startGameSession() {
+        try {
+            Level level = LevelLoader.loadLevel(seasonName, levelNumber);
+            if (level != null) {
+                GameEngine.getInstance().reset();
+                GameContext context = new GameContext(level);
+                for (PlantType pt : plantSelectModal.getSelectedPlants()) {
+                    MyPlant owned = null;
+                    try {
+                        owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(pt);
+                    } catch (Exception ignored) {}
+                    PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(pt);
+                    int sunCost = (sheet != null) ? sheet.getSunCost() : 50;
+                    float recharge = (sheet != null) ? sheet.getRechargeSeconds() : 5f;
+                    
+                    MyPlant myPlant = owned;
+                    if (myPlant == null) {
+                        myPlant = new MyPlant();
+                        myPlant.setType(pt);
+                        myPlant.setLevel(1);
+                    }
+                    context.addCard(new PlantCard(myPlant, sunCost, recharge));
+                }
+                AppContext.getInstance().setGameContext(context);
+                
+                plantSelectModal.setVisible(false);
+                currentState = State.PANNING_BACK;
+                panBackTime = 0f;
+
+                Gdx.app.log("GameScreen", "Starting camera pan back for " + seasonName + " Level " + levelNumber);
+            } else {
+                Gdx.app.error("GameScreen", "Failed to load level: " + seasonName + " Level " + levelNumber);
+            }
+        } catch (Exception e) {
+            Gdx.app.error("GameScreen", "Error starting game session", e);
+        }
     }
 
     @Override
     public void render(float delta) {
-        stateTime += delta;
-        float progress = Math.min(1f, stateTime / transitionDuration);
-        float smoothProgress = com.badlogic.gdx.math.Interpolation.fade.apply(progress);
-
-        float currentX = com.badlogic.gdx.math.MathUtils.lerp(startX, endX, smoothProgress);
-        camera.position.set(currentX, 720f / 2f, 0);
-
-        if (!modalShown && stateTime >= transitionDuration) {
-            modalShown = true;
-            plantSelectModal.setVisible(true);
-            Gdx.input.setInputProcessor(stage);
-        }
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        switch (currentState) {
+            case PANNING_FORWARD:
+                stateTime += delta;
+                float progressFwd = Math.min(1f, stateTime / transitionDuration);
+                float smoothFwd = com.badlogic.gdx.math.Interpolation.fade.apply(progressFwd);
+                float currentXFwd = com.badlogic.gdx.math.MathUtils.lerp(startX, endX, smoothFwd);
+                camera.position.set(currentXFwd, 720f / 2f, 0);
+
+                if (progressFwd >= 1f) {
+                    currentState = State.PLANT_SELECT;
+                    plantSelectModal.setVisible(true);
+                    Gdx.input.setInputProcessor(stage);
+                }
+                break;
+
+            case PLANT_SELECT:
+                camera.position.set(endX, 720f / 2f, 0);
+                break;
+
+            case PANNING_BACK:
+                panBackTime += delta;
+                float progressBack = Math.min(1f, panBackTime / panBackDuration);
+                float smoothBack = com.badlogic.gdx.math.Interpolation.fade.apply(progressBack);
+                float currentXBack = com.badlogic.gdx.math.MathUtils.lerp(endX, startX, smoothBack);
+                camera.position.set(currentXBack, 720f / 2f, 0);
+
+                if (progressBack >= 1f) {
+                    currentState = State.READY_PLANT;
+                    readyPlantLabel.setVisible(true);
+                    readyPlantTimer = 0f;
+                }
+                break;
+
+            case READY_PLANT:
+                camera.position.set(startX, 720f / 2f, 0);
+                readyPlantTimer += delta;
+                if (readyPlantTimer >= readyPlantDuration) {
+                    readyPlantLabel.setVisible(false);
+                    currentState = State.PLAYING;
+                    gameUiModal.setVisible(true);
+                    gameStarted = true;
+                }
+                break;
+
+            case PLAYING:
+                camera.position.set(startX, 720f / 2f, 0);
+                gameUiModal.updateHud();
+                GameEngine.getInstance().advanceTime(1);
+                break;
+        }
+
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
@@ -97,7 +229,7 @@ public class GameScreen extends ScreenAdapter {
         float x = 0;
         float y = 0;
 
-        x-=left.getRegionWidth();
+        x -= left.getRegionWidth();
         batch.draw(left, x, y);
         x = 0;
 

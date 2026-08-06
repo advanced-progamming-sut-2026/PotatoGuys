@@ -66,7 +66,7 @@ public class ChapterMenu extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                game.setScreen(new GameScreen());
+                game.setScreen(new GameScreen(chapterName, 1));
             }
         });
 
@@ -75,16 +75,43 @@ public class ChapterMenu extends ScreenAdapter {
         level2Btn =new TextButton("2",PvzSkin.get(),"brown");
         if (!controller.isLevelUnlocked(2)) level2Btn.setColor(1,1,1,0.3f);
         rootTable.add(level2Btn).width(150).height(150);
+        level2Btn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                if (controller.isLevelUnlocked(2)) {
+                    game.setScreen(new GameScreen(chapterName, 2));
+                }
+            }
+        });
 
         //level 3
         level3Btn =new TextButton("3",PvzSkin.get(),"brown");
         if (!controller.isLevelUnlocked(3)) level3Btn.setColor(1,1,1,0.3f);
         rootTable.add(level3Btn).width(150).height(150);
+        level3Btn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                if (controller.isLevelUnlocked(3)) {
+                    game.setScreen(new GameScreen(chapterName, 3));
+                }
+            }
+        });
 
         //level 4
         level4Btn =new TextButton("4",PvzSkin.get(),"brown");
         if (!controller.isLevelUnlocked(4)) level4Btn.setColor(1,1,1,0.3f);
         rootTable.add(level4Btn).width(150).height(150);
+        level4Btn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                if (controller.isLevelUnlocked(4)) {
+                    game.setScreen(new GameScreen(chapterName, 4));
+                }
+            }
+        });
 
         //back button & wrapper
         Table backBtnWrapper=new Table();
