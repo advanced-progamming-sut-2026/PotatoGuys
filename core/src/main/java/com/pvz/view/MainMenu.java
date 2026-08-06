@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
 import com.pvz.controller.MainController;
+import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
 public class MainMenu extends ScreenAdapter {
@@ -91,11 +92,28 @@ public class MainMenu extends ScreenAdapter {
         });
 
 
-        //settings button wrapper
-        Table settingsBtnWrapper = new Table();
-        settingsBtnWrapper.right().bottom();
-        settingsBtnWrapper.pad(20);
-        stack.add(settingsBtnWrapper);
+        //profile & settings buttons wrapper (bottom-right corner)
+        Table bottomRightWrapper = new Table();
+        bottomRightWrapper.right().bottom();
+        bottomRightWrapper.pad(20);
+        stack.add(bottomRightWrapper);
+
+        //profile button: bordered table (from skin) with just the face icon
+        BorderedTable profilePanel = new BorderedTable();
+        profilePanel.pad(8);
+        profilePanel.setSize(96, 96);
+
+        Image profileFace = new Image(skin.getDrawable("image_ui_mainmenu_mm_playericon"));
+        profilePanel.add(profileFace).size(44, 50);
+
+        profilePanel.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new ProfileMenu(game));
+            }
+        });
+        bottomRightWrapper.add(profilePanel).size(96).padRight(15);
 
         ImageButton settingsBtn = new ImageButton(skin, "settings");
         settingsBtn.addListener(new ClickListener() {
@@ -105,7 +123,7 @@ public class MainMenu extends ScreenAdapter {
                 game.setScreen(new SettingsMenu(game));
             }
         });
-        settingsBtnWrapper.add(settingsBtn).size(64);
+        bottomRightWrapper.add(settingsBtn).size(100);
 
         //news button & news wrapper
         Table newsBtnWrapper = new Table();
