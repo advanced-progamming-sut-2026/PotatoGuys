@@ -37,4 +37,14 @@ public class Season {
         return false;
     }
 
+    public int getUnlockedLevelCount(){
+        int count = 0;
+        for (boolean unlocked : levelUnlocked.values()){
+            if (unlocked){
+                count++;
+            }
+        }
+        return count;
+    }
+
 }
