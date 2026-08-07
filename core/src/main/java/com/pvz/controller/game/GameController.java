@@ -16,6 +16,7 @@ import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.Card;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.card.ZombieCard;
+import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.behaviors.TileBehavior;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
@@ -28,6 +29,14 @@ import com.pvz.models.quests.QuestEvaluator;
 import com.pvz.models.user.User;
 
 public class GameController {
+    // This method returns the world coordinates of the middle of column
+    public static float colToWorldX(int col){
+        return (GameMap.START_X+col*GameMap.TILE_WIDTH)-GameMap.TILE_WIDTH/2;
+    }
+
+    public static float laneToWorldY(int lane){
+        return (GameMap.TOP_LANE_Y-lane*GameMap.TILE_HEIGHT)+GameMap.TILE_HEIGHT/2;
+    }
 /*
 
     private final GameContext context;

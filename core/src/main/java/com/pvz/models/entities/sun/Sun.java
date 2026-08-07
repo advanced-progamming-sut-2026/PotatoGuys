@@ -3,18 +3,21 @@ package com.pvz.models.entities.sun;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.pvz.PvZ2;
+import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
+import com.pvz.view.GameScreen;
 
 public class Sun implements TickAware {
 
-    private static final int TICKS_PER_SECOND = 10;
     private static final float DEFAULT_LIFESPAN_SECONDS = 8f;
-    private static final int FALL_DURATION_TICKS = 50;
+    private static final float DEFAULT_FALL_SPEED = 3f;
 
     private final SunType type;
     private final int col;
@@ -22,12 +25,14 @@ public class Sun implements TickAware {
     private final int amount;
     private final GameContext context;
 
-    private int ticksRemaining;
-    private int fallingTicksRemaining;
+    private float fallSpeed;
+
     private boolean fallen;
     private boolean collected;
 
     private float stateTime;
+    private Vector2 currentPos;
+    private Vector2 targetPos;
 
     /** Backward-compatible constructor (plant-produced suns, no falling). */
     public Sun(SunType type, int col, int lane, int amount) {
@@ -40,14 +45,21 @@ public class Sun implements TickAware {
         this.lane = lane;
         this.amount = amount;
         this.context = context;
-        this.ticksRemaining = Math.max(1, Math.round(DEFAULT_LIFESPAN_SECONDS * TICKS_PER_SECOND));
-        this.fallingTicksRemaining = startFalling ? FALL_DURATION_TICKS : 0;
         this.fallen = !startFalling;
-        stateTime=0;
-    }
+        this.stateTime = 0;
+        this.fallSpeed=DEFAULT_FALL_SPEED;
+        if (startFalling){
+            currentPos=new Vector2(GameController.colToWorldX(col),GameScreen.SCREEN_HEIGHT+50);
+            targetPos=new Vector2(GameController.colToWorldX(col),GameController.laneToWorldY(lane));
+        } else {
+            currentPos=new Vector2(GameController.colToWorldX(col),GameController.laneToWorldY(lane));
+            targetPos=new Vector2(currentPos);
+        }
 
+    }
+    @Override
     public void draw(){
-        PvZ2.pamPlayer.draw(PvZ2.batch,"768/INITIAL/EFFECTS/SUN/SUN.PAM","animation",stateTime,col,lane,true);
+        PvZ2.pamPlayer.draw(PvZ2.batch,"768/INITIAL/EFFECTS/SUN/SUN.PAM","animation",stateTime,currentPos.x,currentPos.y,true);
     }
 
     @Override
@@ -55,13 +67,13 @@ public class Sun implements TickAware {
 
     @Override
     public void update(float dt) {
-        stateTime+=dt;
+        stateTime += dt;
         if (collected) return;
 
         if (!fallen) {
-            fallingTicksRemaining--;
-            if (fallingTicksRemaining <= 0) {
-                fallen = true;
+            currentPos.add(0,-fallSpeed);
+            if (currentPos.y<targetPos.y){
+                fallen=true;
                 if (context != null) {
                     context.log("Sun reached the ground at position (" + col + ", " + lane + ")");
                 }
@@ -69,8 +81,6 @@ public class Sun implements TickAware {
                     convertToNormal();
                 }
             }
-        } else {
-            ticksRemaining--;
         }
     }
 
@@ -126,7 +136,7 @@ public class Sun implements TickAware {
     }
 
     public boolean isFalling()    { return !fallen; }
-    public boolean isExpired()    { return !collected && fallen && ticksRemaining <= 0; }
+    public boolean isExpired()    { return !collected && fallen && stateTime>DEFAULT_LIFESPAN_SECONDS; }
     public boolean isCollected()  { return collected; }
     public boolean isDone()       { return collected || isExpired(); }
 
@@ -134,5 +144,4 @@ public class Sun implements TickAware {
     public int getCol()      { return col; }
     public int getLane()     { return lane; }
     public int getAmount()   { return amount > 0 ? amount : type.getAmountSun(); }
-    public float getSecondsRemaining() { return Math.max(0, ticksRemaining) / (float) TICKS_PER_SECOND; }
 }

@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -25,21 +24,24 @@ import com.pvz.models.engine.GameEngine;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.enums.PlantType;
+import com.pvz.models.entities.sun.Sun;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.LevelLoader;
-import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.user.MyPlant;
 import pvz.skin.PvzSkin;
 
+import java.util.ArrayList;
+
 public class GameScreen extends ScreenAdapter {
+    public static final int SCREEN_HEIGHT=720;
+    public static final int SCREEN_WIDTH=1280;
 
     private final AssetManager assetManager;
     private final SpriteBatch batch;
     private final ShapeRenderer shapeRenderer;
-    private final Vector3 touchPos = new Vector3();
 
     private TextureRegion left;
     private TextureRegion center;
@@ -57,8 +59,6 @@ public class GameScreen extends ScreenAdapter {
     private PlantSelectModal plantSelectModal;
     private GameUiModal gameUiModal;
     private Label readyPlantLabel;
-
-    private GameContext context;
 
     private enum State {
         PANNING_FORWARD,
@@ -117,15 +117,53 @@ public class GameScreen extends ScreenAdapter {
         // Use a separate FitViewport for UI stage so it stays fixed and centered on screen
         stage = new Stage(new FitViewport(1280, 720));
 
-        // Debug tool: print pointer coordinates on click anywhere
+        // Debug tool & Sun collection / Plant placement click listener
         stage.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                // اینجا x و y دقیقاً مختصات 1280x720 هستند، مستقل از اندازه پنجره!
-                int col = (int) Math.floor((x - 390f) / 80f);
-                int lane = (int) Math.floor((570f - y) / 100f);
-                System.out.println("[DEBUG Click] Stage X: " + x + ", Y: " + y +
-                    " | Computed Tile: (col=" + col + ", lane=" + lane + ")");
+                float screenX = Gdx.input.getX();
+                float screenY = Gdx.input.getY();
+
+                // 1. Check if clicking on suns during PLAYING
+                if (currentState == State.PLAYING) {
+                    GameContext context = AppContext.getInstance().getGameContext();
+                    if (context != null) {
+                        for (Sun sun : new ArrayList<>(context.getSuns())) {
+                            float sunScreenX = 324f + sun.getCol() * 80f + 40f;
+                            float sunScreenY = 536f + sun.getLane() * 100f + 50f;
+                            float dist = (float) Math.hypot(screenX - sunScreenX, screenY - sunScreenY);
+                            if (dist < 60f) {
+                                sun.collect(context);
+                                Gdx.app.log("GameScreen", "Sun collected! Amount: " + sun.getAmount());
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+                // 2. Plant placement if card is selected
+                if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null) {
+                    if (screenY > 120f) { // below top HUD bar
+                        int col = (int) Math.floor((screenX - 324f) / 80f);
+                        int lane = (int) Math.floor((screenY - 536f) / 100f);
+                        if (col >= 0 && col < 9 && lane >= 0 && lane < 5) {
+                            PlantCard card = gameUiModal.getSelectedCard();
+                            GameContext context = AppContext.getInstance().getGameContext();
+                            if (context != null && context.getMode() instanceof PlantPlacer placer) {
+                                if (placer.isValidPlacement(context, col, lane, card)) {
+                                    placer.handlePlacement(context, col, lane, card);
+                                    gameUiModal.setSelectedCard(null);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                int col = (int) Math.floor((screenX - 324f) / 80f);
+                int lane = (int) Math.floor((screenY - 536f) / 100f);
+                System.out.println("[DEBUG Click] Screen X: " + screenX + ", Y: " + screenY +
+                                   " | Stage X: " + x + ", Y: " + y + " | Computed Tile: (col=" + col + ", lane=" + lane + ")");
                 return false;
             }
         });
@@ -156,7 +194,7 @@ public class GameScreen extends ScreenAdapter {
             Level level = LevelLoader.loadLevel(seasonName, levelNumber);
             if (level != null) {
                 GameEngine.getInstance().reset();
-                context = new GameContext(level);
+                GameContext context = new GameContext(level);
                 for (PlantType pt : plantSelectModal.getSelectedPlants()) {
                     MyPlant owned = null;
                     try {
@@ -265,45 +303,24 @@ public class GameScreen extends ScreenAdapter {
                 break;
         }
 
-        // Render tile highlight and placement when in PLAYING state and a plant card is selected
+        // Render tile highlight when in PLAYING state and a plant card is selected
         if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null) {
+            float mouseX = Gdx.input.getX();
+            float mouseY = Gdx.input.getY();
 
-            // ۱. گرفتن مختصات خام موس
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            int col = (int) Math.floor((mouseX - 324f) / 80f);
+            int lane = (int) Math.floor((mouseY - 536f) / 100f);
 
-            // ۲. تبدیل مختصات صفحه به مختصات دنیای بازی (1280x720)
-            viewport.unproject(touchPos);
-            float worldX = touchPos.x;
-            float worldY = touchPos.y;
-            Tile hoveredTile=context.getMap().getTileAt(worldX,worldY);
+            if (col >= 0 && col < 9 && lane >= 0 && lane < 5) {
+                float tileX = 324f + col * 80f;
+                float tileTopDownY = 536f + lane * 100f;
+                float tileGlY = 720f - (tileTopDownY + 100f);
 
-            if (hoveredTile != null) {
-                // رسم هایلایت سبز
                 shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                shapeRenderer.setColor(0f, 1f, 0f, 0.4f);
-
-                // دیگه نیازی به محاسبه نیست، خود Tile میدونه کجاست!
-                shapeRenderer.rect(hoveredTile.getX(), hoveredTile.getY(),
-                    hoveredTile.getWidth(), hoveredTile.getHeight());
+                shapeRenderer.setColor(0f, 1f, 0f, 0.4f); // semi-transparent green highlight
+                shapeRenderer.rect(tileX, tileGlY, 80f, 100f);
                 shapeRenderer.end();
-            }
-            if (Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
-                if (worldY < 600f && hoveredTile != null) {
-                    PlantCard card = gameUiModal.getSelectedCard();
-                    GameContext context = AppContext.getInstance().getGameContext();
-
-                    if (context != null && context.getMode() instanceof PlantPlacer placer) {
-                        // فقط کافیه col و lane رو از آبجکت Tile بگیریم
-                        int col = hoveredTile.getCol();
-                        int lane = hoveredTile.getLane();
-
-                        if (placer.isValidPlacement(context, col, lane, card)) {
-                            placer.handlePlacement(context, col, lane, card);
-                            gameUiModal.setSelectedCard(null);
-                        }
-                    }
-                }
             }
         }
 
