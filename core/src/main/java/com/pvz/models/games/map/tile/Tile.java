@@ -16,11 +16,15 @@ import com.pvz.models.games.map.behaviors.DestructibleBehavior;
 import com.pvz.models.games.map.behaviors.TileBehavior;
 
 public class Tile {
+    private final int lane;
+    private final int col;
     private List<TileTags> tags;
     private List<TileBehavior> behaviors = new ArrayList<>();
     private List<Plant> plants;
 
-    public Tile() {
+    public Tile(int lane, int col) {
+        this.lane=lane;
+        this.col=col;
         plants = new ArrayList<>();
         tags = new ArrayList<>();
     }

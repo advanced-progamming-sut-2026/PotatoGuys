@@ -205,7 +205,7 @@ public class QuestEvaluator {
     }
 
     private static String getPlantNameAt(GameMap map, int col, int row) {
-        Tile tile = map.getTile(col, row);
+        Tile tile = map.getTileAt(col, row);
         if (tile != null && !tile.getPlants().isEmpty()) {
             return tile.getPlants().getLast().getType().name();
         }

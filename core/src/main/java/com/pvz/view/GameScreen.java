@@ -9,6 +9,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -25,6 +29,7 @@ import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.LevelLoader;
+import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.user.MyPlant;
 import pvz.skin.PvzSkin;
 
@@ -32,6 +37,8 @@ public class GameScreen extends ScreenAdapter {
 
     private final AssetManager assetManager;
     private final SpriteBatch batch;
+    private final ShapeRenderer shapeRenderer;
+    private final Vector3 touchPos = new Vector3();
 
     private TextureRegion left;
     private TextureRegion center;
@@ -76,6 +83,7 @@ public class GameScreen extends ScreenAdapter {
         this.levelNumber = levelNumber;
 
         batch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
 
         assetManager = new AssetManager();
         GameAsset.BACKGROUND_ANCIENT_EGYPT.load(assetManager);
@@ -105,7 +113,20 @@ public class GameScreen extends ScreenAdapter {
 
         // Use a separate FitViewport for UI stage so it stays fixed and centered on screen
         stage = new Stage(new FitViewport(1280, 720));
-        
+
+        // Debug tool: print pointer coordinates on click anywhere
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                // اینجا x و y دقیقاً مختصات 1280x720 هستند، مستقل از اندازه پنجره!
+                int col = (int) Math.floor((x - 390f) / 80f);
+                int lane = (int) Math.floor((570f - y) / 100f);
+                System.out.println("[DEBUG Click] Stage X: " + x + ", Y: " + y +
+                    " | Computed Tile: (col=" + col + ", lane=" + lane + ")");
+                return false;
+            }
+        });
+
         plantSelectModal = new PlantSelectModal(() -> {
             startGameSession();
         });
@@ -141,7 +162,7 @@ public class GameScreen extends ScreenAdapter {
                     PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(pt);
                     int sunCost = (sheet != null) ? sheet.getSunCost() : 50;
                     float recharge = (sheet != null) ? sheet.getRechargeSeconds() : 5f;
-                    
+
                     MyPlant myPlant = owned;
                     if (myPlant == null) {
                         myPlant = new MyPlant();
@@ -151,7 +172,8 @@ public class GameScreen extends ScreenAdapter {
                     context.addCard(new PlantCard(myPlant, sunCost, recharge));
                 }
                 AppContext.getInstance().setGameContext(context);
-                
+                gameUiModal.initCards();
+
                 plantSelectModal.setVisible(false);
                 currentState = State.PANNING_BACK;
                 panBackTime = 0f;
@@ -240,6 +262,54 @@ public class GameScreen extends ScreenAdapter {
 
         batch.end();
 
+        // Render tile highlight and placement when in PLAYING state and a plant card is selected
+        if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null) {
+
+            // ۱. گرفتن مختصات خام موس
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+
+            // ۲. تبدیل مختصات صفحه به مختصات دنیای بازی (1280x720)
+            viewport.unproject(touchPos);
+            float worldX = touchPos.x;
+            float worldY = touchPos.y;
+            // نکته مهم: در worldY نقطه صفر پایین صفحه است، در حالی که در Gdx.input نقطه صفر بالای صفحه است!
+
+            // ۳. محاسبه ستون و ردیف بر اساس مختصات دنیای بازی
+            int col = (int) Math.floor((worldX - 255f) / 80f);
+
+            // چون unproject نقطه صفر رو میندازه پایین صفحه، فرمول lane برعکس میشه.
+            // بالاترین ردیف (lane 0) الان در مختصات Y بین 470 تا 570 دنیای بازی قرار داره
+            int lane = (int) Math.floor((570f - worldY) / 100f);
+
+            if (col >= 0 && col < 9 && lane >= 0 && lane < 5) {
+                float tileX = 255f + col * 80f;
+                // رسم مستطیل حالا با worldY خیلی ساده تر محاسبه میشه:
+                float tileGlY = 470f - (lane * 100f);
+
+                shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                shapeRenderer.setColor(0f, 1f, 0f, 0.4f); // semi-transparent green highlight
+                shapeRenderer.rect(tileX, tileGlY, 86f, 93f);
+                shapeRenderer.end();
+            }
+
+            if (Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
+                // به جای mouseY > 120 (که از بالا حساب میشد) حالا از worldY < 600 (از پایین) استفاده می‌کنیم
+                if (worldY < 600f) { // below top HUD bar
+                    if (col >= 0 && col < 9 && lane >= 0 && lane < 5) {
+                        PlantCard card = gameUiModal.getSelectedCard();
+                        GameContext context = AppContext.getInstance().getGameContext();
+                        if (context != null && context.getMode() instanceof PlantPlacer placer) {
+                            if (placer.isValidPlacement(context, col, lane, card)) {
+                                placer.handlePlacement(context, col, lane, card);
+                                gameUiModal.setSelectedCard(null);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         stage.act(delta);
         stage.draw();
     }
@@ -253,6 +323,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void dispose() {
         batch.dispose();
+        shapeRenderer.dispose();
         assetManager.dispose();
         stage.dispose();
     }

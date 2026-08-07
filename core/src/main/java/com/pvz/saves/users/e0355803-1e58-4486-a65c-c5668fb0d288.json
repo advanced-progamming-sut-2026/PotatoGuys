@@ -9,8 +9,8 @@
   "securityAnswer": "hamid",
   "profile": {
     "gamePlayed": 0,
-    "coins": 0,
-    "diamonds": 0,
+    "coins": 200,
+    "diamonds": 1,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -75,7 +75,12 @@
           "isBoosted": false
         }
       ],
-      "unlockedZombies": [],
+      "unlockedZombies": [
+        "BASIC",
+        "CONEHEAD",
+        "RA",
+        "EXPLORER"
+      ],
       "seedPackets": {}
     },
     "news": {
@@ -83,6 +88,22 @@
         {
           "message": "Welcome   to   Plants   vs   Zombies 2   sednoob ! ",
           "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: BASIC!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: CONEHEAD!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: RA!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: EXPLORER!",
+          "unread": true
         }
       ]
     },
@@ -182,13 +203,13 @@
       {
         "x": 4,
         "y": 2,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
         "x": 5,
         "y": 2,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -206,7 +227,7 @@
       {
         "x": 3,
         "y": 3,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -218,7 +239,7 @@
       {
         "x": 5,
         "y": 3,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -1171,7 +1192,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786051927810
+    "lastDailyReset": 1786120644255
   },
   "questLogRefreshed": false
 }

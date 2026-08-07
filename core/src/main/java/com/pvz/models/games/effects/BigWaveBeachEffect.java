@@ -42,7 +42,7 @@ public class BigWaveBeachEffect implements ChapterEffect {
         // clear all waters from map before updating them
         for (int i = 0; i < ctx.getMap().getColumns(); i++) {
             for (int j = 0; j < ctx.getMap().getRows(); j++) {
-                Tile tile = ctx.getMap().getTile(i, j);
+                Tile tile = ctx.getMap().getTileAt(i, j);
                 tile.getTags().removeAll(tile.getTags().stream().filter(t -> t.equals(TileTags.WATER)).toList());
                 for (TileBehavior behavior : new ArrayList<>(tile.getBehaviors())) {
                     if (behavior instanceof WaterBehavior waterBehavior) {

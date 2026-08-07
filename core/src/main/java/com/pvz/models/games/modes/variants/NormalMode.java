@@ -68,7 +68,7 @@ public class NormalMode implements GameMode, PlantPlacer {
                 context.log("Wave " + currentWave.getWaveNumber() + " started.");
             } else {
                 context.setGameOver(true);
-                context.log("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
+                //context.log("Dear humanz, zis is not done yet; we will come back to eat your brainz, humanz.");
             }
             return;
         }
