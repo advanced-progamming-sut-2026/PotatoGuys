@@ -126,7 +126,7 @@ public class GameContext implements TickAware {
     }
 
     public int getLanes() {
-        return map.getRows();
+        return map.getLanes();
     }
 
     public List<Zombie> getZombies() {

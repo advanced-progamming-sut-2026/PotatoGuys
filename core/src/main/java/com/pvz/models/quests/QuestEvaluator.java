@@ -188,7 +188,7 @@ public class QuestEvaluator {
         }
 
         GameMap map = context.getMap();
-        int rows = map.getRows();
+        int rows = map.getLanes();
         int cols = map.getColumns();
 
         for (int r = 0; r < rows / 2; r++) {

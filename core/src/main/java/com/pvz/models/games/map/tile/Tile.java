@@ -18,13 +18,21 @@ import com.pvz.models.games.map.behaviors.TileBehavior;
 public class Tile {
     private final int lane;
     private final int col;
+    private final float x;
+    private final float y;
+    private final float width;
+    private final float height;
     private List<TileTags> tags;
     private List<TileBehavior> behaviors = new ArrayList<>();
     private List<Plant> plants;
 
-    public Tile(int lane, int col) {
-        this.lane=lane;
-        this.col=col;
+    public Tile(int col, int lane, float x, float y, float width, float height) {
+        this.col = col;
+        this.lane = lane;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
         plants = new ArrayList<>();
         tags = new ArrayList<>();
     }
@@ -103,5 +111,29 @@ public class Tile {
 
     public List<TileTags> getTags() {
         return tags;
+    }
+
+    public int getLane() {
+        return lane;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
     }
 }

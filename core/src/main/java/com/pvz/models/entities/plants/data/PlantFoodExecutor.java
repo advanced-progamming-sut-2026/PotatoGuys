@@ -65,7 +65,7 @@ public final class PlantFoodExecutor {
     private static void executeMultiInstakill(PlantFoodProfile pf, GameContext ctx, String name) {
         int limit = Math.max(1, pf.getCount());
         int killed = 0;
-        for (int lane = 0; lane < ctx.getMap().getRows() && killed < limit; lane++) {
+        for (int lane = 0; lane < ctx.getMap().getLanes() && killed < limit; lane++) {
             for (Zombie z : ctx.getZombiesInLane(lane)) {
                 if (killed >= limit) {
                     break;

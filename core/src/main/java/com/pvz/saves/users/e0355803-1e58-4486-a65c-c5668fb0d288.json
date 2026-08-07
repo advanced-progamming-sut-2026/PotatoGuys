@@ -9,7 +9,7 @@
   "securityAnswer": "hamid",
   "profile": {
     "gamePlayed": 0,
-    "coins": 200,
+    "coins": 350,
     "diamonds": 1,
     "plantFood": 0,
     "collection": {
@@ -91,19 +91,19 @@
         },
         {
           "message": "New Zombie Encountered: BASIC!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: CONEHEAD!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: RA!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: EXPLORER!",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -185,7 +185,7 @@
       {
         "x": 1,
         "y": 2,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -1192,7 +1192,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786120644255
+    "lastDailyReset": 1786122145666
   },
   "questLogRefreshed": false
 }

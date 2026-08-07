@@ -29,6 +29,7 @@ import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.LevelLoader;
+import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.user.MyPlant;
 import pvz.skin.PvzSkin;
@@ -56,6 +57,8 @@ public class GameScreen extends ScreenAdapter {
     private PlantSelectModal plantSelectModal;
     private GameUiModal gameUiModal;
     private Label readyPlantLabel;
+
+    private GameContext context;
 
     private enum State {
         PANNING_FORWARD,
@@ -153,7 +156,7 @@ public class GameScreen extends ScreenAdapter {
             Level level = LevelLoader.loadLevel(seasonName, levelNumber);
             if (level != null) {
                 GameEngine.getInstance().reset();
-                GameContext context = new GameContext(level);
+                context = new GameContext(level);
                 for (PlantType pt : plantSelectModal.getSelectedPlants()) {
                     MyPlant owned = null;
                     try {
@@ -272,38 +275,32 @@ public class GameScreen extends ScreenAdapter {
             viewport.unproject(touchPos);
             float worldX = touchPos.x;
             float worldY = touchPos.y;
-            // نکته مهم: در worldY نقطه صفر پایین صفحه است، در حالی که در Gdx.input نقطه صفر بالای صفحه است!
+            Tile hoveredTile=context.getMap().getTileAt(worldX,worldY);
 
-            // ۳. محاسبه ستون و ردیف بر اساس مختصات دنیای بازی
-            int col = (int) Math.floor((worldX - 255f) / 80f);
-
-            // چون unproject نقطه صفر رو میندازه پایین صفحه، فرمول lane برعکس میشه.
-            // بالاترین ردیف (lane 0) الان در مختصات Y بین 470 تا 570 دنیای بازی قرار داره
-            int lane = (int) Math.floor((570f - worldY) / 100f);
-
-            if (col >= 0 && col < 9 && lane >= 0 && lane < 5) {
-                float tileX = 255f + col * 80f;
-                // رسم مستطیل حالا با worldY خیلی ساده تر محاسبه میشه:
-                float tileGlY = 470f - (lane * 100f);
-
+            if (hoveredTile != null) {
+                // رسم هایلایت سبز
                 shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                shapeRenderer.setColor(0f, 1f, 0f, 0.4f); // semi-transparent green highlight
-                shapeRenderer.rect(tileX, tileGlY, 86f, 93f);
+                shapeRenderer.setColor(0f, 1f, 0f, 0.4f);
+
+                // دیگه نیازی به محاسبه نیست، خود Tile میدونه کجاست!
+                shapeRenderer.rect(hoveredTile.getX(), hoveredTile.getY(),
+                    hoveredTile.getWidth(), hoveredTile.getHeight());
                 shapeRenderer.end();
             }
-
             if (Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
-                // به جای mouseY > 120 (که از بالا حساب میشد) حالا از worldY < 600 (از پایین) استفاده می‌کنیم
-                if (worldY < 600f) { // below top HUD bar
-                    if (col >= 0 && col < 9 && lane >= 0 && lane < 5) {
-                        PlantCard card = gameUiModal.getSelectedCard();
-                        GameContext context = AppContext.getInstance().getGameContext();
-                        if (context != null && context.getMode() instanceof PlantPlacer placer) {
-                            if (placer.isValidPlacement(context, col, lane, card)) {
-                                placer.handlePlacement(context, col, lane, card);
-                                gameUiModal.setSelectedCard(null);
-                            }
+                if (worldY < 600f && hoveredTile != null) {
+                    PlantCard card = gameUiModal.getSelectedCard();
+                    GameContext context = AppContext.getInstance().getGameContext();
+
+                    if (context != null && context.getMode() instanceof PlantPlacer placer) {
+                        // فقط کافیه col و lane رو از آبجکت Tile بگیریم
+                        int col = hoveredTile.getCol();
+                        int lane = hoveredTile.getLane();
+
+                        if (placer.isValidPlacement(context, col, lane, card)) {
+                            placer.handlePlacement(context, col, lane, card);
+                            gameUiModal.setSelectedCard(null);
                         }
                     }
                 }

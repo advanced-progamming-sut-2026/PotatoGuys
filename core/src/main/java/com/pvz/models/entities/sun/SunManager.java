@@ -45,7 +45,7 @@ public class SunManager implements TickAware {
 
     private void spawnSun() {
         int col = random.nextInt(gameContext.getMap().getColumns());
-        int lane = random.nextInt(gameContext.getMap().getRows());
+        int lane = random.nextInt(gameContext.getMap().getLanes());
 
         SunType type = SunType.NORMAL;
         double rand = random.nextDouble();
