@@ -3,6 +3,7 @@ package com.pvz.models.engine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
 
 public class GameEngine {
@@ -27,16 +28,10 @@ public class GameEngine {
         getToRemove().add(entity);
     }
 
-    public void advanceTime(int ticks){
-        for (int i = 0; i < ticks; i++) {
-            processOneTick();
-            if(AppContext.getInstance().getGameContext().isGameOver()){
-                break;
-            }
+    public void update(float dt) {
+        if(AppContext.getInstance().getGameContext().isGameOver()){
+            return;
         }
-    }
-
-    private void processOneTick() {
         for (TickAware entity : new ArrayList<>(getToAdd())) {
             entity.enter();
         }
@@ -47,9 +42,19 @@ public class GameEngine {
         getToRemove().clear();
 
         List<TickAware> snapshot = new ArrayList<>(getEntities());
+
+        // Updating all entities
         for (TickAware entity : snapshot) {
-            entity.update();
+            entity.update(dt);
         }
+
+        // Rendering all entities
+        PvZ2.batch.begin();
+        for (TickAware entity: snapshot){
+            entity.draw();
+        }
+        PvZ2.batch.end();
+
         firstTickDone = true;
     }
 

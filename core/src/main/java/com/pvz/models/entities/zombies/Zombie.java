@@ -134,7 +134,7 @@ public class Zombie implements TickAware {
     }
 
     @Override
-    public void update() {
+    public void update(float dt) {
         if (dead) return;
         tickStatusEffects();
         if (isParalysed()) return;

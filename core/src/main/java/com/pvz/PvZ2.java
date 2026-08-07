@@ -4,6 +4,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -12,12 +14,17 @@ import com.pvz.models.user.User;
 import com.pvz.utils.SaveManager;
 import com.pvz.view.MainMenu;
 import com.pvz.view.RegisterMenu;
+import pvz.libpvz.pam.PamPlayer;
+import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
 import java.util.HashMap;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class PvZ2 extends Game {
+    public static TextureBank textureBank;
+    public static PamPlayer pamPlayer;
+    public static SpriteBatch batch;
     AssetManager globalAssetManager;
     public PvZ2(){
         globalAssetManager=new AssetManager();
@@ -44,11 +51,20 @@ public class PvZ2 extends Game {
     @Override
     public void create() {
         globalAssetManager.finishLoading();
+        textureBank=new TextureBank("768",Gdx.files.internal("./assets/pvz-assets/"));
+        pamPlayer=new PamPlayer(textureBank,Gdx.files.internal("./assets/pvz-assets/"));
+        batch=new SpriteBatch();
         if (AppContext.getInstance().getCurrentUser()==null){
             setScreen(new RegisterMenu(this));
         } else {
             setScreen(new MainMenu(this));
         }
+    }
+
+    @Override
+    public void render() {
+        super.render();
+        textureBank.update();
     }
 
     public AssetManager getGlobalAssetManager(){

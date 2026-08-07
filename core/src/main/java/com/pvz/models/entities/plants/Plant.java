@@ -111,7 +111,7 @@ public class Plant implements TickAware {
     }
 
     @Override
-    public void update() {
+    public void update(float dt) {
         if (dead || isFrozen)
             return;
         tickGrowth();

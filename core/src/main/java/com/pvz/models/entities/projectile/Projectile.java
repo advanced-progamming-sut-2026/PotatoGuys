@@ -91,7 +91,7 @@ public class Projectile implements TickAware {
     public void enter() {}
 
     @Override
-    public void update() {
+    public void update(float dt) {
         if (isDead) return;
 
         // ۱. جابه‌جایی دوبعدی پرتابه در محیط بازی

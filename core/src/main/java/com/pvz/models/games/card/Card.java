@@ -73,7 +73,7 @@ public abstract class Card implements TickAware{
     }
 
     @Override
-    public void update() {
+    public void update(float dt) {
         decrementCooldown();
     }
 

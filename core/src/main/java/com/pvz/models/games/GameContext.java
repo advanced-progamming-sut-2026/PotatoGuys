@@ -290,7 +290,7 @@ public class GameContext implements TickAware {
 
 
     @Override
-    public void update() {
+    public void update(float dt) {
         applyFireAuras();
         for (ChapterEffect effect : activeEffects) {
             effect.onTick(this);

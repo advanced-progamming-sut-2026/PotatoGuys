@@ -195,6 +195,25 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
+
+        batch.begin();
+
+        float x = 0;
+        float y = 0;
+
+        x -= left.getRegionWidth();
+        batch.draw(left, x, y);
+        x = 0;
+
+        batch.draw(center, x, y);
+        x += center.getRegionWidth();
+
+        batch.draw(right, x, y);
+
+        batch.end();
+
         switch (currentState) {
             case PANNING_FORWARD:
                 stateTime += delta;
@@ -242,28 +261,9 @@ public class GameScreen extends ScreenAdapter {
             case PLAYING:
                 camera.position.set(startX, 720f / 2f, 0);
                 gameUiModal.updateHud();
-                GameEngine.getInstance().advanceTime(1);
+                GameEngine.getInstance().update(delta);
                 break;
         }
-
-        camera.update();
-        batch.setProjectionMatrix(camera.combined);
-
-        batch.begin();
-
-        float x = 0;
-        float y = 0;
-
-        x -= left.getRegionWidth();
-        batch.draw(left, x, y);
-        x = 0;
-
-        batch.draw(center, x, y);
-        x += center.getRegionWidth();
-
-        batch.draw(right, x, y);
-
-        batch.end();
 
         // Render tile highlight and placement when in PLAYING state and a plant card is selected
         if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null) {

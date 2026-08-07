@@ -22,7 +22,7 @@ public class SunManager implements TickAware {
     }
 
     @Override
-    public void update() {
+    public void update(float dt) {
         totalTicks++;
         ticksSinceLastDrop++;
 

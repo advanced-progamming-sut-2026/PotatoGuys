@@ -3,6 +3,7 @@ package com.pvz.models.entities.sun;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pvz.PvZ2;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.DamageKind;
@@ -26,6 +27,8 @@ public class Sun implements TickAware {
     private boolean fallen;
     private boolean collected;
 
+    private float stateTime;
+
     /** Backward-compatible constructor (plant-produced suns, no falling). */
     public Sun(SunType type, int col, int lane, int amount) {
         this(type, col, lane, amount, false, null);
@@ -40,13 +43,19 @@ public class Sun implements TickAware {
         this.ticksRemaining = Math.max(1, Math.round(DEFAULT_LIFESPAN_SECONDS * TICKS_PER_SECOND));
         this.fallingTicksRemaining = startFalling ? FALL_DURATION_TICKS : 0;
         this.fallen = !startFalling;
+        stateTime=0;
+    }
+
+    public void draw(){
+        PvZ2.pamPlayer.draw(PvZ2.batch,"768/INITIAL/EFFECTS/SUN/SUN.PAM","animation",stateTime,col,lane,true);
     }
 
     @Override
     public void enter() { }
 
     @Override
-    public void update() {
+    public void update(float dt) {
+        stateTime+=dt;
         if (collected) return;
 
         if (!fallen) {
