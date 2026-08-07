@@ -10,7 +10,7 @@
   "profile": {
     "gamePlayed": 0,
     "coins": 350,
-    "diamonds": 2,
+    "diamonds": 4,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -221,7 +221,7 @@
       {
         "x": 2,
         "y": 3,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -263,7 +263,7 @@
       {
         "x": 4,
         "y": 4,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -1192,7 +1192,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786138908034
+    "lastDailyReset": 1786141979621
   },
   "questLogRefreshed": false
 }

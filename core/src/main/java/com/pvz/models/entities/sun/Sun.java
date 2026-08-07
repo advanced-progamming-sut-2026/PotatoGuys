@@ -17,7 +17,7 @@ import com.pvz.view.GameScreen;
 public class Sun implements TickAware {
 
     private static final float DEFAULT_LIFESPAN_SECONDS = 8f;
-    private static final float DEFAULT_FALL_SPEED = 3f;
+    private static final float DEFAULT_FALL_SPEED = 50f;
 
     private final SunType type;
     private final int col;
@@ -49,7 +49,7 @@ public class Sun implements TickAware {
         this.stateTime = 0;
         this.fallSpeed=DEFAULT_FALL_SPEED;
         if (startFalling){
-            currentPos=new Vector2(GameController.colToWorldX(col),GameScreen.SCREEN_HEIGHT+50);
+            currentPos=new Vector2(GameController.colToWorldX(col),GameScreen.SCREEN_HEIGHT);
             targetPos=new Vector2(GameController.colToWorldX(col),GameController.laneToWorldY(lane));
         } else {
             currentPos=new Vector2(GameController.colToWorldX(col),GameController.laneToWorldY(lane));
@@ -71,11 +71,11 @@ public class Sun implements TickAware {
         if (collected) return;
 
         if (!fallen) {
-            currentPos.add(0,-fallSpeed);
+            currentPos.add(0,-fallSpeed*dt);
             if (currentPos.y<targetPos.y){
                 fallen=true;
                 if (context != null) {
-                    context.log("Sun reached the ground at position (" + col + ", " + lane + ")");
+                    context.log("Sun reached the ground at position (" + currentPos.x + ", " + currentPos.y + ")");
                 }
                 if (type == SunType.RADIOACTIVE) {
                     convertToNormal();
