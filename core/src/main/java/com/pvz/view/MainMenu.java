@@ -45,6 +45,7 @@ public class MainMenu extends ScreenAdapter {
         //background
         Texture bgTexture = game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
         Image bgImage = new Image(bgTexture);
+        bgImage.setFillParent(true);
         stage.addActor(bgImage);
 
         //stack
@@ -121,7 +122,7 @@ public class MainMenu extends ScreenAdapter {
                 game.setScreen(new ProfileMenu(game));
             }
         });
-        bottomRightWrapper.add(profileFace).size(64).padRight(15);
+        bottomRightWrapper.add(profileFace).size(80).padRight(15);
 
         ImageButton settingsBtn = new ImageButton(skin, "settings");
         settingsBtn.addListener(new ClickListener() {
@@ -131,7 +132,7 @@ public class MainMenu extends ScreenAdapter {
                 game.setScreen(new SettingsMenu(game));
             }
         });
-        bottomRightWrapper.add(settingsBtn).size(100);
+        bottomRightWrapper.add(settingsBtn).size(125);
 
         //news button wrapper (bottom-left corner)
         Table newsBtnWrapper = new Table();
@@ -158,7 +159,7 @@ public class MainMenu extends ScreenAdapter {
         badgeContainer.padTop(-12).padRight(-12);
         newsBtnStack.add(badgeContainer);
 
-        newsBtnWrapper.add(newsBtnStack).size(96);
+        newsBtnWrapper.add(newsBtnStack).size(120);
 
         newsModal.setUnreadBadge(unreadBadge);
 

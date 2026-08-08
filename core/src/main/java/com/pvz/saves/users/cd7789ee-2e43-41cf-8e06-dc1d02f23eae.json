@@ -1,17 +1,17 @@
 {
-  "id": "e0355803-1e58-4486-a65c-c5668fb0d288",
-  "username": "sednoob",
-  "passwordHash": "c731112cfdac04122988150d3e7d17da30173be84c3cd4c37a6961b0c4da6470",
-  "nickName": "sednoob",
-  "email": "sednoob@gmail.com",
+  "id": "cd7789ee-2e43-41cf-8e06-dc1d02f23eae",
+  "username": "mahdi23",
+  "passwordHash": "c3ef54ab870f466f6cd24c7044721f94acebf0586743fe043c7fa4b17086e84a",
+  "nickName": "rrz",
+  "email": "mahdi23@gmail.com",
   "gender": "MALE",
   "securityQuestion": "1",
-  "securityAnswer": "hamid",
-  "profilePicture": "textures/avatars/avatar_zoro.png",
+  "securityAnswer": "teh",
+  "profilePicture": "textures/avatars/avatar_nami.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 350,
-    "diamonds": 2,
+    "coins": 0,
+    "diamonds": 0,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -76,34 +76,13 @@
           "isBoosted": false
         }
       ],
-      "unlockedZombies": [
-        "BASIC",
-        "CONEHEAD",
-        "RA",
-        "EXPLORER"
-      ],
+      "unlockedZombies": [],
       "seedPackets": {}
     },
     "news": {
       "messages": [
         {
-          "message": "Welcome   to   Plants   vs   Zombies 2   sednoob ! ",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: BASIC!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: CONEHEAD!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: RA!",
-          "unread": false
-        },
-        {
-          "message": "New Zombie Encountered: EXPLORER!",
+          "message": "Welcome   to   Plants   vs   Zombies 2   rrz ! ",
           "unread": false
         }
       ]
@@ -136,8 +115,8 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": "IcebergLettuce",
-    "dailyOfferDate": "2026-08-08",
+    "dailyOfferPlantType": null,
+    "dailyOfferDate": null,
     "dailyOfferPurchased": false
   },
   "setting": {
@@ -186,7 +165,7 @@
       {
         "x": 1,
         "y": 2,
-        "locked": false,
+        "locked": true,
         "greenHousePlant": null
       },
       {
@@ -204,13 +183,13 @@
       {
         "x": 4,
         "y": 2,
-        "locked": false,
+        "locked": true,
         "greenHousePlant": null
       },
       {
         "x": 5,
         "y": 2,
-        "locked": false,
+        "locked": true,
         "greenHousePlant": null
       },
       {
@@ -228,7 +207,7 @@
       {
         "x": 3,
         "y": 3,
-        "locked": false,
+        "locked": true,
         "greenHousePlant": null
       },
       {
@@ -240,7 +219,7 @@
       {
         "x": 5,
         "y": 3,
-        "locked": false,
+        "locked": true,
         "greenHousePlant": null
       },
       {
@@ -1193,7 +1172,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786227383344
+    "lastDailyReset": 1786227889069
   },
   "questLogRefreshed": false
 }

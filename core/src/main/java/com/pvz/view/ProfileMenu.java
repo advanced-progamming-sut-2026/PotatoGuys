@@ -75,6 +75,7 @@ public class ProfileMenu extends ScreenAdapter {
 
         Texture bgTexture = game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
         Image bgImage = new Image(bgTexture);
+        bgImage.setFillParent(true);
         stage.addActor(bgImage);
 
         currentUser = AppContext.getInstance().getCurrentUser();
@@ -357,19 +358,23 @@ public class ProfileMenu extends ScreenAdapter {
         scrollPane.setScrollingDisabled(true, false);
         pickerContent.add(scrollPane).size(880, 560).padTop(20).row();
 
-        TextButton closeBtn = new TextButton("Close", skin, "purple");
-        closeBtn.getLabel().setFontScale(1.0f);
-        closeBtn.getLabel().setColor(Color.BLACK);
-        closeBtn.addListener(new ClickListener() {
+        // --- Close button overlay (top-right corner of the panel, like News) ----
+        ImageButton pickerCloseBtn = new ImageButton(skin, "generic_close");
+        pickerCloseBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 avatarPicker.setVisible(false);
             }
         });
-        pickerContent.add(closeBtn).size(200, 55).padTop(18);
-
-        avatarPicker.add(pickerContent).size(1000, 760);
+        Table exitBtnOverlay = new Table();
+        exitBtnOverlay.top().right();
+        exitBtnOverlay.add(pickerCloseBtn).size(48).pad(10);
+        Stack pickerStack = new Stack();
+        pickerStack.add(pickerContent);
+        pickerStack.add(exitBtnOverlay);
+        pickerStack.setSize(1000, 760);
+        avatarPicker.add(pickerStack).size(1000, 760);
         stage.addActor(avatarPicker);
     }
 

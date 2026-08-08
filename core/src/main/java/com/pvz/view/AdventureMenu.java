@@ -50,10 +50,10 @@ public class AdventureMenu extends ScreenAdapter {
         new Color(0.28f, 0.2f, 0.3f, 0.9f),   // dark
         new Color(0.2f, 0.55f, 0.55f, 0.9f)   // aqua
     };
-    private static final float CARD_WIDTH = 260f;
-    private static final float CARD_HEIGHT = 340f;
-    private static final float CARD_PAD = 20f;
-    private static final float CAROUSEL_VIEWPORT_WIDTH = 1150f;
+    private static final float CARD_WIDTH = 220f;
+    private static final float CARD_HEIGHT = 420f;
+    private static final float CARD_PAD = 135f;
+    private static final float CAROUSEL_VIEWPORT_WIDTH = 1550f;
 
     AdventureController controller;
     Stage stage;
@@ -98,7 +98,7 @@ public class AdventureMenu extends ScreenAdapter {
 
         Table topLeft = new Table();
         topLeft.add(MenuUiKit.backButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)), () -> game.setScreen(new GameModesMenu(game))))
-            .size(60, 56).padRight(24);
+            .size(75, 70).padRight(24);
         Label title = new Label("Choose a Chapter", skin, "big");
         topLeft.add(title);
 
@@ -133,7 +133,8 @@ public class AdventureMenu extends ScreenAdapter {
                 boolean locked = index == 0 ? false : controller.isSeasonLocked(CHAPTER_KEYS[index]);
                 return MenuUiKit.bigCard(skin, CHAPTER_ART[index], CHAPTER_TINTS[index], chapterName,
                     locked ? "Locked" : "Unlocked", locked,
-                    () -> game.setScreen(new ChapterMenu(game, chapterName)));
+                    () -> game.setScreen(new ChapterMenu(game, chapterName)),
+                    CARD_WIDTH, CARD_HEIGHT);
             });
         }
 

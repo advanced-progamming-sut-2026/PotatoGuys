@@ -44,6 +44,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
 
         Texture bgTexture = game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
         Image bgImage = new Image(bgTexture);
+        bgImage.setFillParent(true);
         stage.addActor(bgImage);
 
         mainTable = new Table();
@@ -86,7 +87,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
                 game.setScreen(new LoginMenu(game));
             }
         });
-        mainTable.add(backBtn).size(60, 56).left().row();
+        mainTable.add(backBtn).size(75, 70).left().row();
     }
 
     private void handleUsernameSubmit(String username, Label statusLabel) {
@@ -160,7 +161,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
                 game.setScreen(new LoginMenu(game));
             }
         });
-        mainTable.add(backBtn).size(60, 56).left().row();
+        mainTable.add(backBtn).size(75, 70).left().row();
     }
 
     private void showResetPasswordScreen() {
@@ -218,7 +219,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
                 game.setScreen(new LoginMenu(game));
             }
         });
-        mainTable.add(backBtn).size(60, 56).left().row();
+        mainTable.add(backBtn).size(75, 70).left().row();
     }
 
     @Override

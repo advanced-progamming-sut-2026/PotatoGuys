@@ -45,6 +45,7 @@ public class LoginMenu extends ScreenAdapter {
 
         Texture bgTexture = game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
         Image bgImage = new Image(bgTexture);
+        bgImage.setFillParent(true);
         stage.addActor(bgImage);
 
         Table table = new Table();

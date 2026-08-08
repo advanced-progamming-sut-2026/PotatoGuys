@@ -21,7 +21,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import pvz.skin.PvzSkin;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -90,7 +92,7 @@ public final class MenuUiKit {
         Label label = new Label(value, skin);
         label.setFontScale(1.2f);
         Table textTable = new Table();
-        textTable.add(label).left().expand().padLeft(68);
+        textTable.add(label).left().expand().padLeft(78);
         stack.add(textTable);
 
         Table outer = new Table();
@@ -120,18 +122,114 @@ public final class MenuUiKit {
 
     // ---------------------------------------------------------------- big tappable cards
 
+    private static final Map<String, Texture> ROUNDED_CACHE = new HashMap<>();
+
+    private static int cornerRadius(float cardW, float cardH) {
+        return Math.min(Math.min((int) cardW, (int) cardH) / 8, 24);
+    }
+
     /**
-     * A big rounded card with background art, a soft bottom shadow band, a title and an
+     * Rounded-corner card texture: art stretched to the card size with the bottom shadow
+     * band baked in. Loaded via {@link Pixmap} directly so the corners can be masked —
+     * {@code new Texture(FileHandle)} disposes its source pixmap before we could touch it.
+     */
+    private static Texture roundedCardTexture(String artPath, float cardW, float cardH) {
+        int w = Math.max(1, (int) cardW);
+        int h = Math.max(1, (int) cardH);
+        String key = artPath + "@" + w + "x" + h;
+        Texture cached = ROUNDED_CACHE.get(key);
+        if (cached != null) return cached;
+
+        Pixmap src = new Pixmap(Gdx.files.internal(artPath));
+        Pixmap out = new Pixmap(w, h, Pixmap.Format.RGBA8888);
+        scaleDraw(src, out);
+        src.dispose();
+
+        bakeShadow(out, w, h);
+        roundCorners(out, cornerRadius(cardW, cardH));
+
+        Texture texture = new Texture(out);
+        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        out.dispose();
+        ROUNDED_CACHE.put(key, texture);
+        return texture;
+    }
+
+    /** Scales {@code src} into {@code dst} (nearest-neighbor) — avoids Pixmap.drawPixmap scaling API drift. */
+    private static void scaleDraw(Pixmap src, Pixmap dst) {
+        int sw = src.getWidth(), sh = src.getHeight();
+        int dw = dst.getWidth(), dh = dst.getHeight();
+        dst.setBlending(Pixmap.Blending.None);
+        for (int y = 0; y < dh; y++) {
+            int sy = Math.min(sh - 1, (y * sh) / dh);
+            for (int x = 0; x < dw; x++) {
+                int sx = Math.min(sw - 1, (x * sw) / dw);
+                dst.drawPixel(x, y, src.getPixel(sx, sy));
+            }
+        }
+    }
+
+    /** Rounded-corner solid, used for the missing-art tinted panel and the locked overlay. */
+    private static Texture roundedSolidTexture(Color color, float cardW, float cardH) {
+        int w = Math.max(1, (int) cardW);
+        int h = Math.max(1, (int) cardH);
+        String key = "solid@" + color.toIntBits() + "@" + w + "x" + h;
+        Texture cached = ROUNDED_CACHE.get(key);
+        if (cached != null) return cached;
+
+        Pixmap out = new Pixmap(w, h, Pixmap.Format.RGBA8888);
+        out.setColor(color);
+        out.fill();
+        bakeShadow(out, w, h);
+        roundCorners(out, cornerRadius(cardW, cardH));
+
+        Texture texture = new Texture(out);
+        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        out.dispose();
+        ROUNDED_CACHE.put(key, texture);
+        return texture;
+    }
+
+    /** Soft dark band across the bottom so the title/caption stays readable. */
+    private static void bakeShadow(Pixmap pix, int w, int h) {
+        int shadowH = Math.min(64, h / 3);
+        pix.setColor(0f, 0f, 0f, 0.55f);
+        pix.setBlending(Pixmap.Blending.SourceOver);
+        pix.fillRectangle(0, h - shadowH, w, shadowH);
+    }
+
+    /** Sets the alpha of pixels outside the rounded-rect corners to zero. */
+    private static void roundCorners(Pixmap pix, int radius) {
+        int w = pix.getWidth(), h = pix.getHeight();
+        int r = Math.min(radius, Math.min(w, h) / 2);
+        if (r <= 0) return;
+        pix.setBlending(Pixmap.Blending.None);
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int dx = x < r ? r - x : (x >= w - r ? x - (w - 1 - r) : 0);
+                int dy = y < r ? r - y : (y >= h - r ? y - (h - 1 - r) : 0);
+                if (dx != 0 && dy != 0 && dx * dx + dy * dy > r * r) {
+                    int px = pix.getPixel(x, y);
+                    pix.setColor(((px >> 24) & 0xFF) / 255f, ((px >> 16) & 0xFF) / 255f,
+                        ((px >> 8) & 0xFF) / 255f, 0f);
+                    pix.drawPixel(x, y);
+                }
+            }
+        }
+    }
+
+    /**
+     * A big card with rounded-corner background art, a soft bottom shadow band, a title and an
      * optional status caption (e.g. "Locked" / "Unlocked"). Used for the mode/chapter grids.
      */
     public static Actor bigCard(Skin skin, String artPath, Color accent, String title,
-                                String caption, boolean locked, Runnable onClick) {
+                                String caption, boolean locked, Runnable onClick,
+                                float cardW, float cardH) {
         Stack stack = new Stack();
 
         boolean hasArt = artPath != null && !artPath.isEmpty() && Gdx.files.internal(artPath).exists();
-        Image art = new Image(loadTextureSafe(artPath));
         if (hasArt) {
-            stack.add(art);
+            stack.add(new Image(roundedCardTexture(artPath, cardW, cardH)));
         } else {
             // no art dropped in yet -> show a tinted panel instead of an empty card.
             // Logged so you can see in the console exactly which path it looked for.
@@ -139,15 +237,8 @@ public final class MenuUiKit {
                 Gdx.app.log("MenuUiKit", "card art not found, looked at internal path: \"" + artPath
                     + "\" (resolved to " + Gdx.files.internal(artPath).file().getAbsolutePath() + ")");
             }
-            stack.add(new Image(solidDrawable(accent)));
+            stack.add(new Image(roundedSolidTexture(accent, cardW, cardH)));
         }
-
-        // bottom shadow band so the title text stays readable over any art
-        Table shadowRow = new Table();
-        shadowRow.bottom();
-        Image shadow = new Image(solidDrawable(new Color(0f, 0f, 0f, 0.55f)));
-        shadowRow.add(shadow).growX().height(64);
-        stack.add(shadowRow);
 
         Table textTable = new Table();
         textTable.bottom();
@@ -163,7 +254,7 @@ public final class MenuUiKit {
         stack.add(textTable);
 
         if (locked) {
-            stack.add(new Image(solidDrawable(new Color(0f, 0f, 0f, 0.45f))));
+            stack.add(new Image(roundedSolidTexture(new Color(0f, 0f, 0f, 0.45f), cardW, cardH)));
         }
 
         stack.addListener(new ClickListener() {

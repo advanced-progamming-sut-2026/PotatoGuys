@@ -128,7 +128,7 @@ public class ChapterMenu extends ScreenAdapter {
                 game.setScreen(new GameModesMenu(game));
             }
         });
-        backBtnWrapper.add(backBtn).size(60, 56);
+        backBtnWrapper.add(backBtn).size(75, 70);
     }
 
     @Override

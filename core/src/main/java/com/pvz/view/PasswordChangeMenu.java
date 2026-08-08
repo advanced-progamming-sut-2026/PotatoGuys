@@ -48,6 +48,7 @@ public class PasswordChangeMenu extends ScreenAdapter {
 
         Texture bgTexture = game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
         Image bgImage = new Image(bgTexture);
+        bgImage.setFillParent(true);
         stage.addActor(bgImage);
 
         currentUser = AppContext.getInstance().getCurrentUser();
@@ -107,7 +108,7 @@ public class PasswordChangeMenu extends ScreenAdapter {
                 game.setScreen(new ProfileMenu(game));
             }
         });
-        mainPanel.add(backBtn).size(60, 56).left().padTop(10).row();
+        mainPanel.add(backBtn).size(75, 70).left().padTop(10).row();
     }
 
     private void handleChange() {

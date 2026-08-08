@@ -125,7 +125,7 @@ public class TravelLogMenu extends ScreenAdapter {
         titleLabel.setFontScale(1.4f);
         titleLabel.setColor(Color.BLACK);
 
-        top.add(backBtn).size(60, 56).left();
+        top.add(backBtn).size(75, 70).left();
         top.add(titleLabel).expandX().center();
         top.add(buildWallet()).right();
         return top;
