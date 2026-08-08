@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -23,6 +24,7 @@ import com.pvz.models.user.User;
 import com.pvz.utils.SaveManager;
 import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
+import com.pvz.view.ui.MenuUiKit;
 
 import java.util.HashMap;
 
@@ -102,9 +104,7 @@ public class ProfileEditMenu extends ScreenAdapter {
         });
         mainPanel.add(saveBtn).width(250).height(60).row();
 
-        TextButton backBtn = new TextButton("Back", skin, "purple");
-        backBtn.getLabel().setFontScale(1.3f);
-        backBtn.getLabel().setColor(Color.BLACK);
+        ImageButton backBtn = new ImageButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -112,7 +112,7 @@ public class ProfileEditMenu extends ScreenAdapter {
                 game.setScreen(new ProfileMenu(game));
             }
         });
-        mainPanel.add(backBtn).width(250).height(60).padTop(10).row();
+        mainPanel.add(backBtn).size(60, 56).left().padTop(10).row();
     }
 
     private void handleSave() {

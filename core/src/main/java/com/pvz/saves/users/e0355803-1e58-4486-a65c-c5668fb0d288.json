@@ -7,6 +7,7 @@
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "hamid",
+  "profilePicture": "textures/avatars/avatar_chopper.png",
   "profile": {
     "gamePlayed": 0,
     "coins": 350,
@@ -135,8 +136,8 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": null,
-    "dailyOfferDate": null,
+    "dailyOfferPlantType": "IcebergLettuce",
+    "dailyOfferDate": "2026-08-08",
     "dailyOfferPurchased": false
   },
   "setting": {
@@ -1192,7 +1193,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786138908034
+    "lastDailyReset": 1786199904677
   },
   "questLogRefreshed": false
 }

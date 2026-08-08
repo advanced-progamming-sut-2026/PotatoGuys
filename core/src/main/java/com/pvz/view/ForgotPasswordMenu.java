@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -22,6 +23,7 @@ import com.pvz.models.user.User;
 import com.pvz.utils.PasswordUtils;
 import com.pvz.utils.SaveManager;
 import pvz.skin.PvzSkin;
+import com.pvz.view.ui.MenuUiKit;
 
 public class ForgotPasswordMenu extends ScreenAdapter {
     private final PvZ2 game;
@@ -76,7 +78,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
         });
         mainTable.add(nextBtn).width(200).height(60).row();
 
-        TextButton backBtn = new TextButton("Back", skin, "purple");
+        ImageButton backBtn = new ImageButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -84,7 +86,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
                 game.setScreen(new LoginMenu(game));
             }
         });
-        mainTable.add(backBtn).width(200).height(60).row();
+        mainTable.add(backBtn).size(60, 56).left().row();
     }
 
     private void handleUsernameSubmit(String username, Label statusLabel) {
@@ -150,7 +152,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
         });
         mainTable.add(verifyBtn).width(200).height(60).row();
 
-        TextButton backBtn = new TextButton("Back", skin, "purple");
+        ImageButton backBtn = new ImageButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -158,7 +160,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
                 game.setScreen(new LoginMenu(game));
             }
         });
-        mainTable.add(backBtn).width(200).height(60).row();
+        mainTable.add(backBtn).size(60, 56).left().row();
     }
 
     private void showResetPasswordScreen() {
@@ -208,7 +210,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
         });
         mainTable.add(resetBtn).width(200).height(60).row();
 
-        TextButton backBtn = new TextButton("Back", skin, "purple");
+        ImageButton backBtn = new ImageButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -216,7 +218,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
                 game.setScreen(new LoginMenu(game));
             }
         });
-        mainTable.add(backBtn).width(200).height(60).row();
+        mainTable.add(backBtn).size(60, 56).left().row();
     }
 
     @Override
