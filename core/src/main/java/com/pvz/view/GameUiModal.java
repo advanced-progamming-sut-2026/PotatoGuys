@@ -2,6 +2,7 @@ package com.pvz.view;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -11,6 +12,7 @@ import com.pvz.models.AppContext;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.Card;
 import com.pvz.models.games.card.PlantCard;
+import com.pvz.models.user.User;
 import pvz.skin.PvzSkin;
 
 import java.util.HashMap;
@@ -20,6 +22,8 @@ public class GameUiModal extends Table {
 
     private final Label sunLabel;
     private final Label plantFoodLabel;
+    private final Label coinLabel;
+    private final Label gemLabel;
     private final Table cardsBarTable;
     private PlantCard selectedCard = null;
     private final Map<PlantCard, TextButton> cardButtonMap = new HashMap<>();
@@ -50,7 +54,31 @@ public class GameUiModal extends Table {
         cardsBarTable.defaults().size(80, 100).pad(5);
         topBar.add(cardsBarTable);
 
-        add(topBar).top().left().expandX();
+        // Wallet display (coins & gems) pinned to the top-right corner
+        Table walletTable = new Table();
+        walletTable.top().right();
+
+        Table coinCell = new Table();
+        Image coinIcon = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_coin"));
+        coinLabel = new Label("0", PvzSkin.get(), "medium_outline");
+        coinLabel.setColor(Color.YELLOW);
+        coinLabel.setFontScale(1.4f);
+        coinCell.add(coinIcon).size(64, 64);
+        coinCell.add(coinLabel).padLeft(8);
+        walletTable.add(coinCell).padRight(20);
+
+        Table gemCell = new Table();
+        Image gemIcon = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_gem"));
+        gemLabel = new Label("0", PvzSkin.get(), "medium_outline");
+        gemLabel.setColor(Color.CYAN);
+        gemLabel.setFontScale(1.4f);
+        gemCell.add(gemIcon).size(64, 64);
+        gemCell.add(gemLabel).padLeft(8);
+        walletTable.add(gemCell);
+
+        add(topBar).top().left().expandX().fillX();
+        add(walletTable).top().right().padTop(15).padRight(15);
+        row();
     }
 
     public PlantCard getSelectedCard() {
@@ -101,6 +129,12 @@ public class GameUiModal extends Table {
 
         sunLabel.setText("Sun: " + context.getCurrentSun());
         plantFoodLabel.setText("Plant Food: " + context.getPlantFoodCount());
+
+        User user = AppContext.getInstance().getCurrentUser();
+        if (user != null && user.getProfile() != null) {
+            coinLabel.setText(String.valueOf(user.getProfile().getCoins()));
+            gemLabel.setText(String.valueOf(user.getProfile().getDiamonds()));
+        }
     }
 
     private void updateCardStyles() {

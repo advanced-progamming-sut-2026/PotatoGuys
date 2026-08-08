@@ -14,6 +14,7 @@ import com.pvz.PvZ2;
 import com.pvz.controller.ChapterController;
 import com.pvz.enums.GameAsset;
 import pvz.skin.PvzSkin;
+import com.pvz.view.ui.MenuUiKit;
 
 public class ChapterMenu extends ScreenAdapter {
     ChapterController controller;
@@ -26,7 +27,7 @@ public class ChapterMenu extends ScreenAdapter {
     TextButton level2Btn;
     TextButton level3Btn;
     TextButton level4Btn;
-    TextButton backBtn;
+    ImageButton backBtn;
     public ChapterMenu(PvZ2 game, String seasonName){
         this.game=game;
         this.chapterName=seasonName;
@@ -115,11 +116,11 @@ public class ChapterMenu extends ScreenAdapter {
 
         //back button & wrapper
         Table backBtnWrapper=new Table();
-        backBtnWrapper.bottom().left();
+        backBtnWrapper.top().left();
         backBtnWrapper.defaults().pad(50);
         stack.add(backBtnWrapper);
 
-        backBtn=new TextButton("Back",PvzSkin.get(),"green_small");
+        backBtn=new ImageButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
         backBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -127,7 +128,7 @@ public class ChapterMenu extends ScreenAdapter {
                 game.setScreen(new GameModesMenu(game));
             }
         });
-        backBtnWrapper.add(backBtn).width(100).height(50);
+        backBtnWrapper.add(backBtn).size(60, 56);
     }
 
     @Override

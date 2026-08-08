@@ -10,8 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -40,12 +42,31 @@ public class SettingsMenu extends ScreenAdapter {
         Image bgImage = new Image(bgTexture);
         stage.addActor(bgImage);
 
+        Stack frameStack = new Stack();
         BorderedTable mainPanel = new BorderedTable();
         mainPanel.setSize(550, 650);
         mainPanel.setPosition((1920 - 550) / 2, (1080 - 650) / 2);
         mainPanel.defaults().space(15);
         mainPanel.center();
-        stage.addActor(mainPanel);
+        frameStack.add(mainPanel);
+
+        // --- Close button overlay (top-right corner of the panel, like News) ----
+        ImageButton closeBtn = new ImageButton(skin, "generic_close");
+        closeBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new MainMenu(game));
+            }
+        });
+        Table exitBtnOverlay = new Table();
+        exitBtnOverlay.top().right();
+        exitBtnOverlay.add(closeBtn).size(48).pad(10);
+        frameStack.add(exitBtnOverlay);
+
+        frameStack.setSize(550, 650);
+        frameStack.setPosition((1920 - 550) / 2, (1080 - 650) / 2);
+        stage.addActor(frameStack);
 
         Label titleLabel = new Label("Settings", skin, "big");
         titleLabel.setFontScale(1.5f);
@@ -121,18 +142,6 @@ public class SettingsMenu extends ScreenAdapter {
         debugModeCheckBox.getLabel().setFontScale(1.2f);
         debugModeCheckBox.getLabel().setColor(Color.BLACK);
         mainPanel.add(debugModeCheckBox).left().row();
-
-        TextButton backBtn = new TextButton("Back", skin, "purple");
-        backBtn.getLabel().setFontScale(1.3f);
-        backBtn.getLabel().setColor(Color.BLACK);
-        backBtn.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                game.setScreen(new MainMenu(game));
-            }
-        });
-        mainPanel.add(backBtn).width(250).height(70).padTop(30).row();
     }
 
     @Override

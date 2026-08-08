@@ -7,10 +7,11 @@
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "hamid",
+  "profilePicture": "textures/avatars/avatar_chopper.png",
   "profile": {
     "gamePlayed": 0,
     "coins": 350,
-    "diamonds": 4,
+    "diamonds": 2,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -135,8 +136,8 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": null,
-    "dailyOfferDate": null,
+    "dailyOfferPlantType": "IcebergLettuce",
+    "dailyOfferDate": "2026-08-08",
     "dailyOfferPurchased": false
   },
   "setting": {
@@ -221,7 +222,7 @@
       {
         "x": 2,
         "y": 3,
-        "locked": false,
+        "locked": true,
         "greenHousePlant": null
       },
       {
@@ -263,7 +264,7 @@
       {
         "x": 4,
         "y": 4,
-        "locked": false,
+        "locked": true,
         "greenHousePlant": null
       },
       {
@@ -1192,7 +1193,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786141979621
+    "lastDailyReset": 1786199904677
   },
   "questLogRefreshed": false
 }
