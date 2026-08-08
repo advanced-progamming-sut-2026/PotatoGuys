@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.pvz.models.AppContext;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.plants.Plant;
@@ -29,6 +30,15 @@ import com.pvz.models.quests.QuestEvaluator;
 import com.pvz.models.user.User;
 
 public class GameController {
+    SpriteBatch batch;
+
+    public GameController(){
+        this.batch=new SpriteBatch();
+    }
+
+    public void update(float dt){
+
+    }
     // This method returns the world coordinates of the middle of column
     public static float colToWorldX(int col){
         return (GameMap.START_X+col*GameMap.TILE_WIDTH)-GameMap.TILE_WIDTH/2;

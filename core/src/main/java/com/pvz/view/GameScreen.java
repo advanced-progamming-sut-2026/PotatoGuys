@@ -19,6 +19,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.pvz.PvZ2;
+import com.pvz.controller.game.GameController;
 import com.pvz.enums.GameAsset;
 import com.pvz.models.AppContext;
 import com.pvz.models.engine.GameEngine;
@@ -41,6 +43,8 @@ import java.util.ArrayList;
 public class GameScreen extends ScreenAdapter {
     public static final int SCREEN_HEIGHT=720;
     public static final int SCREEN_WIDTH=1280;
+
+    GameController controller;
 
     private final AssetManager assetManager;
     private final SpriteBatch batch;
@@ -68,6 +72,24 @@ public class GameScreen extends ScreenAdapter {
     // این رو به فیلدهای کلاس اضافه کن
     private final Vector3 touchPos = new Vector3();
 
+    private boolean checkSunClick(float worldX, float worldY) {
+        context = AppContext.getInstance().getGameContext();
+        if (context != null) {
+            for (Sun sun : new ArrayList<>(context.getSuns())) {
+                if (sun.isDone()) continue;
+                float sunX = sun.getX();
+                float sunY = sun.getY();
+                float dist = (float) Math.hypot(worldX - sunX, worldY - sunY);
+                if (dist < 50f) {
+                    sun.collect(context);
+                    Gdx.app.log("GameScreen", "Sun collected! Amount: " + sun.getAmount());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private enum State {
         PANNING_FORWARD,
         PLANT_SELECT,
@@ -85,15 +107,11 @@ public class GameScreen extends ScreenAdapter {
     private final String seasonName;
     private final int levelNumber;
 
-    public GameScreen() {
-        this("Ancient Egypt", 1);
-    }
-
     public GameScreen(String seasonName, int levelNumber) {
         this.seasonName = seasonName;
         this.levelNumber = levelNumber;
 
-        batch = new SpriteBatch();
+        batch = PvZ2.batch;
         shapeRenderer = new ShapeRenderer();
 
         assetManager = new AssetManager();
@@ -136,15 +154,10 @@ public class GameScreen extends ScreenAdapter {
                 if (currentState == State.PLAYING) {
                     context = AppContext.getInstance().getGameContext();
                     if (context != null) {
-                        for (Sun sun : new ArrayList<>(context.getSuns())) {
-                            float sunScreenX = 324f + sun.getCol() * 80f + 40f;
-                            float sunScreenY = 536f + sun.getLane() * 100f + 50f;
-                            float dist = (float) Math.hypot(screenX - sunScreenX, screenY - sunScreenY);
-                            if (dist < 60f) {
-                                sun.collect(context);
-                                Gdx.app.log("GameScreen", "Sun collected! Amount: " + sun.getAmount());
-                                return true;
-                            }
+                        touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                        viewport.unproject(touchPos);
+                        if (checkSunClick(touchPos.x, touchPos.y)) {
+                            return true;
                         }
                     }
                 }
@@ -259,6 +272,7 @@ public class GameScreen extends ScreenAdapter {
 
         batch.draw(right, x, y);
 
+
         batch.end();
 
         switch (currentState) {
@@ -312,6 +326,17 @@ public class GameScreen extends ScreenAdapter {
                 break;
         }
 
+        // Check sun clicks in PLAYING state on left click
+        if (currentState == State.PLAYING && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            viewport.unproject(touchPos);
+            if (checkSunClick(touchPos.x, touchPos.y)) {
+                if (gameUiModal != null) {
+                    gameUiModal.setSelectedCard(null);
+                }
+            }
+        }
+
         // Render tile highlight when in PLAYING state and a plant card is selected
         if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null) {
 
@@ -354,8 +379,13 @@ public class GameScreen extends ScreenAdapter {
         }
 
         //debug
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setAutoShapeType(true);
+        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.line(0,-3000,0,3000);
+        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.line(-3000,0,3000,0);
         if (context!=null) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(Color.RED);
             for (int i = 0; i < context.getMap().getLanes(); i++) {
                 shapeRenderer.line(0, GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT, SCREEN_WIDTH, GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT);
@@ -363,8 +393,12 @@ public class GameScreen extends ScreenAdapter {
             for (int i = 0; i <context.getMap().getColumns(); i++){
                 shapeRenderer.line(GameMap.START_X+i*GameMap.TILE_WIDTH,0,GameMap.START_X+i*GameMap.TILE_WIDTH,SCREEN_HEIGHT);
             }
-            shapeRenderer.end();
+            /*shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+            for (Sun sun: context.getSuns()){
+                shapeRenderer.circle(sun.getX(),sun.getY(),50);
+            }*/
         }
+        shapeRenderer.end();
         stage.act(delta);
         stage.draw();
     }
