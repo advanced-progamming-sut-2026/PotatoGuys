@@ -4,36 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="added profile menu">
-      <change afterPath="$PROJECT_DIR$/assets/textures/avatars/avatar_brook.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/textures/avatars/avatar_chopper.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/textures/avatars/avatar_franky.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/textures/avatars/avatar_jinbe.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/textures/avatars/avatar_luffy.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/textures/avatars/avatar_nami.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/textures/avatars/avatar_robin.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/textures/avatars/avatar_sanji.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/textures/avatars/avatar_usopp.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/textures/avatars/avatar_zoro.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/PvZ2.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/PvZ2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/QuestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/QuestController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/user/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/e0355803-1e58-4486-a65c-c5668fb0d288.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/e0355803-1e58-4486-a65c-c5668fb0d288.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/AdventureMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/AdventureMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ChapterMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ChapterMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ForgotPasswordMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ForgotPasswordMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GameModesMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GameModesMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GameUiModal.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GameUiModal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/MainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/MainMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/NewsModal.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/NewsModal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PasswordChangeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PasswordChangeMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ProfileEditMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ProfileEditMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ProfileMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ProfileMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/SettingsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/SettingsMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lwjgl3/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/lwjgl3/build.gradle" afterDir="false" />
-    </list>
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="updated chapter selection menu and game mode menu appearance" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -296,7 +267,31 @@
       <option name="project" value="LOCAL" />
       <updated>1785856363023</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="added travel log menu">
+      <option name="closed" value="true" />
+      <created>1786200508463</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1786200508463</updated>
+    </task>
+    <task id="LOCAL-00004" summary="setting and news and profile menu updated">
+      <option name="closed" value="true" />
+      <created>1786200570399</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1786200570399</updated>
+    </task>
+    <task id="LOCAL-00005" summary="updated chapter selection menu and game mode menu appearance">
+      <option name="closed" value="true" />
+      <created>1786200686143</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1786200686143</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -305,6 +300,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added Login and register and forgot password menu to the game" />
     <MESSAGE value="added settings menu and some details for it" />
-    <option name="LAST_COMMIT_MESSAGE" value="added settings menu and some details for it" />
+    <MESSAGE value="added travel log menu" />
+    <MESSAGE value="setting and news and profile menu updated" />
+    <MESSAGE value="updated chapter selection menu and game mode menu appearance" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated chapter selection menu and game mode menu appearance" />
   </component>
 </project>

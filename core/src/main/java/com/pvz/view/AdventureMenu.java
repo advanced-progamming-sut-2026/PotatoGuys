@@ -50,7 +50,7 @@ public class AdventureMenu extends ScreenAdapter {
         new Color(0.28f, 0.2f, 0.3f, 0.9f),   // dark
         new Color(0.2f, 0.55f, 0.55f, 0.9f)   // aqua
     };
-    private static final float CARD_WIDTH = 320f;
+    private static final float CARD_WIDTH = 260f;
     private static final float CARD_HEIGHT = 340f;
     private static final float CARD_PAD = 20f;
     private static final float CAROUSEL_VIEWPORT_WIDTH = 1150f;
