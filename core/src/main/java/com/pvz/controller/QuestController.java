@@ -1,194 +1,71 @@
 package com.pvz.controller;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Matcher;
 
-import com.pvz.controller.game.GameController;
 import com.pvz.models.AppContext;
-import com.pvz.models.games.GameContext;
-import com.pvz.models.games.levels.Level;
-import com.pvz.models.games.levels.LevelLoader;
 import com.pvz.models.quests.Quest;
 import com.pvz.models.quests.QuestCategory;
 import com.pvz.models.quests.QuestLog;
 import com.pvz.models.user.User;
 
+/**
+ * Controller for the Travel Log (quest) menu.
+ * Reads/writes quest progress through the current user's QuestLog and
+ * grants rewards when a completed quest is claimed.
+ */
 public class QuestController {
-/*
 
     private User getCurrentUser() {
         return AppContext.getInstance().getCurrentUser();
     }
 
-    public Result showPage(Matcher matcher) {
+    /** Active quests for a single category (Daily/Main/Epic), sorted by priority. */
+    public List<Quest> getQuests(QuestCategory category) {
         User user = getCurrentUser();
-        if (user == null)
-            return new Result("No user logged in.");
-
-        String pageName = matcher.group(1).toLowerCase();
-
-        if (pageName.equals("daily") || pageName.equals("main") || pageName.equals("epic")) {
-            return showQuestsByCategory(user, pageName);
-        } else if (pageName.equals("minigames")) {
-            return showMiniGames(matcher);
-        } else {
-            return new Result("Invalid page. Available pages: daily, main, epic.");
-        }
-
+        if (user == null) return new ArrayList<>();
+        return user.getQuestLog().getDisplayableQuests(category);
     }
 
-    public Result showMiniGames(Matcher matcher) {
-        return new Result(
-                "Mini games:\n1. Vasebreaker\n2. Wallnut Bowling\n3. I, Zombie\n4. " +
-                 "Beghouled\n5. Zombotany\nUsing 'mini game -t <miniGameNumber> -l <level>' to start a mini game.");
-    }
-
-    private Result showQuestsByCategory(User user, String pageName) {
-        QuestCategory category;
-        try {
-            category = QuestCategory.valueOf(pageName.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return new Result("Invalid page. Available pages: daily, main, epic.");
-        }
-
-        QuestLog log = user.getQuestLog();
-        List<Quest> quests = log.getDisplayableQuests(category);
-
-        if (quests.isEmpty()) {
-            return new Result("No active quests in " + pageName + " category.");
-        }
-
-        StringBuilder sb = new StringBuilder("=== Travel Log: " + category.name() + " ===");
-        for (Quest q : quests) {
-            sb.append("\n\n[");
-            sb.append(q.getPriority()).append("] ");
-            sb.append(q.getTitle());
-            sb.append("\n  ");
-            sb.append(q.getDescription());
-            sb.append("\n  Progress: ").append(q.getProgress().toString());
-            sb.append(" | Status: ").append(q.getStatus());
-            sb.append("\n  Reward: ").append(q.getRewardDescription());
-            if (q.isCompleted() && !q.isClaimed()) {
-                sb.append("\n  >> Reward not granted yet. Use 'claim quest ")
-                        .append(q.getId()).append("' to claim it manually.");
-            }
-        }
-        return new Result(sb.toString());
-    }
-
-    public Result showAllPages(Matcher matcher) {
+    /** All active quests across every category, sorted by priority. */
+    public List<Quest> getAllQuests() {
         User user = getCurrentUser();
-        if (user == null)
-            return new Result("No user logged in.");
-
+        if (user == null) return new ArrayList<>();
         QuestLog log = user.getQuestLog();
-        StringBuilder sb = new StringBuilder("=== Travel Log Summary ===");
-
-        for (QuestCategory cat : QuestCategory.values()) {
-            List<Quest> quests = log.getDisplayableQuests(cat);
-            sb.append("\n\n--- ").append(cat.name()).append(" (").append(quests.size()).append(" quests) ---");
-            for (Quest q : quests) {
-                sb.append("\n [").append(q.getPriority()).append("] ")
-                        .append(q.getTitle()).append(" - ").append(q.getStatus());
-            }
+        List<Quest> all = new ArrayList<>();
+        for (QuestCategory category : QuestCategory.values()) {
+            all.addAll(log.getDisplayableQuests(category));
         }
-        return new Result(sb.toString());
+        all.sort(Comparator.comparing(Quest::getPriority).reversed());
+        return all;
     }
 
-    public Result showQuest(Matcher matcher) {
+    public int getCoins() {
         User user = getCurrentUser();
-        if (user == null)
-            return new Result("No user logged in.");
-
-        String questId = matcher.group(1);
-        QuestLog log = user.getQuestLog();
-        Quest quest = log.findById(questId);
-
-        if (quest == null) {
-            return new Result("Quest not found: " + questId);
-        }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== ").append(quest.getTitle()).append(" ===");
-        sb.append("\nCategory: ").append(quest.getCategory().name());
-        sb.append("\nPriority: ").append(quest.getPriority().name());
-        sb.append("\nDescription: ").append(quest.getDescription());
-        sb.append("\nProgress: ").append(quest.getProgress().toString());
-        sb.append("\nStatus: ").append(quest.getStatus());
-        sb.append("\nReward: ").append(quest.getRewardDescription());
-        if (quest.getVariable() != null) {
-            sb.append("\nVariable: ").append(quest.getVariable());
-        }
-
-        if (quest.isCompleted() && !quest.isClaimed()) {
-            sb.append("\n>> Reward not granted yet. Use 'claim quest ")
-                    .append(questId).append("' to claim it manually.");
-        }
-        return new Result(sb.toString());
+        return user == null ? 0 : user.getProfile().getCoins();
     }
 
-    public Result claimReward(Matcher matcher) {
+    public int getDiamonds() {
         User user = getCurrentUser();
-        if (user == null)
-            return new Result("No user logged in.");
+        return user == null ? 0 : user.getProfile().getDiamonds();
+    }
 
-        String questId = matcher.group(1);
-        QuestLog log = user.getQuestLog();
-        Quest quest = log.findById(questId);
+    /**
+     * Attempts to claim the reward for the given quest id.
+     * Returns a status message describing what happened.
+     */
+    public String claimQuest(String questId) {
+        User user = getCurrentUser();
+        if (user == null) return "No user logged in.";
 
-        if (quest == null) {
-            return new Result("Quest not found: " + questId);
-        }
-        if (!quest.isCompleted()) {
-            return new Result("Quest is not completed yet. Progress: " + quest.getProgress().toString());
-        }
-        if (quest.isClaimed()) {
-            return new Result("Reward already claimed for this quest.");
-        }
+        Quest quest = user.getQuestLog().findById(questId);
+        if (quest == null) return "Quest not found.";
+        if (!quest.isCompleted()) return "This quest isn't complete yet.";
+        if (quest.isClaimed()) return "Reward already claimed.";
 
         quest.claim(user);
-        if (quest.getCategory() == QuestCategory.DAILY) {
-            user.getScore().setDailyQuests(user.getScore().getDailyQuests() + 1);
-        } else {
-            user.getScore().setNonDailyQuests(user.getScore().getNonDailyQuests() + 1);
-        }
         user.saveUser();
-        return new Result("Rewards claimed for quest: " + quest.getTitle() + "!");
+        return "Reward claimed: " + quest.getRewardDescription();
     }
-
-    public Result startMiniGame(Matcher matcher) {
-        int miniGameNumber = Integer.parseInt(matcher.group("miniGameNumber"));
-        String miniGame = null;
-        switch (miniGameNumber) {
-            case 1:
-                miniGame = "Vasebreaker";
-                break;
-            case 2:
-                miniGame = "Wallnut Bowling";
-                break;
-            case 3:
-                miniGame = "IZombie";
-                break;
-            // case 4:
-            // miniGame = "Beghouled";
-            // break;
-            // case 5:
-            // miniGame = "Zombotany";
-            // break;
-            default:
-                return new Result("Invalid mini game number!");
-        }
-        int levelNumber = Integer.parseInt(matcher.group("level"));
-        Level level = LevelLoader.loadLevel(miniGame, levelNumber);
-        if (level.hasPreGame())
-            return new Result(new PreGameMenu(level));
-        GameContext context = new GameContext(level);
-        AppContext.getInstance().setGameContext(context);
-        return new Result("Game started!", new RunningGameMenu(new GameController(context)));
-    }
-
-    public Result exit(Matcher matcher) {
-        return new Result("Exited to " + new pvz.view.OldMainMenu().getName(), new pvz.view.OldMainMenu());
-    }
-*/
 }

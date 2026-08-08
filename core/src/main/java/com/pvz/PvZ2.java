@@ -30,6 +30,9 @@ public class PvZ2 extends Game {
         globalAssetManager=new AssetManager();
         globalAssetManager.load("textures/backgrounds/MainMenu.png", Texture.class);
         globalAssetManager.load("textures/pvz2_logo_horizontal.png", Texture.class);
+        globalAssetManager.load("textures/ui/news_button.png", Texture.class);
+        globalAssetManager.load("news_preview/news_selected2.png", Texture.class);
+        globalAssetManager.load("textures/ui/buttons_hud_back_normal.png", Texture.class);
         String savedUsername = SaveManager.getInstance().load("session.json", String.class);
         if (savedUsername != null) {
             HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
@@ -51,8 +54,8 @@ public class PvZ2 extends Game {
     @Override
     public void create() {
         globalAssetManager.finishLoading();
-        textureBank=new TextureBank("768",Gdx.files.internal("./assets/pvz-assets/"));
-        pamPlayer=new PamPlayer(textureBank,Gdx.files.internal("./assets/pvz-assets/"));
+        textureBank=new TextureBank("768",Gdx.files.internal("./assets/pvz assets/"));
+        pamPlayer=new PamPlayer(textureBank,Gdx.files.internal("./assets/pvz assets/"));
         batch=new SpriteBatch();
         if (AppContext.getInstance().getCurrentUser()==null){
             setScreen(new RegisterMenu(this));

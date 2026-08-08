@@ -18,6 +18,7 @@ public class User {
     private Gender gender;
     private String securityQuestion;
     private String securityAnswer;
+    private String profilePicture;
     private Profile profile;
     private Setting setting;
     private Score score;
@@ -94,6 +95,14 @@ public class User {
 
     public Profile getProfile() {
         return profile;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public GreenHouse getGreenHouse() {
