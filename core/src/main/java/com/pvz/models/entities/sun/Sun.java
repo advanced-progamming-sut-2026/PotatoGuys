@@ -3,7 +3,10 @@ package com.pvz.models.entities.sun;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
@@ -15,9 +18,11 @@ import com.pvz.models.games.GameContext;
 import com.pvz.view.GameScreen;
 
 public class Sun implements TickAware {
+    private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
+    private static final String SUN_CLIP = "animation";
 
-    private static final float DEFAULT_LIFESPAN_SECONDS = 8f;
-    private static final float DEFAULT_FALL_SPEED = 3f;
+    private static final float DEFAULT_LIFESPAN_SECONDS = 50f;
+    private static final float DEFAULT_FALL_SPEED = 70f;
 
     private final SunType type;
     private final int col;
@@ -49,17 +54,17 @@ public class Sun implements TickAware {
         this.stateTime = 0;
         this.fallSpeed=DEFAULT_FALL_SPEED;
         if (startFalling){
-            currentPos=new Vector2(GameController.colToWorldX(col),GameScreen.SCREEN_HEIGHT+50);
+            currentPos=new Vector2(GameController.colToWorldX(col),GameScreen.SCREEN_HEIGHT);
             targetPos=new Vector2(GameController.colToWorldX(col),GameController.laneToWorldY(lane));
         } else {
             currentPos=new Vector2(GameController.colToWorldX(col),GameController.laneToWorldY(lane));
             targetPos=new Vector2(currentPos);
         }
-
     }
+
     @Override
     public void draw(){
-        PvZ2.pamPlayer.draw(PvZ2.batch,"768/INITIAL/EFFECTS/SUN/SUN.PAM","animation",stateTime,currentPos.x,currentPos.y,true);
+        PvZ2.pamPlayer.draw(PvZ2.batch, SUN_PAM, SUN_CLIP, stateTime, currentPos.x, currentPos.y, true);
     }
 
     @Override
@@ -71,11 +76,11 @@ public class Sun implements TickAware {
         if (collected) return;
 
         if (!fallen) {
-            currentPos.add(0,-fallSpeed);
+            currentPos.add(0,-fallSpeed*dt);
             if (currentPos.y<targetPos.y){
                 fallen=true;
                 if (context != null) {
-                    context.log("Sun reached the ground at position (" + col + ", " + lane + ")");
+                    context.log("Sun reached the ground at position (" + currentPos.x + ", " + currentPos.y + ")");
                 }
                 if (type == SunType.RADIOACTIVE) {
                     convertToNormal();
@@ -144,4 +149,7 @@ public class Sun implements TickAware {
     public int getCol()      { return col; }
     public int getLane()     { return lane; }
     public int getAmount()   { return amount > 0 ? amount : type.getAmountSun(); }
+    public Vector2 getCurrentPos() { return currentPos; }
+    public float getX()      { return currentPos != null ? currentPos.x : GameController.colToWorldX(col); }
+    public float getY()      { return currentPos != null ? currentPos.y : GameController.laneToWorldY(lane); }
 }

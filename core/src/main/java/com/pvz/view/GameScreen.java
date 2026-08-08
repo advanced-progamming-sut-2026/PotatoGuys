@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -18,6 +19,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.pvz.PvZ2;
+import com.pvz.controller.game.GameController;
 import com.pvz.enums.GameAsset;
 import com.pvz.models.AppContext;
 import com.pvz.models.engine.GameEngine;
@@ -29,6 +32,8 @@ import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.LevelLoader;
+import com.pvz.models.games.map.GameMap;
+import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.user.MyPlant;
 import pvz.skin.PvzSkin;
@@ -38,6 +43,8 @@ import java.util.ArrayList;
 public class GameScreen extends ScreenAdapter {
     public static final int SCREEN_HEIGHT=720;
     public static final int SCREEN_WIDTH=1280;
+
+    GameController controller;
 
     private final AssetManager assetManager;
     private final SpriteBatch batch;
@@ -60,6 +67,29 @@ public class GameScreen extends ScreenAdapter {
     private GameUiModal gameUiModal;
     private Label readyPlantLabel;
 
+    private GameContext context;
+
+    // این رو به فیلدهای کلاس اضافه کن
+    private final Vector3 touchPos = new Vector3();
+
+    private boolean checkSunClick(float worldX, float worldY) {
+        context = AppContext.getInstance().getGameContext();
+        if (context != null) {
+            for (Sun sun : new ArrayList<>(context.getSuns())) {
+                if (sun.isDone()) continue;
+                float sunX = sun.getX();
+                float sunY = sun.getY();
+                float dist = (float) Math.hypot(worldX - sunX, worldY - sunY);
+                if (dist < 50f) {
+                    sun.collect(context);
+                    Gdx.app.log("GameScreen", "Sun collected! Amount: " + sun.getAmount());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private enum State {
         PANNING_FORWARD,
         PLANT_SELECT,
@@ -77,15 +107,11 @@ public class GameScreen extends ScreenAdapter {
     private final String seasonName;
     private final int levelNumber;
 
-    public GameScreen() {
-        this("Ancient Egypt", 1);
-    }
-
     public GameScreen(String seasonName, int levelNumber) {
         this.seasonName = seasonName;
         this.levelNumber = levelNumber;
 
-        batch = new SpriteBatch();
+        batch = PvZ2.batch;
         shapeRenderer = new ShapeRenderer();
 
         assetManager = new AssetManager();
@@ -126,17 +152,12 @@ public class GameScreen extends ScreenAdapter {
 
                 // 1. Check if clicking on suns during PLAYING
                 if (currentState == State.PLAYING) {
-                    GameContext context = AppContext.getInstance().getGameContext();
+                    context = AppContext.getInstance().getGameContext();
                     if (context != null) {
-                        for (Sun sun : new ArrayList<>(context.getSuns())) {
-                            float sunScreenX = 324f + sun.getCol() * 80f + 40f;
-                            float sunScreenY = 536f + sun.getLane() * 100f + 50f;
-                            float dist = (float) Math.hypot(screenX - sunScreenX, screenY - sunScreenY);
-                            if (dist < 60f) {
-                                sun.collect(context);
-                                Gdx.app.log("GameScreen", "Sun collected! Amount: " + sun.getAmount());
-                                return true;
-                            }
+                        touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                        viewport.unproject(touchPos);
+                        if (checkSunClick(touchPos.x, touchPos.y)) {
+                            return true;
                         }
                     }
                 }
@@ -148,7 +169,7 @@ public class GameScreen extends ScreenAdapter {
                         int lane = (int) Math.floor((screenY - 536f) / 100f);
                         if (col >= 0 && col < 9 && lane >= 0 && lane < 5) {
                             PlantCard card = gameUiModal.getSelectedCard();
-                            GameContext context = AppContext.getInstance().getGameContext();
+                            context = AppContext.getInstance().getGameContext();
                             if (context != null && context.getMode() instanceof PlantPlacer placer) {
                                 if (placer.isValidPlacement(context, col, lane, card)) {
                                     placer.handlePlacement(context, col, lane, card);
@@ -234,7 +255,8 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
-        batch.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
+        batch.setProjectionMatrix(viewport.getCamera().combined);
 
         batch.begin();
 
@@ -249,6 +271,7 @@ public class GameScreen extends ScreenAdapter {
         x += center.getRegionWidth();
 
         batch.draw(right, x, y);
+
 
         batch.end();
 
@@ -303,27 +326,79 @@ public class GameScreen extends ScreenAdapter {
                 break;
         }
 
-        // Render tile highlight when in PLAYING state and a plant card is selected
-        if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null) {
-            float mouseX = Gdx.input.getX();
-            float mouseY = Gdx.input.getY();
-
-            int col = (int) Math.floor((mouseX - 324f) / 80f);
-            int lane = (int) Math.floor((mouseY - 536f) / 100f);
-
-            if (col >= 0 && col < 9 && lane >= 0 && lane < 5) {
-                float tileX = 324f + col * 80f;
-                float tileTopDownY = 536f + lane * 100f;
-                float tileGlY = 720f - (tileTopDownY + 100f);
-
-                shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                shapeRenderer.setColor(0f, 1f, 0f, 0.4f); // semi-transparent green highlight
-                shapeRenderer.rect(tileX, tileGlY, 80f, 100f);
-                shapeRenderer.end();
+        // Check sun clicks in PLAYING state on left click
+        if (currentState == State.PLAYING && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            viewport.unproject(touchPos);
+            if (checkSunClick(touchPos.x, touchPos.y)) {
+                if (gameUiModal != null) {
+                    gameUiModal.setSelectedCard(null);
+                }
             }
         }
 
+        // Render tile highlight when in PLAYING state and a plant card is selected
+        if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null) {
+
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            viewport.unproject(touchPos);
+            float worldX = touchPos.x;
+            float worldY = touchPos.y;
+
+            // گرفتن کاشی زیر موس به راحتی!
+            Tile hoveredTile = context.getMap().getTileAt(worldX, worldY);
+
+            if (hoveredTile != null) {
+                // رسم هایلایت سبز
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                shapeRenderer.setColor(0f, 1f, 0f, 0.4f);
+
+                // دیگه نیازی به محاسبه نیست، خود Tile میدونه کجاست!
+                shapeRenderer.rect(hoveredTile.getX(), hoveredTile.getY(),
+                    hoveredTile.getWidth(), hoveredTile.getHeight());
+                shapeRenderer.end();
+            }
+
+            if (Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
+                if (worldY < 600f && hoveredTile != null) {
+                    PlantCard card = gameUiModal.getSelectedCard();
+                    GameContext context = AppContext.getInstance().getGameContext();
+
+                    if (context != null && context.getMode() instanceof PlantPlacer placer) {
+                        // فقط کافیه col و lane رو از آبجکت Tile بگیریم
+                        int col = hoveredTile.getCol();
+                        int lane = hoveredTile.getLane();
+
+                        if (placer.isValidPlacement(context, col, lane, card)) {
+                            placer.handlePlacement(context, col, lane, card);
+                            gameUiModal.setSelectedCard(null);
+                        }
+                    }
+                }
+            }
+        }
+
+        //debug
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setAutoShapeType(true);
+        shapeRenderer.setColor(Color.BLUE);
+        shapeRenderer.line(0,-3000,0,3000);
+        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.line(-3000,0,3000,0);
+        if (context!=null) {
+            shapeRenderer.setColor(Color.RED);
+            for (int i = 0; i < context.getMap().getLanes(); i++) {
+                shapeRenderer.line(0, GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT, SCREEN_WIDTH, GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT);
+            }
+            for (int i = 0; i <context.getMap().getColumns(); i++){
+                shapeRenderer.line(GameMap.START_X+i*GameMap.TILE_WIDTH,0,GameMap.START_X+i*GameMap.TILE_WIDTH,SCREEN_HEIGHT);
+            }
+            /*shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+            for (Sun sun: context.getSuns()){
+                shapeRenderer.circle(sun.getX(),sun.getY(),50);
+            }*/
+        }
+        shapeRenderer.end();
         stage.act(delta);
         stage.draw();
     }
