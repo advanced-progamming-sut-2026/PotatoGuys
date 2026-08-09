@@ -56,8 +56,8 @@ public class PvZ2 extends Game {
     @Override
     public void create() {
         globalAssetManager.finishLoading();
-        textureBank=new TextureBank("768",Gdx.files.internal("./assets/pvz-asset/"));
-        pamPlayer=new PamPlayer(textureBank,Gdx.files.internal("./assets/pvz-asset/"));
+        textureBank=new TextureBank("768",Gdx.files.internal("./assets/pvz-assets/"));
+        pamPlayer=new PamPlayer(textureBank,Gdx.files.internal("./assets/pvz-assets/"));
         batch=new SpriteBatch();
         applyWindowIcon();
         if (AppContext.getInstance().getCurrentUser()==null){
