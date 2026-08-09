@@ -20,7 +20,7 @@ import com.pvz.models.games.effects.ChapterEffect;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.Wave;
 import com.pvz.models.games.levels.variants.NormalLevel;
-import com.pvz.models.games.map.behaviors.DestructibleBehavior;
+import com.pvz.models.games.map.behaviors.GraveBehavior;
 import com.pvz.models.games.map.behaviors.TileBehavior;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
@@ -292,10 +292,10 @@ public class NormalMode implements GameMode, PlantPlacer {
         if (tile.getTags().contains(TileTags.GRAVE)) {
             String graveDisplay = " G  ";
             for (TileBehavior b : tile.getBehaviors()) {
-                if (b instanceof DestructibleBehavior db) {
-                    if (db.getReward() == DestructibleBehavior.GraveReward.SUN_50) {
+                if (b instanceof GraveBehavior db) {
+                    if (db.getReward() == GraveBehavior.GraveReward.SUN_50) {
                         graveDisplay = " G$ ";
-                    } else if (db.getReward() == DestructibleBehavior.GraveReward.PLANT_FOOD) {
+                    } else if (db.getReward() == GraveBehavior.GraveReward.PLANT_FOOD) {
                         graveDisplay = " G! ";
                     }
                 }

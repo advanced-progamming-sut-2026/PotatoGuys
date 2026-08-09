@@ -10,7 +10,7 @@ public interface TileBehavior {
     default void onProjectileHit(Projectile p, Tile tile) {}
     default void onZombieEnter(Zombie z, Tile tile) {}
     default boolean canPlant(PlantCard p, Tile tile) { return true; }
-    default void onTick(GameContext ctx, Tile tile) {}
+    default void update(GameContext ctx, Tile tile, float dt) {}
     default String getStatus() {return null;}
     default String getName() { return "Behavior"; }
 }

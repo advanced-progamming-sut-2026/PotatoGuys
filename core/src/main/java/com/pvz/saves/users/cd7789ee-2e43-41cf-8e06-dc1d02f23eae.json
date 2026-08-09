@@ -10,13 +10,8 @@
   "profilePicture": "textures/avatars/avatar_nami.png",
   "profile": {
     "gamePlayed": 0,
-<<<<<<< HEAD
     "coins": 200,
     "diamonds": 5,
-=======
-    "coins": 0,
-    "diamonds": 0,
->>>>>>> e49d54917d2906d5dbf898973d452b6b5af27bf4
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
