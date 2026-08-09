@@ -31,7 +31,6 @@ import com.pvz.models.quests.QuestPriority;
 
 import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
-import com.pvz.view.ui.MenuUiKit;
 
 /**
  * Travel Log menu: shows Daily / Main / Epic / All quests with progress and
@@ -125,7 +124,7 @@ public class TravelLogMenu extends ScreenAdapter {
         titleLabel.setFontScale(1.4f);
         titleLabel.setColor(Color.BLACK);
 
-        top.add(backBtn).size(60, 56).left();
+        top.add(backBtn).size(75, 70).left();
         top.add(titleLabel).expandX().center();
         top.add(buildWallet()).right();
         return top;

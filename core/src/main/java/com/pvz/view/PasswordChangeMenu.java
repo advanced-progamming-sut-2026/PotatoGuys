@@ -11,20 +11,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
 import com.pvz.controller.user.PatternManager;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.User;
 import com.pvz.utils.PasswordUtils;
 import com.pvz.utils.SaveManager;
+
 import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
-import com.pvz.view.ui.MenuUiKit;
 
 public class PasswordChangeMenu extends ScreenAdapter {
     private final PvZ2 game;
@@ -48,6 +47,7 @@ public class PasswordChangeMenu extends ScreenAdapter {
 
         Texture bgTexture = game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
         Image bgImage = new Image(bgTexture);
+        bgImage.setFillParent(true);
         stage.addActor(bgImage);
 
         currentUser = AppContext.getInstance().getCurrentUser();
@@ -107,7 +107,7 @@ public class PasswordChangeMenu extends ScreenAdapter {
                 game.setScreen(new ProfileMenu(game));
             }
         });
-        mainPanel.add(backBtn).size(60, 56).left().padTop(10).row();
+        mainPanel.add(backBtn).size(75, 70).left().padTop(10).row();
     }
 
     private void handleChange() {

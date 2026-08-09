@@ -3,10 +3,11 @@ package com.pvz.models.entities.plants.data;
 import java.util.List;
 
 import com.pvz.models.entities.plants.actions.shooters.ShooterPattern;
+import com.pvz.models.entities.plants.config.PamAnimationConfig;
+import com.pvz.models.entities.plants.config.PlantActionConfig;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.plants.enums.PlantType;
-import com.pvz.models.entities.projectile.ProjectileType;
 
 public final class PlantPropertySheet {
 
@@ -21,18 +22,14 @@ public final class PlantPropertySheet {
     private final float baseHp;
     private final DamageProfile damage;
 
-    // --- Shooter Specifics ---
-    private final ProjectileType projectileType;
-    private final ShooterPattern shooterPattern;
-
-    /** {@code null} means the plant has no autonomous repeating action. */
     private final Float actionIntervalSeconds;
-    /** Card re-select cooldown; consumed by a future seed-packet/UI system, not by {@code Plant} itself. */
     private final Float rechargeSeconds;
 
-    private final SunProduction production;   // non-null only for SUN_PRODUCER
-    private final PlantFoodProfile plantFood;
-    private final GrowthProfile growth;        // non-null only for wramp-up plants
+    public final PlantActionConfig attackConfig;
+    public final PlantActionConfig feedConfig;
+    public final PamAnimationConfig pamAnimationConfig;
+
+    private final GrowthProfile growth;
     private final List<LevelUpgrade> levelUpgrades;
     private final String description;
 
@@ -46,15 +43,15 @@ public final class PlantPropertySheet {
         this.sunCost = b.sunCost;
         this.baseHp = b.baseHp;
         this.damage = b.damage;
-        this.projectileType = b.projectileType;
-        this.shooterPattern = b.shooterPattern;
         this.actionIntervalSeconds = b.actionIntervalSeconds;
         this.rechargeSeconds = b.rechargeSeconds;
-        this.production = b.production;
-        this.plantFood = b.plantFood;
         this.growth = b.growth;
         this.levelUpgrades = List.copyOf(b.levelUpgrades);
         this.description = b.description;
+
+        this.attackConfig = b.attackConfig;
+        this.feedConfig = b.feedConfig;
+        this.pamAnimationConfig = b.pamAnimationConfig;
     }
 
     public int getId()                             { return id; }
@@ -66,12 +63,8 @@ public final class PlantPropertySheet {
     public int getSunCost()                        { return sunCost; }
     public float getBaseHp()                       { return baseHp; }
     public DamageProfile getDamage()               { return damage; }
-    public ProjectileType getProjectileType()      { return projectileType; }
-    public ShooterPattern getShooterPattern()      { return shooterPattern; }
     public Float getActionIntervalSeconds()        { return actionIntervalSeconds; }
     public Float getRechargeSeconds()              { return rechargeSeconds; }
-    public SunProduction getProduction()           { return production; }
-    public PlantFoodProfile getPlantFood()         { return plantFood; }
     public GrowthProfile getGrowth()               { return growth; }
     public List<LevelUpgrade> getLevelUpgrades()   { return levelUpgrades; }
     public String getDescription()                 { return description; }
@@ -95,15 +88,14 @@ public final class PlantPropertySheet {
         private int sunCost = 0;
         private float baseHp = 300f;
         private DamageProfile damage = new DamageProfile(DamageKind.NONE, 0, 1, null);
-        private ProjectileType projectileType = null;
-        private ShooterPattern shooterPattern = null;
         private Float actionIntervalSeconds = null;
         private Float rechargeSeconds = null;
-        private SunProduction production = null;
-        private PlantFoodProfile plantFood = new PlantFoodProfile(PlantFoodKind.NONE, 0, 0, 0, List.of(), "");
         private GrowthProfile growth = null;
         private List<LevelUpgrade> levelUpgrades = List.of();
         private String description = "";
+        private PlantActionConfig attackConfig;
+        private PlantActionConfig feedConfig;
+        private PamAnimationConfig pamAnimationConfig;
 
         public Builder(int id, String name, PlantType type) {
             this.id = id;
@@ -117,15 +109,14 @@ public final class PlantPropertySheet {
         public Builder sunCost(int v)                          { sunCost = v; return this; }
         public Builder baseHp(float v)                         { baseHp = v; return this; }
         public Builder damage(DamageProfile v)                 { damage = v; return this; }
-        public Builder projectileType(ProjectileType v)        { projectileType = v; return this; }
-        public Builder shooterPattern(ShooterPattern v)        { shooterPattern = v; return this; }
         public Builder actionIntervalSeconds(Float v)          { actionIntervalSeconds = v; return this; }
         public Builder rechargeSeconds(Float v)                { rechargeSeconds = v; return this; }
-        public Builder production(SunProduction v)             { production = v; return this; }
-        public Builder plantFood(PlantFoodProfile v)           { plantFood = v; return this; }
         public Builder growth(GrowthProfile v)                 { growth = v; return this; }
         public Builder levelUpgrades(List<LevelUpgrade> v)     { levelUpgrades = v; return this; }
         public Builder description(String v)                   { description = v; return this; }
+        public Builder plantAttackConfig(PlantActionConfig v)  { attackConfig = v; return this;}
+        public Builder plantFeedConfig(PlantActionConfig v)    { feedConfig = v; return this;}
+        public Builder pamAnimationConfig(PamAnimationConfig v){ pamAnimationConfig = v; return this;}
 
         public PlantPropertySheet build() { return new PlantPropertySheet(this); }
     }

@@ -19,9 +19,8 @@ public class GameMap {
         for (int i = 0; i < lanes; i++) {
             for (int j = 0; j < columns; j++) {
                 float x = START_X + (j * TILE_WIDTH);
-                // چون lane 0 بالاترین ردیف است، هرچه lane بیشتر می‌شود، Y باید کمتر شود
                 float y = TOP_LANE_Y - (i * TILE_HEIGHT);
-                map[i][j]=new Tile(i, j, x, y, TILE_WIDTH, TILE_HEIGHT);;
+                map[i][j]=new Tile(j, i, x, y, TILE_WIDTH, TILE_HEIGHT);
             }
         }
     }
@@ -50,6 +49,11 @@ public class GameMap {
     }
 
     public int getLanes() {
+        return lanes;
+    }
+
+    /** Alias for {@link #getLanes()}, matching the row/column terminology used elsewhere. */
+    public int getRows() {
         return lanes;
     }
 

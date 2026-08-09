@@ -6,14 +6,13 @@ import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.plants.data.GrowthProfile;
-import com.pvz.models.entities.plants.data.PlantFoodExecutor;
 import com.pvz.models.entities.plants.data.PlantFoodProfile;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
-import com.pvz.models.entities.plants.data.ProductionKind;
 import com.pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.plants.fsm.PlantDeadState;
+import com.pvz.models.entities.plants.fsm.PlantFeedState;
 import com.pvz.models.entities.plants.fsm.PlantIdleState;
 import com.pvz.models.entities.plants.fsm.PlantState;
 import com.pvz.models.games.GameContext;
@@ -21,42 +20,12 @@ import com.pvz.models.games.map.behaviors.IceBlockBehavior;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
 
-/**
- * Concrete, data-driven plant entity.
- *
- * <p>
- * All 69 plant kinds share this single class. Unique behavior comes from:
- * <ol>
- * <li>A {@link PlantPropertySheet} — immutable parsed stats loaded from
- * JSON.</li>
- * <li>A resolved {@link ResolvedStats} snapshot — base stats plus every level
- * upgrade unlocked at {@link #level}, computed once at construction
- * (mirrors {@code Zombie}'s wave-scaling, generalized to plant leveling).</li>
- * <li>A single {@link PlantAction} plug-in — the Strategy-pattern behavior
- * (shoot / produce sun / explode / buff family / ...) chosen by
- * {@link PlantFactory} from the sheet's category.</li>
- * </ol>
- *
- * <h3>Tick lifecycle</h3>
- *
- * <pre>
- *   enter()      – set initial PlantIdleState, log placement
- *   update() × N – tick FSM (cooldown countdown -&gt; action -&gt; idle) + growth timer
- *   dispose()    – cleanup on engine removal
- * </pre>
- *
- * <p>
- * Plants are stationary, so unlike {@code Zombie} there is no float x /
- * velocity — just an integer (col, lane) grid cell.
- */
 public class Plant implements TickAware {
 
-    /** Matches {@code Zombie.TICKS_PER_SECOND} so both systems share one clock. */
     public static final int TICKS_PER_SECOND = 10;
 
     private final PlantPropertySheet sheet;
     private final GameContext context;
-    private final PlantAction action;
 
     private final int col;
     private final int lane;
@@ -73,6 +42,8 @@ public class Plant implements TickAware {
     private int growthStageIndex;
 
     private PlantState currentState;
+    private final PlantAction attackAction;
+    private final PlantAction feedAction;
     private boolean dead;
 
     private int freezeLevel = 0; // 0, 1, 2, 3
@@ -80,16 +51,12 @@ public class Plant implements TickAware {
     private float iceHp = 0f;
     private static final float MAX_ICE_HP = 600f;
 
-    /**
-     * @param context world adapter, or {@code null} for an "unplaced" record
-     *                (e.g. a catalog/collection entry that is never registered
-     *                with a {@link pvz.models.engine.GameEngine} and never has
-     *                {@link #enter()}/{@link #update()} invoked)
-     */
-    public Plant(PlantPropertySheet sheet, PlantAction action, int col, int lane,
+  
+    public Plant(PlantPropertySheet sheet, PlantAction attackAction, PlantAction feedAction, int col, int lane,
             int level, boolean boosted, GameContext context) {
         this.sheet = sheet;
-        this.action = action;
+        this.attackAction = attackAction;
+        this.feedAction = feedAction;
         this.col = col;
         this.lane = lane;
         this.level = Math.max(1, Math.min(4, level));
@@ -116,23 +83,31 @@ public class Plant implements TickAware {
             return;
         tickGrowth();
         tickBoost();
-        PlantState next;
         if (this.currentState != null) {
-            next = currentState.tick(this, context);
-        } else {
-            this.currentState = new PlantIdleState();
-            next = currentState.tick(this, context);
-        }
-        if (next != currentState) {
-            currentState.onExit(this, context);
-            next.onEnter(this, context);
-            currentState = next;
+            currentState.update(this, context , dt);
+        }else{
+            changeState(new PlantIdleState());
         }
     }
 
     @Override
     public void dispose() {
         // no owned resources to release
+    }
+
+    @Override
+    public void draw(){
+        if(currentState != null){
+            currentState.draw(this, context);
+        }
+    }
+
+    public void changeState(PlantState nextState){
+        if(currentState != null){
+            currentState.onExit(this, context);
+        }
+        currentState = nextState;
+        currentState.onEnter(this, context);
     }
 
     // ── Cold Wind / Freezing ──────────────────────────────────────────────────
@@ -223,15 +198,10 @@ public class Plant implements TickAware {
     }
 
     // ── Plant Food ────────────────────────────────────────────────────────────
-
-    /** Triggers this plant's own Plant-Food effect immediately. */
     public void triggerPlantFood(GameContext ctx) {
-        PlantFoodProfile pf = sheet.getPlantFood();
-        boosted = true;
-        boostedTicksRemaining = Math.max(1, Math.round(pf.getDurationSeconds() * TICKS_PER_SECOND));
-        PlantFoodExecutor.execute(this, ctx);
-        ctx.log("[PlantFood] " + sheet.getName() + " is boosted for " + String.format("%.1f", pf.getDurationSeconds())
-                + "s!");
+        PlantState feedState = new PlantFeedState(feedAction);
+        changeState(feedState);
+        ctx.log("[PlantFood] " + sheet.getName() + " used its Plant Food!");
     }
 
     // ── Growth (wramp-up plants) ───────────────────────────────────────────────
@@ -253,9 +223,7 @@ public class Plant implements TickAware {
         }
     }
 
-    /**
-     * Damage for the plant's current growth stage (flat for non wramp-up plants).
-     */
+
     public float getEffectiveDamage() {
         float base = sheet.getDamage().getKind() == DamageKind.STAGED && growth != null
                 ? sheet.getDamage().valueAtStage(growthStageIndex)
@@ -264,19 +232,6 @@ public class Plant implements TickAware {
         return base + levelDelta;
     }
 
-    /**
-     * Sun amount for the plant's current growth stage (flat for non-staged
-     * producers).
-     */
-    public float getEffectiveProductionAmount() {
-        var production = sheet.getProduction();
-        if (production == null)
-            return 0f;
-        if (production.getKind() == ProductionKind.STAGED) {
-            return production.amountAtStage(growthStageIndex);
-        }
-        return production.getAmount();
-    }
 
     // ── Accessors ─────────────────────────────────────────────────────────────
 
@@ -288,8 +243,12 @@ public class Plant implements TickAware {
         return context;
     }
 
-    public PlantAction getAction() {
-        return action;
+    public PlantAction getAttackAction() {
+        return attackAction;
+    }
+
+    public PlantAction getFeedAction() {
+        return feedAction;
     }
 
     public PlantType getType() {

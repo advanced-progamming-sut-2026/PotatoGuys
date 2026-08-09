@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}",
+            "preLaunchTask": "gradle: lwjgl3:build"
+        },
+        {
+            "type": "java",
+            "name": "ProjectMerger",
+            "request": "launch",
+            "mainClass": "com.pvz.ProjectMerger",
+            "projectName": "core",
+            "preLaunchTask": "gradle: lwjgl3:build"
+        },
+        {
+            "type": "java",
+            "name": "Lwjgl3Launcher",
+            "request": "launch",
+            "mainClass": "com.pvz.lwjgl3.Lwjgl3Launcher",
+            "projectName": "lwjgl3",
+            "preLaunchTask": "gradle: lwjgl3:build"
+        }
+    ]
+}

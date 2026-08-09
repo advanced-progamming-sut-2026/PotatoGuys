@@ -1,5 +1,9 @@
 package com.pvz.view;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -7,7 +11,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
@@ -15,12 +23,8 @@ import com.pvz.controller.AdventureController;
 import com.pvz.enums.GameAsset;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.Profile;
-import com.pvz.view.ui.MenuUiKit;
-import pvz.skin.PvzSkin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
+import pvz.skin.PvzSkin;
 
 /**
  * "Choose a Chapter" screen — this is the one Dani's screenshot shows directly, so it
@@ -50,10 +54,10 @@ public class AdventureMenu extends ScreenAdapter {
         new Color(0.28f, 0.2f, 0.3f, 0.9f),   // dark
         new Color(0.2f, 0.55f, 0.55f, 0.9f)   // aqua
     };
-    private static final float CARD_WIDTH = 260f;
-    private static final float CARD_HEIGHT = 340f;
-    private static final float CARD_PAD = 20f;
-    private static final float CAROUSEL_VIEWPORT_WIDTH = 1150f;
+    private static final float CARD_WIDTH = 220f;
+    private static final float CARD_HEIGHT = 420f;
+    private static final float CARD_PAD = 135f;
+    private static final float CAROUSEL_VIEWPORT_WIDTH = 1550f;
 
     AdventureController controller;
     Stage stage;
@@ -98,7 +102,7 @@ public class AdventureMenu extends ScreenAdapter {
 
         Table topLeft = new Table();
         topLeft.add(MenuUiKit.backButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)), () -> game.setScreen(new GameModesMenu(game))))
-            .size(60, 56).padRight(24);
+            .size(75, 70).padRight(24);
         Label title = new Label("Choose a Chapter", skin, "big");
         topLeft.add(title);
 
@@ -133,7 +137,8 @@ public class AdventureMenu extends ScreenAdapter {
                 boolean locked = index == 0 ? false : controller.isSeasonLocked(CHAPTER_KEYS[index]);
                 return MenuUiKit.bigCard(skin, CHAPTER_ART[index], CHAPTER_TINTS[index], chapterName,
                     locked ? "Locked" : "Unlocked", locked,
-                    () -> game.setScreen(new ChapterMenu(game, chapterName)));
+                    () -> game.setScreen(new ChapterMenu(game, chapterName)),
+                    CARD_WIDTH, CARD_HEIGHT);
             });
         }
 

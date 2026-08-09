@@ -15,7 +15,7 @@ public final class PlantFoodExecutor {
     }
 
     public static void execute(Plant plant, GameContext ctx) {
-        PlantFoodProfile pf = plant.getSheet().getPlantFood();
+        PlantFoodProfile pf = null;
         String name = plant.getSheet().getName();
 
         switch (pf.getKind()) {
@@ -37,7 +37,7 @@ public final class PlantFoodExecutor {
             ctx.addSun(amount);
             ctx.log("[PlantFood] " + name + " instantly produced " + amount + " sun.");
         } else if (pf.getKind() == PlantFoodKind.RAPID_FIRE) {
-            if (plant.getAction() instanceof CooldownPlantAction cooldown) {
+            if (plant.getAttackAction() instanceof CooldownPlantAction cooldown) {
                 cooldown.forceReady();
             }
             ctx.log("[PlantFood] " + name + " is unleashing rapid fire!");
@@ -65,7 +65,7 @@ public final class PlantFoodExecutor {
     private static void executeMultiInstakill(PlantFoodProfile pf, GameContext ctx, String name) {
         int limit = Math.max(1, pf.getCount());
         int killed = 0;
-        for (int lane = 0; lane < ctx.getMap().getLanes() && killed < limit; lane++) {
+        for (int lane = 0; lane < ctx.getMap().getRows() && killed < limit; lane++) {
             for (Zombie z : ctx.getZombiesInLane(lane)) {
                 if (killed >= limit) {
                     break;
@@ -94,7 +94,7 @@ public final class PlantFoodExecutor {
         }
         PlantCategory family = mint.getSheet().getCategory();
         for (Plant member : getActivePlantsInFamily(family, ctx)) {
-            if (member.getAction() instanceof CooldownPlantAction cooldown) {
+            if (member.getAttackAction() instanceof CooldownPlantAction cooldown) {
                 cooldown.forceReady();
             }
         }

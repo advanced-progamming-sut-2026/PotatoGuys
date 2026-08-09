@@ -40,6 +40,7 @@ public class SettingsMenu extends ScreenAdapter {
 
         Texture bgTexture = game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
         Image bgImage = new Image(bgTexture);
+        bgImage.setFillParent(true);
         stage.addActor(bgImage);
 
         Stack frameStack = new Stack();

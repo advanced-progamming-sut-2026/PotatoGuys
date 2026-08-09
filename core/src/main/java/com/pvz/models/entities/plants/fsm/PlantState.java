@@ -3,13 +3,19 @@ package com.pvz.models.entities.plants.fsm;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.games.GameContext;
 
-public interface PlantState {
+public abstract class PlantState {
 
-    void onEnter(Plant plant, GameContext ctx);
+    protected float stateTime = 0f;
 
-    PlantState tick(Plant plant, GameContext ctx);
+    public abstract void onEnter(Plant plant, GameContext ctx);
 
-    void onExit(Plant plant, GameContext ctx);
+    public void update(Plant plant, GameContext ctx , float dt){
+        stateTime += dt;
+    };
 
-    String getLabel();
+    public abstract void onExit(Plant plant, GameContext ctx);
+
+    public abstract void draw(Plant plant, GameContext ctx);
+
+    public abstract String getLabel();
 }

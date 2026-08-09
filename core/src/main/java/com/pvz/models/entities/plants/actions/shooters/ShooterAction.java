@@ -1,47 +1,36 @@
 package com.pvz.models.entities.plants.actions.shooters;
 
-import java.util.List;
-
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.actions.CooldownPlantAction;
+import com.pvz.models.entities.plants.config.ShooterActionConfig;
+import com.pvz.models.entities.plants.config.ShooterActionConfig.ProjectilePattern;
 import com.pvz.models.entities.plants.enums.PlantCategory;
-import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.projectile.ProjectileType;
-import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
-import com.pvz.models.games.map.tile.TileTags;
 
+/**
+ * Data-driven shooter behavior: fires every {@link ShooterActionConfig.ProjectilePattern}
+ * declared on its config (see {@code plant_actions.json}), each pattern independently
+ * offset/aimed/delayed and optionally broadcast to every lane ({@code allLanes}).
+ */
 public class ShooterAction extends CooldownPlantAction {
 
-    public ShooterAction(float intervalSeconds) {
+    private final ShooterActionConfig config;
+
+    public ShooterAction(float intervalSeconds, ShooterActionConfig config) {
         super(intervalSeconds);
+        this.config = config;
     }
 
     @Override
     protected boolean canUse(Plant plant, GameContext ctx) {
-        ShooterPattern pattern = plant.getSheet().getShooterPattern();
-
-        return hasValidTarget(plant, ctx, pattern, -1);
+        return !ctx.getZombiesInLane(plant.getLane()).isEmpty();
     }
 
     @Override
     protected void doExecute(Plant plant, GameContext ctx) {
-        int count = Math.max(1, plant.getSheet().getDamage().getCount());
-
-        boolean poisonous = plant.getSheet().hasTag(PlantTag.POISON);
-        boolean chills = plant.getSheet().hasTag(PlantTag.ICE);
-        boolean fire = plant.getSheet().hasTag(PlantTag.FIRE);
-
-        int pierce = plant.getPierceCount();
-        if (plant.getSheet().getCategory() == PlantCategory.STRIKE_THROUGH) {
-            pierce += 2;
-        }
-
-        ProjectileType type = plant.getSheet().getProjectileType();
-        ShooterPattern pattern = plant.getSheet().getShooterPattern();
-
-        firePattern(plant, ctx, pattern, count, type, poisonous, chills, fire, pierce);
+        fire(config, plant, ctx);
     }
 
     @Override
@@ -49,111 +38,44 @@ public class ShooterAction extends CooldownPlantAction {
         return "Shoot";
     }
 
-    // ─── Target Checking Logic ───────────────────────────────────────────────
-
-    private boolean hasValidTarget(Plant plant, GameContext ctx, ShooterPattern pattern, int maxRange) {
-        int row = plant.getLane();
-        int col = plant.getCol();
-
-        switch (pattern) {
-            case FORWARD -> {
-                return isZombieInDirection(ctx, row, col, 1, maxRange) || hasObstacleInFront(ctx, row, col);
-            }
-            case BIDIRECTIONAL -> {
-                return isZombieInDirection(ctx, row, col, 1, maxRange) ||
-                        isZombieInDirection(ctx, row, col, -1, maxRange);
-            }
-            case THREE_LANE -> {
-                return isZombieInDirection(ctx, row - 1, col, 1, maxRange) ||
-                        isZombieInDirection(ctx, row, col, 1, maxRange) ||
-                        isZombieInDirection(ctx, row + 1, col, 1, maxRange);
-            }
-            case FIVE_WAY_STAR, DIAGONAL_FOUR -> {
-                return !ctx.getZombies().isEmpty();
-            }
-            default -> {
-                return false;
+    /** Fires every pattern in {@code config} once, honoring per-pattern delay/lane-broadcast. Reused by Plant Food. */
+    public static void fire(ShooterActionConfig config, Plant plant, GameContext ctx) {
+        boolean pierceThrough = plant.getSheet().getCategory() == PlantCategory.STRIKE_THROUGH;
+        for (ProjectilePattern pattern : config.patterns) {
+            Runnable spawn = () -> spawnPattern(pattern, plant, ctx, pierceThrough);
+            int delayTicks = Math.round(pattern.delaySeconds * Plant.TICKS_PER_SECOND);
+            if (delayTicks <= 0) {
+                spawn.run();
+            } else {
+                ctx.getEngine().register(new DelayedShot(delayTicks, ctx, spawn));
             }
         }
     }
 
-    private boolean isZombieInDirection(GameContext ctx, int row, int startCol, int dx, int maxRange) {
-        if (row < 0 || row >= ctx.getLanes())
-            return false;
-
-        for (Zombie z : ctx.getZombiesInLane(row)) {
-            if (z.isDead())
-                continue;
-
-            float zX = z.getX();
-            if (dx > 0 && zX >= startCol) {
-                if (maxRange < 0 || (zX - startCol) <= maxRange)
-                    return true;
-            } else if (dx < 0 && zX <= startCol) {
-                if (maxRange < 0 || (startCol - zX) <= maxRange)
-                    return true;
+    private static void spawnPattern(ProjectilePattern pattern, Plant plant, GameContext ctx, boolean pierceThrough) {
+        if (pattern.allLanes) {
+            for (int lane = 0; lane < ctx.getLanes(); lane++) {
+                spawnAt(pattern, plant, lane, ctx, pierceThrough);
             }
-        }
-        return false;
-    }
-
-    private boolean hasObstacleInFront(GameContext ctx, int row, int startCol) {
-        for (int c = startCol + 1; c < ctx.getColumns(); c++) {
-            List<TileTags> tags = ctx.getTileAt(c, row).getTags();
-            if (tags.contains(TileTags.GRAVE) || tags.contains(TileTags.ICE_BLOCK)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // ─── Projectile Spawning Logic ───────────────────────────────────────────
-
-    private void firePattern(Plant plant, GameContext ctx, ShooterPattern pattern, int count,
-            ProjectileType type, boolean poison, boolean ice, boolean fire, int pierce) {
-        int row = plant.getLane();
-        int col = plant.getCol();
-        float dmg = plant.getEffectiveDamage();
-
-        for (int i = 0; i < count; i++) {
-            switch (pattern) {
-                case FORWARD -> spawnProjectile(ctx, type, row, col, 1.0f, 0.0f, dmg, poison, ice, fire, pierce);
-
-                case BIDIRECTIONAL -> {
-                    spawnProjectile(ctx, type, row, col, 1.0f, 0.0f, dmg, poison, ice, fire, pierce); // جلو
-                    spawnProjectile(ctx, type, row, col, -1.0f, 0.0f, dmg, poison, ice, fire, pierce); // عقب
-                }
-
-                case THREE_LANE -> {
-                    if (row - 1 >= 0)
-                        spawnProjectile(ctx, type, row - 1, col, 1.0f, 0.0f, dmg, poison, ice, fire, pierce);
-                    spawnProjectile(ctx, type, row, col, 1.0f, 0.0f, dmg, poison, ice, fire, pierce);
-                    if (row + 1 < ctx.getLanes())
-                        spawnProjectile(ctx, type, row + 1, col, 1.0f, 0.0f, dmg, poison, ice, fire, pierce);
-                }
-
-                case DIAGONAL_FOUR -> {
-                    spawnProjectile(ctx, type, row, col, 1.0f, 1.0f, dmg, poison, ice, fire, pierce); // پایین-راست
-                    spawnProjectile(ctx, type, row, col, 1.0f, -1.0f, dmg, poison, ice, fire, pierce); // بالا-راست
-                    spawnProjectile(ctx, type, row, col, -1.0f, 1.0f, dmg, poison, ice, fire, pierce); // پایین-چپ
-                    spawnProjectile(ctx, type, row, col, -1.0f, -1.0f, dmg, poison, ice, fire, pierce); // بالا-چپ
-                }
-
-                case FIVE_WAY_STAR -> {
-                    spawnProjectile(ctx, type, row, col, 0.0f, -1.0f, dmg, poison, ice, fire, pierce); // بالا
-                    spawnProjectile(ctx, type, row, col, 0.0f, 1.0f, dmg, poison, ice, fire, pierce); // پایین
-                    spawnProjectile(ctx, type, row, col, -1.0f, 0.0f, dmg, poison, ice, fire, pierce); // عقب
-                    spawnProjectile(ctx, type, row, col, 1.0f, -1.0f, dmg, poison, ice, fire, pierce); // بالا-راست
-                    spawnProjectile(ctx, type, row, col, 1.0f, 1.0f, dmg, poison, ice, fire, pierce); // پایین-راست
-                }
-            }
+        } else {
+            int lane = plant.getLane() + pattern.laneOffset;
+            if (lane < 0 || lane >= ctx.getLanes()) return;
+            spawnAt(pattern, plant, lane, ctx, pierceThrough);
         }
     }
 
-    private void spawnProjectile(GameContext ctx, ProjectileType type, float row, float col,
-            float dx, float dy, float dmg, boolean poison, boolean ice, boolean fire, int pierce) {
-        Projectile bolt = new Projectile(ctx, type, row, col, dmg, poison, ice, fire, pierce, null);
-        bolt.setVelocityVector(dx, dy);
-        ctx.spawnProjectile(bolt);
+    private static void spawnAt(ProjectilePattern pattern, Plant plant, int lane, GameContext ctx, boolean pierceThrough) {
+        float col = plant.getCol() + pattern.positionOffset.x;
+        float row = lane + pattern.positionOffset.y;
+        boolean ice = pattern.projectileType == ProjectileType.SNOW_PEA;
+        boolean fire = pattern.projectileType == ProjectileType.FIRE_PEA;
+        boolean poison = pattern.projectileType == ProjectileType.GOO_PEA;
+        int pierceCount = pierceThrough ? 3 : 0;
+
+        Projectile projectile = new Projectile(ctx, pattern.projectileType, row, col, pattern.damage,
+                poison, ice, fire, pierceCount, null);
+        projectile.setVelocityVector(pattern.velocity.x, pattern.velocity.y);
+        ctx.spawnProjectile(projectile);
     }
 }
+

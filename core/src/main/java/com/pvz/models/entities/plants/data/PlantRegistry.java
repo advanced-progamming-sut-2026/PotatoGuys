@@ -65,8 +65,6 @@ public final class PlantRegistry {
             for (String t : dto.tags) tags.add(PlantTag.valueOf(t));
         }
 
-        ProjectileType projType = dto.projectileType != null ? ProjectileType.valueOf(dto.projectileType) : null;
-        ShooterPattern shootPat = dto.shooterPattern != null ? ShooterPattern.valueOf(dto.shooterPattern) : null;
 
         return new PlantPropertySheet.Builder(dto.id, dto.name, type)
                 .category(category)
@@ -75,12 +73,8 @@ public final class PlantRegistry {
                 .sunCost(dto.sunCost)
                 .baseHp(dto.baseHp)
                 .damage(toDamage(dto.damage))
-                .projectileType(projType)
-                .shooterPattern(shootPat)
                 .actionIntervalSeconds(dto.actionIntervalSeconds)
                 .rechargeSeconds(dto.rechargeSeconds)
-                .production(toProduction(dto.production))
-                .plantFood(toPlantFood(dto.plantFood))
                 .growth(toGrowth(dto.growth))
                 .levelUpgrades(toLevelUpgrades(dto.levelUpgrades))
                 .description(dto.description == null ? "" : dto.description)

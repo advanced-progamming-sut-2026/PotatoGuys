@@ -7,10 +7,10 @@
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "hamid",
-  "profilePicture": "textures/avatars/avatar_chopper.png",
+  "profilePicture": "textures/avatars/avatar_zoro.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 350,
+    "coins": 400,
     "diamonds": 2,
     "plantFood": 0,
     "collection": {
@@ -270,7 +270,7 @@
       {
         "x": 5,
         "y": 4,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       }
     ]
@@ -1193,7 +1193,11 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786199904677
+<<<<<<< HEAD
+    "lastDailyReset": 1786264654300
+=======
+    "lastDailyReset": 1786227383344
+>>>>>>> e49d54917d2906d5dbf898973d452b6b5af27bf4
   },
   "questLogRefreshed": false
 }

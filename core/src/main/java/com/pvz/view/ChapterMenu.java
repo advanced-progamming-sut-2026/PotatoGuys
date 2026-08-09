@@ -6,15 +6,20 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
 import com.pvz.controller.ChapterController;
 import com.pvz.enums.GameAsset;
+
 import pvz.skin.PvzSkin;
-import com.pvz.view.ui.MenuUiKit;
 
 public class ChapterMenu extends ScreenAdapter {
     ChapterController controller;
@@ -128,7 +133,7 @@ public class ChapterMenu extends ScreenAdapter {
                 game.setScreen(new GameModesMenu(game));
             }
         });
-        backBtnWrapper.add(backBtn).size(60, 56);
+        backBtnWrapper.add(backBtn).size(75, 70);
     }
 
     @Override

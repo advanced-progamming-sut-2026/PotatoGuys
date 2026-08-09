@@ -13,4 +13,7 @@ public class Constants {
 
     /** Static, read-only game-data resource (not a user save file). */
     public static final String ZOMBIE_PROFILES_PATH = "core/src/main/java/com/resources/zombie_profiles.json";
+
+    /** Static, read-only game-data resource (not a user save file). */
+    public static final String PLANT_ACTIONS_PATH = "core/src/main/java/com/resources/plant_actions.json";
 }

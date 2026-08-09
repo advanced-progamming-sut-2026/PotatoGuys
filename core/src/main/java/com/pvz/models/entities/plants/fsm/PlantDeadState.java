@@ -4,16 +4,17 @@ import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.games.GameContext;
 
 
-public class PlantDeadState implements PlantState {
+public class PlantDeadState extends PlantState {
 
     @Override
     public void onEnter(Plant plant, GameContext ctx) {
+        stateTime = 0f;
         // death logging happens inside Plant.kill() so it fires exactly once
     }
 
     @Override
-    public PlantState tick(Plant plant, GameContext ctx) {
-        return this;
+    public void update(Plant plant, GameContext ctx , float dt) {
+        super.update(plant, ctx, dt);
     }
 
     @Override
@@ -24,5 +25,10 @@ public class PlantDeadState implements PlantState {
     @Override
     public String getLabel() {
         return "Dead";
+    }
+
+    @Override
+    public void draw(Plant plant, GameContext ctx) {
+        System.out.println("ahhh");
     }
 }

@@ -1,0 +1,971 @@
+[
+  {
+    "id": 1,
+    "name": "Sunflower",
+    "type": "Sunflower",
+    "category": "SUN_PRODUCER",
+    "sunCost": 50,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 24.0,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "SunProducerActionConfig",
+      "productionKind": "FIXED",
+      "amount": 50,
+      "spawnOffset": { "x": 0.0, "y": 0.3 }
+    },
+    "feedConfig": {
+      "class": "SunProducerActionConfig",
+      "productionKind": "ONESHOT",
+      "amount": 150,
+      "spawnOffset": { "x": 0.0, "y": 0.3 }
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/SUNFLOWER/SUNFLOWER.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "special",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 14
+    },
+    "description": "تولید 50 خورشید هر 24 ثانیه."
+  },
+  {
+    "id": 2,
+    "name": "Twin Sunflower",
+    "type": "TwinSunflower",
+    "category": "SUN_PRODUCER",
+    "sunCost": 125,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 24.0,
+    "rechargeSeconds": 15.0,
+    "attackConfig": {
+      "class": "SunProducerActionConfig",
+      "productionKind": "FIXED",
+      "amount": 100,
+      "spawnOffset": { "x": 0.0, "y": 0.35 }
+    },
+    "feedConfig": {
+      "class": "SunProducerActionConfig",
+      "productionKind": "ONESHOT",
+      "amount": 250,
+      "spawnOffset": { "x": 0.0, "y": 0.35 }
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/SUNFLOWER_TWIN/SUNFLOWER_TWIN.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "special",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 16
+    },
+    "description": "تولید 100 خورشید در هر دور."
+  },
+  {
+    "id": 3,
+    "name": "Sun-shroom",
+    "type": "Sunshroom",
+    "category": "SUN_PRODUCER",
+    "sunCost": 25,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 24.0,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "SunProducerActionConfig",
+      "productionKind": "STAGED",
+      "amounts": [25, 50, 75],
+      "stageIntervalSeconds": [24.0, 72.0],
+      "spawnOffset": { "x": 0.0, "y": 0.2 }
+    },
+    "feedConfig": {
+      "class": "SunProducerActionConfig",
+      "productionKind": "ONESHOT",
+      "amount": 75,
+      "spawnOffset": { "x": 0.0, "y": 0.2 }
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/SUNSHROOM/SUNSHROOM.PAM",
+      "idleLabel": "idle_stage1",
+      "attackActionLabel": "special_stage1",
+      "plantFoodLabel": "plantfood_stage1",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 18
+    },
+    "description": "رشد در 3 مرحله و تولید خورشید بیشتر (25/50/75). تغذیه فوراً حداکثر مقدار را تولید می‌کند."
+  },
+  {
+    "id": 4,
+    "name": "Primal Sunflower",
+    "type": "PrimalSunflower",
+    "category": "SUN_PRODUCER",
+    "sunCost": 75,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 24.0,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "SunProducerActionConfig",
+      "productionKind": "FIXED",
+      "amount": 75,
+      "spawnOffset": { "x": 0.0, "y": 0.3 }
+    },
+    "feedConfig": {
+      "class": "SunProducerActionConfig",
+      "productionKind": "ONESHOT",
+      "amount": 225,
+      "spawnOffset": { "x": 0.0, "y": 0.3 }
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/PRIMAL_SUNFLOWER/PRIMAL_SUNFLOWER.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "special",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 14
+    },
+    "description": "تولید خورشید بزرگ 75 تایی از ابتدا."
+  },
+  {
+    "id": 5,
+    "name": "Gold Bloom",
+    "type": "GoldBloom",
+    "category": "SUN_PRODUCER",
+    "sunCost": 0,
+    "baseHp": 0.0,
+    "actionIntervalSeconds": 0.0,
+    "rechargeSeconds": 75.0,
+    "attackConfig": {
+      "class": "SunProducerActionConfig",
+      "productionKind": "ONESHOT",
+      "amount": 375,
+      "spawnOffset": { "x": 0.0, "y": 0.4 }
+    },
+    "feedConfig": null,
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/GOLDBLOOM/GOLDBLOOM.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerLabel": "trigger_release"
+    },
+    "description": "تولید فوری و یک‌باره مقدار زیادی خورشید و سپس ناپدید شدن (375 خورشید)."
+  },
+  {
+    "id": 6,
+    "name": "Peashooter",
+    "type": "Peashooter",
+    "category": "SHOOTER",
+    "sunCost": 100,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.15 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.30 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.45 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.60 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.75 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.90 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 1.05 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/PEASHOOTER/PEASHOOTER.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 10
+    },
+    "description": "شلیک تیر مستقیم."
+  },
+  {
+    "id": 7,
+    "name": "Repeater",
+    "type": "Repeater",
+    "category": "SHOOTER",
+    "sunCost": 200,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.15
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.15 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.40 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.55 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.80 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.95 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/REPEATER/REPEATER.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 12
+    },
+    "description": "شلیک 2 تیر مستقیم متوالی."
+  },
+  {
+    "id": 8,
+    "name": "Threepeater",
+    "type": "Threepeater",
+    "category": "SHOOTER",
+    "sunCost": 300,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": -1,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 1,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "allLanes": true,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/THREEPEATER/THREEPEATER.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 12
+    },
+    "description": "شلیک همزمان تیر در 3 لاین موازی."
+  },
+  {
+    "id": 9,
+    "name": "Snow Pea",
+    "type": "SnowPea",
+    "category": "SHOOTER",
+    "sunCost": 150,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "SNOW_PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "SNOW_PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "SNOW_PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.15 },
+        { "projectileType": "SNOW_PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.30 },
+        { "projectileType": "SNOW_PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.45 },
+        { "projectileType": "SNOW_PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.60 },
+        { "projectileType": "SNOW_PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.75 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/SNOWPEA/SNOWPEA.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 10
+    },
+    "description": "شلیک تیر مستقیم کندکننده سرعت."
+  },
+  {
+    "id": 10,
+    "name": "Rotobaga",
+    "type": "Rotobaga",
+    "category": "SHOOTER",
+    "sunCost": 150,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "ROTOBAGA_PROJECTILE",
+          "damage": 10.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.15, "y": 0.15 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "ROTOBAGA_PROJECTILE",
+          "damage": 10.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.15, "y": -0.15 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "ROTOBAGA_PROJECTILE",
+          "damage": 10.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": -0.15, "y": 0.15 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "ROTOBAGA_PROJECTILE",
+          "damage": 10.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": -0.15, "y": -0.15 },
+          "delaySeconds": 0.0
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "ROTOBAGA_PROJECTILE", "damage": 10.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.15, "y": 0.15 }, "delaySeconds": 0.0 },
+        { "projectileType": "ROTOBAGA_PROJECTILE", "damage": 10.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.15, "y": -0.15 }, "delaySeconds": 0.0 },
+        { "projectileType": "ROTOBAGA_PROJECTILE", "damage": 10.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": -0.15, "y": 0.15 }, "delaySeconds": 0.0 },
+        { "projectileType": "ROTOBAGA_PROJECTILE", "damage": 10.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": -0.15, "y": -0.15 }, "delaySeconds": 0.0 },
+        { "projectileType": "ROTOBAGA_PROJECTILE", "damage": 10.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.15, "y": 0.15 }, "delaySeconds": 0.2 },
+        { "projectileType": "ROTOBAGA_PROJECTILE", "damage": 10.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.15, "y": -0.15 }, "delaySeconds": 0.2 },
+        { "projectileType": "ROTOBAGA_PROJECTILE", "damage": 10.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": -0.15, "y": 0.15 }, "delaySeconds": 0.2 },
+        { "projectileType": "ROTOBAGA_PROJECTILE", "damage": 10.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": -0.15, "y": -0.15 }, "delaySeconds": 0.2 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/ROTORUTABAGA/ROTORUTABAGA.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "plantfood_on",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 14
+    },
+    "description": "شلیک در 4 جهت اریب."
+  },
+  {
+    "id": 11,
+    "name": "Pea Pod",
+    "type": "PeaPod",
+    "category": "SHOOTER",
+    "sunCost": 125,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.20 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.25 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.30 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.35 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.40 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "PEA", "damage": 100.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.30 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.0 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/PEAPOD/PEAPOD.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 10
+    },
+    "description": "شلیک تیر مستقیم به ازای هر سر کاشته شده روی هم (تا 5 سر، دمیج 20 تا 100)."
+  },
+  {
+    "id": 12,
+    "name": "Split Pea",
+    "type": "SplitPea",
+    "category": "SHOOTER",
+    "sunCost": 125,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": -0.5, "y": 0.2 },
+          "velocity": { "x": -0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": -0.5, "y": 0.2 },
+          "velocity": { "x": -0.2, "y": 0.0 },
+          "delaySeconds": 0.15
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "PEA", "damage": 40.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "PEA", "damage": 40.0, "laneOffset": 0, "positionOffset": { "x": -0.5, "y": 0.2 }, "velocity": { "x": -0.2, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "PEA", "damage": 40.0, "laneOffset": 0, "positionOffset": { "x": -0.5, "y": 0.2 }, "velocity": { "x": -0.2, "y": 0.0 }, "delaySeconds": 0.15 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/SPLITPEA/SPLITPEA.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 10
+    },
+    "description": "شلیک 1 تیر به جلو و 2 تیر به عقب."
+  },
+  {
+    "id": 13,
+    "name": "Bowling Bulb",
+    "type": "BowlingBulb",
+    "category": "SHOOTER",
+    "sunCost": 200,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 2.0,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "BULB_CYAN",
+          "damage": 40.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.1 },
+          "velocity": { "x": 0.25, "y": 0.0 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "BULB_BLUE",
+          "damage": 120.0,
+          "laneOffset": -1,
+          "positionOffset": { "x": 0.5, "y": 0.1 },
+          "velocity": { "x": 0.25, "y": 0.3 },
+          "delaySeconds": 0.5
+        },
+        {
+          "projectileType": "BULB_ORANGE",
+          "damage": 180.0,
+          "laneOffset": 1,
+          "positionOffset": { "x": 0.5, "y": 0.1 },
+          "velocity": { "x": 0.25, "y": -0.3 },
+          "delaySeconds": 1.0
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "BULB_CYAN", "damage": 40.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.1 }, "velocity": { "x": 0.25, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "BULB_BLUE", "damage": 120.0, "laneOffset": -1, "positionOffset": { "x": 0.5, "y": 0.1 }, "velocity": { "x": 0.25, "y": 0.3 }, "delaySeconds": 0.3 },
+        { "projectileType": "BULB_ORANGE", "damage": 180.0, "laneOffset": 1, "positionOffset": { "x": 0.5, "y": 0.1 }, "velocity": { "x": 0.25, "y": -0.3 }, "delaySeconds": 0.6 },
+        { "projectileType": "BULB_CYAN", "damage": 40.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.1 }, "velocity": { "x": 0.25, "y": 0.0 }, "delaySeconds": 2.0 },
+        { "projectileType": "BULB_BLUE", "damage": 120.0, "laneOffset": -1, "positionOffset": { "x": 0.5, "y": 0.1 }, "velocity": { "x": 0.25, "y": 0.3 }, "delaySeconds": 2.3 },
+        { "projectileType": "BULB_ORANGE", "damage": 180.0, "laneOffset": 1, "positionOffset": { "x": 0.5, "y": 0.1 }, "velocity": { "x": 0.25, "y": -0.3 }, "delaySeconds": 2.6 },
+        { "projectileType": "BULB_CYAN", "damage": 40.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.1 }, "velocity": { "x": 0.25, "y": 0.0 }, "delaySeconds": 4.0 },
+        { "projectileType": "BULB_BLUE", "damage": 120.0, "laneOffset": -1, "positionOffset": { "x": 0.5, "y": 0.1 }, "velocity": { "x": 0.25, "y": 0.3 }, "delaySeconds": 4.3 },
+        { "projectileType": "BULB_ORANGE", "damage": 180.0, "laneOffset": 1, "positionOffset": { "x": 0.5, "y": 0.1 }, "velocity": { "x": 0.25, "y": -0.3 }, "delaySeconds": 4.6 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/BOWLINGBULB/BOWLINGBULB.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "special",
+      "plantFoodLabel": "plantfood1",
+      "animSpeed": 1.0,
+      "actionTriggerLabel": "trigger_release"
+    },
+    "description": "شلیک 3 نوع پیاز که بین لاین‌ها کمانه می‌کند (دمیج 40/120/180)."
+  },
+  {
+    "id": 14,
+    "name": "Cactus",
+    "type": "Cactus",
+    "category": "STRIKE_THROUGH",
+    "sunCost": 175,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "SPIKE",
+          "damage": 30.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.25 },
+          "velocity": { "x": 0.25, "y": 0.0 },
+          "delaySeconds": 0.0
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "SPIKE", "damage": 30.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.25 }, "velocity": { "x": 0.25, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "SPIKE", "damage": 30.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.25 }, "velocity": { "x": 0.25, "y": 0.0 }, "delaySeconds": 0.2 },
+        { "projectileType": "SPIKE", "damage": 30.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.25 }, "velocity": { "x": 0.25, "y": 0.0 }, "delaySeconds": 0.4 },
+        { "projectileType": "SPIKE", "damage": 30.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.25 }, "velocity": { "x": 0.25, "y": 0.0 }, "delaySeconds": 0.6 },
+        { "projectileType": "SPIKE", "damage": 30.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.25 }, "velocity": { "x": 0.25, "y": 0.0 }, "delaySeconds": 0.8 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/CACTUS/CACTUS.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 10
+    },
+    "description": "شلیک خار مستقیم (عبور از چند زامبی)."
+  },
+  {
+    "id": 15,
+    "name": "Fire Peashooter",
+    "type": "FirePeashooter",
+    "category": "SHOOTER",
+    "sunCost": 175,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "FIRE_PEA",
+          "damage": 40.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "FIRE_PEA", "damage": 40.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "FIRE_PEA", "damage": 40.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.15 },
+        { "projectileType": "FIRE_PEA", "damage": 40.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.30 },
+        { "projectileType": "FIRE_PEA", "damage": 40.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.45 },
+        { "projectileType": "FIRE_PEA", "damage": 40.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.60 },
+        { "projectileType": "FIRE_PEA", "damage": 40.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.75 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/FIREPEASHOOTER/FIREPEASHOOTER.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 10
+    },
+    "description": "شلیک تیر مستقیم آتشین (دمیج 2 برابر)."
+  },
+  {
+    "id": 16,
+    "name": "Starfruit",
+    "type": "Starfruit",
+    "category": "SHOOTER",
+    "sunCost": 150,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "STAR",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.200, "y": 0.000 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "STAR",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.062, "y": 0.190 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "STAR",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": -0.162, "y": 0.118 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "STAR",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": -0.162, "y": -0.118 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "STAR",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.062, "y": -0.190 },
+          "delaySeconds": 0.0
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "STAR", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.200, "y": 0.000 }, "delaySeconds": 0.0 },
+        { "projectileType": "STAR", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.062, "y": 0.190 }, "delaySeconds": 0.0 },
+        { "projectileType": "STAR", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": -0.162, "y": 0.118 }, "delaySeconds": 0.0 },
+        { "projectileType": "STAR", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": -0.162, "y": -0.118 }, "delaySeconds": 0.0 },
+        { "projectileType": "STAR", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.062, "y": -0.190 }, "delaySeconds": 0.0 },
+        { "projectileType": "STAR", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.200, "y": 0.000 }, "delaySeconds": 0.2 },
+        { "projectileType": "STAR", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.062, "y": 0.190 }, "delaySeconds": 0.2 },
+        { "projectileType": "STAR", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": -0.162, "y": 0.118 }, "delaySeconds": 0.2 },
+        { "projectileType": "STAR", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": -0.162, "y": -0.118 }, "delaySeconds": 0.2 },
+        { "projectileType": "STAR", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.062, "y": -0.190 }, "delaySeconds": 0.2 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/STARFRUIT/STARFRUIT.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 12
+    },
+    "description": "شلیک در 5 جهت ستاره‌ای شامل عقب."
+  },
+  {
+    "id": 17,
+    "name": "Goo Peashooter",
+    "type": "GooPeashooter",
+    "category": "SHOOTER",
+    "sunCost": 125,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "GOO_PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.2, "y": 0.0 },
+          "delaySeconds": 0.0
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "GOO_PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "GOO_PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.15 },
+        { "projectileType": "GOO_PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.30 },
+        { "projectileType": "GOO_PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.45 },
+        { "projectileType": "GOO_PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.60 },
+        { "projectileType": "GOO_PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.75 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/GOOPEASHOOTER/GOOPEASHOOTER.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 10
+    },
+    "description": "شلیک تیر مستقیم (نادیده گرفتن زره + آسیب مستمر)."
+  },
+  {
+    "id": 18,
+    "name": "Mega Gatlin Pea",
+    "type": "MegaGatlingPea",
+    "category": "SHOOTER",
+    "sunCost": 400,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.3, "y": 0.0 },
+          "delaySeconds": 0.0
+        },
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.3, "y": 0.0 },
+          "delaySeconds": 0.12
+        },
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.3, "y": 0.0 },
+          "delaySeconds": 0.24
+        },
+        {
+          "projectileType": "PEA",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.2 },
+          "velocity": { "x": 0.3, "y": 0.0 },
+          "delaySeconds": 0.36
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.3, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.3, "y": 0.0 }, "delaySeconds": 0.08 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.3, "y": 0.0 }, "delaySeconds": 0.16 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.3, "y": 0.0 }, "delaySeconds": 0.24 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.3, "y": 0.0 }, "delaySeconds": 0.32 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.3, "y": 0.0 }, "delaySeconds": 0.40 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.3, "y": 0.0 }, "delaySeconds": 0.48 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.3, "y": 0.0 }, "delaySeconds": 0.56 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.3, "y": 0.0 }, "delaySeconds": 0.64 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.3, "y": 0.0 }, "delaySeconds": 0.72 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/MEGAGATLING/MEGAGATLING.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.2,
+      "actionTriggerFrame": 8
+    },
+    "description": "شلیک 4 تیر مستقیم متوالی با سرعت بسیار بالا."
+  },
+  {
+    "id": 19,
+    "name": "Sea-shroom",
+    "type": "Seashroom",
+    "category": "SHOOTER",
+    "sunCost": 0,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 15.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "SPORE",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.15 },
+          "velocity": { "x": 0.15, "y": 0.0 },
+          "delaySeconds": 0.0
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "SPORE", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.15 }, "velocity": { "x": 0.15, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "SPORE", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.15 }, "velocity": { "x": 0.15, "y": 0.0 }, "delaySeconds": 0.15 },
+        { "projectileType": "SPORE", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.15 }, "velocity": { "x": 0.15, "y": 0.0 }, "delaySeconds": 0.30 },
+        { "projectileType": "SPORE", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.15 }, "velocity": { "x": 0.15, "y": 0.0 }, "delaySeconds": 0.45 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/SEASHROOM/SEASHROOM.PAM",
+      "idleLabel": "idle",
+      "attackActionLabel": "attack",
+      "plantFoodLabel": "pf",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه."
+  },
+  {
+    "id": 20,
+    "name": "Puff-shroom",
+    "type": "Puffshroom",
+    "category": "SHOOTER",
+    "sunCost": 0,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        {
+          "projectileType": "SPORE",
+          "damage": 20.0,
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.5, "y": 0.15 },
+          "velocity": { "x": 0.15, "y": 0.0 },
+          "delaySeconds": 0.0
+        }
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "patterns": [
+        { "projectileType": "SPORE", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.15 }, "velocity": { "x": 0.15, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "SPORE", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.15 }, "velocity": { "x": 0.15, "y": 0.0 }, "delaySeconds": 0.15 },
+        { "projectileType": "SPORE", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.15 }, "velocity": { "x": 0.15, "y": 0.0 }, "delaySeconds": 0.30 },
+        { "projectileType": "SPORE", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.15 }, "velocity": { "x": 0.15, "y": 0.0 }, "delaySeconds": 0.45 }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/PUFFSHROOM/PUFFSHROOM.PAM",
+      "idleLabel": "idle_stage1",
+      "attackActionLabel": "special_stage1",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه."
+  }
+]
