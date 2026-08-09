@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.pvz.controller.AudioManager;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.User;
 import com.pvz.utils.SaveManager;
@@ -65,6 +66,7 @@ public class PvZ2 extends Game {
         } else {
             setScreen(new MainMenu(this));
         }
+        AudioManager.getInstance().playMusic("assets/audio/music/Laura Shigihara - Crazy Dave (In-Game).mp3",true,0.7f);
     }
 
     /**
