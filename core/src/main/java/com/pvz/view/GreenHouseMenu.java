@@ -25,6 +25,7 @@ import com.pvz.models.greenhouse.GreenHouse;
 import com.pvz.models.greenhouse.GreenHousePlant;
 import com.pvz.models.greenhouse.GreenHousePot;
 import com.pvz.models.user.Profile;
+import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
 /**
@@ -55,6 +56,22 @@ public class GreenHouseMenu extends ScreenAdapter {
     private static final float CELL_SIZE = 155f;
     private static final float CELL_PAD = 40f;
     private static final float GRID_VIEWPORT_HEIGHT = 950f;
+    /** Whole pot grid offset from the top of its area. Increase to push the grid DOWN, decrease to move it UP. */
+    private static final float GRID_UP_OFFSET = -63f;
+    /** Row 2 is lifted this many px (via a smaller top pad) so it sits a bit higher on the background. */
+    private static final float ROW_2_LIFT = 38f;
+    /** Row 3 is lifted a bit more than row 2 (this much extra on top of {@link #ROW_2_LIFT}). */
+    private static final float ROW_3_EXTRA_LIFT = 18f;
+    /** How many px the plant art's bottom sits above the bottom of its pot cell. Raise it to
+     *  make the plant stick further out of the pot, lower it to tuck the plant back in. */
+    private static final float PLANT_ART_LIFT = 75f;
+
+    /** Grow-now dialog frame: total width, and the padding between the content and the
+     *  decorative border so the buttons/text sit comfortably inside the cadre. */
+    private static final float GROW_DIALOG_WIDTH = 820f;
+    private static final float GROW_DIALOG_PAD_TOP = 48f;
+    private static final float GROW_DIALOG_PAD_BOTTOM = 42f;
+    private static final float GROW_DIALOG_PAD_SIDE = 56f;
 
     private final PvZ2 game;
     private final GreenHouseController controller;
@@ -63,6 +80,13 @@ public class GreenHouseMenu extends ScreenAdapter {
 
     /** Growing pots whose countdown label needs refreshing every frame. */
     private final List<TimerBinding> timerBindings = new ArrayList<>();
+
+    private Table growModal;
+    private Label growPlantLabel;
+    private Label growCostLabel;
+    private Label growHintLabel;
+    private int growTargetX;
+    private int growTargetY;
 
     public GreenHouseMenu(PvZ2 game) {
         this.game = game;
@@ -94,7 +118,28 @@ public class GreenHouseMenu extends ScreenAdapter {
         stack.add(rootTable);
 
         rootTable.add(buildTopBar()).fillX().top().padTop(30).padLeft(40).padRight(40).row();
-        rootTable.add(buildPotGrid()).expand().center().padTop(90).row();
+        rootTable.add(buildTitle()).padTop(20).row();
+        rootTable.add(buildPotGrid()).expand().top().padTop(GRID_UP_OFFSET).row();
+
+        stack.add(buildGrowModal());
+    }
+
+    private Table buildTitle() {
+        GreenHouse greenHouse = controller.getGreenHouse();
+
+        Table titleBlock = new Table();
+        Label title = new Label("GreenHouse", skin, "big_outline");
+        title.setFontScale(1.6f);
+        title.setColor(Color.WHITE);
+        titleBlock.add(title).row();
+
+        Label subtitle = new Label(greenHouse.getUnlockedPotCount() + "/" + (GreenHouse.WIDTH * GreenHouse.HEIGHT)
+            + " pots unlocked", skin, "medium");
+        subtitle.setFontScale(1.0f);
+        subtitle.setColor(new Color(0.6f, 1f, 0.65f, 1f));
+        titleBlock.add(subtitle).padTop(6);
+
+        return titleBlock;
     }
 
     private Table buildTopBar() {
@@ -103,31 +148,20 @@ public class GreenHouseMenu extends ScreenAdapter {
         Table topLeft = new Table();
         topLeft.add(MenuUiKit.backButton(
             MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)),
-            () -> game.setScreen(new MainMenu(game))
+            () -> game.setScreen(new GameModesMenu(game))
         )).size(70).padRight(24);
-
-        GreenHouse greenHouse = controller.getGreenHouse();
-        Table titleBlock = new Table();
-        Label title = new Label("Greenhouse", skin, "big");
-        titleBlock.add(title).row();
-        Label subtitle = new Label(greenHouse.getUnlockedPotCount() + "/" + (GreenHouse.WIDTH * GreenHouse.HEIGHT)
-            + " pots unlocked", skin);
-        subtitle.setFontScale(0.85f);
-        subtitle.setColor(0.8f, 0.8f, 0.8f, 1f);
-        titleBlock.add(subtitle).padTop(4);
-        topLeft.add(titleBlock);
 
         Table topRight = new Table();
         Profile profile = currentProfile();
         int coins = profile != null ? profile.getCoins() : 0;
         int diamonds = profile != null ? profile.getDiamonds() : 0;
         topRight.add(MenuUiKit.resourceWidget(skin, "textures/ui/coin_icon.png",
-            new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(coins))).padRight(15);
+            new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(coins), 195, 63)).padRight(15);
         topRight.add(MenuUiKit.resourceWidget(skin, "textures/ui/diamond_icon.png",
-            new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(diamonds)));
+            new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(diamonds), 195, 63));
 
-        topBar.add(topLeft).left().expandX();
-        topBar.add(topRight).right();
+        topBar.add(topLeft).left().expandX().top().padTop(40);
+        topBar.add(topRight).right().top().padTop(40).padRight(20);
         return topBar;
     }
 
@@ -136,9 +170,16 @@ public class GreenHouseMenu extends ScreenAdapter {
 
         Table grid = new Table();
         for (int y = 1; y <= GreenHouse.HEIGHT; y++) {
+            float topPad = CELL_PAD;
+            if (y >= 3) {
+                topPad = CELL_PAD - ROW_2_LIFT - ROW_3_EXTRA_LIFT;
+            } else if (y == 2) {
+                topPad = CELL_PAD - ROW_2_LIFT;
+            }
             for (int x = 1; x <= GreenHouse.WIDTH; x++) {
                 GreenHousePot pot = greenHouse.getPot(x, y);
-                grid.add(buildPotCell(pot)).size(CELL_SIZE, CELL_SIZE + 34).pad(CELL_PAD);
+                grid.add(buildPotCell(pot)).size(CELL_SIZE, CELL_SIZE + 34)
+                    .padTop(topPad).padBottom(CELL_PAD).padLeft(CELL_PAD).padRight(CELL_PAD);
             }
             grid.row();
         }
@@ -184,16 +225,18 @@ public class GreenHouseMenu extends ScreenAdapter {
         }
 
         // Scaling.fit (not fill) so the art always stays inside its own cell — no bleed
-        // into the row below regardless of the PNG's actual aspect ratio. No backing tint
+        // into the row below regardless of the PNG's actual aspect ratio. The pot art is
+        // bottom-aligned so every pot's base/plank sits on the same line even when the
+        // individual pot PNGs have different internal (vertical) padding. No backing tint
         // panel behind it: your pot PNGs are already transparent outside the pot shape,
         // so a backing color would just show through as an ugly square behind the pot.
-        potStack.add(fittedImage(potArt, fallbackTint, Scaling.fit));
+        potStack.add(fittedImage(potArt, fallbackTint, Scaling.fit, Align.bottom));
 
         if (locked) {
             potStack.add(centeredIcon(LOCK_ICON, null, 0.5f));
         } else if (plant != null) {
             String plantArt = PLANTS_DIR + (plant.isMariGold() ? "marigold" : plant.getPlantType()) + ".png";
-            potStack.add(centeredIcon(plantArt, null, 0.7f));
+            potStack.add(liftedIcon(plantArt, null, 0.7f, PLANT_ART_LIFT));
         }
 
         cell.add(potStack).size(CELL_SIZE, CELL_SIZE).row();
@@ -253,9 +296,119 @@ public class GreenHouseMenu extends ScreenAdapter {
         if (plant.isReady()) {
             controller.collect(x, y);
             rebuild();
+        } else {
+            showGrowDialog(x, y);
         }
-        // still growing: tapping does nothing for now (see GreenHouseController.growNow
-        // if you want to add an instant-grow-with-diamonds button later)
+    }
+
+    /** Full-screen overlay asking to spend diamonds to finish the growth instantly. */
+    private Table buildGrowModal() {
+        growModal = new Table();
+        growModal.setFillParent(true);
+        growModal.setVisible(false);
+        growModal.setBackground(MenuUiKit.solidDrawable(new Color(0f, 0f, 0f, 0.55f)));
+        growModal.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Dismiss only when the dim backdrop itself (not a panel/button) is clicked.
+                if (event.getTarget() == growModal) {
+                    growModal.setVisible(false);
+                }
+            }
+        });
+
+        float contentW = GROW_DIALOG_WIDTH - GROW_DIALOG_PAD_SIDE * 2;
+
+        BorderedTable panel = new BorderedTable();
+        panel.setBackground(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
+        panel.pad(GROW_DIALOG_PAD_TOP, GROW_DIALOG_PAD_SIDE, GROW_DIALOG_PAD_BOTTOM, GROW_DIALOG_PAD_SIDE);
+
+        growPlantLabel = new Label("", skin, "big_outline");
+        growPlantLabel.setFontScale(1.25f);
+        growPlantLabel.setColor(new Color(0.6f, 0.42f, 0.06f, 1f));
+        growPlantLabel.setWrap(true);
+        growPlantLabel.setAlignment(Align.center);
+
+        growCostLabel = new Label("", skin, "medium");
+        growCostLabel.setFontScale(1.1f);
+        growCostLabel.setColor(new Color(0.1f, 0.1f, 0.1f, 1f));
+        growCostLabel.setWrap(true);
+        growCostLabel.setAlignment(Align.center);
+
+        growHintLabel = new Label("", skin, "medium");
+        growHintLabel.setFontScale(1.05f);
+        growHintLabel.setColor(new Color(0.72f, 0.08f, 0.03f, 1f));
+        growHintLabel.setWrap(true);
+        growHintLabel.setAlignment(Align.center);
+
+        TextButton.TextButtonStyle buttonStyle = growDialogButtonStyle();
+
+        TextButton growBtn = new TextButton("Grow Now", buttonStyle);
+        growBtn.getLabel().setFontScale(1.25f);
+        growBtn.getLabel().setColor(Color.WHITE);
+        growBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (controller.growNow(growTargetX, growTargetY)) {
+                    growModal.setVisible(false);
+                    rebuild();
+                } else {
+                    growHintLabel.setText("Not enough diamonds!");
+                }
+            }
+        });
+
+        TextButton cancelBtn = new TextButton("Cancel", buttonStyle);
+        cancelBtn.getLabel().setFontScale(1.25f);
+        cancelBtn.getLabel().setColor(new Color(0.9f, 0.9f, 0.9f, 1f));
+        cancelBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                growModal.setVisible(false);
+            }
+        });
+
+        Table buttonRow = new Table();
+        buttonRow.add(growBtn).size(260, 84).padRight(20);
+        buttonRow.add(cancelBtn).size(200, 84);
+
+        panel.add(growPlantLabel).width(contentW).padBottom(16).row();
+        panel.add(growCostLabel).width(contentW).padBottom(8).row();
+        panel.add(growHintLabel).width(contentW).padBottom(30).row();
+        panel.add(buttonRow).width(contentW).center();
+
+        growModal.add(panel).width(GROW_DIALOG_WIDTH);
+        return growModal;
+    }
+
+    private void showGrowDialog(int x, int y) {
+        GreenHousePot pot = controller.getGreenHouse().getPot(x, y);
+        if (pot == null || pot.isLocked() || pot.isEmpty()) return;
+
+        GreenHousePlant plant = pot.getPlant();
+        if (plant.isReady()) return;
+
+        int cost = controller.growNowCost(x, y);
+        if (cost < 0) return;
+
+        growTargetX = x;
+        growTargetY = y;
+        growPlantLabel.setText((plant.isMariGold() ? "MariGold" : plant.getPlantType()) + " is still growing");
+        growCostLabel.setText("Finish it now for " + cost + " diamond" + (cost == 1 ? "" : "s") + "?");
+        growHintLabel.setText("");
+        growModal.setVisible(true);
+        growModal.toFront();
+    }
+
+    private TextButton.TextButtonStyle growDialogButtonStyle() {
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.up = skin.getDrawable("image_ui_generic_bluetab_down");
+        style.over = skin.getDrawable("image_ui_generic_bluetab_down");
+        style.checked = skin.getDrawable("image_ui_generic_bluetab_active");
+        style.font = skin.getFont("FBUSV8C5EI_2");
+        style.fontColor = new Color(0.2f, 0.2f, 0.2f, 1f);
+        style.checkedFontColor = Color.WHITE;
+        return style;
     }
 
     private String formatRemaining(GreenHousePlant plant) {
@@ -269,6 +422,13 @@ public class GreenHouseMenu extends ScreenAdapter {
 
     /** Full-size art (or a tinted fallback panel of the same size) with the given scaling mode. */
     private Image fittedImage(String path, Color fallbackTint, Scaling scaling) {
+        return fittedImage(path, fallbackTint, scaling, Align.center);
+    }
+
+    /** Like {@link #fittedImage(String, Color, Scaling)} but pins the art to the given alignment
+     *  inside its cell — e.g. {@link Align#bottom} for the pot art so every pot's base/plank
+     *  sits on the same line regardless of each PNG's internal padding. */
+    private Image fittedImage(String path, Color fallbackTint, Scaling scaling, int alignment) {
         boolean hasArt = path != null && !path.isEmpty() && Gdx.files.internal(path).exists();
         Image image;
         if (hasArt) {
@@ -278,7 +438,7 @@ public class GreenHouseMenu extends ScreenAdapter {
             image = new Image(MenuUiKit.solidDrawable(fallbackTint != null ? fallbackTint : new Color(0f, 0f, 0f, 0f)));
         }
         image.setScaling(scaling);
-        image.setAlign(Align.center);
+        image.setAlign(alignment);
         return image;
     }
 
@@ -287,6 +447,15 @@ public class GreenHouseMenu extends ScreenAdapter {
         Image image = fittedImage(path, fallbackTint, Scaling.fit);
         Table wrap = new Table();
         wrap.add(image).size(CELL_SIZE * sizeFraction).center();
+        return wrap;
+    }
+
+    /** Like {@link #centeredIcon} but the icon's bottom edge is pinned {@code lift} px above the
+     *  bottom of the cell (used for plant art so it rises out of the pot). */
+    private Actor liftedIcon(String path, Color fallbackTint, float sizeFraction, float lift) {
+        Image image = fittedImage(path, fallbackTint, Scaling.fit);
+        Table wrap = new Table();
+        wrap.add(image).size(CELL_SIZE * sizeFraction).expandY().bottom().padBottom(lift);
         return wrap;
     }
 

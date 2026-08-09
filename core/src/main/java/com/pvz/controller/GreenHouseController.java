@@ -101,24 +101,44 @@ public class GreenHouseController {
         return plant;
     }
 
-    /** Instantly finishes growth for a diamond cost equal to the remaining hours. Returns false if it can't afford it / nothing to grow. */
+    /**
+     * Returns how many diamonds it would cost to instantly finish the plant in pot (x, y),
+     * or -1 if there is nothing growable there (locked / empty / already ready).
+     */
+    public int growNowCost(int x, int y) {
+        GreenHousePot pot = growablePot(x, y);
+        if (pot == null) return -1;
+        return pot.getPlant().remainingHours();
+    }
+
+    /**
+     * Instantly finishes growth for a diamond cost equal to the remaining hours.
+     * Returns true only if it actually grew (i.e. the pot had a growing plant and
+     * the user could afford the cost, which is then deducted and the save written).
+     */
     public boolean growNow(int x, int y) {
-        GreenHouse greenHouse = getGreenHouse();
-        if (!greenHouse.isValidCoordinate(x, y)) return false;
+        GreenHousePot pot = growablePot(x, y);
+        if (pot == null) return false;
 
-        GreenHousePot pot = greenHouse.getPot(x, y);
-        if (pot == null || pot.isLocked() || pot.isEmpty()) return false;
-
-        GreenHousePlant plant = pot.getPlant();
-        if (plant.isReady()) return false;
-
-        int cost = plant.remainingHours();
+        int cost = pot.getPlant().remainingHours();
         User user = getCurrentUser();
         if (user == null || user.getProfile().getDiamonds() < cost) return false;
 
         user.getProfile().setDiamonds(user.getProfile().getDiamonds() - cost);
-        greenHouse.grow(x, y);
+        getGreenHouse().grow(x, y);
         user.saveUser();
         return true;
+    }
+
+    /** The pot at (x, y) if it holds a plant that is not finished growing yet, else null. */
+    private GreenHousePot growablePot(int x, int y) {
+        GreenHouse greenHouse = getGreenHouse();
+        if (!greenHouse.isValidCoordinate(x, y)) return null;
+
+        GreenHousePot pot = greenHouse.getPot(x, y);
+        if (pot == null || pot.isLocked() || pot.isEmpty()) return null;
+
+        if (pot.getPlant().isReady()) return null;
+        return pot;
     }
 }

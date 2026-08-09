@@ -75,7 +75,7 @@ public class GreenHouse {
     public int getUnlockedPotCount() {
         int count = 0;
         for (GreenHousePot pot : greenHousePots) {
-            if (!pot.isLocked()) {
+            if (!pot.isLocked() && isValidCoordinate(pot.getX(), pot.getY())) {
                 count++;
             }
         }

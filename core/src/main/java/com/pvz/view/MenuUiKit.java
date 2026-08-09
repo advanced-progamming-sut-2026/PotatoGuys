@@ -70,6 +70,10 @@ public final class MenuUiKit {
         return new TextureRegionDrawable(solidTexture(color));
     }
 
+    /** How far (at the 130px reference size) the value number sits from the left edge of the
+     *  coin/diamond pill. Lower = number sits further left, right after the icon. */
+    private static final float RESOURCE_LABEL_PAD_FACTOR = 50f;
+
     // ---------------------------------------------------------------- top bar pieces
 
     /** Coin/diamond style pill: an icon on the left and a value label on top of it. */
@@ -77,7 +81,7 @@ public final class MenuUiKit {
         return resourceWidget(skin, iconPath, fallbackTint, value, 130, 42);
     }
 
-    /** Coin/diamond style pill with a custom size. */
+    /** Coin/diamond style pill with a custom size. Label padding and font scale follow the width. */
     public static Table resourceWidget(Skin skin, String iconPath, Color fallbackTint, String value, float width, float height) {
         Stack stack = new Stack();
 
@@ -95,9 +99,9 @@ public final class MenuUiKit {
         stack.add(bg);
 
         Label label = new Label(value, skin);
-        label.setFontScale(1.2f);
+        label.setFontScale(1.2f * (width / 130f));
         Table textTable = new Table();
-        textTable.add(label).left().expand().padLeft(78);
+        textTable.add(label).left().expand().padLeft(RESOURCE_LABEL_PAD_FACTOR * (width / 130f));
         stack.add(textTable);
 
         Table outer = new Table();

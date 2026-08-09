@@ -10,8 +10,8 @@
   "profilePicture": "textures/avatars/avatar_nami.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 200,
-    "diamonds": 5,
+    "coins": 1700,
+    "diamonds": 1,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -164,10 +164,10 @@
         "y": 1,
         "locked": false,
         "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-10T00:56:17.405448800",
-          "growthHours": 2
+          "kind": "unlocked",
+          "plantType": "Jalapeno",
+          "plantedTime": "2026-08-10T02:35:16.087248500",
+          "growthHours": 8
         }
       },
       {
@@ -188,7 +188,7 @@
         "greenHousePlant": {
           "kind": "mariGold",
           "plantType": null,
-          "plantedTime": "2026-08-10T00:56:21.656859900",
+          "plantedTime": "2026-08-10T02:35:14.403278600",
           "growthHours": 2
         }
       },
@@ -1213,7 +1213,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786310755338
+    "lastDailyReset": 1786316704920
   },
   "questLogRefreshed": false
 }

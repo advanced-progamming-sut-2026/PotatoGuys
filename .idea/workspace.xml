@@ -4,14 +4,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="added leaderboard and made the game appearance better">
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="bug fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/greenhouse/pot_ready.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/GreenHouseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/GreenHouseController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/greenhouse/GreenHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/greenhouse/GreenHouse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/cd7789ee-2e43-41cf-8e06-dc1d02f23eae.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/cd7789ee-2e43-41cf-8e06-dc1d02f23eae.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/e0355803-1e58-4486-a65c-c5668fb0d288.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/e0355803-1e58-4486-a65c-c5668fb0d288.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ChapterMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ChapterMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GameModesMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GameModesMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/MenuUiKit.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/MenuUiKit.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,12 +82,12 @@
     }
   }
 }</component>
-  <component name="GitLabMergeRequestsSettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "first": "https://hamgit.ir/sedhhn/plantsvszombies2.git",
-    "second": "304f2ff1-c759-44fd-9fe9-01504ac41863"
+  <component name="GitLabMergeRequestsSettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;first&quot;: &quot;https://hamgit.ir/sedhhn/plantsvszombies2.git&quot;,
+    &quot;second&quot;: &quot;304f2ff1-c759-44fd-9fe9-01504ac41863&quot;
   }
-}]]></component>
+}</component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -124,7 +124,7 @@
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/104/IdeaProjects/plantsvszombies2/assets/textures/greenhouse",
+    "last_opened_file_path": "C:/Users/104/IdeaProjects/plantsvszombies2/assets/textures/greenhouse/plants",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -141,14 +141,14 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse\plants" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\core\src\main\java\com\pvz" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\core\src\main\java\com\pvz\view" />
-      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\ui" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Lwjgl3Launcher">
+  <component name="RunManager" selected="Gradle.plantsvszombies2 [:lwjgl3:run]">
     <configuration name="Lwjgl3Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -232,8 +232,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Lwjgl3Launcher" />
         <item itemvalue="Gradle.plantsvszombies2 [:lwjgl3:run]" />
+        <item itemvalue="Application.Lwjgl3Launcher" />
         <item itemvalue="Application.ProjectMerger" />
         <item itemvalue="Gradle.plantsvszombies2" />
       </list>
@@ -306,7 +306,23 @@
       <option name="project" value="LOCAL" />
       <updated>1786200686143</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="added Greenhouse (need some fixes)">
+      <option name="closed" value="true" />
+      <created>1786311987562</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1786311987562</updated>
+    </task>
+    <task id="LOCAL-00007" summary="bug fixes">
+      <option name="closed" value="true" />
+      <created>1786312034907</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1786312034907</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -318,6 +334,8 @@
     <MESSAGE value="added travel log menu" />
     <MESSAGE value="setting and news and profile menu updated" />
     <MESSAGE value="updated chapter selection menu and game mode menu appearance" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated chapter selection menu and game mode menu appearance" />
+    <MESSAGE value="added Greenhouse (need some fixes)" />
+    <MESSAGE value="bug fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="bug fixes" />
   </component>
 </project>
