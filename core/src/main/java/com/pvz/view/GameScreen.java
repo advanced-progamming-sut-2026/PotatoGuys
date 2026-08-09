@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,6 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.pvz.PvZ2;
+import com.pvz.controller.game.GameController;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
 import com.pvz.enums.GameAsset;
@@ -32,6 +35,8 @@ import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.LevelLoader;
+import com.pvz.models.games.map.GameMap;
+import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
@@ -146,6 +151,7 @@ public class GameScreen extends ScreenAdapter {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (currentState == State.PLAYING) {
+                    context = AppContext.getInstance().getGameContext();
                     context = AppContext.getInstance().getGameContext();
                     if (context != null) {
                         // تبدیل ورودی ماوس/لمس به مختصات دقیق World
@@ -296,6 +302,17 @@ public class GameScreen extends ScreenAdapter {
                 camera.position.set(startX, 720f / 2f, 0);
                 gameUiModal.updateHud();
                 break;
+        }
+
+        // Check sun clicks in PLAYING state on left click
+        if (currentState == State.PLAYING && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            viewport.unproject(touchPos);
+            if (checkSunClick(touchPos.x, touchPos.y)) {
+                if (gameUiModal != null) {
+                    gameUiModal.setSelectedCard(null);
+                }
+            }
         }
 
         // ۲. به روزرسانی دوربین و ماتریس‌ها

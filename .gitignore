@@ -163,7 +163,11 @@ Thumbs.db
 ## You should delete or comment out the next line if you have configuration in a different resource-config.json .
 **/resource-config.json
 /assets/pvz-asset/
+<<<<<<< HEAD
 /assets/pvz asset/
 /assets/pvz-asset-browser.jar
 /assets/browser_mac.jar
+=======
+/assets/pvz-asset-browser.jar
+>>>>>>> e49d54917d2906d5dbf898973d452b6b5af27bf4
 /assets/pvz-assets/

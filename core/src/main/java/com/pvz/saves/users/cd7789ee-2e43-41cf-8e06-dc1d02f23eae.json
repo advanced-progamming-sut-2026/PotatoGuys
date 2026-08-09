@@ -10,8 +10,13 @@
   "profilePicture": "textures/avatars/avatar_nami.png",
   "profile": {
     "gamePlayed": 0,
+<<<<<<< HEAD
     "coins": 200,
     "diamonds": 5,
+=======
+    "coins": 0,
+    "diamonds": 0,
+>>>>>>> e49d54917d2906d5dbf898973d452b6b5af27bf4
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -76,11 +81,15 @@
           "isBoosted": false
         }
       ],
+<<<<<<< HEAD
       "unlockedZombies": [
         "BASIC",
         "CONEHEAD",
         "RA"
       ],
+=======
+      "unlockedZombies": [],
+>>>>>>> e49d54917d2906d5dbf898973d452b6b5af27bf4
       "seedPackets": {}
     },
     "news": {
@@ -88,6 +97,7 @@
         {
           "message": "Welcome   to   Plants   vs   Zombies 2   rrz ! ",
           "unread": false
+<<<<<<< HEAD
         },
         {
           "message": "New Zombie Encountered: BASIC!",
@@ -100,6 +110,8 @@
         {
           "message": "New Zombie Encountered: RA!",
           "unread": true
+=======
+>>>>>>> e49d54917d2906d5dbf898973d452b6b5af27bf4
         }
       ]
     },
@@ -229,7 +241,11 @@
       {
         "x": 4,
         "y": 3,
+<<<<<<< HEAD
         "locked": false,
+=======
+        "locked": true,
+>>>>>>> e49d54917d2906d5dbf898973d452b6b5af27bf4
         "greenHousePlant": null
       },
       {
@@ -1188,7 +1204,11 @@
         "variable": "50"
       }
     ],
+<<<<<<< HEAD
     "lastDailyReset": 1786294554227
+=======
+    "lastDailyReset": 1786227889069
+>>>>>>> e49d54917d2906d5dbf898973d452b6b5af27bf4
   },
   "questLogRefreshed": false
 }
