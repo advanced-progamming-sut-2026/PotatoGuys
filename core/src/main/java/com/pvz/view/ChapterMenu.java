@@ -134,6 +134,16 @@ public class ChapterMenu extends ScreenAdapter {
             }
         });
         backBtnWrapper.add(backBtn).size(75, 70);
+
+        ImageButton greenhouseBtn = new ImageButton(MenuUiKit.textureDrawable(MenuUiKit.loadTextureSafe("textures/greenhouse/greenhouse.png")));
+        greenhouseBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new GreenHouseMenu(game));
+            }
+        });
+        backBtnWrapper.add(greenhouseBtn).size(75, 70).padLeft(24);
     }
 
     @Override

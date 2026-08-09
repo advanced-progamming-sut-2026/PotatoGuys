@@ -2,9 +2,7 @@ package com.pvz.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 
-import com.pvz.enums.AnsiColors;
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.greenhouse.GreenHouse;
@@ -13,10 +11,15 @@ import com.pvz.models.greenhouse.GreenHousePot;
 import com.pvz.models.user.MyPlant;
 import com.pvz.models.user.User;
 
+/**
+ * Backs the GreenHouseMenu screen. The previous version of this class was written for the
+ * old text/console menu system (Result/Matcher based) and was fully commented out, so
+ * nothing here was actually reachable from the game before. Rewritten with plain methods
+ * a Scene2D screen can call directly.
+ */
 public class GreenHouseController {
-/*
 
-    private GreenHouse getGreenHouse() {
+    public GreenHouse getGreenHouse() {
         User user = getCurrentUser();
         GreenHouse gh = AppContext.getInstance().getGreenHouse();
         if (gh == null && user != null) {
@@ -49,108 +52,35 @@ public class GreenHouseController {
         return names;
     }
 
-    public Result showGreenhouse(Matcher matcher) {
+    /** Plants a random seed (mostly MariGold, occasionally an unlocked plant) into an empty, unlocked pot. */
+    public boolean plant(int x, int y) {
         GreenHouse greenHouse = getGreenHouse();
-        return new Result(renderGreenhouse(greenHouse));
-    }
+        if (!greenHouse.isValidCoordinate(x, y)) return false;
 
-    private String renderGreenhouse(GreenHouse greenHouse) {
-        StringBuilder sb = new StringBuilder();
-        appendHeader(sb, greenHouse);
-        appendColumnHeaders(sb);
-        appendDivider(sb);
-        for (int y = 1; y <= GreenHouse.HEIGHT; y++) {
-            appendRow(sb, greenHouse, y);
-            appendDivider(sb);
-        }
-        return sb.toString();
-    }
-
-    private void appendHeader(StringBuilder sb, GreenHouse greenHouse) {
-        sb.append("\n=== Greenhouse | Unlocked pots: ").append(greenHouse.getUnlockedPotCount())
-                .append(" / ").append(GreenHouse.WIDTH * GreenHouse.HEIGHT).append(" ===\n");
-    }
-
-    private void appendColumnHeaders(StringBuilder sb) {
-        sb.append("\n     ");
-        for (int x = 1; x <= GreenHouse.WIDTH; x++) {
-            sb.append(String.format(" P%-2d ", x));
-        }
-        sb.append("\n");
-    }
-
-    private void appendDivider(StringBuilder sb) {
-        sb.append("    +");
-        for (int x = 1; x <= GreenHouse.WIDTH; x++) {
-            sb.append("----+");
-        }
-        sb.append("\n");
-    }
-
-    private void appendRow(StringBuilder sb, GreenHouse greenHouse, int y) {
-        sb.append("    |");
-        for (int x = 1; x <= GreenHouse.WIDTH; x++) {
-            sb.append(getCellContent(greenHouse.getPot(x, y))).append('|');
-        }
-        sb.append("  Row ").append(y).append("\n");
-    }
-
-    private String getCellContent(GreenHousePot pot) {
-        if (pot == null) {
-            return "    ";
-        }
-        if (pot.isLocked()) {
-            return AnsiColors.BRIGHT_BLACK + " LK " + AnsiColors.RESET;
-        }
-        if (pot.isEmpty()) {
-            return "    ";
-        }
-
-        GreenHousePlant plant = pot.getPlant();
-        if (plant.isReady()) {
-            return AnsiColors.GREEN + " RD " + AnsiColors.RESET;
-        }
-        return AnsiColors.YELLOW + String.format("G%-3d", plant.remainingHours()) + AnsiColors.RESET;
-    }
-
-    public Result plant(Matcher matcher) {
-        int x = Integer.parseInt(matcher.group(1));
-        int y = Integer.parseInt(matcher.group(2));
-        GreenHouse greenHouse = getGreenHouse();
-
-        if (!greenHouse.isValidCoordinate(x, y)) return new Result("Invalid coordinates.");
         GreenHousePot pot = greenHouse.getPot(x, y);
-        if (pot == null) return new Result("Invalid coordinates.");
-        if (pot.isLocked()) return new Result("Pot is locked.");
-        if (!pot.isEmpty()) return new Result("Pot is not empty.");
+        if (pot == null || pot.isLocked() || !pot.isEmpty()) return false;
 
         List<String> unlockedPlants = getUnlockedPlantNames();
-        greenHouse.plantRandomPotAt(x, y, unlockedPlants);
+        boolean planted = greenHouse.plantRandomPotAt(x, y, unlockedPlants);
 
         User user = getCurrentUser();
-        if (user != null) user.saveUser();
-        return new Result("Plant placed successfully.");
+        if (planted && user != null) user.saveUser();
+        return planted;
     }
 
-    public Result collect(Matcher matcher) {
-        int x = Integer.parseInt(matcher.group(1));
-        int y = Integer.parseInt(matcher.group(2));
+    /** Harvests a ready plant: MariGold pays coins, an unlocked plant stores a boost. Returns what was collected, or null. */
+    public GreenHousePlant collect(int x, int y) {
         GreenHouse greenHouse = getGreenHouse();
-
-        if (!greenHouse.isValidCoordinate(x, y)) return new Result("Invalid coordinates.");
-        GreenHousePot pot = greenHouse.getPot(x, y);
-        if (pot == null) return new Result("Invalid coordinates.");
+        if (!greenHouse.isValidCoordinate(x, y)) return null;
 
         GreenHousePlant plant = greenHouse.collect(x, y);
-        if (plant == null) return new Result("No ready plant found.");
+        if (plant == null) return null;
 
         User user = getCurrentUser();
-        if (user == null) return new Result("No user logged in.");
+        if (user == null) return plant;
 
         if (plant.isMariGold()) {
             user.getProfile().setCoins(user.getProfile().getCoins() + GreenHousePlant.MARIGOLD_REWARD);
-            user.saveUser();
-            return new Result("Harvested MariGold. Collected " + GreenHousePlant.MARIGOLD_REWARD + " coins.");
         } else {
             String plantTypeName = plant.getPlantType();
             PlantType plantType = null;
@@ -164,92 +94,31 @@ public class GreenHouseController {
                 MyPlant myPlant = user.getProfile().getCollection().getPlant(plantType);
                 if (myPlant != null && !myPlant.isBoosted()) {
                     myPlant.setBoosted(true);
-                    user.saveUser();
-                    return new Result("Harvested " + plantTypeName + ". A boost has been stored for " + plantTypeName + ".");
-                } else {
-                    user.saveUser();
-                    return new Result("Harvested " + plantTypeName + ". Boost already stored. Pot emptied.");
                 }
             }
-            user.saveUser();
-            return new Result("Harvested " + plantTypeName + ". Pot emptied.");
         }
+        user.saveUser();
+        return plant;
     }
 
-    public Result grow(Matcher matcher) {
-        int x = Integer.parseInt(matcher.group(1));
-        int y = Integer.parseInt(matcher.group(2));
+    /** Instantly finishes growth for a diamond cost equal to the remaining hours. Returns false if it can't afford it / nothing to grow. */
+    public boolean growNow(int x, int y) {
         GreenHouse greenHouse = getGreenHouse();
+        if (!greenHouse.isValidCoordinate(x, y)) return false;
 
-        if (!greenHouse.isValidCoordinate(x, y)) return new Result("Invalid coordinates.");
         GreenHousePot pot = greenHouse.getPot(x, y);
-        if (pot == null) return new Result("Invalid coordinates.");
-        if (pot.isLocked() || pot.isEmpty()) return new Result("No plant to grow.");
+        if (pot == null || pot.isLocked() || pot.isEmpty()) return false;
 
         GreenHousePlant plant = pot.getPlant();
-        if (plant.isReady()) return new Result("Plant is already ready.");
+        if (plant.isReady()) return false;
 
         int cost = plant.remainingHours();
         User user = getCurrentUser();
-        if (user == null) return new Result("No user logged in.");
-
-        if (user.getProfile().getDiamonds() < cost) {
-            return new Result("Not enough diamonds. Need " + cost + " diamonds, have " + user.getProfile().getDiamonds() + ".");
-        }
+        if (user == null || user.getProfile().getDiamonds() < cost) return false;
 
         user.getProfile().setDiamonds(user.getProfile().getDiamonds() - cost);
         greenHouse.grow(x, y);
         user.saveUser();
-        return new Result("Plant grown instantly for " + cost + " diamonds.");
+        return true;
     }
-
-    public Result inspect(Matcher matcher) {
-        int x = Integer.parseInt(matcher.group(1));
-        int y = Integer.parseInt(matcher.group(2));
-        GreenHouse greenHouse = getGreenHouse();
-
-        if (!greenHouse.isValidCoordinate(x, y)) return new Result("Invalid coordinates.");
-        GreenHousePot pot = greenHouse.getPot(x, y);
-        if (pot == null) return new Result("Invalid coordinates.");
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== Pot (").append(x).append(", ").append(y).append(") ===");
-
-        if (pot.isLocked()) {
-            sb.append("\nStatus: LOCKED");
-            return new Result(sb.toString());
-        }
-        if (pot.isEmpty()) {
-            sb.append("\nStatus: Empty");
-            sb.append("\nUse 'plant pot at (").append(x).append(", ").append(y).append(")' to plant.");
-            return new Result(sb.toString());
-        }
-
-        GreenHousePlant plant = pot.getPlant();
-        String plantName = plant.isMariGold() ? "MariGold" : plant.getPlantType();
-        sb.append("\nPlant: ").append(plantName);
-        sb.append("\nType: ").append(plant.isMariGold() ? "MariGold (coins reward)" : "Unlocked (boost reward)");
-        sb.append("\nGrowth: ").append(plant.getGrowthHours()).append(" hours total");
-
-        if (plant.isReady()) {
-            sb.append("\nStatus: ").append(AnsiColors.GREEN).append("READY TO HARVEST").append(AnsiColors.RESET);
-            sb.append("\nUse 'collect (").append(x).append(", ").append(y).append(")' to harvest.");
-        } else {
-            int remaining = plant.remainingHours();
-            sb.append("\nStatus: ").append(AnsiColors.YELLOW).append("Growing (").append(remaining).append(" hours left)").append(AnsiColors.RESET);
-            sb.append("\nUse 'grow (").append(x).append(", ").append(y).append(")' to speed up (costs ").append(remaining).append(" diamonds).");
-        }
-        return new Result(sb.toString());
-    }
-
-    public Result enterShop(Matcher matcher) {
-        Menu nextMenu = new ShopMenu(new GreenHouseMenu());
-        return new Result("Entered " + nextMenu.getName(), nextMenu);
-    }
-
-    public Result exit(Matcher matcher) {
-        Menu nextMenu = new pvz.view.OldMainMenu();
-        return new Result("Exited to " + nextMenu.getName(), nextMenu);
-    }
-*/
 }

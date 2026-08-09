@@ -10,13 +10,8 @@
   "profilePicture": "textures/avatars/avatar_nami.png",
   "profile": {
     "gamePlayed": 0,
-<<<<<<< HEAD
     "coins": 200,
     "diamonds": 5,
-=======
-    "coins": 0,
-    "diamonds": 0,
->>>>>>> e49d54917d2906d5dbf898973d452b6b5af27bf4
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -81,15 +76,11 @@
           "isBoosted": false
         }
       ],
-<<<<<<< HEAD
       "unlockedZombies": [
         "BASIC",
         "CONEHEAD",
         "RA"
       ],
-=======
-      "unlockedZombies": [],
->>>>>>> e49d54917d2906d5dbf898973d452b6b5af27bf4
       "seedPackets": {}
     },
     "news": {
@@ -97,21 +88,18 @@
         {
           "message": "Welcome   to   Plants   vs   Zombies 2   rrz ! ",
           "unread": false
-<<<<<<< HEAD
         },
         {
           "message": "New Zombie Encountered: BASIC!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: CONEHEAD!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: RA!",
-          "unread": true
-=======
->>>>>>> e49d54917d2906d5dbf898973d452b6b5af27bf4
+          "unread": false
         }
       ]
     },
@@ -164,25 +152,45 @@
         "x": 1,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "CherryBomb",
+          "plantedTime": "2026-08-10T00:56:19.194087500",
+          "growthHours": 8
+        }
       },
       {
         "x": 2,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-10T00:56:17.405448800",
+          "growthHours": 2
+        }
       },
       {
         "x": 3,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "Wallnut",
+          "plantedTime": "2026-08-10T00:56:20.557944300",
+          "growthHours": 8
+        }
       },
       {
         "x": 4,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-10T00:56:21.656859900",
+          "growthHours": 2
+        }
       },
       {
         "x": 5,
@@ -241,12 +249,13 @@
       {
         "x": 4,
         "y": 3,
-<<<<<<< HEAD
         "locked": false,
-=======
-        "locked": true,
->>>>>>> e49d54917d2906d5dbf898973d452b6b5af27bf4
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "Peashooter",
+          "plantedTime": "2026-08-10T00:58:43.384309400",
+          "growthHours": 8
+        }
       },
       {
         "x": 5,
@@ -1204,11 +1213,7 @@
         "variable": "50"
       }
     ],
-<<<<<<< HEAD
-    "lastDailyReset": 1786294554227
-=======
-    "lastDailyReset": 1786227889069
->>>>>>> e49d54917d2906d5dbf898973d452b6b5af27bf4
+    "lastDailyReset": 1786310755338
   },
   "questLogRefreshed": false
 }
