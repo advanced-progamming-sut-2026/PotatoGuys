@@ -28815,7 +28815,7 @@ public class Plant implements TickAware {
     private float iceHp = 0f;
     private static final float MAX_ICE_HP = 600f;
 
-  
+
     public Plant(PlantPropertySheet sheet, PlantAction attackAction, PlantAction feedAction, int col, int lane,
             int level, boolean boosted, GameContext context) {
         this.sheet = sheet;

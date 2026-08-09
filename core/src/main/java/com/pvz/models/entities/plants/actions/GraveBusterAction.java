@@ -3,7 +3,7 @@ package com.pvz.models.entities.plants.actions;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
-import com.pvz.models.games.map.behaviors.DestructibleBehavior;
+import com.pvz.models.games.map.behaviors.GraveBehavior;
 import com.pvz.models.games.map.behaviors.TileBehavior;
 import com.pvz.models.games.map.tile.Tile;
 
@@ -32,7 +32,7 @@ public class GraveBusterAction implements PlantAction {
 
         boolean graveFound = false;
         for (TileBehavior b : new ArrayList<>(tile.getBehaviors())) {
-            if (b instanceof DestructibleBehavior db) {
+            if (b instanceof GraveBehavior db) {
                 db.destroyGrave(tile, ctx);
                 graveFound = true;
             }

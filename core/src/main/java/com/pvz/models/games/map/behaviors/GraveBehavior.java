@@ -8,7 +8,7 @@ import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
 
-public class DestructibleBehavior implements TileBehavior {
+public class GraveBehavior implements TileBehavior {
     public enum GraveReward {
         NONE, SUN_50, PLANT_FOOD
     }
@@ -17,11 +17,11 @@ public class DestructibleBehavior implements TileBehavior {
     private final String name;
     private final GraveReward reward;
 
-    public DestructibleBehavior(float hp, String name) {
+    public GraveBehavior(float hp, String name) {
         this(hp, name, GraveReward.NONE);
     }
 
-    public DestructibleBehavior(float hp, String name, GraveReward reward) {
+    public GraveBehavior(float hp, String name, GraveReward reward) {
         this.hp = hp;
         this.name = name;
         this.reward = reward;

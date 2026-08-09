@@ -3,6 +3,7 @@ package com.pvz.models.games.map.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
@@ -12,10 +13,10 @@ import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.PlantCard;
-import com.pvz.models.games.map.behaviors.DestructibleBehavior;
+import com.pvz.models.games.map.behaviors.GraveBehavior;
 import com.pvz.models.games.map.behaviors.TileBehavior;
 
-public class Tile {
+public class Tile implements TickAware {
     private final int lane;
     private final int col;
     private final float x;
@@ -43,7 +44,7 @@ public class Tile {
         }
         if (newPlant.getPlant().getType() == PlantType.GraveBuster) {
             boolean hasGrave = tags.contains(TileTags.GRAVE) || behaviors.stream()
-                    .anyMatch(b -> b instanceof DestructibleBehavior);
+                    .anyMatch(b -> b instanceof GraveBehavior);
             if (!hasGrave)
                 return false;
         }
@@ -105,8 +106,7 @@ public class Tile {
     }
 
     public void onTick(GameContext ctx) {
-        for (TileBehavior b : new ArrayList<>(behaviors))
-            b.onTick(ctx, this);
+
     }
 
     public List<TileTags> getTags() {
@@ -135,5 +135,21 @@ public class Tile {
 
     public float getHeight() {
         return height;
+    }
+
+    @Override
+    public void enter() {
+
+    }
+
+    @Override
+    public void update(float dt) {
+        /*for (TileBehavior b : new ArrayList<>(behaviors))
+            b.update(ctx, this);*/
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }

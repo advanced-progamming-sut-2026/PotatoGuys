@@ -7,7 +7,7 @@ import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.ZombieType;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.levels.Wave;
-import com.pvz.models.games.map.behaviors.DestructibleBehavior;
+import com.pvz.models.games.map.behaviors.GraveBehavior;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
 
@@ -72,14 +72,14 @@ public class DarkAgesEffect implements ChapterEffect {
 
         // Determine reward
         double roll = rand.nextDouble();
-        DestructibleBehavior.GraveReward reward = DestructibleBehavior.GraveReward.NONE;
+        GraveBehavior.GraveReward reward = GraveBehavior.GraveReward.NONE;
         if (roll < 0.25) {
-            reward = DestructibleBehavior.GraveReward.SUN_50;
+            reward = GraveBehavior.GraveReward.SUN_50;
         } else if (roll < 0.40) {
-            reward = DestructibleBehavior.GraveReward.PLANT_FOOD;
+            reward = GraveBehavior.GraveReward.PLANT_FOOD;
         }
 
-        tile.addBehavior(new DestructibleBehavior(Constants.DEFAULT_GRAVE_HP, "Grave", reward));
+        tile.addBehavior(new GraveBehavior(Constants.DEFAULT_GRAVE_HP, "Grave", reward));
         tile.getTags().add(TileTags.GRAVE);
         ctx.log("A dark grave has grown at (" + col + "," + lane + ")!");
     }

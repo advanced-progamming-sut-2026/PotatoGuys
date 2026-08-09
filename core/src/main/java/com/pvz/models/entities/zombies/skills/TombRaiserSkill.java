@@ -3,7 +3,7 @@ package com.pvz.models.entities.zombies.skills;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
-import com.pvz.models.games.map.behaviors.DestructibleBehavior;
+import com.pvz.models.games.map.behaviors.GraveBehavior;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
 
@@ -92,7 +92,7 @@ public class TombRaiserSkill extends CooldownSkill {
     private void raiseTomb(GameContext ctx , int[] cell){
         Tile tile=ctx.getTileAt(cell[0],cell[1]);
         tile.getTags().add(TileTags.GRAVE);
-        tile.addBehavior(new DestructibleBehavior(Constants.DEFAULT_GRAVE_HP,"Grave"));
+        tile.addBehavior(new GraveBehavior(Constants.DEFAULT_GRAVE_HP,"Grave"));
     }
 
     @Override
