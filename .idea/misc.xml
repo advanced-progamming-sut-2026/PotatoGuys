@@ -4,6 +4,9 @@
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>
+  <component name="LibGDXNonGdxJsonFiles">
+    <file url="file://$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/cd7789ee-2e43-41cf-8e06-dc1d02f23eae.json" />
+  </component>
   <component name="LibGDXSkins">
     <file url="file://$PROJECT_DIR$/assets/ui/uiskin.json" />
   </component>

@@ -3,6 +3,7 @@ package com.pvz.models.games.map.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pvz.models.engine.GameEngine;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
@@ -17,6 +18,8 @@ import com.pvz.models.games.map.behaviors.GraveBehavior;
 import com.pvz.models.games.map.behaviors.TileBehavior;
 
 public class Tile implements TickAware {
+    public static final float WIDTH = 82f;
+    public static final float HEIGHT = 96f;
     private final int lane;
     private final int col;
     private final float x;
@@ -105,10 +108,6 @@ public class Tile implements TickAware {
             b.onZombieEnter(z, this);
     }
 
-    public void onTick(GameContext ctx) {
-
-    }
-
     public List<TileTags> getTags() {
         return tags;
     }
@@ -144,8 +143,16 @@ public class Tile implements TickAware {
 
     @Override
     public void update(float dt) {
-        /*for (TileBehavior b : new ArrayList<>(behaviors))
-            b.update(ctx, this);*/
+        for (TileBehavior b : new ArrayList<>(behaviors))
+            b.update(null, this,dt);
+    }
+
+    @Override
+    public void draw() {
+        TickAware.super.draw();
+        for (TileBehavior b: new ArrayList<>(behaviors)){
+            b.draw(this);
+        }
     }
 
     @Override

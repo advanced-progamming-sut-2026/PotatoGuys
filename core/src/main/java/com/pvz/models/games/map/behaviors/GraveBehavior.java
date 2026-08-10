@@ -1,5 +1,6 @@
 package com.pvz.models.games.map.behaviors;
 
+import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.projectile.Projectile;
@@ -9,6 +10,11 @@ import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
 
 public class GraveBehavior implements TileBehavior {
+    private static final String pamId="768/INITIAL/GRAVESTONES/EGYPT_HIEROGLYPH/EGYPT_HIEROGLYPH.PAM";
+    private static final String clip="undamaged";
+
+    float stateTime;
+
     public enum GraveReward {
         NONE, SUN_50, PLANT_FOOD
     }
@@ -25,6 +31,7 @@ public class GraveBehavior implements TileBehavior {
         this.hp = hp;
         this.name = name;
         this.reward = reward;
+        stateTime=0;
     }
 
     public GraveReward getReward() {
@@ -72,4 +79,16 @@ public class GraveBehavior implements TileBehavior {
 
     @Override
     public String getName() { return name; }
+
+    @Override
+    public void update(GameContext ctx, Tile tile, float dt) {
+        TileBehavior.super.update(ctx, tile, dt);
+        stateTime+=dt;
+    }
+
+    @Override
+    public void draw(Tile tile) {
+        TileBehavior.super.draw(tile);
+        PvZ2.pamPlayer.draw(PvZ2.batch,pamId,clip,stateTime,tile.getX()+Tile.WIDTH/2,tile.getY()+Tile.HEIGHT/2,0.6f,0.6f,false);
+    }
 }

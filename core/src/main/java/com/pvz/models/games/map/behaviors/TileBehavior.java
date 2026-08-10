@@ -13,4 +13,5 @@ public interface TileBehavior {
     default void update(GameContext ctx, Tile tile, float dt) {}
     default String getStatus() {return null;}
     default String getName() { return "Behavior"; }
+    default void draw(Tile tile){}
 }

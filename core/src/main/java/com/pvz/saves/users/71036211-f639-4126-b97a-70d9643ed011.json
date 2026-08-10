@@ -85,11 +85,11 @@
       "messages": [
         {
           "message": "Welcome   to   Plants   vs   Zombies 2   Peashooter ! ",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: BASIC!",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -142,25 +142,45 @@
         "x": 1,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-10T12:36:51.087481372",
+          "growthHours": 2
+        }
       },
       {
         "x": 2,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-10T12:36:53.356177369",
+          "growthHours": 2
+        }
       },
       {
         "x": 3,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "Peashooter",
+          "plantedTime": "2026-08-10T12:36:54.669433369",
+          "growthHours": 8
+        }
       },
       {
         "x": 4,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "Peashooter",
+          "plantedTime": "2026-08-10T12:36:58.417622407",
+          "growthHours": 8
+        }
       },
       {
         "x": 5,
@@ -1178,7 +1198,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786311460638
+    "lastDailyReset": 1786352798600
   },
-  "questLogRefreshed": false
+  "questLogRefreshed": true
 }

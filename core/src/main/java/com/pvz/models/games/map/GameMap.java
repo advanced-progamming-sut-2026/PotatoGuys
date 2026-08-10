@@ -1,6 +1,7 @@
 package com.pvz.models.games.map;
 
 import com.pvz.models.Constants;
+import com.pvz.models.engine.GameEngine;
 import com.pvz.models.games.map.tile.Tile;
 
 public class GameMap {
@@ -21,6 +22,7 @@ public class GameMap {
                 float x = START_X + (j * TILE_WIDTH);
                 float y = TOP_LANE_Y - (i * TILE_HEIGHT);
                 map[i][j]=new Tile(j, i, x, y, TILE_WIDTH, TILE_HEIGHT);
+                GameEngine.getInstance().getToAdd().add(map[i][j]);
             }
         }
     }
