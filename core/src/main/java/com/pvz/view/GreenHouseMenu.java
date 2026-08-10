@@ -102,7 +102,7 @@ public class GreenHouseMenu extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
         skin = PvzSkin.get();
         rebuild();
-        AudioManager.getInstance().playMusic(AudioPaths.GREEN_HOUSE,true,0.7f);
+        AudioManager.getInstance().playMusic(AudioPaths.GREEN_HOUSE,true,AudioManager.getInstance().getUserMusicVolume());
     }
 
     /** Rebuilds the whole screen from the current model state — called after every plant/collect action. */

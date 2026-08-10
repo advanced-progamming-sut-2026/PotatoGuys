@@ -41,41 +41,45 @@ import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
 /**
- * Ancient Egypt level-select ("stage map") screen. Ported from Dani's
- * EgyptStagesScreen: floating islands on a winding path, a separate boss
- * altar off to the side, tap a stage to select it, then hit Play in the
- * bottom bar to actually launch it - matches the screenshot you sent.
+ * Frostbite Caves level-select ("stage map") screen. Ported from Dani's
+ * FrostbiteCavesStagesScreen: 3 icy islands plus a separate boss altar,
+ * tap a stage to select it, then hit Play in the bottom bar - same
+ * interaction pattern as {@link EgyptChapterMenu}.
+ * <p>
+ * One genuine structural difference from Egypt, taken directly from her
+ * code: the trail forks after Day 2 into a "bridge" point near the boss
+ * decoration before reconnecting to Day 3, instead of one straight segment -
+ * that's the crossing-lines look in the reference screenshot.
  * <p>
  * Real asset paths and PAM engine calls below are copied directly from her
  * working code (same {@code assets/pvz-assets} root, same
- * {@code pvz.libpvz.pam} classes), since you confirmed this project has
- * the identical assets and library. Lock/complete state comes from our
- * own {@link ChapterController}/{@code Season}, not her Level model.
- * <p>
- * Only Egypt is done for now. Frostbite Caves, Dark Ages, and Big Wave
- * Beach still route to the plain {@code ChapterMenu} until we give them
- * the same treatment.
+ * {@code pvz.libpvz.pam} classes). Lock/complete state comes from our own
+ * {@link ChapterController}/{@code Season}, not her Level model. Level 4
+ * (the boss) is appearance-only for now, same as Egypt - no real level-4
+ * data exists yet, so it isn't clickable.
  */
-public class EgyptChapterMenu extends ScreenAdapter {
+public class FrostbiteCavesChapterMenu extends ScreenAdapter {
 
-    private static final String CHAPTER_NAME = "Ancient Egypt";
+    private static final String CHAPTER_NAME = "Frostbite Caves";
 
-    private static final String CHAPTER_BACKGROUND = "textures/backgrounds/img_1.png";
+    private static final String CHAPTER_BACKGROUND = "textures/backgrounds/frostbite_cave_bg.png";
 
     private static final String[] STAGE_ISLAND_TEXTURES = {
-        "images/chapters/egypt/island5.png",
-        "images/chapters/egypt/island4.png",
-        "images/chapters/egypt/island5.png"
+        "images/chapters/frostbite_cave/island2.png",
+        "images/chapters/frostbite_cave/island1.png",
+        "images/chapters/frostbite_cave/island2.png"
     };
-    private static final String BOSS_STAGE_ISLAND_TEXTURE = "images/chapters/egypt/island3.png";
-
-    private static final float HOUSE_ISLAND_WIDTH = 335f;
-    private static final float HOUSE_ISLAND_HEIGHT = 245f;
+    private static final String BOSS_STAGE_ISLAND_TEXTURE = "images/chapters/frostbite_cave/boss_island.png";
 
     private static final float NODE_WIDTH = 170f;
     private static final float NODE_HEIGHT = 130f;
     private static final float BOSS_NODE_WIDTH = 470f;
     private static final float BOSS_NODE_HEIGHT = 540f;
+
+    // Decorative starting island (start_island.png, native 837x844 — near square).
+    private static final float START_ISLAND_WIDTH = 330f;
+    private static final float START_ISLAND_HEIGHT = 330f;
+    private static final float START_ISLAND_Y_OFFSET = -20f;
 
     private static final float PATH_WIDTH = 1700f;
     private static final float PATH_HEIGHT = 700f;
@@ -99,18 +103,18 @@ public class EgyptChapterMenu extends ScreenAdapter {
     }
 
     private static final DecorTuning LEVEL_NODE_TUNING = new DecorTuning(260f, 260f, 0.34f, 27f, 44f);
-    private static final DecorTuning BOSS_LEVEL_NODE_TUNING = new DecorTuning(260f, 260f, 0.53f, 35f, 25f);
-    private static final DecorTuning PYRAMID_TUNING = new DecorTuning(350f, 300f, 0.15f, 70f, -215f);
-    private static final DecorTuning ZOMBOSS_TUNING = new DecorTuning(560f, 760f, 0.30f, 37f, 140f);
-    private static final DecorTuning TORNADO_TUNING = new DecorTuning(250f, 300f, 0.30f, -83f, -24f);
-    private static final DecorTuning ROCK_TUNING = new DecorTuning(100f, 100f, 0.22f, 0f, 0f);
-    private static final DecorTuning DUST_TUNING = new DecorTuning(200f, 150f, 0.50f, 10f, 45f);
-    private static final DecorTuning STAR_TUNING = new DecorTuning(25f, 25f, 0.30f, 0f, 0f);
+    private static final DecorTuning BOSS_LEVEL_NODE_TUNING = new DecorTuning(260f, 260f, 0.53f, 45f, 25f);
+    private static final DecorTuning DANGER_NODE_TUNING = new DecorTuning(350f, 300f, 0.40f, 90f, -150f);
+    private static final DecorTuning ZOMBOSS_TUNING = new DecorTuning(560f, 760f, 0.50f, 37f, 160f);
+    private static final DecorTuning BLIZZARD_TUNING = new DecorTuning(250f, 300f, 0.30f, -83f, -24f);
+    private static final DecorTuning ICE_CHUNK_TUNING = new DecorTuning(100f, 100f, 0.22f, 0f, 0f);
+    private static final DecorTuning SNOW_DUST_TUNING = new DecorTuning(200f, 150f, 0.50f, 10f, 45f);
+    private static final DecorTuning CRYSTAL_TUNING = new DecorTuning(25f, 25f, 0.40f, 0f, 0f);
 
-    private enum PyramidState {
+    private enum DangerNodeState {
         LOCKED_IDLE("locked_idle"), UNLOCKED_ANIMATION("unlocked_animation"), UNLOCKED_IDLE("unlocked_idle");
         final String pamState;
-        PyramidState(String pamState) { this.pamState = pamState; }
+        DangerNodeState(String pamState) { this.pamState = pamState; }
     }
 
     private enum LevelNodeState {
@@ -121,26 +125,28 @@ public class EgyptChapterMenu extends ScreenAdapter {
     }
 
     private enum MapObjectType {
-        DECOR_HOUSE_ISLAND("images/chapters/egypt/island1.png", false),
+        DECOR_HOUSE_ISLAND("images/chapters/frostbite_cave/start_island.png", false),
 
-        SMALL_ISLAND_1("images/chapters/egypt/island9.png", false),
-        SMALL_ISLAND_2("images/chapters/egypt/anim9_347x204.png", false),
-        SMALL_ISLAND_3("images/chapters/egypt/anim9_227x131.png", false),
-        SMALL_ISLAND_4("images/chapters/egypt/anim5_132x90.png", false),
-        SMALL_ISLAND_5("images/chapters/egypt/anim6_208x139.png", false),
+        SMALL_ISLAND_1("images/chapters/frostbite_cave/island3.png", false),
+        SMALL_ISLAND_2("images/chapters/frostbite_cave/island4.png", false),
+        SMALL_ISLAND_3("images/chapters/frostbite_cave/island5.png", false),
+        SMALL_ISLAND_4("images/chapters/frostbite_cave/island6.png", false),
+        SMALL_ISLAND_5("images/chapters/frostbite_cave/island7.png", false),
+        SMALL_ISLAND_6("images/chapters/frostbite_cave/anim28_271x337.png", false),
+        SMALL_ISLAND_7("images/chapters/frostbite_cave/island11.png", false),
 
-        BIG_BOSS_DECOR_ISLAND("768/INITIAL/WORLDMAP/ZOMBOSS_NODE_EGYPT/ZOMBOSS_NODE_EGYPT.PAM", true),
+        BIG_BOSS_DECOR_ISLAND("images/chapters/frostbite_cave/island8.png", false),
         LEVEL_NODE("768/INITIAL/WORLDMAP/LEVEL_NODE/LEVEL_NODE.PAM", true),
 
-        FLOATING_ROCK_ANIM_1("768/INITIAL/WORLDMAP/EGYPT/ANIM9/ANIM9.PAM", true),
-        FLOATING_ROCK_ANIM_2("768/INITIAL/WORLDMAP/EGYPT/ANIM7/ANIM7.PAM", true),
-        FLOATING_ROCK_ANIM_3("768/INITIAL/WORLDMAP/EGYPT/ANIM5/ANIM5.PAM", true),
+        FLOATING_ICE_ANIM_1("768/FULL/WORLDMAP/ICEAGE/ANIM27/ANIM27.PAM", true),
+        FLOATING_ICE_ANIM_2("768/FULL/WORLDMAP/ICEAGE/ANIM26/ANIM26.PAM", true),
+        FLOATING_ICE_ANIM_3("768/FULL/WORLDMAP/ICEAGE/ANIM17/ANIM17.PAM", true),
 
-        PYRAMID_ANIM("768/INITIAL/WORLDMAP/DANGER_NODE_EGYPT/DANGER_NODE_EGYPT.PAM", true),
+        DANGER_NODE_ANIM("768/FULL/WORLDMAP/DANGER_NODE_ICEAGE/DANGER_NODE_ICEAGE.PAM", true),
 
-        TORNADO_ANIM("768/INITIAL/WORLDMAP/EGYPT/ANIM4/ANIM4.PAM", true),
-        TWINKLING_STAR_ANIM("768/INITIAL/WORLDMAP/EGYPT/ANIM3/ANIM3.PAM", true),
-        DUST_EFFECT_ANIM("768/INITIAL/WORLDMAP/EGYPT/ANIM10/ANIM10.PAM", true);
+        BLIZZARD_ANIM("768/FULL/EFFECTS/HOTPOTATO_ICEBLOCK_STEAMFX/HOTPOTATO_ICEBLOCK_STEAMFX.PAM", true),
+        TWINKLING_CRYSTAL_ANIM("768/INITIAL/EFFECTS/PRIZE_TWINKLE/PRIZE_TWINKLE.PAM", true),
+        SNOW_DUST_ANIM("768/FULL/EFFECTS/SNOWSTORM_REAR/SNOWSTORM_REAR.PAM", true);
 
         final String path;
         final boolean isPamAnimation;
@@ -179,7 +185,7 @@ public class EgyptChapterMenu extends ScreenAdapter {
     private TextButton playButton;
     private int selectedLevel = -1;
 
-    public EgyptChapterMenu(PvZ2 game) {
+    public FrostbiteCavesChapterMenu(PvZ2 game) {
         this.game = game;
         this.controller = new ChapterController(CHAPTER_NAME);
     }
@@ -199,7 +205,7 @@ public class EgyptChapterMenu extends ScreenAdapter {
                 FileHandle rootHandle = Gdx.files.internal("assets/pvz-assets");
                 textureBank = new TextureBank("atlases", rootHandle);
                 pamPlayer = new PamPlayer(textureBank, rootHandle);
-                Gdx.app.log("PAM_INIT", "PAM system initialized for the Egypt stage map.");
+                Gdx.app.log("PAM_INIT", "PAM system initialized for the Frostbite Caves stage map.");
             } catch (Throwable t) {
                 Gdx.app.error("PAM_INIT", "Failed to initialize PAM system - falling back to static art.", t);
             }
@@ -244,7 +250,7 @@ public class EgyptChapterMenu extends ScreenAdapter {
         stage.dispose();
     }
 
-    // --- Top bar (same convention as AdventureMenu/MainMenu) -----------
+    // --- Top bar (same convention as AdventureMenu/MainMenu/EgyptChapterMenu) -
 
     private Table buildTopBar() {
         Table topBar = new Table();
@@ -332,7 +338,7 @@ public class EgyptChapterMenu extends ScreenAdapter {
     private void refreshSelectionBar() {
         if (selectedLevel > 0) {
             boolean boss = selectedLevel == BOSS_LEVEL_NUMBER;
-            selectionLabel.setText(CHAPTER_NAME + " - " + (boss ? "Ra's Wrath" : "Day " + selectedLevel)
+            selectionLabel.setText(CHAPTER_NAME + " - " + (boss ? "Ice Age Zomboss" : "Day " + selectedLevel)
                 + "\nAdventure - " + (boss ? "Boss" : "Normal"));
             playButton.setDisabled(false);
             playButton.setTouchable(Touchable.enabled);
@@ -392,10 +398,10 @@ public class EgyptChapterMenu extends ScreenAdapter {
 
         private final float[] centerX = new float[PATH_NODE_COUNT];
         private final float[] centerY = new float[PATH_NODE_COUNT];
-        private float houseAnchorX, houseAnchorY;
         private float houseX, houseY;
+        private float houseAnchorX, houseAnchorY;
         private float zombossNodeX, zombossNodeY;
-        private float pyramidAnchorX, pyramidAnchorY;
+        private float dangerNodeAnchorX, dangerNodeAnchorY;
         private float bridgeX, bridgeY;
 
         private float zombossRenderHeight() {
@@ -421,13 +427,13 @@ public class EgyptChapterMenu extends ScreenAdapter {
             zombossNodeY = Math.max(centerY[1], centerY[2]) - 200f * LAYOUT_SCALE_Y;
 
             // The trail forks here: Day 2 -> bridge -> Day 3, instead of one
-            // straight segment - this is what actually creates the crossing-
-            // lines look near the pyramid/Zomboss decoration in the reference.
+            // straight segment - matches the crossing-lines look Dani's
+            // reference art has near the boss decoration.
             bridgeX = zombossNodeX;
             bridgeY = zombossNodeY + zombossRenderHeight() / 2f;
 
-            pyramidAnchorX = centerX[1] + PYRAMID_TUNING.offsetX * LAYOUT_SCALE_X;
-            pyramidAnchorY = centerY[1] + 120f * LAYOUT_SCALE_Y;
+            dangerNodeAnchorX = centerX[1] + DANGER_NODE_TUNING.offsetX * LAYOUT_SCALE_X;
+            dangerNodeAnchorY = centerY[1] + 120f * LAYOUT_SCALE_Y;
 
             addBackgroundDecorations();
             addActor(new TrailActor());
@@ -464,41 +470,53 @@ public class EgyptChapterMenu extends ScreenAdapter {
         }
 
         private void addBackgroundDecorations() {
-            float[][] starCoords = {
+            float[][] crystalCoords = {
                 {110f, 45f}, {320f, 330f}, {540f, 50f}, {760f, 310f}, {910f, 70f},
                 {210f, 270f}, {460f, 190f}, {650f, 35f}, {870f, 330f}, {140f, 170f},
-                {380f, 85f}, {590f, 320f}, {830f, 175f}, {260f, 345f}, {980f, 220f}
+                {380f, 85f}, {590f, 320f}, {830f, 175f}, {260f, 345f}, {980f, 220f},
+                {500f, 400f}, {350f, 180f}
             };
-            for (float[] coord : starCoords) {
-                addActor(createAnchoredAnimation(MapObjectType.TWINKLING_STAR_ANIM, STAR_TUNING, "idle",
+            for (float[] coord : crystalCoords) {
+                addActor(createAnchoredAnimation(MapObjectType.TWINKLING_CRYSTAL_ANIM, CRYSTAL_TUNING, "animation",
                     coord[0] * LAYOUT_SCALE_X, coord[1] * LAYOUT_SCALE_Y));
             }
 
-            MapObjectType[] rockTypes = {
-                MapObjectType.FLOATING_ROCK_ANIM_1,
-                MapObjectType.FLOATING_ROCK_ANIM_2,
-                MapObjectType.FLOATING_ROCK_ANIM_3
+            MapObjectType[] iceTypes = {
+                MapObjectType.FLOATING_ICE_ANIM_1,
+                MapObjectType.FLOATING_ICE_ANIM_2,
+                MapObjectType.FLOATING_ICE_ANIM_3
             };
-            float[][] rockCoords = {
+            float[][] iceCoords = {
                 {180f, 310f}, {480f, 320f}, {750f, 300f},
                 {120f, 150f}, {350f, 450f}, {600f, 120f},
                 {820f, 480f}, {1020f, 280f}, {400f, 250f},
-                {250f, 550f}, {680f, 500f}, {920f, 550f}
+                {250f, 550f}, {680f, 500f}, {920f, 550f},
+                {300f, 500f}, {100f, 200f}, {600f, 400f}
             };
-            for (int i = 0; i < rockCoords.length; i++) {
-                MapObjectType selectedRock = rockTypes[i % rockTypes.length];
-                addActor(createAnchoredAnimation(selectedRock, ROCK_TUNING, "idle",
-                    rockCoords[i][0] * LAYOUT_SCALE_X, rockCoords[i][1] * LAYOUT_SCALE_Y));
+            for (int i = 0; i < iceCoords.length; i++) {
+                MapObjectType selectedIce = iceTypes[i % iceTypes.length];
+                addActor(createAnchoredAnimation(selectedIce, ICE_CHUNK_TUNING, "animation",
+                    iceCoords[i][0] * LAYOUT_SCALE_X, iceCoords[i][1] * LAYOUT_SCALE_Y));
             }
         }
 
         private void addMapDecorations() {
             MapObjectPlacement[] placements = {
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_1, 70, 260, 50, 38),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 310, 15, 55, 40),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_3, 620, 280, 60, 45),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_4, 880, 25, 50, 35),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_5, 970, 240, 55, 40)
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_1, 225, 230, 50, 38),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 530, 190, 55, 40),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_3, 610, 260, 60, 45),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_4, 880, 195, 50, 35),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_5, 770, 240, 40, 60),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_5, 155, 270, 40, 60),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_5, 450, 120, 40, 60),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_6, 270, 160, 55, 42),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_6, 700, 180, 60, 45),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_6, 950, 110, 50, 38),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_7, 460, 300, 60, 120),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_7, 770, 20, 90, 180),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_7, 75, 105, 90, 180),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_6, 600, 80, 52, 40),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_7, 350, 70, 100, 200)
             };
             for (MapObjectPlacement p : placements) {
                 MapDecorationActor actor = new MapDecorationActor(p.type, p.width, p.height, "idle");
@@ -507,36 +525,36 @@ public class EgyptChapterMenu extends ScreenAdapter {
             }
 
             // Purely decorative starting island - not clickable (no Greenhouse hookup here).
-            MapDecorationActor houseIsland = new MapDecorationActor(MapObjectType.DECOR_HOUSE_ISLAND, HOUSE_ISLAND_WIDTH, HOUSE_ISLAND_HEIGHT, "idle");
-            houseIsland.setPosition(houseX, houseY);
+            MapDecorationActor houseIsland = new MapDecorationActor(MapObjectType.DECOR_HOUSE_ISLAND, START_ISLAND_WIDTH, START_ISLAND_HEIGHT, "idle");
+            houseIsland.setPosition(houseX, houseY + START_ISLAND_Y_OFFSET);
             addActor(houseIsland);
         }
 
         private void addForegroundEffects() {
-            PyramidState pState = calculatePyramidState();
-            String zombossState = (pState == PyramidState.UNLOCKED_IDLE) ? "defeated" : "idle";
-            addActor(createAnchoredAnimation(MapObjectType.BIG_BOSS_DECOR_ISLAND, ZOMBOSS_TUNING, zombossState, zombossNodeX, zombossNodeY));
-            addActor(createAnchoredAnimation(MapObjectType.PYRAMID_ANIM, PYRAMID_TUNING, pState.pamState, pyramidAnchorX, pyramidAnchorY));
+            DangerNodeState dState = calculateDangerNodeState();
+            addActor(createAnchoredAnimation(MapObjectType.BIG_BOSS_DECOR_ISLAND, ZOMBOSS_TUNING, "idle",
+                zombossNodeX - 60f, zombossNodeY - 160f));
+            addActor(createAnchoredAnimation(MapObjectType.DANGER_NODE_ANIM, DANGER_NODE_TUNING, dState.pamState,
+                dangerNodeAnchorX, dangerNodeAnchorY));
 
-            addActor(createAnchoredAnimation(MapObjectType.DUST_EFFECT_ANIM, DUST_TUNING, "idle", houseX + 45f, houseY + 20f));
-            addActor(createAnchoredAnimation(MapObjectType.DUST_EFFECT_ANIM, DUST_TUNING, "idle", centerX[0], centerY[0] - 20f));
-            addActor(createAnchoredAnimation(MapObjectType.DUST_EFFECT_ANIM, DUST_TUNING, "idle", centerX[2], centerY[2] - 20f));
+            addActor(createAnchoredAnimation(MapObjectType.SNOW_DUST_ANIM, SNOW_DUST_TUNING, "loop", centerX[0] + 35f, centerY[0] - 30f));
+            addActor(createAnchoredAnimation(MapObjectType.SNOW_DUST_ANIM, SNOW_DUST_TUNING, "loop", centerX[2] + 35f, centerY[2] - 30f));
 
-            float tornadoOffsetX = 130f * LAYOUT_SCALE_X;
-            float tornadoOffsetY = 70f * LAYOUT_SCALE_Y;
-            addActor(createAnchoredAnimation(MapObjectType.TORNADO_ANIM, TORNADO_TUNING, "idle",
-                centerX[1] + tornadoOffsetX, centerY[1] + tornadoOffsetY));
+            float blizzardOffsetX = 130f * LAYOUT_SCALE_X;
+            float blizzardOffsetY = 70f * LAYOUT_SCALE_Y;
+            addActor(createAnchoredAnimation(MapObjectType.BLIZZARD_ANIM, BLIZZARD_TUNING, "animation",
+                centerX[1] + blizzardOffsetX - 40f, centerY[1] + blizzardOffsetY + 28f));
         }
 
-        private PyramidState calculatePyramidState() {
+        private DangerNodeState calculateDangerNodeState() {
             StageStatus s2 = statusOf(2);
             StageStatus s3 = statusOf(3);
             if (s3 != StageStatus.LOCKED) {
-                return PyramidState.UNLOCKED_IDLE;
+                return DangerNodeState.UNLOCKED_IDLE;
             } else if (s2 == StageStatus.COMPLETED) {
-                return PyramidState.UNLOCKED_ANIMATION;
+                return DangerNodeState.UNLOCKED_ANIMATION;
             }
-            return PyramidState.LOCKED_IDLE;
+            return DangerNodeState.LOCKED_IDLE;
         }
 
         private void buildNode(int index, int stageNumber) {
@@ -561,7 +579,7 @@ public class EgyptChapterMenu extends ScreenAdapter {
             Table column = new Table();
             column.add(stack).size(width, height).row();
 
-            String captionText = boss ? "Ancient Egypt - Ra's Wrath" : "Ancient Egypt - Day " + stageNumber;
+            String captionText = boss ? "Frostbite Caves - Ice Age Zomboss" : "Frostbite Caves - Day " + stageNumber;
             Label nameLabel = new Label(captionText, skin);
             nameLabel.setColor(status == StageStatus.LOCKED ? new Color(0.75f, 0.75f, 0.75f, 1f) : Color.WHITE);
             nameLabel.setAlignment(Align.center);
@@ -592,7 +610,7 @@ public class EgyptChapterMenu extends ScreenAdapter {
             if (Gdx.files.internal(path).exists()) {
                 return new TextureRegionDrawable(MenuUiKit.loadTextureSafe(path));
             }
-            return circleDrawable(Math.min(w, h), new Color(0.8f, 0.6f, 0.2f, 1f), Color.WHITE, 2);
+            return circleDrawable(Math.min(w, h), new Color(0.35f, 0.62f, 0.82f, 1f), Color.WHITE, 2);
         }
 
         private Drawable circleDrawable(int diameter, Color fill, Color border, int borderWidth) {
@@ -612,7 +630,8 @@ public class EgyptChapterMenu extends ScreenAdapter {
 
             @Override
             public void draw(Batch batch, float parentAlpha) {
-                batch.setColor(0.85f, 0.72f, 0.35f, 0.85f);
+                batch.setColor(0.72f, 0.85f, 0.95f, 0.85f);
+
                 drawSegment(batch, houseAnchorX, houseAnchorY, centerX[0], centerY[0]);
 
                 // Day 2 -> Day 3 is replaced by a two-part detour through the
