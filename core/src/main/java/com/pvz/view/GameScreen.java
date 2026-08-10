@@ -120,9 +120,30 @@ public class GameScreen extends ScreenAdapter {
 
         TextureAtlas atlas = GameAsset.BACKGROUND_ANCIENT_EGYPT.get(assetManager);
 
-        left = atlas.findRegion("texture_left");
-        center = atlas.findRegion("texture");
-        right = atlas.findRegion("texture_right");
+        switch (seasonName.toLowerCase()){
+            case "ancient egypt"->{
+                left = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE_LEFT");
+                center = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE");
+                right = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE_RIGHT");
+            }
+            case "frostbite caves"->{
+                left = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_ICEAGE_TEXTURE_LEFT");
+                center = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_ICEAGE_TEXTURE");
+                right = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_ICEAGE_TEXTURE_RIGHT");
+            }
+            case "dark ages"->{
+                left = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_DARK_TEXTURE_LEFT");
+                center = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_DARK_TEXTURE");
+                right = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_DARK_TEXTURE_RIGHT");
+            }
+            case "big wave beach"->{
+                left = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE_LEFT");
+                center = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE");
+                right = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE_RIGHT");
+            }
+
+        }
+
 
         if (left == null || center == null || right == null) {
             throw new RuntimeException("Background regions not found in atlas.");
