@@ -8,7 +8,7 @@ import com.pvz.models.user.User;
 import java.io.File;
 
 public class SeasonManager {
-    private static final String BASE_PATH = "app/src/main/resources/data/seasons/";
+    private static final String BASE_PATH = "core/src/main/java/com/resources/data/seasons/";
 
     public void unlockNextLevel(User user, String currentSeasonName, int currentLevelNumber) {
         Profile profile = user.getProfile();

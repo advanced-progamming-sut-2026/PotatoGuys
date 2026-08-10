@@ -4,14 +4,15 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="bug fixes">
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="enjoy the greenhouse ( shop coming soon ... )">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/textures/greenhouse/pot_ready.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/GreenHouseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/GreenHouseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/greenhouse/GreenHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/greenhouse/GreenHouse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/cd7789ee-2e43-41cf-8e06-dc1d02f23eae.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/cd7789ee-2e43-41cf-8e06-dc1d02f23eae.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/MenuUiKit.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/MenuUiKit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MergedProject.txt" beforeDir="false" afterPath="$PROJECT_DIR$/MergedProject.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/PvZ2.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/PvZ2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/AudioManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/AudioManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/seasons/SeasonManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/seasons/SeasonManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/user/Setting.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/user/Setting.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/71036211-f639-4126-b97a-70d9643ed011.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/71036211-f639-4126-b97a-70d9643ed011.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/AdventureMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/AdventureMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +125,7 @@
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/104/IdeaProjects/plantsvszombies2/assets/textures/greenhouse/plants",
+    "last_opened_file_path": "C:/Users/104/IdeaProjects/plantsvszombies2/assets/images",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -141,11 +142,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\images" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse\plants" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\core\src\main\java\com\pvz" />
-      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\core\src\main\java\com\pvz\view" />
     </key>
   </component>
   <component name="RunManager" selected="Gradle.plantsvszombies2 [:lwjgl3:run]">

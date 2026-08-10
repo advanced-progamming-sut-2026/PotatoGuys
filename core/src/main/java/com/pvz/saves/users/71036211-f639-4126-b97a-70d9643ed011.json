@@ -10,8 +10,8 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 100,
-    "diamonds": 2,
+    "coins": 1000,
+    "diamonds": 1,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -131,7 +131,12 @@
     "dailyOfferPurchased": false
   },
   "setting": {
-    "difficulty": 3
+    "difficulty": 3,
+    "gameSpeed": 2,
+    "brightness": 100,
+    "volume": 70,
+    "showGrid": false,
+    "debugMode": false
   },
   "score": {
     "lastSeason": 0,
@@ -150,7 +155,7 @@
         "greenHousePlant": {
           "kind": "mariGold",
           "plantType": null,
-          "plantedTime": "2026-08-10T12:36:51.087481372",
+          "plantedTime": "2026-08-10T18:48:05.569279100",
           "growthHours": 2
         }
       },
@@ -159,10 +164,10 @@
         "y": 1,
         "locked": false,
         "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-10T12:36:53.356177369",
-          "growthHours": 2
+          "kind": "unlocked",
+          "plantType": "TwinSunflower",
+          "plantedTime": "2026-08-10T18:48:02.320653900",
+          "growthHours": 8
         }
       },
       {
@@ -1203,7 +1208,11 @@
         "variable": "50"
       }
     ],
+<<<<<<< HEAD
     "lastDailyReset": 1786376175306
+=======
+    "lastDailyReset": 1786375042042
+>>>>>>> a8e92094e95598b0e62ae0723eebe608e25a639e
   },
   "questLogRefreshed": true
 }
