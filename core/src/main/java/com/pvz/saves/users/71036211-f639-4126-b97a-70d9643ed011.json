@@ -10,7 +10,7 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 1000,
+    "coins": 1200,
     "diamonds": 1,
     "plantFood": 0,
     "collection": {
@@ -237,7 +237,7 @@
       {
         "x": 2,
         "y": 3,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -267,7 +267,7 @@
       {
         "x": 2,
         "y": 4,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -1208,11 +1208,7 @@
         "variable": "50"
       }
     ],
-<<<<<<< HEAD
-    "lastDailyReset": 1786376175306
-=======
-    "lastDailyReset": 1786375042042
->>>>>>> a8e92094e95598b0e62ae0723eebe608e25a639e
+    "lastDailyReset": 1786386773352
   },
   "questLogRefreshed": true
 }

@@ -9,43 +9,32 @@ import com.pvz.models.games.GameContext;
 
 public class PlantActionState extends PlantState {
 
-    private final PlantAction action;
-    private int pauseTicksRemaining;
+    private final PlantState action;
 
-    public PlantActionState(PlantAction action, int pauseTicks) {
+    public PlantActionState(PlantState action) {
         this.action = action;
-        this.pauseTicksRemaining = pauseTicks;
-    }
-
-    public PlantActionState(PlantAction action) {
-        this(action, 0);
     }
 
     @Override
     public void onEnter(Plant plant, GameContext ctx) {
         stateTime = 0f;
-        action.execute(plant, ctx);
+        action.onEnter(plant, ctx);
     }
 
     @Override
     public void update(Plant plant, GameContext ctx , float dt) {
         super.update(plant, ctx, dt);
-        if (plant.isDead()) return;
-        if (pauseTicksRemaining > 0) {
-            pauseTicksRemaining--;
-            return;
-        }
-        // return new PlantIdleState();
+        action.update(plant, ctx, dt);
     }
 
     @Override
     public void onExit(Plant plant, GameContext ctx) {
-        // nothing
+        action.onExit(plant, ctx);
     }
 
     @Override
     public String getLabel() {
-        return "Action[" + action.getName() + "]";
+        return "Action[" + action.getLabel() + "]";
     }
 
     @Override

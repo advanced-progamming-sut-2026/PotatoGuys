@@ -52,7 +52,7 @@ public class GameController {
         return GameMap.START_X + (x * GameMap.TILE_WIDTH);
     }
     public static float yToWorldY(float y){
-        return 720.0f - GameMap.TOP_LANE_Y - (y * GameMap.TILE_HEIGHT);
+        return GameMap.TOP_LANE_Y - (y * GameMap.TILE_HEIGHT);
     }
 /*
 

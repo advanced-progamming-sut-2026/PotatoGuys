@@ -64,17 +64,20 @@ public class Projectile implements TickAware {
     // ─── Tick Update Logic ───────────────────────────────────────────────────
 
     @Override
-    public void enter() {}
+    public void enter() {
+        stateTime = 0f;
+        lastCol = (int) Math.floor(pos.x);
+        lastLane = (int) Math.floor(pos.y);
+    }
 
     @Override
     public void update(float dt) {
+        stateTime += dt;
         if (isDead) return;
 
-        // ۱. جابه‌جایی دوبعدی پرتابه در محیط بازی
         pos.x += vel.x * dt;
         pos.y += vel.y * dt;
 
-        // ۲. چک کردن خروج تیر از مرزهای نقشه
         if (pos.x < -0.5f || pos.x >= ctx.getColumns() + 0.5f || pos.y < -0.5f || pos.y >= ctx.getLanes() + 0.5f) {
             destroy();
             return;
