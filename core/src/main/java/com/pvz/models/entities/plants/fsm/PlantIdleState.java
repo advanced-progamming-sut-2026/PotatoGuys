@@ -17,8 +17,8 @@ public class PlantIdleState extends PlantState {
     @Override
     public void update(Plant plant, GameContext ctx , float dt) {
         super.update(plant, ctx, dt);
-        if (plant.getAttackAction().shouldTrigger(plant, ctx)) {
-            plant.changeState(new PlantActionState(plant.getAttackAction()));
+        if (plant.getAttackAction().shouldTrigger(plant, ctx , dt)) {
+            plant.changeState(plant.getAttackAction());
         }
     }
 

@@ -19,22 +19,23 @@ public class PlantFeedState extends PlantState {
     @Override
     public void onEnter(Plant plant, GameContext ctx) {
         stateTime = 0f;
-        feedAction.execute(plant, ctx);
+        feedAction.onEnter(plant, ctx);
     }
 
     @Override
     public void update(Plant plant, GameContext ctx , float dt) {
         super.update(plant, ctx, dt);
+        feedAction.update(plant, ctx, dt);
     }
 
     @Override
     public void onExit(Plant plant, GameContext ctx) {
-        // nothing
+        feedAction.onExit(plant, ctx);
     }
 
     @Override
     public String getLabel() {
-        return "Feed[" + feedAction.getName() + "]";
+        return "Feed[" + feedAction.getLabel() + "]";
     }
 
     @Override

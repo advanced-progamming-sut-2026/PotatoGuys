@@ -227,22 +227,7 @@ public class Zombie implements TickAware {
     }
 
     // ── CLI display ────────────────────────────────────────────────────────────
-
-    /**
-     * Full info string matching the {@code zombies info} output format in the spec.
-     * Example:
-     * <pre>
-     *   ZombieDarkArmor3Default [Intact SHOULDER_ARMOR] [Damaged CROWN]:
-     *     position: 6.0, 2
-     *     health: 180 / 190
-     *     armor:
-     *       shoulder_armor: 1600
-     *       crown: 800
-     *     effects:
-     *       chilled: 3.2s
-     *     state: Walking
-     * </pre>
-     */
+    
     public String toInfoString() {
         StringBuilder sb = new StringBuilder();
         sb.append(sheet.getAlias());
