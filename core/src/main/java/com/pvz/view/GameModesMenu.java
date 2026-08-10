@@ -99,6 +99,16 @@ public class GameModesMenu extends ScreenAdapter {
         });
         topLeft.add(leaderboardBtn).size(75, 70);
 
+        ImageButton greenhouseBtn = new ImageButton(MenuUiKit.textureDrawable(MenuUiKit.loadTextureSafe("textures/greenhouse/greenhouse.png")));
+        greenhouseBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new GreenHouseMenu(game));
+            }
+        });
+        topLeft.add(greenhouseBtn).size(75, 70).padLeft(24);
+
         Table topRight = new Table();
         Profile profile = currentProfile();
         int coins = profile != null ? profile.getCoins() : 0;

@@ -6,8 +6,8 @@ import java.util.Random;
 
 public class GreenHouse {
 
-    public static final int WIDTH = 5;
-    public static final int HEIGHT = 4;
+    public static final int WIDTH = 4;
+    public static final int HEIGHT = 3;
 
     private List<GreenHousePot> greenHousePots = new ArrayList<>();
     private transient final Random random = new Random();
@@ -75,7 +75,7 @@ public class GreenHouse {
     public int getUnlockedPotCount() {
         int count = 0;
         for (GreenHousePot pot : greenHousePots) {
-            if (!pot.isLocked()) {
+            if (!pot.isLocked() && isValidCoordinate(pot.getX(), pot.getY())) {
                 count++;
             }
         }

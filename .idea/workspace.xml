@@ -4,19 +4,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="added leaderboard and made the game appearance better">
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="bug fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MergedProject.txt" beforeDir="false" afterPath="$PROJECT_DIR$/MergedProject.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/GraveBusterAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/GraveBusterAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/skills/TombRaiserSkill.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/skills/TombRaiserSkill.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/DarkAgesEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/DarkAgesEffect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/GameMapFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/GameMapFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/behaviors/DestructibleBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/behaviors/GraveBehavior.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/behaviors/TileBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/behaviors/TileBehavior.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/tile/Tile.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/tile/Tile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/DeadLineMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/DeadLineMode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/NormalMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/NormalMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/greenhouse/pot_ready.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/GreenHouseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/GreenHouseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/greenhouse/GreenHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/greenhouse/GreenHouse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/cd7789ee-2e43-41cf-8e06-dc1d02f23eae.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/cd7789ee-2e43-41cf-8e06-dc1d02f23eae.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/MenuUiKit.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/MenuUiKit.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,8 +84,8 @@
 }</component>
   <component name="GitLabMergeRequestsSettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;first&quot;: &quot;https://hamgit.ir/sedhhn/plantsvszombies2&quot;,
-    &quot;second&quot;: &quot;83191278-9b68-4e33-a55d-f523d58ebe84&quot;
+    &quot;first&quot;: &quot;https://hamgit.ir/sedhhn/plantsvszombies2.git&quot;,
+    &quot;second&quot;: &quot;304f2ff1-c759-44fd-9fe9-01504ac41863&quot;
   }
 }</component>
   <component name="McpProjectServerCommands">
@@ -101,60 +96,63 @@
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="3HMhFDEJvcEAbZXO55kQ21Gz1r1" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Lwjgl3Launcher.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build plantsvszombies2.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build pvz2.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.plantsvszombies2 [:core:com.pvz.ProjectMerger.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.plantsvszombies2 [:lwjgl3:run].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.plantsvszombies2.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.pvz2 [:core:com.pvz.ProjectMerger.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.pvz2 [:lwjgl3:com.pvz.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/sedhhn/Desktop/pvz2&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.build.tools.auto.reload&quot;: &quot;SELECTIVE&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Lwjgl3Launcher.executor": "Run",
+    "Gradle.Build plantsvszombies2.executor": "Run",
+    "Gradle.Build pvz2.executor": "Run",
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.plantsvszombies2 [:core:com.pvz.ProjectMerger.main()].executor": "Run",
+    "Gradle.plantsvszombies2 [:lwjgl3:run].executor": "Run",
+    "Gradle.plantsvszombies2.executor": "Run",
+    "Gradle.pvz2 [:core:com.pvz.ProjectMerger.main()].executor": "Run",
+    "Gradle.pvz2 [:lwjgl3:com.pvz.lwjgl3.Lwjgl3Launcher.main()].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/104/IdeaProjects/plantsvszombies2/assets/textures/greenhouse/plants",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.build.tools.auto.reload": "SELECTIVE",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\ui" />
-      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\avatars" />
+      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse\plants" />
+      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures" />
-      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\ProfPics" />
+      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\core\src\main\java\com\pvz" />
+      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\core\src\main\java\com\pvz\view" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Lwjgl3Launcher">
+  <component name="RunManager" selected="Gradle.plantsvszombies2 [:lwjgl3:run]">
     <configuration name="Lwjgl3Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.pvz.lwjgl3.Lwjgl3Launcher" />
-      <module name="pvz2.lwjgl3.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.pvz.lwjgl3.*" />
@@ -234,8 +232,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Lwjgl3Launcher" />
         <item itemvalue="Gradle.plantsvszombies2 [:lwjgl3:run]" />
+        <item itemvalue="Application.Lwjgl3Launcher" />
         <item itemvalue="Application.ProjectMerger" />
         <item itemvalue="Gradle.plantsvszombies2" />
       </list>
@@ -245,7 +243,6 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
@@ -268,8 +265,6 @@
       <workItem from="1786115652340" duration="4135000" />
       <workItem from="1786207261837" duration="3163000" />
       <workItem from="1786221623014" duration="5347000" />
-      <workItem from="1786242029884" duration="710000" />
-      <workItem from="1786302292955" duration="3262000" />
     </task>
     <task id="LOCAL-00001" summary="added Login and register and forgot password menu to the game">
       <option name="closed" value="true" />
@@ -311,7 +306,23 @@
       <option name="project" value="LOCAL" />
       <updated>1786200686143</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="added Greenhouse (need some fixes)">
+      <option name="closed" value="true" />
+      <created>1786311987562</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1786311987562</updated>
+    </task>
+    <task id="LOCAL-00007" summary="bug fixes">
+      <option name="closed" value="true" />
+      <created>1786312034907</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1786312034907</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -323,6 +334,8 @@
     <MESSAGE value="added travel log menu" />
     <MESSAGE value="setting and news and profile menu updated" />
     <MESSAGE value="updated chapter selection menu and game mode menu appearance" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated chapter selection menu and game mode menu appearance" />
+    <MESSAGE value="added Greenhouse (need some fixes)" />
+    <MESSAGE value="bug fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="bug fixes" />
   </component>
 </project>
