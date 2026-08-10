@@ -62,6 +62,7 @@ public class PvZ2 extends Game {
         pamPlayer=new PamPlayer(textureBank,Gdx.files.internal("./assets/pvz-assets/"));
         batch=new SpriteBatch();
         applyWindowIcon();
+        applyCustomCursor();
         if (AppContext.getInstance().getCurrentUser()==null){
             setScreen(new RegisterMenu(this));
         } else {
@@ -102,6 +103,56 @@ public class PvZ2 extends Game {
         } catch (Exception e) {
             Gdx.app.error("PvZ2", "could not apply window icon", e);
         }
+    }
+
+    /**
+     * Replaces the OS mouse cursor with textures/ui/cursor.png everywhere in-game.
+     * The source is a large PNG (1112x607) with real alpha, so it's scaled down to a
+     * normal cursor size and handed to the OS. The hotspot sits at the top-left (0,0),
+     * matching a default arrow — tweak {@code HOTSPOT_X}/{@code HOTSPOT_Y} if the
+     * pointer feels offset.
+     */
+    private void applyCustomCursor() {
+        try {
+            String cursorPath = "textures/ui/cursor.png";
+            if (!Gdx.files.internal(cursorPath).exists()) return;
+
+            final int HOTSPOT_X = 0;
+            final int HOTSPOT_Y = 0;
+            final int MAX_SIZE = 90;
+
+            Pixmap source = new Pixmap(Gdx.files.internal(cursorPath));
+            float scale = Math.min(1f, MAX_SIZE / (float) Math.max(source.getWidth(), source.getHeight()));
+            int w = Math.max(1, Math.round(source.getWidth() * scale));
+            int h = Math.max(1, Math.round(source.getHeight() * scale));
+            // Lwjgl3 rejects non-power-of-two cursor pixmaps, so the scaled sprite is
+            // drawn at (0,0) onto a transparent power-of-two canvas of the same or larger size.
+            int canvasW = nextPowerOfTwo(w);
+            int canvasH = nextPowerOfTwo(h);
+            Pixmap cursor = new Pixmap(canvasW, canvasH, Pixmap.Format.RGBA8888);
+            cursor.setBlending(Pixmap.Blending.None);
+            for (int y = 0; y < h; y++) {
+                int sy = Math.min(source.getHeight() - 1, (y * source.getHeight()) / h);
+                for (int x = 0; x < w; x++) {
+                    int sx = Math.min(source.getWidth() - 1, (x * source.getWidth()) / w);
+                    cursor.drawPixel(x, y, source.getPixel(sx, sy));
+                }
+            }
+            source.dispose();
+
+            Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursor, HOTSPOT_X, HOTSPOT_Y));
+            cursor.dispose();
+        } catch (Exception e) {
+            Gdx.app.error("PvZ2", "could not apply custom cursor", e);
+        }
+    }
+
+    private static int nextPowerOfTwo(int value) {
+        int v = Math.max(1, value);
+        while ((v & (v - 1)) != 0) {
+            v++;
+        }
+        return v;
     }
 
     /** Removes the bright green background, turning matching pixels transparent. */

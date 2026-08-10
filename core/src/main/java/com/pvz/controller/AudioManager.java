@@ -31,6 +31,16 @@ public class AudioManager {
         currentMusicPath = path;
     }
 
+    public void setMusicVolume(float volume) {
+        if (currentMusic != null) {
+            currentMusic.setVolume(volume);
+        }
+    }
+
+    public float getMusicVolume() {
+        return currentMusic != null ? currentMusic.getVolume() : 0f;
+    }
+
     public void stopMusic() {
         if (currentMusic != null) {
             currentMusic.stop();
