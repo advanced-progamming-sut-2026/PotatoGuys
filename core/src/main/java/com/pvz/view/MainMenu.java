@@ -15,7 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
+import com.pvz.controller.AudioManager;
 import com.pvz.controller.MainController;
+import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.User;
 import com.pvz.utils.AvatarImages;
@@ -170,6 +172,7 @@ public class MainMenu extends ScreenAdapter {
                 newsModal.showNews();
             }
         });
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
     }
 
     @Override

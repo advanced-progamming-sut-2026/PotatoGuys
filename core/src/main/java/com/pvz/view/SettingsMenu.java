@@ -20,6 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
+import com.pvz.controller.AudioManager;
+import com.pvz.enums.AudioPaths;
 import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
@@ -143,6 +145,7 @@ public class SettingsMenu extends ScreenAdapter {
         debugModeCheckBox.getLabel().setFontScale(1.2f);
         debugModeCheckBox.getLabel().setColor(Color.BLACK);
         mainPanel.add(debugModeCheckBox).left().row();
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
     }
 
     @Override

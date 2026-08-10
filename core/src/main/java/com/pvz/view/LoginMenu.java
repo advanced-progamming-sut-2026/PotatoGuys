@@ -18,6 +18,8 @@ import java.util.HashMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
+import com.pvz.controller.AudioManager;
+import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.User;
 import com.pvz.utils.PasswordUtils;
@@ -100,6 +102,7 @@ public class LoginMenu extends ScreenAdapter {
             }
         });
         table.add(backBtn).width(200).height(60).row();
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
     }
 
     private void handleLogin() {

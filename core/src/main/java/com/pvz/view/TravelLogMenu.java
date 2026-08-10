@@ -23,7 +23,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
+import com.pvz.controller.AudioManager;
 import com.pvz.controller.QuestController;
+import com.pvz.enums.AudioPaths;
 import com.pvz.enums.GameAsset;
 import com.pvz.models.quests.Quest;
 import com.pvz.models.quests.QuestCategory;
@@ -106,6 +108,8 @@ public class TravelLogMenu extends ScreenAdapter {
         buildTabs();
         refreshWallet();
         refreshList();
+
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
     }
 
     private Table buildTopBar() {

@@ -19,7 +19,9 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
+import com.pvz.controller.AudioManager;
 import com.pvz.controller.GreenHouseController;
+import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
 import com.pvz.models.greenhouse.GreenHouse;
 import com.pvz.models.greenhouse.GreenHousePlant;
@@ -100,6 +102,7 @@ public class GreenHouseMenu extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
         skin = PvzSkin.get();
         rebuild();
+        AudioManager.getInstance().playMusic(AudioPaths.GREEN_HOUSE,true,0.7f);
     }
 
     /** Rebuilds the whole screen from the current model state — called after every plant/collect action. */

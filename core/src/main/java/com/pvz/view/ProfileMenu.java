@@ -21,6 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
+import com.pvz.controller.AudioManager;
+import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
 import com.pvz.models.games.seasons.Season;
 import com.pvz.models.user.User;
@@ -220,6 +222,8 @@ public class ProfileMenu extends ScreenAdapter {
 
         // --- Avatar picker overlay -----------------------------------------
         buildAvatarPicker();
+
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
     }
 
     private static String getAvatarPath(String avatarName) {

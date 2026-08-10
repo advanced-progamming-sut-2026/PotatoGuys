@@ -20,6 +20,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
 import com.pvz.controller.AdventureController;
+import com.pvz.controller.AudioManager;
+import com.pvz.enums.AudioPaths;
 import com.pvz.enums.GameAsset;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.Profile;
@@ -95,6 +97,8 @@ public class AdventureMenu extends ScreenAdapter {
 
         rootTable.add(buildTopBar()).fillX().top().padTop(30).padLeft(40).padRight(40).row();
         rootTable.add(buildCenter()).expand().center().row();
+
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
     }
 
     private Table buildTopBar() {

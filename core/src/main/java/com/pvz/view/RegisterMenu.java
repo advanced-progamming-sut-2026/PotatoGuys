@@ -18,7 +18,9 @@ import java.util.HashMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
+import com.pvz.controller.AudioManager;
 import com.pvz.controller.user.PatternManager;
+import com.pvz.enums.AudioPaths;
 import com.pvz.enums.SecurityQuestions;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.seasons.Season;
@@ -135,6 +137,7 @@ public class RegisterMenu extends ScreenAdapter {
             }
         });
         table.add(loginBtn).width(300).height(60);
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
     }
 
     private void handleRegister() {
