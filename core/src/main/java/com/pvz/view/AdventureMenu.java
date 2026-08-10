@@ -139,9 +139,12 @@ public class AdventureMenu extends ScreenAdapter {
                 // Ancient Egypt is the starting chapter and was never lock-checked before;
                 // keep that behavior instead of relying on season data that may not track it.
                 boolean locked = index == 0 ? false : controller.isSeasonLocked(CHAPTER_KEYS[index]);
+                Runnable openChapter = index == 0
+                    ? () -> game.setScreen(new EgyptChapterMenu(game))
+                    : () -> game.setScreen(new ChapterMenu(game, chapterName));
                 return MenuUiKit.bigCard(skin, CHAPTER_ART[index], CHAPTER_TINTS[index], chapterName,
                     locked ? "Locked" : "Unlocked", locked,
-                    () -> game.setScreen(new ChapterMenu(game, chapterName)),
+                    openChapter,
                     CARD_WIDTH, CARD_HEIGHT);
             });
         }
