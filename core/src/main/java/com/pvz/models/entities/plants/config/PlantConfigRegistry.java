@@ -11,12 +11,6 @@ import com.pvz.models.entities.plants.data.SunProduction;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.plants.enums.PlantType;
 
-/**
- * Singleton registry that loads {@code plant_actions.json} (see {@link PlantActionConfigLoader})
- * and, for now, serves only {@code SHOOTER}/{@code STRIKE_THROUGH}/{@code SUN_PRODUCER} plants —
- * see {@link com.pvz.models.entities.plants.PlantFactory}. Other categories keep using the legacy
- * {@link com.pvz.models.entities.plants.data.PlantRegistry} until they are migrated too.
- */
 public final class PlantConfigRegistry {
 
     private static final PlantConfigRegistry INSTANCE = new PlantConfigRegistry();

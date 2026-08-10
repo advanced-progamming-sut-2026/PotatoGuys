@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.pvz.PvZ2;
+import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
@@ -24,34 +26,9 @@ import com.pvz.models.games.map.behaviors.TileBehavior;
 import com.pvz.models.games.map.tile.Tile;
 
 
-/**
- * Concrete, data-driven zombie entity.
- *
- * <p>All 52+ zombie types share this single class. Unique behavior comes from:
- * <ol>
- *   <li>A {@link ZombiePropertySheet} — immutable parsed stats.</li>
- *   <li>An ordered {@link ArmorPiece} stack — layered HP shield.</li>
- *   <li>A {@link ZombieSkill} list — special ability plug-ins.</li>
- * </ol>
- *
- * <h3>Tick lifecycle</h3>
- * <pre>
- *   enter()          – set initial WalkState, log spawn
- *   update() × N     – tick FSM + status effects (10 ticks = 1 second)
- *   dispose()        – cleanup on engine removal
- * </pre>
- *
- * <h3>Coordinate system</h3>
- * Column 0 = house side, column (cols-1) = spawn side.
- * {@code x} is a {@code float}; integer cell = {@code (int) x}.
- * Each tick {@code x} decreases by {@link #getEffectiveSpeedPerTick()}.
- */
 public class Zombie implements TickAware {
 
-    /**
-     * 10 ticks equal one in-game second (project spec §Mekanism Gozar Zaman).
-     * All per-second values (DPS, cooldowns, speed) are divided by this constant.
-     */
+    
     public static final int TICKS_PER_SECOND = 10;
 
     private static final Random RNG = new Random();
@@ -61,6 +38,7 @@ public class Zombie implements TickAware {
     private final ZombiePropertySheet sheet;
     private final GameContext context;
 
+    private float stateTime = 0f;
     // ── Grid position ─────────────────────────────────────────────────────────
     private int lastX;
     private int lastLane;
@@ -135,6 +113,7 @@ public class Zombie implements TickAware {
 
     @Override
     public void update(float dt) {
+        stateTime += dt;
         if (dead) return;
         tickStatusEffects();
         if (isParalysed()) return;
@@ -155,6 +134,13 @@ public class Zombie implements TickAware {
                 }
             } catch (IndexOutOfBoundsException ignored){ }
         }
+    }
+
+    @Override
+    public void draw() {
+        float xx = GameController.xToWorldX(x);
+        float y = GameController.laneToWorldY(lane);
+        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM" , "walk", stateTime, xx, y, true);
     }
 
     @Override

@@ -13,8 +13,9 @@ public interface GameMode {
     /** Initialize mode-specific state (e.g., enable/disable mowers). */
     void initMode(GameContext context);
 
-    /** Update mode-specific rules (Win/Loss conditions). */
-    void updateMode(GameContext context);
+    /** Update mode-specific rules (Win/Loss conditions). 
+     * @param dt TODO*/
+    void updateMode(GameContext context, float dt);
 
     String renderMap(GameContext context);
 

@@ -2,7 +2,6 @@ package com.pvz.models.entities.plants.data;
 
 import java.util.List;
 
-import com.pvz.models.entities.plants.actions.shooters.ShooterPattern;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.plants.config.PlantActionConfig;
 import com.pvz.models.entities.plants.enums.PlantCategory;

@@ -72,7 +72,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     }
 
     @Override
-    public void updateMode(GameContext context) {
+    public void updateMode(GameContext context, float dt) {
         // شرط پایان بازی و پیروزی
         if (!anyVasesRemain() && context.getZombies().isEmpty()) {
             context.setGameOver(true);

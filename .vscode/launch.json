@@ -3,26 +3,16 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Current File",
-            "request": "launch",
-            "mainClass": "${file}",
-            "preLaunchTask": "gradle: lwjgl3:build"
-        },
-        {
-            "type": "java",
-            "name": "ProjectMerger",
-            "request": "launch",
-            "mainClass": "com.pvz.ProjectMerger",
-            "projectName": "core",
-            "preLaunchTask": "gradle: lwjgl3:build"
-        },
-        {
-            "type": "java",
-            "name": "Lwjgl3Launcher",
+            "name": "Debug with Hotswap (macOS)",
             "request": "launch",
             "mainClass": "com.pvz.lwjgl3.Lwjgl3Launcher",
             "projectName": "lwjgl3",
-            "preLaunchTask": "gradle: lwjgl3:build"
+            "cwd": "${workspaceFolder}",
+            "javaExec": "/Users/yousofrahimzadeh/SDKs/jbr_jcef-21.0.11-osx-aarch64-b1163.116/Contents/Home/bin/java",
+            "preLaunchTask": "build-lwjgl3-classes",
+            "vmArgs": "-XstartOnFirstThread -javaagent:/Users/yousofrahimzadeh/SDKs/hotswap-agent-2.0.3.jar -XX:+AllowEnhancedClassRedefinition --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED"
         }
     ]
+
+    
 }

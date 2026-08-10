@@ -70,7 +70,7 @@ public class WallnutBowlingMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public void updateMode(GameContext context) {
+    public void updateMode(GameContext context, float dt) {
         tickCounter++;
         if (tickCounter >= SPAWN_INTERVAL_TICKS) {
             addRandomBowlingCard(context);
@@ -91,7 +91,7 @@ public class WallnutBowlingMode implements GameMode, PlantPlacer {
         }
 
         if (currentWave != null && !currentWave.isDone()) {
-            currentWave.updateWave(context);
+            currentWave.updateWave(context, 0);
         }
 
         for (int i = 0; i < context.getZombies().size(); i++) {

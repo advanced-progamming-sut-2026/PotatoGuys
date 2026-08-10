@@ -50,7 +50,7 @@ public class TimedWarMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public void updateMode(GameContext context) {
+    public void updateMode(GameContext context, float dt) {
         int currentTick = context.getCurrentTick();
         trackZombieKills(context);
         cleanupExpiredKills(currentTick);
@@ -115,7 +115,7 @@ public class TimedWarMode implements GameMode, PlantPlacer {
         }
 
         if (!currentWave.isDone()) {
-            currentWave.updateWave(context);
+            currentWave.updateWave(context, 0);
         }
 
         updateLawnMowersAndZombies(context);

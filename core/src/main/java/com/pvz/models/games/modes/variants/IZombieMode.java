@@ -110,7 +110,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
     }
 
     @Override
-    public void updateMode(GameContext context) {
+    public void updateMode(GameContext context, float dt) {
         ticksElapsed++;
 
         if (ticksElapsed % 200 == 0 && sunZombieInterval > 40) {

@@ -20,7 +20,7 @@ public class Wave {
 
     private int currentPhase;
     private int remainingInPhase;
-    private int ticksUntilNextSpawn;
+    private float secondsUntilNextSpawn;
     private boolean done;
     private static Random rand = new Random();
 
@@ -34,7 +34,7 @@ public class Wave {
         this.difficulty = difficulty;
         this.currentPhase = 0;
         this.remainingInPhase = phases.get(currentPhase).getZombieCount();
-        this.ticksUntilNextSpawn = phases.get(currentPhase).getIntervalTicks();
+        this.secondsUntilNextSpawn = phases.get(currentPhase).getIntervalSeconds();
         this.done = false;
     }
 
@@ -42,10 +42,10 @@ public class Wave {
     }
 
     private void ensureInitialized() {
-        if (this.remainingInPhase == 0 && this.ticksUntilNextSpawn == 0 && !done) {
+        if (this.remainingInPhase == 0 && this.secondsUntilNextSpawn == 0 && !done) {
             this.currentPhase = 0;
             this.remainingInPhase = phases.get(currentPhase).getZombieCount();
-            this.ticksUntilNextSpawn = phases.get(currentPhase).getIntervalTicks();
+            this.secondsUntilNextSpawn = phases.get(currentPhase).getIntervalSeconds();
         }
     }
 
@@ -73,13 +73,13 @@ public class Wave {
         }
     }
 
-    public void updateWave(GameContext context) {
+    public void updateWave(GameContext context, float dt) {
         ensureInitialized();
         if (done)
             return;
 
-        ticksUntilNextSpawn--;
-        if (ticksUntilNextSpawn > 0)
+        secondsUntilNextSpawn -= dt;
+        if (secondsUntilNextSpawn > 0.01)
             return;
 
         WavePhase phase = phases.get(currentPhase);
@@ -102,7 +102,7 @@ public class Wave {
                     + (phases.get(currentPhase).isBurst() ? " [BURST]" : ""));
         }
 
-        ticksUntilNextSpawn = phases.get(currentPhase).getIntervalTicks();
+        secondsUntilNextSpawn = phases.get(currentPhase).getIntervalSeconds();
     }
 
     private void spawnZombie(GameContext context, WavePhase phase) {

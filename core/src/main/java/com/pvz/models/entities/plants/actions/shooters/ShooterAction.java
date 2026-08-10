@@ -1,11 +1,13 @@
 package com.pvz.models.entities.plants.actions.shooters;
 
+import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.actions.CooldownPlantAction;
 import com.pvz.models.entities.plants.config.ShooterActionConfig;
 import com.pvz.models.entities.plants.config.ShooterActionConfig.ProjectilePattern;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.projectile.Projectile;
+import com.pvz.models.entities.projectile.ProjectileFactory;
 import com.pvz.models.entities.projectile.ProjectileType;
 import com.pvz.models.games.GameContext;
 
@@ -72,9 +74,7 @@ public class ShooterAction extends CooldownPlantAction {
         boolean poison = pattern.projectileType == ProjectileType.GOO_PEA;
         int pierceCount = pierceThrough ? 3 : 0;
 
-        Projectile projectile = new Projectile(ctx, pattern.projectileType, row, col, pattern.damage,
-                poison, ice, fire, pierceCount, null);
-        projectile.setVelocityVector(pattern.velocity.x, pattern.velocity.y);
+        Projectile projectile = ProjectileFactory.create(ProjectileType.PEA, ctx, new Vector2(col, row),pattern.velocity , pattern.damage);
         ctx.spawnProjectile(projectile);
     }
 }

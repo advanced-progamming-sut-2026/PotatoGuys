@@ -9,7 +9,6 @@ public final class GrowthProfile {
 
     public float[] getStageSeconds() { return stageSeconds.clone(); }
 
-    /** Resolves the current 0-based stage index given elapsed seconds since planting. */
     public int stageIndexFor(float elapsedSeconds) {
         int stage = 0;
         for (float threshold : stageSeconds) {

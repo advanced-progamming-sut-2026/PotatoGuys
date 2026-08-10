@@ -6,13 +6,13 @@ import com.pvz.models.entities.zombies.ZombieType;
 
 public class WavePhase {
     private int zombieCount;
-    private int intervalTicks;
+    private float intervalSeconds;
     private List<ZombieType> allowedTypes;
     private boolean isBurst;
 
-    public WavePhase(int zombieCount, int intervalTicks, List<ZombieType> allowedTypes, boolean isBurst) {
+    public WavePhase(int zombieCount, float intervalSeconds, List<ZombieType> allowedTypes, boolean isBurst) {
         this.setZombieCount(zombieCount);
-        this.setIntervalTicks(intervalTicks);
+        this.setIntervalSeconds(intervalSeconds);
         this.setAllowedTypes(allowedTypes);
         this.setBurst(isBurst);
     }
@@ -29,12 +29,12 @@ public class WavePhase {
         this.zombieCount = zombieCount;
     }
 
-    public int getIntervalTicks() {
-        return intervalTicks;
+    public float getIntervalSeconds() {
+        return intervalSeconds;
     }
 
-    public void setIntervalTicks(int intervalTicks) {
-        this.intervalTicks = intervalTicks;
+    public void setIntervalSeconds(float intervalSeconds) {
+        this.intervalSeconds = intervalSeconds;
     }
 
     public List<ZombieType> getAllowedTypes() {

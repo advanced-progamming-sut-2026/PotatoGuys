@@ -295,7 +295,7 @@ public class GameContext implements TickAware {
         for (ChapterEffect effect : activeEffects) {
             effect.onTick(this);
         }
-        mode.updateMode(this);
+        mode.updateMode(this , dt);
     }
 
     private void applyFireAuras() {

@@ -74,7 +74,7 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
     }
 
     @Override
-    public void updateMode(GameContext context) {
+    public void updateMode(GameContext context, float dt) {
         // ۱. قطع باران آفتاب: هر خورشیدی که در محیط بازی ساخته شود (از آسمان تولید شود)
         // فوراً حذف می‌گردد
         for (int i = 0; i < context.getSuns().size(); i++) {
@@ -103,7 +103,7 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
         }
 
         if (!currentWave.isDone()) {
-            currentWave.updateWave(context);
+            currentWave.updateWave(context, 0);
         }
 
         // ۴. منطق ماشین‌های چمن‌زنی و باخت بازی

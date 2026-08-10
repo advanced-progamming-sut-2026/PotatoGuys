@@ -161,19 +161,21 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "intervalSeconds": 1.5,
       "patterns": [
         {
           "projectileType": "PEA",
           "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": { "x": 0.5, "y": 0.2 },
-          "velocity": { "x": 0.2, "y": 0.0 },
+          "velocity": { "x": 1, "y": 0 },
           "delaySeconds": 0.0
         }
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "intervalSeconds": 1.5,
       "patterns": [
         { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.0 },
         { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.15 },

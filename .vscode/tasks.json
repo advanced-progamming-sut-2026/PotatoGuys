@@ -1,41 +1,17 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "gradle",
-			"id": "/Users/yousofrahimzadeh/Yousof/AP/FinalProject/plantsvszombies2lwjgl3:runlwjgl3",
-			"script": "lwjgl3:run",
-			"description": "Runs this project as a JVM application",
-			"group": "application",
-			"project": "lwjgl3",
-			"buildFile": "/Users/yousofrahimzadeh/Yousof/AP/FinalProject/plantsvszombies2/lwjgl3/build.gradle",
-			"rootProject": "plantsvszombies2",
-			"projectFolder": "/Users/yousofrahimzadeh/Yousof/AP/FinalProject/plantsvszombies2",
-			"workspaceFolder": "/Users/yousofrahimzadeh/Yousof/AP/FinalProject/plantsvszombies2",
-			"args": "",
-			"javaDebug": false,
-			"problemMatcher": [
-				"$gradle"
-			],
-			"label": "gradle: lwjgl3:run"
-		},
-		{
-			"type": "gradle",
-			"id": "/Users/yousofrahimzadeh/Yousof/AP/FinalProject/plantsvszombies2lwjgl3:buildlwjgl3",
-			"script": "lwjgl3:build",
-			"description": "Assembles and tests this project.",
-			"group": "build",
-			"project": "lwjgl3",
-			"buildFile": "/Users/yousofrahimzadeh/Yousof/AP/FinalProject/plantsvszombies2/lwjgl3/build.gradle",
-			"rootProject": "plantsvszombies2",
-			"projectFolder": "/Users/yousofrahimzadeh/Yousof/AP/FinalProject/plantsvszombies2",
-			"workspaceFolder": "/Users/yousofrahimzadeh/Yousof/AP/FinalProject/plantsvszombies2",
-			"args": "",
-			"javaDebug": false,
-			"problemMatcher": [
-				"$gradle"
-			],
-			"label": "gradle: lwjgl3:build"
-		}
-	]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-lwjgl3-classes",
+            "type": "shell",
+            "command": "./gradlew",
+            "args": [
+                "lwjgl3:classes"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            }
+        }
+    ]
 }

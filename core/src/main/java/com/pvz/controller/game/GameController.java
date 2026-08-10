@@ -48,6 +48,12 @@ public class GameController {
         return GameMap.TOP_LANE_Y - (lane * GameMap.TILE_HEIGHT) + (GameMap.TILE_HEIGHT / 2f);
     }
 
+    public static float xToWorldX(float x){
+        return GameMap.START_X + (x * GameMap.TILE_WIDTH);
+    }
+    public static float yToWorldY(float y){
+        return 720.0f - GameMap.TOP_LANE_Y - (y * GameMap.TILE_HEIGHT);
+    }
 /*
 
     private final GameContext context;

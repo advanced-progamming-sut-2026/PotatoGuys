@@ -50,7 +50,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public void updateMode(GameContext context) {
+    public void updateMode(GameContext context, float dt) {
         if (checkDeadlineLoss(context)) {
             return;
         }
@@ -88,7 +88,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
         }
 
         if (!currentWave.isDone()) {
-            currentWave.updateWave(context);
+            currentWave.updateWave(context, 0);
         }
         return false;
     }

@@ -37,7 +37,7 @@ public class BeghouledMode implements GameMode, BoardSwapper {
     }
 
     @Override
-    public void updateMode(GameContext context) {
+    public void updateMode(GameContext context, float dt) {
         // TODO: detect matches, resolve cascades, award sun/damage, check win/loss.
     }
 

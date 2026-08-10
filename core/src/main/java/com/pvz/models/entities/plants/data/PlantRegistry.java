@@ -8,18 +8,12 @@ import java.util.Map;
 import com.google.gson.annotations.SerializedName;
 
 import com.pvz.models.Constants;
-import com.pvz.models.entities.plants.actions.shooters.ShooterPattern;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.plants.enums.PlantType;
-import com.pvz.models.entities.projectile.ProjectileType;
 import com.pvz.utils.SaveManager;
 
-/**
- * Singleton registry that loads every {@link PlantPropertySheet} from the
- * data-driven {@code plant_profiles.json} resource via {@link SaveManager}
- * (Gson) at startup.
- */
+
 public final class PlantRegistry {
 
     private static final PlantRegistry INSTANCE = new PlantRegistry();
@@ -86,18 +80,6 @@ public final class PlantRegistry {
         return new DamageProfile(DamageKind.valueOf(d.kind), d.value, Math.max(1, d.count), d.stages);
     }
 
-    private SunProduction toProduction(ProductionDto p) {
-        if (p == null) return null;
-        return new SunProduction(ProductionKind.valueOf(p.kind), p.amount, p.stages, p.stageSeconds);
-    }
-
-    private PlantFoodProfile toPlantFood(PlantFoodDto p) {
-        if (p == null) return new PlantFoodProfile(PlantFoodKind.NONE, 0, 0, 0, List.of(), "");
-        return new PlantFoodProfile(PlantFoodKind.valueOf(p.kind), p.amount, p.count,
-                p.durationSeconds, p.flags == null ? List.of() : p.flags,
-                p.description == null ? "" : p.description);
-    }
-
     private GrowthProfile toGrowth(GrowthDto g) {
         if (g == null) return null;
         return new GrowthProfile(g.stageSeconds);
@@ -130,12 +112,8 @@ public final class PlantRegistry {
         int sunCost;
         float baseHp;
         DamageDto damage;
-        String projectileType;
-        String shooterPattern;
         Float actionIntervalSeconds;
         Float rechargeSeconds;
-        ProductionDto production;
-        PlantFoodDto plantFood;
         List<LevelUpgradeDto> levelUpgrades;
         GrowthDto growth;
         String description;
@@ -148,21 +126,6 @@ public final class PlantRegistry {
         float[] stages;
     }
 
-    private static final class ProductionDto {
-        String kind;
-        float amount;
-        float[] stages;
-        float[] stageSeconds;
-    }
-
-    private static final class PlantFoodDto {
-        String kind;
-        float amount;
-        int count;
-        float durationSeconds;
-        List<String> flags;
-        String description;
-    }
 
     private static final class LevelUpgradeDto {
         int level;

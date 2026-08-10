@@ -55,7 +55,7 @@ public class NormalMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public void updateMode(GameContext context) {
+    public void updateMode(GameContext context, float dt) {
 
         if (currentWave.isDone() && context.getZombies().isEmpty()) {
             int nextWaveIndex = waves.indexOf(currentWave) + 1;
@@ -74,7 +74,7 @@ public class NormalMode implements GameMode, PlantPlacer {
         }
 
         if (!currentWave.isDone()) {
-            currentWave.updateWave(context);
+            currentWave.updateWave(context, dt);
         }
 
         for (int i = 0; i < context.getZombies().size(); i++) {

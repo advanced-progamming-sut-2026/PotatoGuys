@@ -3,6 +3,9 @@ package com.pvz.models.entities.projectile;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.PvZ2;
+import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.effects.EffectType;
@@ -15,15 +18,13 @@ public class Projectile implements TickAware {
     private final GameContext ctx;
     private final ProjectileType type;
 
-    private float x;
-    private float y;
+    private float stateTime = 0f;
+
+    private Vector2 pos;
+    private Vector2 vel;
 
     private int lastCol;
     private int lastLane;
-
-    private float dirX = 1.0f;
-    private float dirY = 0.0f;
-    private float speed;
 
     private final float damage;
     private final boolean poison;
@@ -39,46 +40,21 @@ public class Projectile implements TickAware {
     // ثبت زامبی‌های برخورد کرده برای جلوگیری از دمیج مکرر در یک فریم (در حالت نفوذی/کمانه)
     private final Set<Zombie> hitZombies = new HashSet<>();
 
-    public Projectile(GameContext ctx, ProjectileType type, float lane, float col,
-                      float damage, boolean poison, boolean ice, boolean fire,
-                      int pierceCount, Object target) {
+    public Projectile(GameContext ctx, ProjectileType type, float startX, float startY , float velX , float velY ,float damage, boolean poison, boolean ice, boolean fire,int pierceCount, Object target) {
         this.ctx = ctx;
         this.type = type;
-        this.y = lane;
-        this.x = col;
-
-        // مقداردهی اولیه موقعیت کاشی
-        this.lastCol = (int) Math.floor(col);
-        this.lastLane = (int) Math.floor(lane);
+        this.pos = new Vector2(startX, startY);
+        this.vel = new Vector2(velX, velY);
 
         this.damage = damage;
         this.poison = poison;
         this.ice = ice;
         this.fire = fire;
         this.pierceCount = pierceCount;
-        this.speed = type.getSpeed();
-    }
-
-    // ─── Setters & Direction Vector ──────────────────────────────────────────
-
-    /**
-     * تنظیم بردار جهت حرکت (پشتیبانی از تمام جهت‌ها: چپ، راست، بالا، پایین و قطری)
-     */
-    public void setVelocityVector(float dx, float dy) {
-        float length = (float) Math.hypot(dx, dy);
-        if (length != 0) {
-            // نرمال‌سازی بردار جهت برای یکنواخت ماندن سرعت حرکت در تمام زوایا
-            this.dirX = dx / length;
-            this.dirY = dy / length;
-        }
     }
 
     public void setBouncing(boolean bouncing) {
         this.bouncing = bouncing;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
     }
 
     public boolean isDead() {
@@ -95,18 +71,18 @@ public class Projectile implements TickAware {
         if (isDead) return;
 
         // ۱. جابه‌جایی دوبعدی پرتابه در محیط بازی
-        x += dirX * speed;
-        y += dirY * speed;
+        pos.x += vel.x * dt;
+        pos.y += vel.y * dt;
 
         // ۲. چک کردن خروج تیر از مرزهای نقشه
-        if (x < -0.5f || x >= ctx.getColumns() + 0.5f || y < -0.5f || y >= ctx.getLanes() + 0.5f) {
+        if (pos.x < -0.5f || pos.x >= ctx.getColumns() + 0.5f || pos.y < -0.5f || pos.y >= ctx.getLanes() + 0.5f) {
             destroy();
             return;
         }
 
         // ۳. چک کردن ورود به کاشی (Tile) جدید
-        int currentCol = (int) Math.floor(x);
-        int currentLane = (int) Math.floor(y);
+        int currentCol = (int) Math.floor(pos.x);
+        int currentLane = (int) Math.floor(pos.y);
 
         if (currentCol != lastCol || currentLane != lastLane) {
             lastCol = currentCol;
@@ -130,6 +106,13 @@ public class Projectile implements TickAware {
     }
 
     @Override
+    public void draw(){
+        float x = GameController.xToWorldX(pos.x);
+        float y = GameController.yToWorldY(pos.y);
+        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM" , "animation", stateTime, x, y, true);
+    }
+
+    @Override
     public void dispose() {}
 
     // ─── 2D Collision & Bounce Logic ─────────────────────────────────────────
@@ -143,7 +126,7 @@ public class Projectile implements TickAware {
             float zY = z.getLane();
 
             // محاسبه فاصله اقلیدسی دوبعدی بین پرتابه و زامبی
-            double distance = Math.hypot(zX - this.x, zY - this.y);
+            double distance = Math.hypot(zX - pos.x, zY - pos.y);
 
             if (distance <= HIT_RADIUS) {
                 onHitZombie(z);
@@ -206,7 +189,7 @@ public class Projectile implements TickAware {
         for (Zombie z : ctx.getZombies()) {
             if (z.isDead() || hitZombies.contains(z)) continue;
 
-            double dist = Math.hypot(z.getX() - this.x, z.getLane() - this.y);
+            double dist = Math.hypot(z.getX() - pos.x, z.getLane() - pos.y);
             if (dist < minDistance) {
                 minDistance = dist;
                 nearestNextZombie = z;
@@ -219,7 +202,7 @@ public class Projectile implements TickAware {
             float targetY = nearestNextZombie.getLane();
 
             // تغییر بردار جهت پرتابه به سمت زامبی جدید
-            setVelocityVector(targetX - this.x, targetY - this.y);
+            // setVelocityVector(targetX - pos.x, targetY - pos.y);
             ctx.log("[Projectile] " + type + " bounced towards target at (" + targetX + ", " + targetY + ")");
         } else {
             // اگر زامبی دیگری در صفحه نبود، تیر نابود می‌شود
@@ -235,8 +218,9 @@ public class Projectile implements TickAware {
 
     // ─── Getters ─────────────────────────────────────────────────────────────
 
-    public float getX() { return x; }
-    public float getY() { return y; }
+    public float getX() { return pos.x; }
+    public float getY() { return pos.y; }
+    public Vector2 getPos() { return pos; }
     public float getDamage() {return damage;}
     public ProjectileType getType() { return type; }
 }
