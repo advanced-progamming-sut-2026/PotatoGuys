@@ -1,261 +1,139 @@
 package com.pvz.controller;
 
-import java.util.regex.Matcher;
-
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.enums.PlantType;
-import com.pvz.models.entities.zombies.ZombieType;
-import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
-import com.pvz.models.entities.zombies.data.ZombieRegistry;
 import com.pvz.models.user.Collection;
 import com.pvz.models.user.MyPlant;
 import com.pvz.models.user.Profile;
+import com.pvz.models.user.User;
 
+/**
+ * Controller for the Collection (Almanac) screen. Owns every rule the UI must never
+ * decide on its own: how much an unlock costs, what happens when the player cannot
+ * afford it, and persisting the result to the save.
+ */
 public class CollectionController {
-/*
-    // Purchase costs
-    private static final int PURCHASE_COIN_COST = 2000;
-    private static final int PURCHASE_PACKET_COST = 10;
 
-    // Base multipliers for scaling upgrade costs
-    private static final int UPGRADE_COIN_BASE = 500;
-    private static final int UPGRADE_PACKET_BASE = 10;
+    /** Flat coin cost to unlock a locked plant. */
+    public static final int PURCHASE_COIN_COST = 2000;
 
-    private Profile getProfile() {
-        return AppContext.getInstance().getCurrentUser().getProfile();
+    /**
+     * Seed packets required to advance an owned plant from {@code currentLevel} to the next one.
+     * Level 1→2 costs 5, 2→3 costs 10, 3→4 costs 20, then 20 per level beyond that.
+     */
+    public static int requiredPacketsForLevel(int currentLevel) {
+        int targetLevel = currentLevel + 1;
+        switch (targetLevel) {
+            case 2: return 5;
+            case 3: return 10;
+            case 4: return 20;
+            default: return 20 * Math.max(1, targetLevel - 3);
+        }
     }
 
-    private Collection getCollection() {
-        return getProfile().getCollection();
+    private User user() {
+        return AppContext.getInstance().getCurrentUser();
     }
 
-    public Result showPlants(Matcher matcher) {
-        StringBuilder output = new StringBuilder("Your unlocked plants:");
-        if (getCollection().getUnlockedPlants().isEmpty()) {
-            output.append("\nYou haven't unlocked any plants yet.");
-            return new Result(output.toString());
-        }
-        for (MyPlant p : getCollection().getUnlockedPlants()) {
-            PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(p.getType());
-            output.append("\n- ").append(p.getType());
-            output.append(" | Level: ").append(p.getLevel());
-            output.append(" | Sun Cost: ").append(sheet.getSunCost());
-            output.append(" | Seed Packets: ").append(getCollection().getSeedPackets(p.getType()));
-            if (p.isBoosted())
-                output.append(" [BOOSTED]");
-        }
-        return new Result(output.toString());
+    private Profile profile() {
+        User user = user();
+        return user != null ? user.getProfile() : null;
     }
 
-    public Result showAllPlants(Matcher matcher) {
-        StringBuilder output = new StringBuilder("All defined plants in the game:");
-        for (PlantType pt : PlantType.values()) {
-            PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(pt);
-            if (sheet == null)
-                continue;
-            output.append("\n- ").append(sheet.getType().toString());
-            output.append(" | ").append(sheet.getCategory().toString());
-            output.append(" | Sun: ").append(sheet.getSunCost());
-            output.append(" | HP: ").append((int) sheet.getBaseHp());
-            output.append(" | Recharge: ").append(sheet.getRechargeSeconds()).append("s");
-        }
-        return new Result(output.toString());
+    private Collection collection() {
+        Profile profile = profile();
+        return profile != null ? profile.getCollection() : null;
     }
 
-    public Result showZombies(Matcher matcher) {
-        StringBuilder output = new StringBuilder("Your encountered zombies:");
-        if (getCollection().getUnlockedZombies().isEmpty()) {
-            output.append("\nNo zombies seen yet. Their respective frames are empty!");
-        }
-        for (ZombieType z : getCollection().getUnlockedZombies()) {
-            output.append("\n- ").append(z.name()).append(" (").append(z.getAlias()).append(")");
-        }
-        return new Result(output.toString());
+    /** Current coin balance, or 0 when no user is logged in. */
+    public int getCoins() {
+        Profile profile = profile();
+        return profile != null ? profile.getCoins() : 0;
     }
 
-    public Result showAllZombies(Matcher matcher) {
-        StringBuilder output = new StringBuilder("All defined zombies in the game:");
-        for (ZombieType zt : ZombieType.values()) {
-            output.append("\n- ").append(zt.name());
-            ZombiePropertySheet sheet = ZombieRegistry.getInstance().getSheet(zt.getAlias());
-            if (sheet != null) {
-                output.append(" | HP: ").append((int) sheet.getHitPoints());
-                output.append(" | Speed: ").append(sheet.getSpeed());
-            }
-        }
-        return new Result(output.toString());
+    /** Current diamond (gem) balance, or 0 when no user is logged in. */
+    public int getDiamonds() {
+        Profile profile = profile();
+        return profile != null ? profile.getDiamonds() : 0;
     }
 
-    public Result showPlantInfo(Matcher matcher) {
-        String name = matcher.group("plantName");
+    /**
+     * Unlocks a locked plant by spending {@link #PURCHASE_COIN_COST} coins.
+     *
+     * @return {@code null} on success, or an error message explaining what went wrong
+     *         (unknown plant, already owned, insufficient coins).
+     */
+    public String purchasePlant(PlantType type) {
+        User user = user();
+        if (user == null) return "No player is logged in.";
+        Profile profile = profile();
+        Collection collection = collection();
+        if (profile == null || collection == null) return "No save data available.";
 
-        PlantType plantType = null;
-        for (PlantType pt : PlantType.values()) {
-            if (pt.name().equalsIgnoreCase(name)) {
-                plantType = pt;
-                break;
-            }
+        if (collection.getPlant(type) != null) {
+            return type + " is already unlocked.";
         }
-        if (plantType == null) {
-            return new Result("Plant \"" + name + "\" not found.");
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
+        if (sheet == null) {
+            return type + " is not available to unlock.";
         }
 
-        PlantPropertySheet storage = PlantRegistry.getInstance().getSheet(plantType);
-        if (storage == null) {
-            return new Result("No data available for this plant.");
+        int coins = profile.getCoins();
+        if (coins < PURCHASE_COIN_COST) {
+            return "Not enough coins! Unlocking " + sheet.getName() + " costs " + PURCHASE_COIN_COST
+                    + " coins, but you only have " + coins + ".";
         }
 
-        StringBuilder output = new StringBuilder();
-        output.append("=== ").append(plantType.toString()).append(" ===");
-        output.append("\nCategory: ").append(storage.getCategory().toString());
-        output.append("\nSun Cost: ").append(storage.getSunCost());
-        output.append("\nBase HP: ").append((int) storage.getBaseHp());
-        output.append("\nBase Recharge: ").append(storage.getRechargeSeconds()).append("s");
-        output.append("\nBase Action Interval: ").append(storage.getActionIntervalSeconds()).append("s");
-
-        MyPlant plant = getCollection().getPlant(plantType);
-        int packets = getCollection().getSeedPackets(plantType);
-
-        if (plant != null) {
-            output.append("\n\n-- Your Plant Status --");
-            output.append("\nLevel: ").append(plant.getLevel());
-            output.append("\nSeed Packets Owned: ").append(packets);
-            output.append("\nBoosted: ").append(plant.isBoosted() ? "Yes" : "No");
-        } else {
-            output.append("\n\nStatus: Not yet unlocked.");
-            output.append("\nSeed Packets Owned: ").append(packets).append(" / ").append(PURCHASE_PACKET_COST);
-        }
-        return new Result(output.toString());
+        profile.setCoins(coins - PURCHASE_COIN_COST);
+        collection.unlockPlant(type);
+        user.saveUser();
+        return null;
     }
 
-    public Result showZombieInfo(Matcher matcher) {
-        String name = matcher.group("zombieName");
-
-        ZombieType zombieType = null;
-        for (ZombieType zt : ZombieType.values()) {
-            if (zt.name().equalsIgnoreCase(name)) {
-                zombieType = zt;
-                break;
-            }
-        }
-        if (zombieType == null) {
-            return new Result("Zombie \"" + name + "\" not found.");
-        }
-
-        StringBuilder output = new StringBuilder();
-        output.append("=== ").append(zombieType.name()).append(" ===");
-        output.append("\nAlias: ").append(zombieType.getAlias());
-
-        ZombiePropertySheet sheet = ZombieRegistry.getInstance().getSheet(zombieType.getAlias());
-        if (sheet != null) {
-            output.append("\nHitPoints: ").append(sheet.getHitPoints());
-            output.append("\nEat DPS: ").append(sheet.getEatDps());
-            output.append("\nSpeed: ").append(sheet.getSpeed());
-            output.append("\nWeight: ").append(sheet.getWeight());
-        }
-        return new Result(output.toString());
+    /** True when the plant exists, is not a mint and is not owned yet (so it can be bought). */
+    public boolean canPurchase(PlantType type) {
+        Collection collection = collection();
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
+        if (sheet == null || sheet.isMint()) return false;
+        if (collection == null) return true;
+        return collection.getPlant(type) == null;
     }
 
-    public Result purchasePlant(Matcher matcher) {
-        String name = matcher.group("plantName");
+    /**
+     * Spends seed packets to raise an owned plant to its next level.
+     *
+     * @return {@code null} on success, or an error message explaining what went wrong
+     *         (not owned, already max level, not enough packets).
+     */
+    public String upgradePlant(PlantType type) {
+        User user = user();
+        if (user == null) return "No player is logged in.";
+        Profile profile = profile();
+        Collection collection = collection();
+        if (profile == null || collection == null) return "No save data available.";
 
-        PlantType plantType = null;
-        for (PlantType pt : PlantType.values()) {
-            if (pt.name().equalsIgnoreCase(name)) {
-                plantType = pt;
-                break;
-            }
+        MyPlant plant = collection.getPlant(type);
+        if (plant == null) return type + " is not unlocked yet.";
+
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
+        int maxLevel = 1;
+        if (sheet != null && sheet.getLevelUpgrades() != null) {
+            maxLevel = sheet.getLevelUpgrades().size() + 1;
         }
-        if (plantType == null) {
-            return new Result("Plant \"" + name + "\" not found.");
-        }
+        if (plant.getLevel() >= maxLevel) return type + " is already at max level.";
 
-        if (getCollection().getPlant(plantType) != null) {
-            return new Result("You already own this plant.");
-        }
-
-        if (PlantRegistry.getInstance().getSheet(plantType) == null) {
-            return new Result("This plant is not available for purchase.");
-        }
-
-        int coins = getProfile().getCoins();
-        int packets = getCollection().getSeedPackets(plantType);
-
-        if (coins < PURCHASE_COIN_COST || packets < PURCHASE_PACKET_COST) {
-            return new Result(String.format(
-                    "Not enough resources to unlock! Need %d coins and %d seed packets. " +
-                    "You currently have %d coins and %d packets.",
-                    PURCHASE_COIN_COST, PURCHASE_PACKET_COST, coins, packets));
+        int cost = requiredPacketsForLevel(plant.getLevel());
+        int packets = collection.getSeedPackets(type);
+        if (packets < cost) {
+            return "Not enough packets! You need " + cost + " to reach level "
+                    + (plant.getLevel() + 1) + ", but you only have " + packets + ".";
         }
 
-        // Deduct costs and unlock
-        getProfile().setCoins(coins - PURCHASE_COIN_COST);
-        getCollection().consumeSeedPackets(plantType, PURCHASE_PACKET_COST);
-        getCollection().unlockPlant(plantType);
-
-        // ---> FIX: SAVE THE USER <---
-        AppContext.getInstance().getCurrentUser().saveUser();
-
-        return new Result("Successfully purchased and unlocked " + plantType.toString() + "!\n"
-                + "Remaining Coins: " + getProfile().getCoins() + "\n"
-                + "Remaining Seed Packets: " + getCollection().getSeedPackets(plantType));
+        collection.consumeSeedPackets(type, cost);
+        plant.setLevel(plant.getLevel() + 1);
+        user.saveUser();
+        return null;
     }
-
-    public Result upgradePlant(Matcher matcher) {
-        String name = matcher.group("plantName");
-
-        PlantType plantType = null;
-        for (PlantType pt : PlantType.values()) {
-            if (pt.name().equalsIgnoreCase(name)) {
-                plantType = pt;
-                break;
-            }
-        }
-        if (plantType == null) {
-            return new Result("Plant \"" + name + "\" not found.");
-        }
-
-        MyPlant owned = getCollection().getPlant(plantType);
-        if (owned == null) {
-            return new Result("You do not own this plant. Purchase it first.");
-        }
-
-        int currentLevel = owned.getLevel();
-        if (currentLevel >= 4) { // Assuming 4 is the max level handled by PlantStatResolver
-            return new Result(plantType.toString() + " is already at maximum level.");
-        }
-
-        // Costs scale up with each level
-        int coinCost = UPGRADE_COIN_BASE * currentLevel;
-        int packetCost = UPGRADE_PACKET_BASE * currentLevel;
-
-        int coins = getProfile().getCoins();
-        int packets = getCollection().getSeedPackets(plantType);
-
-        if (coins < coinCost || packets < packetCost) {
-            return new Result(String.format(
-                    "Not enough resources to upgrade! Need %d coins and %d seed packets." +
-                     " You currently have %d coins and %d packets.",
-                    coinCost, packetCost, coins, packets));
-        }
-
-        // Deduct costs and upgrade
-        getProfile().setCoins(coins - coinCost);
-        getCollection().consumeSeedPackets(plantType, packetCost);
-        owned.setLevel(currentLevel + 1);
-
-        // ---> FIX: SAVE THE USER <---
-        AppContext.getInstance().getCurrentUser().saveUser();
-
-        return new Result(plantType.toString() + " upgraded successfully to level " + (currentLevel + 1) + "!\n"
-                + "Remaining Coins: " + getProfile().getCoins() + "\n"
-                + "Remaining Seed Packets: " + getCollection().getSeedPackets(plantType));
-    }
-
-    public Result exit(Matcher matcher) {
-        Menu nextMenu = new GameMenu(new GameModesModal());
-        return new Result("Exited to " + nextMenu.getName(), nextMenu);
-    }*/
 }

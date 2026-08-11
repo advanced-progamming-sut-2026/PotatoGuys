@@ -113,6 +113,16 @@ public class GameModesMenu extends ScreenAdapter {
         });
         topLeft.add(greenhouseBtn).size(75, 70).padLeft(24);
 
+        ImageButton almanacBtn = new ImageButton(PvzSkin.get(), "almanac");
+        almanacBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new CollectionMenu(game, GameModesMenu.this));
+            }
+        });
+        topLeft.add(almanacBtn).size(75, 70).padLeft(24);
+
         Table topRight = new Table();
         Profile profile = currentProfile();
         int coins = profile != null ? profile.getCoins() : 0;

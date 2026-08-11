@@ -171,6 +171,16 @@ public class GreenHouseMenu extends ScreenAdapter {
             () -> game.setScreen(new GameModesMenu(game))
         )).size(70).padRight(24);
 
+        ImageButton almanacBtn = new ImageButton(PvzSkin.get(), "almanac");
+        almanacBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                game.setScreen(new CollectionMenu(game, GreenHouseMenu.this));
+            }
+        });
+        topLeft.add(almanacBtn).size(75, 70);
+
         Table topRight = new Table();
         Profile profile = currentProfile();
         int coins = profile != null ? profile.getCoins() : 0;
