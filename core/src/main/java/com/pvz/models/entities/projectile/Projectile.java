@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.PvZ2;
+import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.zombies.Zombie;
@@ -34,7 +35,7 @@ public class Projectile implements TickAware {
     private boolean bouncing;
     private boolean isDead = false;
 
-    private static final float HIT_RADIUS = 0.45f;
+    private static final float HIT_RADIUS = 2f;
 
     private final Set<Zombie> hitZombies = new HashSet<>();
 
@@ -104,7 +105,9 @@ public class Projectile implements TickAware {
 
     @Override
     public FrameConfig draw(){
-        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM" , "animation", stateTime, pos.x, pos.y, true);
+        float xx = GameController.xToWorldX(pos.x);
+        float yy = GameController.yToWorldY(pos.y);
+        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM" , "animation", stateTime, xx, yy, true);
         return null;
     }
 

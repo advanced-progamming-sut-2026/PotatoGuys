@@ -373,42 +373,42 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
-        // // ۶. رسم خورشیدها و خطوط دیباگ گرید
-        // if (context != null) {
-        //     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        // ۶. رسم خورشیدها و خطوط دیباگ گرید
+        if (context != null) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        //     // رسم خورشیدها
-        //     shapeRenderer.setColor(Color.YELLOW);
-        //     for (Sun sun : new ArrayList<>(context.getSuns())) {
-        //         if (!sun.isDone()) {
-        //             shapeRenderer.circle(sun.getX(), sun.getY(), 50);
-        //         }
-        //     }
-         //     // رسم خطوط گرید دیباگ
-        //     shapeRenderer.setColor(Color.RED);
-        //     for (int i = 0; i < context.getMap().getLanes(); i++) {
-        //         float gridY = GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT;
-        //         shapeRenderer.rect(0, gridY - 0.5f, SCREEN_WIDTH, 1);
-        //     }
-        //     for (int i = 0; i < context.getMap().getColumns(); i++) {
-        //         float gridX = GameMap.START_X + i * GameMap.TILE_WIDTH;
-        //         shapeRenderer.rect(gridX - 0.5f, 0, 1, SCREEN_HEIGHT);
-        //     }
+            // رسم خورشیدها
+            shapeRenderer.setColor(Color.YELLOW);
+            for (Sun sun : new ArrayList<>(context.getSuns())) {
+                if (!sun.isDone()) {
+                    shapeRenderer.circle(sun.getX(), sun.getY(), 50);
+                }
+            }
+             // رسم خطوط گرید دیباگ
+            shapeRenderer.setColor(Color.RED);
+            for (int i = 0; i < context.getMap().getLanes(); i++) {
+                float gridY = GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT;
+                shapeRenderer.rect(0, gridY - 0.5f, SCREEN_WIDTH, 1);
+            }
+            for (int i = 0; i < context.getMap().getColumns(); i++) {
+                float gridX = GameMap.START_X + i * GameMap.TILE_WIDTH;
+                shapeRenderer.rect(gridX - 0.5f, 0, 1, SCREEN_HEIGHT);
+            }
 
-        //     for(Plant a : context.getPlants()){
-        //         shapeRenderer.circle(GameController.xToWorldX(a.getCol()), GameController.yToWorldY(a.getLane()), 10);
-        //     }
+            for(Plant a : context.getPlants()){
+                shapeRenderer.circle(GameController.xToWorldX(a.getCol()), GameController.yToWorldY(a.getLane()), 10);
+            }
 
-        //     for(Projectile a : context.getProjectiles()){
-        //         shapeRenderer.circle(GameController.xToWorldX(a.getX()), GameController.yToWorldY(a.getY()), 10);
-        //     }
+            for(Projectile a : context.getProjectiles()){
+                shapeRenderer.circle(GameController.xToWorldX(a.getX()), GameController.yToWorldY(a.getY()), 10);
+            }
 
-        //     for(Zombie a : context.getZombies()){
-        //         shapeRenderer.circle(GameController.xToWorldX(a.getX()), GameController.yToWorldY(a.getLane()), 10);
-        //     }
+            for(Zombie a : context.getZombies()){
+                shapeRenderer.circle(GameController.xToWorldX(a.getX()), GameController.yToWorldY(a.getY()), 10);
+            }
 
-        //     shapeRenderer.end();
-        // }
+            shapeRenderer.end();
+        }
 
         stage.act(delta);
         stage.draw();

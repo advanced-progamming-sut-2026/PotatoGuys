@@ -169,7 +169,7 @@
           "laneOffset": 0,
           "positionOffset": { "x": 0.85, "y": -0.70 },
           "velocity": { "x": 4.0, "y": 0.0 },
-          "delaySeconds": 0.5
+          "delaySeconds": 0.4
         }
       ]
     },
@@ -177,14 +177,14 @@
       "class": "ShooterActionConfig",
       "intervalSeconds": 1.5,
       "patterns": [
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.0 },
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.15 },
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.30 },
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.45 },
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.60 },
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.75 },
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.90 },
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 1.05 }
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.15 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.30 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.45 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.60 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.75 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.90 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 1.05 }
       ]
     },
     "pamAnimationConfig": {
@@ -208,34 +208,35 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "intervalSeconds" :1.5,
       "patterns": [
         {
           "projectileType": "PEA",
           "damage": 20.0,
           "laneOffset": 0,
-          "positionOffset": { "x": 0.5, "y": 0.2 },
-          "velocity": { "x": 0.2, "y": 0.0 },
-          "delaySeconds": 0.0
+          "positionOffset": { "x": 0.85, "y": -0.70},
+          "velocity": { "x": 4.0, "y": 0.0 },
+          "delaySeconds": 0.5
         },
         {
           "projectileType": "PEA",
           "damage": 20.0,
           "laneOffset": 0,
-          "positionOffset": { "x": 0.5, "y": 0.2 },
-          "velocity": { "x": 0.2, "y": 0.0 },
-          "delaySeconds": 0.15
+          "positionOffset": { "x": 0.85, "y": -0.70},
+          "velocity": { "x": 4.0, "y": 0.0 },
+          "delaySeconds": 0.6
         }
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "patterns": [
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.0 },
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.15 },
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.40 },
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.55 },
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.80 },
-        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": { "x": 0.5, "y": 0.2 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.95 }
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": {"x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.0 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": {"x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.15 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": {"x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.40 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": {"x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.55 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": {"x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.80 },
+        { "projectileType": "PEA", "damage": 20.0, "laneOffset": 0, "positionOffset": {"x": 0.85, "y": -0.70 }, "velocity": { "x": 0.2, "y": 0.0 }, "delaySeconds": 0.95 }
       ]
     },
     "pamAnimationConfig": {
@@ -259,30 +260,31 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "intervalSeconds": 1.5,
       "patterns": [
         {
           "projectileType": "PEA",
           "damage": 20.0,
-          "laneOffset": -1,
-          "positionOffset": { "x": 0.5, "y": 0.2 },
-          "velocity": { "x": 0.2, "y": 0.0 },
-          "delaySeconds": 0.0
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.85, "y": -0.90},
+          "velocity": { "x": 4.0, "y": 0.0 },
+          "delaySeconds": 0.4
         },
         {
           "projectileType": "PEA",
           "damage": 20.0,
           "laneOffset": 0,
-          "positionOffset": { "x": 0.5, "y": 0.2 },
-          "velocity": { "x": 0.2, "y": 0.0 },
-          "delaySeconds": 0.0
+          "positionOffset": { "x": 0.85, "y": -0.70},
+          "velocity": { "x": 4.0, "y": 0.0 },
+          "delaySeconds": 0.4
         },
         {
           "projectileType": "PEA",
           "damage": 20.0,
-          "laneOffset": 1,
-          "positionOffset": { "x": 0.5, "y": 0.2 },
-          "velocity": { "x": 0.2, "y": 0.0 },
-          "delaySeconds": 0.0
+          "laneOffset": 0,
+          "positionOffset": { "x": 0.85, "y": -0.50},
+          "velocity": { "x": 4.0, "y": 0.0 },
+          "delaySeconds": 0.4
         }
       ]
     },
@@ -295,7 +297,7 @@
           "laneOffset": 0,
           "allLanes": true,
           "positionOffset": { "x": 0.5, "y": 0.2 },
-          "velocity": { "x": 0.2, "y": 0.0 },
+          "velocity": { "x": 4.0, "y": 0.0 },
           "delaySeconds": 0.0
         }
       ]
