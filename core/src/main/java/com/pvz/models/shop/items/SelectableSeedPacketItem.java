@@ -55,9 +55,8 @@ public class SelectableSeedPacketItem extends ShopItem {
             }
         }
 
-        MyPlant target = user.getProfile().getCollection().getPlant(selectedType);
         int totalPackets = unitAmount * count;
-        target.setSeed(target.getSeed() + totalPackets);
+        user.getProfile().getCollection().addSeedPackets(selectedType, totalPackets);
 
         user.saveUser();
         return true;

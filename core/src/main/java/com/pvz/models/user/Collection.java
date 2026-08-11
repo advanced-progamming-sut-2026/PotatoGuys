@@ -15,6 +15,29 @@ public class Collection {
     private Map<PlantType, Integer> seedPackets = new HashMap<>();
     private transient News news;
 
+    /**
+     * True once legacy {@link MyPlant#getSeed()} values have been folded into the
+     * {@link #seedPackets} map. The plant's own {@code seed} field used to be a second,
+     * parallel packet counter (written by old shop items and editable in the save JSON),
+     * but the Collection UI and level-ups only ever read the map — so those packets were
+     * invisible. Gson resets this flag to {@code false} on load, which triggers the
+     * one-time migration below.
+     */
+    private transient boolean packetsMigrated = false;
+
+    /** Folds any leftover {@link MyPlant#getSeed()} packets into the map and zeroes the field. */
+    private void migratePackets() {
+        if (packetsMigrated) return;
+        packetsMigrated = true;
+        for (MyPlant p : unlockedPlants) {
+            int seed = p.getSeed();
+            if (seed > 0 && !seedPackets.containsKey(p.getType())) {
+                seedPackets.put(p.getType(), seed);
+                p.setSeed(0);
+            }
+        }
+    }
+
     public Collection() {
     }
 
@@ -72,6 +95,7 @@ public class Collection {
     }
 
     public int getSeedPackets(PlantType type) {
+        migratePackets();
         return seedPackets.getOrDefault(type, 0);
     }
 
