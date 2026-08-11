@@ -42,6 +42,6 @@ public class PlantActionState extends PlantState {
         PamAnimationConfig config = plant.getSheet().pamAnimationConfig;
         float x = GameController.colToWorldX(plant.getCol());
         float y = GameController.laneToWorldY(plant.getLane());
-        PvZ2.pamPlayer.draw(PvZ2.batch, config.pamFilePath , config.attackActionLabel, stateTime, x, y, true);
+        PvZ2.pamPlayer.draw(PvZ2.batch, config.pamFilePath , config.attackActionLabel, stateTime, x, y,0.7f,0.7f, true);
     }
 }

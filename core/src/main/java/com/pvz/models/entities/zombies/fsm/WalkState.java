@@ -61,7 +61,7 @@ public class WalkState implements ZombieState {
     private ZombieState checkForPlant(Zombie zombie, GameContext ctx) {
         int col = GameController.worldXtoCol(zombie.getX());
         int lane = GameController.worldYtoLane(zombie.getY());
-        if (col<ctx.getMap().getColumns()) {
+        if (col<ctx.getMap().getColumns() && col >= 0) {
             if (ctx.isPlantAt(col, lane) && !ctx.getPlantsAt(col, lane).getLast().isFrozen()) {
                 return new EatState(col, lane);
             }

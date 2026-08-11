@@ -36,7 +36,7 @@ public class Projectile implements TickAware {
     private boolean isDead = false;
 
     // شعاع برخورد تیر بر حسب خانه/کاشی
-    private static final float HIT_RADIUS = 0.45f;
+    private static final float HIT_RADIUS = 50f;
 
     // ثبت زامبی‌های برخورد کرده برای جلوگیری از دمیج مکرر در یک فریم (در حالت نفوذی/کمانه)
     private final Set<Zombie> hitZombies = new HashSet<>();
@@ -76,21 +76,21 @@ public class Projectile implements TickAware {
         stateTime += dt;
         if (isDead) return;
 
-        pos.x += vel.x * dt;
-        pos.y += vel.y * dt;
+        pos.x += vel.x * 80 * dt;
+        pos.y += vel.y * 80 * dt;
 
-        if (pos.x < -0.5f || pos.x >= ctx.getColumns() + 0.5f || pos.y < -0.5f || pos.y >= ctx.getLanes() + 0.5f) {
+        int col = GameController.worldXtoCol(pos.x);
+        int lane = GameController.worldYtoLane(pos.y);
+        if (col < -0.5f || col >= ctx.getColumns() + 0.5f || lane < -0.5f || lane >= ctx.getLanes() + 0.5f) {
             destroy();
             return;
         }
 
         // ۳. چک کردن ورود به کاشی (Tile) جدید
-        int currentCol = (int) Math.floor(pos.x);
-        int currentLane = (int) Math.floor(pos.y);
 
-        if (currentCol != lastCol || currentLane != lastLane) {
-            lastCol = currentCol;
-            lastLane = currentLane;
+        if (col != lastCol || lane != lastLane) {
+            lastCol = col;
+            lastLane = lane;
 
             try {
                 Tile tile = ctx.getTileAt(lastCol, lastLane);
@@ -111,9 +111,7 @@ public class Projectile implements TickAware {
 
     @Override
     public FrameConfig draw(){
-        float x = GameController.xToWorldX(pos.x);
-        float y = GameController.yToWorldY(pos.y);
-        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM" , "animation", stateTime, x, y, true);
+        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM" , "animation", stateTime, pos.x, pos.y, true);
         return null;
     }
 
