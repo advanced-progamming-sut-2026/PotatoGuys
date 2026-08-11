@@ -43,16 +43,16 @@ public class ProfileMenu extends ScreenAdapter {
     private static final String DEFAULT_AVATAR = AVATAR_DIR + "avatar_luffy.png";
 
     private static final List<String> AVAILABLE_AVATARS = List.of(
-            "avatar_luffy.png",
-            "avatar_zoro.png",
-            "avatar_nami.png",
-            "avatar_usopp.png",
-            "avatar_sanji.png",
-            "avatar_chopper.png",
-            "avatar_robin.png",
-            "avatar_franky.png",
-            "avatar_brook.png",
-            "avatar_jinbe.png"
+        "avatar_luffy.png",
+        "avatar_zoro.png",
+        "avatar_nami.png",
+        "avatar_usopp.png",
+        "avatar_sanji.png",
+        "avatar_chopper.png",
+        "avatar_robin.png",
+        "avatar_franky.png",
+        "avatar_brook.png",
+        "avatar_jinbe.png"
     );
 
     private final PvZ2 game;
@@ -223,7 +223,7 @@ public class ProfileMenu extends ScreenAdapter {
         // --- Avatar picker overlay -----------------------------------------
         buildAvatarPicker();
 
-        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,AudioManager.getInstance().getUserMusicVolume());
     }
 
     private static String getAvatarPath(String avatarName) {
@@ -265,7 +265,7 @@ public class ProfileMenu extends ScreenAdapter {
 
     private Table createAvatarStack() {
         Texture avatarTex = getAvatarTexture(
-                currentUser != null ? currentUser.getProfilePicture() : null);
+            currentUser != null ? currentUser.getProfilePicture() : null);
         Texture feathered = AvatarImages.featheredCircle(avatarTex);
         avatarImage = new Image(new TextureRegionDrawable(feathered));
 

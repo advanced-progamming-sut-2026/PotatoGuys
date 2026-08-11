@@ -396,6 +396,7 @@ public class EgyptChapterMenu extends ScreenAdapter {
         private float houseX, houseY;
         private float zombossNodeX, zombossNodeY;
         private float pyramidAnchorX, pyramidAnchorY;
+        private float bridgeX, bridgeY;
 
         private float zombossRenderHeight() {
             return ZOMBOSS_TUNING.nativeH * ZOMBOSS_TUNING.scale;
@@ -418,6 +419,12 @@ public class EgyptChapterMenu extends ScreenAdapter {
 
             zombossNodeX = (centerX[1] + centerX[2]) / 2f;
             zombossNodeY = Math.max(centerY[1], centerY[2]) - 200f * LAYOUT_SCALE_Y;
+
+            // The trail forks here: Day 2 -> bridge -> Day 3, instead of one
+            // straight segment - this is what actually creates the crossing-
+            // lines look near the pyramid/Zomboss decoration in the reference.
+            bridgeX = zombossNodeX;
+            bridgeY = zombossNodeY + zombossRenderHeight() / 2f;
 
             pyramidAnchorX = centerX[1] + PYRAMID_TUNING.offsetX * LAYOUT_SCALE_X;
             pyramidAnchorY = centerY[1] + 120f * LAYOUT_SCALE_Y;
@@ -607,9 +614,18 @@ public class EgyptChapterMenu extends ScreenAdapter {
             public void draw(Batch batch, float parentAlpha) {
                 batch.setColor(0.85f, 0.72f, 0.35f, 0.85f);
                 drawSegment(batch, houseAnchorX, houseAnchorY, centerX[0], centerY[0]);
+
+                // Day 2 -> Day 3 is replaced by a two-part detour through the
+                // bridge point near the boss decoration, instead of a direct line.
                 for (int i = 0; i < centerX.length - 1; i++) {
+                    if (i == 1) {
+                        continue;
+                    }
                     drawSegment(batch, centerX[i], centerY[i], centerX[i + 1], centerY[i + 1]);
                 }
+                drawSegment(batch, centerX[1], centerY[1], bridgeX, bridgeY);
+                drawSegment(batch, bridgeX, bridgeY, centerX[2], centerY[2]);
+
                 batch.setColor(Color.WHITE);
             }
 
@@ -674,10 +690,33 @@ public class EgyptChapterMenu extends ScreenAdapter {
                         }
                         if (clip != null) {
                             pamPlayer.draw(batch, clip, stateTime, getX(), getY(), true);
+                        } else {
+                            logMissingClipOnce(objectType, pamState);
                         }
-                    } catch (Throwable ignored) {
+                    } catch (Throwable t) {
+                        logClipErrorOnce(objectType, pamState, t);
                     }
                 }
+            }
+        }
+
+        private final java.util.Set<String> loggedClipIssues = new java.util.HashSet<>();
+
+        private void logMissingClipOnce(MapObjectType objectType, String pamState) {
+            String key = objectType.name() + ":" + pamState;
+            if (loggedClipIssues.add(key)) {
+                Gdx.app.error("PAM_MISSING", "No PAM clip found for " + objectType.name()
+                    + " at path '" + objectType.path + "' (tried state '" + pamState
+                    + "', then idle/default/\"\") - check this file actually exists under assets/pvz-assets/"
+                    + objectType.path);
+            }
+        }
+
+        private void logClipErrorOnce(MapObjectType objectType, String pamState, Throwable t) {
+            String key = objectType.name() + ":error";
+            if (loggedClipIssues.add(key)) {
+                Gdx.app.error("PAM_ERROR", "Exception drawing " + objectType.name()
+                    + " ('" + objectType.path + "', state '" + pamState + "')", t);
             }
         }
     }
@@ -691,4 +730,3 @@ public class EgyptChapterMenu extends ScreenAdapter {
         return new TextureRegion(texture);
     }
 }
-

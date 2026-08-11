@@ -3,6 +3,7 @@ package com.pvz.models.games;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.GameEngine;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.plants.Plant;
@@ -135,12 +136,12 @@ public class GameContext implements TickAware {
 
     public List<Zombie> getZombiesAt(int col, int lane) {
         return getZombies().stream()
-                .filter(z -> z.getLane() == lane && (int) z.getX() == col && !z.isDead())
+                .filter(z -> GameController.worldYtoLane(z.getY()) == lane && (int) z.getX() == col && !z.isDead())
                 .toList();
     }
     public List<Zombie> getZombiesInLane(int lane) {
         return zombies.stream()
-                .filter(z -> z.getLane() == lane && !z.isDead())
+                .filter(z -> GameController.worldYtoLane(z.getY()) == lane && !z.isDead())
                 .toList();
     }
     public List<Zombie> getZombiesInColumn(int col) {

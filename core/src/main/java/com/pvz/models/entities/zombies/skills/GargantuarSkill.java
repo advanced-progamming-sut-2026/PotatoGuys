@@ -1,5 +1,6 @@
 package com.pvz.models.entities.zombies.skills;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.games.GameContext;
@@ -49,10 +50,10 @@ public class GargantuarSkill implements ZombieSkill {
     public void execute(Zombie zombie, GameContext ctx) {
         zombie.markImpThrown();
         int targetCol = Math.max(1, Math.min((int)zombie.getX() - IMP_TARGET_COL, ctx.getColumns() - 1));
-        Zombie imp = new ZombieFactory().create(impAlias, targetCol, zombie.getLane(), ctx, 1, 2);
+        Zombie imp = new ZombieFactory().create(impAlias, targetCol, GameController.worldYtoLane(zombie.getY()), ctx, 1, 2);
         ctx.spawnZombie(imp);
         ctx.log("Gargantuar threw Imp [" + impAlias + "] to column "
-                + targetCol + " in lane " + zombie.getLane() + "!");
+                + targetCol + " in lane " + GameController.worldYtoLane(zombie.getY()) + "!");
     }
 
     @Override

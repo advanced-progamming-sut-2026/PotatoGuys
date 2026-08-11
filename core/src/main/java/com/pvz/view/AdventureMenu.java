@@ -98,7 +98,7 @@ public class AdventureMenu extends ScreenAdapter {
         rootTable.add(buildTopBar()).fillX().top().padTop(30).padLeft(40).padRight(40).row();
         rootTable.add(buildCenter()).expand().center().row();
 
-        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,AudioManager.getInstance().getUserMusicVolume());
     }
 
     private Table buildTopBar() {
@@ -139,8 +139,8 @@ public class AdventureMenu extends ScreenAdapter {
                 // Ancient Egypt is the starting chapter and was never lock-checked before;
                 // keep that behavior instead of relying on season data that may not track it.
                 boolean locked = index == 0 ? false : controller.isSeasonLocked(CHAPTER_KEYS[index]);
-                Runnable openChapter = index == 0
-                    ? () -> game.setScreen(new EgyptChapterMenu(game))
+                Runnable openChapter = index == 0 ? () -> game.setScreen(new EgyptChapterMenu(game))
+                    : index == 1 ? () -> game.setScreen(new FrostbiteCavesChapterMenu(game))
                     : () -> game.setScreen(new ChapterMenu(game, chapterName));
                 return MenuUiKit.bigCard(skin, CHAPTER_ART[index], CHAPTER_TINTS[index], chapterName,
                     locked ? "Locked" : "Unlocked", locked,

@@ -3,6 +3,7 @@ package com.pvz.models.games.modes.variants;
 import java.util.List;
 import java.util.Random;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
@@ -120,7 +121,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
         // ─── ۲. بررسی رسیدن زامبی‌ها به انتهای لاین (خوردن مغز) ─────────────────
         for (Zombie z : context.getZombies()) {
             if (!z.isDead() && z.getX() <= 0f) {
-                int lane = z.getLane();
+                int lane = GameController.worldYtoLane(z.getY());
                 if (!brainsEaten[lane]) {
                     brainsEaten[lane] = true;
                     context.log("🧠 BRAIN EATEN in Lane " + lane + "! Yummy!");

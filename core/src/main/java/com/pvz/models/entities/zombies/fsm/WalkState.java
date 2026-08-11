@@ -1,5 +1,6 @@
 package com.pvz.models.entities.zombies.fsm;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.skills.ZombieSkill;
 import com.pvz.models.games.GameContext;
@@ -27,8 +28,8 @@ public class WalkState implements ZombieState {
     }
 
     @Override
-    public ZombieState tick(Zombie zombie, GameContext ctx) {
-        advancePosition(zombie);
+    public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
+        advancePosition(zombie, dt);
 
         ZombieState skillTransition = checkForSkill(zombie, ctx);
         if (skillTransition != null) return skillTransition;
@@ -52,15 +53,18 @@ public class WalkState implements ZombieState {
     // ── Private helpers ───────────────────────────────────────────────────────
 
     /** Move the zombie left by its (effect-adjusted) speed-per-tick. */
-    private void advancePosition(Zombie zombie) {
-        zombie.setX(zombie.getX() - zombie.getEffectiveSpeedPerTick());
+    private void advancePosition(Zombie zombie, float dt) {
+        zombie.setX(zombie.getX() - zombie.getEffectiveSpeedPerTick()*1000*dt);
     }
 
     /** Returns {@link EatState} if a plant is at the zombie's current column, else null. */
     private ZombieState checkForPlant(Zombie zombie, GameContext ctx) {
-        int col = (int) zombie.getX();
-        if (ctx.isPlantAt(col, zombie.getLane()) && !ctx.getPlantsAt(col,zombie.getLane()).getLast().isFrozen()) {
-            return new EatState(col, zombie.getLane());
+        int col = GameController.worldXtoCol(zombie.getX());
+        int lane = GameController.worldYtoLane(zombie.getY());
+        if (col<ctx.getMap().getColumns() && col >= 0) {
+            if (ctx.isPlantAt(col, lane) && !ctx.getPlantsAt(col, lane).getLast().isFrozen()) {
+                return new EatState(col, lane);
+            }
         }
         return null;
     }

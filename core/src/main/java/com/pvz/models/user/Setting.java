@@ -3,45 +3,95 @@ package com.pvz.models.user;
 public class Setting {
     private int difficulty;
     private int gameSpeed;
-    private int brightness;
-    private int volume;
     private boolean showGrid;
     private boolean debugMode;
+
+    // 0.5 - 1.5 (50% - 150%), matches the on-screen brightness overlay range.
+    private float brightness;
+    // 0f (muted) - 1f (full volume).
+    private float musicVolume;
+    private float sfxVolume;
+    private boolean musicMuted;
+    private boolean sfxMuted;
 
     // creating a setting with default difficulty
     public Setting(){
         difficulty = 3;
         gameSpeed = 2;
-        brightness = 100;
-        volume = 70;
         showGrid = false;
         debugMode = false;
+        brightness = 1.0f;
+        musicVolume = 0.7f;
+        sfxVolume = 0.7f;
+        musicMuted = false;
+        sfxMuted = false;
     }
 
     public Setting(int difficulty) {
+        this();
         this.difficulty = difficulty;
-        gameSpeed = 2;
-        brightness = 100;
-        volume = 70;
-        showGrid = false;
-        debugMode = false;
     }
 
-    public int getDifficulty() { return difficulty; }
-    public void setDifficulty(int difficulty) { this.difficulty = difficulty; }
+    public int getDifficulty() {
+        return difficulty;
+    }
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
+    }
 
-    public int getGameSpeed() { return gameSpeed; }
-    public void setGameSpeed(int gameSpeed) { this.gameSpeed = gameSpeed; }
+    public int getGameSpeed() {
+        return gameSpeed;
+    }
+    public void setGameSpeed(int gameSpeed) {
+        this.gameSpeed = gameSpeed;
+    }
 
-    public int getBrightness() { return brightness; }
-    public void setBrightness(int brightness) { this.brightness = brightness; }
+    public boolean isShowGrid() {
+        return showGrid;
+    }
+    public void setShowGrid(boolean showGrid) {
+        this.showGrid = showGrid;
+    }
 
-    public int getVolume() { return volume; }
-    public void setVolume(int volume) { this.volume = volume; }
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
 
-    public boolean isShowGrid() { return showGrid; }
-    public void setShowGrid(boolean showGrid) { this.showGrid = showGrid; }
+    public float getBrightness() {
+        return brightness;
+    }
+    public void setBrightness(float brightness) {
+        this.brightness = brightness;
+    }
 
-    public boolean isDebugMode() { return debugMode; }
-    public void setDebugMode(boolean debugMode) { this.debugMode = debugMode; }
+    public float getMusicVolume() {
+        return musicVolume;
+    }
+    public void setMusicVolume(float musicVolume) {
+        this.musicVolume = musicVolume;
+    }
+
+    public float getSfxVolume() {
+        return sfxVolume;
+    }
+    public void setSfxVolume(float sfxVolume) {
+        this.sfxVolume = sfxVolume;
+    }
+
+    public boolean isMusicMuted() {
+        return musicMuted;
+    }
+    public void setMusicMuted(boolean musicMuted) {
+        this.musicMuted = musicMuted;
+    }
+
+    public boolean isSfxMuted() {
+        return sfxMuted;
+    }
+    public void setSfxMuted(boolean sfxMuted) {
+        this.sfxMuted = sfxMuted;
+    }
 }

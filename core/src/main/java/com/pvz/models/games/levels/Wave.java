@@ -3,6 +3,7 @@ package com.pvz.models.games.levels;
 import java.util.List;
 import java.util.Random;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
@@ -112,7 +113,7 @@ public class Wave {
 
         ZombieType type = allowed.get(rand.nextInt(allowed.size()));
         int lane = rand.nextInt(lanes);
-        int col = context.getColumns() - 1;
+        int col = context.getColumns()+1;
 
         // Sandstorm: during final wave burst in Ancient Egypt, zombies are carried
         // deeper into the map (1-4 columns from the right edge)
@@ -127,7 +128,7 @@ public class Wave {
             context.log("A sandstorm carries a " + type.getAlias() + " to column " + col + "!");
         }
 
-        Zombie newZombie = new ZombieFactory().create(type.getAlias(), col, lane, context, waveNumber, difficulty);
+        Zombie newZombie = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(col), lane, context, waveNumber, difficulty);
         context.spawnZombie(newZombie);
 
         // Adding this zombie type to user collection if user hasn't seen this type of

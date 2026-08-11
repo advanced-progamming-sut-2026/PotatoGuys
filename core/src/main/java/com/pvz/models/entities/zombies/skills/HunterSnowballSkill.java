@@ -1,5 +1,6 @@
 package com.pvz.models.entities.zombies.skills;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
 
@@ -47,10 +48,10 @@ public class HunterSnowballSkill extends CooldownSkill {
         if (targetCol < 0) return;
 
         for (int shot = 0; shot < snowballsPerBarrage; shot++) {
-             ctx.getPlantsAt(targetCol,zombie.getLane()).getLast().incrementFreezeLevel();
+             ctx.getPlantsAt(targetCol, GameController.worldYtoLane(zombie.getY())).getLast().incrementFreezeLevel();
         }
         ctx.log("Hunter Zombie threw " + snowballsPerBarrage
-                + " snowball(s) at (" + targetCol + "," + zombie.getLane()
+                + " snowball(s) at (" + targetCol + "," + GameController.worldYtoLane(zombie.getY())
                 + ") — " + snowballsPerBarrage + " frost level(s) added!");
     }
 
@@ -71,7 +72,7 @@ public class HunterSnowballSkill extends CooldownSkill {
         int minCol = Math.max(0, col - farRange);
         int maxCol = col - nearRange; // do not attack at melee range
         for (int c = maxCol; c >= minCol; c--) {
-            if (ctx.isPlantAt(c, zombie.getLane())) return c;
+            if (ctx.isPlantAt(c, GameController.worldYtoLane(zombie.getY()))) return c;
         }
         return -1;
     }

@@ -3,6 +3,7 @@ package com.pvz.models.games.map.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.GameEngine;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.plants.Plant;
@@ -148,11 +149,12 @@ public class Tile implements TickAware {
     }
 
     @Override
-    public void draw() {
+    public FrameConfig draw() {
         TickAware.super.draw();
         for (TileBehavior b: new ArrayList<>(behaviors)){
             b.draw(this);
         }
+        return null;
     }
 
     @Override

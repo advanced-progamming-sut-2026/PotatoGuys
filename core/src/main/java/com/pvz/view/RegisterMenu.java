@@ -137,7 +137,7 @@ public class RegisterMenu extends ScreenAdapter {
             }
         });
         table.add(loginBtn).width(300).height(60);
-        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,AudioManager.getInstance().getUserMusicVolume());
     }
 
     private void handleRegister() {

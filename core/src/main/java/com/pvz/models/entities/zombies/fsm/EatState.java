@@ -36,7 +36,7 @@ public class EatState implements ZombieState {
     }
 
     @Override
-    public ZombieState tick(Zombie zombie, GameContext ctx) {
+    public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
         if (!ctx.isPlantAt(targetCol, targetLane)) {
             // Plant was destroyed — return to walking
             ctx.log("Plant at (" + targetCol + "," + targetLane + ") is destroyed.");

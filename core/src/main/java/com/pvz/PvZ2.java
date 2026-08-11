@@ -3,16 +3,19 @@ package com.pvz;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.pvz.controller.AudioManager;
 import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
+import com.pvz.models.user.Setting;
 import com.pvz.models.user.User;
 import com.pvz.utils.SaveManager;
 import com.pvz.view.MainMenu;
@@ -29,6 +32,15 @@ public class PvZ2 extends Game {
     public static PamPlayer pamPlayer;
     public static SpriteBatch batch;
     AssetManager globalAssetManager;
+
+    // Screen-space overlay used to apply the Settings screen's Brightness slider
+    // everywhere in the game, not just while the Settings screen itself is open.
+    // Kept as its own tiny batch/texture so it can never interfere with anything
+    // else on the screen's own Stage.
+    private SpriteBatch brightnessBatch;
+    private Texture brightnessPixel;
+    private final Matrix4 brightnessProjection = new Matrix4();
+
     public PvZ2(){
         globalAssetManager=new AssetManager();
         globalAssetManager.load("textures/backgrounds/MainMenu.png", Texture.class);
@@ -61,6 +73,12 @@ public class PvZ2 extends Game {
         textureBank=new TextureBank("768",Gdx.files.internal("./assets/pvz-assets/"));
         pamPlayer=new PamPlayer(textureBank,Gdx.files.internal("./assets/pvz-assets/"));
         batch=new SpriteBatch();
+        brightnessBatch = new SpriteBatch();
+        Pixmap whitePixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        whitePixmap.setColor(1f, 1f, 1f, 1f);
+        whitePixmap.fill();
+        brightnessPixel = new Texture(whitePixmap);
+        whitePixmap.dispose();
         applyWindowIcon();
         applyCustomCursor();
         if (AppContext.getInstance().getCurrentUser()==null){
@@ -108,21 +126,26 @@ public class PvZ2 extends Game {
     /**
      * Replaces the OS mouse cursor with textures/ui/cursor.png everywhere in-game.
      * The source is a large PNG (1112x607) with real alpha, so it's scaled down to a
-     * normal cursor size and handed to the OS. The hotspot sits at the top-left (0,0),
-     * matching a default arrow — tweak {@code HOTSPOT_X}/{@code HOTSPOT_Y} if the
-     * pointer feels offset.
+     * normal cursor size and handed to the OS.
+     *
+     * The hotspot is the single pixel the OS reports as the click point — everything
+     * else is just decoration. It must point at the VISUAL tip of the pointer, not the
+     * top-left of the sprite. These two constants describe that point as a fraction
+     * (0.0 .. 1.0) of the original cursor.png: (0,0) = image top-left, (1,1) = bottom-right.
+     * Open cursor.png, eyeball where the tip is (a classic arrow tip near the bottom-left
+     * is roughly X=0.10, Y=0.90), and tune until clicks land exactly where the tip points.
      */
+    private static final float CURSOR_HOTSPOT_X = 0.10f;
+    private static final float CURSOR_HOTSPOT_Y = 0.05f;
+    private static final int CURSOR_MAX_SIZE = 90;
+
     private void applyCustomCursor() {
         try {
             String cursorPath = "textures/ui/cursor.png";
             if (!Gdx.files.internal(cursorPath).exists()) return;
 
-            final int HOTSPOT_X = 0;
-            final int HOTSPOT_Y = 0;
-            final int MAX_SIZE = 90;
-
             Pixmap source = new Pixmap(Gdx.files.internal(cursorPath));
-            float scale = Math.min(1f, MAX_SIZE / (float) Math.max(source.getWidth(), source.getHeight()));
+            float scale = Math.min(1f, CURSOR_MAX_SIZE / (float) Math.max(source.getWidth(), source.getHeight()));
             int w = Math.max(1, Math.round(source.getWidth() * scale));
             int h = Math.max(1, Math.round(source.getHeight() * scale));
             // Lwjgl3 rejects non-power-of-two cursor pixmaps, so the scaled sprite is
@@ -140,7 +163,12 @@ public class PvZ2 extends Game {
             }
             source.dispose();
 
-            Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursor, HOTSPOT_X, HOTSPOT_Y));
+            // Convert the source-relative hotspot into the scaled sprite's pixel space
+            // (the sprite is drawn at (0,0) of the canvas, so canvas hotspot == sprite hotspot).
+            int hotspotX = Math.round(CURSOR_HOTSPOT_X * (w - 1)+21);
+            int hotspotY = Math.round(CURSOR_HOTSPOT_Y * (h - 1)+8);
+
+            Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursor, hotspotX, hotspotY));
             cursor.dispose();
         } catch (Exception e) {
             Gdx.app.error("PvZ2", "could not apply custom cursor", e);
@@ -197,6 +225,47 @@ public class PvZ2 extends Game {
     public void render() {
         super.render();
         textureBank.update();
+        drawBrightnessOverlay();
+    }
+
+    /**
+     * Applies the Settings screen's Brightness slider on top of whatever screen just
+     * rendered, so it's a real global effect instead of only visible on the Settings
+     * screen itself. Below 100% darkens the screen (black, increasing alpha); above
+     * 100% gives a light wash (white, additive blend) since real pixels can't be pushed
+     * brighter than their own color without a proper lighting pass.
+     */
+    private void drawBrightnessOverlay() {
+        User user = AppContext.getInstance().getCurrentUser();
+        Setting setting = (user != null) ? user.getSetting() : null;
+        float brightness = (setting != null) ? setting.getBrightness() : 1f;
+        if (Math.abs(brightness - 1f) < 0.005f) return; // neutral, nothing to draw
+
+        int width = Gdx.graphics.getWidth();
+        int height = Gdx.graphics.getHeight();
+        brightnessProjection.setToOrtho2D(0, 0, width, height);
+        brightnessBatch.setProjectionMatrix(brightnessProjection);
+
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        brightnessBatch.begin();
+        if (brightness < 1f) {
+            brightnessBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            brightnessBatch.setColor(0f, 0f, 0f, 1f - brightness);
+        } else {
+            brightnessBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+            brightnessBatch.setColor(1f, 1f, 1f, (brightness - 1f) * 0.5f);
+        }
+        brightnessBatch.draw(brightnessPixel, 0, 0, width, height);
+        brightnessBatch.setColor(1f, 1f, 1f, 1f);
+        brightnessBatch.end();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (brightnessBatch != null) brightnessBatch.dispose();
+        if (brightnessPixel != null) brightnessPixel.dispose();
+        AudioManager.getInstance().disposeSounds();
     }
 
     public AssetManager getGlobalAssetManager(){

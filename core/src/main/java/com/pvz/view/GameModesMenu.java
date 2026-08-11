@@ -76,7 +76,7 @@ public class GameModesMenu extends ScreenAdapter {
         rootTable.add(buildTitle()).padTop(10).row();
         rootTable.add(buildCenter()).expand().center().row();
 
-        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,AudioManager.getInstance().getUserMusicVolume());
     }
 
     private Table buildTitle() {

@@ -147,7 +147,7 @@ public class ChapterMenu extends ScreenAdapter {
         });
         backBtnWrapper.add(greenhouseBtn).size(75, 70).padLeft(24);
 
-        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,AudioManager.getInstance().getUserMusicVolume());
     }
 
     @Override

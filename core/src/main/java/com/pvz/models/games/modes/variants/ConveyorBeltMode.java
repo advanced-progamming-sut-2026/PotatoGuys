@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.enums.AnsiColors;
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.Plant;
@@ -81,12 +82,12 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
             Zombie z = context.getZombies().get(i);
 
             if (z.getX() <= 0f) {
-                if (!lawnMower[z.getLane()]) {
-                    runLawnMowers(context, z.getLane());
+                if (!lawnMower[GameController.worldYtoLane(z.getY())]) {
+                    runLawnMowers(context, GameController.worldYtoLane(z.getY()));
                     i--;
                     continue;
                 }
-                if (lawnMower[z.getLane()]) {
+                if (lawnMower[GameController.worldYtoLane(z.getY())]) {
                     context.setGameOver(true);
                     context.log("Brain has eaten");
                     context.removeZombie(z);

@@ -102,7 +102,7 @@ public class LoginMenu extends ScreenAdapter {
             }
         });
         table.add(backBtn).width(200).height(60).row();
-        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,AudioManager.getInstance().getUserMusicVolume());
     }
 
     private void handleLogin() {

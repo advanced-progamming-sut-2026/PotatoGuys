@@ -172,7 +172,7 @@ public class MainMenu extends ScreenAdapter {
                 newsModal.showNews();
             }
         });
-        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,0.7f);
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,AudioManager.getInstance().getUserMusicVolume());
     }
 
     @Override

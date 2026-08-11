@@ -1,5 +1,6 @@
 package com.pvz.models.games.map.behaviors;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.card.PlantCard;
@@ -22,10 +23,10 @@ public class SlipperyBehavior implements TileBehavior {
 
     @Override
     public void onZombieEnter(Zombie z, Tile tile) {
-        int newLane = z.getLane() + laneDelta;
+        int newLane = GameController.worldYtoLane(z.getY()) + laneDelta;
         // Basic check to ensure lane stays in bounds
         if (newLane >= 0 && newLane < 5) {
-            z.setLane(newLane);
+            z.setY(GameController.laneToWorldY(newLane));
         }
     }
 

@@ -33,7 +33,7 @@ public class GameMap {
 
     public Tile getTileAt(int col, int lane) {
         if (col < 0 || col >= cols || lane < 0 || lane >= lanes) {
-            throw new IndexOutOfBoundsException("Invalid column or lane index.");
+            throw new IndexOutOfBoundsException("Invalid column or lane index. col: "+col+" lane: "+lane);
         }
         return map[lane][col];
     }
