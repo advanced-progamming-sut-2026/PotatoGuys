@@ -127,7 +127,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
             return false;
         }
 
-        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+        if (col < 0 || col >= context.getMap().getColumns() || lane < 0 || lane >= context.getMap().getLanes()) {
             context.log("[Placement Failed] Out of bounds: (" + col + ", " + lane + ")");
             return false;
         }
@@ -245,15 +245,15 @@ public class DeadLineMode implements GameMode, PlantPlacer {
                 .append(deadlineColumn).append(" ===\n");
 
         sb.append("\n     ");
-        for (int c = 0; c < context.getColumns(); c++) {
+        for (int c = 0; c < context.getMap().getColumns(); c++) {
             sb.append(String.format(" C%-2d ", c));
         }
         sb.append("\n");
 
         appendDivider(sb, context);
-        for (int lane = 0; lane < context.getLanes(); lane++) {
+        for (int lane = 0; lane < context.getMap().getLanes(); lane++) {
             sb.append(lawnMower[lane] ? "[!]" : "[M]").append(" |");
-            for (int col = 0; col < context.getColumns(); col++) {
+            for (int col = 0; col < context.getMap().getColumns(); col++) {
                 sb.append(getCellContent(col, context, lane));
 
                 if (col == deadlineColumn - 1) {
@@ -270,7 +270,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
 
     private void appendDivider(StringBuilder sb, GameContext context) {
         sb.append("    +");
-        for (int c = 0; c < context.getColumns(); c++) {
+        for (int c = 0; c < context.getMap().getColumns(); c++) {
             sb.append("----+");
         }
         sb.append("\n");

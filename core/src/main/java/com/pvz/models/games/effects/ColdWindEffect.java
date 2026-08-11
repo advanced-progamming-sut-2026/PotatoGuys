@@ -28,7 +28,7 @@ public class ColdWindEffect implements ChapterEffect {
         if (!"frostbite caves".equalsIgnoreCase(ctx.getSeasonName())) return;
 
         // Random rows
-        int numLanes = ctx.getLanes();
+        int numLanes = ctx.getMap().getLanes();
         int affectedLanes = rand.nextInt(numLanes) + 1; // 1 to all lanes
 
         for (int i = 0; i < affectedLanes; i++) {

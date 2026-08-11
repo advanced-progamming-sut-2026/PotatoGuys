@@ -33,8 +33,8 @@ import com.pvz.controller.ChapterController;
 import com.pvz.enums.GameAsset;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.Profile;
-import com.pvz.view.MenuUiKit;
 
+import com.pvz.view.game.GameScreen;
 import pvz.libpvz.pam.ClipRef;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;

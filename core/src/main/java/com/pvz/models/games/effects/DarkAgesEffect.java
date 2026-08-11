@@ -47,8 +47,8 @@ public class DarkAgesEffect implements ChapterEffect {
     }
 
     private void growRandomGrave(GameContext ctx) {
-        int cols = ctx.getColumns();
-        int lanes = ctx.getLanes();
+        int cols = ctx.getMap().getColumns();
+        int lanes = ctx.getMap().getLanes();
 
         List<int[]> emptyTiles = new ArrayList<>();
         for (int l = 0; l < lanes; l++) {
@@ -85,8 +85,8 @@ public class DarkAgesEffect implements ChapterEffect {
     }
 
     private void triggerNecromancy(GameContext ctx, Wave wave) {
-        int cols = ctx.getColumns();
-        int lanes = ctx.getLanes();
+        int cols = ctx.getMap().getColumns();
+        int lanes = ctx.getMap().getLanes();
 
         for (int l = 0; l < lanes; l++) {
             for (int c = 0; c < cols; c++) {

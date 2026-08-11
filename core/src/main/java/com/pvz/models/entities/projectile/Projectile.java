@@ -80,7 +80,7 @@ public class Projectile implements TickAware {
         int col=GameController.worldXtoCol(pos.x);
         int lane = GameController.worldYtoLane(pos.y);
 
-        if (col < -0.5f || col >= ctx.getColumns() + 0.5f || lane < -0.5f || lane >= ctx.getLanes() + 0.5f) {
+        if (col < -0.5f || col >= ctx.getMap().getColumns() + 0.5f || lane < -0.5f || lane >= ctx.getMap().getLanes() + 0.5f) {
             destroy();
             return;
         }

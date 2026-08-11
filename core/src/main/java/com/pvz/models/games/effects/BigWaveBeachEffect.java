@@ -56,8 +56,8 @@ public class BigWaveBeachEffect implements ChapterEffect {
     }
 
     private void updateWaterAndTides(Wave wave, GameContext ctx) {
-        int cols = ctx.getColumns();
-        int lanes = ctx.getLanes();
+        int cols = ctx.getMap().getColumns();
+        int lanes = ctx.getMap().getLanes();
 
         for (int col = 0; col < cols; col++) {
             boolean isWaterColumn = (col >= currentWaterCol);

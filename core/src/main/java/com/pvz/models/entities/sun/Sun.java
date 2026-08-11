@@ -3,10 +3,6 @@ package com.pvz.models.entities.sun;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
@@ -16,7 +12,7 @@ import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
-import com.pvz.view.GameScreen;
+import com.pvz.view.game.GameScreen;
 
 public class Sun implements TickAware {
     private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
@@ -114,7 +110,7 @@ public class Sun implements TickAware {
 
         for (int c = col - 2; c <= col + 2; c++) {
             for (int l = lane - 2; l <= lane + 2; l++) {
-                if (c < 0 || c >= ctx.getColumns() || l < 0 || l >= ctx.getLanes()) continue;
+                if (c < 0 || c >= ctx.getMap().getColumns() || l < 0 || l >= ctx.getMap().getLanes()) continue;
                 zombiesHit.addAll(ctx.getZombiesAt(c, l));
                 plantsHit.addAll(ctx.getPlantsAt(c, l));
             }
@@ -127,7 +123,7 @@ public class Sun implements TickAware {
 
         for (int c = col - 1; c <= col + 1; c++) {
             for (int l = lane - 1; l <= lane + 1; l++) {
-                if (c < 0 || c >= ctx.getColumns() || l < 0 || l >= ctx.getLanes()) continue;
+                if (c < 0 || c >= ctx.getMap().getColumns() || l < 0 || l >= ctx.getMap().getLanes()) continue;
                 zombiesCenter.addAll(ctx.getZombiesAt(c, l));
                 plantsCenter.addAll(ctx.getPlantsAt(c, l));
             }

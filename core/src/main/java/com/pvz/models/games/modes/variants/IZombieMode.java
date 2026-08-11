@@ -60,7 +60,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
 
         if (basedPlants != null && !basedPlants.isEmpty()) {
             for (int col = 0; col < redLineColumn; col++) {
-                for (int lane = 0; lane < context.getLanes(); lane++) {
+                for (int lane = 0; lane < context.getMap().getLanes(); lane++) {
                     MyPlant randomPlant = basedPlants.get(random.nextInt(basedPlants.size()));
 
                     Plant plant = new PlantFactory().create(
@@ -165,7 +165,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
             return false;
         }
 
-        if (col < redLineColumn || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+        if (col < redLineColumn || col >= context.getMap().getColumns() || lane < 0 || lane >= context.getMap().getLanes()) {
             context.log("[Placement Failed] Must place zombies to the right of Column " + (redLineColumn - 1)
                         + "! Invalid position: (" + col + ", " + lane + ")");
             return false;
@@ -267,16 +267,16 @@ public class IZombieMode implements GameMode, ZombiePlacer {
                 .append(" ===\n");
 
         sb.append("\n     ");
-        for (int c = 0; c < context.getColumns(); c++) {
+        for (int c = 0; c < context.getMap().getColumns(); c++) {
             sb.append(String.format(" C%-2d ", c));
         }
         sb.append("\n");
 
         appendDivider(sb, context);
-        for (int lane = 0; lane < context.getLanes(); lane++) {
+        for (int lane = 0; lane < context.getMap().getLanes(); lane++) {
             sb.append(brainsEaten[lane] ? BRAIN_EATEN : BRAIN_OK).append(" |");
 
-            for (int col = 0; col < context.getColumns(); col++) {
+            for (int col = 0; col < context.getMap().getColumns(); col++) {
                 sb.append(getCellContent(col, context, lane));
 
                 if (col == redLineColumn - 1) {
@@ -293,7 +293,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
 
     private void appendDivider(StringBuilder sb, GameContext context) {
         sb.append("    +");
-        for (int c = 0; c < context.getColumns(); c++) {
+        for (int c = 0; c < context.getMap().getColumns(); c++) {
             sb.append("----+");
         }
         sb.append("\n");

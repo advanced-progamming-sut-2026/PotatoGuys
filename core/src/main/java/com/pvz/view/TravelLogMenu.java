@@ -31,6 +31,7 @@ import com.pvz.models.quests.Quest;
 import com.pvz.models.quests.QuestCategory;
 import com.pvz.models.quests.QuestPriority;
 
+import com.pvz.view.game.GameScreen;
 import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 

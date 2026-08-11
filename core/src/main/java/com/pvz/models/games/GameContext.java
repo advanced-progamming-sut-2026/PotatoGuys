@@ -6,6 +6,7 @@ import java.util.List;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.GameEngine;
 import com.pvz.models.engine.TickAware;
+import com.pvz.models.entities.LawnMower;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.enums.PlantTag;
@@ -42,6 +43,7 @@ public class GameContext implements TickAware {
     private List<Plant> plants;
     private List<Card> cards;
     private List<Sun> suns;
+    private LawnMower[] lawnMowers;
     private GameMode mode;
     private GameMap map;
     private GameStats gameStats;
@@ -58,6 +60,11 @@ public class GameContext implements TickAware {
         this.suns           = new ArrayList<>();
         this.cards          = new ArrayList<>();
         this.map = GameMapFactory.createGameMap(currentLevel.getGameMapDefinition());
+        this.lawnMowers=new LawnMower[map.getLanes()];
+        for (int i = 0; i < lawnMowers.length; i++) {
+            lawnMowers[i]=new LawnMower(this,i);
+            GameEngine.getInstance().getToAdd().add(lawnMowers[i]);
+        }
         this.mode = GameModeFactory.createGameMode(currentLevel);
         this.setLevelNumber(currentLevel.getLevelNumber());
         this.seasonName     = currentLevel.getSeasonName();
@@ -120,14 +127,6 @@ public class GameContext implements TickAware {
         if (currentSun < amount) return false;
         currentSun -= amount;
         return true;
-    }
-
-    public int getColumns() {
-        return map.getColumns();
-    }
-
-    public int getLanes() {
-        return map.getLanes();
     }
 
     public List<Zombie> getZombies() {
@@ -308,8 +307,8 @@ public class GameContext implements TickAware {
                         if (dx == 0 && dy == 0) continue;
                         int neighborCol = p.getCol() + dx;
                         int neighborLane = p.getLane() + dy;
-                        if (neighborCol >= 0 && neighborCol < getColumns() &&
-                            neighborLane >= 0 && neighborLane < getLanes()) {
+                        if (neighborCol >= 0 && neighborCol < map.getColumns() &&
+                            neighborLane >= 0 && neighborLane < map.getLanes()) {
 
                             Tile tile = getTileAt(neighborCol, neighborLane);
 
