@@ -7,7 +7,7 @@
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "hamid",
-  "profilePicture": null,
+  "profilePicture": "textures/avatars/avatar_franky.png",
   "profile": {
     "gamePlayed": 0,
     "coins": 50,
@@ -80,7 +80,15 @@
         "BASIC",
         "CONEHEAD"
       ],
-      "seedPackets": {}
+      "seedPackets": {
+        "Peashooter": 2,
+        "Sunflower": 3,
+        "Cabbagepult": 1,
+        "BonkChoy": 3,
+        "Repeater": 2,
+        "TwinSunflower": 4,
+        "Jalapeno": 4
+      }
     },
     "news": {
       "messages": [
@@ -90,11 +98,11 @@
         },
         {
           "message": "New Zombie Encountered: BASIC!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: CONEHEAD!",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -1163,7 +1171,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786429400269
+    "lastDailyReset": 1786463460448
   },
   "questLogRefreshed": false
 }

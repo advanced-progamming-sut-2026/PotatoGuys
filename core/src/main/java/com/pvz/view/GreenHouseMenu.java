@@ -38,7 +38,7 @@ import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
 /**
- * Greenhouse screen — grid of pots you can plant and harvest, styled to match Dani's
+ * Greenhouse screen — grid of pots you can plant and harvest, styled to match 's
  * Greenhouse screenshot: back button + title + "x/y pots unlocked" + currency on top,
  * a grid of pot cells below (locked / empty / growing with a live countdown / ready to
  * harvest). The Collection button and the "Visit Shop" button aren't wired in yet —
@@ -238,7 +238,7 @@ public class GreenHouseMenu extends ScreenAdapter {
         Color fallbackTint;
         if (locked) {
             // You don't have a dedicated pot_locked.png yet, so locked pots reuse the
-            // normal empty-pot art with a lock icon on top (same as Dani's does) instead
+            // normal empty-pot art with a lock icon on top (same as 's does) instead
             // of falling back to a flat gray panel. If you add a real pot_locked.png later
             // it'll be picked up automatically — no code change needed.
             potArt = Gdx.files.internal(POT_LOCKED).exists() ? POT_LOCKED : POT_EMPTY;

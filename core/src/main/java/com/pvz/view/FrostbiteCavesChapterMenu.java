@@ -41,8 +41,7 @@ import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
 /**
- * Frostbite Caves level-select ("stage map") screen. Ported from Dani's
- * FrostbiteCavesStagesScreen: 3 icy islands plus a separate boss altar,
+ * Frostbite Caves level-select ("stage map") screen. Ported from  FrostbiteCavesStagesScreen: 3 icy islands plus a separate boss altar,
  * tap a stage to select it, then hit Play in the bottom bar - same
  * interaction pattern as {@link EgyptChapterMenu}.
  * <p>
@@ -427,7 +426,7 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
             zombossNodeY = Math.max(centerY[1], centerY[2]) - 200f * LAYOUT_SCALE_Y;
 
             // The trail forks here: Day 2 -> bridge -> Day 3, instead of one
-            // straight segment - matches the crossing-lines look Dani's
+            // straight segment - matches the crossing-lines look
             // reference art has near the boss decoration.
             bridgeX = zombossNodeX;
             bridgeY = zombossNodeY + zombossRenderHeight() / 2f;

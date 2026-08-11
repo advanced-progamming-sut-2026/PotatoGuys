@@ -37,7 +37,7 @@ import java.util.function.Supplier;
  * <p>
  * Every method here is defensive about missing art: if the texture path you pass in
  * doesn't exist yet on disk, it falls back to a soft colored panel instead of crashing,
- * so you (or Dani) can drop the real PNGs in later without touching this file again.
+ * so you (or ) can drop the real PNGs in later without touching this file again.
  */
 public final class MenuUiKit {
 
@@ -280,7 +280,7 @@ public final class MenuUiKit {
 
     /**
      * Builds a smooth, flick-scrollable, infinitely-looping row of cards — the same trick
-     * Dani's carousel uses: the row is laid out three times back to back, starts scrolled
+     *  carousel uses: the row is laid out three times back to back, starts scrolled
      * to the middle copy, and quietly snaps back a lap whenever you scroll off either edge,
      * so it feels endless in both directions.
      * <p>

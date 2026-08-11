@@ -28,7 +28,7 @@ import pvz.skin.PvzSkin;
 /**
  * Mode select screen (Adventure / Penny's Pursuit / Arena), restyled to match the
  * hub look: top bar with a back button + title + live currency, then a smooth
- * flick-scrollable card row below (same carousel behavior as AdventureMenu/Dani's).
+ * flick-scrollable card row below (same carousel behavior as AdventureMenu/'s).
  * <p>
  * Optional art (falls back to a tinted card if missing — check the console for a
  * "MenuUiKit" log line telling you exactly which path it looked for and didn't find):

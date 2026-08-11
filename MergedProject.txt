@@ -7391,7 +7391,7 @@ public interface GameMode {
     /** Initialize mode-specific state (e.g., enable/disable mowers). */
     void initMode(GameContext context);
 
-    /** Update mode-specific rules (Win/Loss conditions). 
+    /** Update mode-specific rules (Win/Loss conditions).
      * @param dt TODO*/
     void updateMode(GameContext context, float dt);
 
@@ -10197,7 +10197,7 @@ public class Plant implements TickAware {
     private float iceHp = 0f;
     private static final float MAX_ICE_HP = 600f;
 
-  
+
     public Plant(PlantPropertySheet sheet, PlantAction attackAction, PlantAction feedAction, int col, int lane,
             int level, boolean boosted, GameContext context) {
         this.sheet = sheet;
@@ -11324,16 +11324,16 @@ public class ShooterAction extends PlantAction {
         @Override
     public void update(Plant plant, GameContext ctx, float dt) {
         super.update(plant, ctx, dt);
-        
+
         Iterator<ShooterActionConfig.ProjectilePattern> iterator = patterns.iterator();
-        
+
         while (iterator.hasNext()) {
-            
+
             ShooterActionConfig.ProjectilePattern pattern = iterator.next();
-            
+
             if (stateTime >= pattern.delaySeconds) {
                 spawnProjectile(plant, ctx, pattern);
-                iterator.remove(); 
+                iterator.remove();
             }
         }
 
@@ -11347,7 +11347,7 @@ public class ShooterAction extends PlantAction {
         float y = (float)plant.getLane() + pattern.positionOffset.y;
         float velX = pattern.velocity.x;
         float velY = pattern.velocity.y;
-        Projectile projectile = ProjectileFactory.create(pattern.projectileType, ctx, new Vector2(x, y), new Vector2(velX, velY), plant.getEffectiveDamage()); 
+        Projectile projectile = ProjectileFactory.create(pattern.projectileType, ctx, new Vector2(x, y), new Vector2(velX, velY), plant.getEffectiveDamage());
         ctx.spawnProjectile(projectile);
     }
 
@@ -12348,7 +12348,7 @@ import com.pvz.models.games.map.tile.Tile;
 
 public class Zombie implements TickAware {
 
-    
+
     public static final int TICKS_PER_SECOND = 10;
 
     private static final Random RNG = new Random();
@@ -12547,7 +12547,7 @@ public class Zombie implements TickAware {
     }
 
     // ── CLI display ────────────────────────────────────────────────────────────
-    
+
     public String toInfoString() {
         StringBuilder sb = new StringBuilder();
         sb.append(sheet.getAlias());
@@ -19840,7 +19840,7 @@ import com.pvz.models.user.Profile;
 import pvz.skin.PvzSkin;
 
 /**
- * "Choose a Chapter" screen — this is the one Dani's screenshot shows directly, so it
+ * "Choose a Chapter" screen — this is the one 's screenshot shows directly, so it
  * follows her layout closest: top bar (back + title + currency), then a smooth,
  * flick-scrollable, infinitely-looping row of big chapter cards, same as her carousel.
  * <p>
@@ -20924,7 +20924,7 @@ import java.util.function.Supplier;
  * <p>
  * Every method here is defensive about missing art: if the texture path you pass in
  * doesn't exist yet on disk, it falls back to a soft colored panel instead of crashing,
- * so you (or Dani) can drop the real PNGs in later without touching this file again.
+ * so you  can drop the real PNGs in later without touching this file again.
  */
 public final class MenuUiKit {
 
@@ -21167,7 +21167,7 @@ public final class MenuUiKit {
 
     /**
      * Builds a smooth, flick-scrollable, infinitely-looping row of cards — the same trick
-     * Dani's carousel uses: the row is laid out three times back to back, starts scrolled
+     *  carousel uses: the row is laid out three times back to back, starts scrolled
      * to the middle copy, and quietly snaps back a lap whenever you scroll off either edge,
      * so it feels endless in both directions.
      * <p>
@@ -21483,7 +21483,7 @@ import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
 /**
- * Ancient Egypt level-select ("stage map") screen. Ported from Dani's
+ * Ancient Egypt level-select ("stage map") screen. Ported from
  * EgyptStagesScreen: floating islands on a winding path, a separate boss
  * altar off to the side, tap a stage to select it, then hit Play in the
  * bottom bar to actually launch it - matches the screenshot you sent.
@@ -22611,7 +22611,7 @@ public class GreenHouseMenu extends ScreenAdapter {
         Color fallbackTint;
         if (locked) {
             // You don't have a dedicated pot_locked.png yet, so locked pots reuse the
-            // normal empty-pot art with a lock icon on top (same as Dani's does) instead
+            // normal empty-pot art with a lock icon on top (same as 's does) instead
             // of falling back to a flat gray panel. If you add a real pot_locked.png later
             // it'll be picked up automatically — no code change needed.
             potArt = Gdx.files.internal(POT_LOCKED).exists() ? POT_LOCKED : POT_EMPTY;

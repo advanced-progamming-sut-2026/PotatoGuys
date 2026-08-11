@@ -34,7 +34,7 @@ import pvz.skin.PvzSkin;
 public class SettingsMenu extends ScreenAdapter {
 
     // Swap these for your real asset paths whenever you add them (green tick / gray
-    // tick, matching Dani's) — missing files fall back to a drawn checkmark instead of
+    // tick, matching 's) — missing files fall back to a drawn checkmark instead of
     // crashing the game or showing a plain colored square.
     private static final String CHECKBOX_ON_PATH = "textures/ui/checkbox_on.png";
     private static final String CHECKBOX_OFF_PATH = "textures/ui/checkbox_off.png";
@@ -298,7 +298,7 @@ public class SettingsMenu extends ScreenAdapter {
         return checkBox;
     }
 
-    /** Green/gray tick checkbox style, matching Dani's. */
+    /** Green/gray tick checkbox style, matching 's. */
     private CheckBox.CheckBoxStyle tickCheckBoxStyle() {
         CheckBox.CheckBoxStyle style = new CheckBox.CheckBoxStyle();
         style.checkboxOn = new TextureRegionDrawable(loadTickTexture(CHECKBOX_ON_PATH, true));

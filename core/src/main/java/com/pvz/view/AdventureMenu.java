@@ -29,8 +29,7 @@ import com.pvz.models.user.Profile;
 import pvz.skin.PvzSkin;
 
 /**
- * "Choose a Chapter" screen — this is the one Dani's screenshot shows directly, so it
- * follows her layout closest: top bar (back + title + currency), then a smooth,
+ top bar (back + title + currency), then a smooth,
  * flick-scrollable, infinitely-looping row of big chapter cards, same as her carousel.
  * <p>
  * Optional art (falls back to a tinted card if missing — check the console/logcat for a

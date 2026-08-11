@@ -41,7 +41,7 @@ import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
 /**
- * Ancient Egypt level-select ("stage map") screen. Ported from Dani's
+ * Ancient Egypt level-select ("stage map") screen. Ported from 's
  * EgyptStagesScreen: floating islands on a winding path, a separate boss
  * altar off to the side, tap a stage to select it, then hit Play in the
  * bottom bar to actually launch it - matches the screenshot you sent.
