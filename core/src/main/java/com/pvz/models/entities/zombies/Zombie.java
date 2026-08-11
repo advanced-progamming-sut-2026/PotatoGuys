@@ -9,6 +9,7 @@ import java.util.Random;
 
 import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
@@ -28,7 +29,7 @@ import com.pvz.models.games.map.tile.Tile;
 
 public class Zombie implements TickAware {
 
-    
+
     public static final int TICKS_PER_SECOND = 10;
 
     private static final Random RNG = new Random();
@@ -43,7 +44,7 @@ public class Zombie implements TickAware {
     private int lastX;
     private int lastLane;
     private float x;
-    private int lane;
+    private float y;
 
     // ── Runtime stats (scaled at spawn) ───────────────────────────────────────
     private final float maxHp;
@@ -85,7 +86,7 @@ public class Zombie implements TickAware {
         this.sheet = sheet;
         this.x = startX;
         lastX=(int)startX;
-        this.lane = lane;
+        this.y = GameController.laneToWorldY(lane);
         this.armors = new ArrayList<>(armors);
         this.skills = new ArrayList<>(skills);
         this.activeEffects = new EnumMap<>(EffectType.class);
@@ -107,7 +108,7 @@ public class Zombie implements TickAware {
         currentState = new WalkState();
         currentState.onEnter(this, context);
         context.log("[Spawn] " + sheet.getAlias()
-                + " entered lane " + lane + " at x=" + String.format("%.1f", x)
+                + " entered lane " + GameController.worldYtoLane(y) + " at x=" + String.format("%.1f", x)
                 + (glowing ? " [GLOWING]" : ""));
     }
 
@@ -117,18 +118,18 @@ public class Zombie implements TickAware {
         if (dead) return;
         tickStatusEffects();
         if (isParalysed()) return;
-        ZombieState next = currentState.tick(this, context);
+        ZombieState next = currentState.update(this, context,dt);
         if (next != currentState) {
             currentState.onExit(this, context);
             next.onEnter(this, context);
             currentState = next;
         }
 
-        if (Math.floor(x)!=lastX || lane!=lastLane){
+        if (Math.floor(x)!=lastX || GameController.worldYtoLane(y)!=lastLane){
             lastX=(int)Math.floor(x);
-            lastLane=lane;
+            lastLane=GameController.worldYtoLane(y);
             try {
-                Tile tile = context.getTileAt(lastX, lane);
+                Tile tile = context.getTileAt(lastX, GameController.worldYtoLane(y));
                 for (TileBehavior b : tile.getBehaviors()) {
                     b.onZombieEnter(this, tile);
                 }
@@ -137,10 +138,9 @@ public class Zombie implements TickAware {
     }
 
     @Override
-    public void draw() {
-        float xx = GameController.xToWorldX(x);
-        float y = GameController.laneToWorldY(lane);
-        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM" , "walk", stateTime, xx, y, true);
+    public FrameConfig draw() {
+        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM" , "walk", stateTime, x, y,0.65f,0.65f, true);
+        return null;
     }
 
     @Override
@@ -151,7 +151,7 @@ public class Zombie implements TickAware {
     // ── Damage API ─────────────────────────────────────────────────────────────
 
     /**
-     * Routes damage through the armour chain then into {@link #hp}.
+     * Routes damage through the armor chain then into {@link #hp}.
      *
      * @param amount    positive damage value
      * @param poisonous true → bypasses all armour (Poison Pea, etc.)
@@ -207,8 +207,8 @@ public class Zombie implements TickAware {
     public GameContext getContext()        { return context; }
     public float getX()                         { return x; }
     public void setX(float newX)               { this.x = newX; }
-    public int getLane()                        { return lane; }
-    public void setLane(int newLane)            { this.lane = newLane; }
+    public float getY()                        { return y; }
+    public void setY(float y)            { this.y = y; }
     public float getHp()                        { return hp; }
     public float getMaxHp()                     { return maxHp; }
     public float getEatDpsPerTick()             { return eatDpsPerTick; }
@@ -224,24 +224,6 @@ public class Zombie implements TickAware {
     public List<ArmorPiece> getArmors()         { return Collections.unmodifiableList(armors); }
     public Map<EffectType, StatusEffect> getActiveEffects() {
         return Collections.unmodifiableMap(activeEffects);
-    }
-
-    // ── CLI display ────────────────────────────────────────────────────────────
-    
-    public String toInfoString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(sheet.getAlias());
-        for (ArmorPiece a : armors) {
-            String lbl = a.getCurrentArmorStatus();
-            if (!lbl.isEmpty()) sb.append(' ').append(lbl);
-        }
-        sb.append(":\n  position: ").append(String.format("%.1f", x)).append(", ").append(lane);
-        sb.append("\n  health: ").append(String.format("%.0f", hp))
-                .append(" / ").append(String.format("%.0f", maxHp));
-        appendArmorDetails(sb);
-        appendEffectDetails(sb);
-        sb.append("\n  state: ").append(currentState != null ? currentState.getLabel() : "?");
-        return sb.toString();
     }
 
     // ── Private helpers ────────────────────────────────────────────────────────
@@ -292,7 +274,7 @@ public class Zombie implements TickAware {
         context.getGameStats().onZombieKilledInSeason(context.getSeasonName());
         context.removeZombie(this);
         context.log("Zombie of type " + sheet.getAlias()
-                + " is dead at (" + String.format("%.1f", x) + "," + lane + ")");
+                + " is dead at (" + String.format("%.1f", x) + "," + GameController.worldYtoLane(y) + ")");
     }
 
     private void tickStatusEffects() {

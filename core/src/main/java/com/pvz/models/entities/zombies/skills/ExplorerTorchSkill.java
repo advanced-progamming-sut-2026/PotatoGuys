@@ -1,5 +1,6 @@
 package com.pvz.models.entities.zombies.skills;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.plants.enums.PlantTag;
@@ -56,7 +57,7 @@ public class ExplorerTorchSkill implements ZombieSkill {
     public void execute(Zombie zombie, GameContext ctx) {
         if (!torchLit) return;
         int col = (int) zombie.getX();
-        int row = zombie.getLane();
+        int row = GameController.worldYtoLane(zombie.getY());
         Plant plant = ctx.getPlantsAt(col , row).getFirst();
         if (isTorchVulnerablePlantAt(plant, ctx)) {
             plant.takeDamage(999f, DamageKind.INSTA_KILL);
@@ -74,7 +75,7 @@ public class ExplorerTorchSkill implements ZombieSkill {
 
     private boolean hasTorchVulnerablePlantAhead(Zombie zombie, GameContext ctx) {
         int col = (int) zombie.getX();
-        return ctx.isPlantAt(col, zombie.getLane());
+        return ctx.isPlantAt(col, GameController.worldYtoLane(zombie.getY()));
     }
 
     private boolean isTorchVulnerablePlantAt(Plant plant, GameContext ctx) {

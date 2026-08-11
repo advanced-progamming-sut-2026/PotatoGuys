@@ -20,7 +20,7 @@ public class DeadState implements ZombieState {
     }
 
     @Override
-    public ZombieState tick(Zombie zombie, GameContext ctx) {
+    public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
         return this; // stay in dead state; engine will deregister this zombie
     }
 

@@ -375,12 +375,12 @@ public class GameScreen extends ScreenAdapter {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
             // رسم خورشیدها
-            shapeRenderer.setColor(Color.YELLOW);
+            /*shapeRenderer.setColor(Color.YELLOW);
             for (Sun sun : new ArrayList<>(context.getSuns())) {
                 if (!sun.isDone()) {
                     shapeRenderer.circle(sun.getX(), sun.getY(), 50);
                 }
-            }
+            }*/
 
             // رسم خطوط گرید دیباگ
             shapeRenderer.setColor(Color.RED);

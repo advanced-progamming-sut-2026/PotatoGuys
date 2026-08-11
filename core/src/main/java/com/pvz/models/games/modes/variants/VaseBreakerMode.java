@@ -3,6 +3,7 @@ package com.pvz.models.games.modes.variants;
 import java.util.List;
 import java.util.Random;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
@@ -84,12 +85,12 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         for (int i = 0; i < context.getZombies().size(); i++) {
             Zombie z = context.getZombies().get(i);
             if (z.getX() <= 0f) {
-                if (!lawnMower[z.getLane()]) {
-                    runLawnMowers(context, z.getLane());
+                if (!lawnMower[GameController.worldYtoLane(z.getY())]) {
+                    runLawnMowers(context, GameController.worldYtoLane(z.getY()));
                     i--;
                     continue;
                 }
-                if (lawnMower[z.getLane()]) {
+                if (lawnMower[GameController.worldYtoLane(z.getY())]) {
                     context.setGameOver(true);
                     context.log("The zombie ate your brain; LOOSER!!!");
                     context.removeZombie(z);

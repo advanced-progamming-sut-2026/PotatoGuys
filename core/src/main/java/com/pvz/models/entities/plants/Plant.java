@@ -2,6 +2,7 @@ package com.pvz.models.entities.plants;
 
 import java.util.List;
 
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.data.DamageKind;
@@ -51,7 +52,7 @@ public class Plant implements TickAware {
     private float iceHp = 0f;
     private static final float MAX_ICE_HP = 600f;
 
-  
+
     public Plant(PlantPropertySheet sheet, PlantAction attackAction, PlantAction feedAction, int col, int lane,
             int level, boolean boosted, GameContext context) {
         this.sheet = sheet;
@@ -96,10 +97,11 @@ public class Plant implements TickAware {
     }
 
     @Override
-    public void draw(){
+    public FrameConfig draw(){
         if(currentState != null){
             currentState.draw(this, context);
         }
+        return null;
     }
 
     public void changeState(PlantState nextState){

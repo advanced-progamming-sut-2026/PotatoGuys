@@ -43,7 +43,7 @@ public class SpecialActionState implements ZombieState {
     }
 
     @Override
-    public ZombieState tick(Zombie zombie, GameContext ctx) {
+    public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
         if (pauseTicksRemaining > 0) {
             pauseTicksRemaining--;
             return this;

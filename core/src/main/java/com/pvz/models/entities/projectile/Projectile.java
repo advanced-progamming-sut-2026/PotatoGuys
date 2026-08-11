@@ -6,6 +6,7 @@ import java.util.Set;
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.effects.EffectType;
@@ -109,10 +110,11 @@ public class Projectile implements TickAware {
     }
 
     @Override
-    public void draw(){
+    public FrameConfig draw(){
         float x = GameController.xToWorldX(pos.x);
         float y = GameController.yToWorldY(pos.y);
         PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM" , "animation", stateTime, x, y, true);
+        return null;
     }
 
     @Override
@@ -126,7 +128,7 @@ public class Projectile implements TickAware {
             if (z.isDead() || hitZombies.contains(z)) continue;
 
             float zX = z.getX();
-            float zY = z.getLane();
+            float zY = z.getY();
 
             // محاسبه فاصله اقلیدسی دوبعدی بین پرتابه و زامبی
             double distance = Math.hypot(zX - pos.x, zY - pos.y);
@@ -148,7 +150,7 @@ public class Projectile implements TickAware {
         // اعمال افکت‌های وضعیتی (Slow, Unfreeze, Poison)
         applyStatusEffects(zombie);
 
-        ctx.log("[Projectile] " + type + " hit zombie at (" + zombie.getX() + ", " + zombie.getLane() + ")");
+        ctx.log("[Projectile] " + type + " hit zombie at (" + zombie.getX() + ", " + zombie.getY() + ")");
 
         // ۱. مدیریت کمانه کردن (برای پیاز بولینگ / Bowling Bulb)
         if (bouncing) {
@@ -192,7 +194,7 @@ public class Projectile implements TickAware {
         for (Zombie z : ctx.getZombies()) {
             if (z.isDead() || hitZombies.contains(z)) continue;
 
-            double dist = Math.hypot(z.getX() - pos.x, z.getLane() - pos.y);
+            double dist = Math.hypot(z.getX() - pos.x, z.getY() - pos.y);
             if (dist < minDistance) {
                 minDistance = dist;
                 nearestNextZombie = z;
@@ -202,7 +204,7 @@ public class Projectile implements TickAware {
         // اگر زامبی دیگری در محیط وجود داشت، تیر به سمت او تغییر جهت می‌دهد
         if (nearestNextZombie != null) {
             float targetX = nearestNextZombie.getX();
-            float targetY = nearestNextZombie.getLane();
+            float targetY = nearestNextZombie.getY();
 
             // تغییر بردار جهت پرتابه به سمت زامبی جدید
             // setVelocityVector(targetX - pos.x, targetY - pos.y);

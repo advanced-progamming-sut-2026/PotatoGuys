@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.DamageKind;
@@ -63,8 +64,9 @@ public class Sun implements TickAware {
     }
 
     @Override
-    public void draw(){
-        PvZ2.pamPlayer.draw(PvZ2.batch, SUN_PAM, SUN_CLIP, stateTime, currentPos.x, currentPos.y, true);
+    public FrameConfig draw(){
+        PvZ2.pamPlayer.draw(PvZ2.batch, SUN_PAM, SUN_CLIP, stateTime, currentPos.x, currentPos.y,0.7f,0.7f, true);
+        return null;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.pvz.models.entities.zombies.skills;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
 
@@ -29,7 +30,7 @@ public class WizardZapSkill extends CooldownSkill {
     protected boolean canUse(Zombie zombie, GameContext ctx) {
         int col = (int) zombie.getX();
         for (int c = col; c >= 0; c--) {
-            if (ctx.isPlantAt(c, zombie.getLane())) return true;
+            if (ctx.isPlantAt(c, GameController.worldYtoLane(zombie.getY()))) return true;
         }
         return false;
     }
@@ -38,10 +39,10 @@ public class WizardZapSkill extends CooldownSkill {
     protected void doExecute(Zombie zombie, GameContext ctx) {
         int col = (int) zombie.getX();
         for (int c = col; c >= 0; c--) {
-            if (ctx.isPlantAt(c, zombie.getLane())) {
+            if (ctx.isPlantAt(c, GameController.worldYtoLane(zombie.getY()))) {
                 // ctx.transformPlantToCat(c, zombie.getLane());
                 ctx.log("Wizard Zombie cast a spell! Plant at ("
-                        + c + "," + zombie.getLane() + ") is now a cat.");
+                        + c + "," + GameController.worldYtoLane(zombie.getY()) + ") is now a cat.");
                 return;
             }
         }

@@ -28,7 +28,7 @@ public interface ZombieState {
      *
      * @return the next state ({@code this} = no transition, any other object = transition)
      */
-    ZombieState tick(Zombie zombie, GameContext ctx);
+    ZombieState update(Zombie zombie, GameContext ctx, float dt);
 
     /** Side-effects when leaving this state. */
     void onExit(Zombie zombie, GameContext ctx);
