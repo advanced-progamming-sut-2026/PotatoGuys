@@ -59,6 +59,7 @@ public class AdventureMenu extends ScreenAdapter {
     private static final float CARD_HEIGHT = 420f;
     private static final float CARD_PAD = 135f;
     private static final float CAROUSEL_VIEWPORT_WIDTH = 1550f;
+    private static final float CAROUSEL_VIEWPORT_HEIGHT = 560f;
 
     AdventureController controller;
     Stage stage;
@@ -141,14 +142,15 @@ public class AdventureMenu extends ScreenAdapter {
                 Runnable openChapter = index == 0 ? () -> game.setScreen(new EgyptChapterMenu(game))
                     : index == 1 ? () -> game.setScreen(new FrostbiteCavesChapterMenu(game))
                     : () -> game.setScreen(new ChapterMenu(game, chapterName));
-                return MenuUiKit.bigCard(skin, CHAPTER_ART[index], CHAPTER_TINTS[index], chapterName,
-                    locked ? "Locked" : "Unlocked", locked,
+                return MenuUiKit.addHoverPop(MenuUiKit.bigCard(skin, CHAPTER_ART[index], CHAPTER_TINTS[index], chapterName,
+                    locked, locked,
                     openChapter,
-                    CARD_WIDTH, CARD_HEIGHT);
+                    CARD_WIDTH, CARD_HEIGHT));
             });
         }
 
-        carousel = MenuUiKit.buildCarousel(cardFactories, CARD_WIDTH, CARD_HEIGHT, CARD_PAD, CAROUSEL_VIEWPORT_WIDTH);
+        carousel = MenuUiKit.buildCarousel(cardFactories, CARD_WIDTH, CARD_HEIGHT, CARD_PAD, CAROUSEL_VIEWPORT_WIDTH,
+            CAROUSEL_VIEWPORT_HEIGHT);
         return carousel.viewport;
     }
 

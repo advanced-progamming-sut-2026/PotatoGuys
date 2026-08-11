@@ -35,10 +35,11 @@ import pvz.skin.PvzSkin;
  * textures/ui/mode_adventure.png, textures/ui/mode_pennys_pursuit.png, textures/ui/mode_arena.png
  */
 public class GameModesMenu extends ScreenAdapter {
-    private static final float CARD_WIDTH = 500f;
-    private static final float CARD_HEIGHT = 200f;
-    private static final float CARD_PAD = 30f;
+    private static final float CARD_WIDTH = 1000f;
+    private static final float CARD_HEIGHT = 400f;
+    private static final float CARD_PAD = -180f;
     private static final float CAROUSEL_VIEWPORT_WIDTH = 1550f;
+    private static final float CAROUSEL_VIEWPORT_HEIGHT = 560f;
 
     Stage stage;
     PvZ2 game;
@@ -145,18 +146,19 @@ public class GameModesMenu extends ScreenAdapter {
 
     private Table buildModeCarousel() {
         List<Supplier<Actor>> cardFactories = Arrays.asList(
-            () -> MenuUiKit.bigCard(skin, "textures/ui/mode_adventure.png",
-                new Color(0.55f, 0.32f, 0.14f, 0.9f), "Adventure", "Unlocked", false,
-                () -> game.setScreen(new AdventureMenu(game)), CARD_WIDTH, CARD_HEIGHT),
-            () -> MenuUiKit.bigCard(skin, "textures/ui/mode_pennys_pursuit.png",
-                new Color(0.2f, 0.3f, 0.55f, 0.9f), "Penny's Pursuit", "Locked", true, null,
-                CARD_WIDTH, CARD_HEIGHT),
-            () -> MenuUiKit.bigCard(skin, "textures/ui/mode_arena.png",
-                new Color(0.5f, 0.18f, 0.22f, 0.9f), "Arena", "Locked", true, null,
-                CARD_WIDTH, CARD_HEIGHT)
+            () -> MenuUiKit.addHoverPop(MenuUiKit.bigCard(skin, "textures/ui/mode_adventure.png",
+                new Color(0.55f, 0.32f, 0.14f, 0.9f), "Adventure", false, false,
+                () -> game.setScreen(new AdventureMenu(game)), CARD_WIDTH, CARD_HEIGHT)),
+            () -> MenuUiKit.addHoverPop(MenuUiKit.bigCard(skin, "textures/ui/mode_pennys_pursuit.png",
+                new Color(0.2f, 0.3f, 0.55f, 0.9f), "Penny's Pursuit", true, true, null,
+                CARD_WIDTH, CARD_HEIGHT)),
+            () -> MenuUiKit.addHoverPop(MenuUiKit.bigCard(skin, "textures/ui/mode_arena.png",
+                new Color(0.5f, 0.18f, 0.22f, 0.9f), "Arena", true, true, null,
+                CARD_WIDTH, CARD_HEIGHT))
         );
 
-        carousel = MenuUiKit.buildCarousel(cardFactories, CARD_WIDTH, CARD_HEIGHT, CARD_PAD, CAROUSEL_VIEWPORT_WIDTH);
+        carousel = MenuUiKit.buildCarousel(cardFactories, CARD_WIDTH, CARD_HEIGHT, CARD_PAD, CAROUSEL_VIEWPORT_WIDTH,
+            CAROUSEL_VIEWPORT_HEIGHT);
         return carousel.viewport;
     }
 

@@ -494,7 +494,7 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
             };
             for (int i = 0; i < iceCoords.length; i++) {
                 MapObjectType selectedIce = iceTypes[i % iceTypes.length];
-                addActor(createAnchoredAnimation(selectedIce, ICE_CHUNK_TUNING, "animation",
+                addActor(createAnchoredAnimation(selectedIce, ICE_CHUNK_TUNING, "idle",
                     iceCoords[i][0] * LAYOUT_SCALE_X, iceCoords[i][1] * LAYOUT_SCALE_Y));
             }
         }
@@ -678,6 +678,13 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
 
                 if (!objectType.isPamAnimation && Gdx.files.internal(objectType.path).exists()) {
                     texture = MenuUiKit.loadTextureSafe(objectType.path);
+                }
+
+                if (objectType.isPamAnimation && pamPlayer != null) {
+                    try {
+                        pamPlayer.loadSync(objectType.path);
+                    } catch (Throwable ignored) {
+                    }
                 }
             }
 

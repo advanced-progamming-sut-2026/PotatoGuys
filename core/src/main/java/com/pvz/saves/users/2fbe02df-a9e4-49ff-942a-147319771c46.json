@@ -140,13 +140,13 @@
   },
   "setting": {
     "difficulty": 3,
-    "gameSpeed": 2,
+    "gameSpeed": 1,
     "showGrid": false,
     "debugMode": false,
     "brightness": 1.0,
     "musicVolume": 0.84999996,
-    "sfxVolume": 0.7,
-    "musicMuted": false,
+    "sfxVolume": 0.34,
+    "musicMuted": true,
     "sfxMuted": false
   },
   "score": {
@@ -1171,7 +1171,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786463460448
+    "lastDailyReset": 1786480908413
   },
   "questLogRefreshed": false
 }

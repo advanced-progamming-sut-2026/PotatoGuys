@@ -1,8 +1,6 @@
 package com.pvz.view;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import com.badlogic.gdx.Gdx;
@@ -11,7 +9,10 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -23,13 +24,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 
 import pvz.skin.PvzSkin;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * Small shared helper used by MainMenu, GameModesMenu and AdventureMenu to build the
@@ -131,139 +128,51 @@ public final class MenuUiKit {
 
     // ---------------------------------------------------------------- big tappable cards
 
-    private static final Map<String, Texture> ROUNDED_CACHE = new HashMap<>();
-
-    private static int cornerRadius(float cardW, float cardH) {
-        return Math.min(Math.min((int) cardW, (int) cardH) / 8, 24);
-    }
-
     /**
-     * Rounded-corner card texture: art stretched to the card size with the bottom shadow
-     * band baked in. Loaded via {@link Pixmap} directly so the corners can be masked —
-     * {@code new Texture(FileHandle)} disposes its source pixmap before we could touch it.
+     * A big card with rounded-corner background art and the chapter name up top. Locked
+     * chapter cards (showLock) get a gold lock badge; game-mode cards pass showLock=false.
      */
-    private static Texture roundedCardTexture(String artPath, float cardW, float cardH) {
-        int w = Math.max(1, (int) cardW);
-        int h = Math.max(1, (int) cardH);
-        String key = artPath + "@" + w + "x" + h;
-        Texture cached = ROUNDED_CACHE.get(key);
-        if (cached != null) return cached;
+    /** Size of the gold lock badge (width, height) on locked chapter cards. */
+    private static final float LOCK_BADGE_WIDTH = 104f;
+    private static final float LOCK_BADGE_HEIGHT = 144f;
 
-        Pixmap src = new Pixmap(Gdx.files.internal(artPath));
-        Pixmap out = new Pixmap(w, h, Pixmap.Format.RGBA8888);
-        scaleDraw(src, out);
-        src.dispose();
+    /** Chapter-name label on big cards: font scale and distance from the card's top edge. */
+    private static final float CARD_TITLE_FONT_SCALE = 2.3f;
+    private static final float CARD_TITLE_PAD_TOP = -10f;
 
-        bakeShadow(out, w, h);
-        roundCorners(out, cornerRadius(cardW, cardH));
-
-        Texture texture = new Texture(out);
-        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        out.dispose();
-        ROUNDED_CACHE.put(key, texture);
-        return texture;
-    }
-
-    /** Scales {@code src} into {@code dst} (nearest-neighbor) — avoids Pixmap.drawPixmap scaling API drift. */
-    private static void scaleDraw(Pixmap src, Pixmap dst) {
-        int sw = src.getWidth(), sh = src.getHeight();
-        int dw = dst.getWidth(), dh = dst.getHeight();
-        dst.setBlending(Pixmap.Blending.None);
-        for (int y = 0; y < dh; y++) {
-            int sy = Math.min(sh - 1, (y * sh) / dh);
-            for (int x = 0; x < dw; x++) {
-                int sx = Math.min(sw - 1, (x * sw) / dw);
-                dst.drawPixel(x, y, src.getPixel(sx, sy));
-            }
-        }
-    }
-
-    /** Rounded-corner solid, used for the missing-art tinted panel and the locked overlay. */
-    private static Texture roundedSolidTexture(Color color, float cardW, float cardH) {
-        int w = Math.max(1, (int) cardW);
-        int h = Math.max(1, (int) cardH);
-        String key = "solid@" + color.toIntBits() + "@" + w + "x" + h;
-        Texture cached = ROUNDED_CACHE.get(key);
-        if (cached != null) return cached;
-
-        Pixmap out = new Pixmap(w, h, Pixmap.Format.RGBA8888);
-        out.setColor(color);
-        out.fill();
-        bakeShadow(out, w, h);
-        roundCorners(out, cornerRadius(cardW, cardH));
-
-        Texture texture = new Texture(out);
-        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        out.dispose();
-        ROUNDED_CACHE.put(key, texture);
-        return texture;
-    }
-
-    /** Soft dark band across the bottom so the title/caption stays readable. */
-    private static void bakeShadow(Pixmap pix, int w, int h) {
-        int shadowH = Math.min(64, h / 3);
-        pix.setColor(0f, 0f, 0f, 0.55f);
-        pix.setBlending(Pixmap.Blending.SourceOver);
-        pix.fillRectangle(0, h - shadowH, w, shadowH);
-    }
-
-    /** Sets the alpha of pixels outside the rounded-rect corners to zero. */
-    private static void roundCorners(Pixmap pix, int radius) {
-        int w = pix.getWidth(), h = pix.getHeight();
-        int r = Math.min(radius, Math.min(w, h) / 2);
-        if (r <= 0) return;
-        pix.setBlending(Pixmap.Blending.None);
-        for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
-                int dx = x < r ? r - x : (x >= w - r ? x - (w - 1 - r) : 0);
-                int dy = y < r ? r - y : (y >= h - r ? y - (h - 1 - r) : 0);
-                if (dx != 0 && dy != 0 && dx * dx + dy * dy > r * r) {
-                    int px = pix.getPixel(x, y);
-                    pix.setColor(((px >> 24) & 0xFF) / 255f, ((px >> 16) & 0xFF) / 255f,
-                        ((px >> 8) & 0xFF) / 255f, 0f);
-                    pix.drawPixel(x, y);
-                }
-            }
-        }
-    }
-
-    /**
-     * A big card with rounded-corner background art, a soft bottom shadow band, a title and an
-     * optional status caption (e.g. "Locked" / "Unlocked"). Used for the mode/chapter grids.
-     */
     public static Actor bigCard(Skin skin, String artPath, Color accent, String title,
-                                String caption, boolean locked, Runnable onClick,
+                                boolean locked, boolean showLock, Runnable onClick,
                                 float cardW, float cardH) {
         Stack stack = new Stack();
 
         boolean hasArt = artPath != null && !artPath.isEmpty() && Gdx.files.internal(artPath).exists();
         if (hasArt) {
-            stack.add(new Image(roundedCardTexture(artPath, cardW, cardH)));
+            Image art = new Image(loadTextureSafe(artPath));
+            art.setScaling(Scaling.fit); // natural aspect ratio, no stretch/crop
+            stack.add(art);
         } else {
-            // no art dropped in yet -> show a tinted panel instead of an empty card.
+            // no art dropped in yet -> a plain flat-color placeholder, not a styled frame.
             // Logged so you can see in the console exactly which path it looked for.
             if (artPath != null && !artPath.isEmpty()) {
                 Gdx.app.log("MenuUiKit", "card art not found, looked at internal path: \"" + artPath
                     + "\" (resolved to " + Gdx.files.internal(artPath).file().getAbsolutePath() + ")");
             }
-            stack.add(new Image(roundedSolidTexture(accent, cardW, cardH)));
+            Image placeholder = new Image(solidTexture(accent));
+            stack.add(placeholder);
         }
 
         Table textTable = new Table();
-        textTable.bottom();
+        textTable.top();
         Label titleLabel = new Label(title, skin);
-        titleLabel.setFontScale(1.05f);
-        textTable.add(titleLabel).padBottom(caption != null ? 22 : 10).row();
-        if (caption != null && !caption.isEmpty()) {
-            Label captionLabel = new Label(caption, skin);
-            captionLabel.setFontScale(0.85f);
-            captionLabel.setColor(locked ? new Color(1f, 0.6f, 0.6f, 1f) : new Color(0.65f, 1f, 0.7f, 1f));
-            textTable.add(captionLabel).padBottom(8);
-        }
+        titleLabel.setFontScale(CARD_TITLE_FONT_SCALE);
+        textTable.add(titleLabel).padTop(CARD_TITLE_PAD_TOP);
         stack.add(textTable);
 
-        if (locked) {
-            stack.add(new Image(roundedSolidTexture(new Color(0f, 0f, 0f, 0.45f), cardW, cardH)));
+        if (locked && showLock) {
+            Table lockTable = new Table();
+            float size = Math.min(cardW * 0.5f, Math.min(LOCK_BADGE_WIDTH, LOCK_BADGE_HEIGHT));
+            lockTable.add(new Image(loadTextureSafe("textures/greenhouse/goldlock_icon.png"))).size(LOCK_BADGE_WIDTH, LOCK_BADGE_HEIGHT);
+            stack.add(lockTable);
         }
 
         stack.addListener(new ClickListener() {
@@ -274,6 +183,58 @@ public final class MenuUiKit {
         });
 
         return stack;
+    }
+
+    // ---------------------------------------------------------------- hover pop effect
+
+    /**
+     * Adds a smooth "pop up" hover effect: the card grows up from its base while the pointer
+     * is over it and settles back when the pointer leaves. Pointer state is polled directly
+     * (not via enter/exit events), so it works reliably inside the scrolling carousel.
+     */
+    /** How much a card grows on hover — 1.12 = 12% larger. Shared by every card
+     *  that uses {@link #addHoverPop}, so chapters and game modes always match. */
+    public static final float CARD_HOVER_SCALE = 1.12f;
+
+    /**
+     * Adds a smooth "pop up" hover effect: the card grows up from its base while the pointer
+     * is over it and settles back when the pointer leaves. Driven by real Scene2D
+     * enter/exit hover events (filtered to pointer == -1, i.e. actual mouse movement,
+     * not touch/drag), not manual per-frame hit-testing.
+     */
+    public static Actor addHoverPop(final Actor actor) {
+        final boolean[] hovering = {false};
+        // Table/Stack disable transforms by default, so an explicit enable is required
+        // for setScale to actually affect drawing.
+        if (actor instanceof Group) ((Group) actor).setTransform(true);
+
+        actor.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if (pointer == -1) { // real mouse hover, not a touch/drag pointer
+                    hovering[0] = true;
+                }
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                if (pointer == -1) {
+                    hovering[0] = false;
+                }
+            }
+        });
+
+        actor.addAction(new Action() {
+            @Override
+            public boolean act(float delta) {
+                actor.setOrigin(actor.getWidth() / 2f, 0f);
+                float target = hovering[0] ? CARD_HOVER_SCALE : 1f;
+                float next = actor.getScaleX() + (target - actor.getScaleX()) * Math.min(1f, delta * 10f);
+                actor.setScale(next);
+                return false;
+            }
+        });
+        return actor;
     }
 
     // ---------------------------------------------------------------- scrolling card row
@@ -289,6 +250,14 @@ public final class MenuUiKit {
      */
     public static Carousel buildCarousel(List<Supplier<Actor>> cardFactories, float cardWidth,
                                          float cardHeight, float cardPad, float viewportWidth) {
+        // extra vertical room so the hover "pop up" (scale from the card base) isn't clipped
+        return buildCarousel(cardFactories, cardWidth, cardHeight, cardPad, viewportWidth, cardHeight * 1.2f);
+    }
+
+    /** Same as {@link #buildCarousel(List, float, float, float, float)} but with an explicit viewport height. */
+    public static Carousel buildCarousel(List<Supplier<Actor>> cardFactories, float cardWidth,
+                                         float cardHeight, float cardPad, float viewportWidth,
+                                         float viewportHeight) {
         Table content = new Table();
         for (int lap = 0; lap < 3; lap++) {
             for (Supplier<Actor> factory : cardFactories) {
@@ -304,7 +273,7 @@ public final class MenuUiKit {
         float unitWidth = (cardWidth + cardPad * 2) * cardFactories.size();
 
         Table viewport = new Table();
-        viewport.add(pane).width(viewportWidth).height(cardHeight);
+        viewport.add(pane).width(viewportWidth).height(viewportHeight);
 
         Carousel carousel = new Carousel(pane, viewport, unitWidth);
         Gdx.app.postRunnable(() -> pane.setScrollX(unitWidth));
