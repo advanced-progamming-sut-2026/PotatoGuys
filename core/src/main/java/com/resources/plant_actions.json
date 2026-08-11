@@ -169,7 +169,7 @@
           "laneOffset": 0,
           "positionOffset": { "x": 0.85, "y": -0.70 },
           "velocity": { "x": 4.0, "y": 0.0 },
-          "delaySeconds": 1
+          "delaySeconds": 0.5
         }
       ]
     },

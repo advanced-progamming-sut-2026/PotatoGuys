@@ -34,10 +34,8 @@ public class Projectile implements TickAware {
     private boolean bouncing;
     private boolean isDead = false;
 
-    // شعاع برخورد تیر بر حسب خانه/کاشی
     private static final float HIT_RADIUS = 0.45f;
 
-    // ثبت زامبی‌های برخورد کرده برای جلوگیری از دمیج مکرر در یک فریم (در حالت نفوذی/کمانه)
     private final Set<Zombie> hitZombies = new HashSet<>();
 
     public Projectile(GameContext ctx, ProjectileType type, float startX, float startY , float velX , float velY ,float damage, boolean poison, boolean ice, boolean fire,int pierceCount, Object target) {

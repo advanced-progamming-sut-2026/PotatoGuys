@@ -73,7 +73,7 @@ public class ShooterAction extends PlantAction {
             }
         }
 
-        if(patterns.isEmpty() && stateTime >= config.intervalSeconds) {
+        if(patterns.isEmpty()) {
             plant.changeState(new PlantIdleState());
         }
     }
@@ -90,7 +90,7 @@ public class ShooterAction extends PlantAction {
 
     @Override
     public void onExit(Plant plant, GameContext ctx) {
-        stateTime = 0f;
+        // stateTime = 0f;
     }
 
     @Override

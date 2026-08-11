@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ProjectMerger",
+            "request": "launch",
+            "mainClass": "com.pvz.ProjectMerger",
+            "projectName": "core"
+        },
+        {
+            "type": "java",
             "name": "Debug with Hotswap (macOS)",
             "request": "launch",
             "mainClass": "com.pvz.lwjgl3.Lwjgl3Launcher",
