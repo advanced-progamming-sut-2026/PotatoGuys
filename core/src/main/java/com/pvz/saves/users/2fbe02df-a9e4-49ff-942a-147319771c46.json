@@ -11,7 +11,7 @@
   "profile": {
     "gamePlayed": 0,
     "coins": 0,
-    "diamonds": 0,
+    "diamonds": 1,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -76,7 +76,9 @@
           "isBoosted": false
         }
       ],
-      "unlockedZombies": [],
+      "unlockedZombies": [
+        "BASIC"
+      ],
       "seedPackets": {}
     },
     "news": {
@@ -84,6 +86,10 @@
         {
           "message": "Welcome   to   Plants   vs   Zombies 2   PvZ ! ",
           "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: BASIC!",
+          "unread": true
         }
       ]
     },
@@ -1152,7 +1158,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786398851160
+    "lastDailyReset": 1786424016281
   },
   "questLogRefreshed": false
 }

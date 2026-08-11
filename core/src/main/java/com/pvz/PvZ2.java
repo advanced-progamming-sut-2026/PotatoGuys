@@ -165,8 +165,8 @@ public class PvZ2 extends Game {
 
             // Convert the source-relative hotspot into the scaled sprite's pixel space
             // (the sprite is drawn at (0,0) of the canvas, so canvas hotspot == sprite hotspot).
-            int hotspotX = Math.round(CURSOR_HOTSPOT_X * (w - 1));
-            int hotspotY = Math.round(CURSOR_HOTSPOT_Y * (h - 1));
+            int hotspotX = Math.round(CURSOR_HOTSPOT_X * (w - 1)+21);
+            int hotspotY = Math.round(CURSOR_HOTSPOT_Y * (h - 1)+8);
 
             Gdx.graphics.setCursor(Gdx.graphics.newCursor(cursor, hotspotX, hotspotY));
             cursor.dispose();
