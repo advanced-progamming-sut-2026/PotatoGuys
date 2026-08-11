@@ -9,6 +9,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,10 +26,14 @@ import com.pvz.controller.AudioManager;
 import com.pvz.controller.GreenHouseController;
 import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
+import com.pvz.models.entities.plants.config.PlantConfigRegistry;
+import com.pvz.models.entities.plants.config.PlantJsonConfig;
+import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.greenhouse.GreenHouse;
 import com.pvz.models.greenhouse.GreenHousePlant;
 import com.pvz.models.greenhouse.GreenHousePot;
 import com.pvz.models.user.Profile;
+import pvz.libpvz.pam.ClipRef;
 import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
@@ -67,6 +74,16 @@ public class GreenHouseMenu extends ScreenAdapter {
     /** How many px the plant art's bottom sits above the bottom of its pot cell. Raise it to
      *  make the plant stick further out of the pot, lower it to tuck the plant back in. */
     private static final float PLANT_ART_LIFT = 75f;
+
+    /** How big the plant's animation area is inside the pot, as a fraction of {@link #CELL_SIZE}.
+     *  Raise it to make the plant bigger in the pot, lower it to shrink it. */
+    private static final float PLANT_ART_SIZE_FRACTION = 0.9f;
+    /** Extra px the plant is shifted UP from its normal position inside the pot. Positive = up,
+     *  negative = down. */
+    private static final float PLANT_ART_SHIFT_Y = -10f;
+    /** Extra px the plant is shifted RIGHT from its normal position inside the pot. Positive = right,
+     *  negative = left. */
+    private static final float PLANT_ART_SHIFT_X = 0f;
 
     /** Grow-now dialog frame: total width, and the padding between the content and the
      *  decorative border so the buttons/text sit comfortably inside the cadre. */
@@ -238,8 +255,7 @@ public class GreenHouseMenu extends ScreenAdapter {
         if (locked) {
             potStack.add(centeredIcon(LOCK_ICON, null, 0.5f));
         } else if (plant != null) {
-            String plantArt = PLANTS_DIR + (plant.isMariGold() ? "marigold" : plant.getPlantType()) + ".png";
-            potStack.add(liftedIcon(plantArt, null, 0.7f, PLANT_ART_LIFT));
+            potStack.add(plantArtActor(plant));
         }
 
         cell.add(potStack).size(CELL_SIZE, CELL_SIZE).row();
@@ -460,6 +476,131 @@ public class GreenHouseMenu extends ScreenAdapter {
         Table wrap = new Table();
         wrap.add(image).size(CELL_SIZE * sizeFraction).expandY().bottom().padBottom(lift);
         return wrap;
+    }
+
+    /** The plant's in-pot display: its idle PAM animation when one exists, otherwise the static
+     *  PNG. Both are laid out the same way as {@link #liftedIcon} so the plant rises out of the pot. */
+    private Actor plantArtActor(GreenHousePlant plant) {
+        String[] pam = resolvePlantPam(plant);
+        if (pam == null) {
+            String plantArt = PLANTS_DIR + (plant.isMariGold() ? "marigold" : plant.getPlantType()) + ".png";
+            return liftedIcon(plantArt, null, PLANT_ART_SIZE_FRACTION, PLANT_ART_LIFT);
+        }
+        String pamPath = pam[0];
+        String idleLabel = pam[1];
+        String fallbackPng = PLANTS_DIR + (plant.isMariGold() ? "marigold" : plant.getPlantType()) + ".png";
+        PlantPamActor actor = new PlantPamActor(pamPath, idleLabel, PLANT_ART_SHIFT_X, PLANT_ART_SHIFT_Y,
+                Gdx.files.internal(fallbackPng).exists() ? MenuUiKit.loadTextureSafe(fallbackPng) : null);
+        Table wrap = new Table();
+        wrap.add(actor).size(CELL_SIZE * PLANT_ART_SIZE_FRACTION).expandY().bottom().padBottom(PLANT_ART_LIFT);
+        return wrap;
+    }
+
+    /** Returns {pamFilePath, idleLabel} for the plant's idle PAM, or {@code null} when the plant
+     *  has no configured animation. MariGold hard-codes to MARIGOLD.PAM; other plants use their
+     *  {@code pamAnimationConfig} from plant_actions.json, falling back to a folder-style path
+     *  guess (768/{INITIAL,FULL}/PLANT/<TYPE>) only when the PAM actually exists on disk. */
+    private String[] resolvePlantPam(GreenHousePlant plant) {
+        if (plant.isMariGold()) {
+            return new String[]{"768/INITIAL/PLANT/MARIGOLD/MARIGOLD.PAM", "idle"};
+        }
+        String typeName = plant.getPlantType();
+        if (typeName == null || typeName.isEmpty()) return null;
+
+        PlantType type;
+        try {
+            type = PlantType.valueOf(typeName);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+        PlantJsonConfig config = PlantConfigRegistry.getInstance().getConfig(type);
+        if (config != null && config.pamAnimationConfig != null && config.pamAnimationConfig.pamFilePath != null) {
+            String label = config.pamAnimationConfig.idleLabel;
+            return new String[]{config.pamAnimationConfig.pamFilePath, label != null ? label : "idle"};
+        }
+
+        String upper = typeName.toUpperCase();
+        String[] candidates = {
+            "768/INITIAL/PLANT/" + upper + "/" + upper + ".PAM",
+            "768/FULL/PLANT/" + upper + "/" + upper + ".PAM",
+        };
+        for (String path : candidates) {
+            if (Gdx.files.internal("assets/pvz-assets/IMAGES/" + path).exists()) {
+                return new String[]{path, "idle"};
+            }
+        }
+        return null;
+    }
+
+    /** Draws a plant's idle PAM animation inside the pot. Falls back to the static PNG (when given)
+     *  until the animation has loaded. */
+    private static final class PlantPamActor extends Actor {
+        private final String pamPath;
+        private final String idleLabel;
+        private final float shiftX;
+        private final float shiftY;
+        private final Texture fallbackTexture;
+        private float stateTime;
+
+        PlantPamActor(String pamPath, String idleLabel, float shiftX, float shiftY, Texture fallbackTexture) {
+            this.pamPath = pamPath;
+            this.idleLabel = idleLabel;
+            this.shiftX = shiftX;
+            this.shiftY = shiftY;
+            this.fallbackTexture = fallbackTexture;
+        }
+
+        @Override
+        public void act(float delta) {
+            super.act(delta);
+            stateTime += delta;
+        }
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            ClipRef clip = resolveClip();
+            if (clip == null) {
+                drawFallback(batch, parentAlpha);
+                return;
+            }
+            Rectangle bounds = PvZ2.pamPlayer.bounds(pamPath, idleLabel);
+            if (bounds == null) {
+                bounds = PvZ2.pamPlayer.bounds(pamPath);
+            }
+            float target = Math.min(getWidth(), getHeight());
+            float scale = 1f;
+            if (bounds != null && bounds.width > 0 && bounds.height > 0) {
+                scale = Math.min(target / bounds.width, target / bounds.height);
+            } else {
+                scale = target / 390f; // default PAM canvas is 390x390
+            }
+            float cx = getX() + getWidth() / 2f + shiftX;
+            float cy = getY() + getHeight() / 2f + shiftY;
+            PvZ2.pamPlayer.draw(batch, clip, stateTime, cx, cy, scale, scale, true);
+        }
+
+        private ClipRef resolveClip() {
+            if (idleLabel != null) {
+                ClipRef clip = PvZ2.pamPlayer.getClip(pamPath, idleLabel);
+                if (clip != null) return clip;
+            }
+            for (String state : new String[]{"idle", "default", ""}) {
+                ClipRef clip = PvZ2.pamPlayer.getClip(pamPath, state);
+                if (clip != null) return clip;
+            }
+            return null;
+        }
+
+        private void drawFallback(Batch batch, float parentAlpha) {
+            if (fallbackTexture == null) return;
+            float w = getWidth(), h = getHeight();
+            float imgW = fallbackTexture.getWidth(), imgH = fallbackTexture.getHeight();
+            float fit = Math.min(w / imgW, h / imgH);
+            float dw = imgW * fit, dh = imgH * fit;
+            batch.setColor(1f, 1f, 1f, parentAlpha);
+            batch.draw(fallbackTexture, getX() + (w - dw) / 2f, getY() + (h - dh) / 2f, dw, dh);
+            batch.setColor(Color.WHITE);
+        }
     }
 
     private void logIfMissing(String path) {

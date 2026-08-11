@@ -690,10 +690,33 @@ public class EgyptChapterMenu extends ScreenAdapter {
                         }
                         if (clip != null) {
                             pamPlayer.draw(batch, clip, stateTime, getX(), getY(), true);
+                        } else {
+                            logMissingClipOnce(objectType, pamState);
                         }
-                    } catch (Throwable ignored) {
+                    } catch (Throwable t) {
+                        logClipErrorOnce(objectType, pamState, t);
                     }
                 }
+            }
+        }
+
+        private final java.util.Set<String> loggedClipIssues = new java.util.HashSet<>();
+
+        private void logMissingClipOnce(MapObjectType objectType, String pamState) {
+            String key = objectType.name() + ":" + pamState;
+            if (loggedClipIssues.add(key)) {
+                Gdx.app.error("PAM_MISSING", "No PAM clip found for " + objectType.name()
+                    + " at path '" + objectType.path + "' (tried state '" + pamState
+                    + "', then idle/default/\"\") - check this file actually exists under assets/pvz-assets/"
+                    + objectType.path);
+            }
+        }
+
+        private void logClipErrorOnce(MapObjectType objectType, String pamState, Throwable t) {
+            String key = objectType.name() + ":error";
+            if (loggedClipIssues.add(key)) {
+                Gdx.app.error("PAM_ERROR", "Exception drawing " + objectType.name()
+                    + " ('" + objectType.path + "', state '" + pamState + "')", t);
             }
         }
     }
