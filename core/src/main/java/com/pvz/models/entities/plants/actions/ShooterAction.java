@@ -92,8 +92,8 @@ public class ShooterAction extends PlantAction {
     }
 
     private void spawnProjectile(Plant plant, GameContext ctx, ShooterActionConfig.ProjectilePattern pattern) {
-        float x = plant.getCol() + pattern.positionOffset.x;
-        float y = plant.getLane() + pattern.positionOffset.y;
+        float x = GameController.colToWorldX(plant.getCol()) + pattern.positionOffset.x;
+        float y = GameController.laneToWorldY(plant.getLane()) + pattern.positionOffset.y;
         float velX = pattern.velocity.x;
         float velY = pattern.velocity.y;
         Projectile projectile = ProjectileFactory.create(pattern.projectileType, ctx, new Vector2(x, y), new Vector2(velX, velY), plant.getEffectiveDamage());

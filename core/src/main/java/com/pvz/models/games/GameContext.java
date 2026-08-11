@@ -146,7 +146,7 @@ public class GameContext implements TickAware {
     }
     public List<Zombie> getZombiesInColumn(int col) {
         return zombies.stream()
-                .filter(z -> (int) z.getX() == col && !z.isDead())
+                .filter(z -> GameController.worldXtoCol(z.getX()) == col && !z.isDead())
                 .toList();
     }
     public void spawnZombie(Zombie z) {
