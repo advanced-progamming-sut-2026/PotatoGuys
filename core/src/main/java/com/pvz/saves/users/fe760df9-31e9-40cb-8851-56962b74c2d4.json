@@ -11,6 +11,7 @@
   "profile": {
     "gamePlayed": 0,
     "coins": 100,
+    "coins": 100,
     "diamonds": 1,
     "plantFood": 0,
     "collection": {

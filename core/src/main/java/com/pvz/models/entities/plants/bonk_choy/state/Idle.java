@@ -51,7 +51,7 @@ public class Idle extends PlantState {
     @Override
     public FrameConfig draw(Plant plant, GameContext ctx) {
         Vector2 position= new Vector2(GameController.colToWorldX(plant.getCol()),GameController.laneToWorldY(plant.getLane()));
-        Vector2 scale = new Vector2(0.7f,0.7f);
+        Vector2 scale = new Vector2(0.65f,0.65f);
         return new FrameConfig(BonkChoy.PAM_PATH,CLIP,stateTime,position,scale,null,true);
     }
 
