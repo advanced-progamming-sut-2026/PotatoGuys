@@ -93,7 +93,7 @@ public class Plant implements TickAware {
 
     @Override
     public void dispose() {
-        // no owned resources to release
+        context.removePlant(this);
     }
 
     @Override
@@ -333,6 +333,10 @@ public class Plant implements TickAware {
 
     public PlantState getCurrentState() {
         return currentState;
+    }
+
+    public boolean isPlantableOnTile(Tile tile){
+        return true;
     }
 
     // ── CLI display ────────────────────────────────────────────────────────────

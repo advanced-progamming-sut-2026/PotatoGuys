@@ -6,6 +6,8 @@ import com.pvz.models.entities.plants.bonk_choy.state.Idle;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.GameMap;
+import com.pvz.models.games.map.tile.Tile;
+import com.pvz.models.games.map.tile.TileTags;
 
 public class BonkChoy extends Plant {
     public static final String PAM_PATH="768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM";
