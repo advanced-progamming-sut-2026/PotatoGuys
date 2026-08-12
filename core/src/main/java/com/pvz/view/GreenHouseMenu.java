@@ -89,6 +89,7 @@ public class GreenHouseMenu extends ScreenAdapter {
     /** Extra px the plant is shifted UP from its normal position inside the pot. Positive = up,
      *  negative = down. */
     private static final float PLANT_ART_SHIFT_Y = -17f;
+
     /** Extra px the plant is shifted RIGHT from its normal position inside the pot. Positive = right,
      *  negative = left. */
     private static final float PLANT_ART_SHIFT_X = 20f;
