@@ -7,11 +7,11 @@
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "hamid",
-  "profilePicture": null,
+  "profilePicture": "textures/avatars/avatar_chopper.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 50,
-    "diamonds": 2,
+    "coins": 2100,
+    "diamonds": 0,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -73,7 +73,7 @@
           "Type": "Wallnut",
           "level": 1,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         }
       ],
       "unlockedZombies": [
@@ -90,11 +90,11 @@
         },
         {
           "message": "New Zombie Encountered: BASIC!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: CONEHEAD!",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -135,9 +135,9 @@
     "gameSpeed": 2,
     "showGrid": false,
     "debugMode": false,
-    "brightness": 1.0,
-    "musicVolume": 0.84999996,
-    "sfxVolume": 0.7,
+    "brightness": 1.0699999,
+    "musicVolume": 0.0,
+    "sfxVolume": 0.84999996,
     "musicMuted": false,
     "sfxMuted": false
   },
@@ -156,10 +156,10 @@
         "y": 1,
         "locked": false,
         "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-11T01:25:16.270591699",
-          "growthHours": 2
+          "kind": "unlocked",
+          "plantType": "Jalapeno",
+          "plantedTime": "2026-08-11T19:34:21.048702",
+          "growthHours": 8
         }
       },
       {
@@ -168,8 +168,8 @@
         "locked": false,
         "greenHousePlant": {
           "kind": "unlocked",
-          "plantType": "Wallnut",
-          "plantedTime": "2026-08-11T01:25:18.261926916",
+          "plantType": "Repeater",
+          "plantedTime": "2026-08-11T20:52:29.942090",
           "growthHours": 8
         }
       },
@@ -180,7 +180,7 @@
         "greenHousePlant": {
           "kind": "mariGold",
           "plantType": null,
-          "plantedTime": "2026-08-11T01:25:19.464467294",
+          "plantedTime": "2026-08-11T19:34:31.852145",
           "growthHours": 2
         }
       },
@@ -189,10 +189,10 @@
         "y": 1,
         "locked": false,
         "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-11T01:25:20.294381075",
-          "growthHours": 2
+          "kind": "unlocked",
+          "plantType": "BonkChoy",
+          "plantedTime": "2026-08-11T19:34:32.786711",
+          "growthHours": 8
         }
       },
       {
@@ -1163,7 +1163,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786429400269
+    "lastDailyReset": 1786468929879
   },
-  "questLogRefreshed": false
+  "questLogRefreshed": true
 }

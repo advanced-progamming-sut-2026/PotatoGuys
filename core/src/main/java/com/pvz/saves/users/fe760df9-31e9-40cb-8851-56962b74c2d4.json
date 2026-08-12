@@ -126,7 +126,15 @@
     "dailyOfferPurchased": false
   },
   "setting": {
-    "difficulty": 3
+    "difficulty": 3,
+    "gameSpeed": 2,
+    "showGrid": false,
+    "debugMode": false,
+    "brightness": 1.0,
+    "musicVolume": 0.7,
+    "sfxVolume": 0.7,
+    "musicMuted": false,
+    "sfxMuted": false
   },
   "score": {
     "lastSeason": 0,
@@ -1178,7 +1186,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786308608838
+    "lastDailyReset": 1786469127590
   },
   "questLogRefreshed": false
 }

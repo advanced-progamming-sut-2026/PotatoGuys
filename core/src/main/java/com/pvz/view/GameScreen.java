@@ -274,6 +274,7 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // ۱. منطق وضعیت‌ها و موقعیت دوربین
+        
         switch (currentState) {
             case PANNING_FORWARD:
                 stateTime += delta;
@@ -377,23 +378,23 @@ public class GameScreen extends ScreenAdapter {
         if (context != null) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-            // رسم خورشیدها
-            shapeRenderer.setColor(Color.YELLOW);
-            for (Sun sun : new ArrayList<>(context.getSuns())) {
-                if (!sun.isDone()) {
-                    shapeRenderer.circle(sun.getX(), sun.getY(), 50);
-                }
-            }
-             // رسم خطوط گرید دیباگ
-            shapeRenderer.setColor(Color.RED);
-            for (int i = 0; i < context.getMap().getLanes(); i++) {
-                float gridY = GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT;
-                shapeRenderer.rect(0, gridY - 0.5f, SCREEN_WIDTH, 1);
-            }
-            for (int i = 0; i < context.getMap().getColumns(); i++) {
-                float gridX = GameMap.START_X + i * GameMap.TILE_WIDTH;
-                shapeRenderer.rect(gridX - 0.5f, 0, 1, SCREEN_HEIGHT);
-            }
+            // // رسم خورشیدها
+            // shapeRenderer.setColor(Color.YELLOW);
+            // for (Sun sun : new ArrayList<>(context.getSuns())) {
+            //     if (!sun.isDone()) {
+            //         shapeRenderer.circle(sun.getX(), sun.getY(), 50);
+            //     }
+            // }
+            //  // رسم خطوط گرید دیباگ
+            // shapeRenderer.setColor(Color.RED);
+            // for (int i = 0; i < context.getMap().getLanes(); i++) {
+            //     float gridY = GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT;
+            //     shapeRenderer.rect(0, gridY - 0.5f, SCREEN_WIDTH, 1);
+            // }
+            // for (int i = 0; i < context.getMap().getColumns(); i++) {
+            //     float gridX = GameMap.START_X + i * GameMap.TILE_WIDTH;
+            //     shapeRenderer.rect(gridX - 0.5f, 0, 1, SCREEN_HEIGHT);
+            // }
 
             for(Plant a : context.getPlants()){
                 shapeRenderer.circle(GameController.xToWorldX(a.getCol()), GameController.yToWorldY(a.getLane()), 10);
@@ -404,7 +405,7 @@ public class GameScreen extends ScreenAdapter {
             }
 
             for(Zombie a : context.getZombies()){
-                shapeRenderer.circle(GameController.xToWorldX(a.getX()), GameController.yToWorldY(a.getY()), 10);
+                shapeRenderer.circle(a.getX(), a.getY(), 10);
             }
 
             shapeRenderer.end();

@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.plants.config.ShooterActionConfig;
 import com.pvz.models.entities.plants.config.ShooterActionConfig.ProjectilePattern;
@@ -21,6 +25,7 @@ public class ShooterAction extends PlantAction {
 
     private final ShooterActionConfig config;
     public ArrayList<ProjectilePattern> patterns = new ArrayList<>();
+    private float animTime = 0f;
 
     public ShooterAction(ShooterActionConfig config) {
         this.config = config;
@@ -68,6 +73,15 @@ public class ShooterAction extends PlantAction {
             newPattern.delaySeconds = pattern.delaySeconds;
             patterns.add(newPattern);
         }
+
+        FileHandle file = Gdx.files.internal("pvz-assets/animations.json");
+
+        Json json = new Json();
+        json.setIgnoreUnknownFields(true);
+
+        AnimationCatalog catalog = json.fromJson(AnimationCatalog.class, file);
+        PamAnimationConfig config = plant.getSheet().pamAnimationConfig;
+        animTime = catalog.getClipDuration(config.pamFilePath , config.attackActionLabel);
     }
 
         @Override
@@ -86,7 +100,7 @@ public class ShooterAction extends PlantAction {
             }
         }
 
-        if(patterns.isEmpty()) {
+        if(patterns.isEmpty() && stateTime >= animTime) {
             plant.changeState(new PlantIdleState());
         }
     }
