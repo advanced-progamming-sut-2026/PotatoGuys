@@ -143,7 +143,7 @@ public class Projectile implements TickAware {
     @Override
     public FrameConfig draw() {
         PvZ2.pamPlayer.draw(PvZ2.batch, type.path,
-                type.lable, stateTime, pos.x, pos.y, true);
+                type.lable, stateTime, pos.x, pos.y, type.scale, type.scale, true);
         return null;
     }
 
