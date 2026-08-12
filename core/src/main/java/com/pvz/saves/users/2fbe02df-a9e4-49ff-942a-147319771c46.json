@@ -10,7 +10,7 @@
   "profilePicture": "textures/avatars/avatar_franky.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 50,
+    "coins": 1550,
     "diamonds": 2,
     "plantFood": 0,
     "collection": {
@@ -73,7 +73,7 @@
           "Type": "Wallnut",
           "level": 1,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         }
       ],
       "unlockedZombies": [
@@ -146,7 +146,7 @@
     "brightness": 1.0,
     "musicVolume": 0.84999996,
     "sfxVolume": 0.34,
-    "musicMuted": true,
+    "musicMuted": false,
     "sfxMuted": false
   },
   "score": {
@@ -164,10 +164,10 @@
         "y": 1,
         "locked": false,
         "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-11T01:25:16.270591699",
-          "growthHours": 2
+          "kind": "unlocked",
+          "plantType": "TwinSunflower",
+          "plantedTime": "2026-08-12T06:54:37.193440865",
+          "growthHours": 8
         }
       },
       {
@@ -176,8 +176,8 @@
         "locked": false,
         "greenHousePlant": {
           "kind": "unlocked",
-          "plantType": "Wallnut",
-          "plantedTime": "2026-08-11T01:25:18.261926916",
+          "plantType": "BonkChoy",
+          "plantedTime": "2026-08-12T06:54:38.026273377",
           "growthHours": 8
         }
       },
@@ -186,10 +186,10 @@
         "y": 1,
         "locked": false,
         "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-11T01:25:19.464467294",
-          "growthHours": 2
+          "kind": "unlocked",
+          "plantType": "Sunflower",
+          "plantedTime": "2026-08-12T06:54:38.795240670",
+          "growthHours": 8
         }
       },
       {
@@ -197,10 +197,10 @@
         "y": 1,
         "locked": false,
         "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-11T01:25:20.294381075",
-          "growthHours": 2
+          "kind": "unlocked",
+          "plantType": "Cabbagepult",
+          "plantedTime": "2026-08-12T06:54:39.458902782",
+          "growthHours": 8
         }
       },
       {
@@ -1171,7 +1171,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786480908413
+    "lastDailyReset": 1786504967889
   },
   "questLogRefreshed": false
 }

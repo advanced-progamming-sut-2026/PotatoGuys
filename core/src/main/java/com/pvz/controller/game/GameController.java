@@ -261,6 +261,7 @@ public class GameController {
         drawZombies();
         drawSuns();
         drawProjectiles();
+        batch.end();
         // ۵. رسم هایلایت خانه زیر ماوس (در صورت انتخاب کارت)
         if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null && ctx != null) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -278,7 +279,6 @@ public class GameController {
                 Gdx.gl.glDisable(GL20.GL_BLEND);
             }
         }
-        batch.end();
         drawDebugShapes();
     }
 
@@ -379,9 +379,9 @@ public class GameController {
                 shapeRenderer.circle(GameController.xToWorldX(a.getCol()), GameController.yToWorldY(a.getLane()), 10);
             }
 
-            for(Projectile a : ctx.getProjectiles()){
+            /*for(Projectile a : ctx.getProjectiles()){
                 shapeRenderer.circle(GameController.xToWorldX(a.getX()), GameController.yToWorldY(a.getY()), 10);
-            }
+            }*/
 
             for(Zombie a : ctx.getZombies()){
                 shapeRenderer.circle(GameController.xToWorldX(a.getX()), GameController.yToWorldY(a.getY()), 10);
