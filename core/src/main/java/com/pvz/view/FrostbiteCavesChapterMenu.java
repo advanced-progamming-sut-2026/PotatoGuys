@@ -33,16 +33,15 @@ import com.pvz.controller.ChapterController;
 import com.pvz.enums.GameAsset;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.Profile;
-import com.pvz.view.MenuUiKit;
 
+import com.pvz.view.game.GameScreen;
 import pvz.libpvz.pam.ClipRef;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
 /**
- * Frostbite Caves level-select ("stage map") screen. Ported from Dani's
- * FrostbiteCavesStagesScreen: 3 icy islands plus a separate boss altar,
+ * Frostbite Caves level-select ("stage map") screen. Ported from  FrostbiteCavesStagesScreen: 3 icy islands plus a separate boss altar,
  * tap a stage to select it, then hit Play in the bottom bar - same
  * interaction pattern as {@link EgyptChapterMenu}.
  * <p>
@@ -427,7 +426,7 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
             zombossNodeY = Math.max(centerY[1], centerY[2]) - 200f * LAYOUT_SCALE_Y;
 
             // The trail forks here: Day 2 -> bridge -> Day 3, instead of one
-            // straight segment - matches the crossing-lines look Dani's
+            // straight segment - matches the crossing-lines look
             // reference art has near the boss decoration.
             bridgeX = zombossNodeX;
             bridgeY = zombossNodeY + zombossRenderHeight() / 2f;
@@ -495,7 +494,7 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
             };
             for (int i = 0; i < iceCoords.length; i++) {
                 MapObjectType selectedIce = iceTypes[i % iceTypes.length];
-                addActor(createAnchoredAnimation(selectedIce, ICE_CHUNK_TUNING, "animation",
+                addActor(createAnchoredAnimation(selectedIce, ICE_CHUNK_TUNING, "idle",
                     iceCoords[i][0] * LAYOUT_SCALE_X, iceCoords[i][1] * LAYOUT_SCALE_Y));
             }
         }
@@ -679,6 +678,13 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
 
                 if (!objectType.isPamAnimation && Gdx.files.internal(objectType.path).exists()) {
                     texture = MenuUiKit.loadTextureSafe(objectType.path);
+                }
+
+                if (objectType.isPamAnimation && pamPlayer != null) {
+                    try {
+                        pamPlayer.loadSync(objectType.path);
+                    } catch (Throwable ignored) {
+                    }
                 }
             }
 

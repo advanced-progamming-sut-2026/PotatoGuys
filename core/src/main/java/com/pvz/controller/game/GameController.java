@@ -1,44 +1,497 @@
 package com.pvz.controller.game;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
-import com.pvz.models.engine.TickAware;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.engine.GameEngine;
+import com.pvz.models.entities.LawnMower;
 import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.data.PlantPropertySheet;
+import com.pvz.models.entities.plants.data.PlantRegistry;
+import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.sun.Sun;
 import com.pvz.models.entities.zombies.Zombie;
-import com.pvz.models.entities.zombies.ZombieFactory;
-import com.pvz.models.entities.zombies.ZombieType;
 import com.pvz.models.games.GameContext;
-import com.pvz.models.games.card.Card;
 import com.pvz.models.games.card.PlantCard;
-import com.pvz.models.games.card.ZombieCard;
+import com.pvz.models.games.levels.Level;
+import com.pvz.models.games.levels.LevelLoader;
 import com.pvz.models.games.map.GameMap;
-import com.pvz.models.games.map.behaviors.TileBehavior;
 import com.pvz.models.games.map.tile.Tile;
-import com.pvz.models.games.map.tile.TileTags;
-import com.pvz.models.games.modes.GameMode;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
-import com.pvz.models.games.modes.capabilities.StartWaves;
-import com.pvz.models.games.modes.capabilities.ZombiePlacer;
-import com.pvz.models.games.modes.variants.VaseBreakerMode;
-import com.pvz.models.quests.QuestEvaluator;
-import com.pvz.models.user.User;
+import com.pvz.models.user.MyPlant;
+import com.pvz.view.game.GameScreen;
+import com.pvz.view.game.GameUiModal;
+import com.pvz.view.game.PlantSelectModal;
+import pvz.skin.PvzSkin;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameController {
-    SpriteBatch batch;
+    private final String seasonName;
+    private final int levelNumber;
 
-    public GameController(){
-        this.batch=new SpriteBatch();
+    private SpriteBatch batch;
+    private final ShapeRenderer shapeRenderer;
+    private final Viewport viewport;
+    private Stage stage;
+    private final OrthographicCamera camera;
+
+    private float stateTime;
+    private GameContext ctx;
+    private PlantSelectModal plantSelectModal;
+    private GameUiModal gameUiModal;
+    private State currentState = State.PANNING_FORWARD;
+
+    private TextureRegion[] backgroundTextures;
+
+    private final Vector3 touchPos = new Vector3();
+
+    private float panBackTime = 0f;
+    private final float transitionDuration = 3.0f;
+    private float startX;
+    private float endX;
+    private boolean gameStarted = false;
+    private final float panBackDuration = 2.5f;
+    private Label readyPlantLabel;
+    private float readyPlantTimer = 0f;
+    private final float readyPlantDuration = 2.0f;
+
+    public GameController(String seasonName, int levelNumber){
+        this.seasonName=seasonName;
+        this.levelNumber=levelNumber;
+
+        this.batch= PvZ2.batch;
+        shapeRenderer = new ShapeRenderer();
+        stateTime=0;
+
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(1280, 720, camera);
+        stage = new Stage(new FitViewport(1280, 720));
+
+        viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+
+        stage.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (currentState == State.PLAYING) {
+                    if (ctx != null) {
+                        // تبدیل ورودی ماوس/لمس به مختصات دقیق World
+                        touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                        viewport.unproject(touchPos);
+
+                        // ۱. ابتدا کلیک روی خورشید بررسی می‌شود
+                        if (checkSunClick(touchPos.x, touchPos.y)) {
+                            if (gameUiModal != null) {
+                                gameUiModal.setSelectedCard(null);
+                            }
+                            return true;
+                        }
+
+                        // ۲. کاشت گیاه در صورت انتخاب کارت
+                        if (gameUiModal != null && gameUiModal.getSelectedCard() != null) {
+                            Tile hoveredTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
+                            if (hoveredTile != null) {
+                                PlantCard card = gameUiModal.getSelectedCard();
+                                if (ctx.getMode() instanceof PlantPlacer placer) {
+                                    int col = hoveredTile.getCol();
+                                    int lane = hoveredTile.getLane();
+
+                                    if (placer.isValidPlacement(ctx, col, lane, card)) {
+                                        placer.handlePlacement(ctx, col, lane, card);
+                                        gameUiModal.setSelectedCard(null);
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+
+        ctx = AppContext.getInstance().getGameContext();
+
+        plantSelectModal = new PlantSelectModal(this::startGameSession);
+        stage.addActor(plantSelectModal);
+
+        gameUiModal = new GameUiModal();
+        stage.addActor(gameUiModal);
+
+        backgroundTextures=new TextureRegion[3];
+        switch (seasonName.toLowerCase()){
+            case "ancient egypt"->{
+                backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE_LEFT");
+                backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE");
+                backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE_RIGHT");
+            }
+            case "frostbite caves"->{
+                backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_ICEAGE_TEXTURE_LEFT");
+                backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_ICEAGE_TEXTURE");
+                backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_ICEAGE_TEXTURE_RIGHT");
+            }
+            case "dark ages"->{
+                backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_DARK_TEXTURE_LEFT");
+                backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_DARK_TEXTURE");
+                backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_DARK_TEXTURE_RIGHT");
+            }
+            case "big wave beach"->{
+                backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE_LEFT");
+                backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE");
+                backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE_RIGHT");
+            }
+        }
+
+        float wCenter = backgroundTextures[1].getRegionWidth();
+        float wRight = backgroundTextures[2].getRegionWidth();
+
+        startX = wCenter / 2f;
+        endX = wCenter + wRight - 640f;
+
+        camera.position.set(startX, 720f / 2f, 0);
+        camera.update();
+
+        readyPlantLabel = new Label("Ready... Plant!", PvzSkin.get(), "big");
+        readyPlantLabel.setColor(Color.RED);
+        readyPlantLabel.setFontScale(1.5f);
+        readyPlantLabel.setAlignment(Align.center);
+        readyPlantLabel.setVisible(false);
+
+        Table labelTable = new Table();
+        labelTable.setFillParent(true);
+        labelTable.center();
+        labelTable.add(readyPlantLabel);
+        stage.addActor(labelTable);
     }
 
     public void update(float dt){
+        camera.update();
 
+        switch (currentState) {
+            case PANNING_FORWARD:
+                stateTime += dt;
+                float progressFwd = Math.min(1f, stateTime / transitionDuration);
+                float smoothFwd = com.badlogic.gdx.math.Interpolation.fade.apply(progressFwd);
+                float currentXFwd = com.badlogic.gdx.math.MathUtils.lerp(startX, endX, smoothFwd);
+                camera.position.set(currentXFwd, 720f / 2f, 0);
+
+                if (progressFwd >= 1f) {
+                    currentState = State.PLANT_SELECT;
+                    plantSelectModal.setVisible(true);   // show plant selection instead
+                    Gdx.input.setInputProcessor(stage);
+                }
+                break;
+
+            case PLANT_SELECT:
+                camera.position.set(endX, 720f / 2f, 0);
+                break;
+
+            case PANNING_BACK:
+                panBackTime += dt;
+                float progressBack = Math.min(1f, panBackTime / panBackDuration);
+                float smoothBack = com.badlogic.gdx.math.Interpolation.fade.apply(progressBack);
+                float currentXBack = com.badlogic.gdx.math.MathUtils.lerp(endX, startX, smoothBack);
+                camera.position.set(currentXBack, 720f / 2f, 0);
+
+                if (progressBack >= 1f) {
+                    currentState = State.READY_PLANT;
+                    readyPlantLabel.setVisible(true);
+                    readyPlantTimer = 0f;
+                }
+                break;
+
+            case READY_PLANT:
+                camera.position.set(startX, 720f / 2f, 0);
+                readyPlantTimer += dt;
+                if (readyPlantTimer >= readyPlantDuration) {
+                    readyPlantLabel.setVisible(false);
+                    currentState = State.PLAYING;
+                    gameUiModal.setVisible(true);
+                    gameStarted = true;
+                }
+                break;
+
+            case PLAYING:
+                camera.position.set(startX, 720f / 2f, 0);
+                gameUiModal.updateHud();
+                break;
+        }
+
+        // Check sun clicks in PLAYING state on left click
+        if (currentState == State.PLAYING && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            viewport.unproject(touchPos);
+            if (checkSunClick(touchPos.x, touchPos.y)) {
+                if (gameUiModal != null) {
+                    gameUiModal.setSelectedCard(null);
+                }
+            }
+        }
+
+        // ۴. آپدیت Engine
+        if (currentState == State.PLAYING) {
+            GameEngine.getInstance().update(dt);
+        }
     }
+
+    public void draw(){
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        drawBackground();
+        if (ctx != null) {
+            drawTiles();
+            drawPlants();
+            drawZombies();
+            drawLawnMowers();
+            drawSuns();
+            drawProjectiles();
+        }
+        batch.end();
+        // ۵. رسم هایلایت خانه زیر ماوس (در صورت انتخاب کارت)
+        if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null && ctx != null) {
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            viewport.unproject(touchPos);
+
+            Tile hoveredTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
+
+            if (hoveredTile != null) {
+                Gdx.gl.glEnable(GL20.GL_BLEND);
+                Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                shapeRenderer.setColor(0f, 1f, 0f, 0.4f);
+                shapeRenderer.rect(hoveredTile.getX(), hoveredTile.getY(), hoveredTile.getWidth(), hoveredTile.getHeight());
+                shapeRenderer.end();
+                Gdx.gl.glDisable(GL20.GL_BLEND);
+            }
+        }
+        drawDebugShapes();
+    }
+
+    private void drawBackground(){
+        float x = -backgroundTextures[0].getRegionWidth();
+        batch.draw(backgroundTextures[0], x, 0);
+        batch.draw(backgroundTextures[1], 0, 0);
+        batch.draw(backgroundTextures[2], backgroundTextures[1].getRegionWidth(), 0);
+    }
+
+    private void drawTiles(){
+        if (ctx==null) return;
+        for (int lane = 0; lane < ctx.getMap().getLanes(); lane++) {
+            for (int col = 0; col < ctx.getMap().getColumns(); col++) {
+                FrameConfig frameConfig = ctx.getMap().getTileAt(col,lane).draw();
+                if (frameConfig!=null){
+                    PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
+                        frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
+                        frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+                }
+            }
+        }
+    }
+
+    private void drawPlants(){
+        if (ctx==null) return;
+        for (Plant p: ctx.getPlants()){
+            FrameConfig frameConfig = p.draw();
+            if (frameConfig!=null){
+                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
+                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
+                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+            }
+        }
+    }
+
+    private void drawZombies(){
+        if (ctx==null) return;
+        for (Zombie z: ctx.getZombies()){
+            FrameConfig frameConfig = z.draw();
+            if (frameConfig!=null){
+                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
+                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
+                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+            }
+        }
+    }
+
+    private void drawLawnMowers(){
+        LawnMower[] lawnMowers = ctx.getLawnMowers();
+        for (LawnMower lawnMower : lawnMowers) {
+            if (lawnMower != null) {
+                FrameConfig frameConfig = lawnMower.draw();
+                PvZ2.pamPlayer.draw(batch, frameConfig.pamPath, frameConfig.label,
+                    frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
+                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+            }
+        }
+    }
+
+    private void drawProjectiles(){
+        if (ctx==null) return;
+        for (Projectile p: ctx.getProjectiles()){
+            FrameConfig frameConfig = p.draw();
+            if (frameConfig!=null){
+                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
+                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
+                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+            }
+        }
+    }
+
+    private void drawSuns(){
+        if (ctx==null) return;
+        for (Sun s: ctx.getSuns()){
+            FrameConfig frameConfig = s.draw();
+            if (frameConfig!=null){
+                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
+                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
+                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+            }
+        }
+    }
+
+    private void drawDebugShapes(){
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        // ۶. رسم خورشیدها و خطوط دیباگ گرید
+        if (ctx != null) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+            // رسم خورشیدها
+            shapeRenderer.setColor(Color.YELLOW);
+            /*for (Sun sun : new ArrayList<>(context.getSuns())) {
+                if (!sun.isDone()) {
+                    shapeRenderer.circle(sun.getX(), sun.getY(), 50);
+                }
+            }*/
+            // رسم خطوط گرید دیباگ
+            shapeRenderer.setColor(Color.RED);
+            for (int i = 0; i < ctx.getMap().getLanes(); i++) {
+                float gridY = GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT;
+                shapeRenderer.rect(0, gridY - 0.5f, GameScreen.SCREEN_WIDTH, 1);
+            }
+            for (int i = 0; i < ctx.getMap().getColumns(); i++) {
+                float gridX = GameMap.START_X + i * GameMap.TILE_WIDTH;
+                shapeRenderer.rect(gridX - 0.5f, 0, 1, GameScreen.SCREEN_HEIGHT);
+            }
+
+            for(Plant a : ctx.getPlants()){
+                shapeRenderer.circle(GameController.xToWorldX(a.getCol()), GameController.yToWorldY(a.getLane()), 10);
+            }
+
+            /*for(Projectile a : ctx.getProjectiles()){
+                shapeRenderer.circle(GameController.xToWorldX(a.getX()), GameController.yToWorldY(a.getY()), 10);
+            }*/
+
+            for(Zombie a : ctx.getZombies()){
+                shapeRenderer.circle(GameController.xToWorldX(a.getX()), GameController.yToWorldY(a.getY()), 10);
+            }
+
+            shapeRenderer.end();
+        }
+    }
+
+    public void startGameSession() {
+        try {
+            Level level = LevelLoader.loadLevel(seasonName, levelNumber);
+            if (level != null) {
+                GameEngine.getInstance().reset();
+                GameContext newContext = new GameContext(level);
+                for (PlantType pt : plantSelectModal.getSelectedPlants()) {
+                    MyPlant owned = null;
+                    try {
+                        owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(pt);
+                    } catch (Exception ignored) {}
+                    PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(pt);
+                    int sunCost = (sheet != null) ? sheet.getSunCost() : 50;
+                    float recharge = (sheet != null) ? sheet.getRechargeSeconds() : 5f;
+
+                    MyPlant myPlant = owned;
+                    if (myPlant == null) {
+                        myPlant = new MyPlant();
+                        myPlant.setType(pt);
+                        myPlant.setLevel(1);
+                    }
+                    newContext.addCard(new PlantCard(myPlant, sunCost, recharge));
+                }
+                AppContext.getInstance().setGameContext(newContext);
+                ctx = newContext;
+                gameUiModal.initCards();
+
+                plantSelectModal.setVisible(false);
+                currentState = State.PANNING_BACK;
+                panBackTime = 0f;
+
+                Gdx.app.log("GameScreen", "Starting camera pan back for " + seasonName + " Level " + levelNumber);
+            } else {
+                Gdx.app.error("GameScreen", "Failed to load level: " + seasonName + " Level " + levelNumber);
+            }
+        } catch (Exception e) {
+            Gdx.app.error("GameScreen", "Error starting game session", e);
+        }
+    }
+
+    private boolean checkSunClick(float worldX, float worldY) {
+        if (ctx != null) {
+            for (Sun sun : new ArrayList<>(ctx.getSuns())) {
+                if (sun.isDone()) continue;
+                float sunX = sun.getX();
+                float sunY = sun.getY();
+                float dist = (float) Math.hypot(worldX - sunX, worldY - sunY);
+                if (dist < 50f) {
+                    sun.collect(ctx);
+                    Gdx.app.log("GameScreen", "Sun collected! Amount: " + sun.getAmount());
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public GameContext getCtx(){
+        return ctx;
+    }
+
+    public PlantSelectModal getPlantSelectModal(){
+        return plantSelectModal;
+    }
+
+    public GameUiModal getGameUiModal(){
+        return gameUiModal;
+    }
+
+    public State getCurrentState(){
+        return currentState;
+    }
+
+    public OrthographicCamera getCamera(){
+        return camera;
+    }
+
+    public Stage getStage(){
+        return stage;
+    }
+
+    public ShapeRenderer getShapeRenderer(){
+        return shapeRenderer;
+    }
+
     // This method returns the world coordinates of the middle of column
     public static float colToWorldX(int col){
         return GameMap.START_X + (col * GameMap.TILE_WIDTH) + (GameMap.TILE_WIDTH / 2f);

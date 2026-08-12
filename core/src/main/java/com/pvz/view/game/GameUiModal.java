@@ -1,4 +1,4 @@
-package com.pvz.view;
+package com.pvz.view.game;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;

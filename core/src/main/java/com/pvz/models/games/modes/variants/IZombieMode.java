@@ -60,7 +60,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
 
         if (basedPlants != null && !basedPlants.isEmpty()) {
             for (int col = 0; col < redLineColumn; col++) {
-                for (int lane = 0; lane < context.getLanes(); lane++) {
+                for (int lane = 0; lane < context.getMap().getLanes(); lane++) {
                     MyPlant randomPlant = basedPlants.get(random.nextInt(basedPlants.size()));
 
                     Plant plant = new PlantFactory().create(
@@ -165,7 +165,7 @@ public class IZombieMode implements GameMode, ZombiePlacer {
             return false;
         }
 
-        if (col < redLineColumn || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+        if (col < redLineColumn || col >= context.getMap().getColumns() || lane < 0 || lane >= context.getMap().getLanes()) {
             context.log("[Placement Failed] Must place zombies to the right of Column " + (redLineColumn - 1)
                         + "! Invalid position: (" + col + ", " + lane + ")");
             return false;
@@ -246,72 +246,5 @@ public class IZombieMode implements GameMode, ZombiePlacer {
             }
         }
         return minCost == Integer.MAX_VALUE ? 50 : minCost;
-    }
-
-    // =========================================================================
-    // ─── سیستم رندر اختصاصی نقشه همراه با مغزها و خط قرمز ──────────────────────
-    // =========================================================================
-
-    private static final String CELL_EMPTY = "    ";
-    private static final String BRAIN_OK = "[B]";
-    private static final String BRAIN_EATEN = "[!]";
-
-    @Override
-    public String renderMap(GameContext context) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("\n=== TICK: ").append(context.getCurrentTick())
-                .append(" | SUN: ").append(context.getCurrentSun())
-                .append(" | ACTIVE ZOMBIES: ").append(context.getZombies().size())
-                .append(" | PLANTS LEFT: ").append(context.getPlants().size())
-                .append(" ===\n");
-
-        sb.append("\n     ");
-        for (int c = 0; c < context.getColumns(); c++) {
-            sb.append(String.format(" C%-2d ", c));
-        }
-        sb.append("\n");
-
-        appendDivider(sb, context);
-        for (int lane = 0; lane < context.getLanes(); lane++) {
-            sb.append(brainsEaten[lane] ? BRAIN_EATEN : BRAIN_OK).append(" |");
-
-            for (int col = 0; col < context.getColumns(); col++) {
-                sb.append(getCellContent(col, context, lane));
-
-                if (col == redLineColumn - 1) {
-                    sb.append("║");
-                } else {
-                    sb.append("|");
-                }
-            }
-            sb.append("  Lane ").append(lane).append("\n");
-            appendDivider(sb, context);
-        }
-        return sb.toString();
-    }
-
-    private void appendDivider(StringBuilder sb, GameContext context) {
-        sb.append("    +");
-        for (int c = 0; c < context.getColumns(); c++) {
-            sb.append("----+");
-        }
-        sb.append("\n");
-    }
-
-    private String getCellContent(int col, GameContext context, int lane) {
-        List<Plant> plants = context.getPlantsAt(col, lane);
-        List<Zombie> zombies = context.getZombiesAt(col, lane);
-
-        boolean hasPlant = !plants.isEmpty();
-        boolean hasZombie = !zombies.isEmpty();
-
-        if (hasPlant && hasZombie)
-            return "P/Z ";
-        if (hasPlant)
-            return " P  ";
-        if (hasZombie)
-            return String.format(" Z%-2d", zombies.size());
-        return CELL_EMPTY;
     }
 }

@@ -25,7 +25,6 @@ import com.pvz.models.games.modes.capabilities.StartWaves;
 public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
     private Wave currentWave;
     private List<Wave> waves;
-    private Boolean[] lawnMower;
 
     // فاز آمادگی در ابتدا فعال است
     private boolean preparationPhase = true;
@@ -37,7 +36,6 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
         if (waves != null && !waves.isEmpty()) {
             currentWave = waves.get(0);
         }
-        setupLawnMowers();
     }
 
     @Override
@@ -111,16 +109,10 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
         for (int i = 0; i < context.getZombies().size(); i++) {
             Zombie z = context.getZombies().get(i);
             if (z.getX() <= 0f) {
-                if (!lawnMower[GameController.worldYtoLane(z.getY())]) {
-                    runLawnMowers(context, GameController.worldYtoLane(z.getY()));
-                    i--;
-                    continue;
-                }
-                if (lawnMower[GameController.worldYtoLane(z.getY())]) {
-                    context.setGameOver(true);
-                    context.log("❌ GAME OVER! The zombies ate your brains! ❌");
-                    context.removeZombie(z);
-                }
+                context.setGameOver(true);
+                context.log("❌ GAME OVER! The zombies ate your brains! ❌");
+                context.removeZombie(z);
+
             }
         }
     }
@@ -132,7 +124,7 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
             return false;
         }
 
-        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+        if (col < 0 || col >= context.getMap().getColumns() || lane < 0 || lane >= context.getMap().getLanes()) {
             context.log("[Placement Failed] Out of bounds: (" + col + ", " + lane + ")");
             return false;
         }
@@ -242,100 +234,5 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
             }
         }
         return null;
-    }
-
-    private void setupLawnMowers() {
-        lawnMower = new Boolean[5];
-        for (int i = 0; i < 5; i++)
-            lawnMower[i] = false;
-    }
-
-    private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane])
-            return;
-        context.getZombiesInLane(lane).forEach(zombie -> {
-            zombie.takeDamage(Float.MAX_VALUE, true);
-            context.removeZombie(zombie);
-        });
-        context.log("Lawn mower in lane " + lane + " mowed down the zombies!");
-        lawnMower[lane] = true;
-    }
-
-    // =========================================================================
-    // ─── سیستم رندر کامل نقشه برای مود PLANT WHAT YOU GET ────────────────────
-    // =========================================================================
-
-    private static final String CELL_EMPTY = "    ";
-    private static final String MOWER_OK = "[M]";
-    private static final String MOWER_USED = "[!]";
-
-    @Override
-    public String renderMap(GameContext context) {
-        StringBuilder sb = new StringBuilder();
-
-        // هدر اختصاصی وضعیت خورشید ثابت و فاز آمادگی
-        sb.append("\n=================================================================================\n");
-        if (preparationPhase) {
-            sb.append(" 🟢  MODE: PLANT WHAT YOU GET  |  STATUS: [PREPARATION PHASE - NO ZOMBIES]\n");
-            sb.append(" 👉  Type 'start zombie waves' to begin the battle!\n");
-        } else {
-            sb.append(" 🔴  MODE: PLANT WHAT YOU GET  |  STATUS: [ZOMBIE WAVES ACTIVE]\n");
-        }
-        sb.append(String.format(" ☀️  REMAINING SUN: %d  (No more suns will drop!)\n", context.getCurrentSun()));
-        sb.append("=================================================================================\n");
-
-        sb.append("Tick: ").append(context.getCurrentTick())
-                .append(" | Zombies: ").append(context.getZombies().size())
-                .append(" | Plants: ").append(context.getPlants().size())
-                .append("\n");
-
-        appendColumnHeaders(sb, context);
-        appendDivider(sb, context);
-        for (int lane = 0; lane < context.getLanes(); lane++) {
-            appendLaneRow(sb, context, lane);
-            appendDivider(sb, context);
-        }
-        return sb.toString();
-    }
-
-    private void appendColumnHeaders(StringBuilder sb, GameContext context) {
-        sb.append("\n     ");
-        for (int c = 0; c < context.getColumns(); c++) {
-            sb.append(String.format(" C%-2d ", c));
-        }
-        sb.append("\n");
-    }
-
-    private void appendDivider(StringBuilder sb, GameContext context) {
-        sb.append("    +");
-        for (int c = 0; c < context.getColumns(); c++) {
-            sb.append("----+");
-        }
-        sb.append("\n");
-    }
-
-    private void appendLaneRow(StringBuilder sb, GameContext context, int lane) {
-        sb.append(lawnMower[lane] ? MOWER_USED : MOWER_OK).append(" |");
-        for (int col = 0; col < context.getColumns(); col++) {
-            sb.append(getCellContent(col, context, lane)).append('|');
-        }
-        sb.append("  Lane ").append(lane).append("\n");
-    }
-
-    private String getCellContent(int col, GameContext context, int lane) {
-        List<Plant> plantsAtCell = context.getPlantsAt(col, lane);
-        boolean hasPlant = !plantsAtCell.isEmpty();
-
-        List<Zombie> zombiesAtCell = context.getZombiesAt(col, lane);
-        boolean hasZombie = !zombiesAtCell.isEmpty();
-
-        if (hasPlant && hasZombie) {
-            return "P/Z ";
-        } else if (hasPlant) {
-            return " P  ";
-        } else if (hasZombie) {
-            return String.format(" Z%-2d", zombiesAtCell.size());
-        }
-        return CELL_EMPTY;
     }
 }

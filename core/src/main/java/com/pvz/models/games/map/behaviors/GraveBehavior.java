@@ -22,12 +22,14 @@ public class GraveBehavior implements TileBehavior {
     private float hp;
     private final String name;
     private final GraveReward reward;
+    private final Tile tile;
 
-    public GraveBehavior(float hp, String name) {
-        this(hp, name, GraveReward.NONE);
+    public GraveBehavior(Tile tile, float hp, String name) {
+        this(tile, hp, name, GraveReward.NONE);
     }
 
-    public GraveBehavior(float hp, String name, GraveReward reward) {
+    public GraveBehavior(Tile tile, float hp, String name, GraveReward reward) {
+        this.tile=tile;
         this.hp = hp;
         this.name = name;
         this.reward = reward;
@@ -64,6 +66,15 @@ public class GraveBehavior implements TileBehavior {
         } else if (reward == GraveReward.PLANT_FOOD) {
             ctx.addPlantFood(1);
             ctx.log("Grave reward collected: Plant Food!");
+        }
+    }
+
+    @Override
+    public void processHit(float damage) {
+        TileBehavior.super.processHit(damage);
+        hp-=damage;
+        if (this.hp <= 0) {
+            destroyGrave(tile, AppContext.getInstance().getGameContext());
         }
     }
 

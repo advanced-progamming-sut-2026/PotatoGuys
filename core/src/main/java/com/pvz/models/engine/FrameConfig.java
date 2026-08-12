@@ -11,5 +11,16 @@ public class FrameConfig {
     public Vector2 position;
     public Vector2 scale;
     public Map<String, Boolean> partsVisibility;
-    public boolean loop;
+    public boolean looping;
+
+    public FrameConfig(String pamPath, String label, float stateTime, Vector2 position,
+                       Vector2 scale, Map<String, Boolean> partsVisibility, boolean looping) {
+        this.pamPath = pamPath;
+        this.label = label;
+        this.stateTime = stateTime;
+        this.position = position;
+        this.scale = scale;
+        this.partsVisibility = partsVisibility;
+        this.looping = looping;
+    }
 }

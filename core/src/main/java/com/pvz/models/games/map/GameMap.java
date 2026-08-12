@@ -1,5 +1,6 @@
 package com.pvz.models.games.map;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.Constants;
 import com.pvz.models.engine.GameEngine;
 import com.pvz.models.games.map.tile.Tile;
@@ -33,15 +34,15 @@ public class GameMap {
 
     public Tile getTileAt(int col, int lane) {
         if (col < 0 || col >= cols || lane < 0 || lane >= lanes) {
-            throw new IndexOutOfBoundsException("Invalid column or lane index. col: "+col+" lane: "+lane);
+            return null;
         }
         return map[lane][col];
     }
 
     public Tile getTileAt(float worldX, float worldY){
         // برای پرفورمنس بهتر به جای حلقه زدن، با یک محاسبه ساده ریاضی پیداش می‌کنیم
-        int col = (int) Math.floor((worldX - START_X) / TILE_WIDTH);
-        int lane = (int) Math.floor((TOP_LANE_Y + TILE_HEIGHT - worldY) / TILE_HEIGHT);
+        int col = GameController.worldXtoCol(worldX);
+        int lane = GameController.worldYtoLane(worldY);
 
         // بررسی اینکه آیا خارج از محدوده کلیک شده یا نه
         if (col >= 0 && col < cols && lane >= 0 && lane < lanes) {

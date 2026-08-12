@@ -61,20 +61,6 @@ public class BeghouledMode implements GameMode, BoardSwapper {
     private boolean inBounds(int col, int lane) {
         return lane >= 0 && lane < board.length && col >= 0 && col < board[0].length;
     }
-
-    @Override
-    public String renderMap(GameContext context) {
-        StringBuilder sb = new StringBuilder("\n=== Beghouled | Tick: ").append(context.getCurrentTick())
-                .append(" ===\n");
-        for (int[] row : board) {
-            for (int gem : row) {
-                sb.append('[').append(gem).append(']');
-            }
-            sb.append('\n');
-        }
-        return sb.toString();
-    }
-
     @Override
     public boolean supportsFallingSuns() {
         return false;

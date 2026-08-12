@@ -113,7 +113,7 @@ public class Wave {
 
         ZombieType type = allowed.get(rand.nextInt(allowed.size()));
         int lane = rand.nextInt(lanes);
-        int col = context.getColumns()+1;
+        int col = context.getMap().getColumns()+1;
 
         // Sandstorm: during final wave burst in Ancient Egypt, zombies are carried
         // deeper into the map (1-4 columns from the right edge)
@@ -124,7 +124,7 @@ public class Wave {
                 + ", season=" + context.getSeasonName() + ", isSandstorm=" + isSandstorm);
 
         if (isSandstorm) {
-            col = context.getColumns() - 2 - rand.nextInt(4);
+            col = context.getMap().getColumns() - 2 - rand.nextInt(4);
             context.log("A sandstorm carries a " + type.getAlias() + " to column " + col + "!");
         }
 

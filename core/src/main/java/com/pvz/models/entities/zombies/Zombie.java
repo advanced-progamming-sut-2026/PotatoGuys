@@ -125,15 +125,15 @@ public class Zombie implements TickAware {
             currentState = next;
         }
 
-        if (Math.floor(x)!=lastX || GameController.worldYtoLane(y)!=lastLane){
-            lastX=(int)Math.floor(x);
-            lastLane=GameController.worldYtoLane(y);
-            try {
-                Tile tile = context.getTileAt(lastX, GameController.worldYtoLane(y));
+        if (Math.floor(x)!=lastX || GameController.worldYtoLane(y)!=lastLane) {
+            lastX = (int) Math.floor(x);
+            lastLane = GameController.worldYtoLane(y);
+            Tile tile = context.getTileAt(lastX, GameController.worldYtoLane(y));
+            if (tile!=null) {
                 for (TileBehavior b : tile.getBehaviors()) {
                     b.onZombieEnter(this, tile);
                 }
-            } catch (IndexOutOfBoundsException ignored){ }
+            }
         }
     }
 

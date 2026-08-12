@@ -30,7 +30,6 @@ import com.pvz.models.games.modes.capabilities.PlantPlacer;
 public class DeadLineMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
-    private Boolean[] lawnMower;
     private int deadlineColumn;
     private static final String CELL_EMPTY = "    ";
 
@@ -42,7 +41,6 @@ public class DeadLineMode implements GameMode, PlantPlacer {
         if (waves != null && !waves.isEmpty()) {
             currentWave = waves.get(0);
         }
-        setupLawnMowers();
     }
 
     @Override
@@ -98,16 +96,9 @@ public class DeadLineMode implements GameMode, PlantPlacer {
         for (int i = 0; i < context.getZombies().size(); i++) {
             Zombie z = context.getZombies().get(i);
             if (z.getX() <= 0f) {
-                if (!lawnMower[GameController.worldYtoLane(z.getY())]) {
-                    runLawnMowers(context, GameController.worldYtoLane(z.getY()));
-                    i--;
-                    continue;
-                }
-                if (lawnMower[GameController.worldYtoLane(z.getY())]) {
-                    context.setGameOver(true);
-                    context.log("Brain has eaten");
-                    context.removeZombie(z);
-                }
+                context.setGameOver(true);
+                context.log("Brain has eaten");
+                context.removeZombie(z);
             }
         }
 
@@ -127,7 +118,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
             return false;
         }
 
-        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+        if (col < 0 || col >= context.getMap().getColumns() || lane < 0 || lane >= context.getMap().getLanes()) {
             context.log("[Placement Failed] Out of bounds: (" + col + ", " + lane + ")");
             return false;
         }
@@ -218,157 +209,5 @@ public class DeadLineMode implements GameMode, PlantPlacer {
             }
         }
         return null;
-    }
-
-    private void setupLawnMowers() {
-        lawnMower = new Boolean[5];
-        for (int i = 0; i < 5; i++) {
-            lawnMower[i] = false;
-        }
-    }
-
-    private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane]) {
-            return;
-        }
-        context.getZombiesInLane(lane).forEach(zombie -> {
-            zombie.takeDamage(Float.MAX_VALUE, true);
-            context.removeZombie(zombie);
-        });
-        lawnMower[lane] = true;
-    }
-
-    @Override
-    public String renderMap(GameContext context) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n=== TICK: ").append(context.getCurrentTick()).append(" | DEADLINE AT COLUMN: ")
-                .append(deadlineColumn).append(" ===\n");
-
-        sb.append("\n     ");
-        for (int c = 0; c < context.getColumns(); c++) {
-            sb.append(String.format(" C%-2d ", c));
-        }
-        sb.append("\n");
-
-        appendDivider(sb, context);
-        for (int lane = 0; lane < context.getLanes(); lane++) {
-            sb.append(lawnMower[lane] ? "[!]" : "[M]").append(" |");
-            for (int col = 0; col < context.getColumns(); col++) {
-                sb.append(getCellContent(col, context, lane));
-
-                if (col == deadlineColumn - 1) {
-                    sb.append("║");
-                } else {
-                    sb.append("|");
-                }
-            }
-            sb.append("  Lane ").append(lane).append("\n");
-            appendDivider(sb, context);
-        }
-        return sb.toString();
-    }
-
-    private void appendDivider(StringBuilder sb, GameContext context) {
-        sb.append("    +");
-        for (int c = 0; c < context.getColumns(); c++) {
-            sb.append("----+");
-        }
-        sb.append("\n");
-    }
-
-    private String getCellContent(int col, GameContext context, int lane) {
-        List<Plant> plantsAtCell = context.getPlantsAt(col, lane);
-        List<Zombie> zombiesAtCell = context.getZombiesAt(col, lane);
-        Tile tile = context.getTileAt(col, lane);
-
-        if (tile != null) {
-            String specialContent = getSpecialTileContent(tile, !plantsAtCell.isEmpty(), zombiesAtCell);
-            if (specialContent != null) {
-                return specialContent;
-            }
-        }
-
-        return getStandardCellContent(tile, plantsAtCell, zombiesAtCell, context, col, lane);
-    }
-
-    private String getSpecialTileContent(Tile tile, boolean hasPlant, List<Zombie> zombiesAtCell) {
-        boolean hasZombie = !zombiesAtCell.isEmpty();
-
-        if (tile.getTags().contains(TileTags.GRAVE)) {
-            String graveDisplay = " G  ";
-            for (TileBehavior b : tile.getBehaviors()) {
-                if (b instanceof GraveBehavior db) {
-                    if (db.getReward() == GraveBehavior.GraveReward.SUN_50) {
-                        graveDisplay = " G$ ";
-                    } else if (db.getReward() == GraveBehavior.GraveReward.PLANT_FOOD) {
-                        graveDisplay = " G! ";
-                    }
-                }
-            }
-            if (hasZombie) {
-                return String.format(AnsiColors.BRIGHT_BLACK + "G" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
-            }
-            return AnsiColors.BRIGHT_BLACK + graveDisplay + AnsiColors.RESET;
-        } else if (tile.getTags().contains(TileTags.SLIP_UP)) {
-            if (hasZombie) {
-                return String.format(AnsiColors.BLUE + "↑" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
-            }
-            return AnsiColors.BLUE + " S↑ " + AnsiColors.RESET;
-        } else if (tile.getTags().contains(TileTags.SLIP_DOWN)) {
-            if (hasZombie) {
-                return String.format(AnsiColors.BLUE + "↓" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
-            }
-            return AnsiColors.BLUE + " S↓ " + AnsiColors.RESET;
-        } else if (tile.getTags().contains(TileTags.ICE_BLOCK)) {
-            if (hasZombie) {
-                return String.format(AnsiColors.BLUE + "I" + AnsiColors.RESET + "/Z%-1d", zombiesAtCell.size());
-            } else if (hasPlant) {
-                return AnsiColors.BLUE + "I/P " + AnsiColors.RESET;
-            }
-            return AnsiColors.BLUE + " I  " + AnsiColors.RESET;
-        }
-        return null;
-    }
-
-    private String getStandardCellContent(Tile tile, List<Plant> plantsAtCell, List<Zombie> zombiesAtCell, GameContext ctx, int col, int lane) {
-        boolean hasPlant = !plantsAtCell.isEmpty();
-        boolean hasZombie = !zombiesAtCell.isEmpty();
-        List<Projectile> projectiles=ctx.getProjectiles()
-                .stream()
-                .filter(p->((p.getX()<col+1 && p.getX()>=col) && (p.getY()<lane+1 && p.getY()>=lane)))
-                .toList();
-        boolean hasProjectile=!projectiles.isEmpty();
-
-        StringBuilder output = new StringBuilder();
-        if (tile != null && tile.getTags().contains(TileTags.WATER)) {
-            output.append(AnsiColors.BLUE_BG);
-        }
-
-        if (hasPlant && hasZombie) {
-            output.append(String.format(AnsiColors.GREEN + "P" + AnsiColors.RESET + "/Z%-1d", plantsAtCell.size(),
-                    zombiesAtCell.size()));
-        } else if(hasZombie && hasProjectile){
-            output.append(String.format("●/Z%-1d",zombiesAtCell.size()));
-        } else if (hasPlant && hasProjectile){
-            output.append(String.format(AnsiColors.GREEN + "P" + AnsiColors.RESET+"/●%-1d",projectiles.size()));
-        } else if (hasProjectile){
-            output.append(String.format(" ●%-1d ",projectiles.size()));
-        } else if (hasPlant) {
-            output.append(String.format(AnsiColors.GREEN + " P  " + AnsiColors.RESET, plantsAtCell.size()));
-        } else if (hasZombie) {
-            output.append(String.format(" Z%-2d", zombiesAtCell.size()));
-        } else {
-            output.append(CELL_EMPTY);
-        }
-
-        if (tile != null && tile.getTags().contains(TileTags.WATER)) {
-            output.append(AnsiColors.RESET);
-        }
-
-        if (!output.isEmpty()) {
-            return output.toString();
-        }
-
-        return CELL_EMPTY;
     }
 }

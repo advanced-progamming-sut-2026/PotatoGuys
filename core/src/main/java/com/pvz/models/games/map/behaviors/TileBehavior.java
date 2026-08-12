@@ -8,6 +8,7 @@ import com.pvz.models.games.map.tile.Tile;
 
 public interface TileBehavior {
     default void onProjectileHit(Projectile p, Tile tile) {}
+    default void processHit(float damage){}
     default void onZombieEnter(Zombie z, Tile tile) {}
     default boolean canPlant(PlantCard p, Tile tile) { return true; }
     default void update(GameContext ctx, Tile tile, float dt) {}

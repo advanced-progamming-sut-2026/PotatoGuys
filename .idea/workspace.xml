@@ -5,14 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="bug fixes">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/CollectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/CollectionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/DailyOffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/DailyOffer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/SelectableSeedPacketItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/SelectableSeedPacketItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/user/Collection.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/user/Collection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/Plant.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/Plant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/ShooterAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/ShooterAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/fsm/PlantActionState.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/fsm/PlantActionState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/fsm/PlantDeadState.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/fsm/PlantDeadState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/fsm/PlantFeedState.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/fsm/PlantFeedState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/fsm/PlantIdleState.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/fsm/PlantIdleState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/fsm/PlantState.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/fsm/PlantState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/skills/TombRaiserSkill.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/skills/TombRaiserSkill.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/DarkAgesEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/DarkAgesEffect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/GameMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/GameMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/GameMapFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/GameMapFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/behaviors/GraveBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/behaviors/GraveBehavior.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/behaviors/TileBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/behaviors/TileBehavior.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/tile/Tile.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/tile/Tile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/GameMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/GameMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/BeghouledMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/BeghouledMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/ConveyorBeltMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/ConveyorBeltMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/DeadLineMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/DeadLineMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/IZombieMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/IZombieMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/NormalMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/NormalMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/PlantWhatYouGetMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/PlantWhatYouGetMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/TimedWarMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/TimedWarMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/VaseBreakerMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/VaseBreakerMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/WallnutBowlingMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/WallnutBowlingMode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/2fbe02df-a9e4-49ff-942a-147319771c46.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/2fbe02df-a9e4-49ff-942a-147319771c46.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GameModesMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GameModesMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,8 +111,8 @@
 }</component>
   <component name="GitLabMergeRequestsSettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;first&quot;: &quot;https://hamgit.ir/sedhhn/plantsvszombies2&quot;,
-    &quot;second&quot;: &quot;83191278-9b68-4e33-a55d-f523d58ebe84&quot;
+    &quot;first&quot;: &quot;https://hamgit.ir/sedhhn/plantsvszombies2.git&quot;,
+    &quot;second&quot;: &quot;304f2ff1-c759-44fd-9fe9-01504ac41863&quot;
   }
 }</component>
   <component name="McpProjectServerCommands">
@@ -132,7 +151,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/104/IdeaProjects/plantsvszombies2/assets/textures/greenhouse&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/104/IdeaProjects/plantsvszombies2/assets/images/chapters&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -149,9 +168,9 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\images\chapters" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\ui" />
+      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\images" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse\plants" />
     </key>
@@ -370,7 +389,31 @@
       <option name="project" value="LOCAL" />
       <updated>1786399001589</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="added Collection menu ( just for plants )">
+      <option name="closed" value="true" />
+      <created>1786463919793</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1786463919793</updated>
+    </task>
+    <task id="LOCAL-00014" summary="bug fixes">
+      <option name="closed" value="true" />
+      <created>1786473734496</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1786473734496</updated>
+    </task>
+    <task id="LOCAL-00015" summary="bug fixes">
+      <option name="closed" value="true" />
+      <created>1786473936377</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1786473936377</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -387,6 +430,7 @@
     <MESSAGE value="added a googooli mouse cursor" />
     <MESSAGE value="added frostbite_caves chapter menu screen" />
     <MESSAGE value="updated setting menu you can now change the brightness and music vol" />
+    <MESSAGE value="added Collection menu ( just for plants )" />
     <MESSAGE value="bug fixes" />
     <option name="LAST_COMMIT_MESSAGE" value="bug fixes" />
   </component>

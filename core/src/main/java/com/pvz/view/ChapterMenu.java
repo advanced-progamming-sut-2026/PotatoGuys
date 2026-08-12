@@ -21,6 +21,7 @@ import com.pvz.controller.ChapterController;
 import com.pvz.enums.AudioPaths;
 import com.pvz.enums.GameAsset;
 
+import com.pvz.view.game.GameScreen;
 import pvz.skin.PvzSkin;
 
 public class ChapterMenu extends ScreenAdapter {

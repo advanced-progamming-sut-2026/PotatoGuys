@@ -33,15 +33,15 @@ import com.pvz.controller.ChapterController;
 import com.pvz.enums.GameAsset;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.Profile;
-import com.pvz.view.MenuUiKit;
 
+import com.pvz.view.game.GameScreen;
 import pvz.libpvz.pam.ClipRef;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
 /**
- * Ancient Egypt level-select ("stage map") screen. Ported from Dani's
+ * Ancient Egypt level-select ("stage map") screen. Ported from 's
  * EgyptStagesScreen: floating islands on a winding path, a separate boss
  * altar off to the side, tap a stage to select it, then hit Play in the
  * bottom bar to actually launch it - matches the screenshot you sent.
@@ -514,7 +514,7 @@ public class EgyptChapterMenu extends ScreenAdapter {
 
         private void addForegroundEffects() {
             PyramidState pState = calculatePyramidState();
-            String zombossState = (pState == PyramidState.UNLOCKED_IDLE) ? "defeated" : "idle";
+            String zombossState = (pState == PyramidState.UNLOCKED_IDLE) ? "defeated" : "active";
             addActor(createAnchoredAnimation(MapObjectType.BIG_BOSS_DECOR_ISLAND, ZOMBOSS_TUNING, zombossState, zombossNodeX, zombossNodeY));
             addActor(createAnchoredAnimation(MapObjectType.PYRAMID_ANIM, PYRAMID_TUNING, pState.pamState, pyramidAnchorX, pyramidAnchorY));
 
@@ -661,6 +661,13 @@ public class EgyptChapterMenu extends ScreenAdapter {
                 if (!objectType.isPamAnimation && Gdx.files.internal(objectType.path).exists()) {
                     texture = MenuUiKit.loadTextureSafe(objectType.path);
                 }
+
+                if (objectType.isPamAnimation && pamPlayer != null) {
+                    try {
+                        pamPlayer.loadSync(objectType.path);
+                    } catch (Throwable ignored) {
+                    }
+                }
             }
 
             @Override
@@ -707,7 +714,7 @@ public class EgyptChapterMenu extends ScreenAdapter {
             if (loggedClipIssues.add(key)) {
                 Gdx.app.error("PAM_MISSING", "No PAM clip found for " + objectType.name()
                     + " at path '" + objectType.path + "' (tried state '" + pamState
-                    + "', then idle/default/\"\") - check this file actually exists under assets/pvz-assets/"
+                    + "', then idle/default/\"\") - check this file actually exists under assets/pvz-assets/IMAGES/"
                     + objectType.path);
             }
         }

@@ -35,7 +35,7 @@ public class Projectile implements TickAware {
     private boolean bouncing;
     private boolean isDead = false;
 
-    private static final float HIT_RADIUS = 2f;
+    private static final float HIT_RADIUS = 50f;
 
     private final Set<Zombie> hitZombies = new HashSet<>();
 
@@ -65,8 +65,8 @@ public class Projectile implements TickAware {
     @Override
     public void enter() {
         stateTime = 0f;
-        lastCol = (int) Math.floor(pos.x);
-        lastLane = (int) Math.floor(pos.y);
+        lastCol = GameController.worldXtoCol(pos.x);
+        lastLane = GameController.worldYtoLane(pos.y);
     }
 
     @Override
@@ -74,20 +74,20 @@ public class Projectile implements TickAware {
         stateTime += dt;
         if (isDead) return;
 
-        pos.x += vel.x * dt;
-        pos.y += vel.y * dt;
+        pos.x += vel.x * 80 * dt;
+        pos.y += vel.y * 80 * dt;
 
-        if (pos.x < -0.5f || pos.x >= ctx.getColumns() + 0.5f || pos.y < -0.5f || pos.y >= ctx.getLanes() + 0.5f) {
+        int col=GameController.worldXtoCol(pos.x);
+        int lane = GameController.worldYtoLane(pos.y);
+
+        if (col < -0.5f || col >= ctx.getMap().getColumns() + 0.5f || lane < -0.5f || lane >= ctx.getMap().getLanes() + 0.5f) {
             destroy();
             return;
         }
 
-        int currentCol = (int) Math.floor(pos.x);
-        int currentLane = (int) Math.floor(pos.y);
-
-        if (currentCol != lastCol || currentLane != lastLane) {
-            lastCol = currentCol;
-            lastLane = currentLane;
+        if (col != lastCol || lane != lastLane) {
+            lastCol = col;
+            lastLane = lane;
 
             try {
                 Tile tile = ctx.getTileAt(lastCol, lastLane);
@@ -105,9 +105,7 @@ public class Projectile implements TickAware {
 
     @Override
     public FrameConfig draw(){
-        float xx = GameController.xToWorldX(pos.x);
-        float yy = GameController.yToWorldY(pos.y);
-        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM" , "animation", stateTime, xx, yy, true);
+        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM" , "animation", stateTime, pos.x, pos.y, true);
         return null;
     }
 

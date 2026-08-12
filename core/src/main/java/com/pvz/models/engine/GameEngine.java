@@ -48,13 +48,6 @@ public class GameEngine {
             entity.update(dt);
         }
 
-        // Rendering all entities
-        PvZ2.batch.begin();
-        for (TickAware entity: snapshot){
-            entity.draw();
-        }
-        PvZ2.batch.end();
-
         firstTickDone = true;
     }
 

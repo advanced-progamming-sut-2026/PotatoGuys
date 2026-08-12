@@ -213,7 +213,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             return false;
         }
 
-        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
+        if (col < 0 || col >= context.getMap().getColumns() || lane < 0 || lane >= context.getMap().getLanes()) {
             context.log("[Placement Failed] Out of bounds: (" + col + ", " + lane + ")");
             return false;
         }
@@ -273,101 +273,8 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         }
         return result.toString();
     }
-
-    // ── رندر کردن دقیق نقشه (Map Rendering) ──────────────────────────────────
-
-    private static final String CELL_EMPTY = "    ";
-    private static final String MOWER_OK = "[M]";
-    private static final String MOWER_USED = "[!]";
-
-    @Override
-    public String renderMap(GameContext context) {
-        StringBuilder sb = new StringBuilder();
-        appendHeader(sb, context);
-        appendColumnHeaders(sb, context);
-        appendDivider(sb, context);
-        for (int lane = 0; lane < context.getLanes(); lane++) {
-            appendLaneRow(sb, context, lane);
-            appendDivider(sb, context);
-        }
-        return sb.toString();
-    }
-
-    private void appendHeader(StringBuilder sb, GameContext context) {
-        int remainingVases = 0;
-        for (VaseTile[] row : vaseGrid) {
-            for (VaseTile v : row) {
-                if (v != null && !v.isBroken)
-                    remainingVases++;
-            }
-        }
-
-        sb.append("\n=== Tick: ").append(context.getCurrentTick())
-                .append(" | Sun: ").append(context.getCurrentSun())
-                .append(" | Vases Remaining: ").append(remainingVases)
-                .append(" | Zombies: ").append(context.getZombies().size())
-                .append(" | Plants: ").append(context.getPlants().size())
-                .append(" ===\n");
-    }
-
-    private void appendColumnHeaders(StringBuilder sb, GameContext context) {
-        sb.append("\n     ");
-        for (int c = 0; c < context.getColumns(); c++) {
-            sb.append(String.format(" C%-2d ", c));
-        }
-        sb.append("\n");
-    }
-
-    private void appendDivider(StringBuilder sb, GameContext context) {
-        sb.append("    +");
-        for (int c = 0; c < context.getColumns(); c++) {
-            sb.append("----+");
-        }
-        sb.append("\n");
-    }
-
-    private void appendLaneRow(StringBuilder sb, GameContext context, int lane) {
-        sb.append(lawnMower[lane] ? MOWER_USED : MOWER_OK).append(" |");
-        for (int col = 0; col < context.getColumns(); col++) {
-            sb.append(getCellContent(col, context, lane)).append('|');
-        }
-        sb.append("  Lane ").append(lane).append("\n");
-    }
-
-    private String getCellContent(int col, GameContext context, int lane) {
-        // ۱. اگر کوزه نشکسته در این خانه باشد، نماد کوزه را رسم کن
-        VaseTile vase = vaseGrid[lane][col];
-        if (vase != null && !vase.isBroken) {
-            return switch (vase.type) {
-                case PLANT -> " P? ";
-                case GARGANTUAR -> " G? ";
-                default -> " ?? ";
-            };
-        }
-
-        // ۲. اگر کوزه شکسته یا وجود نداشت، وضعیت گیاه‌/زامبی روی خانه را رسم کن
-        List<Plant> plantsAtCell = context.getPlantsAt(col, lane);
-        boolean hasPlant = !plantsAtCell.isEmpty();
-
-        List<Zombie> zombiesAtCell = context.getZombiesAt(col, lane);
-        boolean hasZombie = !zombiesAtCell.isEmpty();
-
-        if (hasPlant && hasZombie) {
-            return String.format("P/Z%-1d", zombiesAtCell.size());
-        } else if (hasPlant) {
-            return " P  ";
-        } else if (hasZombie) {
-            return String.format(" Z%-2d", zombiesAtCell.size());
-        }
-
-        return CELL_EMPTY;
-    }
-
     @Override
     public boolean supportsFallingSuns() {
         return false;
     }
-
-
-
 }

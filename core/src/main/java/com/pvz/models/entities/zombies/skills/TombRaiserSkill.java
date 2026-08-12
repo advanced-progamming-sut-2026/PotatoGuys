@@ -60,8 +60,8 @@ public class TombRaiserSkill extends CooldownSkill {
     private int[] getRandomEmptyCell(GameContext ctx){
         List<int[]> emptyCells = new ArrayList<>();
 
-        for (int lane = 0; lane < ctx.getLanes(); lane++) {
-            for (int col = 0; col < ctx.getColumns(); col++) {
+        for (int lane = 0; lane < ctx.getMap().getLanes(); lane++) {
+            for (int col = 0; col < ctx.getMap().getColumns(); col++) {
                 if (isCellEmpty(ctx, col, lane)) {
                     emptyCells.add(new int[]{col, lane});
                 }
@@ -92,7 +92,7 @@ public class TombRaiserSkill extends CooldownSkill {
     private void raiseTomb(GameContext ctx , int[] cell){
         Tile tile=ctx.getTileAt(cell[0],cell[1]);
         tile.getTags().add(TileTags.GRAVE);
-        tile.addBehavior(new GraveBehavior(Constants.DEFAULT_GRAVE_HP,"Grave"));
+        tile.addBehavior(new GraveBehavior(tile,Constants.DEFAULT_GRAVE_HP,"Grave"));
     }
 
     @Override

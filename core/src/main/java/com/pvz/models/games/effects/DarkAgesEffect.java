@@ -47,8 +47,8 @@ public class DarkAgesEffect implements ChapterEffect {
     }
 
     private void growRandomGrave(GameContext ctx) {
-        int cols = ctx.getColumns();
-        int lanes = ctx.getLanes();
+        int cols = ctx.getMap().getColumns();
+        int lanes = ctx.getMap().getLanes();
 
         List<int[]> emptyTiles = new ArrayList<>();
         for (int l = 0; l < lanes; l++) {
@@ -79,14 +79,14 @@ public class DarkAgesEffect implements ChapterEffect {
             reward = GraveBehavior.GraveReward.PLANT_FOOD;
         }
 
-        tile.addBehavior(new GraveBehavior(Constants.DEFAULT_GRAVE_HP, "Grave", reward));
+        tile.addBehavior(new GraveBehavior(tile,Constants.DEFAULT_GRAVE_HP, "Grave", reward));
         tile.getTags().add(TileTags.GRAVE);
         ctx.log("A dark grave has grown at (" + col + "," + lane + ")!");
     }
 
     private void triggerNecromancy(GameContext ctx, Wave wave) {
-        int cols = ctx.getColumns();
-        int lanes = ctx.getLanes();
+        int cols = ctx.getMap().getColumns();
+        int lanes = ctx.getMap().getLanes();
 
         for (int l = 0; l < lanes; l++) {
             for (int c = 0; c < cols; c++) {
