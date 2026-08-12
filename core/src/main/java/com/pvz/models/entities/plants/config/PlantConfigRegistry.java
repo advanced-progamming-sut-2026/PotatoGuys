@@ -7,7 +7,6 @@ import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.data.GrowthProfile;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.ProductionKind;
-import com.pvz.models.entities.plants.data.SunProduction;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.plants.enums.PlantType;
 
@@ -42,11 +41,8 @@ public final class PlantConfigRegistry {
 
     /** Adapts a {@link PlantJsonConfig} into the {@link PlantPropertySheet} shape {@code Plant} already understands. */
     public PlantPropertySheet toSheet(PlantJsonConfig cfg) {
-        SunProduction production = null;
         GrowthProfile growth = null;
         if (cfg.attackConfig instanceof SunProducerActionConfig sunConfig) {
-            production = new SunProduction(sunConfig.productionKind, sunConfig.amount,
-                    sunConfig.amounts, sunConfig.stageIntervalSeconds);
             if (sunConfig.productionKind == ProductionKind.STAGED) {
                 growth = new GrowthProfile(sunConfig.stageIntervalSeconds);
             }

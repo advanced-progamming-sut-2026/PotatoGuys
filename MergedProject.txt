@@ -10782,7 +10782,7 @@ public class ShooterAction extends PlantAction {
         float y = GameController.laneToWorldY(plant.getLane()) + pattern.positionOffset.y;
         float velX = pattern.velocity.x;
         float velY = pattern.velocity.y;
-        Projectile projectile = ProjectileFactory.create(pattern.projectileType, ctx, new Vector2(x, y), new Vector2(velX, velY), plant.getEffectiveDamage() , ctx.getZombiesInLane(plant.getLane()).get(0));
+        Projectile projectile = ProjectileFactory.create(pattern.projectileType, ctx, new Vector2(x, y), new Vector2(velX, velY), plant.getEffectiveDamage());
         ctx.spawnProjectile(projectile);
         ctx.log("projectile spawned at x= "+x+"  y= "+y+" (col: "+GameController.worldXtoCol(x)+" lane: "+GameController.worldYtoLane(y)+")");
     }
@@ -10908,15 +10908,14 @@ FILE: PlantFactory.java
 
 package com.pvz.models.entities.plants;
 
-import com.pvz.models.entities.plants.actions.*;
+import com.pvz.models.entities.plants.actions.PlantAction;
+import com.pvz.models.entities.plants.actions.ShooterAction;
 import com.pvz.models.entities.plants.config.PlantActionConfig;
 import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.config.PlantJsonConfig;
 import com.pvz.models.entities.plants.config.ShooterActionConfig;
-import com.pvz.models.entities.plants.config.SunProducerActionConfig;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
-import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.GameContext;
 
@@ -14325,13 +14324,12 @@ import com.pvz.models.entities.projectile.Projectile;
 public class StraightMotionState extends ProjectileMotionState {
 
     /** Matches the multiplier previously hard-coded in Projectile.update(). */
-    private static final float SPEED_SCALE = 80f;
 
     @Override
     public void update(Projectile projectile, float dt) {
         stateTime += dt;
-        projectile.getPos().x += projectile.getVelocity().x * SPEED_SCALE * dt;
-        projectile.getPos().y += projectile.getVelocity().y * SPEED_SCALE * dt;
+        projectile.getPos().x += projectile.getVelocity().x * dt;
+        projectile.getPos().y += projectile.getVelocity().y * dt;
     }
 
     @Override
@@ -14591,7 +14589,7 @@ public class Projectile implements TickAware {
             try {
                 Tile tile = ctx.getTileAt(lastCol, lastLane);
                 tile.processHit(this);
-            } catch (IndexOutOfBoundsException ex) {
+            } catch (Exception ex) {
                 destroy();
                 return;
             }
@@ -14606,8 +14604,8 @@ public class Projectile implements TickAware {
 
     @Override
     public FrameConfig draw() {
-        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM",
-                "animation", stateTime, pos.x, pos.y, true);
+        PvZ2.pamPlayer.draw(PvZ2.batch, type.path,
+                type.lable, stateTime, pos.x, pos.y, true);
         return null;
     }
 
@@ -15132,35 +15130,35 @@ FILE: ProjectileType.java
 package com.pvz.models.entities.projectile;
 
 public enum ProjectileType {
-    PEA(0.25f),
-    SNOW_PEA(0.25f),
-    FIRE_PEA(0.25f),
-    GOO_PEA(0.25f),
-    SPIKE(0.35f),
-    FUME(0.20f),
-    SPORE(0.20f),
-    STAR(0.25f),
-    ROTOBAGA_PROJECTILE(0.25f),
-    CITRON_BALL(0.30f),
-    BULB_CYAN(0.22f),
-    BULB_BLUE(0.22f),
-    HOMING_BOLT(0.22f),
-    BULB_ORANGE(0.22f),
+    PEA("768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM", "animation"),
+    SNOW_PEA("768/INITIAL/EFFECTS/T_SNOW_PEA/T_SNOW_PEA.PAM", "animation"),
+    FIRE_PEA("768/INITIAL/EFFECTS/T_FIRE_PEA/T_FIRE_PEA.PAM", "animation"),
+    GOO_PEA("768/INITIAL/EFFECTS/GOOPEASHOOTER_PROJECTILES/GOOPEASHOOTER_PROJECTILES.PAM", "projectile_t1"),
+    SPIKE("768/INITIAL/EFFECTS/CACTUS_PROJECTILE/CACTUS_PROJECTILE.PAM", "idle"),
+    FUME("768/INITIAL/EFFECTS/FUMESHROOM_BUBBLES/FUMESHROOM_BUBBLES.PAM", "special"),
+    SPORE("768/INITIAL/EFFECTS/T_SPORESHROOM_PROJECTILE/T_SPORESHROOM_PROJECTILE.PAM", "animation"),
+    STAR("768/INITIAL/EFFECTS/T_STARFRUIT_PROJECTILE/T_STARFRUIT_PROJECTILE.PAM", "animation"),
+    ROTOBAGA_PROJECTILE("768/FULL/EFFECTS/ROTORUTABAGA_PROJECTILE2/ROTORUTABAGA_PROJECTILE2.PAM", "animation"),
+    CITRON_BALL("768/FULL/EFFECTS/CITRON_CITRUS_ORB/CITRON_CITRUS_ORB.PAM", "Citron_Citrus_Orb"),
+    BULB_CYAN("768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE1/BOWLINGBULB_PROJECTILE1.PAM", "animation"),
+    BULB_BLUE("768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE2/BOWLINGBULB_PROJECTILE2.PAM", "animation"),
+    HOMING_BOLT("768/INITIAL/EFFECTS/HOMING_THISTLE_PROJECTILE/HOMING_THISTLE_PROJECTILE.PAM", "animation"),
+    BULB_ORANGE("768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE3/BOWLINGBULB_PROJECTILE3.PAM", "animation"),
 
     // --- New for the projectile State Pattern pass ---
-    PEPPER_BALL(0.25f),   // Pepper-pult: lobbed, area fire effect
-    MELON(0.20f),         // Melon-pult: lobbed, area effect
-    WINTER_MELON(0.20f);  // Winter Melon-pult: lobbed, area effect + chill
+    PEPPER_BALL("768/FULL/EFFECTS/PEPPERPULT_PROJECTILE/PEPPERPULT_PROJECTILE.PAM", "animation"),   // Pepper-pult: lobbed, area fire effect
+    MELON("768/INITIAL/EFFECTS/T_MELON_PROJECTILE/T_MELON_PROJECTILE.PAM", "animation"),         // Melon-pult: lobbed, area effect
+    WINTER_MELON("768/FULL/EFFECTS/T_WINTERMELON_PROJECTILE/T_WINTERMELON_PROJECTILE.PAM", "animation");  // Winter Melon-pult: lobbed, area effect + chill
 
-    private final float speed; // سرعت بر حسب کاشی (Grid Cell) در هر تیک
 
-    ProjectileType(float speed) {
-        this.speed = speed;
+    public String path;
+    public String lable;
+    ProjectileType(String animPath , String lable) {
+        this.path = animPath;
+        this.lable = lable;
     }
 
-    public float getSpeed() {
-        return speed;
-    }
+
 }
 
 
@@ -17193,26 +17191,26 @@ public class GameController {
             }*/
             // رسم خطوط گرید دیباگ
             shapeRenderer.setColor(Color.RED);
-            for (int i = 0; i < ctx.getMap().getLanes(); i++) {
-                float gridY = GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT;
-                shapeRenderer.rect(0, gridY - 0.5f, GameScreen.SCREEN_WIDTH, 1);
-            }
-            for (int i = 0; i < ctx.getMap().getColumns(); i++) {
-                float gridX = GameMap.START_X + i * GameMap.TILE_WIDTH;
-                shapeRenderer.rect(gridX - 0.5f, 0, 1, GameScreen.SCREEN_HEIGHT);
-            }
+            // for (int i = 0; i < ctx.getMap().getLanes(); i++) {
+            //     float gridY = GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT;
+            //     shapeRenderer.rect(0, gridY - 0.5f, GameScreen.SCREEN_WIDTH, 1);
+            // }
+            // for (int i = 0; i < ctx.getMap().getColumns(); i++) {
+            //     float gridX = GameMap.START_X + i * GameMap.TILE_WIDTH;
+            //     shapeRenderer.rect(gridX - 0.5f, 0, 1, GameScreen.SCREEN_HEIGHT);
+            // }
 
-            for(Plant a : ctx.getPlants()){
-                shapeRenderer.circle(GameController.xToWorldX(a.getCol()), GameController.yToWorldY(a.getLane()), 10);
-            }
+            // for(Plant a : ctx.getPlants()){
+            //     shapeRenderer.circle(GameController.xToWorldX(a.getCol()), GameController.yToWorldY(a.getLane()), 10);
+            // }
 
-            /*for(Projectile a : ctx.getProjectiles()){
-                shapeRenderer.circle(GameController.xToWorldX(a.getX()), GameController.yToWorldY(a.getY()), 10);
-            }*/
+            // for(Projectile a : ctx.getProjectiles()){
+            //     shapeRenderer.circle(a.getX(), a.getY(), 10);
+            // }
 
-            for(Zombie a : ctx.getZombies()){
-                shapeRenderer.circle(GameController.xToWorldX(a.getX()), GameController.yToWorldY(a.getY()), 10);
-            }
+            // for(Zombie a : ctx.getZombies()){
+            //     shapeRenderer.circle(a.getX(),a.getY(), 10);
+            // }
 
             shapeRenderer.end();
         }
@@ -17317,11 +17315,6 @@ public class GameController {
     }
 
     public static int worldYtoLane(float y) {
-        // اگر لاین‌ها از بالا به پایین (۰، ۱، ۲...) افزایش می‌یابند:
-        // return (int) Math.floor((y - GameMap.TOP_LANE_Y) / GameMap.TILE_HEIGHT);
-        
-        // نکته: اگر TOP_LANE_Y بالاترین نقطه است و y به سمت پایین افزایش می‌یابد، 
-        // فرمول بالا درست است. اگر محور Y معکوس است:
         return (int) Math.ceil((GameMap.TOP_LANE_Y - y) / GameMap.TILE_HEIGHT);
     }
 

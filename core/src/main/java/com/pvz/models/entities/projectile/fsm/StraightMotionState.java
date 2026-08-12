@@ -10,13 +10,12 @@ import com.pvz.models.entities.projectile.Projectile;
 public class StraightMotionState extends ProjectileMotionState {
 
     /** Matches the multiplier previously hard-coded in Projectile.update(). */
-    private static final float SPEED_SCALE = 80f;
 
     @Override
     public void update(Projectile projectile, float dt) {
         stateTime += dt;
-        projectile.getPos().x += projectile.getVelocity().x * SPEED_SCALE * dt;
-        projectile.getPos().y += projectile.getVelocity().y * SPEED_SCALE * dt;
+        projectile.getPos().x += projectile.getVelocity().x * dt;
+        projectile.getPos().y += projectile.getVelocity().y * dt;
     }
 
     @Override

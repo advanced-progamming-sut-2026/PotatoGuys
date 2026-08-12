@@ -127,7 +127,7 @@ public class Projectile implements TickAware {
             try {
                 Tile tile = ctx.getTileAt(lastCol, lastLane);
                 tile.processHit(this);
-            } catch (IndexOutOfBoundsException ex) {
+            } catch (Exception ex) {
                 destroy();
                 return;
             }
@@ -142,8 +142,8 @@ public class Projectile implements TickAware {
 
     @Override
     public FrameConfig draw() {
-        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM",
-                "animation", stateTime, pos.x, pos.y, true);
+        PvZ2.pamPlayer.draw(PvZ2.batch, type.path,
+                type.lable, stateTime, pos.x, pos.y, true);
         return null;
     }
 

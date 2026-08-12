@@ -15,6 +15,7 @@ public final class PlantActionConfigLoader {
     public static Json newJson() {
         Json json = new Json(OutputType.json);
         json.addClassTag("ShooterActionConfig", ShooterActionConfig.class);
+        json.addClassTag("LobberActionConfig", LobberActionConfig.class);
         json.addClassTag("SunProducerActionConfig", SunProducerActionConfig.class);
         return json;
     }

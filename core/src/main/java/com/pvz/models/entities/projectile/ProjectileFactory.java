@@ -2,6 +2,7 @@ package com.pvz.models.entities.projectile;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.entities.projectile.effects.AreaFireEffectState;
+import com.pvz.models.entities.projectile.effects.ButterEffectState;
 import com.pvz.models.entities.projectile.effects.FireEffectState;
 import com.pvz.models.entities.projectile.effects.IceEffectState;
 import com.pvz.models.entities.projectile.effects.MelonEffectState;
@@ -69,6 +70,14 @@ public class ProjectileFactory {
             case WINTER_MELON -> {
                 projectile.setMotionState(lobbedTowards(target));
                 projectile.setEffectState(new MelonEffectState(true));
+            }
+            case CABBAGE, KERNEL -> {
+                projectile.setMotionState(lobbedTowards(target));
+                projectile.setEffectState(new NormalEffectState());
+            }
+            case BUTTER -> {
+                projectile.setMotionState(lobbedTowards(target));
+                projectile.setEffectState(new ButterEffectState());
             }
             case FUME, SPIKE -> {
                 projectile.setMotionState(new StraightMotionState());

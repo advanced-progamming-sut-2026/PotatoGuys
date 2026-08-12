@@ -1,33 +1,36 @@
 package com.pvz.models.entities.projectile;
 
 public enum ProjectileType {
-    PEA(0.25f),
-    SNOW_PEA(0.25f),
-    FIRE_PEA(0.25f),
-    GOO_PEA(0.25f),
-    SPIKE(0.35f),
-    FUME(0.20f),
-    SPORE(0.20f),
-    STAR(0.25f),
-    ROTOBAGA_PROJECTILE(0.25f),
-    CITRON_BALL(0.30f),
-    BULB_CYAN(0.22f),
-    BULB_BLUE(0.22f),
-    HOMING_BOLT(0.22f),
-    BULB_ORANGE(0.22f),
+    PEA("768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM", "animation"),
+    SNOW_PEA("768/INITIAL/EFFECTS/T_SNOW_PEA/T_SNOW_PEA.PAM", "animation"),
+    FIRE_PEA("768/INITIAL/EFFECTS/T_FIRE_PEA/T_FIRE_PEA.PAM", "animation"),
+    GOO_PEA("768/INITIAL/EFFECTS/GOOPEASHOOTER_PROJECTILES/GOOPEASHOOTER_PROJECTILES.PAM", "projectile_t1"),
+    SPIKE("768/INITIAL/EFFECTS/CACTUS_PROJECTILE/CACTUS_PROJECTILE.PAM", "idle"),
+    FUME("768/INITIAL/EFFECTS/FUMESHROOM_BUBBLES/FUMESHROOM_BUBBLES.PAM", "special"),
+    SPORE("768/INITIAL/EFFECTS/T_SPORESHROOM_PROJECTILE/T_SPORESHROOM_PROJECTILE.PAM", "animation"),
+    STAR("768/INITIAL/EFFECTS/T_STARFRUIT_PROJECTILE/T_STARFRUIT_PROJECTILE.PAM", "animation"),
+    ROTOBAGA_PROJECTILE("768/FULL/EFFECTS/ROTORUTABAGA_PROJECTILE2/ROTORUTABAGA_PROJECTILE2.PAM", "animation"),
+    CITRON_BALL("768/FULL/EFFECTS/CITRON_CITRUS_ORB/CITRON_CITRUS_ORB.PAM", "Citron_Citrus_Orb"),
+    BULB_CYAN("768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE1/BOWLINGBULB_PROJECTILE1.PAM", "animation"),
+    BULB_BLUE("768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE2/BOWLINGBULB_PROJECTILE2.PAM", "animation"),
+    HOMING_BOLT("768/INITIAL/EFFECTS/HOMING_THISTLE_PROJECTILE/HOMING_THISTLE_PROJECTILE.PAM", "animation"),
+    BULB_ORANGE("768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE3/BOWLINGBULB_PROJECTILE3.PAM", "animation"),
 
     // --- New for the projectile State Pattern pass ---
-    PEPPER_BALL(0.25f),   // Pepper-pult: lobbed, area fire effect
-    MELON(0.20f),         // Melon-pult: lobbed, area effect
-    WINTER_MELON(0.20f);  // Winter Melon-pult: lobbed, area effect + chill
+    PEPPER_BALL("768/FULL/EFFECTS/PEPPERPULT_PROJECTILE/PEPPERPULT_PROJECTILE.PAM", "animation"),   // Pepper-pult: lobbed, area fire effect
+    MELON("768/INITIAL/EFFECTS/T_MELON_PROJECTILE/T_MELON_PROJECTILE.PAM", "animation"),         // Melon-pult: lobbed, area effect
+    WINTER_MELON("768/FULL/EFFECTS/T_WINTERMELON_PROJECTILE/T_WINTERMELON_PROJECTILE.PAM", "animation"),  // Winter Melon-pult: lobbed, area effect + chill
+    CABBAGE("768/INITIAL/EFFECTS/T_CABBAGEPULT_PROJECTILE/T_CABBAGEPULT_PROJECTILE.PAM", "animation"),  // Cabbage-pult: lobbed, single target
+    KERNEL("768/INITIAL/EFFECTS/T_KERNALPULT_PROJECTILE/T_KERNALPULT_PROJECTILE.PAM", "animation"),  // Kernel-pult: lobbed kernel, single target
+    BUTTER("768/INITIAL/EFFECTS/SPLAT_KERNALPULT_BUTTER/SPLAT_KERNALPULT_BUTTER.PAM", "animation");  // Kernel-pult butter: lobbed, stuns target
 
-    private final float speed; // سرعت بر حسب کاشی (Grid Cell) در هر تیک
 
-    ProjectileType(float speed) {
-        this.speed = speed;
+    public String path;
+    public String lable;
+    ProjectileType(String animPath , String lable) {
+        this.path = animPath;
+        this.lable = lable;
     }
 
-    public float getSpeed() {
-        return speed;
-    }
+
 }

@@ -387,26 +387,26 @@ public class GameController {
             }*/
             // رسم خطوط گرید دیباگ
             shapeRenderer.setColor(Color.RED);
-            for (int i = 0; i < ctx.getMap().getLanes(); i++) {
-                float gridY = GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT;
-                shapeRenderer.rect(0, gridY - 0.5f, GameScreen.SCREEN_WIDTH, 1);
-            }
-            for (int i = 0; i < ctx.getMap().getColumns(); i++) {
-                float gridX = GameMap.START_X + i * GameMap.TILE_WIDTH;
-                shapeRenderer.rect(gridX - 0.5f, 0, 1, GameScreen.SCREEN_HEIGHT);
-            }
+            // for (int i = 0; i < ctx.getMap().getLanes(); i++) {
+            //     float gridY = GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT;
+            //     shapeRenderer.rect(0, gridY - 0.5f, GameScreen.SCREEN_WIDTH, 1);
+            // }
+            // for (int i = 0; i < ctx.getMap().getColumns(); i++) {
+            //     float gridX = GameMap.START_X + i * GameMap.TILE_WIDTH;
+            //     shapeRenderer.rect(gridX - 0.5f, 0, 1, GameScreen.SCREEN_HEIGHT);
+            // }
 
-            for(Plant a : ctx.getPlants()){
-                shapeRenderer.circle(GameController.xToWorldX(a.getCol()), GameController.yToWorldY(a.getLane()), 10);
-            }
+            // for(Plant a : ctx.getPlants()){
+            //     shapeRenderer.circle(GameController.xToWorldX(a.getCol()), GameController.yToWorldY(a.getLane()), 10);
+            // }
 
-            /*for(Projectile a : ctx.getProjectiles()){
-                shapeRenderer.circle(GameController.xToWorldX(a.getX()), GameController.yToWorldY(a.getY()), 10);
-            }*/
+            // for(Projectile a : ctx.getProjectiles()){
+            //     shapeRenderer.circle(a.getX(), a.getY(), 10);
+            // }
 
-            for(Zombie a : ctx.getZombies()){
-                shapeRenderer.circle(GameController.xToWorldX(a.getX()), GameController.yToWorldY(a.getY()), 10);
-            }
+            // for(Zombie a : ctx.getZombies()){
+            //     shapeRenderer.circle(a.getX(),a.getY(), 10);
+            // }
 
             shapeRenderer.end();
         }
@@ -511,11 +511,6 @@ public class GameController {
     }
 
     public static int worldYtoLane(float y) {
-        // اگر لاین‌ها از بالا به پایین (۰، ۱، ۲...) افزایش می‌یابند:
-        // return (int) Math.floor((y - GameMap.TOP_LANE_Y) / GameMap.TILE_HEIGHT);
-        
-        // نکته: اگر TOP_LANE_Y بالاترین نقطه است و y به سمت پایین افزایش می‌یابد، 
-        // فرمول بالا درست است. اگر محور Y معکوس است:
         return (int) Math.ceil((GameMap.TOP_LANE_Y - y) / GameMap.TILE_HEIGHT);
     }
 
