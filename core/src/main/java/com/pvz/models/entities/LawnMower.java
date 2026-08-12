@@ -14,8 +14,8 @@ public class LawnMower implements TickAware {
     private static final String PAM_PATH="768/INITIAL/MOWERS/MOWER_EGYPT/MOWER_EGYPT.PAM";
     private static final String PAM_LABEL_IDLE="idle";
     private static final String PAM_LABEL_ATTACK="attack";
-    private static final float TRIGGER_RADIUS=10f;
-    private static final float VELOCITY=60f;
+    private static final float TRIGGER_RADIUS=12f;
+    private static final float VELOCITY=300f;
 
     Vector2 pos;
     GameContext ctx;
@@ -23,7 +23,7 @@ public class LawnMower implements TickAware {
     float stateTime;
 
     public LawnMower(GameContext ctx, int lane){
-        pos=new Vector2(GameMap.START_X, GameController.laneToWorldY(lane));
+        pos=new Vector2(GameController.colToWorldX(-1), GameController.laneToWorldY(lane));
         this.ctx=ctx;
         triggered=false;
         stateTime=0;
@@ -43,7 +43,7 @@ public class LawnMower implements TickAware {
                 if (distance < TRIGGER_RADIUS) triggered = true;
             }
         } else {
-            pos.x+=VELOCITY;
+            pos.x+=VELOCITY*dt;
             for (Zombie z : ctx.getZombiesInLane(GameController.worldYtoLane(pos.y))) {
                 float distance = z.getX() - pos.x;
                 if (distance < TRIGGER_RADIUS) z.takeDamage(100000);
@@ -57,13 +57,14 @@ public class LawnMower implements TickAware {
     @Override
     public FrameConfig draw() {
         if (!triggered) return new FrameConfig(PAM_PATH,PAM_LABEL_IDLE,stateTime,pos,
-            new Vector2(1,1),null,true);
+            new Vector2(0.75f,0.75f),null,true);
         else return new FrameConfig(PAM_PATH,PAM_LABEL_ATTACK,stateTime,pos,
-            new Vector2(1,1),null,true);
+            new Vector2(0.75f,0.75f),null,true);
     }
 
     @Override
     public void dispose() {
         GameEngine.getInstance().getToRemove().add(this);
+        ctx.getLawnMowers()[GameController.worldYtoLane(pos.y)]=null;
     }
 }

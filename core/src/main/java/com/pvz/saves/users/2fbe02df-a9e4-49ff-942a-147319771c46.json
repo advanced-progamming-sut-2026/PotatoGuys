@@ -11,7 +11,7 @@
   "profile": {
     "gamePlayed": 0,
     "coins": 1550,
-    "diamonds": 2,
+    "diamonds": 3,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -1175,7 +1175,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786504967889
+    "lastDailyReset": 1786506123625
   },
   "questLogRefreshed": false
 }

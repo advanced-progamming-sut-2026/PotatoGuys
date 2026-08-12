@@ -369,4 +369,8 @@ public class GameContext implements TickAware {
         plantFoodCount--;
         return true;
     }
+
+    public LawnMower[] getLawnMowers(){
+        return lawnMowers;
+    }
 }

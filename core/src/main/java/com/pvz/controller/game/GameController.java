@@ -20,6 +20,7 @@ import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.GameEngine;
+import com.pvz.models.entities.LawnMower;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
@@ -256,11 +257,14 @@ public class GameController {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         drawBackground();
-        drawTiles();
-        drawPlants();
-        drawZombies();
-        drawSuns();
-        drawProjectiles();
+        if (ctx != null) {
+            drawTiles();
+            drawPlants();
+            drawZombies();
+            drawLawnMowers();
+            drawSuns();
+            drawProjectiles();
+        }
         batch.end();
         // ۵. رسم هایلایت خانه زیر ماوس (در صورت انتخاب کارت)
         if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null && ctx != null) {
@@ -322,6 +326,18 @@ public class GameController {
             if (frameConfig!=null){
                 PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
                     frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
+                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+            }
+        }
+    }
+
+    private void drawLawnMowers(){
+        LawnMower[] lawnMowers = ctx.getLawnMowers();
+        for (LawnMower lawnMower : lawnMowers) {
+            if (lawnMower != null) {
+                FrameConfig frameConfig = lawnMower.draw();
+                PvZ2.pamPlayer.draw(batch, frameConfig.pamPath, frameConfig.label,
+                    frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
                     frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
             }
         }
