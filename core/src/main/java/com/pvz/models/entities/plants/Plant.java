@@ -72,7 +72,7 @@ public class Plant implements TickAware {
 
     @Override
     public void enter() {
-        currentState = new PlantIdleState();
+        if (currentState == null) currentState = new PlantIdleState();
         currentState.onEnter(this, context);
         context.log("[Plant] " + sheet.getName() + " planted at (" + col + "," + lane + ")"
                 + (level > 1 ? " [Lvl " + level + "]" : ""));
@@ -99,7 +99,7 @@ public class Plant implements TickAware {
     @Override
     public FrameConfig draw(){
         if(currentState != null){
-            currentState.draw(this, context);
+            return currentState.draw(this, context);
         }
         return null;
     }

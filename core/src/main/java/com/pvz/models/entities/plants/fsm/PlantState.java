@@ -1,5 +1,6 @@
 package com.pvz.models.entities.plants.fsm;
 
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.games.GameContext;
 
@@ -15,7 +16,7 @@ public abstract class PlantState {
 
     public abstract void onExit(Plant plant, GameContext ctx);
 
-    public abstract void draw(Plant plant, GameContext ctx);
+    public abstract FrameConfig draw(Plant plant, GameContext ctx);
 
     public abstract String getLabel();
 }

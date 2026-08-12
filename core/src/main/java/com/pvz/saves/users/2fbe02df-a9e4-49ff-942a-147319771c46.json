@@ -10,7 +10,7 @@
   "profilePicture": "textures/avatars/avatar_franky.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 1550,
+    "coins": 1650,
     "diamonds": 3,
     "plantFood": 0,
     "collection": {
@@ -1175,7 +1175,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786506123625
+    "lastDailyReset": 1786511778645
   },
   "questLogRefreshed": false
 }

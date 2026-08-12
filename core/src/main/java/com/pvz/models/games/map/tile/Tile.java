@@ -104,6 +104,11 @@ public class Tile implements TickAware {
             b.onProjectileHit(p, this);
     }
 
+    public void processHit(float damage){
+        for (TileBehavior b : new ArrayList<>(behaviors))
+            b.processHit(damage);
+    }
+
     public void onZombieEnter(Zombie z) {
         for (TileBehavior b : new ArrayList<>(behaviors))
             b.onZombieEnter(z, this);

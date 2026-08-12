@@ -8,6 +8,7 @@ import com.pvz.models.games.map.behaviors.WaterBehavior;
 import com.pvz.models.games.map.data.BehaviorDefinition;
 import com.pvz.models.games.map.data.GameMapDefinition;
 import com.pvz.models.games.map.data.TileDefinition;
+import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
 
 public class GameMapFactory {
@@ -17,16 +18,18 @@ public class GameMapFactory {
             for (TileDefinition tileDef : def.specialTiles) {
                 if (tileDef.behaviors != null) {
                     for (BehaviorDefinition behDef : tileDef.behaviors) {
+                        Tile tile = map.getTileAt(tileDef.x, tileDef.y);
                         switch (behDef.type) {
-                            case DESTRUCTIBLE -> map.getTileAt(tileDef.x, tileDef.y)
-                                    .addBehavior(new GraveBehavior(behDef.hp, behDef.name));
+                            case DESTRUCTIBLE ->
+                                tile.addBehavior(new GraveBehavior(tile,behDef.hp, behDef.name));
                             case SLIPPERY ->
-                                map.getTileAt(tileDef.x, tileDef.y).addBehavior(new SlipperyBehavior(behDef.laneDelta));
-                            case WATER -> map.getTileAt(tileDef.x, tileDef.y).addBehavior(new WaterBehavior());
+                                tile.addBehavior(new SlipperyBehavior(behDef.laneDelta));
+                            case WATER ->
+                                tile.addBehavior(new WaterBehavior());
                             case NECROMANCY -> {
-                                map.getTileAt(tileDef.x, tileDef.y).getTags().add(TileTags.NECROMANCY);
+                                tile.getTags().add(TileTags.NECROMANCY);
                                 if (behDef.hp > 0) {
-                                    map.getTileAt(tileDef.x, tileDef.y).addBehavior(new GraveBehavior(behDef.hp,
+                                    map.getTileAt(tileDef.x, tileDef.y).addBehavior(new GraveBehavior(tile,behDef.hp,
                                             behDef.name != null ? behDef.name : "Grave"));
                                 }
                             }

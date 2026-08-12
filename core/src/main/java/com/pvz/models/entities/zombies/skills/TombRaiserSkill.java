@@ -92,7 +92,7 @@ public class TombRaiserSkill extends CooldownSkill {
     private void raiseTomb(GameContext ctx , int[] cell){
         Tile tile=ctx.getTileAt(cell[0],cell[1]);
         tile.getTags().add(TileTags.GRAVE);
-        tile.addBehavior(new GraveBehavior(Constants.DEFAULT_GRAVE_HP,"Grave"));
+        tile.addBehavior(new GraveBehavior(tile,Constants.DEFAULT_GRAVE_HP,"Grave"));
     }
 
     @Override

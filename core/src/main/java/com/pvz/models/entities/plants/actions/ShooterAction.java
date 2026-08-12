@@ -7,6 +7,7 @@ import java.util.List;
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.plants.config.ShooterActionConfig;
@@ -108,11 +109,14 @@ public class ShooterAction extends PlantAction {
     }
 
     @Override
-    public void draw(Plant plant, GameContext ctx) {
+    public FrameConfig draw(Plant plant, GameContext ctx) {
         PamAnimationConfig config = plant.getSheet().pamAnimationConfig;
         float x = GameController.colToWorldX(plant.getCol());
         float y = GameController.laneToWorldY(plant.getLane());
-        PvZ2.pamPlayer.draw(PvZ2.batch, config.pamFilePath , config.attackActionLabel, stateTime, x, y,0.7f,0.7f, true);
+        Vector2 pos = new Vector2(x,y);
+        Vector2 scale = new Vector2(0.7f,0.7f);
+        return new FrameConfig(config.pamFilePath,config.attackActionLabel,stateTime,pos,scale,
+            null,true);
     }
 
 }

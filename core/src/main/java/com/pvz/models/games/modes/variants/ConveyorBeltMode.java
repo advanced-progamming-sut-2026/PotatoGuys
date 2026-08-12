@@ -31,7 +31,6 @@ import com.pvz.models.user.User;
 public class ConveyorBeltMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
-    private Boolean[] lawnMower;
 
     private int tickCounter = 0;
     private static final int TICKS_PER_SECOND = 10;
@@ -44,7 +43,6 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
             return;
         }
         currentWave = waves.get(0);
-        setupLawnMowers();
     }
 
     @Override
@@ -82,17 +80,11 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
             Zombie z = context.getZombies().get(i);
 
             if (z.getX() <= 0f) {
-                if (!lawnMower[GameController.worldYtoLane(z.getY())]) {
-                    runLawnMowers(context, GameController.worldYtoLane(z.getY()));
-                    i--;
-                    continue;
-                }
-                if (lawnMower[GameController.worldYtoLane(z.getY())]) {
-                    context.setGameOver(true);
-                    context.log("Brain has eaten");
-                    context.removeZombie(z);
-                }
+                context.setGameOver(true);
+                context.log("Brain has eaten");
+                context.removeZombie(z);
             }
+
         }
 
         for (int i = 0; i < context.getSuns().size(); i++) {
@@ -203,94 +195,5 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
 
         context.addCard(conveyorCard);
         context.log("Conveyor delivered a new card: " + randomPlant.getType().toString());
-    }
-
-    private void setupLawnMowers() {
-        int lanes = 5;
-        lawnMower = new Boolean[lanes];
-        for (int i = 0; i < lanes; i++) {
-            lawnMower[i] = false;
-        }
-    }
-
-    private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane])
-            return;
-
-        context.getZombiesInLane(lane).forEach(zombie -> {
-            zombie.takeDamage(Float.MAX_VALUE, true);
-            context.removeZombie(zombie);
-            context.log("Lawn mower in lane " + lane + " ran over a zombie!");
-        });
-        lawnMower[lane] = true;
-    }
-
-    private static final String CELL_EMPTY = "    ";
-    private static final String MOWER_OK = "[M]";
-    private static final String MOWER_USED = "[!]";
-
-    @Override
-    public String renderMap(GameContext context) {
-        StringBuilder sb = new StringBuilder();
-        appendHeader(sb, context);
-        appendColumnHeaders(sb, context);
-        appendDivider(sb, context);
-        for (int lane = 0; lane < context.getMap().getLanes(); lane++) {
-            appendLaneRow(sb, context, lane);
-            appendDivider(sb, context);
-        }
-        return sb.toString();
-    }
-
-    private void appendHeader(StringBuilder sb, GameContext context) {
-        sb.append("\n=== Tick: ").append(context.getCurrentTick())
-                .append(" | Sun: ").append(context.getCurrentSun())
-                .append(" | zombies: ").append(context.getZombies().size())
-                .append(" | plants: ").append(context.getPlants().size())
-                .append(" | projectiles: ").append(context.getProjectiles().size())
-                .append(" | suns: ").append(context.getSuns().size())
-                .append(" ===\n");
-    }
-
-    private void appendColumnHeaders(StringBuilder sb, GameContext context) {
-        sb.append("\n     ");
-        for (int c = 0; c < context.getMap().getColumns(); c++) {
-            sb.append(String.format(" C%-2d ", c));
-        }
-        sb.append("\n");
-    }
-
-    private void appendDivider(StringBuilder sb, GameContext context) {
-        sb.append("    +");
-        for (int c = 0; c < context.getMap().getColumns(); c++) {
-            sb.append("----+");
-        }
-        sb.append("\n");
-    }
-
-    private void appendLaneRow(StringBuilder sb, GameContext context, int lane) {
-        sb.append(lawnMower[lane] ? MOWER_USED : MOWER_OK).append(" |");
-        for (int col = 0; col < context.getMap().getColumns(); col++) {
-            sb.append(getCellContent(col, context, lane)).append('|');
-        }
-        sb.append("  Lane ").append(lane).append("\n");
-    }
-
-    private String getCellContent(int col, GameContext context, int lane) {
-        List<Plant> plantsAtCell = context.getPlantsAt(col, lane);
-        boolean hasPlant = !plantsAtCell.isEmpty();
-
-        List<Zombie> zombiesAtCell = context.getZombiesAt(col, lane);
-        boolean hasZombie = !zombiesAtCell.isEmpty();
-
-        if (hasPlant && hasZombie) {
-            return String.format(AnsiColors.GREEN + "P" + AnsiColors.RESET + "/Z%-1d", plantsAtCell.size(),
-                    zombiesAtCell.size());
-        } else if (hasPlant) {
-            return String.format(AnsiColors.GREEN + " P  " + AnsiColors.RESET, plantsAtCell.size());
-        } else if (hasZombie) {
-            return String.format(" Z%-2d", zombiesAtCell.size());
-        }
-        return CELL_EMPTY;
     }
 }

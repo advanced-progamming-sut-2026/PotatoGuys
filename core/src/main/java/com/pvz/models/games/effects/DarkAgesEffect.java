@@ -79,7 +79,7 @@ public class DarkAgesEffect implements ChapterEffect {
             reward = GraveBehavior.GraveReward.PLANT_FOOD;
         }
 
-        tile.addBehavior(new GraveBehavior(Constants.DEFAULT_GRAVE_HP, "Grave", reward));
+        tile.addBehavior(new GraveBehavior(tile,Constants.DEFAULT_GRAVE_HP, "Grave", reward));
         tile.getTags().add(TileTags.GRAVE);
         ctx.log("A dark grave has grown at (" + col + "," + lane + ")!");
     }

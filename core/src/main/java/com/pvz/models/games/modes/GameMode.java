@@ -13,11 +13,9 @@ public interface GameMode {
     /** Initialize mode-specific state (e.g., enable/disable mowers). */
     void initMode(GameContext context);
 
-    /** Update mode-specific rules (Win/Loss conditions). 
+    /** Update mode-specific rules (Win/Loss conditions).
      * @param dt TODO*/
     void updateMode(GameContext context, float dt);
-
-    String renderMap(GameContext context);
 
     /** Whether this mode allows sky-dropped falling suns (e.g. Dark Ages disables them). */
     default boolean supportsFallingSuns() { return true; }
