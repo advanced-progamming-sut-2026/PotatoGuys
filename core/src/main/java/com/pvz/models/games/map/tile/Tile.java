@@ -52,8 +52,6 @@ public class Tile implements TickAware {
             if (!hasGrave)
                 return false;
         }
-
-
         for (TileBehavior b : behaviors) {
             if (!b.canPlant(newPlant, this))
                 return false;

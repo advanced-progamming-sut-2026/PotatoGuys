@@ -1,13 +1,10 @@
 package com.pvz.models.entities.plants;
 
+import com.pvz.models.entities.plants.actions.BonkChoyAttack;
 import com.pvz.models.entities.plants.actions.LobberAction;
 import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.actions.ShooterAction;
-import com.pvz.models.entities.plants.config.LobberActionConfig;
-import com.pvz.models.entities.plants.config.PlantActionConfig;
-import com.pvz.models.entities.plants.config.PlantConfigRegistry;
-import com.pvz.models.entities.plants.config.PlantJsonConfig;
-import com.pvz.models.entities.plants.config.ShooterActionConfig;
+import com.pvz.models.entities.plants.config.*;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -54,6 +51,9 @@ public class PlantFactory {
         }
         if (config instanceof LobberActionConfig lobberConfig) {
             return new LobberAction(lobberConfig);
+        }
+        if (config instanceof BonkChoyConfig bonkChoyConfig){
+            return new BonkChoyAttack(bonkChoyConfig);
         }
         // if (config instanceof SunProducerActionConfig sunConfig) {
         //     return new SunProducerAction(intervalSeconds, sunConfig);

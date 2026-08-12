@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
-import com.pvz.models.entities.plants.bonk_choy.BonkChoy;
 import com.pvz.models.entities.plants.fsm.PlantState;
 import com.pvz.models.entities.plants.grave_buster.GraveBuster;
 import com.pvz.models.games.GameContext;

@@ -17,6 +17,7 @@ public final class PlantActionConfigLoader {
         json.addClassTag("ShooterActionConfig", ShooterActionConfig.class);
         json.addClassTag("LobberActionConfig", LobberActionConfig.class);
         json.addClassTag("SunProducerActionConfig", SunProducerActionConfig.class);
+        json.addClassTag("BonkChoyConfig", BonkChoyConfig.class);
         return json;
     }
 

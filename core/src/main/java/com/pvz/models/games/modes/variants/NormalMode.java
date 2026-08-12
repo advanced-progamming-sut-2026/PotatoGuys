@@ -7,7 +7,6 @@ import com.pvz.enums.AnsiColors;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
-import com.pvz.models.entities.plants.bonk_choy.BonkChoy;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
@@ -147,17 +146,15 @@ public class NormalMode implements GameMode, PlantPlacer {
             return;
         }
         Plant plant;
-        if (card.getPlant().getType()== PlantType.BonkChoy){
+        /*if (card.getPlant().getType()== PlantType.BonkChoy){
             plant = new BonkChoy(sheet,null,null,col,
                 lane,card.getPlant().getLevel(),card.getPlant().isBoosted(),context);
         } else if (card.getPlant().getType() == PlantType.GraveBuster){
             plant = new GraveBuster(sheet,null,null,col,lane,
                 card.getPlant().getLevel(),card.getPlant().isBoosted(),context);
-        }
-        else {
-            plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
+        }*/
+        plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
-        }
         if (!plant.isPlantableOnTile(context.getMap().getTileAt(col,lane))) return;
         context.spawnPlant(plant);
         context.getGameStats().onPlantPlaced(col, lane, plantCard.getPlant().getType());

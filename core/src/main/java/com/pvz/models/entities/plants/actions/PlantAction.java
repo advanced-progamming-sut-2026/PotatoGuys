@@ -6,4 +6,5 @@ import com.pvz.models.games.GameContext;
 
 public abstract class PlantAction extends PlantState {
     public abstract boolean shouldTrigger(Plant plant, GameContext ctx , float dt);
+
 }
