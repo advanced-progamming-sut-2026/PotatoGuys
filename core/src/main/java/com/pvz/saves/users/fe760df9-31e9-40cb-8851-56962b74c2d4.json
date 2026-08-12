@@ -10,7 +10,7 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 50,
+    "coins": 100,
     "diamonds": 1,
     "plantFood": 0,
     "collection": {
@@ -133,7 +133,7 @@
     "brightness": 1.0,
     "musicVolume": 0.7,
     "sfxVolume": 0.7,
-    "musicMuted": false,
+    "musicMuted": true,
     "sfxMuted": false
   },
   "score": {
@@ -1186,7 +1186,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786536300484
+    "lastDailyReset": 1786548835024
   },
   "questLogRefreshed": false
 }

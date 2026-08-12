@@ -37,8 +37,12 @@ public class Attack extends PlantState {
         super.update(plant, ctx, dt);
         if (!attacked && stateTime>BonkChoy.DEFAULT_ACTION_INTERVAL/2){
             if (target != null) target.takeDamage(BonkChoy.BASE_DAMAGE);
+            //self tile
             Tile tile = ctx.getMap().getTileAt(plant.getCol(),plant.getLane());
             tile.processHit(BonkChoy.BASE_DAMAGE);
+            //front tile
+            tile = ctx.getMap().getTileAt(plant.getCol()+1,plant.getLane());
+            if (tile!=null) tile.processHit(BonkChoy.BASE_DAMAGE);
             attacked=true;
         }
         if (stateTime>=BonkChoy.DEFAULT_ACTION_INTERVAL) plant.changeState(new Idle());
