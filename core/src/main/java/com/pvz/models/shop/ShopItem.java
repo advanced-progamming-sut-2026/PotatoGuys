@@ -6,6 +6,7 @@ public abstract class ShopItem {
 
     protected int id;
     protected String name;
+    protected String description;
     protected Price price;
     protected int unitAmount;
     protected int maxPurchasePerUser;
@@ -16,6 +17,10 @@ public abstract class ShopItem {
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Price getPrice() {

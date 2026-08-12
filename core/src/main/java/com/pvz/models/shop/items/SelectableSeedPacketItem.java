@@ -12,6 +12,7 @@ public class SelectableSeedPacketItem extends ShopItem {
     public SelectableSeedPacketItem() {
         this.id = 4;
         this.name = "Selectable Seed Packet";
+        this.description = "Grants   seed   packets   for   a   plant   you   choose.";
         this.price = new Price(Currency.DIAMOND, 5);
         this.unitAmount = 10;
         this.maxPurchasePerUser = 0;

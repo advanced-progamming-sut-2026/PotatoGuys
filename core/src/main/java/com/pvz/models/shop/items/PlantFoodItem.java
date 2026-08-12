@@ -10,6 +10,7 @@ public class PlantFoodItem extends ShopItem {
     public PlantFoodItem() {
         this.id = 2;
         this.name = "Plant Food";
+        this.description = "Feeds    a    plant   to   trigger   its  plant  Food  boost.";
         this.price = new Price(Currency.DIAMOND, 3);
         this.unitAmount = 1;
         this.maxPurchasePerUser = 3;

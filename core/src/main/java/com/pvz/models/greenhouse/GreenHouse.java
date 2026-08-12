@@ -82,6 +82,16 @@ public class GreenHouse {
         return count;
     }
 
+    public int getLockedPotCount() {
+        int count = 0;
+        for (GreenHousePot pot : greenHousePots) {
+            if (pot.isLocked() && isValidCoordinate(pot.getX(), pot.getY())) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public boolean plantPotAt(int x, int y, GreenHousePlant plant) {
         GreenHousePot pot = getPot(x, y);
 

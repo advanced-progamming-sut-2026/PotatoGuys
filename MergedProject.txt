@@ -4927,6 +4927,7 @@ import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
 import com.pvz.models.entities.plants.enums.PlantType;
+import com.pvz.models.entities.plants.grave_buster.GraveBuster;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.sun.Sun;
 import com.pvz.models.entities.zombies.Zombie;
@@ -5063,10 +5064,15 @@ public class NormalMode implements GameMode, PlantPlacer {
         if (card.getPlant().getType()== PlantType.BonkChoy){
             plant = new BonkChoy(sheet,null,null,col,
                 lane,card.getPlant().getLevel(),card.getPlant().isBoosted(),context);
-        } else {
+        } else if (card.getPlant().getType() == PlantType.GraveBuster){
+            plant = new GraveBuster(sheet,null,null,col,lane,
+                card.getPlant().getLevel(),card.getPlant().isBoosted(),context);
+        }
+        else {
             plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
         }
+        if (!plant.isPlantableOnTile(context.getMap().getTileAt(col,lane))) return;
         context.spawnPlant(plant);
         context.getGameStats().onPlantPlaced(col, lane, plantCard.getPlant().getType());
         plantCard.use();
@@ -8986,6 +8992,8 @@ import com.pvz.models.entities.plants.bonk_choy.state.Idle;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.GameMap;
+import com.pvz.models.games.map.tile.Tile;
+import com.pvz.models.games.map.tile.TileTags;
 
 public class BonkChoy extends Plant {
     public static final String PAM_PATH="768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM";
@@ -9042,8 +9050,12 @@ public class Attack extends PlantState {
         super.update(plant, ctx, dt);
         if (!attacked && stateTime>BonkChoy.DEFAULT_ACTION_INTERVAL/2){
             if (target != null) target.takeDamage(BonkChoy.BASE_DAMAGE);
+            //self tile
             Tile tile = ctx.getMap().getTileAt(plant.getCol(),plant.getLane());
             tile.processHit(BonkChoy.BASE_DAMAGE);
+            //front tile
+            tile = ctx.getMap().getTileAt(plant.getCol()+1,plant.getLane());
+            if (tile!=null) tile.processHit(BonkChoy.BASE_DAMAGE);
             attacked=true;
         }
         if (stateTime>=BonkChoy.DEFAULT_ACTION_INTERVAL) plant.changeState(new Idle());
@@ -9057,7 +9069,7 @@ public class Attack extends PlantState {
     @Override
     public FrameConfig draw(Plant plant, GameContext ctx) {
         Vector2 position= new Vector2(GameController.colToWorldX(plant.getCol()),GameController.laneToWorldY(plant.getLane()));
-        Vector2 scale = new Vector2(0.7f,0.7f);
+        Vector2 scale = new Vector2(0.65f,0.65f);
         return new FrameConfig(BonkChoy.PAM_PATH,CLIP,stateTime,position,scale,null,true);
     }
 
@@ -9125,7 +9137,7 @@ public class Idle extends PlantState {
     @Override
     public FrameConfig draw(Plant plant, GameContext ctx) {
         Vector2 position= new Vector2(GameController.colToWorldX(plant.getCol()),GameController.laneToWorldY(plant.getLane()));
-        Vector2 scale = new Vector2(0.7f,0.7f);
+        Vector2 scale = new Vector2(0.65f,0.65f);
         return new FrameConfig(BonkChoy.PAM_PATH,CLIP,stateTime,position,scale,null,true);
     }
 
@@ -9184,11 +9196,15 @@ import com.pvz.models.entities.plants.data.ProductionKind;
 
 public class SunProducerActionConfig extends PlantActionConfig {
 
+    /** Seconds between production cycles (0 = produce immediately / one-shot). */
+    public float intervalSeconds;
     public ProductionKind productionKind;
     public float amount;
     public float[] amounts;
     public float[] stageIntervalSeconds;
     public Vector2 spawnOffset = new Vector2();
+    /** Sun pops out this many seconds into the attack/feed animation (defaults to 0 = instantly). */
+    public float delaySeconds = 0f;
 }
 
 
@@ -9223,6 +9239,43 @@ public class PlantJsonConfig {
     public PlantActionConfig feedConfig;
     public PamAnimationConfig pamAnimationConfig;
     public String description;
+}
+
+
+======================================================
+FILE: LobberActionConfig.java
+======================================================
+
+package com.pvz.models.entities.plants.config;
+
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.pvz.models.entities.projectile.ProjectileType;
+
+/**
+ * Attack payload for lobber plants (Cabbage-pult, Kernel-pult, Melon-pult family).
+ * Mirrors {@link ShooterActionConfig} but for parabolic lobbed projectiles: instead
+ * of a fixed velocity each {@link LobPattern} aims at one or more random zombies
+ * (see {@link LobPattern#targets}) and lets {@code ProjectileFactory} decide the
+ * arc, splash and status effect from the {@code projectileType}.
+ */
+public class LobberActionConfig extends PlantActionConfig {
+
+    public float intervalSeconds;
+    public Array<LobPattern> patterns = new Array<>();
+
+    public static class LobPattern {
+        public ProjectileType projectileType;
+        public float damage;
+        /** How many random zombies to lob at; values &lt;= 0 lob at every zombie in range. */
+        public int targets = 1;
+        /** When true the range covers every zombie on the field instead of just the plant's lane. */
+        public boolean allLanes;
+        public Vector2 positionOffset = new Vector2();
+        public float delaySeconds;
+        /** Spawn chance 0..1 — a pattern with chance &lt; 1 fires only sometimes (e.g. Kernel-pult's butter). */
+        public float chance = 1f;
+    }
 }
 
 
@@ -9290,6 +9343,7 @@ public final class PlantActionConfigLoader {
     public static Json newJson() {
         Json json = new Json(OutputType.json);
         json.addClassTag("ShooterActionConfig", ShooterActionConfig.class);
+        json.addClassTag("LobberActionConfig", LobberActionConfig.class);
         json.addClassTag("SunProducerActionConfig", SunProducerActionConfig.class);
         return json;
     }
@@ -9341,7 +9395,6 @@ import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.data.GrowthProfile;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.ProductionKind;
-import com.pvz.models.entities.plants.data.SunProduction;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.plants.enums.PlantType;
 
@@ -9376,11 +9429,8 @@ public final class PlantConfigRegistry {
 
     /** Adapts a {@link PlantJsonConfig} into the {@link PlantPropertySheet} shape {@code Plant} already understands. */
     public PlantPropertySheet toSheet(PlantJsonConfig cfg) {
-        SunProduction production = null;
         GrowthProfile growth = null;
         if (cfg.attackConfig instanceof SunProducerActionConfig sunConfig) {
-            production = new SunProduction(sunConfig.productionKind, sunConfig.amount,
-                    sunConfig.amounts, sunConfig.stageIntervalSeconds);
             if (sunConfig.productionKind == ProductionKind.STAGED) {
                 growth = new GrowthProfile(sunConfig.stageIntervalSeconds);
             }
@@ -9535,6 +9585,141 @@ public enum PlantTag {
 
 
 ======================================================
+FILE: Init.java
+======================================================
+
+package com.pvz.models.entities.plants.grave_buster.state;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.bonk_choy.BonkChoy;
+import com.pvz.models.entities.plants.fsm.PlantState;
+import com.pvz.models.entities.plants.grave_buster.GraveBuster;
+import com.pvz.models.games.GameContext;
+
+public class Init extends PlantState {
+    public static final String CLIP="attack";
+
+    @Override
+    public void onEnter(Plant plant, GameContext ctx) {
+        System.out.println("init grave buster");
+    }
+
+    @Override
+    public void update(Plant plant, GameContext ctx, float dt) {
+        super.update(plant, ctx, dt);
+        if (stateTime>=1f){
+            plant.changeState(new Eat());
+        }
+    }
+
+    @Override
+    public void onExit(Plant plant, GameContext ctx) {
+
+    }
+
+    @Override
+    public FrameConfig draw(Plant plant, GameContext ctx) {
+        Vector2 position= new Vector2(GameController.colToWorldX(plant.getCol()),GameController.laneToWorldY(plant.getLane()));
+        Vector2 scale = new Vector2(0.65f,0.65f);
+        return new FrameConfig(GraveBuster.PAM_PATH,CLIP,stateTime,position,scale,null,true);
+    }
+
+    @Override
+    public String getLabel() {
+        return "";
+    }
+}
+
+
+======================================================
+FILE: Eat.java
+======================================================
+
+package com.pvz.models.entities.plants.grave_buster.state;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.bonk_choy.BonkChoy;
+import com.pvz.models.entities.plants.fsm.PlantState;
+import com.pvz.models.entities.plants.grave_buster.GraveBuster;
+import com.pvz.models.games.GameContext;
+import com.pvz.models.games.map.behaviors.GraveBehavior;
+import com.pvz.models.games.map.behaviors.TileBehavior;
+import com.pvz.models.games.map.tile.Tile;
+import com.pvz.models.games.map.tile.TileTags;
+
+public class Eat extends PlantState {
+    public static final String CLIP="attack1";
+    @Override
+    public void onEnter(Plant plant, GameContext ctx) {
+
+    }
+
+    @Override
+    public void update(Plant plant, GameContext ctx, float dt) {
+        super.update(plant, ctx, dt);
+        if (stateTime>= GraveBuster.DEFAULT_EAT_DURATION){
+            Tile tile = ctx.getMap().getTileAt(plant.getCol(),plant.getLane());
+            tile.getBehaviors().removeIf(behavior -> behavior instanceof GraveBehavior);
+            tile.getTags().remove(TileTags.GRAVE);
+            plant.dispose();
+        }
+    }
+
+    @Override
+    public void onExit(Plant plant, GameContext ctx) {
+
+    }
+
+    @Override
+    public FrameConfig draw(Plant plant, GameContext ctx) {
+        Vector2 position= new Vector2(GameController.colToWorldX(plant.getCol()),GameController.laneToWorldY(plant.getLane()));
+        Vector2 scale = new Vector2(0.65f,0.65f);
+        return new FrameConfig(GraveBuster.PAM_PATH,CLIP,stateTime,position,scale,null,true);
+    }
+
+    @Override
+    public String getLabel() {
+        return "";
+    }
+}
+
+
+======================================================
+FILE: GraveBuster.java
+======================================================
+
+package com.pvz.models.entities.plants.grave_buster;
+
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.actions.PlantAction;
+import com.pvz.models.entities.plants.data.PlantPropertySheet;
+import com.pvz.models.entities.plants.grave_buster.state.Init;
+import com.pvz.models.games.GameContext;
+import com.pvz.models.games.map.tile.Tile;
+import com.pvz.models.games.map.tile.TileTags;
+
+public class GraveBuster extends Plant {
+    public static final String PAM_PATH="768/INITIAL/PLANT/GRAVEBUSTER/GRAVEBUSTER.PAM";
+    public static final float DEFAULT_EAT_DURATION=2.8f;
+    public GraveBuster(PlantPropertySheet sheet, PlantAction attackAction, PlantAction feedAction, int col, int lane, int level, boolean boosted, GameContext context) {
+        super(sheet, attackAction, feedAction, col, lane, level, boosted, context);
+        this.changeState(new Init());
+    }
+
+    @Override
+    public boolean isPlantableOnTile(Tile tile) {
+        return tile.getTags().contains(TileTags.GRAVE);
+    }
+}
+
+
+======================================================
 FILE: Plant.java
 ======================================================
 
@@ -9633,7 +9818,7 @@ public class Plant implements TickAware {
 
     @Override
     public void dispose() {
-        // no owned resources to release
+        context.removePlant(this);
     }
 
     @Override
@@ -9873,6 +10058,10 @@ public class Plant implements TickAware {
 
     public PlantState getCurrentState() {
         return currentState;
+    }
+
+    public boolean isPlantableOnTile(Tile tile){
+        return true;
     }
 
     // ── CLI display ────────────────────────────────────────────────────────────
@@ -10173,53 +10362,127 @@ FILE: MeleeAction.java
 FILE: SunProducerAction.java
 ======================================================
 
-// package com.pvz.models.entities.plants.actions;
+package com.pvz.models.entities.plants.actions;
 
-// import com.pvz.models.entities.plants.Plant;
-// import com.pvz.models.entities.plants.config.SunProducerActionConfig;
-// import com.pvz.models.entities.plants.data.ProductionKind;
-// import com.pvz.models.entities.sun.Sun;
-// import com.pvz.models.entities.sun.SunType;
-// import com.pvz.models.games.GameContext;
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
+import com.pvz.models.entities.plants.config.PamAnimationConfig;
+import com.pvz.models.entities.plants.config.SunProducerActionConfig;
+import com.pvz.models.entities.plants.data.ProductionKind;
+import com.pvz.models.entities.plants.fsm.PlantIdleState;
+import com.pvz.models.entities.sun.Sun;
+import com.pvz.models.entities.sun.SunType;
+import com.pvz.models.games.GameContext;
 
-// public class SunProducerAction extends CooldownPlantAction {
+/**
+ * Config-driven sun production for {@code SUN_PRODUCER} plants, mirroring how
+ * {@link ShooterAction}/{@link LobberAction} consume their config payload:
+ *
+ * <ul>
+ *   <li>{@link ProductionKind#FIXED} — produces {@code amount} every interval (Sunflower, Primal Sunflower).</li>
+ *   <li>{@link ProductionKind#STAGED} — amount scales with the plant's growth stage
+ *       ({@code amounts[stage]} — Sun-shroom's 25/50/75).</li>
+ *   <li>{@link ProductionKind#ONESHOT} — produces once and immediately dies (Gold Bloom).</li>
+ * </ul>
+ *
+ * <p>Production is autonomous (no zombie precondition). The {@code Double Sun Chance}
+ * upgrade flag, when unlocked, doubles the produced amount 50 % of the time.
+ * {@link #produce} is static so Plant Food can reuse the exact same payload.
+ */
+public class SunProducerAction extends PlantAction {
 
-//     private final SunProducerActionConfig config;
+    private final SunProducerActionConfig config;
+    private float animTime = 0f;
+    private boolean produced = false;
 
-//     public SunProducerAction(float intervalSeconds, SunProducerActionConfig config) {
-//         super(intervalSeconds);
-//         this.config = config;
-//     }
+    public SunProducerAction(SunProducerActionConfig config) {
+        this.config = config;
+    }
 
-//     @Override
-//     protected boolean canUse(Plant plant, GameContext ctx) {
-//         return true; // autonomous — no zombie precondition
-//     }
+    @Override
+    public boolean shouldTrigger(Plant plant, GameContext ctx, float dt) {
+        stateTime += dt;
+        if (stateTime < config.intervalSeconds) {
+            return false;
+        }
+        return true;
+    }
 
-//     @Override
-//     protected void doExecute(Plant plant, GameContext ctx) {
-//         produce(config, plant, ctx);
-//         if (config.productionKind == ProductionKind.ONESHOT) {
-//             plant.kill();
-//         }
-//     }
+    @Override
+    public String getLabel() {
+        return "ProduceSun";
+    }
 
-//     @Override
-//     public String getName() { return "ProduceSun"; }
+    @Override
+    public void onEnter(Plant plant, GameContext ctx) {
+        stateTime = 0f;
+        produced = false;
+        PamAnimationConfig config = plant.getSheet().pamAnimationConfig;
+        animTime = AnimationCatalog.getInstance().getClipDuration(config.pamFilePath, config.attackActionLabel);
+    }
 
-//     /** Spawns one sun burst from {@code config}, honoring growth-stage amounts. Reused by Plant Food. */
-//     public static void produce(SunProducerActionConfig config, Plant plant, GameContext ctx) {
-//         int amount = (int)config.amount;
-//         if (amount <= 0) return;
-//         if (plant.getUnlockedFlags().contains("Double Sun Chance") && Math.random() < 0.5) {
-//             amount *= 2;
-//         }
-//         Sun sun = new Sun(SunType.NORMAL, plant.getCol(), plant.getLane(), amount, false, ctx);
-//         ctx.spawnSun(sun);
-//         ctx.log("[Action] " + plant.getSheet().getName() + " produced " + amount + " sun.");
-//     }
-// }
+    @Override
+    public void update(Plant plant, GameContext ctx, float dt) {
+        super.update(plant, ctx, dt);
+        if (plant.isDead()) {
+            return;
+        }
+        if (!produced && stateTime >= config.delaySeconds) {
+            produced = true;
+            produce(config, plant, ctx);
+            if (config.productionKind == ProductionKind.ONESHOT) {
+                plant.kill();
+                return;
+            }
+        }
+        if (stateTime >= animTime) {
+            plant.changeState(new PlantIdleState());
+        }
+    }
 
+    @Override
+    public void onExit(Plant plant, GameContext ctx) {
+    }
+
+    @Override
+    public FrameConfig draw(Plant plant, GameContext ctx) {
+        PamAnimationConfig config = plant.getSheet().pamAnimationConfig;
+        float x = GameController.colToWorldX(plant.getCol());
+        float y = GameController.laneToWorldY(plant.getLane());
+        Vector2 pos = new Vector2(x, y);
+        Vector2 scale = new Vector2(0.7f, 0.7f);
+        return new FrameConfig(config.pamFilePath, config.attackActionLabel, stateTime, pos, scale, null, true);
+    }
+
+    /** Spawns one sun burst from {@code config}, honoring growth-stage amounts, the spawn
+     *  offset and the Double Sun upgrade flag. Reused by Plant Food. */
+    public static void produce(SunProducerActionConfig config, Plant plant, GameContext ctx) {
+        float amount = resolveAmount(config, plant);
+        if (amount <= 0f) {
+            return;
+        }
+
+        if (plant.getUnlockedFlags().contains("Double Sun Chance") && Math.random() < 0.5) {
+            amount *= 2f;
+        }
+
+        Sun sun = new Sun(SunType.NORMAL, plant.getCol(), plant.getLane(), (int) amount, false, ctx);
+        sun.getCurrentPos().add(config.spawnOffset.x, config.spawnOffset.y);
+        ctx.spawnSun(sun);
+        ctx.log("[Action] " + plant.getSheet().getName() + " produced " + (int) amount + " sun.");
+    }
+
+    private static float resolveAmount(SunProducerActionConfig config, Plant plant) {
+        if (config.productionKind == ProductionKind.STAGED && config.amounts != null && config.amounts.length > 0) {
+            int stage = Math.max(0, Math.min(plant.getGrowthStageIndex(), config.amounts.length - 1));
+            return config.amounts[stage];
+        }
+        return config.amount;
+    }
+}
 
 
 ======================================================
@@ -10442,54 +10705,139 @@ FILE: FamilyBuffAction.java
 FILE: LobberAction.java
 ======================================================
 
-// package com.pvz.models.entities.plants.actions;
+package com.pvz.models.entities.plants.actions;
 
-// import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
-// import com.pvz.models.entities.plants.Plant;
-// import com.pvz.models.entities.plants.enums.PlantTag;
-// import com.pvz.models.entities.zombies.Zombie;
-// import com.pvz.models.entities.zombies.effects.EffectType;
-// import com.pvz.models.entities.zombies.effects.StatusEffect;
-// import com.pvz.models.games.GameContext;
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
+import com.pvz.models.entities.plants.config.LobberActionConfig;
+import com.pvz.models.entities.plants.config.LobberActionConfig.LobPattern;
+import com.pvz.models.entities.plants.config.PamAnimationConfig;
+import com.pvz.models.entities.plants.fsm.PlantIdleState;
+import com.pvz.models.entities.projectile.Projectile;
+import com.pvz.models.entities.projectile.ProjectileFactory;
+import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.games.GameContext;
 
-// public class LobberAction extends CooldownPlantAction {
+/**
+ * Config-driven attack for lobber plants. Loads its {@link LobberActionConfig}
+ * payload the same way {@link ShooterAction} loads {@code ShooterActionConfig}:
+ * each pattern is copied into a per-attack list and spawned once its delay elapses.
+ *
+ * <p>Unlike a straight shooter, a lobbed projectile is aimed at a specific zombie
+ * (the parabolic arc lands on it), so on every pattern the action picks a handful
+ * of random zombies in the plant's lane — or every zombie when {@code allLanes} or
+ * {@code targets <= 0} — and hands the target to {@link ProjectileFactory}, which
+ * decides the arc, splash and status effects from the {@code projectileType}.
+ */
+public class LobberAction extends PlantAction {
 
-//     private static final int DEFAULT_SPLASH_TARGETS = 3;
+    private final LobberActionConfig config;
+    private final ArrayList<LobPattern> patterns = new ArrayList<>();
+    private float animTime = 0f;
 
-//     public LobberAction(float intervalSeconds) {
-//         super(intervalSeconds);
-//     }
+    public LobberAction(LobberActionConfig config) {
+        this.config = config;
+    }
 
-//     @Override
-//     protected boolean canUse(Plant plant, GameContext ctx) {
-//         return !ctx.getZombiesInLane(plant.getLane()).isEmpty();
-//     }
+    @Override
+    public boolean shouldTrigger(Plant plant, GameContext ctx, float dt) {
+        stateTime += dt;
+        if (stateTime < config.intervalSeconds) {
+            return false;
+        }
+        return !ctx.getZombiesInLane(plant.getLane()).isEmpty();
+    }
 
-//     @Override
-//     protected void doExecute(Plant plant, GameContext ctx) {
-//         List<Zombie> zombies = ctx.getZombiesInLane(plant.getLane());
-//         boolean aoe = plant.getSheet().hasTag(PlantTag.AOE);
-//         boolean chills = plant.getSheet().hasTag(PlantTag.ICE);
-//         int targets = aoe ? Math.min(zombies.size(), DEFAULT_SPLASH_TARGETS) : 1;
+    @Override
+    public String getLabel() {
+        return "Lob";
+    }
 
-//         int hit = 0;
-//         for (Zombie z : zombies) {
-//             if (hit >= targets) break;
-//             z.takeDamage(plant.getEffectiveDamage() , false);
-//             if (chills) {
-//                 z.applyEffect(new StatusEffect(
-//                         EffectType.CHILL, 3 * Plant.TICKS_PER_SECOND));
-//             }
-//             hit++;
-//         }
-//         ctx.log("[Action] " + plant.getSheet().getName() + " lobbed damage onto " + hit
-//                 + " zombie(s) in lane " + plant.getLane() + ".");
-//     }
+    @Override
+    public void onEnter(Plant plant, GameContext ctx) {
+        stateTime = 0f;
+        patterns.clear();
+        for (LobberActionConfig.LobPattern pattern : config.patterns) {
+            if (pattern.chance < 1f && Math.random() >= pattern.chance) {
+                continue;
+            }
+            LobPattern newPattern = new LobberActionConfig.LobPattern();
+            newPattern.projectileType = pattern.projectileType;
+            newPattern.damage = pattern.damage;
+            newPattern.targets = pattern.targets;
+            newPattern.allLanes = pattern.allLanes;
+            newPattern.positionOffset.set(pattern.positionOffset);
+            newPattern.delaySeconds = pattern.delaySeconds;
+            patterns.add(newPattern);
+        }
 
-//     @Override
-//     public String getName() { return "Lob"; }
-// }
+        PamAnimationConfig config = plant.getSheet().pamAnimationConfig;
+        animTime = AnimationCatalog.getInstance().getClipDuration(config.pamFilePath, config.attackActionLabel);
+    }
+
+    @Override
+    public void update(Plant plant, GameContext ctx, float dt) {
+        super.update(plant, ctx, dt);
+
+        Iterator<LobberActionConfig.LobPattern> iterator = patterns.iterator();
+        while (iterator.hasNext()) {
+            LobberActionConfig.LobPattern pattern = iterator.next();
+            if (stateTime >= pattern.delaySeconds) {
+                spawnLobbedProjectiles(plant, ctx, pattern);
+                iterator.remove();
+            }
+        }
+
+        if (patterns.isEmpty() && stateTime >= animTime) {
+            plant.changeState(new PlantIdleState());
+        }
+    }
+
+    private void spawnLobbedProjectiles(Plant plant, GameContext ctx, LobberActionConfig.LobPattern pattern) {
+        List<Zombie> candidates = pattern.allLanes
+                ? ctx.getZombies().stream().filter(z -> !z.isDead()).toList()
+                : ctx.getZombiesInLane(plant.getLane());
+
+        int count = pattern.targets <= 0 ? candidates.size() : Math.min(pattern.targets, candidates.size());
+
+        List<Zombie> targets = new ArrayList<>(candidates);
+        Collections.shuffle(targets);
+
+        float x = GameController.colToWorldX(plant.getCol()) + pattern.positionOffset.x;
+        float y = GameController.laneToWorldY(plant.getLane()) + pattern.positionOffset.y;
+
+        for (int i = 0; i < count; i++) {
+            Zombie target = targets.get(i);
+            Projectile projectile = ProjectileFactory.create(
+                    pattern.projectileType, ctx, new Vector2(x, y), new Vector2(), pattern.damage, target);
+            ctx.spawnProjectile(projectile);
+            ctx.log("[Action] " + plant.getSheet().getName() + " lobbed " + pattern.projectileType
+                    + " at zombie in lane " + GameController.worldYtoLane(target.getY()) + ".");
+        }
+    }
+
+    @Override
+    public void onExit(Plant plant, GameContext ctx) {
+    }
+
+    @Override
+    public FrameConfig draw(Plant plant, GameContext ctx) {
+        PamAnimationConfig config = plant.getSheet().pamAnimationConfig;
+        float x = GameController.colToWorldX(plant.getCol());
+        float y = GameController.laneToWorldY(plant.getLane());
+        Vector2 pos = new Vector2(x, y);
+        Vector2 scale = new Vector2(0.7f, 0.7f);
+        return new FrameConfig(config.pamFilePath, config.attackActionLabel, stateTime, pos, scale, null, true);
+    }
+}
 
 
 ======================================================
@@ -10908,12 +11256,16 @@ FILE: PlantFactory.java
 
 package com.pvz.models.entities.plants;
 
+import com.pvz.models.entities.plants.actions.LobberAction;
 import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.actions.ShooterAction;
+import com.pvz.models.entities.plants.actions.SunProducerAction;
+import com.pvz.models.entities.plants.config.LobberActionConfig;
 import com.pvz.models.entities.plants.config.PlantActionConfig;
 import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.config.PlantJsonConfig;
 import com.pvz.models.entities.plants.config.ShooterActionConfig;
+import com.pvz.models.entities.plants.config.SunProducerActionConfig;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -10946,22 +11298,21 @@ public class PlantFactory {
     /** Config-driven path for {@code SHOOTER}/{@code STRIKE_THROUGH}/{@code SUN_PRODUCER} plants (see {@code plant_actions.json}). */
     private Plant createFromConfig(PlantJsonConfig config, int col, int lane, int level, boolean boosted, GameContext ctx) {
         PlantPropertySheet sheet = CONFIG_REGISTRY.toSheet(config);
-        PlantAction attackAction = buildConfigAction(config.attackConfig, sheet.getActionIntervalSeconds());
+        PlantAction attackAction = buildConfigAction(config.attackConfig);
         // PlantAction feedAction = new ConfigFeedAction(config.feedConfig);
         return new Plant(sheet, attackAction, null, col, lane, level, boosted, ctx);
     }
 
-    private PlantAction buildConfigAction(PlantActionConfig config, Float intervalSeconds) {
-        if (intervalSeconds == null) {
-            // return PassiveAction.INSTANCE;
-        }
+    private PlantAction buildConfigAction(PlantActionConfig config) {
         if (config instanceof ShooterActionConfig shooterConfig) {
             return new ShooterAction(shooterConfig);
         }
-        // if (config instanceof SunProducerActionConfig sunConfig) {
-        //     return new SunProducerAction(intervalSeconds, sunConfig);
-        // }
-        // return PassiveAction.INSTANCE;
+        if (config instanceof LobberActionConfig lobberConfig) {
+            return new LobberAction(lobberConfig);
+        }
+        if (config instanceof SunProducerActionConfig sunConfig) {
+            return new SunProducerAction(sunConfig);
+        }
         return null;
     }
 
@@ -11395,38 +11746,6 @@ public final class DamageProfile {
 
     public float valueAtStage(int stageIndex) {
         if (kind != DamageKind.STAGED || stages.length == 0) return value;
-        int idx = Math.max(0, Math.min(stageIndex, stages.length - 1));
-        return stages[idx];
-    }
-}
-
-
-======================================================
-FILE: SunProduction.java
-======================================================
-
-package com.pvz.models.entities.plants.data;
-
-public final class SunProduction {
-    private final ProductionKind kind;
-    private final float amount;
-    private final float[] stages;
-    private final float[] stageSeconds;
-
-    public SunProduction(ProductionKind kind, float amount, float[] stages, float[] stageSeconds) {
-        this.kind = kind;
-        this.amount = amount;
-        this.stages = stages == null ? new float[0] : stages.clone();
-        this.stageSeconds = stageSeconds == null ? new float[0] : stageSeconds.clone();
-    }
-
-    public ProductionKind getKind() { return kind; }
-    public float getAmount()        { return amount; }
-    public float[] getStages()      { return stages.clone(); }
-    public float[] getStageSeconds(){ return stageSeconds.clone(); }
-
-    public float amountAtStage(int stageIndex) {
-        if (kind != ProductionKind.STAGED || stages.length == 0) return amount;
         int idx = Math.max(0, Math.min(stageIndex, stages.length - 1));
         return stages[idx];
     }
@@ -14605,7 +14924,7 @@ public class Projectile implements TickAware {
     @Override
     public FrameConfig draw() {
         PvZ2.pamPlayer.draw(PvZ2.batch, type.path,
-                type.lable, stateTime, pos.x, pos.y, true);
+                type.lable, stateTime, pos.x, pos.y, type.scale, type.scale, true);
         return null;
     }
 
@@ -14875,6 +15194,43 @@ public class PiercingEffectState extends ProjectileEffectState {
 
 
 ======================================================
+FILE: ButterEffectState.java
+======================================================
+
+package com.pvz.models.entities.projectile.effects;
+
+import com.pvz.models.entities.projectile.Projectile;
+import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.effects.EffectType;
+import com.pvz.models.entities.zombies.effects.StatusEffect;
+import com.pvz.models.games.GameContext;
+
+/**
+ * Kernel-pult's butter: single-target damage plus a brief stun — the zombie is
+ * temporarily buttered and cannot move or attack (see {@link EffectType#STUN}).
+ */
+public class ButterEffectState extends ProjectileEffectState {
+
+    /** 20 ticks == 2 in-game seconds at Zombie.TICKS_PER_SECOND (10). */
+    private static final int STUN_TICKS = 20;
+
+    @Override
+    public void onImpact(Projectile projectile, Zombie primaryTarget, GameContext ctx) {
+        if (primaryTarget == null) {
+            return;
+        }
+        primaryTarget.takeDamage(projectile.getDamage(), bypassesArmor());
+        primaryTarget.applyEffect(new StatusEffect(EffectType.STUN, STUN_TICKS));
+    }
+
+    @Override
+    public String getLabel() {
+        return "Butter";
+    }
+}
+
+
+======================================================
 FILE: IceEffectState.java
 ======================================================
 
@@ -15030,6 +15386,7 @@ package com.pvz.models.entities.projectile;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.entities.projectile.effects.AreaFireEffectState;
+import com.pvz.models.entities.projectile.effects.ButterEffectState;
 import com.pvz.models.entities.projectile.effects.FireEffectState;
 import com.pvz.models.entities.projectile.effects.IceEffectState;
 import com.pvz.models.entities.projectile.effects.MelonEffectState;
@@ -15098,6 +15455,14 @@ public class ProjectileFactory {
                 projectile.setMotionState(lobbedTowards(target));
                 projectile.setEffectState(new MelonEffectState(true));
             }
+            case CABBAGE, KERNEL -> {
+                projectile.setMotionState(lobbedTowards(target));
+                projectile.setEffectState(new NormalEffectState());
+            }
+            case BUTTER -> {
+                projectile.setMotionState(lobbedTowards(target));
+                projectile.setEffectState(new ButterEffectState());
+            }
             case FUME, SPIKE -> {
                 projectile.setMotionState(new StraightMotionState());
                 projectile.setEffectState(new PiercingEffectState());
@@ -15148,14 +15513,25 @@ public enum ProjectileType {
     // --- New for the projectile State Pattern pass ---
     PEPPER_BALL("768/FULL/EFFECTS/PEPPERPULT_PROJECTILE/PEPPERPULT_PROJECTILE.PAM", "animation"),   // Pepper-pult: lobbed, area fire effect
     MELON("768/INITIAL/EFFECTS/T_MELON_PROJECTILE/T_MELON_PROJECTILE.PAM", "animation"),         // Melon-pult: lobbed, area effect
-    WINTER_MELON("768/FULL/EFFECTS/T_WINTERMELON_PROJECTILE/T_WINTERMELON_PROJECTILE.PAM", "animation");  // Winter Melon-pult: lobbed, area effect + chill
+    WINTER_MELON("768/FULL/EFFECTS/T_WINTERMELON_PROJECTILE/T_WINTERMELON_PROJECTILE.PAM", "animation"),  // Winter Melon-pult: lobbed, area effect + chill
+    CABBAGE("768/INITIAL/EFFECTS/T_CABBAGEPULT_PROJECTILE/T_CABBAGEPULT_PROJECTILE.PAM", "animation", 0.45f),  // Cabbage-pult: lobbed, single target (scaled down, the PAM art is very large)
+    KERNEL("768/INITIAL/EFFECTS/T_KERNALPULT_PROJECTILE/T_KERNALPULT_PROJECTILE.PAM", "animation"),  // Kernel-pult: lobbed kernel, single target
+    BUTTER("768/INITIAL/EFFECTS/SPLAT_KERNALPULT_BUTTER/SPLAT_KERNALPULT_BUTTER.PAM", "animation");  // Kernel-pult butter: lobbed, stuns target
 
 
     public String path;
     public String lable;
-    ProjectileType(String animPath , String lable) {
+    /** Uniform render scale for this projectile's animation; defaults to 1 (full size). */
+    public float scale = 1f;
+
+    ProjectileType(String animPath, String lable) {
+        this(animPath, lable, 1f);
+    }
+
+    ProjectileType(String animPath, String lable, float scale) {
         this.path = animPath;
         this.lable = lable;
+        this.scale = scale;
     }
 
 
@@ -17070,7 +17446,7 @@ public class GameController {
             drawProjectiles();
         }
         batch.end();
-        // ۵. رسم هایلایت خانه زیر ماوس (در صورت انتخاب کارت)
+
         if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null && ctx != null) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             viewport.unproject(touchPos);

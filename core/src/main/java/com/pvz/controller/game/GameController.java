@@ -266,7 +266,7 @@ public class GameController {
             drawProjectiles();
         }
         batch.end();
-        // ۵. رسم هایلایت خانه زیر ماوس (در صورت انتخاب کارت)
+
         if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null && ctx != null) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             viewport.unproject(touchPos);

@@ -13,6 +13,7 @@ public class PotSlotItem extends ShopItem {
     public PotSlotItem() {
         this.id = 1;
         this.name = "Pot";
+        this.description = "Unlocks   a   new   pot   in   your   greenhouse.";
         this.price = new Price(Currency.COIN, 2000);
         this.unitAmount = 1;
         this.maxPurchasePerUser = 20;
@@ -25,16 +26,27 @@ public class PotSlotItem extends ShopItem {
         int totalCost = price.getAmount() * count;
         if (user.getProfile().getCoins() < totalCost) return false;
 
-        GreenHouse gh = AppContext.getInstance().getGreenHouse();
+        GreenHouse gh = greenhouseFor(user);
         if (gh == null) return false;
 
-        int lockedCount = 0;
-        for (GreenHousePot pot : gh.getGreenHousePots()) {
-            if (pot.isLocked()) lockedCount++;
-        }
-        if (count > lockedCount) return false;
+        if (count > gh.getLockedPotCount()) return false;
 
         return true;
+    }
+
+    private static GreenHouse greenhouseFor(User user) {
+        GreenHouse gh = AppContext.getInstance().getGreenHouse();
+        if (gh == null && user != null) {
+            gh = user.getGreenHouse();
+        }
+        if (gh == null) {
+            gh = new GreenHouse();
+        }
+        if (user != null) {
+            user.setGreenHouse(gh);
+        }
+        AppContext.getInstance().setGreenHouse(gh);
+        return gh;
     }
 
     @Override
@@ -44,7 +56,7 @@ public class PotSlotItem extends ShopItem {
         int totalCost = price.getAmount() * count;
         user.getProfile().setCoins(user.getProfile().getCoins() - totalCost);
 
-        GreenHouse gh = AppContext.getInstance().getGreenHouse();
+        GreenHouse gh = greenhouseFor(user);
         int unlocked = 0;
         for (GreenHousePot pot : gh.getGreenHousePots()) {
             if (pot.isLocked() && unlocked < count) {

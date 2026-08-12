@@ -25,8 +25,12 @@ public class BorderedPanel extends Stack {
         Skin skin = PvzSkin.get();
 
         colorBox = new Table();
-        colorBox.setBackground(skin.newDrawable("white_pixel", bgColor));
-        add(colorBox);
+        colorBox.setBackground(skin.newDrawable("image_ui_dialog_asset_inner_bkgd_10", bgColor));
+
+        Table bgWrap = new Table();
+        bgWrap.pad(25, 32, 34, 32);
+        bgWrap.add(colorBox).grow();
+        add(bgWrap);
 
         paddingBox = new Table();
         paddingBox.pad(8, 10, 10, 10);
