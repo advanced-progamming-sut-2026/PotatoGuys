@@ -164,10 +164,10 @@
       "intervalSeconds": 1.5,
       "patterns": [
         {
-          "projectileType": "PEA",
+          "projectileType": "MELON",
           "damage": 20.0,
           "laneOffset": 0,
-          "positionOffset": { "x": 0.85, "y": -0.70 },
+          "positionOffset": { "x": 1, "y": 2 },
           "velocity": { "x": 4.0, "y": 0.0 },
           "delaySeconds": 0.4
         }

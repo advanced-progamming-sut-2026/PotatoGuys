@@ -10,7 +10,7 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 0,
+    "coins": 50,
     "diamonds": 1,
     "plantFood": 0,
     "collection": {
@@ -1186,7 +1186,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786469127590
+    "lastDailyReset": 1786523818632
   },
   "questLogRefreshed": false
 }

@@ -286,6 +286,11 @@ public class GameController {
         drawDebugShapes();
     }
 
+    public void resize(int width , int hight){
+        viewport.update(width , hight);
+        stage.getViewport().update(width, hight);
+    }
+
     private void drawBackground(){
         float x = -backgroundTextures[0].getRegionWidth();
         batch.draw(backgroundTextures[0], x, 0);
@@ -501,12 +506,17 @@ public class GameController {
         return GameMap.TOP_LANE_Y - (lane * GameMap.TILE_HEIGHT) + (GameMap.TILE_HEIGHT / 2f);
     }
 
-    public static int worldXtoCol(float x){
-        return (int)((x-GameMap.START_X-(GameMap.TILE_WIDTH / 2f))/GameMap.TILE_WIDTH);
+    public static int worldXtoCol(float x) {
+        return (int) Math.floor((x - GameMap.START_X) / GameMap.TILE_WIDTH);
     }
 
-    public static int worldYtoLane(float y){
-        return (int)((GameMap.TOP_LANE_Y + (GameMap.TILE_HEIGHT / 2f) - y)/GameMap.TILE_HEIGHT);
+    public static int worldYtoLane(float y) {
+        // اگر لاین‌ها از بالا به پایین (۰، ۱، ۲...) افزایش می‌یابند:
+        // return (int) Math.floor((y - GameMap.TOP_LANE_Y) / GameMap.TILE_HEIGHT);
+        
+        // نکته: اگر TOP_LANE_Y بالاترین نقطه است و y به سمت پایین افزایش می‌یابد، 
+        // فرمول بالا درست است. اگر محور Y معکوس است:
+        return (int) Math.ceil((GameMap.TOP_LANE_Y - y) / GameMap.TILE_HEIGHT);
     }
 
     public static float xToWorldX(float x){

@@ -8,12 +8,30 @@ import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.TickAware;
+import com.pvz.models.entities.projectile.effects.NormalEffectState;
+import com.pvz.models.entities.projectile.effects.ProjectileEffectState;
+import com.pvz.models.entities.projectile.fsm.ProjectileMotionState;
+import com.pvz.models.entities.projectile.fsm.StraightMotionState;
 import com.pvz.models.entities.zombies.Zombie;
-import com.pvz.models.entities.zombies.effects.EffectType;
-import com.pvz.models.entities.zombies.effects.StatusEffect;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.tile.Tile;
 
+/**
+ * A single in-flight projectile. Movement and on-impact behavior are no longer
+ * hard-coded booleans (poison/ice/fire/bouncing) — they're delegated to a pair of
+ * composable states, mirroring how {@code Plant} delegates to {@code PlantState}:
+ *
+ * <ul>
+ *   <li>{@link ProjectileMotionState} — HOW it moves each tick (straight line vs.
+ *       the parabolic arc used by lobbers).</li>
+ *   <li>{@link ProjectileEffectState} — WHAT happens the moment it connects
+ *       (plain damage, fire, area fire, chill, area+chill, pass-through, ...).</li>
+ * </ul>
+ *
+ * <p>{@link ProjectileFactory} is the single place that decides which pair of
+ * states a given {@link ProjectileType} gets, so adding a new projectile flavor
+ * never requires touching this class.
+ */
 public class Projectile implements TickAware {
 
     private final GameContext ctx;
@@ -21,66 +39,83 @@ public class Projectile implements TickAware {
 
     private float stateTime = 0f;
 
-    private Vector2 pos;
-    private Vector2 vel;
+    private final Vector2 pos;
+    private final Vector2 vel;
 
     private int lastCol;
     private int lastLane;
 
     private final float damage;
-    private final boolean poison;
-    private final boolean ice;
-    private final boolean fire;
-    private int pierceCount;
-    private boolean bouncing;
     private boolean isDead = false;
 
     private static final float HIT_RADIUS = 50f;
 
     private final Set<Zombie> hitZombies = new HashSet<>();
 
-    public Projectile(GameContext ctx, ProjectileType type, float startX, float startY , float velX , float velY ,float damage, boolean poison, boolean ice, boolean fire,int pierceCount, Object target) {
+    private ProjectileMotionState motionState;
+    private ProjectileEffectState effectState;
+
+    public Projectile(GameContext ctx, ProjectileType type, float startX, float startY,
+                       float velX, float velY, float damage) {
         this.ctx = ctx;
         this.type = type;
         this.pos = new Vector2(startX, startY);
         this.vel = new Vector2(velX, velY);
-
         this.damage = damage;
-        this.poison = poison;
-        this.ice = ice;
-        this.fire = fire;
-        this.pierceCount = pierceCount;
+
+        // Sensible defaults; ProjectileFactory swaps these for the real states.
+        this.motionState = new StraightMotionState();
+        this.effectState = new NormalEffectState();
     }
 
-    public void setBouncing(boolean bouncing) {
-        this.bouncing = bouncing;
+    // ── State wiring ──────────────────────────────────────────────────────────
+
+    public void setMotionState(ProjectileMotionState motionState) {
+        this.motionState = motionState;
+        this.motionState.onEnter(this);
     }
 
-    public boolean isDead() {
-        return isDead;
+    public void setEffectState(ProjectileEffectState effectState) {
+        this.effectState = effectState;
     }
 
-    // ─── Tick Update Logic ───────────────────────────────────────────────────
+    public ProjectileMotionState getMotionState() {
+        return motionState;
+    }
+
+    public ProjectileEffectState getEffectState() {
+        return effectState;
+    }
+
+    // ── TickAware ─────────────────────────────────────────────────────────────
 
     @Override
     public void enter() {
         stateTime = 0f;
         lastCol = GameController.worldXtoCol(pos.x);
         lastLane = GameController.worldYtoLane(pos.y);
+        motionState.onEnter(this);
     }
 
     @Override
     public void update(float dt) {
         stateTime += dt;
-        if (isDead) return;
+        if (isDead) {
+            return;
+        }
 
-        pos.x += vel.x * 80 * dt;
-        pos.y += vel.y * 80 * dt;
+        motionState.update(this, dt);
+        // A lobbed projectile may have just landed and called land() -> destroy()
+        // from inside motionState.update(); bail out before touching tiles/zombies.
+        if (isDead) {
+            return;
+        }
 
-        int col=GameController.worldXtoCol(pos.x);
+        int col = GameController.worldXtoCol(pos.x);
         int lane = GameController.worldYtoLane(pos.y);
 
-        if (col < -0.5f || col >= ctx.getMap().getColumns() + 0.5f || lane < -0.5f || lane >= ctx.getMap().getLanes() + 0.5f) {
+        if (col < -0.5f || col >= ctx.getMap().getColumns() + 0.5f
+                || lane < -0.5f || lane >= ctx.getMap().getLanes() + 0.5f) {
             destroy();
             return;
         }
@@ -97,36 +132,39 @@ public class Projectile implements TickAware {
                 return;
             }
 
-            if (isDead) return;
+            if (isDead) {
+                return;
+            }
         }
 
         checkCollisions2D();
     }
 
     @Override
-    public FrameConfig draw(){
-        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM" , "animation", stateTime, pos.x, pos.y, true);
+    public FrameConfig draw() {
+        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM",
+                "animation", stateTime, pos.x, pos.y, true);
         return null;
     }
 
     @Override
-    public void dispose() {}
+    public void dispose() {
+    }
 
-    // ─── 2D Collision & Bounce Logic ─────────────────────────────────────────
+    // ── Collision ─────────────────────────────────────────────────────────────
 
     private void checkCollisions2D() {
         for (Zombie z : ctx.getZombies()) {
-            if (z.isDead() || hitZombies.contains(z)) continue;
+            if (z.isDead() || hitZombies.contains(z)) {
+                continue;
+            }
 
-            float zX = z.getX();
-            float zY = z.getY();
-
-            // محاسبه فاصله اقلیدسی دوبعدی بین پرتابه و زامبی
-            double distance = Math.hypot(zX - pos.x, zY - pos.y);
-
+            double distance = Math.hypot(z.getX() - pos.x, z.getY() - pos.y);
             if (distance <= HIT_RADIUS) {
                 onHitZombie(z);
-                if (isDead) break;
+                if (isDead) {
+                    break;
+                }
             }
         }
     }
@@ -134,88 +172,84 @@ public class Projectile implements TickAware {
     private void onHitZombie(Zombie zombie) {
         hitZombies.add(zombie);
 
-        // اعمال دمیج به زامبی
-        // در متد takeDamage کلاس Zombie، آرگومان poison تعیین می‌کند که دمیج از آرمور عبور کند یا خیر.
-        zombie.takeDamage(damage, poison);
+        effectState.onImpact(this, zombie, ctx);
+        ctx.log("[Projectile] " + type + " (" + effectState.getLabel() + ") hit zombie at ("
+                + zombie.getX() + ", " + zombie.getY() + ")");
 
-        // اعمال افکت‌های وضعیتی (Slow, Unfreeze, Poison)
-        applyStatusEffects(zombie);
+        if (!effectState.piercesThrough()) {
+            destroy();
+        }
+    }
 
-        ctx.log("[Projectile] " + type + " hit zombie at (" + zombie.getX() + ", " + zombie.getY() + ")");
-
-        // ۱. مدیریت کمانه کردن (برای پیاز بولینگ / Bowling Bulb)
-        if (bouncing) {
-            handleBounce();
+    /**
+     * Called by a {@link ProjectileMotionState} (currently only the lobbed/aerial
+     * one) once its flight completes. Resolves the impact at the current position
+     * without requiring a live collision — area-effect states (Pepper-pult,
+     * Melon-pult family) look up their own targets from {@link GameContext}, while
+     * single-target effect states fall back to the nearest zombie at the landing tile.
+     */
+    public void land() {
+        if (isDead) {
             return;
         }
-
-        if (pierceCount > 0) {
-            pierceCount--;
-        } else {
-            destroy();
-        }
+        Zombie nearest = nearestZombieAt(pos.x, pos.y);
+        effectState.onImpact(this, nearest, ctx);
+        ctx.log("[Projectile] " + type + " (" + effectState.getLabel() + ") landed at ("
+                + pos.x + ", " + pos.y + ")");
+        destroy();
     }
 
-    private void applyStatusEffects(Zombie zombie) {
-        // توجه: مقادیر Duration در این بخش (مثل 100 یا 50) تیک‌های بازی هستند (هر 10 تیک = 1 ثانیه)
-        // بر اساس سازنده‌ی (Constructor) کلاس StatusEffect در پروژه خود، ممکن است پارامترهای دیگری نیز نیاز باشد.
-
-        if (ice) {
-            // اعمال کندی؛ به طور مثال برای 10 ثانیه (100 تیک)
-            zombie.applyEffect(new StatusEffect(EffectType.CHILL, 100));
-        }
-        if (fire) {
-            // اعمال آتش؛ طبق متد applyEffect در Zombie، اعمال BURNING خودکار باعث حذف CHILL و FROZEN می‌شود.
-            zombie.applyEffect(new StatusEffect(EffectType.BURNING, 20));
-
-        }
-        if (poison) {
-            // اعمال سم تدریجی؛ به طور مثال برای 5 ثانیه (50 تیک)
-            // (اگر دمیج مستقیم مد نظر نیست و قصد اعمال DoT از طریق کامپوننت را دارید)
-            zombie.applyEffect(new StatusEffect(EffectType.POISONED, 50));
-        }
-    }
-
-    private void handleBounce() {
-        Zombie nearestNextZombie = null;
-        double minDistance = Double.MAX_VALUE;
-
-        // پیدا کردن نزدیک‌ترین زامبی زنده که تیر هنوز به آن برخورد نکرده است
+    private Zombie nearestZombieAt(float x, float y) {
+        Zombie nearest = null;
+        double bestDistance = Double.MAX_VALUE;
         for (Zombie z : ctx.getZombies()) {
-            if (z.isDead() || hitZombies.contains(z)) continue;
-
-            double dist = Math.hypot(z.getX() - pos.x, z.getY() - pos.y);
-            if (dist < minDistance) {
-                minDistance = dist;
-                nearestNextZombie = z;
+            if (z.isDead()) {
+                continue;
+            }
+            double distance = Math.hypot(z.getX() - x, z.getY() - y);
+            if (distance < bestDistance) {
+                bestDistance = distance;
+                nearest = z;
             }
         }
-
-        // اگر زامبی دیگری در محیط وجود داشت، تیر به سمت او تغییر جهت می‌دهد
-        if (nearestNextZombie != null) {
-            float targetX = nearestNextZombie.getX();
-            float targetY = nearestNextZombie.getY();
-
-            // تغییر بردار جهت پرتابه به سمت زامبی جدید
-            // setVelocityVector(targetX - pos.x, targetY - pos.y);
-            ctx.log("[Projectile] " + type + " bounced towards target at (" + targetX + ", " + targetY + ")");
-        } else {
-            // اگر زامبی دیگری در صفحه نبود، تیر نابود می‌شود
-            destroy();
-        }
+        return nearest;
     }
 
     public void destroy() {
-        if (isDead) return;
+        if (isDead) {
+            return;
+        }
         this.isDead = true;
         ctx.removeProjectile(this);
     }
 
-    // ─── Getters ─────────────────────────────────────────────────────────────
+    // ── Getters ───────────────────────────────────────────────────────────────
 
-    public float getX() { return pos.x; }
-    public float getY() { return pos.y; }
-    public Vector2 getPos() { return pos; }
-    public float getDamage() {return damage;}
-    public ProjectileType getType() { return type; }
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public Vector2 getPos() {
+        return pos;
+    }
+
+    public Vector2 getVelocity() {
+        return vel;
+    }
+
+    public float getX() {
+        return pos.x;
+    }
+
+    public float getY() {
+        return pos.y;
+    }
+
+    public float getDamage() {
+        return damage;
+    }
+
+    public ProjectileType getType() {
+        return type;
+    }
 }

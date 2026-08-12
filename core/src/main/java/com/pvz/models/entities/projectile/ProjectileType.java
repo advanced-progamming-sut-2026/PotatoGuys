@@ -14,7 +14,12 @@ public enum ProjectileType {
     BULB_CYAN(0.22f),
     BULB_BLUE(0.22f),
     HOMING_BOLT(0.22f),
-    BULB_ORANGE(0.22f);
+    BULB_ORANGE(0.22f),
+
+    // --- New for the projectile State Pattern pass ---
+    PEPPER_BALL(0.25f),   // Pepper-pult: lobbed, area fire effect
+    MELON(0.20f),         // Melon-pult: lobbed, area effect
+    WINTER_MELON(0.20f);  // Winter Melon-pult: lobbed, area effect + chill
 
     private final float speed; // سرعت بر حسب کاشی (Grid Cell) در هر تیک
 

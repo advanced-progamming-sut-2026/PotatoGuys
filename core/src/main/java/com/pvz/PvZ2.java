@@ -3,6 +3,7 @@ package com.pvz;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,9 +13,11 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Json;
 import com.pvz.controller.AudioManager;
 import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.user.Setting;
 import com.pvz.models.user.User;
 import com.pvz.utils.SaveManager;
@@ -49,6 +52,7 @@ public class PvZ2 extends Game {
         globalAssetManager.load("news_preview/news_selected2.png", Texture.class);
         globalAssetManager.load("textures/ui/buttons_hud_back_normal.png", Texture.class);
         globalAssetManager.load("textures/ui/leaderboard.png", Texture.class);
+
         String savedUsername = SaveManager.getInstance().load("session.json", String.class);
         if (savedUsername != null) {
             HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
@@ -69,6 +73,11 @@ public class PvZ2 extends Game {
     }
     @Override
     public void create() {
+        FileHandle file = Gdx.files.internal("pvz-assets/animations.json");
+        Json json = new Json();
+        json.setIgnoreUnknownFields(true);
+        AnimationCatalog.setInstance(json.fromJson(AnimationCatalog.class, file));
+        
         globalAssetManager.finishLoading();
         textureBank=new TextureBank("768",Gdx.files.internal("./assets/pvz-assets/"));
         pamPlayer=new PamPlayer(textureBank,Gdx.files.internal("./assets/pvz-assets/"));

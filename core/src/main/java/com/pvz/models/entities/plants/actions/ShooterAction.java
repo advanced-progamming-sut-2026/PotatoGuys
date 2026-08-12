@@ -75,14 +75,9 @@ public class ShooterAction extends PlantAction {
             patterns.add(newPattern);
         }
 
-        FileHandle file = Gdx.files.internal("pvz-assets/animations.json");
-
-        Json json = new Json();
-        json.setIgnoreUnknownFields(true);
-
-        AnimationCatalog catalog = json.fromJson(AnimationCatalog.class, file);
+        
         PamAnimationConfig config = plant.getSheet().pamAnimationConfig;
-        animTime = catalog.getClipDuration(config.pamFilePath , config.attackActionLabel);
+        animTime = AnimationCatalog.getInstance().getClipDuration(config.pamFilePath , config.attackActionLabel);
     }
 
         @Override
