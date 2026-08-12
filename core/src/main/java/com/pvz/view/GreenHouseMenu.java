@@ -62,6 +62,11 @@ public class GreenHouseMenu extends ScreenAdapter {
     private static final String LOCK_ICON = "textures/greenhouse/lock_icon.png";
     private static final String PLANTS_DIR = "textures/greenhouse/plants/";
 
+    /** One-shot PAM shown over an empty pot before the seed is planted: a watering can pouring
+     *  into the pot. Its frames carry no clip labels, so the whole animation is the "" clip. */
+    private static final String WATER_POUR_PAM_PATH =
+        "768/INITIAL/ZEN_GARDEN/ZENGARDEN_WATER_POURING/ZENGARDEN_WATER_POURING.PAM";
+
     private static final float CELL_SIZE = 155f;
     private static final float CELL_PAD = 40f;
     private static final float GRID_VIEWPORT_HEIGHT = 950f;
@@ -78,12 +83,15 @@ public class GreenHouseMenu extends ScreenAdapter {
     /** How big the plant's animation area is inside the pot, as a fraction of {@link #CELL_SIZE}.
      *  Raise it to make the plant bigger in the pot, lower it to shrink it. */
     private static final float PLANT_ART_SIZE_FRACTION = 0.9f;
+    /** Extra multiplier on top of {@link #PLANT_ART_SIZE_FRACTION} for the water-pouring PAM.
+     *  Raise it to make the water-pouring animation bigger over the pot, lower it to shrink it. */
+    private static final float WATER_POUR_SIZE_FRACTION = 3f;
     /** Extra px the plant is shifted UP from its normal position inside the pot. Positive = up,
      *  negative = down. */
-    private static final float PLANT_ART_SHIFT_Y = -10f;
+    private static final float PLANT_ART_SHIFT_Y = -17f;
     /** Extra px the plant is shifted RIGHT from its normal position inside the pot. Positive = right,
      *  negative = left. */
-    private static final float PLANT_ART_SHIFT_X = 0f;
+    private static final float PLANT_ART_SHIFT_X = 20f;
 
     /** Grow-now dialog frame: total width, and the padding between the content and the
      *  decorative border so the buttons/text sit comfortably inside the cadre. */
@@ -94,11 +102,21 @@ public class GreenHouseMenu extends ScreenAdapter {
 
     private final PvZ2 game;
     private final GreenHouseController controller;
+    private final ShopMenu shopMenu = new ShopMenu();
     private Stage stage;
     private Skin skin;
 
     /** Growing pots whose countdown label needs refreshing every frame. */
     private final List<TimerBinding> timerBindings = new ArrayList<>();
+
+    /** Pot currently playing the water-pouring PAM (or -1/-1 when none). While set, taps are
+     *  ignored and the pot cell shows the pouring animation instead of the empty-pot label. */
+    private int wateringX = -1;
+    private int wateringY = -1;
+    private ClipRef wateringClip;
+    /** Set by the pouring actor when its animation finishes; render() then plants and rebuilds. */
+    private int plantAfterWaterX = -1;
+    private int plantAfterWaterY = -1;
 
     private Table growModal;
     private Label growPlantLabel;
@@ -110,6 +128,9 @@ public class GreenHouseMenu extends ScreenAdapter {
     public GreenHouseMenu(PvZ2 game) {
         this.game = game;
         this.controller = new GreenHouseController();
+        // The shop is an overlay on top of this screen; when it closes (after a
+        // purchase changed the wallet) the top bar must be rebuilt to show fresh values.
+        shopMenu.setOnHide(this::rebuild);
     }
 
     @Override
@@ -118,6 +139,12 @@ public class GreenHouseMenu extends ScreenAdapter {
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
         skin = PvzSkin.get();
+        // If we left the screen mid-pour, don't resume a stale animation (and its delayed plant).
+        wateringX = -1;
+        wateringY = -1;
+        wateringClip = null;
+        plantAfterWaterX = -1;
+        plantAfterWaterY = -1;
         rebuild();
         AudioManager.getInstance().playMusic(AudioPaths.GREEN_HOUSE,true,AudioManager.getInstance().getUserMusicVolume());
     }
@@ -142,6 +169,7 @@ public class GreenHouseMenu extends ScreenAdapter {
         rootTable.add(buildPotGrid()).expand().top().padTop(GRID_UP_OFFSET).row();
 
         stack.add(buildGrowModal());
+        stack.add(shopMenu);
     }
 
     private Table buildTitle() {
@@ -180,6 +208,16 @@ public class GreenHouseMenu extends ScreenAdapter {
             }
         });
         topLeft.add(almanacBtn).size(75, 70);
+
+        ImageButton shopBtn = new ImageButton(MenuUiKit.textureDrawable(MenuUiKit.loadTextureSafe("textures/shop/buttons_hud_store_normal.png")));
+        shopBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                shopMenu.showShop();
+            }
+        });
+        topLeft.add(shopBtn).size(75, 70).padLeft(12);
 
         Table topRight = new Table();
         Profile profile = currentProfile();
@@ -230,8 +268,9 @@ public class GreenHouseMenu extends ScreenAdapter {
         Stack potStack = new Stack();
 
         boolean locked = pot.isLocked();
-        boolean empty = !locked && pot.isEmpty();
-        GreenHousePlant plant = (locked || empty) ? null : pot.getPlant();
+        boolean watering = isWatering(pot.getX(), pot.getY());
+        boolean empty = !locked && !watering && pot.isEmpty();
+        GreenHousePlant plant = (locked || empty || watering) ? null : pot.getPlant();
         boolean ready = plant != null && plant.isReady();
 
         String potArt;
@@ -264,6 +303,8 @@ public class GreenHouseMenu extends ScreenAdapter {
 
         if (locked) {
             potStack.add(centeredIcon(LOCK_ICON, null, 0.5f));
+        } else if (watering) {
+            potStack.add(waterPourActor());
         } else if (plant != null) {
             potStack.add(plantArtActor(plant));
         }
@@ -281,6 +322,11 @@ public class GreenHouseMenu extends ScreenAdapter {
             emptyLabel.setFontScale(1f);
             emptyLabel.setColor(0.75f, 0.85f, 0.75f, 1f);
             cell.add(emptyLabel).padTop(6);
+        } else if (watering) {
+            Label wateringLabel = new Label("Watering...", skin);
+            wateringLabel.setFontScale(1f);
+            wateringLabel.setColor(0.75f, 0.9f, 1f, 1f);
+            cell.add(wateringLabel).padTop(6);
         } else {
             Table textCol = new Table();
             Label nameLabel = new Label(plant.isMariGold() ? "MariGold" : plant.getPlantType(), skin);
@@ -314,10 +360,17 @@ public class GreenHouseMenu extends ScreenAdapter {
         GreenHouse greenHouse = controller.getGreenHouse();
         GreenHousePot pot = greenHouse.getPot(x, y);
         if (pot == null || pot.isLocked()) return;
+        // Taps are ignored while a water-pouring animation is playing, so the delayed plant
+        // always lands in the pot the player actually tapped.
+        if (isWateringActive()) return;
 
         if (pot.isEmpty()) {
-            controller.plant(x, y);
-            rebuild();
+            if (beginWaterPour(x, y)) {
+                rebuild();
+            } else {
+                controller.plant(x, y);
+                rebuild();
+            }
             return;
         }
 
@@ -327,6 +380,30 @@ public class GreenHouseMenu extends ScreenAdapter {
             rebuild();
         } else {
             showGrowDialog(x, y);
+        }
+    }
+
+    private boolean isWateringActive() {
+        return wateringClip != null;
+    }
+
+    private boolean isWatering(int x, int y) {
+        return isWateringActive() && wateringX == x && wateringY == y;
+    }
+
+    /** Starts the water-pouring PAM over the given empty pot. Returns false (caller should plant
+     *  immediately) when the PAM can't be loaded or baked. */
+    private boolean beginWaterPour(int x, int y) {
+        try {
+            PvZ2.pamPlayer.clips(WATER_POUR_PAM_PATH); // force a synchronous bake so getClip() won't be null
+            ClipRef clip = PvZ2.pamPlayer.getClip(WATER_POUR_PAM_PATH, "");
+            if (clip == null || clip.duration <= 0f) return false;
+            wateringX = x;
+            wateringY = y;
+            wateringClip = clip;
+            return true;
+        } catch (RuntimeException e) {
+            return false;
         }
     }
 
@@ -506,6 +583,25 @@ public class GreenHouseMenu extends ScreenAdapter {
         return wrap;
     }
 
+    /** The water-pouring PAM over an empty pot, laid out like {@link #plantArtActor}. Once its
+     *  clip finishes, the animation is cleared and {@link #plantAfterWaterX} is set so render()
+     *  can plant the seed and rebuild. */
+    private Actor waterPourActor() {
+        WaterPourActor actor = new WaterPourActor(WATER_POUR_PAM_PATH, wateringClip, () -> {
+            if (plantAfterWaterX == -1 && plantAfterWaterY == -1) {
+                plantAfterWaterX = wateringX;
+                plantAfterWaterY = wateringY;
+            }
+            wateringX = -1;
+            wateringY = -1;
+            wateringClip = null;
+        });
+        Table wrap = new Table();
+        wrap.add(actor).size(CELL_SIZE * PLANT_ART_SIZE_FRACTION * WATER_POUR_SIZE_FRACTION)
+            .expandY().bottom().padBottom(PLANT_ART_LIFT);
+        return wrap;
+    }
+
     /** Returns {pamFilePath, idleLabel} for the plant's idle PAM, or {@code null} when the plant
      *  has no configured animation. MariGold hard-codes to MARIGOLD.PAM; other plants use their
      *  {@code pamAnimationConfig} from plant_actions.json, falling back to a folder-style path
@@ -613,6 +709,49 @@ public class GreenHouseMenu extends ScreenAdapter {
         }
     }
 
+    /** Plays the water-pouring PAM once (non-looping, clamped to the last frame) inside a pot
+     *  cell, then invokes {@code onFinished} exactly once. */
+    private static final class WaterPourActor extends Actor {
+        private final String pamPath;
+        private final ClipRef clip;
+        private final Runnable onFinished;
+        private float stateTime;
+        private boolean finished;
+
+        WaterPourActor(String pamPath, ClipRef clip, Runnable onFinished) {
+            this.pamPath = pamPath;
+            this.clip = clip;
+            this.onFinished = onFinished;
+        }
+
+        @Override
+        public void act(float delta) {
+            super.act(delta);
+            if (finished) return;
+            stateTime += delta;
+            if (stateTime >= clip.duration) {
+                finished = true;
+                if (onFinished != null) onFinished.run();
+            }
+        }
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            Rectangle bounds = PvZ2.pamPlayer.bounds(pamPath);
+            float target = Math.min(getWidth(), getHeight());
+            float scale;
+            if (bounds != null && bounds.width > 0 && bounds.height > 0) {
+                scale = Math.min(target / bounds.width, target / bounds.height);
+            } else {
+                scale = target / 390f; // default PAM canvas is 390x390
+            }
+            float cx = getX() + getWidth() / 2f;
+            float cy = getY() + getHeight() / 2f;
+            // loop=false: plays once and clamps on the last frame
+            PvZ2.pamPlayer.draw(batch, clip, stateTime, cx, cy, scale, scale, false);
+        }
+    }
+
     private void logIfMissing(String path) {
         if (path == null || path.isEmpty()) return;
         if (!Gdx.files.internal(path).exists()) {
@@ -647,6 +786,18 @@ public class GreenHouseMenu extends ScreenAdapter {
 
         stage.act(delta);
         stage.draw();
+
+        if (plantAfterWaterX != -1) {
+            int x = plantAfterWaterX;
+            int y = plantAfterWaterY;
+            plantAfterWaterX = -1;
+            plantAfterWaterY = -1;
+            GreenHousePot pot = controller.getGreenHouse().getPot(x, y);
+            if (pot != null && pot.isEmpty()) {
+                controller.plant(x, y);
+            }
+            rebuild();
+        }
     }
 
     @Override

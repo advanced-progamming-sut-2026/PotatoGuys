@@ -4,13 +4,28 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="bug fixes">
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="added shop">
+      <change afterPath="$PROJECT_DIR$/assets/textures/shop/buttons_hud_store_normal.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/shop/close_button.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/shop/close_button_down.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/shop/currency_exchange.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/shop/plant_food.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/shop/pot.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/shop/random_seed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/textures/shop/selectable_seed.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ShopMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/Plant.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/Plant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/bonk_choy/BonkChoy.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/bonk_choy/BonkChoy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/bonk_choy/state/Attack.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/bonk_choy/state/Attack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/bonk_choy/state/Idle.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/bonk_choy/state/Idle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/NormalMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/NormalMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/ShopController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/ShopController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/greenhouse/GreenHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/greenhouse/GreenHouse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/ShopItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/ShopItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/CurrencyExchangeItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/CurrencyExchangeItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/PlantFoodItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/PlantFoodItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/PotSlotItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/PotSlotItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/RandomSeedPacketItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/RandomSeedPacketItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/SelectableSeedPacketItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/SelectableSeedPacketItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/BorderedPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/BorderedPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +145,7 @@
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/104/IdeaProjects/plantsvszombies2/assets/images/chapters",
+    "last_opened_file_path": "C:/Users/104/IdeaProjects/plantsvszombies2/assets/news_preview",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -147,11 +162,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\news_preview" />
+      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\shop" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\images\chapters" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\ui" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse" />
-      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\images" />
-      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse\plants" />
     </key>
   </component>
   <component name="RunManager" selected="Gradle.plantsvszombies2 [:lwjgl3:run]">
@@ -413,7 +428,8 @@
     <MESSAGE value="updated setting menu you can now change the brightness and music vol" />
     <MESSAGE value="added Collection menu ( just for plants )" />
     <MESSAGE value="bug fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="bug fixes" />
+    <MESSAGE value="added shop" />
+    <option name="LAST_COMMIT_MESSAGE" value="added shop" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -431,7 +447,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/grave_buster/GraveBuster.java</url>
           <line>19</line>
-          <properties class="com.pvz.models.entities.plants.grave_buster.GraveBuster" method="isPlantableOnTile">
+          <properties class="com.pvz.models.entities.plants.grave_buster.GraveBuster">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>

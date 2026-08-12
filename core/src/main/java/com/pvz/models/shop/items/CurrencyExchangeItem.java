@@ -10,6 +10,7 @@ public class CurrencyExchangeItem extends ShopItem {
     public CurrencyExchangeItem() {
         this.id = 5;
         this.name = "Currency Exchange";
+        this.description = "Trades   diamonds    for    coins.";
         this.price = new Price(Currency.DIAMOND, 5);
         this.unitAmount = 500;
         this.maxPurchasePerUser = 0;

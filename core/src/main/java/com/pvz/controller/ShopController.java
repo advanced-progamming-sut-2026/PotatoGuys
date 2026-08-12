@@ -1,181 +1,158 @@
 package com.pvz.controller;
 
-import java.util.regex.Matcher;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.enums.PlantType;
+import com.pvz.models.greenhouse.GreenHouse;
+import com.pvz.models.shop.Currency;
 import com.pvz.models.shop.DailyOffer;
 import com.pvz.models.shop.Shop;
 import com.pvz.models.shop.ShopItem;
+import com.pvz.models.shop.items.PotSlotItem;
+import com.pvz.models.shop.items.SelectableSeedPacketItem;
+import com.pvz.models.user.Collection;
 import com.pvz.models.user.User;
 
+/**
+ * Live controller for the graphical shop. Rebuilt from scratch — the old
+ * ShopController was fully commented-out console-era code (Result/Matcher based),
+ * but its validation logic and error messages were solid, so this keeps that
+ * same behavior/wording, just as plain method calls instead of regex commands.
+ */
 public class ShopController {
-/*
-    private Menu previousMenu;
 
-    public ShopController() {
-        this.previousMenu = new pvz.view.OldMainMenu();
-    }
-
-    public ShopController(Menu previousMenu) {
-        this.previousMenu = previousMenu;
-    }
+    private Shop shop;
 
     private User getCurrentUser() {
         return AppContext.getInstance().getCurrentUser();
     }
 
-    public Result showPermanentItems(Matcher matcher) {
-        Shop shop = new Shop(getCurrentUser());
-        StringBuilder sb = new StringBuilder("Permanent Items:");
-        for (ShopItem item : shop.getPermanentItems()) {
-            sb.append("\n").append(item.getId()).append(": ").append(item.getName())
-                    .append(" - ").append(item.getPrice().getAmount()).append(" ")
-                    .append(item.getPrice().getCurrency())
-                    .append(" | Unit: ").append(item.getUnitAmount());
+    /** Lazily creates the shop once per controller instance (Shop's constructor already
+     *  handles loading/creating today's daily offer idempotently from the user's profile). */
+    public Shop getShop() {
+        if (shop == null) {
+            shop = new Shop(getCurrentUser());
         }
-        return new Result(sb.toString());
+        return shop;
     }
 
-    public Result showDailyOffer(Matcher matcher) {
-        Shop shop = new Shop(getCurrentUser());
-        DailyOffer offer = shop.getDailyOffer();
+    public List<ShopItem> getPermanentItems() {
+        return getShop().getPermanentItems();
+    }
+
+    public DailyOffer getDailyOffer() {
+        return getShop().getDailyOffer();
+    }
+
+    /** Plants the user actually owns — for the Selectable Seed Packet's plant picker. */
+    public List<PlantType> getUnlockedPlantTypes() {
+        List<PlantType> result = new ArrayList<>();
+        User user = getCurrentUser();
+        if (user == null) {
+            return result;
+        }
+        Collection collection = user.getProfile().getCollection();
+        for (PlantType type : PlantType.values()) {
+            if (collection.getPlant(type) != null) {
+                result.add(type);
+            }
+        }
+        return result;
+    }
+
+    /** How many of maxPurchasePerUser this item has left this session, or -1 if unlimited (0). */
+    public int getRemainingCapacity(ShopItem item) {
+        if (item.getMaxPurchasePerUser() <= 0) {
+            return -1; // unlimited
+        }
+        User user = getCurrentUser();
+        if (user == null) {
+            return item.getMaxPurchasePerUser();
+        }
+        if (item instanceof com.pvz.models.shop.items.PlantFoodItem) {
+            return Math.max(0, item.getMaxPurchasePerUser() - user.getProfile().getPlantFood());
+        }
+        if (item instanceof PotSlotItem) {
+            return getGreenHouse().getLockedPotCount();
+        }
+        return item.getMaxPurchasePerUser();
+    }
+
+    private GreenHouse getGreenHouse() {
+        User user = getCurrentUser();
+        GreenHouse gh = AppContext.getInstance().getGreenHouse();
+        if (gh == null && user != null) {
+            gh = user.getGreenHouse();
+        }
+        if (gh == null) {
+            gh = new GreenHouse();
+        }
+        if (user != null) {
+            user.setGreenHouse(gh);
+        }
+        AppContext.getInstance().setGreenHouse(gh);
+        return gh;
+    }
+
+    /** How long until the daily offer resets (next local midnight). Null if there's no offer. */
+    public Duration getDailyOfferTimeRemaining() {
+        DailyOffer offer = getDailyOffer();
         if (offer == null) {
-            return new Result("No daily offer available today.");
+            return null;
         }
-        StringBuilder sb = new StringBuilder("Daily Offer:");
-        sb.append("\nPlant: ").append(offer.getPlantType().name());
-        sb.append("\nPackets: ").append(offer.getUnitAmount());
-        sb.append("\nPrice: ").append(offer.getPrice().getAmount()).append(" ").append(offer.getPrice().getCurrency());
-        sb.append(" (20% off from 2000 Coins)");
-        if (offer.isPurchasedToday()) {
-            sb.append("\nStatus: Already purchased today.");
-        } else {
-            sb.append("\nStatus: Available.");
-        }
-        return new Result(sb.toString());
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime nextMidnight = LocalDate.now().plusDays(1).atTime(LocalTime.MIDNIGHT);
+        return Duration.between(now, nextMidnight);
     }
 
-    public Result buyItem(Matcher matcher) {
-        User currentUser = getCurrentUser();
-        if (currentUser == null) {
-            return new Result("No user logged in.");
+    /**
+     * Attempts a purchase. Returns null on success, or a specific, user-facing error
+     * message on failure — never throws, always safe to show directly in the UI.
+     */
+    public String purchase(ShopItem item, int count, PlantType plantType) {
+        User user = getCurrentUser();
+        if (user == null) {
+            return "No user logged in.";
         }
-
-        int itemId = Integer.parseInt(matcher.group(1));
-        int count = Integer.parseInt(matcher.group(2));
-        String plantTypeStr = matcher.group(3);
-
-        Shop shop = new Shop(currentUser);
-        ShopItem item = findItem(shop, itemId);
         if (item == null) {
-            return new Result("Invalid item ID.");
+            return "Invalid item.";
+        }
+        if (count <= 0) {
+            return "Invalid quantity.";
         }
 
-        PlantType selectedType = validateAndGetPlantType(item, currentUser, plantTypeStr);
-        if (selectedType == null && item instanceof pvz.models.shop.items.SelectableSeedPacketItem
-                && (plantTypeStr == null || plantTypeStr.isBlank())) {
-            return new Result("For Selectable Seed Packet, the -t parameter is mandatory.");
-        }
-        if (selectedType == null && item instanceof pvz.models.shop.items.SelectableSeedPacketItem) {
-            // If validation failed for selectable item, return error
-            if (findPlantType(plantTypeStr) == null) {
-                return new Result("Invalid plant type: " + plantTypeStr);
+        if (item instanceof SelectableSeedPacketItem) {
+            if (plantType == null) {
+                return "Select a plant first.";
             }
-            return new Result("Plant " + plantTypeStr + " is not unlocked yet.");
-        }
-
-        Result purchaseCheckResult = checkAffordabilityAndLimits(item, currentUser, count, plantTypeStr);
-        if (purchaseCheckResult != null) {
-            return purchaseCheckResult;
-        }
-
-        return executePurchase(item, currentUser, count, plantTypeStr, selectedType);
-    }
-
-    private PlantType findPlantType(String plantTypeStr) {
-        if (plantTypeStr == null || plantTypeStr.isBlank()) {
-            return null;
-        }
-        for (PlantType pt : PlantType.values()) {
-            if (pt.name().equalsIgnoreCase(plantTypeStr)) {
-                return pt;
+            if (user.getProfile().getCollection().getPlant(plantType) == null) {
+                return plantType.name() + " is not unlocked yet.";
             }
         }
-        return null;
-    }
 
-    private PlantType validateAndGetPlantType(ShopItem item, User currentUser, String plantTypeStr) {
-        if (!(item instanceof pvz.models.shop.items.SelectableSeedPacketItem)) {
-            return null;
-        }
-        if (plantTypeStr == null || plantTypeStr.isBlank()) {
-            return null;
-        }
-        PlantType selectedType = findPlantType(plantTypeStr);
-        if (selectedType == null) {
-            return null;
-        }
-        if (currentUser.getProfile().getCollection().getPlant(selectedType) == null) {
-            return null;
-        }
-        return selectedType;
-    }
+        String plantTypeParam = plantType != null ? plantType.name() : null;
 
-    private Result checkAffordabilityAndLimits(ShopItem item, User currentUser, int count, String plantTypeStr) {
-        if (!item.canBuy(currentUser, count, plantTypeStr)) {
+        if (!item.canBuy(user, count, plantTypeParam)) {
             long totalPrice = (long) item.getPrice().getAmount() * count;
-            if (currentUser.getProfile().getCoins() < totalPrice
-                    && item.getPrice().getCurrency() == pvz.models.shop.Currency.COIN) {
-                return new Result("Insufficient coins. Need " + totalPrice
-                        + " coins, have " + currentUser.getProfile().getCoins() + ".");
+            if (item.getPrice().getCurrency() == Currency.COIN && user.getProfile().getCoins() < totalPrice) {
+                return "Insufficient coins. Need " + totalPrice + ", have " + user.getProfile().getCoins() + ".";
             }
-            if (currentUser.getProfile().getDiamonds() < totalPrice
-                    && item.getPrice().getCurrency() == pvz.models.shop.Currency.DIAMOND) {
-                return new Result("Insufficient diamonds. Need " + totalPrice
-                        + " diamonds, have " + currentUser.getProfile().getDiamonds() + ".");
+            if (item.getPrice().getCurrency() == Currency.DIAMOND && user.getProfile().getDiamonds() < totalPrice) {
+                return "Insufficient diamonds. Need " + totalPrice + ", have " + user.getProfile().getDiamonds() + ".";
             }
-            return new Result("Cannot buy this item (capacity limit reached or invalid parameters).");
-        }
-        return null;
-    }
-
-    private Result executePurchase(ShopItem item, User currentUser, int count, String plantTypeStr,
-            PlantType selectedType) {
-        boolean success = item.applyEffect(currentUser, count, plantTypeStr);
-        if (!success) {
-            return new Result("Purchase failed.");
+            if (item instanceof DailyOffer dailyOffer && dailyOffer.isPurchasedToday()) {
+                return "You already bought today's offer. Come back tomorrow.";
+            }
+            return "You've reached the limit for this item.";
         }
 
-        if (selectedType != null) {
-            int totalPackets = item.getUnitAmount() * count;
-            currentUser.getProfile().getCollection().addSeedPackets(selectedType, totalPackets);
-            currentUser.saveUser();
-        }
-        String msg = "Successfully purchased " + item.getName() + " x" + count + ".";
-        if (item instanceof pvz.models.shop.items.RandomSeedPacketItem randomItem) {
-            String details = randomItem.getLastPurchaseDetails();
-            if (details != null) {
-                msg += " Seeds awarded: " + details;
-            }
-        }
-        return new Result(msg);
+        boolean success = item.applyEffect(user, count, plantTypeParam);
+        return success ? null : "Purchase failed.";
     }
-
-    public Result exit(Matcher matcher) {
-        return new Result("Exited to " + previousMenu.getName(), previousMenu);
-    }
-
-    private ShopItem findItem(Shop shop, int itemId) {
-        for (ShopItem item : shop.getPermanentItems()) {
-            if (item.getId() == itemId) {
-                return item;
-            }
-        }
-        if (shop.getDailyOffer() != null && shop.getDailyOffer().getId() == itemId) {
-            return shop.getDailyOffer();
-        }
-        return null;
-    }
-*/
 }

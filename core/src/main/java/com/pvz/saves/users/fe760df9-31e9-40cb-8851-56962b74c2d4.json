@@ -10,9 +10,9 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 100,
-    "diamonds": 1,
-    "plantFood": 0,
+    "coins": 2100,
+    "diamonds": 161,
+    "plantFood": 1,
     "collection": {
       "unlockedPlants": [
         {
@@ -55,13 +55,13 @@
           "Type": "Jalapeno",
           "level": 1,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "SnowPea",
           "level": 1,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "CherryBomb",
@@ -73,23 +73,27 @@
           "Type": "Wallnut",
           "level": 1,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         }
       ],
       "unlockedZombies": [
         "BASIC"
       ],
-      "seedPackets": {}
+      "seedPackets": {
+        "TwinSunflower": 10,
+        "Peashooter": 20,
+        "Sunflower": 20
+      }
     },
     "news": {
       "messages": [
         {
           "message": "Welcome   to   Plants   vs   Zombies 2   YRD ! ",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: BASIC!",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -121,8 +125,8 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": null,
-    "dailyOfferDate": null,
+    "dailyOfferPlantType": "GraveBuster",
+    "dailyOfferDate": "2026-08-12",
     "dailyOfferPurchased": false
   },
   "setting": {
@@ -150,25 +154,45 @@
         "x": 1,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-12T20:12:28.256135700",
+          "growthHours": 2
+        }
       },
       {
         "x": 2,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-12T20:12:31.296163800",
+          "growthHours": 2
+        }
       },
       {
         "x": 3,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-12T23:11:22.766364200",
+          "growthHours": 2
+        }
       },
       {
         "x": 4,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-12T23:05:50.245670600",
+          "growthHours": 2
+        }
       },
       {
         "x": 5,
@@ -186,7 +210,12 @@
         "x": 2,
         "y": 2,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-12T20:12:30.195969200",
+          "growthHours": 2
+        }
       },
       {
         "x": 3,
@@ -1186,7 +1215,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786548835024
+    "lastDailyReset": 1786563666866
   },
   "questLogRefreshed": false
 }
