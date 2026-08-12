@@ -92,6 +92,7 @@ public class GreenHouseMenu extends ScreenAdapter {
 
     /** Extra px the plant is shifted RIGHT from its normal position inside the pot. Positive = right,
      *  negative = left. */
+
     private static final float PLANT_ART_SHIFT_X = 20f;
 
     /** Grow-now dialog frame: total width, and the padding between the content and the
