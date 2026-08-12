@@ -6,14 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="bug fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/textures/ui/mode_adventure.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/textures/ui/mode_adventure.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/textures/ui/mode_pennys_pursuit.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/textures/ui/mode_pennys_pursuit.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/backgrounds/frostbite_cave_bg.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/backgrounds/img_1.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/2fbe02df-a9e4-49ff-942a-147319771c46.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/2fbe02df-a9e4-49ff-942a-147319771c46.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/AdventureMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/AdventureMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/EgyptChapterMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/EgyptChapterMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/FrostbiteCavesChapterMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/FrostbiteCavesChapterMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GameModesMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GameModesMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/MenuUiKit.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/MenuUiKit.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,8 +69,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -133,7 +129,7 @@
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/104/IdeaProjects/plantsvszombies2/assets/textures/ui",
+    "last_opened_file_path": "C:/Users/104/IdeaProjects/plantsvszombies2/assets/images/chapters",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -150,19 +146,18 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\images\chapters" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\ui" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse" />
-      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\images\chapters" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\images" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse\plants" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Lwjgl3Launcher">
+  <component name="RunManager" selected="Gradle.plantsvszombies2 [:lwjgl3:run]">
     <configuration name="Lwjgl3Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.pvz.lwjgl3.Lwjgl3Launcher" />
-      <module name="pvz2.lwjgl3.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.pvz.lwjgl3.*" />
@@ -242,8 +237,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Lwjgl3Launcher" />
         <item itemvalue="Gradle.plantsvszombies2 [:lwjgl3:run]" />
+        <item itemvalue="Application.Lwjgl3Launcher" />
         <item itemvalue="Application.ProjectMerger" />
         <item itemvalue="Gradle.plantsvszombies2" />
       </list>

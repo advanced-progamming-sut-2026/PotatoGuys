@@ -119,13 +119,17 @@
       },
       {
         "name": "Frostbite Caves",
-        "locked": true,
-        "levelUnlocked": {}
+        "locked": false,
+        "levelUnlocked": {
+          "1": true
+        }
       },
       {
         "name": "Dark Ages",
-        "locked": true,
-        "levelUnlocked": {}
+        "locked": false,
+        "levelUnlocked": {
+          "1": true
+        }
       },
       {
         "name": "Big Wave Beach",

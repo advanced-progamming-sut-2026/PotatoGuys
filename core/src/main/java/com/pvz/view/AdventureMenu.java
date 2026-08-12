@@ -29,7 +29,8 @@ import com.pvz.models.user.Profile;
 import pvz.skin.PvzSkin;
 
 /**
- top bar (back + title + currency), then a smooth,
+ * "Choose a Chapter" screen — this is the one Dani's screenshot shows directly, so it
+ * follows her layout closest: top bar (back + title + currency), then a smooth,
  * flick-scrollable, infinitely-looping row of big chapter cards, same as her carousel.
  * <p>
  * Optional art (falls back to a tinted card if missing — check the console/logcat for a
@@ -141,6 +142,7 @@ public class AdventureMenu extends ScreenAdapter {
                 boolean locked = index == 0 ? false : controller.isSeasonLocked(CHAPTER_KEYS[index]);
                 Runnable openChapter = index == 0 ? () -> game.setScreen(new EgyptChapterMenu(game))
                     : index == 1 ? () -> game.setScreen(new FrostbiteCavesChapterMenu(game))
+                    : index == 2 ? () -> game.setScreen(new DarkAgesChapterMenu(game))
                     : () -> game.setScreen(new ChapterMenu(game, chapterName));
                 return MenuUiKit.addHoverPop(MenuUiKit.bigCard(skin, CHAPTER_ART[index], CHAPTER_TINTS[index], chapterName,
                     locked, locked,
