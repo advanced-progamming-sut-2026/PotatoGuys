@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="updated PlantSelectModal &#10;and also plant choosing during the game">
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/EgyptChapterMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/EgyptChapterMenu.java" afterDir="false" />
-    </list>
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="conflict" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -397,7 +394,23 @@
       <option name="project" value="LOCAL" />
       <updated>1786622204483</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="updated PlantSelectModal &#10;and also plant choosing during the game">
+      <option name="closed" value="true" />
+      <created>1786644139556</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1786644139556</updated>
+    </task>
+    <task id="LOCAL-00018" summary="conflict">
+      <option name="closed" value="true" />
+      <created>1786644229418</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1786644229418</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -418,7 +431,8 @@
     <MESSAGE value="bug fixes" />
     <MESSAGE value="added shop" />
     <MESSAGE value="updated PlantSelectModal &#10;and also plant choosing during the game" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated PlantSelectModal &#10;and also plant choosing during the game" />
+    <MESSAGE value="conflict" />
+    <option name="LAST_COMMIT_MESSAGE" value="conflict" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
