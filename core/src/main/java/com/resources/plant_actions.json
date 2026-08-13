@@ -10,6 +10,7 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "SunProducerActionConfig",
+      "label": "special",
       "intervalSeconds": 24.0,
       "delaySeconds": 0.6,
       "productionKind": "FIXED",
@@ -21,8 +22,9 @@
     },
     "feedConfig": {
       "class": "SunProducerActionConfig",
+      "label": "plantfood",
       "intervalSeconds": 24.0,
-      "delaySeconds": 0.6,
+      "delaySeconds": 0.3,
       "productionKind": "ONESHOT",
       "amount": 150,
       "spawnOffset": {
@@ -33,8 +35,6 @@
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/SUNFLOWER/SUNFLOWER.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "special",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
@@ -51,6 +51,7 @@
     "rechargeSeconds": 15.0,
     "attackConfig": {
       "class": "SunProducerActionConfig",
+      "label": "special",
       "intervalSeconds": 24.0,
       "delaySeconds": 0.6,
       "productionKind": "FIXED",
@@ -62,8 +63,9 @@
     },
     "feedConfig": {
       "class": "SunProducerActionConfig",
+      "label": "plantfood",
       "intervalSeconds": 24.0,
-      "delaySeconds": 0.6,
+      "delaySeconds": 0.3,
       "productionKind": "ONESHOT",
       "amount": 250,
       "spawnOffset": {
@@ -74,8 +76,6 @@
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/SUNFLOWER_TWIN/SUNFLOWER_TWIN.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "special",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 16
     },
@@ -92,6 +92,7 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "SunProducerActionConfig",
+      "label": "special_stage1",
       "intervalSeconds": 24.0,
       "delaySeconds": 0.6,
       "productionKind": "STAGED",
@@ -111,10 +112,11 @@
     },
     "feedConfig": {
       "class": "SunProducerActionConfig",
+      "label": "plantfood_stage3",
       "intervalSeconds": 24.0,
       "delaySeconds": 0.6,
       "productionKind": "ONESHOT",
-      "amount": 75,
+      "amount": 225.0,
       "spawnOffset": {
         "x": 0.0,
         "y": 0.2
@@ -123,8 +125,6 @@
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/SUNSHROOM/SUNSHROOM.PAM",
       "idleLabel": "idle_stage1",
-      "attackActionLabel": "special_stage1",
-      "plantFoodLabel": "plantfood_stage1",
       "animSpeed": 1.0,
       "actionTriggerFrame": 18
     },
@@ -141,6 +141,7 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "SunProducerActionConfig",
+      "label": "special",
       "intervalSeconds": 24.0,
       "delaySeconds": 0.6,
       "productionKind": "FIXED",
@@ -152,8 +153,9 @@
     },
     "feedConfig": {
       "class": "SunProducerActionConfig",
+      "label": "plantfood",
       "intervalSeconds": 24.0,
-      "delaySeconds": 0.6,
+      "delaySeconds": 0.5,
       "productionKind": "ONESHOT",
       "amount": 225,
       "spawnOffset": {
@@ -164,8 +166,6 @@
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/PRIMAL_SUNFLOWER/PRIMAL_SUNFLOWER.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "special",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
@@ -182,6 +182,7 @@
     "rechargeSeconds": 75.0,
     "attackConfig": {
       "class": "SunProducerActionConfig",
+      "label": "attack",
       "intervalSeconds": 0.0,
       "delaySeconds": 0.6,
       "productionKind": "ONESHOT",
@@ -195,8 +196,6 @@
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/GOLDBLOOM/GOLDBLOOM.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "idle",
       "animSpeed": 1.0,
       "actionTriggerLabel": "trigger_release"
     },
@@ -213,147 +212,26 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "attack",
       "intervalSeconds": 1.5,
       "patterns": [
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 30,
-            "y": 20
-          },
-          "velocity": {
-            "x": 190.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        }
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.6}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
-      "intervalSeconds": 1.5,
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.15
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.3
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.45
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.75
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.9
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 1.05
-        }
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.1},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.3},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.4}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/PEASHOOTER/PEASHOOTER.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
@@ -370,132 +248,31 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "attack",
       "intervalSeconds": 1.5,
       "patterns": [
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 30,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.5
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 30,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        }
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.5},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "plantfood2",
       "patterns": [
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.15
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.4
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.55
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.8
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 85,
-            "y": -70
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.95
-        }
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.4},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.8},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.0},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.2},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.4},
+        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.6}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/REPEATER/REPEATER.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 12
     },
@@ -512,77 +289,26 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "attack",
       "intervalSeconds": 1.5,
       "patterns": [
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 10,
-            "y": 100
-          },
-          "velocity": {
-            "x": 36.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.4
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 10,
-            "y": 20
-          },
-          "velocity": {
-            "x": 36.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.4
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 10,
-            "y": -80
-          },
-          "velocity": {
-            "x": 36.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.4
-        }
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":100},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.4},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":20},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.4},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":-80},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.4}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "allLanes": true,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 36.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        }
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":100},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":20},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.1},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":-80},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.2}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/THREEPEATER/THREEPEATER.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 12
     },
@@ -599,117 +325,25 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "attack",
       "patterns": [
-        {
-          "projectileType": "SNOW_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 30,
-            "y": 20
-          },
-          "velocity": {
-            "x": 190.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.7
-        }
+        {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.7}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "SNOW_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.9
-        },
-        {
-          "projectileType": "SNOW_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.15
-        },
-        {
-          "projectileType": "SNOW_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.3
-        },
-        {
-          "projectileType": "SNOW_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.45
-        },
-        {
-          "projectileType": "SNOW_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "SNOW_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.75
-        }
+        {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.1},
+        {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.3},
+        {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.4}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/SNOWPEA/SNOWPEA.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
@@ -726,187 +360,39 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "attack",
       "patterns": [
-        {
-          "projectileType": "ROTOBAGA_PROJECTILE",
-          "damage": 10.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 7,
-            "y": 15
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 180.0
-          },
-          "delaySeconds": 0.95
-        },
-        {
-          "projectileType": "ROTOBAGA_PROJECTILE",
-          "damage": 10.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": -20,
-            "y": 18
-          },
-          "velocity": {
-            "x": -180.0,
-            "y": 180.0
-          },
-          "delaySeconds": 0.95
-        },
-        {
-          "projectileType": "ROTOBAGA_PROJECTILE",
-          "damage": 10.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 0,
-            "y": -2
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": -180.0
-          },
-          "delaySeconds": 0.95
-        },
-        {
-          "projectileType": "ROTOBAGA_PROJECTILE",
-          "damage": 10.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": -19,
-            "y": 1
-          },
-          "velocity": {
-            "x": -180.0,
-            "y": -180.0
-          },
-          "delaySeconds": 0.95
-        }
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":0.95},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":0.95},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":0.95},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":0.95}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "plantfood_on",
       "patterns": [
-        {
-          "projectileType": "ROTOBAGA_PROJECTILE",
-          "damage": 10.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": 135.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "ROTOBAGA_PROJECTILE",
-          "damage": 10.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": -135.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "ROTOBAGA_PROJECTILE",
-          "damage": 10.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": -135.0,
-            "y": 135.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "ROTOBAGA_PROJECTILE",
-          "damage": 10.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": -135.0,
-            "y": -135.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "ROTOBAGA_PROJECTILE",
-          "damage": 10.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": 135.0
-          },
-          "delaySeconds": 0.2
-        },
-        {
-          "projectileType": "ROTOBAGA_PROJECTILE",
-          "damage": 10.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": -135.0
-          },
-          "delaySeconds": 0.2
-        },
-        {
-          "projectileType": "ROTOBAGA_PROJECTILE",
-          "damage": 10.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": -135.0,
-            "y": 135.0
-          },
-          "delaySeconds": 0.2
-        },
-        {
-          "projectileType": "ROTOBAGA_PROJECTILE",
-          "damage": 10.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": -135.0,
-            "y": -135.0
-          },
-          "delaySeconds": 0.2
-        }
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":0.0},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":0.0},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":0.0},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":0.0},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":0.2},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":0.2},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":0.2},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":0.2},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":0.4},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":0.4},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":0.4},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":0.4},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":0.6},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":0.6},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":0.6},
+        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":0.6}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/ROTORUTABAGA/ROTORUTABAGA.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood_on",
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
@@ -923,103 +409,29 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "attack",
       "patterns": [
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 25
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 30
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 35
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 40
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        }
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":25},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":30},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":40},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "PEA",
-          "damage": 100.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 30
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        }
+        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":25},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":30},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":40},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/PEAPOD/PEAPOD.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
@@ -1036,103 +448,31 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "attack2",
       "patterns": [
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 15
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": -50,
-            "y": 20
-          },
-          "velocity": {
-            "x": -180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.7
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": -50,
-            "y": 20
-          },
-          "velocity": {
-            "x": -180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.8
-        }
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.7},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.8}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "PEA",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": -50,
-            "y": 20
-          },
-          "velocity": {
-            "x": -180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": -50,
-            "y": 20
-          },
-          "velocity": {
-            "x": -180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.15
-        }
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.4},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.4},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.4}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/SPLITPEA/SPLITPEA.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack2",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
@@ -1149,187 +489,25 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "special",
       "patterns": [
-        {
-          "projectileType": "BULB_CYAN",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 10
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "BULB_BLUE",
-          "damage": 120.0,
-          "laneOffset": -1,
-          "positionOffset": {
-            "x": 50,
-            "y": 10
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 270.0
-          },
-          "delaySeconds": 0.7
-        },
-        {
-          "projectileType": "BULB_ORANGE",
-          "damage": 180.0,
-          "laneOffset": 1,
-          "positionOffset": {
-            "x": 50,
-            "y": 10
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": -270.0
-          },
-          "delaySeconds": 1.0
-        }
+        {"projectileType":"BULB_CYAN","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":10},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.6},
+        {"projectileType":"BULB_BLUE","damage":120.0,"laneOffset":-1,"positionOffset":{"x":50,"y":10},"velocity":{"x":225.0,"y":270.0},"delaySeconds":0.7},
+        {"projectileType":"BULB_ORANGE","damage":180.0,"laneOffset":1,"positionOffset":{"x":50,"y":10},"velocity":{"x":225.0,"y":-270.0},"delaySeconds":1.0}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "plantfood1",
       "patterns": [
-        {
-          "projectileType": "BULB_CYAN",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 10
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "BULB_BLUE",
-          "damage": 120.0,
-          "laneOffset": -1,
-          "positionOffset": {
-            "x": 50,
-            "y": 10
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 270.0
-          },
-          "delaySeconds": 0.3
-        },
-        {
-          "projectileType": "BULB_ORANGE",
-          "damage": 180.0,
-          "laneOffset": 1,
-          "positionOffset": {
-            "x": 50,
-            "y": 10
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": -270.0
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "BULB_CYAN",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 10
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 0.0
-          },
-          "delaySeconds": 2.0
-        },
-        {
-          "projectileType": "BULB_BLUE",
-          "damage": 120.0,
-          "laneOffset": -1,
-          "positionOffset": {
-            "x": 50,
-            "y": 10
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 270.0
-          },
-          "delaySeconds": 2.3
-        },
-        {
-          "projectileType": "BULB_ORANGE",
-          "damage": 180.0,
-          "laneOffset": 1,
-          "positionOffset": {
-            "x": 50,
-            "y": 10
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": -270.0
-          },
-          "delaySeconds": 2.6
-        },
-        {
-          "projectileType": "BULB_CYAN",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 10
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 0.0
-          },
-          "delaySeconds": 4.0
-        },
-        {
-          "projectileType": "BULB_BLUE",
-          "damage": 120.0,
-          "laneOffset": -1,
-          "positionOffset": {
-            "x": 50,
-            "y": 10
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 270.0
-          },
-          "delaySeconds": 4.3
-        },
-        {
-          "projectileType": "BULB_ORANGE",
-          "damage": 180.0,
-          "laneOffset": 1,
-          "positionOffset": {
-            "x": 50,
-            "y": 10
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": -270.0
-          },
-          "delaySeconds": 4.6
-        }
+        {"projectileType":"BULB_CYAN","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":10},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"BULB_BLUE","damage":120.0,"laneOffset":-1,"positionOffset":{"x":50,"y":10},"velocity":{"x":225.0,"y":270.0},"delaySeconds":0.3},
+        {"projectileType":"BULB_ORANGE","damage":180.0,"laneOffset":1,"positionOffset":{"x":50,"y":10},"velocity":{"x":225.0,"y":-270.0},"delaySeconds":0.6}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/BOWLINGBULB/BOWLINGBULB.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "special",
-      "plantFoodLabel": "plantfood1",
       "animSpeed": 1.0,
       "actionTriggerLabel": "trigger_release"
     },
@@ -1346,103 +524,28 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "attack",
       "patterns": [
-        {
-          "projectileType": "SPIKE",
-          "damage": 30.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 35
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        }
+        {"projectileType":"SPIKE","damage":30.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.6}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "SPIKE",
-          "damage": 30.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 25
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "SPIKE",
-          "damage": 30.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 25
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.2
-        },
-        {
-          "projectileType": "SPIKE",
-          "damage": 30.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 25
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.4
-        },
-        {
-          "projectileType": "SPIKE",
-          "damage": 30.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 25
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "SPIKE",
-          "damage": 30.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 25
-          },
-          "velocity": {
-            "x": 225.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.7
-        }
+        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.1},
+        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.3},
+        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.4},
+        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.5},
+        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.6},
+        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.7}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/CACTUS/CACTUS.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
@@ -1459,117 +562,26 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "attack",
       "patterns": [
-        {
-          "projectileType": "FIRE_PEA",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        }
+        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "FIRE_PEA",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "FIRE_PEA",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.15
-        },
-        {
-          "projectileType": "FIRE_PEA",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.3
-        },
-        {
-          "projectileType": "FIRE_PEA",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.45
-        },
-        {
-          "projectileType": "FIRE_PEA",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "FIRE_PEA",
-          "damage": 40.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.75
-        }
+        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.1},
+        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.3},
+        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.4},
+        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.5}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/FIREPEASHOOTER/FIREPEASHOOTER.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
@@ -1586,229 +598,34 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "attack",
       "patterns": [
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 0,
-            "y": 0
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 0,
-            "y": 0
-          },
-          "velocity": {
-            "x": 55.8,
-            "y": 171.0
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 0,
-            "y": 0
-          },
-          "velocity": {
-            "x": -145.8,
-            "y": 106.2
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 0,
-            "y": 0
-          },
-          "velocity": {
-            "x": -145.8,
-            "y": -106.2
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 0,
-            "y": 0
-          },
-          "velocity": {
-            "x": 55.8,
-            "y": -171.0
-          },
-          "delaySeconds": 0.6
-        }
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6},
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":171.0},"delaySeconds":0.6},
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":106.2},"delaySeconds":0.6},
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":-106.2},"delaySeconds":0.6},
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":-171.0},"delaySeconds":0.6}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 55.8,
-            "y": 171.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": -145.8,
-            "y": 106.2
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": -145.8,
-            "y": -106.2
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 55.8,
-            "y": -171.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.2
-        },
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 55.8,
-            "y": 171.0
-          },
-          "delaySeconds": 0.2
-        },
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": -145.8,
-            "y": 106.2
-          },
-          "delaySeconds": 0.2
-        },
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": -145.8,
-            "y": -106.2
-          },
-          "delaySeconds": 0.2
-        },
-        {
-          "projectileType": "STAR",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 55.8,
-            "y": -171.0
-          },
-          "delaySeconds": 0.2
-        }
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":171.0},"delaySeconds":0.0},
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":106.2},"delaySeconds":0.0},
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":-106.2},"delaySeconds":0.0},
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":-171.0},"delaySeconds":0.0},
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":171.0},"delaySeconds":0.2},
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":106.2},"delaySeconds":0.2},
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":-106.2},"delaySeconds":0.2},
+        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":-171.0},"delaySeconds":0.2}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/STARFRUIT/STARFRUIT.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 12
     },
@@ -1825,117 +642,30 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "attack",
       "patterns": [
-        {
-          "projectileType": "GOO_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        }
+        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "GOO_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "GOO_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.15
-        },
-        {
-          "projectileType": "GOO_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.3
-        },
-        {
-          "projectileType": "GOO_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.45
-        },
-        {
-          "projectileType": "GOO_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "GOO_PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 180.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.75
-        }
+        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.15},
+        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.3},
+        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.45},
+        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6},
+        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.75},
+        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.9},
+        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.05},
+        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.2},
+        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.35}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/GOOPEASHOOTER/GOOPEASHOOTER.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
@@ -1952,215 +682,35 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "attack",
       "patterns": [
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.72
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.84
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.96
-        }
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.6},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.72},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.84},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.96}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.6
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.08
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.16
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.24
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.32
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.4
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.48
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.56
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.64
-        },
-        {
-          "projectileType": "PEA",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "velocity": {
-            "x": 270.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.72
-        }
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.04},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.08},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.12},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.16},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.24},
+        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.28},
+        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.05},
+        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.13},
+        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.21},
+        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.29}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/MEGAGATLING/MEGAGATLING.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.2,
       "actionTriggerFrame": 8
     },
@@ -2177,89 +727,28 @@
     "rechargeSeconds": 15.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "attack",
       "patterns": [
-        {
-          "projectileType": "SPORE",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 15
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        }
+        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "pf",
       "patterns": [
-        {
-          "projectileType": "SPORE",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 15
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "SPORE",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 15
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.15
-        },
-        {
-          "projectileType": "SPORE",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 15
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.3
-        },
-        {
-          "projectileType": "SPORE",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 15
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.45
-        }
+        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.15},
+        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.3},
+        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.45},
+        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.6},
+        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.75},
+        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.9},
+        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":1.05}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/SEASHROOM/SEASHROOM.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "pf",
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
@@ -2276,93 +765,61 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
+      "label": "special_stage1",
       "patterns": [
-        {
-          "projectileType": "SPORE",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 15
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        }
+        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0}
       ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "SPORE",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 15
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "SPORE",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 15
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.15
-        },
-        {
-          "projectileType": "SPORE",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 15
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.3
-        },
-        {
-          "projectileType": "SPORE",
-          "damage": 20.0,
-          "laneOffset": 0,
-          "positionOffset": {
-            "x": 50,
-            "y": 15
-          },
-          "velocity": {
-            "x": 135.0,
-            "y": 0.0
-          },
-          "delaySeconds": 0.45
-        }
+        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.03},
+        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.06}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/PUFFSHROOM/PUFFSHROOM.PAM",
       "idleLabel": "idle_stage1",
-      "attackActionLabel": "special_stage1",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
     "description": "شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه."
+  },
+  {
+    "id": 24,
+    "name": "Fume-shroom",
+    "type": "Fumeshroom",
+    "category": "STRIKE_THROUGH",
+    "sunCost": 125,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "label": "special",
+      "intervalSeconds": 1.5,
+      "patterns": [
+        {"projectileType":"FUME","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":170,"y":0.0},"delaySeconds":0.6}
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+        {"projectileType":"FUME","damage":400.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":170,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"FUME","damage":400.0,"laneOffset":0,"positionOffset":{"x":30,"y":-50},"velocity":{"x":170,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"FUME","damage":400.0,"laneOffset":0,"positionOffset":{"x":30,"y":90},"velocity":{"x":170,"y":0.0},"delaySeconds":0.4}
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/FUMESHROOM/FUMESHROOM.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 10
+    },
+    "description": "شلیک دود با برد متوسط که از زامبی‌ها رد می‌شود."
   },
   {
     "id": 25,
@@ -2375,51 +832,23 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "LobberActionConfig",
+      "label": "attack",
       "intervalSeconds": 2.9,
       "patterns": [
-        {
-          "projectileType": "CABBAGE",
-          "damage": 40.0,
-          "targets": 1,
-          "positionOffset": {
-            "x": -10,
-            "y": 40
-          },
-          "delaySeconds": 0.6
-        }
+        {"projectileType":"CABBAGE","damage":40.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.6}
       ]
     },
     "feedConfig": {
       "class": "LobberActionConfig",
-      "intervalSeconds": 2.9,
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "CABBAGE",
-          "damage": 40.0,
-          "targets": 3,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "delaySeconds": 0.0
-        },
-        {
-          "projectileType": "CABBAGE",
-          "damage": 40.0,
-          "targets": 3,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "delaySeconds": 0.6
-        }
+        {"projectileType":"CABBAGE","damage":40.0,"targets":3,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.0},
+        {"projectileType":"CABBAGE","damage":40.0,"targets":3,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.5}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/CABBAGEPULT/CABBAGEPULT.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
@@ -2436,54 +865,24 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "LobberActionConfig",
+      "label": "attack",
       "intervalSeconds": 2.9,
       "patterns": [
-        {
-          "projectileType": "KERNEL",
-          "damage": 20.0,
-          "targets": 1,
-          "positionOffset": {
-            "x": 0,
-            "y": 40
-          },
-          "delaySeconds": 0.6,
-          "chance": 0.8
-        },
-        {
-          "projectileType": "BUTTER",
-          "damage": 40.0,
-          "targets": 1,
-          "positionOffset": {
-            "x": 0,
-            "y": 40
-          },
-          "delaySeconds": 0.6,
-          "chance": 0.2
-        }
+        {"projectileType":"KERNEL","damage":20.0,"targets":1,"positionOffset":{"x":0,"y":40},"delaySeconds":0.6,"chance":0.8},
+        {"projectileType":"BUTTER","damage":40.0,"targets":1,"positionOffset":{"x":0,"y":40},"delaySeconds":0.6,"chance":0.2}
       ]
     },
     "feedConfig": {
       "class": "LobberActionConfig",
-      "intervalSeconds": 2.9,
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "BUTTER",
-          "damage": 40.0,
-          "targets": 0,
-          "allLanes": true,
-          "positionOffset": {
-            "x": 20,
-            "y": 20
-          },
-          "delaySeconds": 0.0
-        }
+        {"projectileType":"BUTTER","damage":40.0,"targets":0,"positionOffset":{"x":0,"y":40},"delaySeconds":0.0,"chance":0.2,"allLanes":true},
+        {"projectileType":"BUTTER","damage":40.0,"targets":0,"positionOffset":{"x":0,"y":40},"delaySeconds":0.4,"chance":0.2,"allLanes":true}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/KERNALPULT/KERNALPULT.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
@@ -2500,42 +899,23 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "LobberActionConfig",
+      "label": "attack",
       "intervalSeconds": 2.9,
       "patterns": [
-        {
-          "projectileType": "MELON",
-          "damage": 80.0,
-          "targets": 1,
-          "positionOffset": {
-            "x": -10,
-            "y": 40
-          },
-          "delaySeconds": 0.6
-        }
+        {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.6}
       ]
     },
     "feedConfig": {
       "class": "LobberActionConfig",
-      "intervalSeconds": 2.9,
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "MELON",
-          "damage": 80.0,
-          "targets": 3,
-          "allLanes": true,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "delaySeconds": 0.0
-        }
+        {"projectileType":"MELON","damage":80.0,"targets":3,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.0,"allLanes":true},
+        {"projectileType":"MELON","damage":80.0,"targets":3,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.6,"allLanes":true}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/MELONPULT/MELONPULT.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
@@ -2552,42 +932,23 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "LobberActionConfig",
+      "label": "attack",
       "intervalSeconds": 2.9,
       "patterns": [
-        {
-          "projectileType": "WINTER_MELON",
-          "damage": 80.0,
-          "targets": 1,
-          "positionOffset": {
-            "x": 0,
-            "y": 40
-          },
-          "delaySeconds": 0.7
-        }
+        {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":0,"y":40},"delaySeconds":0.7}
       ]
     },
     "feedConfig": {
       "class": "LobberActionConfig",
-      "intervalSeconds": 2.9,
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "WINTER_MELON",
-          "damage": 80.0,
-          "targets": 3,
-          "allLanes": true,
-          "positionOffset": {
-            "x": 50,
-            "y": 40
-          },
-          "delaySeconds": 0.0
-        }
+        {"projectileType":"WINTER_MELON","damage":80.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":0.0,"allLanes":true},
+        {"projectileType":"WINTER_MELON","damage":80.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":0.6,"allLanes":true}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/WINTERMELON/WINTERMELON.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
@@ -2604,42 +965,23 @@
     "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "LobberActionConfig",
+      "label": "attack",
       "intervalSeconds": 2.9,
       "patterns": [
-        {
-          "projectileType": "PEPPER_BALL",
-          "damage": 50.0,
-          "targets": 1,
-          "positionOffset": {
-            "x": 0,
-            "y": 40
-          },
-          "delaySeconds": 0.5
-        }
+        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":1,"positionOffset":{"x":0,"y":40},"delaySeconds":0.5}
       ]
     },
     "feedConfig": {
       "class": "LobberActionConfig",
-      "intervalSeconds": 2.9,
+      "label": "plantfood",
       "patterns": [
-        {
-          "projectileType": "PEPPER_BALL",
-          "damage": 50.0,
-          "targets": 3,
-          "allLanes": true,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "delaySeconds": 0.0
-        }
+        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":0.0},
+        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":0.6}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/PEPPERPULT/PEPPERPULT.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
@@ -2655,30 +997,20 @@
     "actionIntervalSeconds": 2.9,
     "rechargeSeconds": 5.0,
     "attackConfig": {
-      "class": "BonkChoyConfig"
+      "class": "BonkChoyConfig",
+      "label": "attack"
     },
     "feedConfig": {
       "class": "LobberActionConfig",
+      "label": "plantfood",
       "intervalSeconds": 2.9,
       "patterns": [
-        {
-          "projectileType": "PEPPER_BALL",
-          "damage": 50.0,
-          "targets": 3,
-          "allLanes": true,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "delaySeconds": 0.0
-        }
+        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"allLanes":true,"positionOffset":{"x":50,"y":20},"delaySeconds":0.0}
       ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
@@ -2694,33 +1026,120 @@
     "actionIntervalSeconds": 2.9,
     "rechargeSeconds": 10.0,
     "attackConfig": {
-      "class": "GraveBusterConfig"
+      "class": "GraveBusterConfig",
+      "label": "attack1"
     },
-    "feedConfig": {
-      "class": "LobberActionConfig",
-      "intervalSeconds": 2.9,
-      "patterns": [
-        {
-          "projectileType": "PEPPER_BALL",
-          "damage": 50.0,
-          "targets": 3,
-          "allLanes": true,
-          "positionOffset": {
-            "x": 50,
-            "y": 20
-          },
-          "delaySeconds": 0.0
-        }
-      ]
-    },
+    "feedConfig": null,
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/GRAVEBUSTER/GRAVEBUSTER.PAM",
       "idleLabel": "attack",
-      "attackActionLabel": "attack1",
-      "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
     "description": "شلیک هوایی با آسیب مساحتی (گرم‌کننده محیط اطراف). پرتاب فلفل‌های بزرگ به ۳ زامبی تصادفی."
+  },
+  {
+    "id": 32,
+    "name": "Citron",
+    "type": "Citron",
+    "category": "SHOOTER",
+    "sunCost": 350,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 9.0,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "label": "attack",
+      "intervalSeconds": 9.0,
+      "patterns": [
+        {"projectileType":"CITRON_BALL","damage":800.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":120,"y":0.0},"delaySeconds":0.6}
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+        {"projectileType":"CITRON_BALL","damage":800.0,"laneOffset":0,"positionOffset":{"x":30,"y":-60},"velocity":{"x":120,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"CITRON_BALL","damage":800.0,"laneOffset":0,"positionOffset":{"x":30,"y":-30},"velocity":{"x":120,"y":0.0},"delaySeconds":0.1},
+        {"projectileType":"CITRON_BALL","damage":800.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":120,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"CITRON_BALL","damage":800.0,"laneOffset":0,"positionOffset":{"x":30,"y":70},"velocity":{"x":120,"y":0.0},"delaySeconds":0.3},
+        {"projectileType":"CITRON_BALL","damage":800.0,"laneOffset":0,"positionOffset":{"x":30,"y":120},"velocity":{"x":120,"y":0.0},"delaySeconds":0.4}
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/CITRON/CITRON.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 12
+    },
+    "description": "شلیک تیر سنگین مستقیم (نیازمند زمان شارژ)."
+  },
+  {
+    "id": 33,
+    "name": "Caulipower",
+    "type": "Caulipower",
+    "category": "HOMING",
+    "sunCost": 250,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 12.0,
+    "rechargeSeconds": 15.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "label": "attack",
+      "intervalSeconds": 12.0,
+      "patterns": [
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.8}
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood_loop",
+      "patterns": [
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.1},
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2}
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/CAULIPOWER/CAULIPOWER.PAM",
+      "idleLabel": "idle1_1",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "شلیک تیر جادویی هیپنوتیزم‌کننده."
+  },
+  {
+    "id": 34,
+    "name": "Electric Blueberry",
+    "type": "ElectricBlueberry",
+    "category": "HOMING",
+    "sunCost": 150,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 12.0,
+    "rechargeSeconds": 15.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "label": "attack",
+      "intervalSeconds": 12.0,
+      "patterns": [
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.8}
+      ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/ELECTRICBLUEBERRY/ELECTRICBLUEBERRY.PAM",
+      "idleLabel": "idle1_1",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
   }
 ]

@@ -111,7 +111,15 @@ public class Wave {
         if (allowed == null || allowed.isEmpty())
             return;
 
-        ZombieType type = allowed.get(rand.nextInt(allowed.size()));
+        // Guard against unknown/unregistered types deserialized as null by Gson —
+        // an invalid enum name in level data must not crash the wave.
+        List<ZombieType> valid = allowed.stream()
+                .filter(java.util.Objects::nonNull)
+                .toList();
+        if (valid.isEmpty())
+            return;
+
+        ZombieType type = valid.get(rand.nextInt(valid.size()));
         int lane = rand.nextInt(lanes);
         int col = context.getMap().getColumns()+1;
 

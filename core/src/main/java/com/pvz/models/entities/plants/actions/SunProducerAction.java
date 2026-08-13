@@ -31,11 +31,19 @@ import com.pvz.models.games.GameContext;
 public class SunProducerAction extends PlantAction {
 
     private final SunProducerActionConfig config;
+    private final boolean killOnOneShot;
     private float animTime = 0f;
     private boolean produced = false;
 
     public SunProducerAction(SunProducerActionConfig config) {
+        this(config, true);
+    }
+
+    /** @param killOnOneShot whether an {@link ProductionKind#ONESHOT} run dies after producing
+     *                       (attack behaviour). Plant Food reuses the same config but must survive. */
+    public SunProducerAction(SunProducerActionConfig config, boolean killOnOneShot) {
         this.config = config;
+        this.killOnOneShot = killOnOneShot;
     }
 
     @Override
@@ -56,8 +64,8 @@ public class SunProducerAction extends PlantAction {
     public void onEnter(Plant plant, GameContext ctx) {
         stateTime = 0f;
         produced = false;
-        PamAnimationConfig config = plant.getSheet().pamAnimationConfig;
-        animTime = AnimationCatalog.getInstance().getClipDuration(config.pamFilePath, config.attackActionLabel);
+        PamAnimationConfig pam = plant.getSheet().pamAnimationConfig;
+        animTime = AnimationCatalog.getInstance().getClipDuration(pam.pamFilePath, config.label);
     }
 
     @Override
@@ -69,7 +77,7 @@ public class SunProducerAction extends PlantAction {
         if (!produced && stateTime >= config.delaySeconds) {
             produced = true;
             produce(config, plant, ctx);
-            if (config.productionKind == ProductionKind.ONESHOT) {
+            if (config.productionKind == ProductionKind.ONESHOT && killOnOneShot) {
                 plant.kill();
                 return;
             }
@@ -85,12 +93,12 @@ public class SunProducerAction extends PlantAction {
 
     @Override
     public FrameConfig draw(Plant plant, GameContext ctx) {
-        PamAnimationConfig config = plant.getSheet().pamAnimationConfig;
+        PamAnimationConfig pam = plant.getSheet().pamAnimationConfig;
         float x = GameController.colToWorldX(plant.getCol());
         float y = GameController.laneToWorldY(plant.getLane());
         Vector2 pos = new Vector2(x, y);
         Vector2 scale = new Vector2(0.7f, 0.7f);
-        return new FrameConfig(config.pamFilePath, config.attackActionLabel, stateTime, pos, scale, null, true);
+        return new FrameConfig(pam.pamFilePath, config.label, stateTime, pos, scale, null, true);
     }
 
     /** Spawns one sun burst from {@code config}, honoring growth-stage amounts, the spawn

@@ -2,6 +2,7 @@ package com.pvz.models.entities.zombies.skills;
 
 import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.config.HunterSnowballSkillConfig;
 import com.pvz.models.games.GameContext;
 
 /**
@@ -13,28 +14,18 @@ import com.pvz.models.games.GameContext;
  *   <li>{@code FarAttackRange = 4} — attacks plants up to 4 cells ahead.</li>
  *   <li>{@code NearAttackRange = 1} — minimum distance before eating rather than throwing.</li>
  * </ul>
- *
- * <p>Three frost levels freeze a plant solid (same model as the WalkState checks for
- * FROZEN plants in Frostbite Caves). Each snowball in a barrage increments the plant's
- * frost counter via {@link GameContext#applyFrostToPlant}.
  */
 public class HunterSnowballSkill extends CooldownSkill {
 
-    private static final float BARRAGE_INTERVAL_SECONDS = 2.0f;
+    private static final int NEAR_RANGE = 1;
 
     private final int snowballsPerBarrage;
     private final int farRange;
-    private final int nearRange;
 
-    /**
-     * @param snowballsPerBarrage JSON {@code SnowballsPerBarrage} (typically 3)
-     * @param farAttackRange      JSON {@code FarAttackRange} (typically 4)
-     */
-    public HunterSnowballSkill(int snowballsPerBarrage, int farAttackRange) {
-        super(BARRAGE_INTERVAL_SECONDS);
-        this.snowballsPerBarrage = snowballsPerBarrage;
-        this.farRange = farAttackRange;
-        this.nearRange = 1;
+    public HunterSnowballSkill(HunterSnowballSkillConfig config) {
+        super(config, config.cooldownSeconds);
+        this.snowballsPerBarrage = config.snowballsPerBarrage;
+        this.farRange = config.farRange;
     }
 
     @Override
@@ -68,9 +59,9 @@ public class HunterSnowballSkill extends CooldownSkill {
      * (it eats directly instead).
      */
     private int findTargetCol(Zombie zombie, GameContext ctx) {
-        int col = (int) zombie.getX();
+        int col = GameController.worldXtoCol(zombie.getX());
         int minCol = Math.max(0, col - farRange);
-        int maxCol = col - nearRange; // do not attack at melee range
+        int maxCol = col - NEAR_RANGE; // do not attack at melee range
         for (int c = maxCol; c >= minCol; c--) {
             if (ctx.isPlantAt(c, GameController.worldYtoLane(zombie.getY()))) return c;
         }

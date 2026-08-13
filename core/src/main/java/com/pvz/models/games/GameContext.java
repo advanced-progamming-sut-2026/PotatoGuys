@@ -181,7 +181,9 @@ public class GameContext implements TickAware {
     }
 
     public List<Plant> getPlantsAt(int col, int lane) {
-        return map.getTileAt(col, lane).getPlants().stream()
+        Tile tile = map.getTileAt(col, lane);
+        if (tile == null) return List.of();
+        return tile.getPlants().stream()
                 .filter(p -> !p.isDead())
                 .toList();
     }

@@ -14,7 +14,6 @@ import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.plants.fsm.PlantDeadState;
-import com.pvz.models.entities.plants.fsm.PlantFeedState;
 import com.pvz.models.entities.plants.fsm.PlantIdleState;
 import com.pvz.models.entities.plants.fsm.PlantState;
 import com.pvz.models.games.GameContext;
@@ -205,8 +204,11 @@ public class Plant extends Entity {
 
     // ── Plant Food ────────────────────────────────────────────────────────────
     public void triggerPlantFood(GameContext ctx) {
-        PlantState feedState = new PlantFeedState(feedAction);
-        changeState(feedState);
+        if (feedAction == null) {
+            ctx.log("[PlantFood] " + sheet.getName() + " has no Plant Food effect!");
+            return;
+        }
+        changeState(feedAction);
         ctx.log("[PlantFood] " + sheet.getName() + " used its Plant Food!");
     }
 

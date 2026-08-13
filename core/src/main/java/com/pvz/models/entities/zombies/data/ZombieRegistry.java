@@ -5,21 +5,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.pvz.models.Constants;
-import com.pvz.utils.SaveManager;
+import com.pvz.models.entities.zombies.config.ScaledPropConfig;
+import com.pvz.models.entities.zombies.config.ZombieArmorConfig;
+import com.pvz.models.entities.zombies.config.ZombieConfigRegistry;
+import com.pvz.models.entities.zombies.config.ZombieJsonConfig;
 
 /**
  * Singleton registry holding all {@link ZombiePropertySheet} and
  * {@link ArmorPropertySheet} definitions.
  *
- * <p>Data is loaded at startup from the data-driven {@code zombie_profiles.json}
- * resource via {@link SaveManager} (Gson) — the zombie-side counterpart of
+ * <p>Data is loaded at startup from the single data-driven
+ * {@code zombie_actions.json} resource (which absorbed the old
+ * {@code zombie_profiles.json}: stats, scaling presets and armour definitions)
+ * via {@link ZombieConfigRegistry} — the zombie-side counterpart of
  * {@link pvz.models.entities.plants.data.PlantRegistry}. Rebalancing or adding
  * a zombie means editing that JSON file only; this class never hard-codes any
  * zombie's stats.
  *
- * <p>Lookup is by <em>alias</em> string (the first element of the JSON
- * {@code "aliases"} array), e.g. {@code "ZombieMummyDefault"}.
+ * <p>Lookup is by <em>alias</em> string, e.g. {@code "ZombieMummyDefault"}.
  */
 public final class ZombieRegistry {
 
@@ -27,7 +30,6 @@ public final class ZombieRegistry {
 
     private final Map<String, ZombiePropertySheet> zombieSheets = new HashMap<>();
     private final Map<String, ArmorPropertySheet>  armorSheets  = new HashMap<>();
-    private final Map<String, List<ScaledProp>> scalingPresets = new HashMap<>();
 
     private ZombieRegistry() {
         load();
@@ -43,145 +45,76 @@ public final class ZombieRegistry {
 
     public int size() { return zombieSheets.size(); }
 
-    // ── Loading ───────────────────────────────────────────────────────────────
+    // ── Loading (from zombie_actions.json only) ───────────────────────────────
 
     private void load() {
-        RootDto root = SaveManager.getInstance().loadAbsolute(Constants.ZOMBIE_PROFILES_PATH, RootDto.class);
-        if (root == null) {
-            System.err.println("[ZombieRegistry] zombie_profiles.json could not be loaded; "
-                    + "no zombies will be available.");
-            return;
-        }
-        loadScalingPresets(root);
-        loadArmors(root);
-        loadZombies(root);
-    }
+        ZombieConfigRegistry cfgRegistry = ZombieConfigRegistry.getInstance();
 
-    private void loadScalingPresets(RootDto root) {
-        if (root.scalingPresets == null) return;
-        for (Map.Entry<String, List<ScaledPropDto>> entry : root.scalingPresets.entrySet()) {
-            List<ScaledProp> props = new ArrayList<>();
-            for (ScaledPropDto dto : entry.getValue()) {
-                props.add(new ScaledProp(dto.key, dto.formula, dto.arg1, dto.arg2));
-            }
-            scalingPresets.put(entry.getKey(), props);
+        for (ZombieArmorConfig armor : cfgRegistry.getAllArmors()) {
+            armorSheets.put(armor.alias, toArmorSheet(armor));
         }
-    }
 
-    private void loadArmors(RootDto root) {
-        if (root.armors == null) return;
-        for (ArmorDto dto : root.armors) {
-            armorSheets.put(dto.alias, new ArmorPropertySheet(
-                    dto.alias, dto.type, dto.baseHealth,
-                    dto.flags == null ? List.of() : dto.flags,
-                    dto.layerThresholds == null ? new float[]{0.666f, 0.333f} : dto.layerThresholds));
-        }
-    }
-
-    private void loadZombies(RootDto root) {
-        if (root.zombies == null) return;
-        for (ZombieDto dto : root.zombies) {
+        for (ZombieJsonConfig cfg : cfgRegistry.getAllConfigs()) {
             try {
-                zombieSheets.put(dto.alias, toSheet(dto));
+                zombieSheets.put(cfg.alias, toSheet(cfg, cfgRegistry));
             } catch (RuntimeException e) {
                 System.err.println("[ZombieRegistry] Skipping malformed zombie '"
-                        + dto.alias + "': " + e.getMessage());
+                        + cfg.alias + "': " + e.getMessage());
             }
         }
     }
 
-    private ZombiePropertySheet toSheet(ZombieDto dto) {
-        List<ZombieStatEntry> stats = new ArrayList<>();
-        if (dto.zombieStats != null) {
-            for (ZombieStatDto s : dto.zombieStats) stats.add(new ZombieStatEntry(s.type, s.value));
-        }
+    private ArmorPropertySheet toArmorSheet(ZombieArmorConfig a) {
+        return new ArmorPropertySheet(
+                a.alias, a.type, a.baseHealth,
+                a.flags == null ? List.of() : a.flags,
+                a.layerThresholds == null ? new float[]{0.666f, 0.333f} : a.layerThresholds);
+    }
 
-        return new ZombiePropertySheet.Builder(dto.alias, dto.objClass)
-                .hitPoints(dto.hitPoints)
-                .eatDps(dto.eatDps)
-                .speed(dto.speed)
-                .wavePointCost(dto.wavePointCost)
-                .weight(dto.weight)
-                .canSpawnPlantFood(dto.canSpawnPlantFood)
-                .scaledProps(resolveScaling(dto.scaling))
-                .armorAliases(dto.armorAliases == null ? List.of() : dto.armorAliases)
-                .zombieStats(stats)
-                .impType(dto.impType)
-                .healthThresholdToThrowImp(dto.healthThresholdToThrowImp)
-                .smashDamage(dto.smashDamage)
-                .smashDuration(dto.smashDuration == 0 ? 2f : dto.smashDuration)
-                .maxClaimedSunCurrency(dto.maxClaimedSunCurrency)
-                .ammo(dto.ammo)
-                .numberOfTombsToSpawn(dto.numberOfTombsToSpawn)
-                .timeBetweenRaisings(dto.timeBetweenRaisings)
-                .maxTorchReach(dto.maxTorchReach)
-                .snowballsPerBarrage(dto.snowballsPerBarrage)
-                .farAttackRange(dto.farAttackRange)
-                .nearAttackRange(dto.nearAttackRange)
-                .numberOfIceblocksToSpawnWith(dto.numberOfIceblocksToSpawnWith)
-                .imp(dto.imp)
+    private ZombiePropertySheet toSheet(ZombieJsonConfig cfg, ZombieConfigRegistry cfgRegistry) {
+        return new ZombiePropertySheet.Builder(cfg.alias, cfg.objClass)
+                .hitPoints(cfg.hitPoints)
+                .eatDps(cfg.eatDps)
+                .speed(cfg.speed)
+                .wavePointCost(cfg.wavePointCost)
+                .weight(cfg.weight)
+                .canSpawnPlantFood(cfg.canSpawnPlantFood)
+                .scaledProps(resolveScaling(cfg.scaling, cfgRegistry))
+                .armorAliases(cfg.armorAliases == null ? List.of()
+                        : java.util.Arrays.asList(cfg.armorAliases))
+                .impType(cfg.impType)
+                .healthThresholdToThrowImp(cfg.healthThresholdToThrowImp)
+                .smashDamage(cfg.smashDamage)
+                .smashDuration(cfg.smashDuration == 0 ? 2f : cfg.smashDuration)
+                .maxClaimedSunCurrency(cfg.maxClaimedSunCurrency)
+                .ammo(cfg.ammo)
+                .numberOfTombsToSpawn(cfg.numberOfTombsToSpawn)
+                .timeBetweenRaisings(cfg.timeBetweenRaisings)
+                .maxTorchReach(cfg.maxTorchReach)
+                .snowballsPerBarrage(cfg.snowballsPerBarrage)
+                .farAttackRange(cfg.farAttackRange)
+                .nearAttackRange(cfg.nearAttackRange)
+                .numberOfIceblocksToSpawnWith(cfg.numberOfIceblocksToSpawnWith)
+                .imp(cfg.imp)
+                .animationConfig(cfg.animationConfig)
+                .walkConfig(cfg.walkConfig)
+                .eatConfig(cfg.eatConfig)
+                .dieConfig(cfg.dieConfig)
+                .skillConfig(cfg.skillConfig)
                 .build();
     }
 
-    private List<ScaledProp> resolveScaling(String scaling) {
+    private List<ScaledProp> resolveScaling(String scaling, ZombieConfigRegistry cfgRegistry) {
         String key = scaling == null ? "standard" : scaling;
-        return scalingPresets.getOrDefault(key, scalingPresets.getOrDefault("standard", List.of()));
-    }
-
-    // ── Gson wire-format DTOs (mirror zombie_profiles.json exactly) ───────────
-
-    private static final class RootDto {
-        Map<String, List<ScaledPropDto>> scalingPresets;
-        List<ArmorDto> armors;
-        List<ZombieDto> zombies;
-    }
-
-    private static final class ScaledPropDto {
-        String key;
-        String formula;
-        float arg1;
-        float arg2;
-    }
-
-    private static final class ArmorDto {
-        String alias;
-        String type;
-        float baseHealth;
-        List<String> flags;
-        float[] layerThresholds;
-    }
-
-    private static final class ZombieStatDto {
-        String type;
-        String value;
-    }
-
-    private static final class ZombieDto {
-        String alias;
-        String objClass;
-        String scaling;
-        float hitPoints;
-        float eatDps;
-        float speed;
-        int wavePointCost;
-        int weight;
-        boolean canSpawnPlantFood;
-        List<String> armorAliases;
-        List<ZombieStatDto> zombieStats;
-        String impType;
-        float healthThresholdToThrowImp;
-        float smashDamage;
-        float smashDuration;
-        int maxClaimedSunCurrency;
-        int ammo;
-        int numberOfTombsToSpawn;
-        float timeBetweenRaisings;
-        float maxTorchReach;
-        int snowballsPerBarrage;
-        int farAttackRange;
-        int nearAttackRange;
-        int numberOfIceblocksToSpawnWith;
-        boolean imp;
+        ScaledPropConfig[] preset = cfgRegistry.getScalingPreset(key);
+        if (preset == null) {
+            preset = cfgRegistry.getScalingPreset("standard");
+        }
+        if (preset == null) return List.of();
+        List<ScaledProp> props = new ArrayList<>();
+        for (ScaledPropConfig dto : preset) {
+            props.add(new ScaledProp(dto.key, dto.formula, dto.arg1, dto.arg2));
+        }
+        return props;
     }
 }
-

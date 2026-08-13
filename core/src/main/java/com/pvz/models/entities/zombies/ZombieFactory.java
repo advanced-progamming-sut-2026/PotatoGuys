@@ -8,16 +8,12 @@ import java.util.Set;
 import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
 import com.pvz.models.entities.zombies.armor.ArmorType;
+import com.pvz.models.entities.zombies.config.ZombieSkillConfig;
 import com.pvz.models.entities.zombies.data.ArmorPropertySheet;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
 import com.pvz.models.entities.zombies.data.ZombieRegistry;
-import com.pvz.models.entities.zombies.skills.ExplorerTorchSkill;
-import com.pvz.models.entities.zombies.skills.GargantuarSkill;
-import com.pvz.models.entities.zombies.skills.HunterSnowballSkill;
-import com.pvz.models.entities.zombies.skills.RaStealSunSkill;
-import com.pvz.models.entities.zombies.skills.TombRaiserSkill;
-import com.pvz.models.entities.zombies.skills.WizardZapSkill;
 import com.pvz.models.entities.zombies.skills.ZombieSkill;
+import com.pvz.models.entities.zombies.skills.ZombieSkillCatalog;
 import com.pvz.models.games.GameContext;
 
 /**
@@ -104,40 +100,15 @@ public class ZombieFactory {
         return flags;
     }
 
-    // ── Skill construction (driven by objClass) ───────────────────────────────
+    // ── Skill construction (driven by the JSON skillConfig) ───────────────────
 
     private List<ZombieSkill> buildSkills(ZombiePropertySheet sheet) {
         List<ZombieSkill> skills = new ArrayList<>();
-        switch (sheet.getObjClass()) {
-            case "ZombieRaProps":
-                skills.add(new RaStealSunSkill(sheet.getMaxClaimedSunCurrency()));
-                break;
-            case "ZombieTombRaiserProps":
-                skills.add(new TombRaiserSkill(
-                        sheet.getTimeBetweenRaisings(),
-                        sheet.getNumberOfTombsToSpawn(),
-                        sheet.getAmmo()));
-                break;
-            case "ZombieExplorerProps":
-                skills.add(new ExplorerTorchSkill());
-                break;
-            case "ZombieGargantuarProps":
-                if (sheet.getImpType() != null) {
-                    skills.add(new GargantuarSkill(
-                            sheet.getImpType(),
-                            sheet.getHealthThresholdToThrowImp()));
-                }
-                break;
-            case "ZombieDarkWizardProps":
-                skills.add(new WizardZapSkill());
-                break;
-            case "ZombieIceAgeHunterProps":
-                skills.add(new HunterSnowballSkill(
-                        sheet.getSnowballsPerBarrage(),
-                        sheet.getFarAttackRange()));
-                break;
-            default:
-                break;
+        if (sheet.skillConfig instanceof ZombieSkillConfig skillCfg) {
+            ZombieSkill skill = ZombieSkillCatalog.create(skillCfg);
+            if (skill != null) {
+                skills.add(skill);
+            }
         }
         return skills;
     }

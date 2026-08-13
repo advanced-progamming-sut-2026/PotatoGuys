@@ -3,43 +3,39 @@ package com.pvz.models.entities.zombies.skills;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
+import com.pvz.models.entities.zombies.config.GargantuarSkillConfig;
 import com.pvz.models.games.GameContext;
 
 /**
- * Gargantuar — throws an Imp when the zombie drops to 50 % HP.
+ * Gargantuar — throws an Imp when the zombie drops to {@code throwHpFraction} % HP.
  *
  * <p>From JSON {@code ZombieGargantuarProps}:
  * <ul>
  *   <li>{@code HealthPercentThrowImp = 0.5}</li>
- *   <li>{@code ImpTargetColumn = 2} — imp lands at column index 2 (0-based from left)</li>
- *   <li>{@code ImpType = "egypt_imp"} → resolved to a zombie alias by the registry</li>
+ *   <li>{@code ImpType = "ZombieTutorialImpDefault"} → resolved to a zombie alias by the registry</li>
  * </ul>
  *
- * <p>The Gargantuar also smashes plants it walks into instead of eating them.
- * That is modelled inside {@link pvz.models.entities.zombies.fsm.EatState}
- * by setting the eat-DPS to {@code smashDamage} in one hit.
+ * <p>The skill fires its throw on state entry, then holds the "smash_left"
+ * clip until it finishes. The Gargantuar also smashes plants it walks into
+ * instead of eating them — that part lives in {@code EatState} via the
+ * smashDamage stat.
  */
-public class GargantuarSkill implements ZombieSkill {
+public class GargantuarSkill extends ZombieSkill {
 
-    /** JSON ImpTargetColumn: imp lands 2 columns from the left edge. */
+    /** Imp lands 2 columns from the left edge. */
     private static final int IMP_TARGET_COL = 3;
 
     private final String impAlias;
-
-    /** HP fraction at which the imp is thrown (from JSON HealthPercentThrowImp). */
     private final float throwHpFraction;
 
-    /**
-     * @param impAlias       full zombie registry alias for the imp to spawn
-     * @param throwHpFraction fraction of max HP (0..1) that triggers the throw
-     */
-    public GargantuarSkill(String impAlias, float throwHpFraction) {
-        this.impAlias = impAlias;
-        this.throwHpFraction = throwHpFraction;
+    public GargantuarSkill(GargantuarSkillConfig config) {
+        super(config);
+        this.impAlias = config.impType;
+        this.throwHpFraction = config.throwHpFraction;
     }
 
     @Override
-    public boolean shouldTrigger(Zombie zombie, GameContext ctx) {
+    public boolean shouldTrigger(Zombie zombie, GameContext ctx, float dt) {
         if (zombie.isImpAlreadyThrown()) return false;
         if (zombie.getMaxHp() <= 0f) return false;
         float hpFraction = zombie.getHp() / zombie.getMaxHp();
@@ -47,7 +43,7 @@ public class GargantuarSkill implements ZombieSkill {
     }
 
     @Override
-    public void execute(Zombie zombie, GameContext ctx) {
+    protected void doExecute(Zombie zombie, GameContext ctx) {
         zombie.markImpThrown();
         int targetCol = Math.max(1, Math.min((int)zombie.getX() - IMP_TARGET_COL, ctx.getMap().getColumns() - 1));
         Zombie imp = new ZombieFactory().create(impAlias, targetCol, GameController.worldYtoLane(zombie.getY()), ctx, 1, 2);

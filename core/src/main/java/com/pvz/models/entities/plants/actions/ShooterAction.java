@@ -76,8 +76,8 @@ public class ShooterAction extends PlantAction {
         }
 
         
-        PamAnimationConfig config = plant.getSheet().pamAnimationConfig;
-        animTime = AnimationCatalog.getInstance().getClipDuration(config.pamFilePath , config.attackActionLabel);
+        PamAnimationConfig pam = plant.getSheet().pamAnimationConfig;
+        animTime = AnimationCatalog.getInstance().getClipDuration(pam.pamFilePath , config.label);
     }
 
         @Override
@@ -119,12 +119,12 @@ public class ShooterAction extends PlantAction {
 
     @Override
     public FrameConfig draw(Plant plant, GameContext ctx) {
-        PamAnimationConfig config = plant.getSheet().pamAnimationConfig;
+        PamAnimationConfig pam = plant.getSheet().pamAnimationConfig;
         float x = GameController.colToWorldX(plant.getCol());
         float y = GameController.laneToWorldY(plant.getLane());
         Vector2 pos = new Vector2(x,y);
         Vector2 scale = new Vector2(0.7f,0.7f);
-        return new FrameConfig(config.pamFilePath,config.attackActionLabel,stateTime,pos,scale,
+        return new FrameConfig(pam.pamFilePath,config.label,stateTime,pos,scale,
             null,true);
     }
 

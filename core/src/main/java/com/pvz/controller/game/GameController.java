@@ -114,6 +114,14 @@ public class GameController {
                             return true;
                         }
 
+                        // ۱.۱. اگر کارتی انتخاب نشده باشد، کلیک روی گیاهِ کاشته‌شده
+                        //      پلنت‌فود آن را اجرا می‌کند
+                        if (gameUiModal == null || gameUiModal.getSelectedCard() == null) {
+                            if (checkPlantFoodClick(touchPos.x, touchPos.y)) {
+                                return true;
+                            }
+                        }
+
                         // ۲. کاشت گیاه در صورت انتخاب کارت
                         if (gameUiModal != null && gameUiModal.getSelectedCard() != null) {
                             Tile hoveredTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
@@ -510,6 +518,31 @@ public class GameController {
                     Gdx.app.log("GameScreen", "Sun collected! Amount: " + sun.getAmount());
                     return true;
                 }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * If the click lands inside a planted plant's hitbox, triggers the plant's
+     * Plant Food effect. Works unconditionally (no plant food is consumed).
+     *
+     * @return {@code true} if the click was consumed by a plant food
+     */
+    private boolean checkPlantFoodClick(float worldX, float worldY) {
+        if (ctx == null) {
+            return false;
+        }
+        for (Plant plant : new ArrayList<>(ctx.getPlants())) {
+            if (plant.isDead()) {
+                continue;
+            }
+            if (plant.getHitbox() != null
+                    && plant.getHitbox().getRectangle().contains(worldX, worldY)) {
+                plant.triggerPlantFood(ctx);
+                ctx.log("[PlantFood] " + plant.getSheet().getName()
+                        + " at (" + plant.getCol() + "," + plant.getLane() + ") used Plant Food!");
+                return true;
             }
         }
         return false;
