@@ -143,7 +143,7 @@ public class AdventureMenu extends ScreenAdapter {
                 Runnable openChapter = index == 0 ? () -> game.setScreen(new EgyptChapterMenu(game))
                     : index == 1 ? () -> game.setScreen(new FrostbiteCavesChapterMenu(game))
                     : index == 2 ? () -> game.setScreen(new DarkAgesChapterMenu(game))
-                    : () -> game.setScreen(new ChapterMenu(game, chapterName));
+                    : () -> game.setScreen(new BigWaveBeachChapterMenu(game));
                 return MenuUiKit.addHoverPop(MenuUiKit.bigCard(skin, CHAPTER_ART[index], CHAPTER_TINTS[index], chapterName,
                     locked, locked,
                     openChapter,

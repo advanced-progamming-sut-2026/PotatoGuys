@@ -105,23 +105,37 @@
         "name": "Ancient Egypt",
         "locked": false,
         "levelUnlocked": {
-          "1": true
+          "1": true,
+          "2": true,
+          "3": true
         }
       },
       {
         "name": "Frostbite Caves",
-        "locked": true,
-        "levelUnlocked": {}
+        "locked": false,
+        "levelUnlocked": {
+          "1": true,
+          "2": true,
+          "3": true
+        }
       },
       {
         "name": "Dark Ages",
-        "locked": true,
-        "levelUnlocked": {}
+        "locked": false,
+        "levelUnlocked": {
+          "1": true,
+          "2": true,
+          "3": true
+        }
       },
       {
         "name": "Big Wave Beach",
-        "locked": true,
-        "levelUnlocked": {}
+        "locked": false,
+        "levelUnlocked": {
+          "1": true,
+          "2": true,
+          "3": true
+        }
       }
     ],
     "maxMiopoint": 0,
