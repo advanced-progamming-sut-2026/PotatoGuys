@@ -104,11 +104,11 @@
         },
         {
           "message": "New Zombie Encountered: DODO!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: RA!",
-          "unread": true
+          "unread": false
         }
       ]
     },
