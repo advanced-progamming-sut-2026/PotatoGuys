@@ -46,7 +46,7 @@ public class GargantuarSkill extends ZombieSkill {
     protected void doExecute(Zombie zombie, GameContext ctx) {
         zombie.markImpThrown();
         int targetCol = Math.max(1, Math.min((int)zombie.getX() - IMP_TARGET_COL, ctx.getMap().getColumns() - 1));
-        Zombie imp = new ZombieFactory().create(impAlias, targetCol, GameController.worldYtoLane(zombie.getY()), ctx, 1, 2);
+        Zombie imp = new ZombieFactory().create(impAlias, zombie.getX(), (int)zombie.getY(), ctx, 1, 2);
         ctx.spawnZombie(imp);
         ctx.log("Gargantuar threw Imp [" + impAlias + "] to column "
                 + targetCol + " in lane " + GameController.worldYtoLane(zombie.getY()) + "!");

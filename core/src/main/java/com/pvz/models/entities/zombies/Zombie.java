@@ -254,12 +254,12 @@ public class Zombie extends Entity {
     // ── Accessors ─────────────────────────────────────────────────────────────
 
     public ZombiePropertySheet getSheet()       { return sheet; }
-    public GameContext getContext()        { return context; }
-    public float getStateTime()            { return stateTime; }
+    public GameContext getContext()             { return context; }
+    public float getStateTime()                 { return stateTime; }
     public float getX()                         { return position.x; }
-    public void setX(float newX)               { position.x = newX; syncHitbox(); }
-    public float getY()                        { return position.y; }
-    public void setY(float y)            { position.y = y; syncHitbox(); }
+    public void setX(float newX)                { position.x = newX; syncHitbox(); }
+    public float getY()                         { return position.y; }
+    public void setY(float y)                   { position.y = y; syncHitbox(); }
     public float getHp()                        { return hp; }
     public float getMaxHp()                     { return maxHp; }
     public float getEatDpsPerTick()             { return eatDpsPerTick; }
