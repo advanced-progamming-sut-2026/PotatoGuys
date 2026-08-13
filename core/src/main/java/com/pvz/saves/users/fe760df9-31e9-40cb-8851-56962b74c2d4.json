@@ -28,6 +28,12 @@
           "isBoosted": false
         },
         {
+          "Type": "PrimalPotatoMine",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
           "Type": "Sunflower",
           "level": 1,
           "seed": 0,
@@ -311,7 +317,7 @@
       {
         "x": 4,
         "y": 4,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
