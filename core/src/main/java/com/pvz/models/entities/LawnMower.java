@@ -20,7 +20,18 @@ public class LawnMower extends Entity {
     public LawnMower(GameContext ctx, int lane){
         position.set(GameController.colToWorldX(-1), GameController.laneToWorldY(lane));
         velocity.set(VELOCITY, 0f);
-        setHitbox(60f, 80f);
+        setHitbox(new Hitbox(this, position.x, position.y, 60f, 80f) {
+            @Override
+            public void onCollision(Hitbox onHit) {
+                if (onHit.getOwner() instanceof Zombie zombie && !zombie.isDead()) {
+                    if (!triggered) {
+                        triggered = true;
+                        ctx.log("[LawnMower] activated in lane " + GameController.worldYtoLane(position.y) + "!");
+                    }
+                    zombie.takeDamage(100000);
+                }
+            }
+        });
         this.ctx=ctx;
         triggered=false;
         stateTime=0;
@@ -43,22 +54,6 @@ public class LawnMower extends Entity {
         }
     }
 
-    /**
-     * Invoked by the {@link CollisionSystem} when this mower's hitbox overlaps
-     * another entity's. The first zombie that bumps into the mower triggers it;
-     * from then on, every zombie it runs over is killed instantly.
-     */
-    @Override
-    public void onCollision(Entity other) {
-        if (other instanceof Zombie zombie && !zombie.isDead()) {
-            if (!triggered) {
-                triggered = true;
-                ctx.log("[LawnMower] activated in lane " + GameController.worldYtoLane(position.y) + "!");
-            }
-            zombie.takeDamage(100000);
-        }
-    }
-
     @Override
     public FrameConfig draw() {
         if (!triggered) return new FrameConfig(PAM_PATH,PAM_LABEL_IDLE,stateTime,position,
@@ -70,6 +65,7 @@ public class LawnMower extends Entity {
     @Override
     public void dispose() {
         GameEngine.getInstance().getToRemove().add(this);
+        ctx.removeHitbox(getHitbox());
         ctx.getLawnMowers()[GameController.worldYtoLane(position.y)]=null;
     }
 }

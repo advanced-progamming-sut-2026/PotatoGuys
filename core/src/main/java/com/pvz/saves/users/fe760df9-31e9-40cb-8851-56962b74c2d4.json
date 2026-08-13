@@ -10,13 +10,25 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 6150,
-    "diamonds": 142,
+    "coins": 6250,
+    "diamonds": 146,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
         {
           "Type": "Peashooter",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "PotatoMine",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "PrimalPotatoMine",
           "level": 1,
           "seed": 0,
           "isBoosted": false
@@ -61,7 +73,7 @@
           "Type": "SnowPea",
           "level": 1,
           "seed": 0,
-          "isBoosted": true
+          "isBoosted": false
         },
         {
           "Type": "CherryBomb",
@@ -80,7 +92,8 @@
         "BASIC",
         "CONEHEAD",
         "DODO",
-        "RA"
+        "RA",
+        "EXPLORER"
       ],
       "seedPackets": {
         "TwinSunflower": 10,
@@ -109,6 +122,10 @@
         {
           "message": "New Zombie Encountered: RA!",
           "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: EXPLORER!",
+          "unread": true
         }
       ]
     },
@@ -294,19 +311,19 @@
       {
         "x": 3,
         "y": 4,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
         "x": 4,
         "y": 4,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
         "x": 5,
         "y": 4,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       }
     ]
@@ -1229,7 +1246,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786644017862
+    "lastDailyReset": 1786654126387
   },
   "questLogRefreshed": true
 }

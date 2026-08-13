@@ -8,6 +8,7 @@ import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
+import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.projectile.effects.NormalEffectState;
 import com.pvz.models.entities.projectile.effects.ProjectileEffectState;
 import com.pvz.models.entities.projectile.fsm.ProjectileMotionState;
@@ -58,7 +59,17 @@ public class Projectile extends Entity {
         this.velocity.set(velX, velY);
         this.damage = damage;
 
-        setHitbox(28f, 28f);
+        setHitbox(new Hitbox(this, position.x, position.y, 28f, 28f) {
+            @Override
+            public void onCollision(Hitbox onHit) {
+                if (isDead) {
+                    return;
+                }
+                if (onHit.getOwner() instanceof Zombie zombie && !zombie.isDead()) {
+                    onHitZombie(zombie);
+                }
+            }
+        });
 
         // Sensible defaults; ProjectileFactory swaps these for the real states.
         this.motionState = new StraightMotionState();
@@ -148,21 +159,6 @@ public class Projectile extends Entity {
     }
 
     // ── Collision ─────────────────────────────────────────────────────────────
-
-    /**
-     * Invoked by the {@link CollisionSystem} when this projectile's hitbox
-     * overlaps another entity's. Only zombies are of interest here; any other
-     * overlap is ignored.
-     */
-    @Override
-    public void onCollision(Entity other) {
-        if (isDead || other == null) {
-            return;
-        }
-        if (other instanceof Zombie zombie && !zombie.isDead()) {
-            onHitZombie(zombie);
-        }
-    }
 
     private void onHitZombie(Zombie zombie) {
         hitZombies.add(zombie);

@@ -6,7 +6,10 @@ import java.util.List;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.GameEngine;
 import com.pvz.models.engine.TickAware;
+import com.pvz.models.entities.Entity;
+import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.LawnMower;
+import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.enums.PlantTag;
@@ -43,7 +46,9 @@ public class GameContext implements TickAware {
     private List<Plant> plants;
     private List<Card> cards;
     private List<Sun> suns;
+    private List<Effect> effects;
     private LawnMower[] lawnMowers;
+    private final List<Hitbox> hitboxes = new ArrayList<>();
     private GameMode mode;
     private GameMap map;
     private GameStats gameStats;
@@ -62,6 +67,8 @@ public class GameContext implements TickAware {
     private final List<Plant> pendingPlantsToRemove = new ArrayList<>();
     private final List<Projectile> pendingProjectilesToAdd = new ArrayList<>();
     private final List<Projectile> pendingProjectilesToRemove = new ArrayList<>();
+    private final List<Effect> pendingEffectsToAdd = new ArrayList<>();
+    private final List<Effect> pendingEffectsToRemove = new ArrayList<>();
     private final List<Sun> pendingSunsToAdd = new ArrayList<>();
     private final List<Sun> pendingSunsToRemove = new ArrayList<>();
 
@@ -73,11 +80,13 @@ public class GameContext implements TickAware {
         this.plants         = new ArrayList<>();
         this.projectiles    = new ArrayList<>();
         this.suns           = new ArrayList<>();
+        this.effects        = new ArrayList<>();
         this.cards          = new ArrayList<>();
         this.map = GameMapFactory.createGameMap(currentLevel.getGameMapDefinition());
         this.lawnMowers=new LawnMower[map.getLanes()];
         for (int i = 0; i < lawnMowers.length; i++) {
             lawnMowers[i]=new LawnMower(this,i);
+            hitboxes.add(lawnMowers[i].getHitbox());
             GameEngine.getInstance().getToAdd().add(lawnMowers[i]);
         }
         this.mode = GameModeFactory.createGameMode(currentLevel);
@@ -166,10 +175,12 @@ public class GameContext implements TickAware {
     public void spawnZombie(Zombie z) {
         pendingZombiesToAdd.add(z);
         engine.register(z);
+        addHitbox(z.getHitbox());
     }
     public boolean removeZombie(Zombie z) {
         engine.unRegister(z);
         pendingZombiesToRemove.add(z);
+        removeHitbox(z.getHitbox());
         return true;
     }
     public boolean isZombieAt(int col, int lane) {
@@ -204,6 +215,7 @@ public class GameContext implements TickAware {
         getTileAt(p.getCol(), p.getLane()).addPlant(p);
         pendingPlantsToAdd.add(p);
         engine.register(p);
+        addHitbox(p.getHitbox());
     }
 
     public boolean isPlantAt(int col, int lane) {
@@ -214,6 +226,7 @@ public class GameContext implements TickAware {
         getTileAt(p.getCol(), p.getLane()).removePlant(p);
         engine.unRegister(p);
         pendingPlantsToRemove.add(p);
+        removeHitbox(p.getHitbox());
         return true;
     }
 
@@ -244,11 +257,13 @@ public class GameContext implements TickAware {
     public void spawnProjectile(Projectile p) {
         pendingProjectilesToAdd.add(p);
         engine.register(p);
+        addHitbox(p.getHitbox());
     }
 
     public boolean removeProjectile(Projectile p) {
         engine.unRegister(p);
         pendingProjectilesToRemove.add(p);
+        removeHitbox(p.getHitbox());
         return true;
     }
 
@@ -259,11 +274,33 @@ public class GameContext implements TickAware {
     public void spawnSun(Sun s) {
         pendingSunsToAdd.add(s);
         engine.register(s);
+        addHitbox(s.getHitbox());
     }
     public boolean removeSun(Sun s) {
         engine.unRegister(s);
         pendingSunsToRemove.add(s);
+        removeHitbox(s.getHitbox());
         return true;
+    }
+
+    // ── Hitbox registry ─────────────────────────────────────────────────────────
+    // Every spawned entity registers its hitbox here so the CollisionSystem can
+    // sweep all hitboxes in one pass without caring about entity types.
+
+    public void addHitbox(Hitbox hitbox) {
+        if (hitbox != null) {
+            hitboxes.add(hitbox);
+        }
+    }
+
+    public void removeHitbox(Hitbox hitbox) {
+        if (hitbox != null) {
+            hitboxes.remove(hitbox);
+        }
+    }
+
+    public List<Hitbox> getHitboxes() {
+        return hitboxes;
     }
 
     /**
@@ -291,6 +328,11 @@ public class GameContext implements TickAware {
         suns.removeAll(pendingSunsToRemove);
         pendingSunsToAdd.clear();
         pendingSunsToRemove.clear();
+
+        effects.addAll((pendingEffectsToAdd));
+        effects.removeAll(pendingEffectsToRemove);
+        pendingEffectsToAdd.clear();
+        pendingEffectsToRemove.clear();
     }
 
     public int getCurrentTick() {
@@ -420,5 +462,19 @@ public class GameContext implements TickAware {
 
     public LawnMower[] getLawnMowers(){
         return lawnMowers;
+    }
+
+    public List<Effect> getEffects(){
+        return effects;
+    }
+
+    public void addEffect(Effect effect){
+        pendingEffectsToAdd.add(effect);
+        engine.getToAdd().add(effect);
+    }
+
+    public void removeEffect(Effect effect){
+        pendingEffectsToRemove.add(effect);
+        engine.getToRemove().add(effect);
     }
 }

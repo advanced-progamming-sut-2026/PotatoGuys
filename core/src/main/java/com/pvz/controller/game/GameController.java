@@ -25,6 +25,7 @@ import com.pvz.models.engine.GameEngine;
 import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.LawnMower;
+import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
@@ -286,6 +287,7 @@ public class GameController {
             drawLawnMowers();
             drawSuns();
             drawProjectiles();
+            drawEffects();
         }
         batch.end();
 
@@ -386,6 +388,18 @@ public class GameController {
         if (ctx==null) return;
         for (Sun s: ctx.getSuns()){
             FrameConfig frameConfig = s.draw();
+            if (frameConfig!=null){
+                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
+                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
+                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+            }
+        }
+    }
+
+    private void drawEffects(){
+        if (ctx==null) return;
+        for (Effect e: ctx.getEffects()){
+            FrameConfig frameConfig = e.draw();
             if (frameConfig!=null){
                 PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
                     frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
