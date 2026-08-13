@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
+import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
@@ -100,7 +101,17 @@ public class Zombie extends Entity {
         this.eatDpsPerTick = scaled[1] * diffFactor / TICKS_PER_SECOND;
         this.speedPerTick  = sheet.getSpeed() / TICKS_PER_SECOND;
 
-        setHitbox(48f, 80f);
+        setHitbox(new Hitbox(this, 48f, 80f) {
+            @Override
+            public void onCollision(Hitbox onHit) {
+                if (dead) {
+                    return;
+                }
+                if (onHit.getOwner() instanceof Plant plant && !plant.isDead() && !plant.isFrozen()) {
+                    startEating(plant);
+                }
+            }
+        });
         velocity.set(-getEffectiveSpeedPerTick() * 1000f, 0f);
     }
 
@@ -171,21 +182,6 @@ public class Zombie extends Entity {
     }
 
     // ── Collision ─────────────────────────────────────────────────────────────
-
-    /**
-     * Invoked by the {@link CollisionSystem} when this zombie's hitbox overlaps
-     * another entity's. Overlapping a plant makes the zombie stop walking and
-     * transition into {@link EatState} so it can chew through it.
-     */
-    @Override
-    public void onCollision(Entity other) {
-        if (dead || other == null) {
-            return;
-        }
-        if (other instanceof Plant plant && !plant.isDead() && !plant.isFrozen()) {
-            startEating(plant);
-        }
-    }
 
     /** Switches to {@link EatState} targeting {@code plant} if not already eating. */
     public void startEating(Plant plant) {

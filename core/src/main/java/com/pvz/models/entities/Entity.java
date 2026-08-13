@@ -63,6 +63,16 @@ public abstract class Entity implements TickAware {
         hitbox = new Hitbox(this, width, height);
     }
 
+    /**
+     * Installs an already-built hitbox (typically an anonymous
+     * {@code new Hitbox(...) { @Override onCollision(...) } } subclass) and
+     * centers it on the current position.
+     */
+    public void setHitbox(Hitbox hitbox) {
+        this.hitbox = hitbox;
+        syncHitbox();
+    }
+
     /** Re-centers the hitbox on the current position; call after moving. */
     protected void syncHitbox() {
         if (hitbox != null) {
@@ -76,17 +86,5 @@ public abstract class Entity implements TickAware {
      */
     public boolean overlaps(Entity other) {
         return hitbox != null && other != null && other.hitbox != null && hitbox.overlaps(other.hitbox);
-    }
-
-    /**
-     * Called by the collision system whenever this entity's hitbox overlaps
-     * another entity's. The default implementation ignores the collision;
-     * subclasses override it to apply their own damage / eating / effect logic
-     * based on what {@code other} is.
-     *
-     * @param other the entity this one collided with (never null)
-     */
-    public void onCollision(Entity other) {
-        // default: no reaction
     }
 }
