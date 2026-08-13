@@ -35,7 +35,7 @@ public class PlantFactory {
     private Plant createFromConfig(PlantJsonConfig config, int col, int lane, int level, boolean boosted, GameContext ctx) {
         PlantPropertySheet sheet = CONFIG_REGISTRY.toSheet(config);
         PlantAction attackAction = buildConfigAction(config.attackConfig);
-        PlantAction feedAction = buildConfigAction(config.feedConfig);
+        PlantAction feedAction = buildFeedAction(config.feedConfig);
         return new Plant(sheet, attackAction, feedAction, col, lane, level, boosted, ctx);
     }
 
@@ -56,6 +56,15 @@ public class PlantFactory {
             return new SunProducerAction(sunConfig);
         }
         return null;
+    }
+
+    /** Plant Food reuses the same config-driven actions, but a one-shot sun producer must
+     *  produce without dying (dying is the Gold-Bloom attack behaviour, not a feed behaviour). */
+    private PlantAction buildFeedAction(PlantActionConfig config) {
+        if (config instanceof SunProducerActionConfig sunConfig) {
+            return new SunProducerAction(sunConfig, false);
+        }
+        return buildConfigAction(config);
     }
 
     // private PlantAction buildAction(PlantPropertySheet sheet) {

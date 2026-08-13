@@ -5,8 +5,6 @@ public class PamAnimationConfig {
 
     public String pamFilePath;
     public String idleLabel;
-    public String attackActionLabel;
-    public String plantFoodLabel;
     public float animSpeed = 1.0f;
 
     /** Frame index (within {@link #actionLabel}) at which the actual game effect fires. Mutually optional with {@link #actionTriggerLabel}. */

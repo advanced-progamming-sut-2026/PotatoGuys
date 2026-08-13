@@ -53,7 +53,7 @@ public class GraveBusterAction extends PlantAction{
         Vector2 position= new Vector2(GameController.colToWorldX(plant.getCol()),GameController.laneToWorldY(plant.getLane()));
         Vector2 scale = new Vector2(0.65f,0.65f);
         PamAnimationConfig pamAnimationConfig = plant.getSheet().pamAnimationConfig;
-        return new FrameConfig(pamAnimationConfig.pamFilePath,pamAnimationConfig.attackActionLabel,stateTime,position,scale,null,true);
+        return new FrameConfig(pamAnimationConfig.pamFilePath,config.label,stateTime,position,scale,null,true);
     }
 
     @Override
