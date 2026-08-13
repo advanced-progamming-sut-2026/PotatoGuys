@@ -27,13 +27,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.pvz.view.game.GameScreen;
+
 import com.pvz.PvZ2;
 import com.pvz.controller.ChapterController;
 import com.pvz.enums.GameAsset;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.Profile;
 import com.pvz.view.MenuUiKit;
+import com.pvz.view.game.GameScreen;
 
 import pvz.libpvz.pam.ClipRef;
 import pvz.libpvz.pam.PamPlayer;
@@ -41,53 +42,67 @@ import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
 /**
- * Dark Ages level-select ("stage map") screen. Ported from Dani's
- * DarkAgesStagesScreen: 3 islands plus a separate boss node, tap a stage to
- * select it, then hit Play in the bottom bar - same interaction pattern as
- * {@link EgyptChapterMenu} and {@link FrostbiteCavesChapterMenu}.
+ * Big Wave Beach level-select ("stage map") screen. Ported from
+ * BigWaveBeachStagesScreen: 3 islands plus a separate boss node, tap a
+ * stage to select it, then hit Play in the bottom bar - same interaction
+ * pattern as {@link EgyptChapterMenu}, {@link FrostbiteCavesChapterMenu},
+ * and {@link DarkAgesChapterMenu}.
  * <p>
- * Genuinely unique things ported from her actual Dark Ages code (not just
- * reused from Egypt/Frostbite): drifting clouds that continuously scroll
- * across the map, a lightning effect near the danger node, fireflies
- * instead of stars/crystals, and Day 2's island rendered taller and
- * top-anchored instead of centered like the others. The boss node itself
- * is rendered using the actual Zomboss PAM clip rather than a static island
- * texture, since her Dark Ages file never defines a separate boss island
- * PNG - the animation IS the boss node's art.
+ * Structurally this one is closer to Egypt/Frostbite than Dark Ages: it
+ * DOES define a real static boss island texture
+ * ({@code images/chapters/beach/boss.png}), so the boss node renders that
+ * texture plus the LEVEL_NODE marker, with a separate ambient Zomboss PAM
+ * decoration floating between Day 2 and Day 3 - not the "PAM clip IS the
+ * node" trick Dark Ages uses.
+ * <p>
+ * One genuinely new thing here: the house island itself is a PAM
+ * animation ({@code ANIM27.PAM}), not a static PNG like the other three
+ * chapters - so it's drawn through {@code createAnchoredAnimation} instead
+ * of a plain {@code MapDecorationActor}.
  * <p>
  * Real asset paths and PAM engine calls below are copied directly from her
  * working code. Lock/complete state comes from our own
  * {@link ChapterController}/{@code Season}, not her Level model. Level 4
- * (the boss) is appearance-only for now, same as Egypt/Frostbite - no real
- * level-4 data exists yet, so it isn't clickable.
+ * (the boss) is appearance-only for now, same as the other three chapters -
+ * no real level-4 data exists yet, so it isn't clickable.
  */
-public class DarkAgesChapterMenu extends ScreenAdapter {
+public class BigWaveBeachChapterMenu extends ScreenAdapter {
 
-    private static final String CHAPTER_NAME = "Dark Ages";
+    private static final String CHAPTER_NAME = "Big Wave Beach";
 
-    private static final String CHAPTER_BACKGROUND = "textures/backgrounds/dark_ages_bg.png";
+    private static final String CHAPTER_BACKGROUND = "textures/backgrounds/beaches_stages.png";
 
     private static final String[] STAGE_ISLAND_TEXTURES = {
-        "images/chapters/darkage/island7.png",
-        "images/chapters/darkage/anim9_373x659.png",
-        "images/chapters/darkage/anim10_352x358.png"
+        "images/chapters/beach/anim12_335x420.png",
+        "images/chapters/beach/anim13_397x399.png",
+        "images/chapters/beach/anim17_321x255.png"
     };
+    private static final String BOSS_STAGE_ISLAND_TEXTURE = "images/chapters/beach/boss.png";
 
-    private static final float NODE_WIDTH = 170f;
-    private static final float NODE_HEIGHT = 130f;
+    private static final float NODE_WIDTH = 204f;
+    private static final float NODE_HEIGHT = 156f;
     private static final float BOSS_NODE_WIDTH = 470f;
     private static final float BOSS_NODE_HEIGHT = 540f;
-
-    private static final float HOUSE_ISLAND_WIDTH = 270f;
-    private static final float HOUSE_ISLAND_HEIGHT = 300f;
-    private static final float HOUSE_ISLAND_OFFSET_X = -25f;
 
     private static final float PATH_WIDTH = 1700f;
     private static final float PATH_HEIGHT = 700f;
     private static final float LAYOUT_SCALE_X = PATH_WIDTH / 1080f;
     private static final float LAYOUT_SCALE_Y = PATH_HEIGHT / 380f;
 
-    private static final Color TRAIL_COLOR = new Color(0.55f, 0.32f, 0.85f, 0.85f);
+    // Offset of the house island from the first level node (centerX[0], centerY[0]).
+    // Tweak these two to move the house (and everything attached to it: the
+    // house splash effect, the greenhouse anchor and the first path segment).
+    private static final float HOUSE_ISLAND_OFFSET_X = -170f * LAYOUT_SCALE_X;
+    private static final float HOUSE_ISLAND_OFFSET_Y = 70f * LAYOUT_SCALE_Y;
+
+    // Resize multipliers for the three beach island PNGs (anim12/anim13/anim17).
+    // The PNGs render at their native pixel size times this scale, so a bigger
+    // value = bigger island. Tweak each one independently.
+    private static final float BEACH_ISLAND_ANIM_12_SCALE = 0.2f;
+    private static final float BEACH_ISLAND_ANIM_13_SCALE = 0.2f;
+    private static final float BEACH_ISLAND_ANIM_17_SCALE = 0.2f;
+
+    private static final Color TRAIL_COLOR = new Color(0.35f, 0.65f, 0.80f, 0.85f);
 
     private static final int PLAYABLE_LEVEL_COUNT = 3;
     private static final int BOSS_LEVEL_NUMBER = 4;
@@ -105,14 +120,19 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
         }
     }
 
-    private static final DecorTuning LEVEL_NODE_TUNING = new DecorTuning(260f, 260f, 0.34f, 27f, 34f);
-    private static final DecorTuning BOSS_LEVEL_NODE_TUNING = new DecorTuning(260f, 260f, 0.45f, 25f, 70f);
-    private static final DecorTuning DANGER_NODE_TUNING = new DecorTuning(350f, 300f, 0.50f, 45f, 130f);
-    private static final DecorTuning ZOMBOSS_TUNING = new DecorTuning(560f, 760f, 0.45f, 70f, 135f);
-    private static final DecorTuning FIREFLY_TUNING = new DecorTuning(25f, 25f, 0.15f, 0f, 0f);
-    private static final DecorTuning CLOUD_TUNING = new DecorTuning(300f, 200f, 0.05f, 0f, 0f);
-    private static final DecorTuning LIGHTNING_TUNING = new DecorTuning(300f, 300f, 0.28f, 0f, 0f);
-    private static final DecorTuning ROCK_TUNING = new DecorTuning(100f, 100f, 0.22f, 0f, 0f);
+    private static final DecorTuning HOUSE_ISLAND_TUNING = new DecorTuning(20f, 400f, 0.18f, -62f, 175f);
+    private static final DecorTuning LEVEL_NODE_TUNING = new DecorTuning(260f, 260f, 0.50f, 40f, 65f);
+    private static final DecorTuning BOSS_LEVEL_NODE_TUNING = new DecorTuning(260f, 260f, 0.45f, -7f, -15f);
+    private static final DecorTuning DANGER_NODE_TUNING = new DecorTuning(350f, 300f, 0.50f, 70f, -215f);
+    private static final DecorTuning ZOMBOSS_TUNING = new DecorTuning(560f, 760f, 0.30f, 37f, 140f);
+    private static final DecorTuning WAVE_TUNING = new DecorTuning(90f, 180f, 0.05f, -60f, -60f);
+    private static final DecorTuning ROCK_TUNING = new DecorTuning(100f, 100f, 0.32f, 32f, -480f);
+    private static final DecorTuning SPLASH_TUNING = new DecorTuning(200f, 150f, 0.50f, 20f, 60f);
+    private static final DecorTuning STAR_TUNING = new DecorTuning(25f, 25f, 0.30f, 0f, 0f);
+    private static final DecorTuning WATER_DROP_TUNING = new DecorTuning(100f, 100f, 0.40f, 0f, -20f);
+    private static final DecorTuning WATERFALL_TUNING = new DecorTuning(200f, 250f, 0.80f, 520f, -85f);
+    private static final DecorTuning LARGE_ROCK_BEACH_TUNING = new DecorTuning(180f, 180f, 0.25f, -40f, -30f);
+    private static final DecorTuning SMALL_ROCK_BEACH_TUNING = new DecorTuning(120f, 120f, 0.20f, -10f, 10f);
 
     private enum DangerNodeState {
         LOCKED_IDLE("locked_idle"), UNLOCKED_ANIMATION("unlocked_animation"), UNLOCKED_IDLE("unlocked_idle");
@@ -128,29 +148,37 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
     }
 
     private enum MapObjectType {
-        DECOR_HOUSE_ISLAND("images/chapters/darkage/anim1_1201x1413.png", false),
+        DECOR_HOUSE_ISLAND("768/FULL/WORLDMAP/BEACH/ANIM27/ANIM27.PAM", true),
 
-        SMALL_ISLAND_1("images/chapters/darkage/island6.png", false),
-        SMALL_ISLAND_2("images/chapters/darkage/island8.png", false),
-        SMALL_ISLAND_3("images/chapters/darkage/island9.png", false),
+        SMALL_ISLAND_1("768/FULL/WORLDMAP/DINO/ANIM16/ANIM16.PAM", true),
+        SMALL_ISLAND_2("768/FULL/WORLDMAP/BEACH/ANIM6/ANIM6.PAM", true),
+        SMALL_ISLAND_3("images/chapters/beach/island42.png", false),
+        SMALL_ISLAND_4("images/chapters/beach/island41.png", false),
+        SMALL_ISLAND_5("images/chapters/beach/img_1.png", false),
 
-        FLOATING_ROCK_1("images/chapters/darkage/anim16_55x63.png", false),
-        FLOATING_ROCK_2("images/chapters/darkage/anim15_102x97.png", false),
+        BEACH_ISLAND_ANIM_12("images/chapters/beach/anim12_335x420.png", false),
+        BEACH_ISLAND_ANIM_13("images/chapters/beach/anim13_397x399.png", false),
+        BEACH_ISLAND_ANIM_17("images/chapters/beach/anim17_321x255.png", false),
 
-        PARTICLE("images/chapters/darkage/anim4_23x23.png", false),
-
+        ZOMBOSS_NODE("768/FULL/WORLDMAP/BEACH/ANIM15/ANIM15.PAM", true),
         LEVEL_NODE("768/INITIAL/WORLDMAP/LEVEL_NODE/LEVEL_NODE.PAM", true),
 
-        ZOMBOSS_BOSS_ISLAND("768/FULL/WORLDMAP/ZOMBOSS_NODE_DARK/ZOMBOSS_NODE_DARK.PAM", true),
+        FLOATING_ROCK_ANIM_1("768/FULL/WORLDMAP/BEACH/ANIM19/ANIM19.PAM", true),
+        FLOATING_ROCK_ANIM_2("768/FULL/WORLDMAP/BEACH/ANIM20/ANIM20.PAM", true),
+        FLOATING_ROCK_ANIM_3("768/FULL/WORLDMAP/BEACH/ANIM18/ANIM18.PAM", true),
 
-        DANGER_NODE_ANIM("768/FULL/WORLDMAP/DANGER_NODE_DARK/DANGER_NODE_DARK.PAM", true),
+        DANGER_NODE_ANIM("768/FULL/WORLDMAP/DANGER_NODE_BEACH/DANGER_NODE_BEACH.PAM", true),
 
-        CLOUD_ANIM_1("768/FULL/WORLDMAP/DARK/ANIM6/ANIM6.PAM", true),
-        CLOUD_ANIM_2("768/FULL/WORLDMAP/DARK/ANIM7/ANIM7.PAM", true),
+        WAVE_ANIM("768/FULL/WORLDMAP/FUTURE/ANIM4/ANIM4.PAM", true),
+        TWINKLING_STAR_ANIM("768/FULL/UI/JOUST/SPINNING_GOLD_STAR/SPINNING_GOLD_STAR.PAM", true),
+        SPLASH_EFFECT_ANIM("768/FULL/EFFECTS/WATER_SPLASH/WATER_SPLASH.PAM", true),
 
-        FIREFLY_ANIM("768/FULL/WORLDMAP/DARK/ANIM5/ANIM5.PAM", true),
-
-        LIGHTNING_ANIM("768/FULL/EFFECTS/ZOMBIE_DARK_WIZARD_PROJECTILE_HIT/ZOMBIE_DARK_WIZARD_PROJECTILE_HIT.PAM", true);
+        WATER_DROP_ANIM("768/FULL/WORLDMAP/BEACH/ANIM35/ANIM35.PAM", true),
+        WATERFALL_ANIM("768/FULL/WORLDMAP/BEACH/ANIM32/ANIM32.PAM", true),
+        FLOATING_ROCK_BEACH_LARGE_1("768/FULL/WORLDMAP/BEACH/ANIM16/ANIM16.PAM", true),
+        FLOATING_ROCK_BEACH_LARGE_2("768/FULL/WORLDMAP/BEACH/ANIM10/ANIM10.PAM", true),
+        SMALL_ROCK_BEACH_1("768/FULL/WORLDMAP/BEACH/ANIM4/ANIM4.PAM", true),
+        SMALL_ROCK_BEACH_2("768/FULL/WORLDMAP/BEACH/ANIM5/ANIM5.PAM", true);
 
         final String path;
         final boolean isPamAnimation;
@@ -189,7 +217,7 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
     private TextButton playButton;
     private int selectedLevel = -1;
 
-    public DarkAgesChapterMenu(PvZ2 game) {
+    public BigWaveBeachChapterMenu(PvZ2 game) {
         this.game = game;
         this.controller = new ChapterController(CHAPTER_NAME);
     }
@@ -209,7 +237,7 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
                 FileHandle rootHandle = Gdx.files.internal("assets/pvz-assets");
                 textureBank = new TextureBank("768", rootHandle);
                 pamPlayer = new PamPlayer(textureBank, rootHandle);
-                Gdx.app.log("PAM_INIT", "PAM system initialized for the Dark Ages stage map.");
+                Gdx.app.log("PAM_INIT", "PAM system initialized for the Big Wave Beach stage map.");
             } catch (Throwable t) {
                 Gdx.app.error("PAM_INIT", "Failed to initialize PAM system - falling back to static art.", t);
             }
@@ -254,7 +282,7 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
         stage.dispose();
     }
 
-    // --- Top bar (same convention as AdventureMenu/MainMenu/EgyptChapterMenu) -
+    // --- Top bar (same convention as AdventureMenu/MainMenu/other chapter screens) -
 
     private Table buildTopBar() {
         Table topBar = new Table();
@@ -342,7 +370,7 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
     private void refreshSelectionBar() {
         if (selectedLevel > 0) {
             boolean boss = selectedLevel == BOSS_LEVEL_NUMBER;
-            selectionLabel.setText(CHAPTER_NAME + " - " + (boss ? "Zomboss" : "Day " + selectedLevel)
+            selectionLabel.setText(CHAPTER_NAME + " - " + (boss ? "Tsunami Zomboss" : "Day " + selectedLevel)
                 + "\nAdventure - " + (boss ? "Boss" : "Normal"));
             playButton.setDisabled(false);
             playButton.setTouchable(Touchable.enabled);
@@ -404,11 +432,12 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
         private final float[] centerY = new float[PATH_NODE_COUNT];
         private float houseX, houseY;
         private float houseAnchorX, houseAnchorY;
+        private float zombossNodeX, zombossNodeY;
         private float dangerNodeAnchorX, dangerNodeAnchorY;
         private float bridgeX, bridgeY;
 
-        private float dangerRenderHeight() {
-            return DANGER_NODE_TUNING.nativeH * DANGER_NODE_TUNING.scale;
+        private float zombossRenderHeight() {
+            return ZOMBOSS_TUNING.nativeH * ZOMBOSS_TUNING.scale;
         }
 
         StagePath() {
@@ -421,18 +450,21 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
             }
             centerX[0] += 60f * LAYOUT_SCALE_X;
 
-            houseX = centerX[0] - 170f * LAYOUT_SCALE_X;
-            houseY = centerY[0] + 70f * LAYOUT_SCALE_Y;
+            houseX = centerX[0] + HOUSE_ISLAND_OFFSET_X;
+            houseY = centerY[0] + HOUSE_ISLAND_OFFSET_Y;
             houseAnchorX = houseX + 75f * LAYOUT_SCALE_X;
             houseAnchorY = houseY + 20f * LAYOUT_SCALE_Y;
 
-            dangerNodeAnchorX = (centerX[1] + centerX[2]) / 2f;
-            dangerNodeAnchorY = Math.max(centerY[1], centerY[2]) - 200f * LAYOUT_SCALE_Y;
+            zombossNodeX = (centerX[1] + centerX[2]) / 2f;
+            zombossNodeY = Math.max(centerY[1], centerY[2]) - 200f * LAYOUT_SCALE_Y;
 
             // The trail forks here: Day 2 -> bridge -> Day 3, instead of one
-            // straight segment - matches Egypt/Frostbite's crossing-lines look.
-            bridgeX = dangerNodeAnchorX;
-            bridgeY = dangerNodeAnchorY + dangerRenderHeight() / 2f;
+            // straight segment - matches Egypt/Frostbite/Dark Ages.
+            bridgeX = zombossNodeX;
+            bridgeY = zombossNodeY + zombossRenderHeight() / 2f;
+
+            dangerNodeAnchorX = centerX[1] + DANGER_NODE_TUNING.offsetX * LAYOUT_SCALE_X;
+            dangerNodeAnchorY = centerY[1] + 120f * LAYOUT_SCALE_Y;
 
             addBackgroundDecorations();
             addActor(new TrailActor());
@@ -443,7 +475,6 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
             }
 
             addForegroundEffects();
-            addClouds();
         }
 
         private Group createScaledAnimation(MapObjectType type, float nativeWidth, float nativeHeight,
@@ -470,45 +501,62 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
         }
 
         private void addBackgroundDecorations() {
-            float[][] fireflyCoords = {
-                {110f, 45f}, {320f, 330f}, {540f, 50f}, {760f, 310f}, {910f, 70f},
-                {210f, 270f}, {460f, 190f}, {650f, 35f}, {870f, 330f}, {140f, 170f},
-                {380f, 85f}, {590f, 320f}, {830f, 175f}, {260f, 345f}, {980f, 220f}
-            };
-            for (float[] coord : fireflyCoords) {
-                addActor(createAnchoredAnimation(MapObjectType.FIREFLY_ANIM, FIREFLY_TUNING, "idle",
+            addActor(createAnchoredAnimation(MapObjectType.WATERFALL_ANIM, WATERFALL_TUNING, "idle",
+                centerX[0] - 40f * LAYOUT_SCALE_X, centerY[0] - 50f * LAYOUT_SCALE_Y));
+
+            float[][] largeRocks1 = { {280f, 320f}, {670f, 110f}, {930f, 280f} };
+            for (float[] coord : largeRocks1) {
+                addActor(createAnchoredAnimation(MapObjectType.FLOATING_ROCK_BEACH_LARGE_1, LARGE_ROCK_BEACH_TUNING, "idle",
                     coord[0] * LAYOUT_SCALE_X, coord[1] * LAYOUT_SCALE_Y));
             }
 
-            MapObjectType[] rockTypes = { MapObjectType.FLOATING_ROCK_1, MapObjectType.FLOATING_ROCK_2 };
+            float[][] largeRocks2 = { {190f, 90f}, {510f, 330f}, {820f, 130f} };
+            for (float[] coord : largeRocks2) {
+                addActor(createAnchoredAnimation(MapObjectType.FLOATING_ROCK_BEACH_LARGE_2, LARGE_ROCK_BEACH_TUNING, "idle",
+                    coord[0] * LAYOUT_SCALE_X, coord[1] * LAYOUT_SCALE_Y));
+            }
+
+            float[][] starCoords = {
+                {110f, 45f}, {320f, 330f}, {540f, 50f},
+                {210f, 270f}, {460f, 190f}, {650f, 35f},
+                {380f, 85f}, {590f, 320f}, {830f, 175f}
+            };
+            for (float[] coord : starCoords) {
+                addActor(createAnchoredAnimation(MapObjectType.TWINKLING_STAR_ANIM, STAR_TUNING, "idle",
+                    coord[0] * LAYOUT_SCALE_X, coord[1] * LAYOUT_SCALE_Y));
+            }
+
+            MapObjectType[] rockTypes = {
+                MapObjectType.FLOATING_ROCK_ANIM_1,
+                MapObjectType.FLOATING_ROCK_ANIM_2,
+                MapObjectType.FLOATING_ROCK_ANIM_3
+            };
             float[][] rockCoords = {
                 {180f, 310f}, {480f, 320f}, {750f, 300f},
-                {120f, 150f}, {350f, 450f}, {600f, 120f},
-                {820f, 480f}, {1020f, 280f}, {400f, 250f},
-                {250f, 550f}, {680f, 500f}, {920f, 550f}
+                {120f, 150f}, {350f, 450f},
+                {820f, 480f}, {1020f, 280f},
+                {250f, 550f}, {680f, 500f}
             };
             for (int i = 0; i < rockCoords.length; i++) {
                 MapObjectType selectedRock = rockTypes[i % rockTypes.length];
                 addActor(createAnchoredAnimation(selectedRock, ROCK_TUNING, "idle",
                     rockCoords[i][0] * LAYOUT_SCALE_X, rockCoords[i][1] * LAYOUT_SCALE_Y));
             }
-
-            for (int i = 0; i < 8; i++) {
-                MapDecorationActor particle = new MapDecorationActor(MapObjectType.PARTICLE, 14f, 14f, "idle");
-                particle.setPosition(rockCoords[i][0] * LAYOUT_SCALE_X + 20f, rockCoords[i][1] * LAYOUT_SCALE_Y - 20f);
-                addActor(particle);
-            }
         }
 
         private void addMapDecorations() {
             MapObjectPlacement[] placements = {
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 70, 260, 50, 38),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 270, 150, 55, 40),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_1, 20, 350, 50, 38),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 310, 15, 55, 40),
                 new MapObjectPlacement(MapObjectType.SMALL_ISLAND_3, 620, 280, 60, 45),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_1, 760, 110, 100, 70),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 970, 240, 55, 40),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_3, 410, 170, 60, 45),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_1, 300, 200, 100, 70)
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_4, 880, 25, 50, 35),
+                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_5, 970, 240, 55, 40),
+                new MapObjectPlacement(MapObjectType.BEACH_ISLAND_ANIM_12, 130, 120,
+                    335f * BEACH_ISLAND_ANIM_12_SCALE, 420f * BEACH_ISLAND_ANIM_12_SCALE),
+                new MapObjectPlacement(MapObjectType.BEACH_ISLAND_ANIM_13, 470, 70,
+                    397f * BEACH_ISLAND_ANIM_13_SCALE, 399f * BEACH_ISLAND_ANIM_13_SCALE),
+                new MapObjectPlacement(MapObjectType.BEACH_ISLAND_ANIM_17, 750, 300,
+                    321f * BEACH_ISLAND_ANIM_17_SCALE, 255f * BEACH_ISLAND_ANIM_17_SCALE)
             };
             for (MapObjectPlacement p : placements) {
                 MapDecorationActor actor = new MapDecorationActor(p.type, p.width, p.height, "idle");
@@ -516,36 +564,64 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
                 addActor(actor);
             }
 
-            // Purely decorative starting island - not clickable (no Greenhouse hookup here).
-            MapDecorationActor houseIsland = new MapDecorationActor(MapObjectType.DECOR_HOUSE_ISLAND,
-                HOUSE_ISLAND_WIDTH, HOUSE_ISLAND_HEIGHT, "idle");
-            houseIsland.setPosition(houseX + HOUSE_ISLAND_OFFSET_X, houseY - 20f);
-            addActor(houseIsland);
+            float[][] smallRocksNode1 = {
+                {centerX[0] - 65f * LAYOUT_SCALE_X, centerY[0] - 35f * LAYOUT_SCALE_Y},
+                {centerX[0] + 75f * LAYOUT_SCALE_X, centerY[0] + 40f * LAYOUT_SCALE_Y},
+                {400f * LAYOUT_SCALE_X, 160f * LAYOUT_SCALE_Y}
+            };
+            for (float[] coord : smallRocksNode1) {
+                addActor(createAnchoredAnimation(MapObjectType.SMALL_ROCK_BEACH_1, SMALL_ROCK_BEACH_TUNING, "idle",
+                    coord[0], coord[1]));
+            }
+
+            float[][] smallRocksNode2 = {
+                {centerX[1] - 70f * LAYOUT_SCALE_X, centerY[1] - 40f * LAYOUT_SCALE_Y},
+                {centerX[1] + 70f * LAYOUT_SCALE_X, centerY[1] + 35f * LAYOUT_SCALE_Y},
+                {zombossNodeX - 80f * LAYOUT_SCALE_X, zombossNodeY + 40f * LAYOUT_SCALE_Y}
+            };
+            for (float[] coord : smallRocksNode2) {
+                addActor(createAnchoredAnimation(MapObjectType.SMALL_ROCK_BEACH_2, SMALL_ROCK_BEACH_TUNING, "idle",
+                    coord[0], coord[1]));
+            }
+
+            addActor(createAnchoredAnimation(MapObjectType.SMALL_ROCK_BEACH_1, SMALL_ROCK_BEACH_TUNING, "idle",
+                centerX[2] + 80f * LAYOUT_SCALE_X, centerY[2] - 35f * LAYOUT_SCALE_Y));
+            addActor(createAnchoredAnimation(MapObjectType.SMALL_ROCK_BEACH_2, SMALL_ROCK_BEACH_TUNING, "idle",
+                centerX[2] - 65f * LAYOUT_SCALE_X, centerY[2] + 45f * LAYOUT_SCALE_Y));
+
+            float[][] waterDropCoords = {
+                {80f, 120f}, {160f, 340f}, {240f, 80f},
+                {380f, 310f}, {440f, 130f}, {510f, 260f},
+                {640f, 330f}, {710f, 180f}, {780f, 60f},
+                {900f, 140f}
+            };
+            for (float[] coord : waterDropCoords) {
+                addActor(createAnchoredAnimation(MapObjectType.WATER_DROP_ANIM, WATER_DROP_TUNING, "idle",
+                    coord[0] * LAYOUT_SCALE_X, coord[1] * LAYOUT_SCALE_Y));
+            }
+
+            // The house island is itself a PAM clip here (unlike the other
+            // three chapters, which use a static PNG) - purely decorative,
+            // not clickable (no Greenhouse hookup here).
+            addActor(createAnchoredAnimation(MapObjectType.DECOR_HOUSE_ISLAND, HOUSE_ISLAND_TUNING, "idle",
+                houseX + 50f, houseY + 20f));
         }
 
         private void addForegroundEffects() {
             DangerNodeState dState = calculateDangerNodeState();
+            String zombossState = (dState == DangerNodeState.UNLOCKED_IDLE) ? "defeated" : "idle";
+            addActor(createAnchoredAnimation(MapObjectType.ZOMBOSS_NODE, ZOMBOSS_TUNING, zombossState, zombossNodeX, zombossNodeY));
             addActor(createAnchoredAnimation(MapObjectType.DANGER_NODE_ANIM, DANGER_NODE_TUNING, dState.pamState,
                 dangerNodeAnchorX, dangerNodeAnchorY));
 
-            addActor(createAnchoredAnimation(MapObjectType.LIGHTNING_ANIM, LIGHTNING_TUNING, "idle",
-                dangerNodeAnchorX + 60f * LAYOUT_SCALE_X, dangerNodeAnchorY + 40f * LAYOUT_SCALE_Y));
-        }
+            addActor(createAnchoredAnimation(MapObjectType.SPLASH_EFFECT_ANIM, SPLASH_TUNING, "idle", centerX[0], centerY[0] - 20f));
+            addActor(createAnchoredAnimation(MapObjectType.SPLASH_EFFECT_ANIM, SPLASH_TUNING, "idle", centerX[1], centerY[1] - 20f));
+            addActor(createAnchoredAnimation(MapObjectType.SPLASH_EFFECT_ANIM, SPLASH_TUNING, "idle", centerX[2], centerY[2] - 20f));
 
-        private void addClouds() {
-            float travel = PATH_WIDTH + CLOUD_TUNING.nativeW * CLOUD_TUNING.scale * 2f;
-            for (int i = 0; i < 4; i++) {
-                float startOffset = travel * i / 4f;
-                float y = PATH_HEIGHT * (0.65f + 0.08f * i);
-                float speed = 40f + i * 6f;
-                addActor(new DriftingCloud(MapObjectType.CLOUD_ANIM_1, CLOUD_TUNING, startOffset, y, speed));
-            }
-            for (int i = 0; i < 4; i++) {
-                float startOffset = travel * (i + 0.5f) / 4f;
-                float y = PATH_HEIGHT * (0.20f + 0.08f * i);
-                float speed = 30f + i * 5f;
-                addActor(new DriftingCloud(MapObjectType.CLOUD_ANIM_2, CLOUD_TUNING, startOffset, y, speed));
-            }
+            float waveOffsetX = 130f * LAYOUT_SCALE_X;
+            float waveOffsetY = 70f * LAYOUT_SCALE_Y;
+            addActor(createAnchoredAnimation(MapObjectType.WAVE_ANIM, WAVE_TUNING, "idle",
+                centerX[1] + waveOffsetX, centerY[1] + waveOffsetY));
         }
 
         private DangerNodeState calculateDangerNodeState() {
@@ -566,41 +642,12 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
             StageStatus status = statusOf(stageNumber);
             LevelNodeState nodeState = levelNodeStateOf(index, status);
 
-            if (boss) {
-                // Dani's Dark Ages never defines a separate static boss island
-                // texture - the Zomboss PAM clip itself IS the boss node's art.
-                String zombossState = (status == StageStatus.COMPLETED) ? "defeated" : "active";
-                addActor(createAnchoredAnimation(MapObjectType.ZOMBOSS_BOSS_ISLAND, ZOMBOSS_TUNING, zombossState,
-                    centerX[index], centerY[index]));
-            } else {
-                String islandPath = STAGE_ISLAND_TEXTURES[index % STAGE_ISLAND_TEXTURES.length];
-
-                // Day 2's island renders taller and top-anchored instead of
-                // centered - a quirk specific to Dani's Dark Ages layout.
-                float islandWidth = width;
-                float islandHeight = (index == 1) ? height * 1.5f : height;
-
-                Image islandImage = new Image(getTextureDrawable(islandPath, (int) islandWidth, (int) islandHeight));
-                islandImage.setSize(islandWidth, islandHeight);
-
-                float islandX = centerX[index] - islandWidth / 2f;
-                float islandY;
-                if (index == 1) {
-                    float topY = centerY[index] + height / 2f;
-                    islandY = topY - islandHeight + 16f;
-                } else {
-                    islandY = centerY[index] - islandHeight / 2f;
-                }
-                islandImage.setPosition(islandX, islandY);
-                addActor(islandImage);
-            }
-
-            DecorTuning tuning = boss ? BOSS_LEVEL_NODE_TUNING : LEVEL_NODE_TUNING;
-            addActor(createAnchoredAnimation(MapObjectType.LEVEL_NODE, tuning, nodeState.pamState,
-                centerX[index], centerY[index]));
-
             Stack stack = new Stack();
             stack.setSize(width, height);
+
+            String islandPath = boss ? BOSS_STAGE_ISLAND_TEXTURE : STAGE_ISLAND_TEXTURES[index % STAGE_ISLAND_TEXTURES.length];
+            Image islandImage = new Image(getTextureDrawable(islandPath, (int) width, (int) height));
+            stack.add(islandImage);
 
             Label numberLabel = new Label(boss ? "BOSS" : String.valueOf(stageNumber), skin, "big");
             numberLabel.setFontScale(boss ? 1.2f : 1.4f);
@@ -610,7 +657,7 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
             Table column = new Table();
             column.add(stack).size(width, height).row();
 
-            String captionText = boss ? "Dark Ages - Zomboss" : "Dark Ages - Day " + stageNumber;
+            String captionText = boss ? "Big Wave Beach - Tsunami Zomboss" : "Big Wave Beach - Day " + stageNumber;
             Label nameLabel = new Label(captionText, skin);
             nameLabel.setColor(status == StageStatus.LOCKED ? new Color(0.75f, 0.75f, 0.75f, 1f) : Color.WHITE);
             nameLabel.setAlignment(Align.center);
@@ -631,13 +678,17 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
             }
 
             addActor(column);
+
+            DecorTuning tuning = boss ? BOSS_LEVEL_NODE_TUNING : LEVEL_NODE_TUNING;
+            addActor(createAnchoredAnimation(MapObjectType.LEVEL_NODE, tuning, nodeState.pamState,
+                centerX[index], centerY[index]));
         }
 
         private Drawable getTextureDrawable(String path, int w, int h) {
             if (Gdx.files.internal(path).exists()) {
                 return new TextureRegionDrawable(MenuUiKit.loadTextureSafe(path));
             }
-            return circleDrawable(Math.min(w, h), new Color(0.45f, 0.30f, 0.6f, 1f), Color.WHITE, 2);
+            return circleDrawable(Math.min(w, h), new Color(0.2f, 0.55f, 0.75f, 1f), Color.WHITE, 2);
         }
 
         private Drawable circleDrawable(int diameter, Color fill, Color border, int borderWidth) {
@@ -650,46 +701,6 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
             texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             pixmap.dispose();
             return new TextureRegionDrawable(texture);
-        }
-
-        /** A cloud that continuously drifts left-to-right and wraps around, per Dani's Dark Ages map. */
-        private class DriftingCloud extends Group {
-            private final float renderWidth;
-            private final float baseY;
-            private final float startOffset;
-            private final float speed;
-            private final float travel;
-            private float elapsed = 0f;
-
-            DriftingCloud(MapObjectType type, DecorTuning tuning, float startOffset, float y, float speed) {
-                setTransform(true);
-                setScale(tuning.scale);
-                setSize(tuning.nativeW, tuning.nativeH);
-
-                this.renderWidth = tuning.nativeW * tuning.scale;
-                this.baseY = y;
-                this.startOffset = startOffset;
-                this.speed = speed;
-                this.travel = PATH_WIDTH + renderWidth * 2f;
-
-                MapDecorationActor actor = new MapDecorationActor(type, tuning.nativeW, tuning.nativeH, "idle");
-                actor.setSize(tuning.nativeW, tuning.nativeH);
-                addActor(actor);
-
-                setPosition(currentX(), baseY);
-            }
-
-            private float currentX() {
-                float x = (startOffset + speed * elapsed) % travel;
-                return x - renderWidth;
-            }
-
-            @Override
-            public void act(float delta) {
-                super.act(delta);
-                elapsed += delta;
-                setPosition(currentX(), baseY);
-            }
         }
 
         private class TrailActor extends Actor {
@@ -823,7 +834,7 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
             if (loggedClipIssues.add(key)) {
                 Gdx.app.error("PAM_MISSING", "No PAM clip found for " + objectType.name()
                     + " at path '" + objectType.path + "' (tried state '" + pamState
-                    + "', then active/idle/default/\"\") - check this file actually exists under assets/pvz-assets/"
+                    + "', then idle/default/\"\") - check this file actually exists under assets/pvz-assets/"
                     + objectType.path);
             }
         }

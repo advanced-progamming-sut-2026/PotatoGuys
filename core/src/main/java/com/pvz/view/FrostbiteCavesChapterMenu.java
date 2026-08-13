@@ -202,7 +202,7 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
         if (textureBank == null) {
             try {
                 FileHandle rootHandle = Gdx.files.internal("assets/pvz-assets");
-                textureBank = new TextureBank("atlases", rootHandle);
+                textureBank = new TextureBank("768", rootHandle);
                 pamPlayer = new PamPlayer(textureBank, rootHandle);
                 Gdx.app.log("PAM_INIT", "PAM system initialized for the Frostbite Caves stage map.");
             } catch (Throwable t) {
@@ -670,6 +670,8 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
             private Texture texture;
             private final String pamState;
             private float stateTime = 0f;
+            private ClipRef clip;
+            private float lastClipAttempt = -10f;
 
             MapDecorationActor(MapObjectType objectType, float width, float height, String state) {
                 this.objectType = objectType;
@@ -700,24 +702,78 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
                     batch.draw(texture, getX(), getY(), getWidth(), getHeight());
                 } else if (objectType.isPamAnimation && pamPlayer != null) {
                     try {
-                        ClipRef clip = null;
-                        if (pamState != null) {
-                            clip = pamPlayer.getClip(objectType.path, pamState);
-                        }
-                        if (clip == null) {
-                            clip = pamPlayer.getClip(objectType.path, "idle");
-                        }
-                        if (clip == null) {
-                            clip = pamPlayer.getClip(objectType.path, "default");
-                        }
-                        if (clip == null) {
-                            clip = pamPlayer.getClip(objectType.path, "");
-                        }
+                        ClipRef clip = resolveClip();
                         if (clip != null) {
                             pamPlayer.draw(batch, clip, stateTime, getX(), getY(), true);
+                        } else {
+                            logMissingClipOnce(objectType, pamState);
                         }
-                    } catch (Throwable ignored) {
+                    } catch (Throwable t) {
+                        logClipErrorOnce(objectType, pamState, t);
                     }
+                }
+            }
+
+            private ClipRef resolveClip() {
+                if (clip != null) {
+                    return clip;
+                }
+                if (stateTime - lastClipAttempt < 1f) {
+                    return null;
+                }
+                lastClipAttempt = stateTime;
+                java.util.List<String> labels = null;
+                try {
+                    labels = pamPlayer.clips(objectType.path);
+                } catch (Throwable ignored) {
+                }
+                if (labels == null || labels.isEmpty()) {
+                    return null;
+                }
+                String chosen = null;
+                if (pamState != null && labels.contains(pamState)) {
+                    chosen = pamState;
+                }
+                if (chosen == null && labels.contains("active")) {
+                    chosen = "active";
+                }
+                if (chosen == null && labels.contains("idle")) {
+                    chosen = "idle";
+                }
+                if (chosen == null && labels.contains("default")) {
+                    chosen = "default";
+                }
+                if (chosen == null && labels.contains("loop")) {
+                    chosen = "loop";
+                }
+                if (chosen == null) {
+                    chosen = labels.get(0);
+                }
+                try {
+                    clip = pamPlayer.getClip(objectType.path, chosen);
+                } catch (IllegalArgumentException e) {
+                    clip = null;
+                }
+                return clip;
+            }
+
+            private final java.util.Set<String> loggedClipIssues = new java.util.HashSet<>();
+
+            private void logMissingClipOnce(MapObjectType objectType, String pamState) {
+                String key = objectType.name() + ":" + pamState;
+                if (loggedClipIssues.add(key)) {
+                    Gdx.app.error("PAM_MISSING", "No PAM clip found for " + objectType.name()
+                        + " at path '" + objectType.path + "' (tried state '" + pamState
+                        + "', then idle/default/\"\") - check this file actually exists under assets/pvz-assets/IMAGES/"
+                        + objectType.path);
+                }
+            }
+
+            private void logClipErrorOnce(MapObjectType objectType, String pamState, Throwable t) {
+                String key = objectType.name() + ":error";
+                if (loggedClipIssues.add(key)) {
+                    Gdx.app.error("PAM_ERROR", "Exception drawing " + objectType.name()
+                        + " ('" + objectType.path + "', state '" + pamState + "')", t);
                 }
             }
         }

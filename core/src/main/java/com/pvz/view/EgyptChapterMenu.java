@@ -72,8 +72,8 @@ public class EgyptChapterMenu extends ScreenAdapter {
     private static final float HOUSE_ISLAND_WIDTH = 335f;
     private static final float HOUSE_ISLAND_HEIGHT = 245f;
 
-    private static final float NODE_WIDTH = 170f;
-    private static final float NODE_HEIGHT = 130f;
+    private static final float NODE_WIDTH = 204f;
+    private static final float NODE_HEIGHT = 156f;
     private static final float BOSS_NODE_WIDTH = 470f;
     private static final float BOSS_NODE_HEIGHT = 540f;
 
@@ -197,7 +197,7 @@ public class EgyptChapterMenu extends ScreenAdapter {
         if (textureBank == null) {
             try {
                 FileHandle rootHandle = Gdx.files.internal("assets/pvz-assets");
-                textureBank = new TextureBank("atlases", rootHandle);
+                textureBank = new TextureBank("768", rootHandle);
                 pamPlayer = new PamPlayer(textureBank, rootHandle);
                 Gdx.app.log("PAM_INIT", "PAM system initialized for the Egypt stage map.");
             } catch (Throwable t) {
@@ -652,6 +652,8 @@ public class EgyptChapterMenu extends ScreenAdapter {
             private Texture texture;
             private final String pamState;
             private float stateTime = 0f;
+            private ClipRef clip;
+            private float lastClipAttempt = -10f;
 
             MapDecorationActor(MapObjectType objectType, float width, float height, String state) {
                 this.objectType = objectType;
@@ -682,19 +684,7 @@ public class EgyptChapterMenu extends ScreenAdapter {
                     batch.draw(texture, getX(), getY(), getWidth(), getHeight());
                 } else if (objectType.isPamAnimation && pamPlayer != null) {
                     try {
-                        ClipRef clip = null;
-                        if (pamState != null) {
-                            clip = pamPlayer.getClip(objectType.path, pamState);
-                        }
-                        if (clip == null) {
-                            clip = pamPlayer.getClip(objectType.path, "idle");
-                        }
-                        if (clip == null) {
-                            clip = pamPlayer.getClip(objectType.path, "default");
-                        }
-                        if (clip == null) {
-                            clip = pamPlayer.getClip(objectType.path, "");
-                        }
+                        ClipRef clip = resolveClip();
                         if (clip != null) {
                             pamPlayer.draw(batch, clip, stateTime, getX(), getY(), true);
                         } else {
@@ -704,6 +694,49 @@ public class EgyptChapterMenu extends ScreenAdapter {
                         logClipErrorOnce(objectType, pamState, t);
                     }
                 }
+            }
+
+            private ClipRef resolveClip() {
+                if (clip != null) {
+                    return clip;
+                }
+                if (stateTime - lastClipAttempt < 1f) {
+                    return null;
+                }
+                lastClipAttempt = stateTime;
+                java.util.List<String> labels = null;
+                try {
+                    labels = pamPlayer.clips(objectType.path);
+                } catch (Throwable ignored) {
+                }
+                if (labels == null || labels.isEmpty()) {
+                    return null;
+                }
+                String chosen = null;
+                if (pamState != null && labels.contains(pamState)) {
+                    chosen = pamState;
+                }
+                if (chosen == null && labels.contains("active")) {
+                    chosen = "active";
+                }
+                if (chosen == null && labels.contains("idle")) {
+                    chosen = "idle";
+                }
+                if (chosen == null && labels.contains("default")) {
+                    chosen = "default";
+                }
+                if (chosen == null && labels.contains("loop")) {
+                    chosen = "loop";
+                }
+                if (chosen == null) {
+                    chosen = labels.get(0);
+                }
+                try {
+                    clip = pamPlayer.getClip(objectType.path, chosen);
+                } catch (IllegalArgumentException e) {
+                    clip = null;
+                }
+                return clip;
             }
         }
 
