@@ -2,6 +2,7 @@ package com.pvz.models.entities.zombies.skills;
 
 import com.pvz.models.Constants;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.config.TombRaiserSkillConfig;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.behaviors.GraveBehavior;
 import com.pvz.models.games.map.tile.Tile;
@@ -27,16 +28,10 @@ public class TombRaiserSkill extends CooldownSkill {
     private int ammoLeft;
     private final Random random = new Random();
 
-
-    /**
-     * @param castIntervalSeconds seconds between casts (JSON {@code TimeBetweenRaisings})
-     * @param tombsPerCast        tombs raised per cast (JSON {@code NumberOfTombsToSpawn})
-     * @param ammo                total casts available (JSON {@code Ammo})
-     */
-    public TombRaiserSkill(float castIntervalSeconds, int tombsPerCast, int ammo) {
-        super(castIntervalSeconds);
-        this.tombsPerCast = tombsPerCast;
-        this.ammoLeft = ammo;
+    public TombRaiserSkill(TombRaiserSkillConfig config) {
+        super(config, config.castIntervalSeconds);
+        this.tombsPerCast = config.tombsPerCast;
+        this.ammoLeft = config.ammo;
     }
 
     @Override

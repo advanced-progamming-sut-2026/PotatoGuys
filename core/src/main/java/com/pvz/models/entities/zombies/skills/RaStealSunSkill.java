@@ -2,29 +2,26 @@ package com.pvz.models.entities.zombies.skills;
 
 import com.pvz.models.entities.sun.Sun;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.config.RaStealSunSkillConfig;
 import com.pvz.models.games.GameContext;
 
 /**
  * Ra Zombie — magnetically steals sun from the player's reserve.
  *
  * <p>From JSON {@code ZombieRaProps}: {@code MaxClaimedSunCurrency = 250}.
- * Every second (10 ticks), Ra steals 25 sun — up to the configured maximum.
- * When Ra dies all stolen sun is returned to the player (handled in
- * {@link Zombie#onDeath()} via {@link GameContext#returnSun}).
+ * Every {@code stealIntervalSeconds} seconds Ra steals {@code sunPerSteal} sun
+ * — up to the configured maximum. When Ra dies all stolen sun is returned to
+ * the player (handled in {@link Zombie#onDeath()}).
  */
 public class RaStealSunSkill extends CooldownSkill {
 
-    private static final float STEAL_INTERVAL_SECONDS = 1.0f;
-    private static final int SUN_PER_STEAL = 25;
-
+    private final int sunPerSteal;
     private final int maxStealable;
 
-    /**
-     * @param maxClaimedSun the JSON {@code MaxClaimedSunCurrency} value (typically 250)
-     */
-    public RaStealSunSkill(int maxClaimedSun) {
-        super(STEAL_INTERVAL_SECONDS);
-        this.maxStealable = maxClaimedSun;
+    public RaStealSunSkill(RaStealSunSkillConfig config) {
+        super(config, config.stealIntervalSeconds);
+        this.sunPerSteal = config.sunPerSteal;
+        this.maxStealable = config.maxClaimedSun;
     }
 
     @Override
@@ -37,7 +34,7 @@ public class RaStealSunSkill extends CooldownSkill {
         int headroom = maxStealable - zombie.getStolenSun();
         Sun sun = getRandomSun(ctx);
         if (sun == null) return;
-        int toSteal = Math.min(SUN_PER_STEAL, Math.min(headroom, sun.getAmount()));
+        int toSteal = Math.min(sunPerSteal, Math.min(headroom, sun.getAmount()));
         zombie.addStolenSun(toSteal);
         ctx.removeSun(sun);
         ctx.log("Ra Zombie stole sun at (" + sun.getCol() + "," + sun.getLane() + ") (total stolen: "

@@ -1,46 +1,40 @@
 package com.pvz.models.entities.zombies.skills;
 
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.config.ZombieSkillConfig;
 import com.pvz.models.games.GameContext;
 
 /**
- * Abstract base for skills that fire on a repeating cooldown.
+ * Abstract base for skills that fire on a repeating cooldown (e.g. Ra's
+ * sun-steal, TombRaiser's casts, Wizard/Hunter attacks).
  *
- * <p>Subclasses implement:
- * <ul>
- *   <li>{@link #canUse(Zombie, GameContext)} — world-state guard (e.g. is there sun to steal?)</li>
- *   <li>{@link #doExecute(Zombie, GameContext)} — the actual skill effect</li>
- * </ul>
- *
- * <p>The cooldown counter is incremented every call to {@link #shouldTrigger}.
- * This means it must be called every tick to count correctly — {@link
- * pvz.models.entities.zombies.fsm.WalkState} already does this.
+ * <p>{@link #shouldTrigger} accumulates real seconds while the zombie walks and
+ * returns {@code true} as soon as the cooldown has elapsed and {@link #canUse}
+ * allows it. The cooldown timer resets when the skill fires (on state entry).
  */
-public abstract class CooldownSkill implements ZombieSkill {
+public abstract class CooldownSkill extends ZombieSkill {
 
-    private final int cooldownTicks;
-    private int elapsed; // ticks since last use (starts at max so skill is ready immediately)
+    private final float cooldownSeconds;
+    private float cooldownTimer = 0f;
 
-    /**
-     * @param cooldownSeconds the minimum interval between uses in in-game seconds
-     *                        (multiply by 10 ticks/s internally)
-     */
-    protected CooldownSkill(float cooldownSeconds) {
-        this.cooldownTicks = Math.max(1, (int) (cooldownSeconds * Zombie.TICKS_PER_SECOND));
-        this.elapsed = cooldownTicks; // ready on first check
+    /** @param config           the skill's JSON config (label, duration, …) */
+    /** @param cooldownSeconds  minimum interval between uses, in seconds */
+    protected CooldownSkill(ZombieSkillConfig config, float cooldownSeconds) {
+        super(config);
+        this.cooldownSeconds = Math.max(0f, cooldownSeconds);
     }
 
     @Override
-    public final boolean shouldTrigger(Zombie zombie, GameContext ctx) {
-        elapsed++;
-        if (elapsed < cooldownTicks) return false;
+    public final boolean shouldTrigger(Zombie zombie, GameContext ctx, float dt) {
+        cooldownTimer += dt;
+        if (cooldownTimer < cooldownSeconds) return false;
         return canUse(zombie, ctx);
     }
 
     @Override
-    public final void execute(Zombie zombie, GameContext ctx) {
-        elapsed = 0;
-        doExecute(zombie, ctx);
+    public void onEnter(Zombie zombie, GameContext ctx) {
+        super.onEnter(zombie, ctx);
+        cooldownTimer = 0f;
     }
 
     /**
@@ -48,9 +42,4 @@ public abstract class CooldownSkill implements ZombieSkill {
      * Override to add pre-conditions (e.g. ammo check, range check).
      */
     protected abstract boolean canUse(Zombie zombie, GameContext ctx);
-
-    /** Perform the skill's game-world side-effect. */
-    protected abstract void doExecute(Zombie zombie, GameContext ctx);
-
-    // protected abstract void onDeath(Zombie zombie, GameContext ctx);
 }

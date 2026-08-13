@@ -5,29 +5,29 @@ import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.config.ExplorerTorchSkillConfig;
 import com.pvz.models.games.GameContext;
+
+import java.util.List;
 
 /**
  * Explorer Zombie — carries a torch that instantly destroys torch-vulnerable
  * plants (e.g. Frost Bonnet, Blazing Knight) within reach.
  *
- * <p>From JSON {@code ZombieExplorerProps}:
- * <ul>
- *   <li>{@code MaxTorchReach = 37} (pixels ≈ 1 grid cell forward)</li>
- *   <li>{@code PlantsToEat} includes {@code "frostbonnet"} and {@code "blazingknight"}</li>
- * </ul>
+ * <p>This is a state, not a one-shot plugin: when {@link #shouldTrigger} finds
+ * a torch-vulnerable plant in the zombie's tile, the zombie switches into this
+ * skill's state, the torch burns the plant on entry, and the "power" clip plays
+ * until it finishes before the zombie resumes {@code WalkState}.
  *
- * <p>Unlike {@link CooldownSkill} this fires every tick whenever the condition
- * is met; the torch is the primary attack mode, not an occasional special.
- * Ice projectiles and frozen plants extinguish the torch ({@link #extinguish()}).
+ * <p>Ice projectiles and frozen plants extinguish the torch ({@link #extinguish()}).
  * Fire projectiles relight it ({@link #relight()}).
  */
-public class ExplorerTorchSkill implements ZombieSkill {
-
+public class ExplorerTorchSkill extends ZombieSkill {
 
     private boolean torchLit;
 
-    public ExplorerTorchSkill() {
+    public ExplorerTorchSkill(ExplorerTorchSkillConfig config) {
+        super(config);
         this.torchLit = true;
     }
 
@@ -48,22 +48,27 @@ public class ExplorerTorchSkill implements ZombieSkill {
     // ── ZombieSkill ───────────────────────────────────────────────────────────
 
     @Override
-    public boolean shouldTrigger(Zombie zombie, GameContext ctx) {
-        if (!torchLit) return false;
-        return hasTorchVulnerablePlantAhead(zombie, ctx);
+    public boolean shouldTrigger(Zombie zombie, GameContext ctx, float dt) {
+        return torchLit && hasTorchVulnerablePlantAhead(zombie, ctx);
     }
 
     @Override
-    public void execute(Zombie zombie, GameContext ctx) {
+    protected void doExecute(Zombie zombie, GameContext ctx) {
         if (!torchLit) return;
-        int col = (int) zombie.getX();
+        int col = GameController.worldXtoCol(zombie.getX());
         int row = GameController.worldYtoLane(zombie.getY());
-        Plant plant = ctx.getPlantsAt(col , row).getFirst();
-        if (isTorchVulnerablePlantAt(plant, ctx)) {
-            plant.takeDamage(999f, DamageKind.INSTA_KILL);
-            ctx.log("Explorer Zombie burned plant at ("
-                    + col + "," + row + ") with torch!");
+        List<Plant> plants = ctx.getPlantsAt(col, row);
+        if (plants.isEmpty()) return;
+        Plant plant = plants.getFirst();
+        if (plant.getSheet().hasTag(PlantTag.ICE)) {
+            extinguish();
+            ctx.log("Explorer Zombie's torch was extinguished by an icy plant at ("
+                    + col + "," + row + ")!");
+            return;
         }
+        plant.takeDamage(999f, DamageKind.INSTA_KILL);
+        ctx.log("Explorer Zombie burned plant at ("
+                + col + "," + row + ") with torch!");
     }
 
     @Override
@@ -74,19 +79,7 @@ public class ExplorerTorchSkill implements ZombieSkill {
     // ── Private helper ────────────────────────────────────────────────────────
 
     private boolean hasTorchVulnerablePlantAhead(Zombie zombie, GameContext ctx) {
-        int col = (int) zombie.getX();
+        int col = GameController.worldXtoCol(zombie.getX());
         return ctx.isPlantAt(col, GameController.worldYtoLane(zombie.getY()));
-    }
-
-    private boolean isTorchVulnerablePlantAt(Plant plant, GameContext ctx) {
-
-        if (plant == null) return false;
-
-        if (plant.getSheet().hasTag(PlantTag.ICE)) {
-            extinguish();
-            return false;
-        }
-
-        return true;
     }
 }

@@ -1,8 +1,10 @@
 package com.pvz.models.entities.zombies.fsm;
 
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.config.ZombieActionConfig;
 import com.pvz.models.games.GameContext;
 
 /**
@@ -16,7 +18,7 @@ import com.pvz.models.games.GameContext;
  *   <li>→ {@link WalkState} when the target plant is destroyed (or removed/frozen).</li>
  * </ul>
  */
-public class EatState implements ZombieState {
+public class EatState extends ZombieState {
 
     private final Plant target;
 
@@ -41,8 +43,11 @@ public class EatState implements ZombieState {
             ctx.log("Plant at (" + target.getCol() + "," + target.getLane() + ") is destroyed.");
             return new WalkState();
         }
-        // Deal eat-DPS damage (not poisonous — regular bite)
-        target.takeDamage(zombie.getEatDpsPerTick(), DamageKind.FIXED);
+        // Deal eat-DPS damage scaled by real dt: the engine runs at render-frame
+        // rate (~60 fps), not at TICKS_PER_SECOND, so a flat per-tick amount would
+        // make chewing ~6× too fast. dps == sheet eatDps (damage per second).
+        float dps = zombie.getEatDpsPerTick() * Zombie.TICKS_PER_SECOND;
+        target.takeDamage(dps * dt, DamageKind.FIXED);
         return this;
     }
 
@@ -54,6 +59,12 @@ public class EatState implements ZombieState {
     @Override
     public String getLabel() {
         return "Eating@(" + target.getCol() + "," + target.getLane() + ")";
+    }
+
+    @Override
+    public FrameConfig draw(Zombie zombie, GameContext ctx) {
+        ZombieActionConfig eat = zombie.getSheet().eatConfig;
+        return zombie.drawClip(eat != null ? eat.label : "eat");
     }
 
     public Plant getTarget()  { return target; }

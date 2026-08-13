@@ -10,8 +10,8 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 6150,
-    "diamonds": 144,
+    "coins": 6200,
+    "diamonds": 146,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -80,7 +80,8 @@
         "BASIC",
         "CONEHEAD",
         "DODO",
-        "RA"
+        "RA",
+        "EXPLORER"
       ],
       "seedPackets": {
         "TwinSunflower": 10,
@@ -109,6 +110,10 @@
         {
           "message": "New Zombie Encountered: RA!",
           "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: EXPLORER!",
+          "unread": true
         }
       ]
     },
@@ -294,7 +299,7 @@
       {
         "x": 3,
         "y": 4,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -306,7 +311,7 @@
       {
         "x": 5,
         "y": 4,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       }
     ]
@@ -1229,7 +1234,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786630719468
+    "lastDailyReset": 1786637779129
   },
   "questLogRefreshed": true
 }

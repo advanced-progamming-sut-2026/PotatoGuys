@@ -1,6 +1,8 @@
 package com.pvz.models.entities.zombies.fsm;
 
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.config.ZombieActionConfig;
 import com.pvz.models.entities.zombies.skills.ZombieSkill;
 import com.pvz.models.games.GameContext;
 
@@ -8,18 +10,20 @@ import com.pvz.models.games.GameContext;
  * Default movement state — the zombie walks left across the lawn.
  *
  * <p>Each tick the zombie advances by its effective speed (accounting for
- * chill/slow effects). Eating is no longer resolved here: the collision system
- * notices when the zombie's hitbox overlaps a plant and hands the zombie to
- * {@link EatState}. This state only walks and checks the zombie's own skills:
+ * chill/slow effects). Eating is resolved by the collision system: when the
+ * zombie's hitbox overlaps a plant it is handed to {@link EatState}. This state
+ * only walks and checks the zombie's own skills:
  *
  * <ol>
  *   <li><b>Boundary check</b> — if {@code x ≤ 0} trigger the lawn-mower.</li>
  *   <li><b>Skill check</b> — iterate the zombie's skill list; if any skill's
- *       {@link ZombieSkill#shouldTrigger} is {@code true}, transition to
- *       {@link SpecialActionState}.</li>
+ *       {@link ZombieSkill#shouldTrigger} returns {@code true}, transition
+ *       directly into <em>that skill's state</em>. The skill runs its own
+ *       {@code update}/{@code draw} (playing its clip) until the animation
+ *       finishes, then hands the zombie back to {@code WalkState}.</li>
  * </ol>
  */
-public class WalkState implements ZombieState {
+public class WalkState extends ZombieState {
 
     @Override
     public void onEnter(Zombie zombie, GameContext ctx) {
@@ -28,9 +32,10 @@ public class WalkState implements ZombieState {
 
     @Override
     public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
+        stateTime += dt;
         advancePosition(zombie, dt);
 
-        ZombieState skillTransition = checkForSkill(zombie, ctx);
+        ZombieState skillTransition = checkForSkill(zombie, ctx, dt);
         if (skillTransition != null) return skillTransition;
 
         return this;
@@ -46,6 +51,12 @@ public class WalkState implements ZombieState {
         return "Walking";
     }
 
+    @Override
+    public FrameConfig draw(Zombie zombie, GameContext ctx) {
+        ZombieActionConfig walk = zombie.getSheet().walkConfig;
+        return zombie.drawClip(walk != null ? walk.label : "walk");
+    }
+
     // ── Private helpers ───────────────────────────────────────────────────────
 
     /** Move the zombie left by its (effect-adjusted) speed-per-tick. */
@@ -53,11 +64,11 @@ public class WalkState implements ZombieState {
         zombie.setX(zombie.getX() - zombie.getEffectiveSpeedPerTick()*1000*dt);
     }
 
-    /** Returns {@link SpecialActionState} for the first ready skill, else null. */
-    private ZombieState checkForSkill(Zombie zombie, GameContext ctx) {
+    /** Returns the first ready skill (as the next state), else null. */
+    private ZombieState checkForSkill(Zombie zombie, GameContext ctx, float dt) {
         for (ZombieSkill skill : zombie.getSkills()) {
-            if (skill.shouldTrigger(zombie, ctx)) {
-                return new SpecialActionState(skill);
+            if (skill.shouldTrigger(zombie, ctx, dt)) {
+                return skill;
             }
         }
         return null;

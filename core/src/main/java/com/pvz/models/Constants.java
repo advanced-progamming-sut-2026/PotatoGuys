@@ -12,8 +12,11 @@ public class Constants {
     public static final String PLANT_PROFILES_PATH = "core/src/main/java/com/resources/plant_profiles.json";
 
     /** Static, read-only game-data resource (not a user save file). */
-    public static final String ZOMBIE_PROFILES_PATH = "core/src/main/java/com/resources/zombie_profiles.json";
-
-    /** Static, read-only game-data resource (not a user save file). */
     public static final String PLANT_ACTIONS_PATH = "core/src/main/java/com/resources/plant_actions.json";
+
+    /** Static, read-only game-data resource (not a user save file).
+     *  Single source of truth for zombies: stats, scaling presets, armour
+     *  definitions, animations and skills. The old {@code zombie_profiles.json}
+     *  was merged into this file and is no longer read. */
+    public static final String ZOMBIE_ACTIONS_PATH = "core/src/main/java/com/resources/zombie_actions.json";
 }

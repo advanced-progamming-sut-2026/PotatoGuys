@@ -1,0 +1,1794 @@
+{
+  "scalingPresets": {
+    "standard": [
+      {
+        "key": "Hitpoints",
+        "formula": "standard",
+        "arg1": 1.3,
+        "arg2": 0.05
+      },
+      {
+        "key": "EatDPS",
+        "formula": "standard",
+        "arg1": 1.3,
+        "arg2": 0.05
+      },
+      {
+        "key": "Speed",
+        "formula": "constant",
+        "arg1": 0,
+        "arg2": 0
+      },
+      {
+        "key": "WavePointCost",
+        "formula": "constant",
+        "arg1": 0,
+        "arg2": 0
+      }
+    ],
+    "constant": [
+      {
+        "key": "Hitpoints",
+        "formula": "constant",
+        "arg1": 0,
+        "arg2": 0
+      },
+      {
+        "key": "EatDPS",
+        "formula": "constant",
+        "arg1": 0,
+        "arg2": 0
+      },
+      {
+        "key": "Speed",
+        "formula": "constant",
+        "arg1": 0,
+        "arg2": 0
+      },
+      {
+        "key": "WavePointCost",
+        "formula": "constant",
+        "arg1": 0,
+        "arg2": 0
+      }
+    ]
+  },
+  "armors": [
+    {
+      "alias": "ConeDefault",
+      "type": "Cone",
+      "baseHealth": 370,
+      "flags": [
+        "damageable",
+        "droppable",
+        "helm"
+      ],
+      "layerThresholds": [
+        0.666,
+        0.333
+      ]
+    },
+    {
+      "alias": "BucketDefault",
+      "type": "Bucket",
+      "baseHealth": 1100,
+      "flags": [
+        "metallic",
+        "damageable",
+        "droppable",
+        "helm"
+      ],
+      "layerThresholds": [
+        0.666,
+        0.333
+      ]
+    },
+    {
+      "alias": "BrickDefault",
+      "type": "Brick",
+      "baseHealth": 2200,
+      "flags": [
+        "damageable",
+        "droppable",
+        "helm"
+      ],
+      "layerThresholds": [
+        0.666,
+        0.333
+      ]
+    },
+    {
+      "alias": "ShoulderArmorDefault",
+      "type": "ShoulderArmor",
+      "baseHealth": 1600,
+      "flags": [
+        "damageable",
+        "passdamage"
+      ],
+      "layerThresholds": [
+        0.666,
+        0.333
+      ]
+    },
+    {
+      "alias": "CrownDefault",
+      "type": "Crown",
+      "baseHealth": 1600,
+      "flags": [
+        "damageable",
+        "droppable",
+        "metallic",
+        "helm"
+      ],
+      "layerThresholds": [
+        0.666,
+        0.333
+      ]
+    },
+    {
+      "alias": "NewspaperDefault",
+      "type": "Newspaper",
+      "baseHealth": 800,
+      "flags": [
+        "damageable"
+      ],
+      "layerThresholds": [
+        0.666,
+        0.333
+      ]
+    }
+  ],
+  "zombies": [
+    {
+      "alias": "ZombieTutorialDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 100,
+      "weight": 1000,
+      "canSpawnPlantFood": true,
+      "id": 1,
+      "name": "Basic Zombie",
+      "category": "ALL",
+      "description": "زامبی پایه.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieTutorialArmor1Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 200,
+      "weight": 3000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "ConeDefault"
+      ],
+      "id": 2,
+      "name": "Conehead Zombie",
+      "category": "ALL",
+      "description": "زامبی با کلاه مخروطی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieTutorialArmor2Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 400,
+      "weight": 4000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "BucketDefault"
+      ],
+      "id": 3,
+      "name": "Buckethead Zombie",
+      "category": "ALL",
+      "description": "زامبی با سطل روی سر.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieTutorialArmor4Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 700,
+      "weight": 3000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "BrickDefault"
+      ],
+      "id": 4,
+      "name": "Brickhead Zombie",
+      "category": "ALL",
+      "description": "زامبی با کلاه آجری.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieTutorialFlagDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 100,
+      "weight": 1000,
+      "canSpawnPlantFood": true,
+      "id": 5,
+      "name": "Flag Zombie",
+      "category": "ALL",
+      "description": "زامبی پرچم‌دار شروع موج.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_FLAG/ZOMBIE_TUTORIAL_FLAG.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieTutorialImpDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.22,
+      "wavePointCost": 100,
+      "weight": 1000,
+      "canSpawnPlantFood": false,
+      "imp": true,
+      "id": 6,
+      "name": "Imp",
+      "category": "ALL",
+      "description": "امپ کوچک و سریع.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_IMP/ZOMBIE_TUTORIAL_IMP.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieGargantuarBasic",
+      "objClass": "ZombieGargantuarProps",
+      "scaling": "standard",
+      "hitPoints": 3600,
+      "eatDps": 9999,
+      "speed": 0.12,
+      "wavePointCost": 1500,
+      "weight": 3000,
+      "canSpawnPlantFood": false,
+      "impType": "ZombieTutorialImpDefault",
+      "healthThresholdToThrowImp": 0.5,
+      "smashDamage": 1500,
+      "smashDuration": 2,
+      "id": 7,
+      "name": "Gargantuar",
+      "category": "ALL",
+      "description": "غرغانتار با ضربهٔ خردکننده.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/TUTORIAL_GARGANTUAR/TUTORIAL_GARGANTUAR.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      },
+      "skillConfig": {
+        "class": "GargantuarSkillConfig",
+        "label": "smash_left",
+        "durationSeconds": 1.5,
+        "impType": "ZombieTutorialImpDefault",
+        "throwHpFraction": 0.5
+      }
+    },
+    {
+      "alias": "ZombieModernNewspaperDefault",
+      "objClass": "ZombieModernNewspaperProps",
+      "scaling": "standard",
+      "hitPoints": 460,
+      "eatDps": 100,
+      "speed": 0.22,
+      "wavePointCost": 700,
+      "weight": 4000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "NewspaperDefault"
+      ],
+      "id": 8,
+      "name": "Newspaper Zombie",
+      "category": "ALL",
+      "description": "زامبی با روزنامهٔ محافظ.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieMummyDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 100,
+      "weight": 1000,
+      "canSpawnPlantFood": true,
+      "id": 9,
+      "name": "Mummy",
+      "category": "EGYPT",
+      "description": "مومیایی مصر باستان.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieMummyArmor1Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 200,
+      "weight": 3000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "ConeDefault"
+      ],
+      "id": 10,
+      "name": "Mummy Conehead",
+      "category": "EGYPT",
+      "description": "مومیایی با کلاه مخروطی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieMummyArmor2Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 400,
+      "weight": 4000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "BucketDefault"
+      ],
+      "id": 11,
+      "name": "Mummy Buckethead",
+      "category": "EGYPT",
+      "description": "مومیایی با سطل.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieMummyArmor4Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 700,
+      "weight": 3000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "BrickDefault"
+      ],
+      "id": 12,
+      "name": "Mummy Brickhead",
+      "category": "EGYPT",
+      "description": "مومیایی با کلاه آجری.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieRaDefault",
+      "objClass": "ZombieRaProps",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.2,
+      "wavePointCost": 100,
+      "weight": 700,
+      "canSpawnPlantFood": true,
+      "maxClaimedSunCurrency": 250,
+      "id": 13,
+      "name": "Ra Zombie",
+      "category": "EGYPT",
+      "description": "را؛ خورشید را می‌دزدد.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_RA/ZOMBIE_EGYPT_RA.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      },
+      "skillConfig": {
+        "class": "RaStealSunSkillConfig",
+        "label": "power",
+        "stealIntervalSeconds": 6.0,
+        "sunPerSteal": 25,
+        "maxClaimedSun": 250
+      }
+    },
+    {
+      "alias": "ZombieExplorerDefault",
+      "objClass": "ZombieExplorerProps",
+      "scaling": "standard",
+      "hitPoints": 250,
+      "eatDps": 50,
+      "speed": 0.25,
+      "wavePointCost": 250,
+      "weight": 3000,
+      "canSpawnPlantFood": true,
+      "maxTorchReach": 37,
+      "id": 14,
+      "name": "Explorer Zombie",
+      "category": "EGYPT",
+      "description": "کاشف؛ مشعل روشن می‌کند.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EXPLORER/ZOMBIE_EXPLORER.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      },
+      "skillConfig": {
+        "class": "ExplorerTorchSkillConfig",
+        "label": "power",
+        "maxTorchReach": 37
+      }
+    },
+    {
+      "alias": "ZombieTombRaiserDefault",
+      "objClass": "ZombieTombRaiserProps",
+      "scaling": "standard",
+      "hitPoints": 380,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 300,
+      "weight": 2000,
+      "canSpawnPlantFood": true,
+      "ammo": 5,
+      "numberOfTombsToSpawn": 2,
+      "timeBetweenRaisings": 6,
+      "id": 15,
+      "name": "Tomb Raiser Zombie",
+      "category": "EGYPT",
+      "description": "مقبره‌ساز؛ قبر می‌سازد.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_TOMBRAISER/ZOMBIE_EGYPT_TOMBRAISER.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      },
+      "skillConfig": {
+        "class": "TombRaiserSkillConfig",
+        "label": "power",
+        "castIntervalSeconds": 6,
+        "tombsPerCast": 2,
+        "ammo": 5
+      }
+    },
+    {
+      "alias": "ZombieEgyptGargantuar",
+      "objClass": "ZombieGargantuarProps",
+      "scaling": "standard",
+      "hitPoints": 3600,
+      "eatDps": 0,
+      "speed": 0.24,
+      "wavePointCost": 1500,
+      "weight": 3000,
+      "canSpawnPlantFood": false,
+      "impType": "ZombieEgyptImpDefault",
+      "healthThresholdToThrowImp": 0.5,
+      "smashDamage": 1500,
+      "smashDuration": 2,
+      "id": 16,
+      "name": "Egypt Gargantuar",
+      "category": "EGYPT",
+      "description": "غرغانتار مصری.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/EGYPT_GARGANTUAR/EGYPT_GARGANTUAR.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      },
+      "skillConfig": {
+        "class": "GargantuarSkillConfig",
+        "label": "smash_left",
+        "durationSeconds": 1.5,
+        "impType": "ZombieEgyptImpDefault",
+        "throwHpFraction": 0.5
+      }
+    },
+    {
+      "alias": "ZombieEgyptImpDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.22,
+      "wavePointCost": 100,
+      "weight": 1000,
+      "canSpawnPlantFood": false,
+      "imp": true,
+      "id": 17,
+      "name": "Egypt Imp",
+      "category": "EGYPT",
+      "description": "امپ مصری پرتاب‌شده توسط غرغانتار.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_IMP/ZOMBIE_EGYPT_IMP.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieIceageDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 100,
+      "weight": 1000,
+      "canSpawnPlantFood": true,
+      "id": 18,
+      "name": "Ice Age Zombie",
+      "category": "FROSTBITE",
+      "description": "زامبی عصر یخبندان.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieIceageArmor1Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 200,
+      "weight": 3000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "ConeDefault"
+      ],
+      "id": 19,
+      "name": "Ice Age Conehead",
+      "category": "FROSTBITE",
+      "description": "زامبی یخی با کلاه مخروطی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieIceageArmor2Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 400,
+      "weight": 4000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "BucketDefault"
+      ],
+      "id": 20,
+      "name": "Ice Age Buckethead",
+      "category": "FROSTBITE",
+      "description": "زامبی یخی با سطل.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieIceAgeHunter",
+      "objClass": "ZombieIceAgeHunterProps",
+      "scaling": "standard",
+      "hitPoints": 700,
+      "eatDps": 50,
+      "speed": 0.12,
+      "wavePointCost": 500,
+      "weight": 3500,
+      "canSpawnPlantFood": true,
+      "snowballsPerBarrage": 3,
+      "farAttackRange": 4,
+      "nearAttackRange": 1,
+      "id": 21,
+      "name": "Hunter Zombie",
+      "category": "FROSTBITE",
+      "description": "شکارچی؛ گلولهٔ برفی پرتاب می‌کند.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      },
+      "skillConfig": {
+        "class": "HunterSnowballSkillConfig",
+        "label": "power",
+        "cooldownSeconds": 2.0,
+        "snowballsPerBarrage": 3,
+        "farRange": 4
+      }
+    },
+    {
+      "alias": "ZombieIceAgeTroglobite",
+      "objClass": "ZombieIceAgeTroglobiteProps",
+      "scaling": "standard",
+      "hitPoints": 470,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 600,
+      "weight": 3500,
+      "canSpawnPlantFood": true,
+      "impType": "ZombieIceageImpDefault",
+      "numberOfIceblocksToSpawnWith": 3,
+      "id": 22,
+      "name": "Troglobite",
+      "category": "FROSTBITE",
+      "description": "تروگلوبایت؛ با بلوک‌های یخ.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieIceAgeDodo",
+      "objClass": "ZombieIceAgeDodoProps",
+      "scaling": "standard",
+      "hitPoints": 490,
+      "eatDps": 50,
+      "speed": 0.3,
+      "wavePointCost": 600,
+      "weight": 3500,
+      "canSpawnPlantFood": true,
+      "id": 23,
+      "name": "Dodo",
+      "category": "FROSTBITE",
+      "description": "دودو؛ از روی گیاهان پرواز می‌کند.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieIceAgeGargantuar",
+      "objClass": "ZombieGargantuarProps",
+      "scaling": "standard",
+      "hitPoints": 3600,
+      "eatDps": 0,
+      "speed": 0.24,
+      "wavePointCost": 1500,
+      "weight": 3000,
+      "canSpawnPlantFood": false,
+      "impType": "ZombieIceageImpDefault",
+      "healthThresholdToThrowImp": 0.5,
+      "smashDamage": 1500,
+      "smashDuration": 2,
+      "id": 24,
+      "name": "Ice Age Gargantuar",
+      "category": "FROSTBITE",
+      "description": "غرغانتار عصر یخبندان.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/TUTORIAL_GARGANTUAR/TUTORIAL_GARGANTUAR.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      },
+      "skillConfig": {
+        "class": "GargantuarSkillConfig",
+        "label": "smash_left",
+        "durationSeconds": 1.5,
+        "impType": "ZombieIceageImpDefault",
+        "throwHpFraction": 0.5
+      }
+    },
+    {
+      "alias": "ZombieIceageImpDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.22,
+      "wavePointCost": 100,
+      "weight": 1000,
+      "canSpawnPlantFood": false,
+      "imp": true,
+      "id": 25,
+      "name": "Ice Age Imp",
+      "category": "FROSTBITE",
+      "description": "امپ عصر یخبندان.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_IMP/ZOMBIE_TUTORIAL_IMP.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieBeachDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 100,
+      "weight": 1000,
+      "canSpawnPlantFood": true,
+      "id": 26,
+      "name": "Beach Zombie",
+      "category": "BEACH",
+      "description": "زامبی ساحلی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieBeachArmor1Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 200,
+      "weight": 3000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "ConeDefault"
+      ],
+      "id": 27,
+      "name": "Beach Conehead",
+      "category": "BEACH",
+      "description": "زامبی ساحلی با کلاه مخروطی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieBeachArmor2Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 400,
+      "weight": 4000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "BucketDefault"
+      ],
+      "id": 28,
+      "name": "Beach Buckethead",
+      "category": "BEACH",
+      "description": "زامبی ساحلی با سطل.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieBeachSnorkel",
+      "objClass": "ZombieBeachSnorkelProps",
+      "scaling": "standard",
+      "hitPoints": 350,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 200,
+      "weight": 3000,
+      "canSpawnPlantFood": true,
+      "id": 29,
+      "name": "Snorkel Zombie",
+      "category": "BEACH",
+      "description": "اسنورکل؛ زیر آب حرکت می‌کند.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieBeachFisherman",
+      "objClass": "ZombieBeachFishermanProps",
+      "scaling": "standard",
+      "hitPoints": 1000,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 700,
+      "weight": 2500,
+      "canSpawnPlantFood": true,
+      "id": 30,
+      "name": "Fisherman Zombie",
+      "category": "BEACH",
+      "description": "ماهیگیر؛ گیاهان را قلاب می‌کند.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieBeachOctopus",
+      "objClass": "ZombieBeachOctopusProps",
+      "scaling": "standard",
+      "hitPoints": 910,
+      "eatDps": 50,
+      "speed": 0.12,
+      "wavePointCost": 900,
+      "weight": 3500,
+      "canSpawnPlantFood": true,
+      "id": 31,
+      "name": "Octopus Zombie",
+      "category": "BEACH",
+      "description": "اختاپوس‌باز؛ ماهی‌گیر را خفه می‌کند.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieBeachGargantuar",
+      "objClass": "ZombieGargantuarProps",
+      "scaling": "standard",
+      "hitPoints": 3600,
+      "eatDps": 0,
+      "speed": 0.24,
+      "wavePointCost": 1500,
+      "weight": 3000,
+      "canSpawnPlantFood": false,
+      "impType": "ZombieBeachImpDefault",
+      "healthThresholdToThrowImp": 0.5,
+      "smashDamage": 1500,
+      "smashDuration": 2,
+      "id": 32,
+      "name": "Beach Gargantuar",
+      "category": "BEACH",
+      "description": "غرغانتار ساحلی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/TUTORIAL_GARGANTUAR/TUTORIAL_GARGANTUAR.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      },
+      "skillConfig": {
+        "class": "GargantuarSkillConfig",
+        "label": "smash_left",
+        "durationSeconds": 1.5,
+        "impType": "ZombieBeachImpDefault",
+        "throwHpFraction": 0.5
+      }
+    },
+    {
+      "alias": "ZombieBeachImpDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.22,
+      "wavePointCost": 100,
+      "weight": 1000,
+      "canSpawnPlantFood": false,
+      "imp": true,
+      "id": 33,
+      "name": "Beach Imp",
+      "category": "BEACH",
+      "description": "امپ ساحلی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_IMP/ZOMBIE_TUTORIAL_IMP.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieDarkDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 100,
+      "weight": 1000,
+      "canSpawnPlantFood": true,
+      "id": 34,
+      "name": "Dark Zombie",
+      "category": "DARK",
+      "description": "زامبی قرون وسطی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieDarkArmor1Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 200,
+      "weight": 3000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "ConeDefault"
+      ],
+      "id": 35,
+      "name": "Dark Conehead",
+      "category": "DARK",
+      "description": "زامبی تیره با کلاه مخروطی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieDarkArmor2Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 400,
+      "weight": 4000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "BucketDefault"
+      ],
+      "id": 36,
+      "name": "Dark Buckethead",
+      "category": "DARK",
+      "description": "زامبی تیره با سطل.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieDarkArmor3Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 550,
+      "weight": 4500,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "ShoulderArmorDefault",
+        "CrownDefault"
+      ],
+      "id": 37,
+      "name": "Knight Zombie",
+      "category": "DARK",
+      "description": "شوالیه با زرهٔ شانه و تاج.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieDarkArmor4Default",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 700,
+      "weight": 3000,
+      "canSpawnPlantFood": true,
+      "armorAliases": [
+        "BrickDefault"
+      ],
+      "id": 38,
+      "name": "Dark Brickhead",
+      "category": "DARK",
+      "description": "زامبی تیره با کلاه آجری.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieWizardDefault",
+      "objClass": "ZombieDarkWizardProps",
+      "scaling": "standard",
+      "hitPoints": 490,
+      "eatDps": 50,
+      "speed": 0.12,
+      "wavePointCost": 800,
+      "weight": 3500,
+      "canSpawnPlantFood": true,
+      "id": 39,
+      "name": "Wizard Zombie",
+      "category": "DARK",
+      "description": "جادوگر؛ گیاهان را به گوسفند تبدیل می‌کند.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      },
+      "skillConfig": {
+        "class": "WizardZapSkillConfig",
+        "label": "power",
+        "cooldownSeconds": 3.0
+      }
+    },
+    {
+      "alias": "ZombieDarkJugglerDefault",
+      "objClass": "ZombieDarkJugglerProps",
+      "scaling": "standard",
+      "hitPoints": 420,
+      "eatDps": 50,
+      "speed": 0.2,
+      "wavePointCost": 450,
+      "weight": 3500,
+      "canSpawnPlantFood": true,
+      "id": 40,
+      "name": "Juggler Zombie",
+      "category": "DARK",
+      "description": "ژانگولرباز.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieDarkKing",
+      "objClass": "ZombieDarkKingProps",
+      "scaling": "standard",
+      "hitPoints": 1000,
+      "eatDps": 50,
+      "speed": 0.185,
+      "wavePointCost": 750,
+      "weight": 2000,
+      "canSpawnPlantFood": true,
+      "id": 41,
+      "name": "King Zombie",
+      "category": "DARK",
+      "description": "شاه زامبی‌ها.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieDarkGargantuar",
+      "objClass": "ZombieGargantuarProps",
+      "scaling": "standard",
+      "hitPoints": 3600,
+      "eatDps": 0,
+      "speed": 0.24,
+      "wavePointCost": 1500,
+      "weight": 3000,
+      "canSpawnPlantFood": false,
+      "impType": "ZombieDarkImpDefault",
+      "healthThresholdToThrowImp": 0.5,
+      "smashDamage": 1500,
+      "smashDuration": 2,
+      "id": 42,
+      "name": "Dark Gargantuar",
+      "category": "DARK",
+      "description": "غرغانتار قرون وسطی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/TUTORIAL_GARGANTUAR/TUTORIAL_GARGANTUAR.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      },
+      "skillConfig": {
+        "class": "GargantuarSkillConfig",
+        "label": "smash_left",
+        "durationSeconds": 1.5,
+        "impType": "ZombieDarkImpDefault",
+        "throwHpFraction": 0.5
+      }
+    },
+    {
+      "alias": "ZombieDarkImpDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 50,
+      "speed": 0.22,
+      "wavePointCost": 150,
+      "weight": 2000,
+      "canSpawnPlantFood": false,
+      "imp": true,
+      "id": 43,
+      "name": "Dark Imp",
+      "category": "DARK",
+      "description": "امپ قرون وسطی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_IMP/ZOMBIE_TUTORIAL_IMP.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieZombossMechEgypt",
+      "objClass": "ZombieZombossMechEgyptProps",
+      "scaling": "constant",
+      "hitPoints": 18500,
+      "eatDps": 0,
+      "speed": 0.1,
+      "wavePointCost": 0,
+      "weight": 3000,
+      "canSpawnPlantFood": false,
+      "id": 44,
+      "name": "Zomboss Mech (Egypt)",
+      "category": "ZOMBOSS",
+      "description": "ربات زامباس مصر.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_ZOMBOSS/ZOMBIE_EGYPT_ZOMBOSS.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk_forward"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "stomp"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieZombossMechPirate",
+      "objClass": "ZombieZombossMechPirateProps",
+      "scaling": "constant",
+      "hitPoints": 26500,
+      "eatDps": 0,
+      "speed": 0.1,
+      "wavePointCost": 0,
+      "weight": 3000,
+      "canSpawnPlantFood": false,
+      "id": 45,
+      "name": "Zomboss Mech (Pirate)",
+      "category": "ZOMBOSS",
+      "description": "ربات زامباس دزد دریایی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieZombossMechCowboy",
+      "objClass": "ZombieZombossMechCowboyProps",
+      "scaling": "constant",
+      "hitPoints": 25500,
+      "eatDps": 0,
+      "speed": 0.1,
+      "wavePointCost": 0,
+      "weight": 3000,
+      "canSpawnPlantFood": false,
+      "id": 46,
+      "name": "Zomboss Mech (Cowboy)",
+      "category": "ZOMBOSS",
+      "description": "ربات زامباس کابوی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieZombossMechDark",
+      "objClass": "ZombieZombossMechDarkProps",
+      "scaling": "constant",
+      "hitPoints": 27000,
+      "eatDps": 0,
+      "speed": 0.1,
+      "wavePointCost": 0,
+      "weight": 3000,
+      "canSpawnPlantFood": false,
+      "id": 47,
+      "name": "Zomboss Mech (Dark)",
+      "category": "ZOMBOSS",
+      "description": "ربات زامباس قرون وسطی.",
+      "animationConfig": {
+        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    }
+  ]
+}

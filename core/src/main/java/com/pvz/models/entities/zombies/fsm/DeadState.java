@@ -1,6 +1,8 @@
 package com.pvz.models.entities.zombies.fsm;
 
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.config.ZombieActionConfig;
 import com.pvz.models.games.GameContext;
 
 /**
@@ -11,7 +13,7 @@ import com.pvz.models.games.GameContext;
  * solely so the {@code zombies info} CLI command can show "Dead" for
  * zombies that died mid-tick before the engine processes removals.
  */
-public class DeadState implements ZombieState {
+public class DeadState extends ZombieState {
 
     @Override
     public void onEnter(Zombie zombie, GameContext ctx) {
@@ -32,5 +34,11 @@ public class DeadState implements ZombieState {
     @Override
     public String getLabel() {
         return "Dead";
+    }
+
+    @Override
+    public FrameConfig draw(Zombie zombie, GameContext ctx) {
+        ZombieActionConfig die = zombie.getSheet().dieConfig;
+        return zombie.drawClip(die != null ? die.label : "die");
     }
 }

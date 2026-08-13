@@ -7,13 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import com.pvz.PvZ2;
+import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
+import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
 import com.pvz.models.entities.zombies.data.ScaledProp;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
 import com.pvz.models.entities.zombies.effects.EffectType;
@@ -143,8 +144,25 @@ public class Zombie extends Entity {
 
     @Override
     public FrameConfig draw() {
-        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM" , "walk", stateTime, position.x, position.y,0.65f,0.65f, true);
-        return null;
+        if (currentState == null) {
+            return null;
+        }
+        return currentState.draw(this, context);
+    }
+
+    /**
+     * Builds the {@link FrameConfig} for the given clip label from the zombie's
+     * config-driven animation (pam path + scale), falling back to the classic
+     * tutorial PAM when no config is attached.
+     */
+    public FrameConfig drawClip(String clipLabel) {
+        ZombieAnimationConfig anim = sheet.getAnimationConfig();
+        String pamPath = (anim != null && anim.pamFilePath != null)
+                ? anim.pamFilePath
+                : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
+        float scale = (anim != null && anim.scale != null) ? anim.scale : 0.65f;
+        return new FrameConfig(pamPath, clipLabel, stateTime,
+                new Vector2(position.x, position.y), new Vector2(scale, scale), null, true);
     }
 
     @Override
@@ -237,6 +255,7 @@ public class Zombie extends Entity {
 
     public ZombiePropertySheet getSheet()       { return sheet; }
     public GameContext getContext()        { return context; }
+    public float getStateTime()            { return stateTime; }
     public float getX()                         { return position.x; }
     public void setX(float newX)               { position.x = newX; syncHitbox(); }
     public float getY()                        { return position.y; }
