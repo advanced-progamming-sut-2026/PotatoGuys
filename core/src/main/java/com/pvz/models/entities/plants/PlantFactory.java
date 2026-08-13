@@ -1,7 +1,9 @@
 package com.pvz.models.entities.plants;
 
 import com.pvz.models.entities.plants.actions.*;
+import com.pvz.models.entities.plants.actions.explosive.potato_mine.PotatoMineAction;
 import com.pvz.models.entities.plants.config.*;
+import com.pvz.models.entities.plants.config.explosive.PotatoMineConfig;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -54,6 +56,9 @@ public class PlantFactory {
         }
         if (config instanceof SunProducerActionConfig sunConfig) {
             return new SunProducerAction(sunConfig);
+        }
+        if (config instanceof PotatoMineConfig potatoMineConfig){
+            return new PotatoMineAction(potatoMineConfig);
         }
         return null;
     }

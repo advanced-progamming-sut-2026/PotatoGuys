@@ -22,6 +22,12 @@
           "isBoosted": false
         },
         {
+          "Type": "PotatoMine",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
           "Type": "Sunflower",
           "level": 1,
           "seed": 0,

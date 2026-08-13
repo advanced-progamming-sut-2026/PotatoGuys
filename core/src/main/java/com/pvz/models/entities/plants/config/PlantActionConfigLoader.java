@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
+import com.pvz.models.entities.plants.config.explosive.PotatoMineConfig;
 
 public final class PlantActionConfigLoader {
 
@@ -19,6 +20,7 @@ public final class PlantActionConfigLoader {
         json.addClassTag("SunProducerActionConfig", SunProducerActionConfig.class);
         json.addClassTag("BonkChoyConfig", BonkChoyConfig.class);
         json.addClassTag("GraveBusterConfig", GraveBusterConfig.class);
+        json.addClassTag("PotatoMineConfig", PotatoMineConfig.class);
         return json;
     }
 
