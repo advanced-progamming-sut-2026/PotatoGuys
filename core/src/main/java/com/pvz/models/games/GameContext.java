@@ -50,6 +50,21 @@ public class GameContext implements TickAware {
     private String seasonName;
     private List<ChapterEffect> activeEffects;
 
+    // ── Deferred mutations ─────────────────────────────────────────────────────
+    // spawnX / removeX never touch the live lists directly: they queue here and
+    // {@link #flushPending()} applies the queues after collision detection (and
+    // again at the start of each engine tick). This guarantees entity lists are
+    // never mutated while they are being iterated (which threw
+    // ConcurrentModificationException in the collision system).
+    private final List<Zombie> pendingZombiesToAdd = new ArrayList<>();
+    private final List<Zombie> pendingZombiesToRemove = new ArrayList<>();
+    private final List<Plant> pendingPlantsToAdd = new ArrayList<>();
+    private final List<Plant> pendingPlantsToRemove = new ArrayList<>();
+    private final List<Projectile> pendingProjectilesToAdd = new ArrayList<>();
+    private final List<Projectile> pendingProjectilesToRemove = new ArrayList<>();
+    private final List<Sun> pendingSunsToAdd = new ArrayList<>();
+    private final List<Sun> pendingSunsToRemove = new ArrayList<>();
+
     public GameContext(Level currentLevel) {
         this.engine         = GameEngine.getInstance();
         this.engine.register(this);
@@ -149,12 +164,13 @@ public class GameContext implements TickAware {
                 .toList();
     }
     public void spawnZombie(Zombie z) {
-        zombies.add(z);
+        pendingZombiesToAdd.add(z);
         engine.register(z);
     }
     public boolean removeZombie(Zombie z) {
         engine.unRegister(z);
-        return zombies.remove(z);
+        pendingZombiesToRemove.add(z);
+        return true;
     }
     public boolean isZombieAt(int col, int lane) {
         return !getZombiesAt(col, lane).isEmpty();
@@ -184,8 +200,8 @@ public class GameContext implements TickAware {
 
     public void spawnPlant(Plant p) {
         getTileAt(p.getCol(), p.getLane()).addPlant(p);
+        pendingPlantsToAdd.add(p);
         engine.register(p);
-        plants.add(p);
     }
 
     public boolean isPlantAt(int col, int lane) {
@@ -195,7 +211,8 @@ public class GameContext implements TickAware {
     public boolean removePlant(Plant p) {
         getTileAt(p.getCol(), p.getLane()).removePlant(p);
         engine.unRegister(p);
-        return plants.remove(p);
+        pendingPlantsToRemove.add(p);
+        return true;
     }
 
     public List<Card> getCards() {
@@ -223,13 +240,14 @@ public class GameContext implements TickAware {
     }
 
     public void spawnProjectile(Projectile p) {
-        projectiles.add(p);
+        pendingProjectilesToAdd.add(p);
         engine.register(p);
     }
 
     public boolean removeProjectile(Projectile p) {
         engine.unRegister(p);
-        return projectiles.remove(p);
+        pendingProjectilesToRemove.add(p);
+        return true;
     }
 
     public List<Sun> getSuns() {
@@ -237,12 +255,40 @@ public class GameContext implements TickAware {
     }
 
     public void spawnSun(Sun s) {
+        pendingSunsToAdd.add(s);
         engine.register(s);
-        suns.add(s);
     }
     public boolean removeSun(Sun s) {
         engine.unRegister(s);
-        return suns.remove(s);
+        pendingSunsToRemove.add(s);
+        return true;
+    }
+
+    /**
+     * Applies every queued spawn/remove operation. Called by the engine right
+     * after collision detection (and once again at the start of each tick), so
+     * the live entity lists are never mutated mid-iteration.
+     */
+    public void flushPending() {
+        zombies.addAll(pendingZombiesToAdd);
+        zombies.removeAll(pendingZombiesToRemove);
+        pendingZombiesToAdd.clear();
+        pendingZombiesToRemove.clear();
+
+        plants.addAll(pendingPlantsToAdd);
+        plants.removeAll(pendingPlantsToRemove);
+        pendingPlantsToAdd.clear();
+        pendingPlantsToRemove.clear();
+
+        projectiles.addAll(pendingProjectilesToAdd);
+        projectiles.removeAll(pendingProjectilesToRemove);
+        pendingProjectilesToAdd.clear();
+        pendingProjectilesToRemove.clear();
+
+        suns.addAll(pendingSunsToAdd);
+        suns.removeAll(pendingSunsToRemove);
+        pendingSunsToAdd.clear();
+        pendingSunsToRemove.clear();
     }
 
     public int getCurrentTick() {

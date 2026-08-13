@@ -1,49 +1,48 @@
 package com.pvz.models.entities.zombies.fsm;
 
+import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
 
 /**
- * The zombie is eating a plant at a fixed grid cell.
+ * The zombie is eating a plant it has collided with.
  *
  * <p>Each tick it deals {@link Zombie#getEatDpsPerTick()} damage to the
- * plant at ({@link #targetCol}, {@link #targetLane}).
+ * {@link Plant} it bumped into.
  *
  * <p><b>Transitions:</b>
  * <ul>
- *   <li>→ {@link WalkState} when the target cell becomes empty (plant destroyed or removed).</li>
+ *   <li>→ {@link WalkState} when the target plant is destroyed (or removed/frozen).</li>
  * </ul>
  */
 public class EatState implements ZombieState {
 
-    private final int targetCol;
-    private final int targetLane;
+    private final Plant target;
 
     /**
-     * @param col  column of the plant being eaten (integer grid index)
-     * @param lane row of the plant being eaten
+     * @param target the plant this zombie is chewing on (tracked by reference, not
+     *               grid cell, so it keeps chewing the same plant as it moves).
      */
-    public EatState(int col, int lane) {
-        this.targetCol = col;
-        this.targetLane = lane;
+    public EatState(Plant target) {
+        this.target = target;
     }
 
     @Override
     public void onEnter(Zombie zombie, GameContext ctx) {
         ctx.log(zombie.getSheet().getAlias()
-                + " is eating plant at (" + targetCol + "," + targetLane + ")");
+                + " is eating plant at (" + target.getCol() + "," + target.getLane() + ")");
     }
 
     @Override
     public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
-        if (!ctx.isPlantAt(targetCol, targetLane)) {
-            // Plant was destroyed — return to walking
-            ctx.log("Plant at (" + targetCol + "," + targetLane + ") is destroyed.");
+        if (target.isDead() || target.isFrozen() || !ctx.getPlants().contains(target)) {
+            // Plant was destroyed or removed — return to walking
+            ctx.log("Plant at (" + target.getCol() + "," + target.getLane() + ") is destroyed.");
             return new WalkState();
         }
         // Deal eat-DPS damage (not poisonous — regular bite)
-        ctx.getPlantsAt(targetCol, targetLane).get(0).takeDamage(zombie.getEatDpsPerTick(), DamageKind.FIXED);
+        target.takeDamage(zombie.getEatDpsPerTick(), DamageKind.FIXED);
         return this;
     }
 
@@ -54,9 +53,8 @@ public class EatState implements ZombieState {
 
     @Override
     public String getLabel() {
-        return "Eating@(" + targetCol + "," + targetLane + ")";
+        return "Eating@(" + target.getCol() + "," + target.getLane() + ")";
     }
 
-    public int getTargetCol()  { return targetCol; }
-    public int getTargetLane() { return targetLane; }
+    public Plant getTarget()  { return target; }
 }

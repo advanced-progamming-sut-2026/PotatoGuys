@@ -102,11 +102,9 @@ public class WallnutBowlingMode implements GameMode, PlantPlacer {
             }
         }
 
-        for (int i = 0; i < context.getSuns().size(); i++) {
-            Sun sun = context.getSuns().get(i);
+        for (Sun sun : new ArrayList<>(context.getSuns())) {
             if (sun.isDone()) {
                 context.removeSun(sun);
-                i--;
             }
         }
     }

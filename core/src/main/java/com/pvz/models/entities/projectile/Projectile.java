@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
-import com.pvz.models.engine.TickAware;
+import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.projectile.effects.NormalEffectState;
 import com.pvz.models.entities.projectile.effects.ProjectileEffectState;
 import com.pvz.models.entities.projectile.fsm.ProjectileMotionState;
@@ -32,23 +32,18 @@ import com.pvz.models.games.map.tile.Tile;
  * states a given {@link ProjectileType} gets, so adding a new projectile flavor
  * never requires touching this class.
  */
-public class Projectile implements TickAware {
+public class Projectile extends Entity {
 
     private final GameContext ctx;
     private final ProjectileType type;
 
     private float stateTime = 0f;
 
-    private final Vector2 pos;
-    private final Vector2 vel;
-
     private int lastCol;
     private int lastLane;
 
     private final float damage;
     private boolean isDead = false;
-
-    private static final float HIT_RADIUS = 50f;
 
     private final Set<Zombie> hitZombies = new HashSet<>();
 
@@ -59,9 +54,11 @@ public class Projectile implements TickAware {
                        float velX, float velY, float damage) {
         this.ctx = ctx;
         this.type = type;
-        this.pos = new Vector2(startX, startY);
-        this.vel = new Vector2(velX, velY);
+        this.position.set(startX, startY);
+        this.velocity.set(velX, velY);
         this.damage = damage;
+
+        setHitbox(28f, 28f);
 
         // Sensible defaults; ProjectileFactory swaps these for the real states.
         this.motionState = new StraightMotionState();
@@ -92,8 +89,8 @@ public class Projectile implements TickAware {
     @Override
     public void enter() {
         stateTime = 0f;
-        lastCol = GameController.worldXtoCol(pos.x);
-        lastLane = GameController.worldYtoLane(pos.y);
+        lastCol = GameController.worldXtoCol(position.x);
+        lastLane = GameController.worldYtoLane(position.y);
         motionState.onEnter(this);
     }
 
@@ -105,14 +102,15 @@ public class Projectile implements TickAware {
         }
 
         motionState.update(this, dt);
+        syncHitbox();
         // A lobbed projectile may have just landed and called land() -> destroy()
         // from inside motionState.update(); bail out before touching tiles/zombies.
         if (isDead) {
             return;
         }
 
-        int col = GameController.worldXtoCol(pos.x);
-        int lane = GameController.worldYtoLane(pos.y);
+        int col = GameController.worldXtoCol(position.x);
+        int lane = GameController.worldYtoLane(position.y);
 
         if (col < -0.5f || col >= ctx.getMap().getColumns() + 0.5f
                 || lane < -0.5f || lane >= ctx.getMap().getLanes() + 0.5f) {
@@ -136,14 +134,12 @@ public class Projectile implements TickAware {
                 return;
             }
         }
-
-        checkCollisions2D();
     }
 
     @Override
     public FrameConfig draw() {
         PvZ2.pamPlayer.draw(PvZ2.batch, type.path,
-                type.lable, stateTime, pos.x, pos.y, type.scale, type.scale, true);
+                type.lable, stateTime, position.x, position.y, type.scale, type.scale, true);
         return null;
     }
 
@@ -153,19 +149,18 @@ public class Projectile implements TickAware {
 
     // ── Collision ─────────────────────────────────────────────────────────────
 
-    private void checkCollisions2D() {
-        for (Zombie z : ctx.getZombies()) {
-            if (z.isDead() || hitZombies.contains(z)) {
-                continue;
-            }
-
-            double distance = Math.hypot(z.getX() - pos.x, z.getY() - pos.y);
-            if (distance <= HIT_RADIUS) {
-                onHitZombie(z);
-                if (isDead) {
-                    break;
-                }
-            }
+    /**
+     * Invoked by the {@link CollisionSystem} when this projectile's hitbox
+     * overlaps another entity's. Only zombies are of interest here; any other
+     * overlap is ignored.
+     */
+    @Override
+    public void onCollision(Entity other) {
+        if (isDead || other == null) {
+            return;
+        }
+        if (other instanceof Zombie zombie && !zombie.isDead()) {
+            onHitZombie(zombie);
         }
     }
 
@@ -192,10 +187,10 @@ public class Projectile implements TickAware {
         if (isDead) {
             return;
         }
-        Zombie nearest = nearestZombieAt(pos.x, pos.y);
+        Zombie nearest = nearestZombieAt(position.x, position.y);
         effectState.onImpact(this, nearest, ctx);
         ctx.log("[Projectile] " + type + " (" + effectState.getLabel() + ") landed at ("
-                + pos.x + ", " + pos.y + ")");
+                + position.x + ", " + position.y + ")");
         destroy();
     }
 
@@ -230,19 +225,19 @@ public class Projectile implements TickAware {
     }
 
     public Vector2 getPos() {
-        return pos;
+        return position;
     }
 
     public Vector2 getVelocity() {
-        return vel;
+        return velocity;
     }
 
     public float getX() {
-        return pos.x;
+        return position.x;
     }
 
     public float getY() {
-        return pos.y;
+        return position.y;
     }
 
     public float getDamage() {

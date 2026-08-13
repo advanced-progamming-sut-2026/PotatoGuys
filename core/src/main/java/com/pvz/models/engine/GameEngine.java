@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
+import com.pvz.models.games.GameContext;
 
 public class GameEngine {
     public static GameEngine instance;
@@ -32,6 +33,10 @@ public class GameEngine {
         if(AppContext.getInstance().getGameContext().isGameOver()){
             return;
         }
+        GameContext gameCtx = AppContext.getInstance().getGameContext();
+        // Apply anything queued by the previous tick's collision before anyone runs.
+        gameCtx.flushPending();
+
         for (TickAware entity : new ArrayList<>(getToAdd())) {
             entity.enter();
         }
@@ -47,6 +52,12 @@ public class GameEngine {
         for (TickAware entity : snapshot) {
             entity.update(dt);
         }
+
+        // Detect overlaps now that every entity has settled into its new position
+        CollisionSystem.getInstance().detect(gameCtx);
+        // Collisions may have killed/destroyed entities — apply their queued
+        // removals/additions now, safely outside of the detection loops.
+        gameCtx.flushPending();
 
         firstTickDone = true;
     }

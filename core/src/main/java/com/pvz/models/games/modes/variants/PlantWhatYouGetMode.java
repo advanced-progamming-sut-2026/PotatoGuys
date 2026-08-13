@@ -1,5 +1,6 @@
 package com.pvz.models.games.modes.variants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.pvz.controller.game.GameController;
@@ -76,10 +77,8 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
     public void updateMode(GameContext context, float dt) {
         // ۱. قطع باران آفتاب: هر خورشیدی که در محیط بازی ساخته شود (از آسمان تولید شود)
         // فوراً حذف می‌گردد
-        for (int i = 0; i < context.getSuns().size(); i++) {
-            Sun sun = context.getSuns().get(i);
+        for (Sun sun : new ArrayList<>(context.getSuns())) {
             context.removeSun(sun);
-            i--;
         }
 
         // ۲. اگر در فاز آمادگی باشیم، زامبی‌ها جلو نمی‌آیند و موج‌ها آپدیت نمی‌شوند

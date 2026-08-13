@@ -10,7 +10,8 @@ import java.util.Random;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
-import com.pvz.models.engine.TickAware;
+import com.pvz.models.entities.Entity;
+import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
 import com.pvz.models.entities.zombies.data.ScaledProp;
@@ -18,6 +19,7 @@ import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
 import com.pvz.models.entities.zombies.effects.EffectType;
 import com.pvz.models.entities.zombies.effects.StatusEffect;
 import com.pvz.models.entities.zombies.fsm.DeadState;
+import com.pvz.models.entities.zombies.fsm.EatState;
 import com.pvz.models.entities.zombies.fsm.WalkState;
 import com.pvz.models.entities.zombies.fsm.ZombieState;
 import com.pvz.models.entities.zombies.skills.ExplorerTorchSkill;
@@ -27,7 +29,7 @@ import com.pvz.models.games.map.behaviors.TileBehavior;
 import com.pvz.models.games.map.tile.Tile;
 
 
-public class Zombie implements TickAware {
+public class Zombie extends Entity {
 
 
     public static final int TICKS_PER_SECOND = 10;
@@ -43,8 +45,6 @@ public class Zombie implements TickAware {
     // ── Grid position ─────────────────────────────────────────────────────────
     private int lastX;
     private int lastLane;
-    private float x;
-    private float y;
 
     // ── Runtime stats (scaled at spawn) ───────────────────────────────────────
     private final float maxHp;
@@ -84,9 +84,8 @@ public class Zombie implements TickAware {
                   List<ArmorPiece> armors, List<ZombieSkill> skills,
                   GameContext ctx, int waveIndex, int difficulty) {
         this.sheet = sheet;
-        this.x = startX;
-        lastX=(int)startX;
-        this.y = GameController.laneToWorldY(lane);
+        this.position.set(startX, GameController.laneToWorldY(lane));
+        lastX = (int) startX;
         this.armors = new ArrayList<>(armors);
         this.skills = new ArrayList<>(skills);
         this.activeEffects = new EnumMap<>(EffectType.class);
@@ -99,6 +98,9 @@ public class Zombie implements TickAware {
         this.hp            = this.maxHp;
         this.eatDpsPerTick = scaled[1] * diffFactor / TICKS_PER_SECOND;
         this.speedPerTick  = sheet.getSpeed() / TICKS_PER_SECOND;
+
+        setHitbox(48f, 80f);
+        velocity.set(-getEffectiveSpeedPerTick() * 1000f, 0f);
     }
 
     // ── TickAware ─────────────────────────────────────────────────────────────
@@ -108,7 +110,7 @@ public class Zombie implements TickAware {
         currentState = new WalkState();
         currentState.onEnter(this, context);
         context.log("[Spawn] " + sheet.getAlias()
-                + " entered lane " + GameController.worldYtoLane(y) + " at x=" + String.format("%.1f", x)
+                + " entered lane " + GameController.worldYtoLane(position.y) + " at x=" + String.format("%.1f", position.x)
                 + (glowing ? " [GLOWING]" : ""));
     }
 
@@ -125,27 +127,57 @@ public class Zombie implements TickAware {
             currentState = next;
         }
 
-        if (Math.floor(x)!=lastX || GameController.worldYtoLane(y)!=lastLane) {
-            lastX = (int) Math.floor(x);
-            lastLane = GameController.worldYtoLane(y);
-            Tile tile = context.getTileAt(lastX, GameController.worldYtoLane(y));
-            if (tile!=null) {
+        if (Math.floor(position.x) != lastX || GameController.worldYtoLane(position.y) != lastLane) {
+            lastX = (int) Math.floor(position.x);
+            lastLane = GameController.worldYtoLane(position.y);
+            Tile tile = context.getTileAt(lastX, GameController.worldYtoLane(position.y));
+            if (tile != null) {
                 for (TileBehavior b : tile.getBehaviors()) {
                     b.onZombieEnter(this, tile);
                 }
             }
         }
+
+        syncHitbox();
     }
 
     @Override
     public FrameConfig draw() {
-        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM" , "walk", stateTime, x, y,0.65f,0.65f, true);
+        PvZ2.pamPlayer.draw(PvZ2.batch, "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM" , "walk", stateTime, position.x, position.y,0.65f,0.65f, true);
         return null;
     }
 
     @Override
     public void dispose() {
         activeEffects.clear();
+    }
+
+    // ── Collision ─────────────────────────────────────────────────────────────
+
+    /**
+     * Invoked by the {@link CollisionSystem} when this zombie's hitbox overlaps
+     * another entity's. Overlapping a plant makes the zombie stop walking and
+     * transition into {@link EatState} so it can chew through it.
+     */
+    @Override
+    public void onCollision(Entity other) {
+        if (dead || other == null) {
+            return;
+        }
+        if (other instanceof Plant plant && !plant.isDead() && !plant.isFrozen()) {
+            startEating(plant);
+        }
+    }
+
+    /** Switches to {@link EatState} targeting {@code plant} if not already eating. */
+    public void startEating(Plant plant) {
+        if (dead || currentState instanceof EatState) {
+            return;
+        }
+        currentState.onExit(this, context);
+        EatState eat = new EatState(plant);
+        eat.onEnter(this, context);
+        currentState = eat;
     }
 
     // ── Damage API ─────────────────────────────────────────────────────────────
@@ -205,10 +237,10 @@ public class Zombie implements TickAware {
 
     public ZombiePropertySheet getSheet()       { return sheet; }
     public GameContext getContext()        { return context; }
-    public float getX()                         { return x; }
-    public void setX(float newX)               { this.x = newX; }
-    public float getY()                        { return y; }
-    public void setY(float y)            { this.y = y; }
+    public float getX()                         { return position.x; }
+    public void setX(float newX)               { position.x = newX; syncHitbox(); }
+    public float getY()                        { return position.y; }
+    public void setY(float y)            { position.y = y; syncHitbox(); }
     public float getHp()                        { return hp; }
     public float getMaxHp()                     { return maxHp; }
     public float getEatDpsPerTick()             { return eatDpsPerTick; }
@@ -274,7 +306,7 @@ public class Zombie implements TickAware {
         context.getGameStats().onZombieKilledInSeason(context.getSeasonName());
         context.removeZombie(this);
         context.log("Zombie of type " + sheet.getAlias()
-                + " is dead at (" + String.format("%.1f", x) + "," + GameController.worldYtoLane(y) + ")");
+                + " is dead at (" + String.format("%.1f", position.x) + "," + GameController.worldYtoLane(position.y) + ")");
     }
 
     private void tickStatusEffects() {

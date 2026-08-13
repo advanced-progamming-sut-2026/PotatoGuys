@@ -1063,7 +1063,7 @@
             "x": -180.0,
             "y": 0.0
           },
-          "delaySeconds": 0.8
+          "delaySeconds": 0.7
         },
         {
           "projectileType": "PEA",
@@ -1077,7 +1077,7 @@
             "x": -180.0,
             "y": 0.0
           },
-          "delaySeconds": 0.9
+          "delaySeconds": 0.8
         }
       ]
     },
@@ -1131,7 +1131,7 @@
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/SPLITPEA/SPLITPEA.PAM",
       "idleLabel": "idle",
-      "attackActionLabel": "attack",
+      "attackActionLabel": "attack2",
       "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 10

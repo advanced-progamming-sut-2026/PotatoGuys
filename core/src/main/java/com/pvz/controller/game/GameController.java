@@ -1,12 +1,14 @@
 package com.pvz.controller.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -20,6 +22,8 @@ import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.GameEngine;
+import com.pvz.models.entities.Entity;
+import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.LawnMower;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
@@ -73,6 +77,9 @@ public class GameController {
     private Label readyPlantLabel;
     private float readyPlantTimer = 0f;
     private final float readyPlantDuration = 2.0f;
+
+    /** Debug: draws every entity's hitbox rectangle (toggle with F1). */
+    private boolean showHitboxes = true;
 
     public GameController(String seasonName, int levelNumber){
         this.seasonName=seasonName;
@@ -185,6 +192,10 @@ public class GameController {
 
     public void update(float dt){
         camera.update();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+            showHitboxes = !showHitboxes;
+        }
 
         switch (currentState) {
             case PANNING_FORWARD:
@@ -409,7 +420,40 @@ public class GameController {
             // }
 
             shapeRenderer.end();
+
+            // Hitbox debug (outline)
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            drawHitboxes();
+            shapeRenderer.end();
         }
+    }
+
+    // ── Hitbox debug ─────────────────────────────────────────────────────────
+
+    private void drawHitboxes() {
+        if (!showHitboxes) return;
+
+        drawEntityHitboxes(Color.GREEN, ctx.getPlants());
+        drawEntityHitboxes(Color.RED, ctx.getZombies());
+        drawEntityHitboxes(Color.CYAN, ctx.getProjectiles());
+        drawEntityHitboxes(Color.YELLOW, ctx.getSuns());
+        for (LawnMower m : ctx.getLawnMowers()) {
+            if (m != null) drawEntityHitbox(Color.ORANGE, m);
+        }
+    }
+
+    private void drawEntityHitboxes(Color color, List<? extends Entity> entities) {
+        for (Entity e : entities) {
+            drawEntityHitbox(color, e);
+        }
+    }
+
+    private void drawEntityHitbox(Color color, Entity e) {
+        Hitbox hitbox = e.getHitbox();
+        if (hitbox == null) return;
+        Rectangle r = hitbox.getRectangle();
+        shapeRenderer.setColor(color);
+        shapeRenderer.rect(r.x, r.y, r.width, r.height);
     }
 
     public void startGameSession() {

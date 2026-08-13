@@ -2,8 +2,9 @@ package com.pvz.models.entities.plants;
 
 import java.util.List;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
-import com.pvz.models.engine.TickAware;
+import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.plants.data.GrowthProfile;
@@ -21,7 +22,7 @@ import com.pvz.models.games.map.behaviors.IceBlockBehavior;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
 
-public class Plant implements TickAware {
+public class Plant extends Entity {
 
     public static final int TICKS_PER_SECOND = 10;
 
@@ -66,6 +67,8 @@ public class Plant implements TickAware {
         this.stats = PlantStatResolver.resolve(sheet, this.level);
         this.growth = sheet.getGrowth();
         this.hp = stats.getMaxHp();
+        this.position.set(GameController.colToWorldX(col), GameController.laneToWorldY(lane));
+        setHitbox(Tile.WIDTH, Tile.HEIGHT);
     }
 
     // ── TickAware ─────────────────────────────────────────────────────────────
@@ -82,6 +85,7 @@ public class Plant implements TickAware {
     public void update(float dt) {
         if (dead || isFrozen)
             return;
+        syncHitbox();
         tickGrowth();
         tickBoost();
         if (this.currentState != null) {
@@ -263,6 +267,14 @@ public class Plant implements TickAware {
 
     public int getLane() {
         return lane;
+    }
+
+    public float getX() {
+        return position.x;
+    }
+
+    public float getY() {
+        return position.y;
     }
 
     public int getLevel() {
