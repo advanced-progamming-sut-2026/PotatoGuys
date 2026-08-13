@@ -10,7 +10,7 @@ import com.pvz.models.games.GameContext;
 
 public class Explosion extends Effect{
     private static final String POTATO_MINE_EXPLOSION_PAM_PATH="768/INITIAL/EFFECTS/POTATOMINE_EXPLOSION/POTATOMINE_EXPLOSION.PAM";
-    private static final String PRIMAL_POTATO_MINE_EXPLOSION_PAM_PATH="768/INITIAL/EFFECTS/POTATOMINE_EXPLOSION/POTATOMINE_EXPLOSION.PAM";
+    private static final String PRIMAL_POTATO_MINE_EXPLOSION_PAM_PATH="768/INITIAL/EFFECTS/ESCAPEROOT_EXPLOSION_PRIMALPOTATOMINE/ESCAPEROOT_EXPLOSION_PRIMALPOTATOMINE.PAM";
     private static final String LOW_INTENSITY_CLIP="animation";
     private static final String HIGH_INTENSITY_CLIP="animation2";
     private static final String INSANE_INTENSITY_CLIP="animation3";

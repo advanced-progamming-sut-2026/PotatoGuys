@@ -1146,7 +1146,7 @@
     "id": 35,
     "name": "Potato Mine",
     "type": "PotatoMine",
-    "category": "HOMING",
+    "category": "EXPLOSIVE",
     "sunCost": 25,
     "baseHp": 300.0,
     "actionIntervalSeconds": 12.0,
@@ -1166,6 +1166,40 @@
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM",
+      "idleLabel": "plant",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
+  },
+  {
+    "id": 36,
+    "name": "Primal Potato Mine",
+    "type": "PrimalPotatoMine",
+    "category": "EXPLOSIVE",
+    "sunCost": 50,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 12.0,
+    "rechargeSeconds": 25.0,
+    "attackConfig": {
+      "class": "PotatoMineConfig",
+      "label": "plant_idle",
+      "idleTime": 5.0,
+      "baseDamage": 2400.0,
+      "readyClip": "idle",
+      "explosionType": "PRIMAL_POTATO_MINE"
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM",
       "idleLabel": "plant",
       "animSpeed": 1.0,
       "actionTriggerFrame": 8

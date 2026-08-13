@@ -10,6 +10,9 @@ import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
+import com.pvz.models.games.map.tile.Tile;
+
+import java.util.List;
 
 public class PotatoMineExplosionAction extends PlantAction {
     String pamPath;
@@ -18,14 +21,18 @@ public class PotatoMineExplosionAction extends PlantAction {
     ExplosionType type;
     ExplosionIntensity intensity;
     Zombie target;
+    List<Tile> targetTiles;
+    float damage;
     public PotatoMineExplosionAction(String pamPath, String clip, float explosionDuration
-        , ExplosionType type, ExplosionIntensity intensity, Zombie target){
+        , ExplosionType type, ExplosionIntensity intensity, Zombie target, List<Tile> targetTiles, float damage){
         this.pamPath=pamPath;
         this.clip=clip;
         this.explosionDuration=explosionDuration;
         this.intensity=intensity;
         this.type=type;
         this.target=target;
+        this.targetTiles=targetTiles;
+        this.damage=damage;
     }
     @Override
     public boolean shouldTrigger(Plant plant, GameContext ctx, float dt) {
@@ -42,7 +49,16 @@ public class PotatoMineExplosionAction extends PlantAction {
         super.update(plant, ctx, dt);
         if (stateTime>=explosionDuration){
             ctx.addEffect(new Explosion(ctx,type,intensity,plant.getPosition()));
-            target.takeDamage(1800);
+            if (target!=null) {
+                target.takeDamage(damage);
+            }
+            if (targetTiles!=null && !targetTiles.isEmpty()){
+                for (Tile t: targetTiles){
+                    for (Zombie z: ctx.getZombiesAt(t.getCol(),t.getLane())){
+                        z.takeDamage(damage);
+                    }
+                }
+            }
             plant.dispose();
         }
     }
