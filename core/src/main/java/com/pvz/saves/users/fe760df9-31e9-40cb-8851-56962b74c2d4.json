@@ -10,8 +10,8 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 6050,
-    "diamonds": 142,
+    "coins": 6100,
+    "diamonds": 143,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -61,7 +61,7 @@
           "Type": "SnowPea",
           "level": 1,
           "seed": 0,
-          "isBoosted": true
+          "isBoosted": false
         },
         {
           "Type": "CherryBomb",
@@ -1229,7 +1229,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786615648579
+    "lastDailyReset": 1786623164506
   },
   "questLogRefreshed": true
 }
