@@ -11,7 +11,7 @@
   "profile": {
     "gamePlayed": 0,
     "coins": 2150,
-    "diamonds": 161,
+    "diamonds": 163,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -61,7 +61,7 @@
           "Type": "SnowPea",
           "level": 1,
           "seed": 0,
-          "isBoosted": true
+          "isBoosted": false
         },
         {
           "Type": "CherryBomb",
@@ -98,7 +98,7 @@
         },
         {
           "message": "New Zombie Encountered: CONEHEAD!",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -153,8 +153,8 @@
     "gameSpeed": 2,
     "showGrid": false,
     "debugMode": false,
-    "brightness": 1.0,
-    "musicVolume": 0.7,
+    "brightness": 0.98999995,
+    "musicVolume": 0.71,
     "sfxVolume": 0.7,
     "musicMuted": true,
     "sfxMuted": false
@@ -287,7 +287,7 @@
       {
         "x": 1,
         "y": 4,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -1234,7 +1234,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786573536021
+    "lastDailyReset": 1786601645046
   },
-  "questLogRefreshed": false
+  "questLogRefreshed": true
 }
