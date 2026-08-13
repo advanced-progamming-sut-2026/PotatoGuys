@@ -35,8 +35,8 @@ public class PlantFactory {
     private Plant createFromConfig(PlantJsonConfig config, int col, int lane, int level, boolean boosted, GameContext ctx) {
         PlantPropertySheet sheet = CONFIG_REGISTRY.toSheet(config);
         PlantAction attackAction = buildConfigAction(config.attackConfig);
-        // PlantAction feedAction = new ConfigFeedAction(config.feedConfig);
-        return new Plant(sheet, attackAction, null, col, lane, level, boosted, ctx);
+        PlantAction feedAction = buildConfigAction(config.feedConfig);
+        return new Plant(sheet, attackAction, feedAction, col, lane, level, boosted, ctx);
     }
 
     private PlantAction buildConfigAction(PlantActionConfig config) {
@@ -52,10 +52,6 @@ public class PlantFactory {
         if(config instanceof GraveBusterConfig graveBusterConfig){
             return new GraveBusterAction(graveBusterConfig);
         }
-        // if (config instanceof SunProducerActionConfig sunConfig) {
-        //     return new SunProducerAction(intervalSeconds, sunConfig);
-        // }
-        // return PassiveAction.INSTANCE;
         if (config instanceof SunProducerActionConfig sunConfig) {
             return new SunProducerAction(sunConfig);
         }

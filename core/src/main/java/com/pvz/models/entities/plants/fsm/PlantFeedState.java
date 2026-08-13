@@ -6,6 +6,7 @@ import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.actions.PlantAction;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.games.GameContext;
 
@@ -28,6 +29,9 @@ public class PlantFeedState extends PlantState {
     public void update(Plant plant, GameContext ctx , float dt) {
         super.update(plant, ctx, dt);
         feedAction.update(plant, ctx, dt);
+        if(stateTime >= AnimationCatalog.getInstance().getClipDuration(plant.getSheet().pamAnimationConfig.pamFilePath, plant.getSheet().pamAnimationConfig.plantFoodLabel)) {
+            plant.changeState(new PlantIdleState());
+        }
     }
 
     @Override
