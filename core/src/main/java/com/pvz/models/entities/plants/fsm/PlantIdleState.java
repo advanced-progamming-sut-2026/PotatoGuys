@@ -40,7 +40,7 @@ public class PlantIdleState extends PlantState {
         float x = GameController.colToWorldX(plant.getCol());
         float y = GameController.laneToWorldY(plant.getLane());
         Vector2 pos = new Vector2(x,y);
-        Vector2 scale = new Vector2(0.7f,0.7f);
+        Vector2 scale = new Vector2(0.65f,0.65f);
         return new FrameConfig(config.pamFilePath,config.idleLabel,stateTime,pos,scale,null,true);
     }
 }

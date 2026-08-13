@@ -2647,7 +2647,7 @@
   },
   {
     "id": 30,
-    "name": "BonkChoy",
+    "name": "Bonk Choy",
     "type": "BonkChoy",
     "category": "MELEE",
     "sunCost": 150,
@@ -2678,6 +2678,45 @@
       "pamFilePath": "768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM",
       "idleLabel": "idle",
       "attackActionLabel": "attack",
+      "plantFoodLabel": "plantfood",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 14
+    },
+    "description": "شلیک هوایی با آسیب مساحتی (گرم‌کننده محیط اطراف). پرتاب فلفل‌های بزرگ به ۳ زامبی تصادفی."
+  },
+  {
+    "id": 31,
+    "name": "Grave Buster",
+    "type": "GraveBuster",
+    "category": "EXPLOSIVE",
+    "sunCost": 0,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 2.9,
+    "rechargeSeconds": 10.0,
+    "attackConfig": {
+      "class": "GraveBusterConfig"
+    },
+    "feedConfig": {
+      "class": "LobberActionConfig",
+      "intervalSeconds": 2.9,
+      "patterns": [
+        {
+          "projectileType": "PEPPER_BALL",
+          "damage": 50.0,
+          "targets": 3,
+          "allLanes": true,
+          "positionOffset": {
+            "x": 50,
+            "y": 20
+          },
+          "delaySeconds": 0.0
+        }
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/GRAVEBUSTER/GRAVEBUSTER.PAM",
+      "idleLabel": "attack",
+      "attackActionLabel": "attack1",
       "plantFoodLabel": "plantfood",
       "animSpeed": 1.0,
       "actionTriggerFrame": 14

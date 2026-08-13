@@ -10,7 +10,7 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 2100,
+    "coins": 2150,
     "diamonds": 161,
     "plantFood": 1,
     "collection": {
@@ -77,7 +77,8 @@
         }
       ],
       "unlockedZombies": [
-        "BASIC"
+        "BASIC",
+        "CONEHEAD"
       ],
       "seedPackets": {
         "TwinSunflower": 10,
@@ -94,6 +95,10 @@
         {
           "message": "New Zombie Encountered: BASIC!",
           "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: CONEHEAD!",
+          "unread": true
         }
       ]
     },
@@ -1229,7 +1234,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786563666866
+    "lastDailyReset": 1786573536021
   },
   "questLogRefreshed": false
 }

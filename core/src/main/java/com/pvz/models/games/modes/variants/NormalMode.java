@@ -145,17 +145,9 @@ public class NormalMode implements GameMode, PlantPlacer {
             context.log("Not enough sun.");
             return;
         }
-        Plant plant;
-        /*if (card.getPlant().getType()== PlantType.BonkChoy){
-            plant = new BonkChoy(sheet,null,null,col,
-                lane,card.getPlant().getLevel(),card.getPlant().isBoosted(),context);
-        } else if (card.getPlant().getType() == PlantType.GraveBuster){
-            plant = new GraveBuster(sheet,null,null,col,lane,
-                card.getPlant().getLevel(),card.getPlant().isBoosted(),context);
-        }*/
-        plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
+        Plant plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
-        if (!plant.isPlantableOnTile(context.getMap().getTileAt(col,lane))) return;
+        if (!plant.getAttackAction().isPlantableOnTile(context.getTileAt(col,lane))) return;
         context.spawnPlant(plant);
         context.getGameStats().onPlantPlaced(col, lane, plantCard.getPlant().getType());
         plantCard.use();
