@@ -60,6 +60,7 @@ public class GameController {
 
     private float stateTime;
     private GameContext ctx;
+    private Level level;
     private PlantSelectModal plantSelectModal;
     private GameUiModal gameUiModal;
     private State currentState = State.PANNING_FORWARD;
@@ -138,7 +139,9 @@ public class GameController {
 
         ctx = AppContext.getInstance().getGameContext();
 
-        plantSelectModal = new PlantSelectModal(this::startGameSession);
+        level = LevelLoader.loadLevel(seasonName, levelNumber);
+
+        plantSelectModal = new PlantSelectModal(level, this::startGameSession);
         stage.addActor(plantSelectModal);
 
         gameUiModal = new GameUiModal();
@@ -458,7 +461,6 @@ public class GameController {
 
     public void startGameSession() {
         try {
-            Level level = LevelLoader.loadLevel(seasonName, levelNumber);
             if (level != null) {
                 GameEngine.getInstance().reset();
                 GameContext newContext = new GameContext(level);

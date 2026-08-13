@@ -17,8 +17,8 @@ import pvz.skin.PvzSkin;
  * One collectible plant card: the packet art doubled as the button background, with the family
  * badge at the top-left, the plant level at the top-right, the sun cost and seed-packet counter
  * just above a full-width progress bar across the bottom edge. Locked cards are dimmed with a
- * big gold lock in the middle but stay clickable so the player can open the details and buy the
- * plant there.
+ * gold lock badge in the top-right corner (matching Rey's IMAGE_UI_LOCK_SMALL_GOLD) but stay
+ * clickable so the player can open the details and buy the plant there.
  */
 public class PlantCard extends Button {
 
@@ -31,6 +31,7 @@ public class PlantCard extends Button {
     private final ProgressBar xpBar;
     private final Label levelLabel;
     private final Label packetsLabel;
+    private final Table levelLayer;
 
     public PlantCard(PlantData data) {
         super(styleFor(data));
@@ -45,7 +46,7 @@ public class PlantCard extends Button {
 
         Image badge = new Image(PlantData.regionDrawableOr(data.familyImageId(), fallback));
 
-        lockImage = new Image(MenuUiKit.loadTextureSafe("textures/greenhouse/lock_icon.png"));
+        lockImage = new Image(PlantData.regionDrawableOr("IMAGE_UI_LOCK_SMALL_GOLD", fallback));
         lockImage.setScaling(Scaling.fit);
 
         dimLayer = new Image(skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.55f)));
@@ -70,18 +71,18 @@ public class PlantCard extends Button {
         // ── top-left: family badge ──────────────────────────────────────────────
         Table badgeLayer = new Table();
         badgeLayer.top().left();
-        badgeLayer.add(badge).size(26f, 26f).pad(3f);
+        badgeLayer.add(badge).size(36f, 36f).pad(3f);
 
-        // ── center: big gold lock on locked cards ───────────────────────────────
+        // ── top-right: gold lock on locked cards (matches Rey's IMAGE_UI_LOCK_SMALL_GOLD) ─
         Table lockLayer = new Table();
-        lockLayer.center();
-        lockLayer.add(lockImage).size(54f, 72f);
+        lockLayer.top().right();
+        lockLayer.add(lockImage).size(26f).pad(4f);
 
         // ── top-right: level pill ────────────────────────────────────────────────
         Table levelPill = new Table();
         levelPill.setBackground(skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.6f)));
         levelPill.add(levelLabel).pad(2f, 7f, 2f, 7f);
-        Table levelLayer = new Table();
+        levelLayer = new Table();
         levelLayer.top().right();
         levelLayer.add(levelPill).pad(4f);
 
@@ -113,7 +114,7 @@ public class PlantCard extends Button {
     private static ButtonStyle styleFor(PlantData data) {
         ButtonStyle style = new ButtonStyle();
         style.up = PlantData.regionDrawable(data.isBoosted() ? "IMAGE_UI_PACKETS_BOOST"
-                                                              : "IMAGE_UI_PACKETS_READY");
+            : "IMAGE_UI_PACKETS_READY");
         style.over = PlantData.regionDrawable("IMAGE_UI_PACKETS_SELECT");
         style.checked = PlantData.regionDrawable("IMAGE_UI_PACKETS_SELECTED");
         return style;
@@ -124,6 +125,7 @@ public class PlantCard extends Button {
         boolean unlocked = data.isUnlocked();
         dimLayer.setVisible(!unlocked);
         lockImage.setVisible(!unlocked);
+        levelLayer.setVisible(unlocked); // avoid overlapping the top-right lock icon when locked
         xpBar.setValue(data.xpFraction());
         levelLabel.setText("LV " + data.getLevel());
 

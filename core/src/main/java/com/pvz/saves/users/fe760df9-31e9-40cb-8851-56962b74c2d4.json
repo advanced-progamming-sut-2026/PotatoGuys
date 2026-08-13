@@ -104,11 +104,11 @@
         },
         {
           "message": "New Zombie Encountered: DODO!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: RA!",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -1229,7 +1229,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786615648579
+    "lastDailyReset": 1786618419248
   },
   "questLogRefreshed": true
 }

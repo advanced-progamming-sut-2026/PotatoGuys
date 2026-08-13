@@ -1,24 +1,47 @@
 package com.pvz.view.game;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
+
 import com.pvz.models.AppContext;
+import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.Card;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.user.User;
+import com.pvz.view.MenuUiKit;
+import com.pvz.view.PlantData;
+
 import pvz.skin.PvzSkin;
 
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * In-game HUD: top bar (sun/plant food/wallet) plus the seed-packet tray,
+ * a vertical column hugging the left edge of the screen showing full cards
+ * (packet background, family badge, sun cost) — same look as the pregame
+ * slot bar and Rey's in-match tray — with a cooldown overlay on top.
+ *
+ * <p>Slot size is tuned to the 1280x720 gameplay viewport (see
+ * GameController's FitViewport) rather than the 1920x1080 menus use, so all
+ * 7 cards fit under the top bar without running off the bottom of the screen.
+ */
 public class GameUiModal extends Table {
+
+    private static final float SLOT_WIDTH = 125f;
+    private static final float SLOT_HEIGHT = 75f;
 
     private final Label sunLabel;
     private final Label plantFoodLabel;
@@ -26,7 +49,10 @@ public class GameUiModal extends Table {
     private final Label gemLabel;
     private final Table cardsBarTable;
     private PlantCard selectedCard = null;
-    private final Map<PlantCard, TextButton> cardButtonMap = new HashMap<>();
+
+    private final Map<PlantCard, Table> slotByCard = new HashMap<>();
+    private final Map<PlantCard, Image> cooldownOverlayByCard = new HashMap<>();
+    private Map<PlantType, PlantData> dataByType = new HashMap<>();
 
     public GameUiModal() {
         super();
@@ -34,27 +60,18 @@ public class GameUiModal extends Table {
         top();
         setVisible(false);
 
-        // Top bar container
         Table topBar = new Table();
         topBar.top().left();
         topBar.pad(15);
 
-        // Sun bank display
         sunLabel = new Label("Sun: 50", PvzSkin.get(), "big");
         sunLabel.setColor(Color.YELLOW);
         topBar.add(sunLabel).padRight(25);
 
-        // Plant food display
         plantFoodLabel = new Label("Plant Food: 0", PvzSkin.get());
         plantFoodLabel.setColor(Color.GREEN);
-        topBar.add(plantFoodLabel).padRight(25);
+        topBar.add(plantFoodLabel);
 
-        // Cards bar (selected plants)
-        cardsBarTable = new Table();
-        cardsBarTable.defaults().size(80, 100).pad(5);
-        topBar.add(cardsBarTable);
-
-        // Wallet display (coins & gems) pinned to the top-right corner
         Table walletTable = new Table();
         walletTable.top().right();
 
@@ -79,6 +96,17 @@ public class GameUiModal extends Table {
         add(topBar).top().left().expandX().fillX();
         add(walletTable).top().right().padTop(15).padRight(15);
         row();
+
+        // Seed-packet tray: vertical column pinned to the left edge, below the top bar.
+        cardsBarTable = new Table();
+        cardsBarTable.top();
+        cardsBarTable.defaults().pad(4f).size(SLOT_WIDTH, SLOT_HEIGHT);
+
+        Table leftColumnWrapper = new Table();
+        leftColumnWrapper.top().left();
+        leftColumnWrapper.add(cardsBarTable);
+
+        add(leftColumnWrapper).left().top().colspan(2).padLeft(15).padTop(5);
     }
 
     public PlantCard getSelectedCard() {
@@ -92,35 +120,89 @@ public class GameUiModal extends Table {
 
     public void initCards() {
         cardsBarTable.clearChildren();
-        cardButtonMap.clear();
+        slotByCard.clear();
+        cooldownOverlayByCard.clear();
+
         GameContext context = AppContext.getInstance().getGameContext();
         if (context == null) return;
 
+        List<PlantData> allData = PlantData.loadAll();
+        dataByType = new HashMap<>();
+        for (PlantData data : allData) {
+            dataByType.put(data.type, data);
+        }
+
         for (Card card : context.getCards()) {
             if (card instanceof PlantCard pc) {
-                String plantName = pc.getPlant().getType().name();
-                String text = plantName + "\nCost: " + pc.getCost();
-                TextButton cardBtn = new TextButton(text, PvzSkin.get(), "brown");
-                cardBtn.getLabel().setWrap(true);
-                cardBtn.getLabel().setAlignment(Align.center);
-
-                cardBtn.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        if (selectedCard == pc) {
-                            selectedCard = null; // deselect
-                        } else {
-                            selectedCard = pc; // select
-                        }
-                        updateCardStyles();
-                    }
-                });
-
-                cardButtonMap.put(pc, cardBtn);
-                cardsBarTable.add(cardBtn).size(80, 100);
+                cardsBarTable.add(buildSlot(pc)).row();
             }
         }
         updateCardStyles();
+    }
+
+    private Table buildSlot(PlantCard pc) {
+        PlantType type = pc.getPlant().getType();
+        PlantData data = dataByType.get(type);
+
+        Skin skin = PvzSkin.get();
+        Drawable fallback = skin.newDrawable("white_pixel", new Color(0.25f, 0.25f, 0.25f, 1f));
+
+        Table slot = new Table();
+        if (data != null) {
+            slot.setBackground(PlantData.regionDrawableOr(
+                data.isBoosted() ? "IMAGE_UI_PACKETS_BOOST" : "IMAGE_UI_PACKETS_READY", fallback));
+        } else {
+            slot.setBackground(new TextureRegionDrawable(MenuUiKit.solidTexture(new Color(0f, 0f, 0f, 0.45f))));
+        }
+
+        Stack stack = new Stack();
+
+        if (data != null) {
+            Image plantImage = new Image(PlantData.regionDrawableOr(data.cardImageId(), fallback));
+            plantImage.setScaling(Scaling.fit);
+            Table plantLayer = new Table();
+            plantLayer.center();
+            plantLayer.add(plantImage).size(SLOT_HEIGHT - 22f);
+            stack.add(plantLayer);
+
+            Image badge = new Image(PlantData.regionDrawableOr(data.familyImageId(), fallback));
+            Table badgeLayer = new Table();
+            badgeLayer.top().left();
+            badgeLayer.add(badge).size(16f).pad(2f);
+            stack.add(badgeLayer);
+        }
+
+        Image cooldownOverlay = new Image(new TextureRegionDrawable(MenuUiKit.solidTexture(new Color(0f, 0f, 0f, 0.6f))));
+        cooldownOverlay.setTouchable(Touchable.disabled);
+        stack.add(cooldownOverlay);
+        cooldownOverlayByCard.put(pc, cooldownOverlay);
+
+        Label costLabel = new Label(String.valueOf(pc.getCost()), skin, "medium");
+        costLabel.setFontScale(0.8f);
+        costLabel.setColor(Color.WHITE);
+        Table costRow = new Table();
+        costRow.bottom().left();
+        costRow.add(costLabel).pad(1f, 4f, 1f, 4f);
+        stack.add(costRow);
+
+        slot.add(stack).grow();
+        slot.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!pc.canUse()) {
+                    return;
+                }
+                if (selectedCard == pc) {
+                    selectedCard = null;
+                } else {
+                    selectedCard = pc;
+                }
+                updateCardStyles();
+            }
+        });
+
+        slotByCard.put(pc, slot);
+        return slot;
     }
 
     public void updateHud() {
@@ -135,16 +217,27 @@ public class GameUiModal extends Table {
             coinLabel.setText(String.valueOf(user.getProfile().getCoins()));
             gemLabel.setText(String.valueOf(user.getProfile().getDiamonds()));
         }
+
+        for (Map.Entry<PlantCard, Image> entry : cooldownOverlayByCard.entrySet()) {
+            PlantCard pc = entry.getKey();
+            Image overlay = entry.getValue();
+            float base = pc.getBaseCooldown();
+            float fraction = base > 0 ? pc.getCooldown() / base : 0f;
+            overlay.setVisible(fraction > 0f);
+            // Sweep the dark overlay's height with the remaining cooldown fraction,
+            // same idea as PvZ's classic recharge shade shrinking from the bottom up.
+            overlay.setHeight(SLOT_HEIGHT * fraction);
+        }
     }
 
     private void updateCardStyles() {
-        for (Map.Entry<PlantCard, TextButton> entry : cardButtonMap.entrySet()) {
+        for (Map.Entry<PlantCard, Table> entry : slotByCard.entrySet()) {
             PlantCard pc = entry.getKey();
-            TextButton btn = entry.getValue();
+            Table slot = entry.getValue();
             if (selectedCard == pc) {
-                btn.setColor(0.8f, 0.5f, 1f, 1f); // highlighted tint when selected
+                slot.setColor(0.8f, 0.5f, 1f, 1f); // highlighted tint when selected
             } else {
-                btn.setColor(1f, 1f, 1f, 1f);
+                slot.setColor(1f, 1f, 1f, 1f);
             }
         }
     }
