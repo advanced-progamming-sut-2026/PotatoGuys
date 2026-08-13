@@ -1,5 +1,6 @@
 package com.pvz.models.entities.plants.config.explosive;
 
+import com.pvz.models.entities.plants.actions.explosive.potato_mine.ExplosionIntensity;
 import com.pvz.models.entities.plants.actions.explosive.potato_mine.ExplosionType;
 import com.pvz.models.entities.plants.config.PlantActionConfig;
 
@@ -11,5 +12,6 @@ public class PotatoMineConfig extends PlantActionConfig {
     public String recoverClip="recover";
     public String readyClip="idle2";
     public String explosionClip="attack";
-    public ExplosionType explosionType=ExplosionType.SMALL;
+    public ExplosionType explosionType=ExplosionType.POTATO_MINE;
+    public ExplosionIntensity explosionIntensity=ExplosionIntensity.LOW;
 }

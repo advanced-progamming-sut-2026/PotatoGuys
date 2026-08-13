@@ -5,6 +5,8 @@ import com.pvz.PvZ2;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.actions.explosive.potato_mine.ExplosionIntensity;
 import com.pvz.models.entities.plants.actions.explosive.potato_mine.ExplosionType;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
+import com.pvz.models.games.GameContext;
 
 public class Explosion extends Effect{
     private static final String POTATO_MINE_EXPLOSION_PAM_PATH="768/INITIAL/EFFECTS/POTATOMINE_EXPLOSION/POTATOMINE_EXPLOSION.PAM";
@@ -18,8 +20,9 @@ public class Explosion extends Effect{
     Vector2 pos;
     String pamPath;
     String clip;
-    public Explosion(ExplosionType type, ExplosionIntensity intensity, Vector2 pos){
-        super();
+    float clipDuration;
+    public Explosion(GameContext ctx, ExplosionType type, ExplosionIntensity intensity, Vector2 pos){
+        super(ctx);
         this.type=type;
         this.intensity=intensity;
         this.pos=new Vector2(pos);
@@ -32,6 +35,7 @@ public class Explosion extends Effect{
             case HIGH -> clip=HIGH_INTENSITY_CLIP;
             case INSANE -> clip=INSANE_INTENSITY_CLIP;
         }
+        clipDuration=AnimationCatalog.getInstance().getClipDuration(pamPath,clip);
     }
 
     @Override
@@ -42,6 +46,9 @@ public class Explosion extends Effect{
     @Override
     public void update(float dt) {
         super.update(dt);
+        if (stateTime>=clipDuration){
+            dispose();
+        }
     }
 
     @Override

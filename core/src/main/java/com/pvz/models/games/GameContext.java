@@ -7,6 +7,7 @@ import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.GameEngine;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.LawnMower;
+import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.enums.PlantTag;
@@ -43,6 +44,7 @@ public class GameContext implements TickAware {
     private List<Plant> plants;
     private List<Card> cards;
     private List<Sun> suns;
+    private List<Effect> effects;
     private LawnMower[] lawnMowers;
     private GameMode mode;
     private GameMap map;
@@ -62,6 +64,8 @@ public class GameContext implements TickAware {
     private final List<Plant> pendingPlantsToRemove = new ArrayList<>();
     private final List<Projectile> pendingProjectilesToAdd = new ArrayList<>();
     private final List<Projectile> pendingProjectilesToRemove = new ArrayList<>();
+    private final List<Effect> pendingEffectsToAdd = new ArrayList<>();
+    private final List<Effect> pendingEffectsToRemove = new ArrayList<>();
     private final List<Sun> pendingSunsToAdd = new ArrayList<>();
     private final List<Sun> pendingSunsToRemove = new ArrayList<>();
 
@@ -73,6 +77,7 @@ public class GameContext implements TickAware {
         this.plants         = new ArrayList<>();
         this.projectiles    = new ArrayList<>();
         this.suns           = new ArrayList<>();
+        this.effects        = new ArrayList<>();
         this.cards          = new ArrayList<>();
         this.map = GameMapFactory.createGameMap(currentLevel.getGameMapDefinition());
         this.lawnMowers=new LawnMower[map.getLanes()];
@@ -291,6 +296,11 @@ public class GameContext implements TickAware {
         suns.removeAll(pendingSunsToRemove);
         pendingSunsToAdd.clear();
         pendingSunsToRemove.clear();
+
+        effects.addAll((pendingEffectsToAdd));
+        effects.removeAll(pendingEffectsToRemove);
+        pendingEffectsToAdd.clear();
+        pendingEffectsToRemove.clear();
     }
 
     public int getCurrentTick() {
@@ -420,5 +430,19 @@ public class GameContext implements TickAware {
 
     public LawnMower[] getLawnMowers(){
         return lawnMowers;
+    }
+
+    public List<Effect> getEffects(){
+        return effects;
+    }
+
+    public void addEffect(Effect effect){
+        pendingEffectsToAdd.add(effect);
+        engine.getToAdd().add(effect);
+    }
+
+    public void removeEffect(Effect effect){
+        pendingEffectsToRemove.add(effect);
+        engine.getToRemove().add(effect);
     }
 }

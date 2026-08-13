@@ -3,6 +3,7 @@ package com.pvz.models.entities.plants.actions.explosive.potato_mine;
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
@@ -10,6 +11,7 @@ import com.pvz.models.entities.plants.config.explosive.PotatoMineConfig;
 import com.pvz.models.entities.plants.potato_mine.PotatoMine;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
+import com.pvz.models.games.map.GameMap;
 
 public class PotatoMineReadyAction extends PlantAction {
     PotatoMineConfig config;
@@ -46,11 +48,10 @@ public class PotatoMineReadyAction extends PlantAction {
                     nearestDistance=distance;
                 }
             }
-
             if (target!=null){
                 PamAnimationConfig pamAnimationConfig = plant.getSheet().pamAnimationConfig;
                 plant.changeState(new PotatoMineExplosionAction(pamAnimationConfig.pamFilePath,
-                    config.explosionClip,config.explosionTime,config.explosionType));
+                    config.explosionClip,config.explosionTime,config.explosionType,config.explosionIntensity,target));
             }
         }
     }
