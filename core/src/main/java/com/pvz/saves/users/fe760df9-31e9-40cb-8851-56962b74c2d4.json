@@ -17,7 +17,7 @@
       "unlockedPlants": [
         {
           "Type": "Peashooter",
-          "level": 1,
+          "level": 3,
           "seed": 0,
           "isBoosted": false
         },
@@ -35,7 +35,7 @@
         },
         {
           "Type": "Sunflower",
-          "level": 1,
+          "level": 3,
           "seed": 0,
           "isBoosted": false
         },
@@ -59,7 +59,7 @@
         },
         {
           "Type": "TwinSunflower",
-          "level": 1,
+          "level": 2,
           "seed": 0,
           "isBoosted": false
         },
@@ -96,9 +96,9 @@
         "EXPLORER"
       ],
       "seedPackets": {
-        "TwinSunflower": 10,
-        "Peashooter": 20,
-        "Sunflower": 20
+        "TwinSunflower": 5,
+        "Peashooter": 5,
+        "Sunflower": 5
       }
     },
     "news": {
@@ -125,7 +125,7 @@
         },
         {
           "message": "New Zombie Encountered: EXPLORER!",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -171,8 +171,8 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": "Peashooter",
-    "dailyOfferDate": "2026-08-13",
+    "dailyOfferPlantType": "Enlightenmint",
+    "dailyOfferDate": "2026-08-14",
     "dailyOfferPurchased": false
   },
   "setting": {
@@ -228,7 +228,12 @@
         "x": 4,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-14T03:16:30.871656300",
+          "growthHours": 2
+        }
       },
       {
         "x": 5,
@@ -246,13 +251,23 @@
         "x": 2,
         "y": 2,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "Sunflower",
+          "plantedTime": "2026-08-14T03:16:39.302384500",
+          "growthHours": 8
+        }
       },
       {
         "x": 3,
         "y": 2,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "PotatoMine",
+          "plantedTime": "2026-08-14T03:16:33.536262700",
+          "growthHours": 8
+        }
       },
       {
         "x": 4,
@@ -282,7 +297,12 @@
         "x": 3,
         "y": 3,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "Peashooter",
+          "plantedTime": "2026-08-14T03:16:35.866992100",
+          "growthHours": 8
+        }
       },
       {
         "x": 4,
@@ -1246,7 +1266,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786654126387
+    "lastDailyReset": 1786665210222
   },
   "questLogRefreshed": true
 }

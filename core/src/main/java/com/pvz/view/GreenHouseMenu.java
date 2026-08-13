@@ -82,7 +82,7 @@ public class GreenHouseMenu extends ScreenAdapter {
 
     /** How big the plant's animation area is inside the pot, as a fraction of {@link #CELL_SIZE}.
      *  Raise it to make the plant bigger in the pot, lower it to shrink it. */
-    private static final float PLANT_ART_SIZE_FRACTION = 0.9f;
+    private static final float PLANT_ART_SIZE_FRACTION = 0.8f;
     /** Extra multiplier on top of {@link #PLANT_ART_SIZE_FRACTION} for the water-pouring PAM.
      *  Raise it to make the water-pouring animation bigger over the pot, lower it to shrink it. */
     private static final float WATER_POUR_SIZE_FRACTION = 3f;
@@ -93,7 +93,7 @@ public class GreenHouseMenu extends ScreenAdapter {
     /** Extra px the plant is shifted RIGHT from its normal position inside the pot. Positive = right,
      *  negative = left. */
 
-    private static final float PLANT_ART_SHIFT_X = 20f;
+    private static final float PLANT_ART_SHIFT_X = 4f;
 
     /** Grow-now dialog frame: total width, and the padding between the content and the
      *  decorative border so the buttons/text sit comfortably inside the cadre. */
