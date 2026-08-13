@@ -60,7 +60,7 @@ public abstract class Entity implements TickAware {
      * centered on the current position. Call once after construction.
      */
     public void setHitbox(float width, float height) {
-        hitbox = new Hitbox(this, width, height);
+        hitbox = new Hitbox(this, position.x, position.y, width, height);
     }
 
     /**

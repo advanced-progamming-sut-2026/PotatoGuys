@@ -20,7 +20,7 @@ public class LawnMower extends Entity {
     public LawnMower(GameContext ctx, int lane){
         position.set(GameController.colToWorldX(-1), GameController.laneToWorldY(lane));
         velocity.set(VELOCITY, 0f);
-        setHitbox(new Hitbox(this, 60f, 80f) {
+        setHitbox(new Hitbox(this, position.x, position.y, 60f, 80f) {
             @Override
             public void onCollision(Hitbox onHit) {
                 if (onHit.getOwner() instanceof Zombie zombie && !zombie.isDead()) {

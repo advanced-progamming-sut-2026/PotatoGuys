@@ -32,10 +32,18 @@ public class Hitbox {
     private final Entity owner;
     private final Rectangle rectangle;
 
-    public Hitbox(Entity owner, float width, float height) {
+    /**
+     * @param owner   the entity that owns this hitbox; may be {@code null}
+     *                (position comes from the caller, not from the owner)
+     * @param x       center x in world coordinates
+     * @param y       center y in world coordinates
+     * @param width   hitbox width
+     * @param height  hitbox height
+     */
+    public Hitbox(Entity owner, float x, float y, float width, float height) {
         this.owner = owner;
-        this.rectangle = new Rectangle(owner.getPosition().x, owner.getPosition().y, width, height);
-        centerOn(owner.getPosition());
+        this.rectangle = new Rectangle(x - width / 2f, y - height / 2f, width, height);
+        centerOn(new Vector2(x, y));
     }
 
     /** Re-centers this hitbox on the given world position (keeps width/height). */

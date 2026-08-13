@@ -101,7 +101,7 @@ public class Zombie extends Entity {
         this.eatDpsPerTick = scaled[1] * diffFactor / TICKS_PER_SECOND;
         this.speedPerTick  = sheet.getSpeed() / TICKS_PER_SECOND;
 
-        setHitbox(new Hitbox(this, 48f, 80f) {
+        setHitbox(new Hitbox(this, position.x, position.y, 48f, 80f) {
             @Override
             public void onCollision(Hitbox onHit) {
                 if (dead) {

@@ -59,7 +59,7 @@ public class Projectile extends Entity {
         this.velocity.set(velX, velY);
         this.damage = damage;
 
-        setHitbox(new Hitbox(this, 28f, 28f) {
+        setHitbox(new Hitbox(this, position.x, position.y, 28f, 28f) {
             @Override
             public void onCollision(Hitbox onHit) {
                 if (isDead) {
