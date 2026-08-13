@@ -18,8 +18,8 @@ public enum ProjectileType {
 
     // --- New for the projectile State Pattern pass ---
     PEPPER_BALL("768/FULL/EFFECTS/PEPPERPULT_PROJECTILE/PEPPERPULT_PROJECTILE.PAM", "animation"),   // Pepper-pult: lobbed, area fire effect
-    MELON("768/INITIAL/EFFECTS/T_MELON_PROJECTILE/T_MELON_PROJECTILE.PAM", "animation"),         // Melon-pult: lobbed, area effect
-    WINTER_MELON("768/FULL/EFFECTS/T_WINTERMELON_PROJECTILE/T_WINTERMELON_PROJECTILE.PAM", "animation"),  // Winter Melon-pult: lobbed, area effect + chill
+    MELON("768/INITIAL/EFFECTS/T_MELON_PROJECTILE/T_MELON_PROJECTILE.PAM", "animation" , 0.45f),         // Melon-pult: lobbed, area effect
+    WINTER_MELON("768/FULL/EFFECTS/T_WINTERMELON_PROJECTILE/T_WINTERMELON_PROJECTILE.PAM", "animation" , 0.45f),  // Winter Melon-pult: lobbed, area effect + chill
     CABBAGE("768/INITIAL/EFFECTS/T_CABBAGEPULT_PROJECTILE/T_CABBAGEPULT_PROJECTILE.PAM", "animation", 0.45f),  // Cabbage-pult: lobbed, single target (scaled down, the PAM art is very large)
     KERNEL("768/INITIAL/EFFECTS/T_KERNALPULT_PROJECTILE/T_KERNALPULT_PROJECTILE.PAM", "animation"),  // Kernel-pult: lobbed kernel, single target
     BUTTER("768/INITIAL/EFFECTS/SPLAT_KERNALPULT_BUTTER/SPLAT_KERNALPULT_BUTTER.PAM", "animation");  // Kernel-pult butter: lobbed, stuns target

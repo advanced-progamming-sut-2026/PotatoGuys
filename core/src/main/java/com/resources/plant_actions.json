@@ -2382,8 +2382,8 @@
           "damage": 40.0,
           "targets": 1,
           "positionOffset": {
-            "x": 30,
-            "y": 20
+            "x": -10,
+            "y": 40
           },
           "delaySeconds": 0.6
         }
@@ -2443,8 +2443,8 @@
           "damage": 20.0,
           "targets": 1,
           "positionOffset": {
-            "x": 20,
-            "y": 20
+            "x": 0,
+            "y": 40
           },
           "delaySeconds": 0.6,
           "chance": 0.8
@@ -2454,8 +2454,8 @@
           "damage": 40.0,
           "targets": 1,
           "positionOffset": {
-            "x": 20,
-            "y": 20
+            "x": 0,
+            "y": 40
           },
           "delaySeconds": 0.6,
           "chance": 0.2
@@ -2507,8 +2507,8 @@
           "damage": 80.0,
           "targets": 1,
           "positionOffset": {
-            "x": 30,
-            "y": 20
+            "x": -10,
+            "y": 40
           },
           "delaySeconds": 0.6
         }
@@ -2559,10 +2559,10 @@
           "damage": 80.0,
           "targets": 1,
           "positionOffset": {
-            "x": 30,
-            "y": 20
+            "x": 0,
+            "y": 40
           },
-          "delaySeconds": 0.6
+          "delaySeconds": 0.7
         }
       ]
     },
@@ -2577,7 +2577,7 @@
           "allLanes": true,
           "positionOffset": {
             "x": 50,
-            "y": 20
+            "y": 40
           },
           "delaySeconds": 0.0
         }
@@ -2611,10 +2611,10 @@
           "damage": 50.0,
           "targets": 1,
           "positionOffset": {
-            "x": 30,
-            "y": 20
+            "x": 0,
+            "y": 40
           },
-          "delaySeconds": 0.6
+          "delaySeconds": 0.5
         }
       ]
     },

@@ -10,8 +10,8 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 2150,
-    "diamonds": 163,
+    "coins": 5700,
+    "diamonds": 142,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -61,13 +61,13 @@
           "Type": "SnowPea",
           "level": 1,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "CherryBomb",
           "level": 1,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "Wallnut",
@@ -144,15 +144,15 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": "GraveBuster",
-    "dailyOfferDate": "2026-08-12",
+    "dailyOfferPlantType": "Peashooter",
+    "dailyOfferDate": "2026-08-13",
     "dailyOfferPurchased": false
   },
   "setting": {
     "difficulty": 3,
     "gameSpeed": 2,
     "showGrid": false,
-    "debugMode": false,
+    "debugMode": true,
     "brightness": 0.98999995,
     "musicVolume": 0.71,
     "sfxVolume": 0.7,
@@ -176,7 +176,7 @@
         "greenHousePlant": {
           "kind": "mariGold",
           "plantType": null,
-          "plantedTime": "2026-08-12T20:12:28.256135700",
+          "plantedTime": "2026-08-13T11:01:38.191169",
           "growthHours": 2
         }
       },
@@ -187,7 +187,7 @@
         "greenHousePlant": {
           "kind": "mariGold",
           "plantType": null,
-          "plantedTime": "2026-08-12T20:12:31.296163800",
+          "plantedTime": "2026-08-13T09:02:54.477890",
           "growthHours": 2
         }
       },
@@ -195,23 +195,13 @@
         "x": 3,
         "y": 1,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-12T23:11:22.766364200",
-          "growthHours": 2
-        }
+        "greenHousePlant": null
       },
       {
         "x": 4,
         "y": 1,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-12T23:05:50.245670600",
-          "growthHours": 2
-        }
+        "greenHousePlant": null
       },
       {
         "x": 5,
@@ -229,12 +219,7 @@
         "x": 2,
         "y": 2,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-12T20:12:30.195969200",
-          "growthHours": 2
-        }
+        "greenHousePlant": null
       },
       {
         "x": 3,
@@ -1234,7 +1219,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786601645046
+    "lastDailyReset": 1786606265535
   },
   "questLogRefreshed": true
 }
