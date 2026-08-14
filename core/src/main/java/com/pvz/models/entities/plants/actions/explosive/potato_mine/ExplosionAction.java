@@ -4,9 +4,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.effects.Explosion;
+import com.pvz.models.entities.effects.JalapenoFire;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
+import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.tile.Tile;
@@ -45,7 +47,14 @@ public class ExplosionAction extends PlantAction {
     public void update(Plant plant, GameContext ctx, float dt) {
         super.update(plant, ctx, dt);
         if (stateTime>=explosionDuration){
-            ctx.addEffect(new Explosion(ctx,type,intensity,plant.getPosition()));
+            if (plant.getType()== PlantType.Jalapeno){
+                for (int i = 0; i < ctx.getMap().getColumns(); i++) {
+                    Vector2 pos=new Vector2(GameController.colToWorldX(i),GameController.laneToWorldY(plant.getLane()));
+                    ctx.addEffect(new JalapenoFire(ctx,pos));
+                }
+            } else {
+                ctx.addEffect(new Explosion(ctx, plant.getPosition(), type, intensity));
+            }
             if (target!=null) {
                 target.takeDamage(damage);
             }

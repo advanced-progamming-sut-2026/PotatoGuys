@@ -55,7 +55,7 @@ public class ExplosiveAction extends PlantAction {
                     }
                 } else{
                     for (int i = 0; i < ctx.getMap().getColumns(); i++) {
-                        Tile tile = ctx.getMap().getTileAt(i, plant.getCol());
+                        Tile tile = ctx.getMap().getTileAt(i, plant.getLane());
                         if (tile != null) targetTiles.add(tile);
                     }
                 }

@@ -1214,7 +1214,7 @@
     "sunCost": 150,
     "baseHp": 300.0,
     "actionIntervalSeconds": 12.0,
-    "rechargeSeconds": 25.0,
+    "rechargeSeconds": 35.0,
     "attackConfig": {
       "class": "ExplosiveConfig",
       "plantTime": 0.0,
@@ -1237,6 +1237,43 @@
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/CHERRYBOMB/CHERRYBOMB.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
+  },
+  {
+    "id": 38,
+    "name": "Jalapeno",
+    "type": "Jalapeno",
+    "category": "EXPLOSIVE",
+    "sunCost": 125,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 12.0,
+    "rechargeSeconds": 35.0,
+    "attackConfig": {
+      "class": "ExplosiveConfig",
+      "plantTime": 0.0,
+      "idleTime": 0.67,
+      "recoverTime": 0.0,
+      "explosionTime": 0.0,
+      "baseDamage": 1800.0,
+      "idleClip": "attack",
+      "explosionClip": "attack",
+      "explosionType": "PRIMAL_POTATO_MINE"
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/JALAPENO/JALAPENO.PAM",
       "idleLabel": "idle",
       "animSpeed": 1.0,
       "actionTriggerFrame": 8

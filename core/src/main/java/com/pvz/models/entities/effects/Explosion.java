@@ -17,15 +17,13 @@ public class Explosion extends Effect{
 
     ExplosionType type;
     ExplosionIntensity intensity;
-    Vector2 pos;
     String pamPath;
     String clip;
     float clipDuration;
-    public Explosion(GameContext ctx, ExplosionType type, ExplosionIntensity intensity, Vector2 pos){
-        super(ctx);
+    public Explosion(GameContext ctx,Vector2 pos, ExplosionType type, ExplosionIntensity intensity){
+        super(ctx,pos);
         this.type=type;
         this.intensity=intensity;
-        this.pos=new Vector2(pos);
         switch (type){
             case POTATO_MINE -> pamPath=POTATO_MINE_EXPLOSION_PAM_PATH;
             case PRIMAL_POTATO_MINE -> pamPath=PRIMAL_POTATO_MINE_EXPLOSION_PAM_PATH;
