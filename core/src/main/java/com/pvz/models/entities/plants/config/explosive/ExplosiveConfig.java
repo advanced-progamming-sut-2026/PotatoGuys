@@ -9,7 +9,9 @@ public class ExplosiveConfig extends PlantActionConfig {
     public float idleTime=15f;
     public float recoverTime=0.82f;
     public float explosionTime=0.67f;
+    public float damageDealTime=0.67f;
     public float baseDamage=1800f;
+    public String plantClip="plant";
     public String idleClip="plant_idle";
     public String recoverClip="recover";
     public String readyClip="idle2";

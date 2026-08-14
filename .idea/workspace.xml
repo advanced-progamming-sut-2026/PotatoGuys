@@ -6,9 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="conflict">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/ExplosionAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/ExplosionAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/ExplosiveAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/ExplosiveAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/PotatoMineReadyAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/PotatoMineReadyAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/config/explosive/ExplosiveConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/config/explosive/ExplosiveConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/CollectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/CollectionMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/resources/plant_actions.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/resources/plant_actions.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

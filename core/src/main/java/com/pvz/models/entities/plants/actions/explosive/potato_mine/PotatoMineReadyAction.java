@@ -61,9 +61,7 @@ public class PotatoMineReadyAction extends PlantAction {
                         }
                     }
                 }
-                plant.changeState(new ExplosionAction(config.explosionClip,
-                    config.explosionTime,config.explosionType,config.explosionIntensity,
-                    target,targetTiles, config.baseDamage));
+                plant.changeState(new ExplosionAction(config, target, targetTiles));
             }
         }
     }

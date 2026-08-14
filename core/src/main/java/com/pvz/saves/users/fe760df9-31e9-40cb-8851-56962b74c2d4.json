@@ -10,7 +10,7 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 6250,
+    "coins": 6350,
     "diamonds": 146,
     "plantFood": 1,
     "collection": {
@@ -29,6 +29,12 @@
         },
         {
           "Type": "PrimalPotatoMine",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Doomshroom",
           "level": 1,
           "seed": 0,
           "isBoosted": false
@@ -67,7 +73,7 @@
           "Type": "Jalapeno",
           "level": 1,
           "seed": 0,
-          "isBoosted": true
+          "isBoosted": false
         },
         {
           "Type": "SnowPea",
@@ -79,7 +85,7 @@
           "Type": "CherryBomb",
           "level": 1,
           "seed": 0,
-          "isBoosted": true
+          "isBoosted": false
         },
         {
           "Type": "Wallnut",
@@ -290,7 +296,7 @@
       {
         "x": 2,
         "y": 3,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -325,7 +331,7 @@
       {
         "x": 2,
         "y": 4,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -1266,7 +1272,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786665210222
+    "lastDailyReset": 1786680469421
   },
   "questLogRefreshed": true
 }

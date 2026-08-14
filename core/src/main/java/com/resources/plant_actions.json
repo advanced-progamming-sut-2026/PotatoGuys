@@ -1153,7 +1153,9 @@
     "rechargeSeconds": 25.0,
     "attackConfig": {
       "class": "ExplosiveConfig",
-      "label": "plant_idle"
+      "label": "plant_idle",
+      "damageDealTime": 0.67,
+      "idleClip": "plant_idle"
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
@@ -1166,7 +1168,7 @@
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM",
-      "idleLabel": "plant",
+      "idleLabel": "idle2",
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
@@ -1186,7 +1188,10 @@
       "label": "plant_idle",
       "idleTime": 5.0,
       "baseDamage": 2400.0,
+      "plantClip": "plant",
+      "idleClip": "plant_idle",
       "readyClip": "idle",
+      "damageDealTime": 0.67,
       "explosionType": "PRIMAL_POTATO_MINE"
     },
     "feedConfig": {
@@ -1200,7 +1205,7 @@
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM",
-      "idleLabel": "plant",
+      "idleLabel": "idle",
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
@@ -1217,12 +1222,14 @@
     "rechargeSeconds": 35.0,
     "attackConfig": {
       "class": "ExplosiveConfig",
-      "plantTime": 0.0,
-      "idleTime": 0.7,
+      "plantTime": 0.7,
+      "idleTime": 0.0,
       "recoverTime": 0.0,
       "explosionTime": 0.0,
+      "damageDealTime": 0.0,
       "baseDamage": 1800.0,
-      "idleClip": "attack",
+      "plantClip": "attack",
+      "idleClip": "idle",
       "explosionClip": "attack",
       "explosionType": "PRIMAL_POTATO_MINE"
     },
@@ -1254,12 +1261,14 @@
     "rechargeSeconds": 35.0,
     "attackConfig": {
       "class": "ExplosiveConfig",
-      "plantTime": 0.0,
-      "idleTime": 0.67,
+      "plantTime": 0.67,
+      "idleTime": 0.0,
       "recoverTime": 0.0,
       "explosionTime": 0.0,
+      "damageDealTime": 0.0,
       "baseDamage": 1800.0,
-      "idleClip": "attack",
+      "plantClip": "attack",
+      "idleClip": "idle",
       "explosionClip": "attack",
       "explosionType": "PRIMAL_POTATO_MINE"
     },
@@ -1275,6 +1284,45 @@
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/JALAPENO/JALAPENO.PAM",
       "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
+  },
+  {
+    "id": 39,
+    "name": "Doom-Shroom",
+    "type": "Doomshroom",
+    "category": "EXPLOSIVE",
+    "sunCost": 125,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 12.0,
+    "rechargeSeconds": 15.0,
+    "attackConfig": {
+      "class": "ExplosiveConfig",
+      "plantTime": 2.0,
+      "idleTime": 0.0,
+      "recoverTime": 0.0,
+      "explosionTime": 3.30,
+      "damageDealTime": 0.8,
+      "baseDamage": 1800.0,
+      "plantClip": "stage2_transform",
+      "idleClip": "stage3_idle2",
+      "explosionClip": "stage3_explode",
+      "explosionType": "PRIMAL_POTATO_MINE"
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
+        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
+      ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/DOOMSHROOM/DOOMSHROOM.PAM",
+      "idleLabel": "stage3_idle2",
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
