@@ -12,6 +12,7 @@ public class ExplosiveConfig extends PlantActionConfig {
     public float damageDealTime=0.67f;
     public float effectDuration=2f;
     public float baseDamage=1800f;
+    public float radarRangeCoefficient=1;
     public String plantClip="plant";
     public String idleClip="plant_idle";
     public String recoverClip="recover";

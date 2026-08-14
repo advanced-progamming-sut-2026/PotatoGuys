@@ -29,7 +29,7 @@ public abstract class ZombieState {
 
     protected final ZombieSkillConfig config;
 
-    protected ZombieState(ZombieSkillConfig config) {
+    public ZombieState(ZombieSkillConfig config) {
         this.config = config;
     }
 
@@ -98,5 +98,9 @@ public abstract class ZombieState {
 
     protected float getFallbackHoldSeconds() {
         return config != null && config.durationSeconds > 0f ? config.durationSeconds : 1f;
+    }
+
+    public float getStateTime(){
+        return stateTime;
     }
 }

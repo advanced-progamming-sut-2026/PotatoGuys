@@ -21,10 +21,7 @@ import com.pvz.models.entities.zombies.data.ScaledProp;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
 import com.pvz.models.entities.zombies.effects.EffectType;
 import com.pvz.models.entities.zombies.effects.StatusEffect;
-import com.pvz.models.entities.zombies.fsm.DeadState;
-import com.pvz.models.entities.zombies.fsm.EatState;
-import com.pvz.models.entities.zombies.fsm.WalkState;
-import com.pvz.models.entities.zombies.fsm.ZombieState;
+import com.pvz.models.entities.zombies.fsm.*;
 import com.pvz.models.entities.zombies.skills.ExplorerTorchSkill;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.behaviors.TileBehavior;
@@ -136,18 +133,8 @@ public class Zombie extends Entity {
         stateTime += dt;
         if (dead) return;
 
-        if (frozen){
-            if (frozenDuration>0){
-                frozenDuration-=dt;
-                return;
-            } else {
-                frozenDuration=0;
-                frozen=false;
-            }
-        }
-
         updateStatusEffects(dt);
-        if (isParalysed()) return;
+        //if (isParalysed()) return;
         ZombieState next = currentState.update(this, context,dt);
         if (next != currentState) {
             currentState.onExit(this, context);
@@ -178,6 +165,12 @@ public class Zombie extends Entity {
         return currentState.draw(this, context);
     }
 
+    public void changeState(ZombieState state){
+        if (currentState!=null) currentState.onExit(this,context);
+        this.currentState=state;
+        currentState.onExit(this,context);
+    }
+
     /**
      * Builds the {@link FrameConfig} for the given clip label from the zombie's
      * config-driven animation (pam path + scale), falling back to the classic
@@ -202,7 +195,7 @@ public class Zombie extends Entity {
 
     /** Switches to {@link EatState} targeting {@code plant} if not already eating. */
     public void startEating(Plant plant) {
-        if (dead || currentState instanceof EatState) {
+        if (dead || currentState instanceof EatState || currentState instanceof FrozenState) {
             return;
         }
         currentState.onExit(this, context);
@@ -235,8 +228,10 @@ public class Zombie extends Entity {
     }
 
     public void setFrozen(float duration){
-        this.frozen=true;
-        this.frozenDuration=duration;
+        FrameConfig frameConfig = currentState.draw(this,context);
+        currentState=new FrozenState(currentState,currentState.getStateTime(),
+            duration,frameConfig.pamPath,frameConfig.label,frameConfig.partsVisibility);
+        currentState.onEnter(this,context);
     }
 
     /** Convenience: non-poisonous damage. */
