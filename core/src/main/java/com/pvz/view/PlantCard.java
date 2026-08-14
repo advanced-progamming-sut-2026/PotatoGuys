@@ -29,6 +29,7 @@ public class PlantCard extends Button {
     private final Image dimLayer;
     private final Image lockImage;
     private final ProgressBar xpBar;
+    private final Label costLabel;
     private final Label levelLabel;
     private final Label packetsLabel;
     private final Table levelLayer;
@@ -51,8 +52,8 @@ public class PlantCard extends Button {
 
         dimLayer = new Image(skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.55f)));
 
-        Label cost = new Label(String.valueOf(data.sunCost()), skin, "medium");
-        cost.setColor(Color.WHITE);
+        costLabel = new Label(String.valueOf(data.sunCost()), skin, "medium");
+        costLabel.setColor(Color.WHITE);
 
         xpBar = new ProgressBar(0f, 1f, 0.01f, false, skin, "xp_green");
         xpBar.setValue(data.xpFraction());
@@ -88,7 +89,7 @@ public class PlantCard extends Button {
 
         // ── bottom: info row over a full-width seed-packet progress bar ─────────
         Table infoRow = new Table();
-        infoRow.add(cost).left();
+        infoRow.add(costLabel).left();
         infoRow.add().expandX();
         infoRow.add(packetsLabel).right();
 
@@ -120,9 +121,10 @@ public class PlantCard extends Button {
         return style;
     }
 
-    /** Refreshes lock dimming, lock icon, level and seed-packet progress from the save. */
+    /** Refreshes lock dimming, lock icon, sun cost, level and seed-packet progress from the save. */
     public void update() {
         boolean unlocked = data.isUnlocked();
+        costLabel.setText(String.valueOf(data.sunCost()));
         dimLayer.setVisible(!unlocked);
         lockImage.setVisible(!unlocked);
         levelLayer.setVisible(unlocked); // avoid overlapping the top-right lock icon when locked

@@ -22,6 +22,7 @@ import com.pvz.models.entities.plants.data.DamageProfile;
 import com.pvz.models.entities.plants.data.LevelUpgrade;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
+import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -202,35 +203,37 @@ public final class PlantData {
     // ── stats ─────────────────────────────────────────────────────────────────
 
     public int sunCost() {
-        return sheet.getSunCost();
+        return PlantStatResolver.resolve(sheet, getLevel()).getSunCost();
     }
 
     public float toughness() {
-        return sheet.getBaseHp();
+        return PlantStatResolver.resolve(sheet, getLevel()).getMaxHp();
     }
 
     public Float rechargeSeconds() {
-        return sheet.getRechargeSeconds();
+        return PlantStatResolver.resolve(sheet, getLevel()).getRechargeSeconds();
     }
 
     public String damageExpression() {
         DamageProfile damage = sheet.getDamage();
         if (damage == null) return "—";
+        float scaledDamage = PlantStatResolver.resolve(sheet, getLevel()).getDamage();
+        float delta = scaledDamage - damage.getValue();
         switch (damage.getKind()) {
             case NONE: return "—";
-            case FIXED: return String.valueOf((int) damage.getValue());
-            case MULTI_SHOT: return ((int) damage.getValue()) + " × " + damage.getCount();
+            case FIXED: return String.valueOf((int) scaledDamage);
+            case MULTI_SHOT: return ((int) scaledDamage) + " × " + damage.getCount();
             case STAGED: {
                 float[] stages = damage.getStages();
-                if (stages.length == 0) return String.valueOf((int) damage.getValue());
+                if (stages.length == 0) return String.valueOf((int) scaledDamage);
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < stages.length; i++) {
                     if (i > 0) sb.append(" / ");
-                    sb.append((int) stages[i]);
+                    sb.append((int) (stages[i] + delta));
                 }
                 return sb.toString();
             }
-            case FIRE: return String.valueOf((int) damage.getValue()) + " fire";
+            case FIRE: return String.valueOf((int) scaledDamage) + " fire";
             case INSTA_KILL: return "Instant";
             default: return "—";
         }
