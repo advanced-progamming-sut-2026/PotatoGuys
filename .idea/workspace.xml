@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="added zombies collection tab pngs and also updated the PlantCardDetails">
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" afterDir="false" />
-    </list>
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="added zombies collection tab pngs and also updated the PlantCardDetails" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -149,11 +147,12 @@
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\shop" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.plantsvszombies2 [:lwjgl3:run]">
+  <component name="RunManager" selected="Application.Lwjgl3Launcher">
     <configuration name="Lwjgl3Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.pvz.lwjgl3.Lwjgl3Launcher" />
+      <module name="pvz2.lwjgl3.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.pvz.lwjgl3.*" />
@@ -233,8 +232,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.plantsvszombies2 [:lwjgl3:run]" />
         <item itemvalue="Application.Lwjgl3Launcher" />
+        <item itemvalue="Gradle.plantsvszombies2 [:lwjgl3:run]" />
         <item itemvalue="Application.ProjectMerger" />
         <item itemvalue="Gradle.plantsvszombies2" />
       </list>
@@ -269,6 +268,7 @@
       <workItem from="1786221623014" duration="5347000" />
       <workItem from="1786547194454" duration="4920000" />
       <workItem from="1786684833223" duration="3935000" />
+      <workItem from="1786734245290" duration="4783000" />
     </task>
     <task id="LOCAL-00001" summary="added Login and register and forgot password menu to the game">
       <option name="closed" value="true" />

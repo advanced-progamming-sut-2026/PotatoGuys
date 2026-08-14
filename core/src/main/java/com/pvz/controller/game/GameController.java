@@ -354,7 +354,9 @@ public class GameController {
         for (Zombie z: ctx.getZombies()){
             FrameConfig frameConfig = z.draw();
             if (frameConfig!=null){
+                batch.setColor(frameConfig.r,frameConfig.g,frameConfig.b,frameConfig.a);
                 drawFrame(frameConfig);
+                batch.setColor(1f,1f,1f,1f);
             }
         }
     }

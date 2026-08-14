@@ -1343,7 +1343,7 @@
       "idleTime": 0.0,
       "recoverTime": 0.0,
       "explosionTime": 1.47,
-      "damageDealTime": 0.9,
+      "damageDealTime": 0.8,
       "effectDuration": 5.0,
       "baseDamage": 0.0,
       "radarRangeCoefficient": 1.3,
