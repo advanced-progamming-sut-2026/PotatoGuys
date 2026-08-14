@@ -32,7 +32,11 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.pvz.PvZ2;
 import com.pvz.controller.CollectionController;
 import com.pvz.enums.GameAsset;
+import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.enums.PlantCategory;
+import com.pvz.models.entities.zombies.ZombieType;
+import com.pvz.models.user.Collection;
+import com.pvz.models.user.User;
 
 import pvz.skin.PvzSkin;
 
@@ -82,6 +86,7 @@ public class CollectionMenu extends ScreenAdapter {
     private final PvZ2 game;
     private final Screen previous;
     private final List<PlantCard> cards = new ArrayList<>();
+    private final List<ZombieCard> zombieCards = new ArrayList<>();
     private final CollectionController controller = new CollectionController();
 
     private Stage stage;
@@ -276,10 +281,7 @@ public class CollectionMenu extends ScreenAdapter {
         }
 
         if (tab == Tab.ZOMBIES) {
-            cardsGrid.clearChildren();
-            Label placeholder = new Label("Zombies collection is coming soon", PvzSkin.get(), "big");
-            placeholder.setColor(Color.WHITE);
-            cardsGrid.add(placeholder).pad(60f);
+            buildZombieGrid();
             refreshFilterBar();
             return;
         }
@@ -316,6 +318,38 @@ public class CollectionMenu extends ScreenAdapter {
         }
 
         refreshFilterBar();
+    }
+
+    private void buildZombieGrid() {
+        zombieCards.clear();
+        cardsGrid.clearChildren();
+
+        User user = AppContext.getInstance().getCurrentUser();
+        if (user == null) return;
+        Collection collection = user.getProfile().getCollection();
+
+        ButtonGroup<ZombieCard> group = new ButtonGroup<>();
+        group.setMaxCheckCount(1);
+        group.setMinCheckCount(0);
+
+        int column = 0;
+        for (ZombieType type : ZombieType.values()) {
+            boolean unlocked = collection.getUnlockedZombies().contains(type);
+            ZombieCard card = new ZombieCard(new ZombieCard.ViewData(type, unlocked));
+            zombieCards.add(card);
+            group.add(card);
+            card.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (!card.isDisabled()) openZombieDetails(card.getData());
+                }
+            });
+            cardsGrid.add(card).pad(8f);
+            if (++column == COLS) {
+                cardsGrid.row();
+                column = 0;
+            }
+        }
     }
 
     private void showTab(Tab tab) {
@@ -603,6 +637,17 @@ public class CollectionMenu extends ScreenAdapter {
             () -> closeDetails(),
             () -> tryPurchase(data),
             () -> tryUpgrade(data));
+        detailsOverlay.add(details).size(840f, 920f);
+    }
+
+    private void openZombieDetails(ZombieCard.ViewData data) {
+        if (detailsOverlay != null) return;
+        detailsOverlay = new Table();
+        detailsOverlay.setFillParent(true);
+        detailsOverlay.setBackground(PvzSkin.get().newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.45f)));
+        stage.addActor(detailsOverlay);
+
+        ZombieDetailsTable details = new ZombieDetailsTable(data, this::closeDetails);
         detailsOverlay.add(details).size(840f, 920f);
     }
 
