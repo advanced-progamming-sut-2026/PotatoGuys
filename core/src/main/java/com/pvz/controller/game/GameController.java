@@ -44,6 +44,7 @@ import com.pvz.models.user.MyPlant;
 import com.pvz.view.game.GameScreen;
 import com.pvz.view.game.GameUiModal;
 import com.pvz.view.game.PlantSelectModal;
+import com.pvz.view.PamActor;
 import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
@@ -353,10 +354,26 @@ public class GameController {
         for (Zombie z: ctx.getZombies()){
             FrameConfig frameConfig = z.draw();
             if (frameConfig!=null){
-                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+                drawFrame(frameConfig);
             }
+        }
+    }
+
+    /**
+     * Draws one animation frame, honouring the optional {@code partsVisibility}
+     * map (e.g. a zombie's armour damage layers). The normal {@code PamPlayer}
+     * draw has no visibility overload, so this falls back to the reflective
+     * visibility-aware draw (which keeps the requested scale).
+     */
+    private void drawFrame(FrameConfig frameConfig){
+        if (frameConfig.partsVisibility == null){
+            PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
+                frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
+                frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+        } else {
+            PamActor.drawWithVisibility(batch,frameConfig.pamPath,frameConfig.label,
+                frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
+                frameConfig.scale.x,frameConfig.looping,frameConfig.partsVisibility);
         }
     }
 

@@ -203,13 +203,25 @@ public final class ZombieCard extends Button {
         for (String alias : sheet.getArmorAliases()) {
             ArmorPropertySheet armor = ZombieRegistry.getInstance().getArmorSheet(alias);
             if (armor == null) continue;
-            String partName;
+            ArmorType type;
             try {
-                partName = ArmorType.fromString(armor.getArmorType()).pamPartName();
+                type = ArmorType.fromString(armor.getArmorType());
             } catch (IllegalArgumentException e) {
                 continue;
             }
-            if (partName != null) parts.put(partName, Boolean.TRUE);
+            // Show the intact layer, explicitly hiding the damaged layers
+            // (their parts may carry no hidden flag and would otherwise stack).
+            String[] layers = type.pamLayers();
+            if (layers == null) continue;
+            for (int i = 0; i < layers.length; i++) {
+                parts.put(layers[i], i == 0);
+            }
+            // Reveal the container part (ARMOR-flagged name culls its children
+            // unless force-shown) and pin the always-on / critical-only extras.
+            String container = type.pamContainerName();
+            if (container != null) parts.put(container, Boolean.TRUE);
+            for (String alive : type.pamAliveParts()) parts.put(alive, Boolean.TRUE);
+            for (String crit : type.pamCriticalParts()) parts.put(crit, Boolean.FALSE);
         }
         return parts.isEmpty() ? null : parts;
     }

@@ -156,7 +156,14 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -191,7 +198,14 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -226,7 +240,14 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -261,7 +282,14 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -293,7 +321,14 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_FLAG/ZOMBIE_TUTORIAL_FLAG.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -326,7 +361,16 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_IMP/ZOMBIE_TUTORIAL_IMP.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles",
+          "land",
+          "fly"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -362,7 +406,17 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/TUTORIAL_GARGANTUAR/TUTORIAL_GARGANTUAR.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "smash_left",
+          "fire",
+          "cannon_fire",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -404,7 +458,17 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_MODERN_NEWSPAPER/ZOMBIE_MODERN_NEWSPAPER.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle_newspaper",
+          "walk_newspaper",
+          "walk",
+          "eat_newspaper",
+          "newspaper_defeat",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -436,7 +500,14 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -471,7 +542,14 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -506,7 +584,14 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -541,7 +626,14 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_BASIC/ZOMBIE_EGYPT_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -574,7 +666,17 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_RA/ZOMBIE_EGYPT_RA.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "power_up",
+          "power",
+          "power_down",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -614,7 +716,14 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EXPLORER/ZOMBIE_EXPLORER.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -654,7 +763,15 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_TOMBRAISER/ZOMBIE_EGYPT_TOMBRAISER.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "power",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -697,7 +814,17 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/EGYPT_GARGANTUAR/EGYPT_GARGANTUAR.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "smash_left",
+          "fire",
+          "cannon_fire",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -737,7 +864,16 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_IMP/ZOMBIE_EGYPT_IMP.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles",
+          "land",
+          "fly"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -769,7 +905,14 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -804,7 +947,14 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -839,7 +989,14 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -874,7 +1031,15 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_HUNTER/ZOMBIE_ICEAGE_HUNTER.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "throw",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -915,7 +1080,15 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_TROGLOBITE/ZOMBIE_ICEAGE_TROGLOBITE.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "push",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -947,7 +1120,18 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_DODORIDER/ZOMBIE_ICEAGE_DODORIDER.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "idle2",
+          "idle3",
+          "walk",
+          "eat",
+          "fly_start",
+          "fly_loop",
+          "fly_end",
+          "die"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -983,7 +1167,17 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_GARGANTUAR/ZOMBIE_ICEAGE_GARGANTUAR.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "smash_left",
+          "fire",
+          "cannon_fire",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1023,7 +1217,16 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_IMP/ZOMBIE_ICEAGE_IMP.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles",
+          "land",
+          "fly"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1055,7 +1258,14 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_BASIC/ZOMBIE_BEACH_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1090,7 +1300,14 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_BASIC/ZOMBIE_BEACH_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1125,7 +1342,14 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_BASIC/ZOMBIE_BEACH_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1157,7 +1381,14 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_SNORKELER/ZOMBIE_BEACH_SNORKELER.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1189,7 +1420,18 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_FISHERMAN/ZOMBIE_BEACH_FISHERMAN.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "intro",
+          "idle",
+          "cast",
+          "cast_loop",
+          "reel",
+          "toss",
+          "die",
+          "die2",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1221,7 +1463,19 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_OCTOPUS/ZOMBIE_BEACH_OCTOPUS.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "idle2",
+          "idle3",
+          "idle4",
+          "idle5",
+          "walk",
+          "toss",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1257,7 +1511,17 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/BEACH_GARGANTUAR/BEACH_GARGANTUAR.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "smash_left",
+          "fire",
+          "cannon_fire",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1297,7 +1561,16 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_IMP_MERMAID/ZOMBIE_BEACH_IMP_MERMAID.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles",
+          "land",
+          "fly"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1329,7 +1602,14 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC/ZOMBIE_DARK_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1364,7 +1644,14 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC/ZOMBIE_DARK_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1399,7 +1686,14 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC/ZOMBIE_DARK_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1435,7 +1729,14 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC/ZOMBIE_DARK_BASIC.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1470,7 +1771,14 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1502,7 +1810,15 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_WIZARD/ZOMBIE_DARK_WIZARD.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "sheep",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1539,7 +1855,18 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_JESTER/ZOMBIE_DARK_JESTER.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "spinup",
+          "spin",
+          "spindown",
+          "spin_walk",
+          "eat",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1571,7 +1898,15 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_KING/ZOMBIE_DARK_KING.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "intro",
+          "idle",
+          "idle2",
+          "special",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1607,7 +1942,17 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/DARK_GARGANTUAR/DARK_GARGANTUAR.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "smash_left",
+          "fire",
+          "cannon_fire",
+          "die",
+          "particles"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1647,7 +1992,17 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_IMP_DRAGON/ZOMBIE_DARK_IMP_DRAGON.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "eat",
+          "die",
+          "particles",
+          "land",
+          "fly",
+          "transition"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1679,7 +2034,32 @@
       "animationConfig": {
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_EGYPT_ZOMBOSS/ZOMBIE_EGYPT_ZOMBOSS.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "Pre_Intro",
+          "intro",
+          "idle",
+          "walk_forward",
+          "walk_backwards",
+          "walk_down",
+          "walk_up",
+          "jump_start",
+          "jump_mid",
+          "jump_land",
+          "stomp",
+          "zombie_portal_start",
+          "zombie_portal_loop",
+          "zombie_portal_end",
+          "missile_start",
+          "rocket_launch",
+          "die",
+          "die_idle",
+          "die_talk",
+          "die_exit",
+          "stun_start",
+          "stun_loop",
+          "stun_end"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1711,7 +2091,34 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_ZOMBOSS/ZOMBIE_PIRATE_ZOMBOSS.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "Pre_Intro",
+          "intro",
+          "idle",
+          "walk_forward",
+          "walk_backwards",
+          "walk_down",
+          "walk_up",
+          "jump_start",
+          "jump_mid",
+          "jump_land",
+          "stomp",
+          "zombie_portal_start",
+          "zombie_portal_loop",
+          "zombie_portal_end",
+          "missile_start",
+          "rocket_launch_start",
+          "rocket_launch_loop",
+          "rocket_launch_fire",
+          "die",
+          "die_idle",
+          "die_talk",
+          "die_exit",
+          "stun_start",
+          "stun_loop",
+          "stun_end"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1743,7 +2150,32 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_COWBOY_ZOMBOSS/ZOMBIE_COWBOY_ZOMBOSS.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "Pre_Intro",
+          "intro",
+          "idle",
+          "walk_forward",
+          "walk_backwards",
+          "walk_down",
+          "walk_up",
+          "jump_start",
+          "jump_mid",
+          "jump_land",
+          "stomp",
+          "zombie_portal_start",
+          "zombie_portal_loop",
+          "zombie_portal_end",
+          "missile_start",
+          "rocket_launch",
+          "die",
+          "die_idle",
+          "die_talk",
+          "die_exit",
+          "stun_start",
+          "stun_loop",
+          "stun_end"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1775,7 +2207,27 @@
       "animationConfig": {
         "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_ZOMBOSS/ZOMBIE_DARK_ZOMBOSS.PAM",
         "idleLabel": "idle",
-        "animSpeed": 1.0
+        "animSpeed": 1.0,
+        "availableClips": [
+          "intro",
+          "idle",
+          "fire_attack",
+          "fire_attack_idle",
+          "fire_attack_end",
+          "fire_bomb",
+          "fire_bomb_loop",
+          "fire_bomb_end",
+          "summoning",
+          "vulnerable",
+          "vulnerable_loop",
+          "vulnerable_end",
+          "stun_start",
+          "stun_loop",
+          "stun_end",
+          "die",
+          "die_talk",
+          "die_exit"
+        ]
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",

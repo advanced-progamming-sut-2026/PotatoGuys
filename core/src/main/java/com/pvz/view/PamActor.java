@@ -85,7 +85,8 @@ public final class PamActor extends Actor {
         float cy = getY() + getHeight() / 2f;
         batch.setColor(1f, 1f, 1f, parentAlpha);
         if (partVisibility != null) {
-            drawWithVisibility(batch, pamPath, clipLabel, stateTime, cx, cy, scale, partVisibility);
+            drawWithVisibility(batch, pamPath, clipLabel, stateTime, cx, cy, scale,
+                    true, partVisibility);
         } else {
             PvZ2.pamPlayer.draw(batch, pamPath, clipLabel, stateTime, cx, cy, scale, scale, true);
         }
@@ -97,9 +98,9 @@ public final class PamActor extends Actor {
      * {@code PamPlayer} visibility overloads only draw at unit scale, so this mirrors
      * them by invoking the same {@code drawInternal} the public API uses.
      */
-    private static void drawWithVisibility(Batch batch, String pamPath, String clipLabel,
-                                           float stateTime, float cx, float cy, float scale,
-                                           Map<String, Boolean> visibility) {
+    public static void drawWithVisibility(Batch batch, String pamPath, String clipLabel,
+                                          float stateTime, float cx, float cy, float scale,
+                                          boolean loop, Map<String, Boolean> visibility) {
         try {
             ClipRef clip = PvZ2.pamPlayer.getClip(pamPath, clipLabel);
             if (clip == null) return;
@@ -115,7 +116,7 @@ public final class PamActor extends Actor {
                     float.class, boolean.class, float.class, float.class,
                     float.class, float.class, Map.class, String.class);
             m.setAccessible(true);
-            m.invoke(PvZ2.pamPlayer, batch, ba, range, stateTime, true,
+            m.invoke(PvZ2.pamPlayer, batch, ba, range, stateTime, loop,
                     cx, cy, scale, scale, visibility, null);
         } catch (ReflectiveOperationException e) {
             PvZ2.pamPlayer.draw(batch, pamPath, clipLabel, stateTime, cx, cy, scale, scale, true);
