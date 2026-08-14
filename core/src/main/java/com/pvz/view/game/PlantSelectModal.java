@@ -47,7 +47,7 @@ public class PlantSelectModal extends Table {
     private static final int MAX_SELECTED = 7;
     private static final int SLOT_COUNT = 7;
 
-    // Matches Rey's PlantSlotsBar: small slot cells stacked in a plain column
+    // Matches PlantSlotsBar: small slot cells stacked in a plain column
     // (no ScrollPane) so all of them fit on screen at once.
     private static final float SLOT_WIDTH = 103.5f;
     private static final float SLOT_HEIGHT = 63f;
