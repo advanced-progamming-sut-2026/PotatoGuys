@@ -3,12 +3,12 @@ package com.pvz.models.entities.zombies;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
-import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
@@ -16,6 +16,7 @@ import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
+import com.pvz.models.entities.zombies.armor.ArmorType;
 import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
 import com.pvz.models.entities.zombies.data.ScaledProp;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
@@ -182,8 +183,95 @@ public class Zombie extends Entity {
                 ? anim.pamFilePath
                 : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
         float scale = (anim != null && anim.scale != null) ? anim.scale : 0.65f;
-        return new FrameConfig(pamPath, clipLabel, stateTime,
-                new Vector2(position.x, position.y), new Vector2(scale, scale), null, true);
+        return new FrameConfig(pamPath, resolveClipLabel(anim, newspaperClipLabel(clipLabel)), stateTime,
+                new Vector2(position.x, position.y), new Vector2(scale, scale),
+                buildPartsVisibility(), true);
+    }
+
+    /**
+     * Resolves the requested clip label to one that actually exists in the
+     * sheet. Not every sheet defines the classic clips (some bosses/fishermen
+     * play {@code intro}/{@code idle}/{@code special} instead of
+     * {@code walk}/{@code eat}), and requesting a missing clip makes the
+     * renderer throw. When the label is absent we fall back to {@code idle} and
+     * finally to the first clip the sheet provides.
+     *
+     * <p>Purely data-driven: the clip list comes from the config, never from a
+     * graphics call, so this runs unchanged on a headless server.
+     */
+    private String resolveClipLabel(ZombieAnimationConfig anim, String requested) {
+        List<String> clips = anim != null ? anim.availableClips : null;
+        if (clips == null || clips.isEmpty() || clips.contains(requested)) return requested;
+        for (String candidate : new String[] { "idle", "idle2", "default", "" }) {
+            if (candidate != null && clips.contains(candidate)) return candidate;
+        }
+        return clips.get(0);
+    }
+
+    /**
+     * While the newspaper armour is alive the sheet plays its dedicated
+     * {@code *_newspaper} clips (the newspaper parts exist only there). Once the
+     * armour is destroyed the zombie falls back to the base clips, which show
+     * it without the paper.
+     */
+    private String newspaperClipLabel(String clipLabel) {
+        if (!hasAliveArmor(ArmorType.NEWSPAPER)) return clipLabel;
+        switch (clipLabel) {
+            case "walk": return "walk_newspaper";
+            case "eat":  return "eat_newspaper";
+            case "idle": return "idle_newspaper";
+            default:     return clipLabel;
+        }
+    }
+
+    private boolean hasAliveArmor(ArmorType type) {
+        for (ArmorPiece armor : armors) {
+            if (!armor.isDestroyed() && armor.getType() == type) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Builds the PAM part-visibility map for this zombie's current armour state.
+     *
+     * <p>Every living armour piece contributes its three damage-layer part names
+     * (from the armour's {@code ArmorLayers} data): the layer matching the
+     * piece's current {@link ArmorPiece#getLayerIndex()} is forced visible
+     * ({@code true}) while the other layers are forced hidden ({@code false}),
+     * so the armour visually cracks as its health drops. Destroyed pieces
+     * contribute nothing, making them fall off the zombie entirely.
+     *
+     * <p>On top of the layer swap, {@link ArmorType#pamContainerName()} may add
+     * a nested container part to force visible (its name carries the ARMOR flag,
+     * so libPVZ would otherwise cull it together with its children), and the
+     * {@code pamAliveParts()}/{@code pamCriticalParts()} extras pin parts such
+     * as the newspaper zombie's hand (always) and flame (critical layer only).
+     *
+     * @return the visibility map, or {@code null} when there is no living armour
+     *         to display (basic zombies / fully destroyed armour)
+     */
+    private Map<String, Boolean> buildPartsVisibility() {
+        if (armors.isEmpty()) return null;
+        Map<String, Boolean> visibility = null;
+        for (ArmorPiece armor : armors) {
+            if (armor.isDestroyed()) continue;
+            String[] layers = armor.getType().pamLayers();
+            if (layers == null) continue;
+            if (visibility == null) visibility = new HashMap<>();
+            int layer = Math.min(armor.getLayerIndex(), layers.length - 1);
+            for (int i = 0; i < layers.length; i++) {
+                visibility.put(layers[i], i == layer);
+            }
+            // Some sheets nest the layer parts under a container part whose
+            // name carries the ARMOR flag; libPVZ culls flagged parts unless
+            // revealed, and culling the container hides its children too, so
+            // force the container visible together with the current layer.
+            String container = armor.getType().pamContainerName();
+            if (container != null) visibility.put(container, true);
+            for (String alive : armor.getType().pamAliveParts()) visibility.put(alive, true);
+            for (String crit : armor.getType().pamCriticalParts()) visibility.put(crit, layer == layers.length - 1);
+        }
+        return visibility;
     }
 
     @Override

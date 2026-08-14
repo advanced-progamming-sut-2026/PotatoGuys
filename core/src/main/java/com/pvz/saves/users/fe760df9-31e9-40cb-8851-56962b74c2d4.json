@@ -10,8 +10,8 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 6400,
-    "diamonds": 147,
+    "coins": 6600,
+    "diamonds": 153,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -105,7 +105,26 @@
         "CONEHEAD",
         "DODO",
         "RA",
-        "EXPLORER"
+        "EXPLORER",
+        "BUCKETHEAD",
+        "BRICKHEAD",
+        "KNIGHT",
+        "FLAG",
+        "IMP",
+        "GARGANTUAR",
+        "NEWSPAPER",
+        "MUMMY",
+        "MUMMY_CONE",
+        "MUMMY_BUCKET",
+        "MUMMY_BRICK",
+        "TOMB_RAISER",
+        "EGYPT_IMP",
+        "ICE_AGE",
+        "ICE_AGE_CONE",
+        "ICE_AGE_BUCKET",
+        "HUNTER",
+        "TROGLOBITE",
+        "ICE_AGE_IMP"
       ],
       "seedPackets": {
         "TwinSunflower": 5,
@@ -138,6 +157,82 @@
         {
           "message": "New Zombie Encountered: EXPLORER!",
           "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: BUCKETHEAD!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: BRICKHEAD!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: KNIGHT!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: FLAG!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: IMP!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: GARGANTUAR!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: NEWSPAPER!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: MUMMY!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: MUMMY_CONE!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: MUMMY_BUCKET!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: MUMMY_BRICK!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: TOMB_RAISER!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: EGYPT_IMP!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: ICE_AGE!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: ICE_AGE_CONE!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: ICE_AGE_BUCKET!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: HUNTER!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: TROGLOBITE!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: ICE_AGE_IMP!",
+          "unread": true
         }
       ]
     },
@@ -193,9 +288,9 @@
     "showGrid": false,
     "debugMode": true,
     "brightness": 0.98999995,
-    "musicVolume": 0.71,
+    "musicVolume": 0.24,
     "sfxVolume": 0.7,
-    "musicMuted": true,
+    "musicMuted": false,
     "sfxMuted": false
   },
   "score": {
@@ -284,7 +379,7 @@
       {
         "x": 4,
         "y": 2,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -296,7 +391,7 @@
       {
         "x": 1,
         "y": 3,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -1278,7 +1373,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786738976191
+    "lastDailyReset": 1786739107725
   },
   "questLogRefreshed": true
 }
