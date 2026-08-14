@@ -402,7 +402,7 @@
       "category": "ALL",
       "description": "زامبی با روزنامهٔ محافظ.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_MODERN_NEWSPAPER/ZOMBIE_MODERN_NEWSPAPER.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -767,7 +767,7 @@
       "category": "FROSTBITE",
       "description": "زامبی عصر یخبندان.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -802,7 +802,7 @@
       "category": "FROSTBITE",
       "description": "زامبی یخی با کلاه مخروطی.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -837,7 +837,7 @@
       "category": "FROSTBITE",
       "description": "زامبی یخی با سطل.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_BASIC/ZOMBIE_ICEAGE_BASIC.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -872,7 +872,7 @@
       "category": "FROSTBITE",
       "description": "شکارچی؛ گلولهٔ برفی پرتاب می‌کند.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_HUNTER/ZOMBIE_ICEAGE_HUNTER.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -913,7 +913,7 @@
       "category": "FROSTBITE",
       "description": "تروگلوبایت؛ با بلوک‌های یخ.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_TROGLOBITE/ZOMBIE_ICEAGE_TROGLOBITE.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -945,7 +945,7 @@
       "category": "FROSTBITE",
       "description": "دودو؛ از روی گیاهان پرواز می‌کند.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_DODORIDER/ZOMBIE_ICEAGE_DODORIDER.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -981,7 +981,7 @@
       "category": "FROSTBITE",
       "description": "غرغانتار عصر یخبندان.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/TUTORIAL_GARGANTUAR/TUTORIAL_GARGANTUAR.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_GARGANTUAR/ZOMBIE_ICEAGE_GARGANTUAR.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1021,7 +1021,7 @@
       "category": "FROSTBITE",
       "description": "امپ عصر یخبندان.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_IMP/ZOMBIE_TUTORIAL_IMP.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_ICEAGE_IMP/ZOMBIE_ICEAGE_IMP.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1053,7 +1053,7 @@
       "category": "BEACH",
       "description": "زامبی ساحلی.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_BASIC/ZOMBIE_BEACH_BASIC.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1088,7 +1088,7 @@
       "category": "BEACH",
       "description": "زامبی ساحلی با کلاه مخروطی.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_BASIC/ZOMBIE_BEACH_BASIC.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1123,7 +1123,7 @@
       "category": "BEACH",
       "description": "زامبی ساحلی با سطل.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_BASIC/ZOMBIE_BEACH_BASIC.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1155,7 +1155,7 @@
       "category": "BEACH",
       "description": "اسنورکل؛ زیر آب حرکت می‌کند.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_SNORKELER/ZOMBIE_BEACH_SNORKELER.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1187,7 +1187,7 @@
       "category": "BEACH",
       "description": "ماهیگیر؛ گیاهان را قلاب می‌کند.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_FISHERMAN/ZOMBIE_BEACH_FISHERMAN.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1219,7 +1219,7 @@
       "category": "BEACH",
       "description": "اختاپوس‌باز؛ ماهی‌گیر را خفه می‌کند.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_OCTOPUS/ZOMBIE_BEACH_OCTOPUS.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1255,7 +1255,7 @@
       "category": "BEACH",
       "description": "غرغانتار ساحلی.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/TUTORIAL_GARGANTUAR/TUTORIAL_GARGANTUAR.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/BEACH_GARGANTUAR/BEACH_GARGANTUAR.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1295,7 +1295,7 @@
       "category": "BEACH",
       "description": "امپ ساحلی.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_IMP/ZOMBIE_TUTORIAL_IMP.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_BEACH_IMP_MERMAID/ZOMBIE_BEACH_IMP_MERMAID.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1327,7 +1327,7 @@
       "category": "DARK",
       "description": "زامبی قرون وسطی.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC/ZOMBIE_DARK_BASIC.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1362,7 +1362,7 @@
       "category": "DARK",
       "description": "زامبی تیره با کلاه مخروطی.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC/ZOMBIE_DARK_BASIC.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1397,7 +1397,7 @@
       "category": "DARK",
       "description": "زامبی تیره با سطل.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC/ZOMBIE_DARK_BASIC.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1433,7 +1433,7 @@
       "category": "DARK",
       "description": "شوالیه با زرهٔ شانه و تاج.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC/ZOMBIE_DARK_BASIC.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1468,7 +1468,7 @@
       "category": "DARK",
       "description": "زامبی تیره با کلاه آجری.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_BASIC_BRICK/ZOMBIE_DARK_BASIC_BRICK.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1500,7 +1500,7 @@
       "category": "DARK",
       "description": "جادوگر؛ گیاهان را به گوسفند تبدیل می‌کند.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_WIZARD/ZOMBIE_DARK_WIZARD.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1537,7 +1537,7 @@
       "category": "DARK",
       "description": "ژانگولرباز.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_JESTER/ZOMBIE_DARK_JESTER.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1569,7 +1569,7 @@
       "category": "DARK",
       "description": "شاه زامبی‌ها.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_KING/ZOMBIE_DARK_KING.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1605,7 +1605,7 @@
       "category": "DARK",
       "description": "غرغانتار قرون وسطی.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/TUTORIAL_GARGANTUAR/TUTORIAL_GARGANTUAR.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/DARK_GARGANTUAR/DARK_GARGANTUAR.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1645,7 +1645,7 @@
       "category": "DARK",
       "description": "امپ قرون وسطی.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL_IMP/ZOMBIE_TUTORIAL_IMP.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_IMP_DRAGON/ZOMBIE_DARK_IMP_DRAGON.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1709,7 +1709,7 @@
       "category": "ZOMBOSS",
       "description": "ربات زامباس دزد دریایی.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_PIRATE_ZOMBOSS/ZOMBIE_PIRATE_ZOMBOSS.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1741,7 +1741,7 @@
       "category": "ZOMBOSS",
       "description": "ربات زامباس کابوی.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_COWBOY_ZOMBOSS/ZOMBIE_COWBOY_ZOMBOSS.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },
@@ -1773,7 +1773,7 @@
       "category": "ZOMBOSS",
       "description": "ربات زامباس قرون وسطی.",
       "animationConfig": {
-        "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_DARK_ZOMBOSS/ZOMBIE_DARK_ZOMBOSS.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0
       },

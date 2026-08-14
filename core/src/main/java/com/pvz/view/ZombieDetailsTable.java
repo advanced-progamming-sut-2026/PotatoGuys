@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -101,7 +102,25 @@ public final class ZombieDetailsTable extends Table {
     private Table createLeftSide(ZombieType type) {
         Table left = new Table();
         left.top();
-        left.add(ZombieCard.pamPortrait(type)).size(320f, 400f);
+
+        // Same structure as the plant details preview (PlantDetailsTable): a card
+        // background Stack with the PAM idle animation centered on top of it.
+        // Sized 320x440 like Rey's reference preview, with the actor fit inside.
+        Stack preview = new Stack();
+        Image cardBg = new Image(regionOrSolid(
+                "IMAGE_UI_CARDS_BACKGROUNDS_CARD_PLANT_BG_MODERN",
+                new Color(0.15f, 0.15f, 0.18f, 1f)));
+        cardBg.setScaling(Scaling.stretch);
+        preview.add(cardBg);
+
+        PamActor pam = ZombieCard.pamPortrait(type);
+        if (pam != null) {
+            Table pamWrap = new Table();
+            pamWrap.add(pam).size(320f, 440f);
+            preview.add(pamWrap);
+        }
+
+        left.add(preview).size(340f, 460f);
         return left;
     }
 

@@ -19,8 +19,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 
 import com.pvz.PvZ2;
+
+import java.util.Map;
 import com.pvz.models.entities.zombies.ZombieType;
 import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
+import com.pvz.models.entities.zombies.armor.ArmorType;
+import com.pvz.models.entities.zombies.data.ArmorPropertySheet;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
 import com.pvz.models.entities.zombies.data.ZombieRegistry;
 
@@ -187,7 +191,27 @@ public final class ZombieCard extends Button {
         ZombieAnimationConfig anim = sheet != null ? sheet.getAnimationConfig() : null;
         String pamPath = anim != null ? anim.pamFilePath : null;
         String idleLabel = anim != null ? anim.idleLabel : "idle";
-        return new PamActor(pamPath, idleLabel);
+        if (pamPath == null || pamPath.isBlank()) return null;
+        return new PamActor(pamPath, idleLabel, armorParts(sheet));
+    }
+
+    /** Maps the zombie's armour aliases to their intact PAM part names, so the
+     *  preview shows the armour that the shared sheet hides by default. */
+    private static Map<String, Boolean> armorParts(ZombiePropertySheet sheet) {
+        if (sheet == null || sheet.getArmorAliases().isEmpty()) return null;
+        Map<String, Boolean> parts = new java.util.HashMap<>();
+        for (String alias : sheet.getArmorAliases()) {
+            ArmorPropertySheet armor = ZombieRegistry.getInstance().getArmorSheet(alias);
+            if (armor == null) continue;
+            String partName;
+            try {
+                partName = ArmorType.fromString(armor.getArmorType()).pamPartName();
+            } catch (IllegalArgumentException e) {
+                continue;
+            }
+            if (partName != null) parts.put(partName, Boolean.TRUE);
+        }
+        return parts.isEmpty() ? null : parts;
     }
 
     private void refreshVisualState() {
