@@ -4,6 +4,7 @@ import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.config.GargantuarSkillConfig;
+import com.pvz.models.entities.zombies.fsm.ZombieState;
 import com.pvz.models.games.GameContext;
 
 /**
@@ -20,7 +21,7 @@ import com.pvz.models.games.GameContext;
  * instead of eating them — that part lives in {@code EatState} via the
  * smashDamage stat.
  */
-public class GargantuarSkill extends ZombieSkill {
+public class GargantuarSkill extends ZombieState {
 
     /** Imp lands 2 columns from the left edge. */
     private static final int IMP_TARGET_COL = 3;

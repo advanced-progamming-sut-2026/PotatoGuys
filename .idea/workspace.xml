@@ -6,10 +6,26 @@
   <component name="ChangeListManager">
     <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="conflict">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/ExplosionAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/ExplosionAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/ExplosiveAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/ExplosiveAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/effects/Explosion.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/effects/Explosion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/PlantFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/PlantFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/ExplosionAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/ExplosionAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/ExplosionIntensity.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/ExplosionIntensity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/ExplosionType.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/ExplosionType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/ExplosiveAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/ExplosiveAction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/PotatoMineReadyAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/actions/explosive/potato_mine/PotatoMineReadyAction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/config/explosive/ExplosiveConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/config/explosive/ExplosiveConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/Zombie.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/Zombie.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/ZombieFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/ZombieFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/effects/StatusEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/effects/StatusEffect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/fsm/DeadState.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/fsm/DeadState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/fsm/EatState.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/fsm/EatState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/fsm/WalkState.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/fsm/WalkState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/fsm/ZombieState.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/fsm/ZombieState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/skills/CooldownSkill.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/skills/CooldownSkill.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/skills/ExplorerTorchSkill.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/skills/ExplorerTorchSkill.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/skills/GargantuarSkill.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/skills/GargantuarSkill.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/skills/ZombieSkill.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/skills/ZombieSkillCatalog.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/skills/ZombieSkillCatalog.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/resources/plant_actions.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/resources/plant_actions.json" afterDir="false" />
     </list>
@@ -89,12 +105,12 @@
     }
   }
 }</component>
-  <component name="GitLabMergeRequestsSettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;first&quot;: &quot;https://hamgit.ir/sedhhn/plantsvszombies2.git&quot;,
-    &quot;second&quot;: &quot;304f2ff1-c759-44fd-9fe9-01504ac41863&quot;
+  <component name="GitLabMergeRequestsSettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "first": "https://hamgit.ir/sedhhn/plantsvszombies2",
+    "second": "83191278-9b68-4e33-a55d-f523d58ebe84"
   }
-}</component>
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -250,6 +266,7 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
@@ -273,6 +290,7 @@
       <workItem from="1786207261837" duration="3163000" />
       <workItem from="1786221623014" duration="5347000" />
       <workItem from="1786547194454" duration="4920000" />
+      <workItem from="1786684833223" duration="3935000" />
     </task>
     <task id="LOCAL-00001" summary="added Login and register and forgot password menu to the game">
       <option name="closed" value="true" />

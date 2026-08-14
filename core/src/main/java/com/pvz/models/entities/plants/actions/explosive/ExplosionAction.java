@@ -1,8 +1,9 @@
-package com.pvz.models.entities.plants.actions.explosive.potato_mine;
+package com.pvz.models.entities.plants.actions.explosive;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.effects.Explosion;
 import com.pvz.models.entities.effects.JalapenoFire;
 import com.pvz.models.entities.plants.Plant;
@@ -11,6 +12,8 @@ import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.effects.EffectType;
+import com.pvz.models.entities.zombies.effects.StatusEffect;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.tile.Tile;
 
@@ -49,7 +52,7 @@ public class ExplosionAction extends PlantAction {
                     Vector2 pos=new Vector2(GameController.colToWorldX(i),GameController.laneToWorldY(plant.getLane()));
                     ctx.addEffect(new JalapenoFire(ctx,pos));
                 }
-            } else if (plant.getType()!=PlantType.Doomshroom){
+            } else if (plant.getType()!=PlantType.Doomshroom && plant.getType()!=PlantType.IcebergLettuce){
                 ctx.addEffect(new Explosion(ctx, plant.getPosition(), config.explosionType, config.explosionIntensity));
             }
         }
@@ -57,6 +60,9 @@ public class ExplosionAction extends PlantAction {
             dealDamageDone=true;
             if (target!=null) {
                 target.takeDamage(config.baseDamage);
+                if (plant.getType()==PlantType.IcebergLettuce){
+                    target.applyEffect(StatusEffect.frozen(config.effectDuration));
+                }
             }
             if (targetTiles!=null && !targetTiles.isEmpty()){
                 for (Tile t: targetTiles){

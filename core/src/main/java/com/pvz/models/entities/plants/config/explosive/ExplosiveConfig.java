@@ -1,7 +1,7 @@
 package com.pvz.models.entities.plants.config.explosive;
 
-import com.pvz.models.entities.plants.actions.explosive.potato_mine.ExplosionIntensity;
-import com.pvz.models.entities.plants.actions.explosive.potato_mine.ExplosionType;
+import com.pvz.models.entities.plants.actions.explosive.ExplosionIntensity;
+import com.pvz.models.entities.plants.actions.explosive.ExplosionType;
 import com.pvz.models.entities.plants.config.PlantActionConfig;
 
 public class ExplosiveConfig extends PlantActionConfig {
@@ -10,6 +10,7 @@ public class ExplosiveConfig extends PlantActionConfig {
     public float recoverTime=0.82f;
     public float explosionTime=0.67f;
     public float damageDealTime=0.67f;
+    public float effectDuration=2f;
     public float baseDamage=1800f;
     public String plantClip="plant";
     public String idleClip="plant_idle";

@@ -1,7 +1,7 @@
 package com.pvz.models.entities.plants;
 
 import com.pvz.models.entities.plants.actions.*;
-import com.pvz.models.entities.plants.actions.explosive.potato_mine.ExplosiveAction;
+import com.pvz.models.entities.plants.actions.explosive.ExplosiveAction;
 import com.pvz.models.entities.plants.config.*;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;

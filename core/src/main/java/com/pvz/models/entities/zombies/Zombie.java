@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
+import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
@@ -25,7 +26,6 @@ import com.pvz.models.entities.zombies.fsm.EatState;
 import com.pvz.models.entities.zombies.fsm.WalkState;
 import com.pvz.models.entities.zombies.fsm.ZombieState;
 import com.pvz.models.entities.zombies.skills.ExplorerTorchSkill;
-import com.pvz.models.entities.zombies.skills.ZombieSkill;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.behaviors.TileBehavior;
 import com.pvz.models.games.map.tile.Tile;
@@ -57,7 +57,7 @@ public class Zombie extends Entity {
     // ── Components ────────────────────────────────────────────────────────────
     private final List<ArmorPiece> armors;
     private final Map<EffectType, StatusEffect> activeEffects;
-    private final List<ZombieSkill> skills;
+    private final List<ZombieState> skills;
 
     // ── FSM ───────────────────────────────────────────────────────────────────
     private ZombieState currentState;
@@ -65,6 +65,8 @@ public class Zombie extends Entity {
     // ── Flags ─────────────────────────────────────────────────────────────────
     private boolean dead;
     private final boolean glowing;
+    private boolean frozen;
+    private float frozenDuration;
     private boolean impAlreadyThrown = false;
     private int stolenSun;
 
@@ -83,7 +85,7 @@ public class Zombie extends Entity {
      * @param difficulty [1..5]; 3 = no modifier
      */
     public Zombie(ZombiePropertySheet sheet, float startX, int lane,
-                  List<ArmorPiece> armors, List<ZombieSkill> skills,
+                  List<ArmorPiece> armors, List<ZombieState> skills,
                   GameContext ctx, int waveIndex, int difficulty) {
         this.sheet = sheet;
         this.position.set(startX, GameController.laneToWorldY(lane));
@@ -113,6 +115,9 @@ public class Zombie extends Entity {
             }
         });
         velocity.set(-getEffectiveSpeedPerTick() * 1000f, 0f);
+
+        frozen=false;
+        frozenDuration=0;
     }
 
     // ── TickAware ─────────────────────────────────────────────────────────────
@@ -130,7 +135,18 @@ public class Zombie extends Entity {
     public void update(float dt) {
         stateTime += dt;
         if (dead) return;
-        tickStatusEffects();
+
+        if (frozen){
+            if (frozenDuration>0){
+                frozenDuration-=dt;
+                return;
+            } else {
+                frozenDuration=0;
+                frozen=false;
+            }
+        }
+
+        updateStatusEffects(dt);
         if (isParalysed()) return;
         ZombieState next = currentState.update(this, context,dt);
         if (next != currentState) {
@@ -149,6 +165,7 @@ public class Zombie extends Entity {
                 }
             }
         }
+
 
         syncHitbox();
     }
@@ -210,11 +227,16 @@ public class Zombie extends Entity {
     }
 
     public void fire(){
-        for(ZombieSkill s : skills){
+        for(ZombieState s : skills){
             if(s instanceof ExplorerTorchSkill sk){
                 sk.relight();
             }
         }
+    }
+
+    public void setFrozen(float duration){
+        this.frozen=true;
+        this.frozenDuration=duration;
     }
 
     /** Convenience: non-poisonous damage. */
@@ -267,7 +289,7 @@ public class Zombie extends Entity {
     public boolean isImpAlreadyThrown()         { return impAlreadyThrown; }
     public void markImpThrown()                 { impAlreadyThrown = true; }
     public ZombieState getCurrentState()        { return currentState; }
-    public List<ZombieSkill> getSkills()        { return Collections.unmodifiableList(skills); }
+    public List<ZombieState> getSkills()        { return Collections.unmodifiableList(skills); }
     public List<ArmorPiece> getArmors()         { return Collections.unmodifiableList(armors); }
     public Map<EffectType, StatusEffect> getActiveEffects() {
         return Collections.unmodifiableMap(activeEffects);
@@ -324,8 +346,8 @@ public class Zombie extends Entity {
                 + " is dead at (" + String.format("%.1f", position.x) + "," + GameController.worldYtoLane(position.y) + ")");
     }
 
-    private void tickStatusEffects() {
-        activeEffects.entrySet().removeIf(entry -> !entry.getValue().tick());
+    private void updateStatusEffects(float dt) {
+        activeEffects.entrySet().removeIf(entry -> !entry.getValue().update(dt));
     }
 
     private boolean isParalysed() {
@@ -351,6 +373,6 @@ public class Zombie extends Entity {
         if (activeEffects.isEmpty()) { sb.append(" (none)"); return; }
         activeEffects.forEach((type, eff) ->
                 sb.append("\n    ").append(type.name().toLowerCase())
-                        .append(": ").append(String.format("%.1f", eff.getSecondsRemaining())).append("s"));
+                        .append(": ").append(String.format("%.1f", eff.getRemainingDuration())).append("s"));
     }
 }

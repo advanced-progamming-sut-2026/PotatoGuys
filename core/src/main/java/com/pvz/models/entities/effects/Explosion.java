@@ -1,10 +1,9 @@
 package com.pvz.models.entities.effects;
 
 import com.badlogic.gdx.math.Vector2;
-import com.pvz.PvZ2;
 import com.pvz.models.engine.FrameConfig;
-import com.pvz.models.entities.plants.actions.explosive.potato_mine.ExplosionIntensity;
-import com.pvz.models.entities.plants.actions.explosive.potato_mine.ExplosionType;
+import com.pvz.models.entities.plants.actions.explosive.ExplosionIntensity;
+import com.pvz.models.entities.plants.actions.explosive.ExplosionType;
 import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.games.GameContext;
 

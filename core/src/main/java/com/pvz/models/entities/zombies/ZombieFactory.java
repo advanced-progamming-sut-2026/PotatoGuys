@@ -12,7 +12,7 @@ import com.pvz.models.entities.zombies.config.ZombieSkillConfig;
 import com.pvz.models.entities.zombies.data.ArmorPropertySheet;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
 import com.pvz.models.entities.zombies.data.ZombieRegistry;
-import com.pvz.models.entities.zombies.skills.ZombieSkill;
+import com.pvz.models.entities.zombies.fsm.ZombieState;
 import com.pvz.models.entities.zombies.skills.ZombieSkillCatalog;
 import com.pvz.models.games.GameContext;
 
@@ -55,7 +55,7 @@ public class ZombieFactory {
             throw new IllegalArgumentException("Unknown zombie alias: " + alias);
         }
         List<ArmorPiece> armors = buildArmors(sheet);
-        List<ZombieSkill> skills = buildSkills(sheet);
+        List<ZombieState> skills = buildSkills(sheet);
         return new Zombie(sheet, startX, lane, armors, skills, ctx, waveIndex, difficulty);
     }
 
@@ -102,10 +102,10 @@ public class ZombieFactory {
 
     // ── Skill construction (driven by the JSON skillConfig) ───────────────────
 
-    private List<ZombieSkill> buildSkills(ZombiePropertySheet sheet) {
-        List<ZombieSkill> skills = new ArrayList<>();
+    private List<ZombieState> buildSkills(ZombiePropertySheet sheet) {
+        List<ZombieState> skills = new ArrayList<>();
         if (sheet.skillConfig instanceof ZombieSkillConfig skillCfg) {
-            ZombieSkill skill = ZombieSkillCatalog.create(skillCfg);
+            ZombieState skill = ZombieSkillCatalog.create(skillCfg);
             if (skill != null) {
                 skills.add(skill);
             }

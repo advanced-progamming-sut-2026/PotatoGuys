@@ -6,6 +6,7 @@ import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.config.ExplorerTorchSkillConfig;
+import com.pvz.models.entities.zombies.fsm.ZombieState;
 import com.pvz.models.games.GameContext;
 
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.List;
  * <p>Ice projectiles and frozen plants extinguish the torch ({@link #extinguish()}).
  * Fire projectiles relight it ({@link #relight()}).
  */
-public class ExplorerTorchSkill extends ZombieSkill {
+public class ExplorerTorchSkill extends ZombieState {
 
     private boolean torchLit;
 

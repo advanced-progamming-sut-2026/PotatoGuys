@@ -3,6 +3,7 @@ package com.pvz.models.entities.zombies.fsm;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.config.ZombieActionConfig;
+import com.pvz.models.entities.zombies.config.ZombieSkillConfig;
 import com.pvz.models.games.GameContext;
 
 /**
@@ -14,6 +15,25 @@ import com.pvz.models.games.GameContext;
  * zombies that died mid-tick before the engine processes removals.
  */
 public class DeadState extends ZombieState {
+
+    public DeadState() {
+        super(null);
+    }
+
+    @Override
+    public boolean shouldTrigger(Zombie zombie, GameContext ctx, float dt) {
+        return false;
+    }
+
+    @Override
+    protected void doExecute(Zombie zombie, GameContext ctx) {
+
+    }
+
+    @Override
+    public String getName() {
+        return "";
+    }
 
     @Override
     public void onEnter(Zombie zombie, GameContext ctx) {

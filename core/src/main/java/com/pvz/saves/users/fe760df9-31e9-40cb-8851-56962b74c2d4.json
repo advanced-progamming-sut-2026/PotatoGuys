@@ -88,6 +88,12 @@
           "isBoosted": false
         },
         {
+          "Type": "IcebergLettuce",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
           "Type": "Wallnut",
           "level": 1,
           "seed": 0,
@@ -313,7 +319,7 @@
       {
         "x": 4,
         "y": 3,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -1272,7 +1278,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786680469421
+    "lastDailyReset": 1786687888646
   },
   "questLogRefreshed": true
 }

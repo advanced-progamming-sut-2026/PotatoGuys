@@ -26,7 +26,7 @@ public class StatusEffect {
     private static final int DEFAULT_ICE_HP = 600;
 
     private final EffectType type;
-    private int ticksRemaining;   // countdown to expiry (infinite = Integer.MAX_VALUE)
+    private float remainingDuration;   // countdown to expiry (infinite = Integer.MAX_VALUE)
     private float poisonDpsPerTick; // used only if type == POISONED
     private float iceHp;           // used only if type == FROZEN
 
@@ -36,9 +36,9 @@ public class StatusEffect {
      * @param type          the kind of condition
      * @param durationTicks how many ticks until it expires
      */
-    public StatusEffect(EffectType type, int durationTicks) {
+    public StatusEffect(EffectType type, float duration) {
         this.type = type;
-        this.ticksRemaining = durationTicks;
+        this.remainingDuration = duration;
         this.iceHp = (type == EffectType.FROZEN) ? DEFAULT_ICE_HP : 0f;
     }
 
@@ -50,7 +50,8 @@ public class StatusEffect {
     }
 
     /** Factory for a FROZEN effect using the default ice-block HP (600). */
-    public static StatusEffect frozen() {
+    public static StatusEffect frozen(float duration) {
+        if (duration>0) return new StatusEffect(EffectType.FROZEN, duration);
         return new StatusEffect(EffectType.FROZEN, Integer.MAX_VALUE);
     }
 
@@ -59,10 +60,10 @@ public class StatusEffect {
      *
      * @return {@code true} if still active, {@code false} if it just expired
      */
-    public boolean tick() {
-        if (ticksRemaining == Integer.MAX_VALUE) return true; // permanent until removed
-        ticksRemaining--;
-        return ticksRemaining > 0;
+    public boolean update(float dt) {
+        if (remainingDuration == Integer.MAX_VALUE) return true; // permanent until removed
+        remainingDuration-=dt;
+        return remainingDuration > 0;
     }
 
     /**
@@ -79,12 +80,11 @@ public class StatusEffect {
     }
 
     public boolean isActive() {
-        return ticksRemaining > 0;
+        return remainingDuration > 0;
     }
 
     public EffectType getType()             { return type; }
-    public int getTicksRemaining()          { return ticksRemaining; }
-    public float getSecondsRemaining()      { return ticksRemaining / 10.0f; }
+    public float getRemainingDuration()          { return remainingDuration; }
     public float getPoisonDpsPerTick()      { return poisonDpsPerTick; }
     public float getIceHp()                 { return iceHp; }
 }

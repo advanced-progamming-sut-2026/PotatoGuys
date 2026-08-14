@@ -1,10 +1,11 @@
-package com.pvz.models.entities.plants.actions.explosive.potato_mine;
+package com.pvz.models.entities.plants.actions.explosive;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.actions.PlantAction;
+import com.pvz.models.entities.plants.actions.explosive.potato_mine.PotatoMineReadyAction;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
 import com.pvz.models.entities.plants.enums.PlantType;

@@ -1,4 +1,4 @@
-package com.pvz.models.entities.plants.actions.explosive.potato_mine;
+package com.pvz.models.entities.plants.actions.explosive;
 
 public enum ExplosionType {
     POTATO_MINE,

@@ -27,7 +27,23 @@ public class EatState extends ZombieState {
      *               grid cell, so it keeps chewing the same plant as it moves).
      */
     public EatState(Plant target) {
+        super(null);
         this.target = target;
+    }
+
+    @Override
+    public boolean shouldTrigger(Zombie zombie, GameContext ctx, float dt) {
+        return false;
+    }
+
+    @Override
+    protected void doExecute(Zombie zombie, GameContext ctx) {
+
+    }
+
+    @Override
+    public String getName() {
+        return "";
     }
 
     @Override

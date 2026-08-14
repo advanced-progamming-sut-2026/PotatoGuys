@@ -7,6 +7,7 @@ import com.pvz.models.entities.zombies.config.RaStealSunSkillConfig;
 import com.pvz.models.entities.zombies.config.TombRaiserSkillConfig;
 import com.pvz.models.entities.zombies.config.WizardZapSkillConfig;
 import com.pvz.models.entities.zombies.config.ZombieSkillConfig;
+import com.pvz.models.entities.zombies.fsm.ZombieState;
 
 /**
  * Maps a {@link ZombieSkillConfig} (parsed from {@code zombie_actions.json}) to
@@ -23,7 +24,7 @@ public final class ZombieSkillCatalog {
     }
 
     /** @return the skill for {@code config}, or {@code null} if the class tag is unknown. */
-    public static ZombieSkill create(ZombieSkillConfig config) {
+    public static ZombieState create(ZombieSkillConfig config) {
         if (config == null) return null;
         if (config instanceof ExplorerTorchSkillConfig explorerConfig) {
             return new ExplorerTorchSkill(explorerConfig);

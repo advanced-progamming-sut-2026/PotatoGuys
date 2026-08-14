@@ -2,6 +2,7 @@ package com.pvz.models.entities.zombies.skills;
 
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.config.ZombieSkillConfig;
+import com.pvz.models.entities.zombies.fsm.ZombieState;
 import com.pvz.models.games.GameContext;
 
 /**
@@ -12,7 +13,7 @@ import com.pvz.models.games.GameContext;
  * returns {@code true} as soon as the cooldown has elapsed and {@link #canUse}
  * allows it. The cooldown timer resets when the skill fires (on state entry).
  */
-public abstract class CooldownSkill extends ZombieSkill {
+public abstract class CooldownSkill extends ZombieState {
 
     private final float cooldownSeconds;
     private float cooldownTimer = 0f;

@@ -3,7 +3,7 @@ package com.pvz.models.entities.zombies.fsm;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.config.ZombieActionConfig;
-import com.pvz.models.entities.zombies.skills.ZombieSkill;
+import com.pvz.models.entities.zombies.config.ZombieSkillConfig;
 import com.pvz.models.games.GameContext;
 
 /**
@@ -24,6 +24,25 @@ import com.pvz.models.games.GameContext;
  * </ol>
  */
 public class WalkState extends ZombieState {
+
+    public WalkState() {
+        super(null);
+    }
+
+    @Override
+    public boolean shouldTrigger(Zombie zombie, GameContext ctx, float dt) {
+        return false;
+    }
+
+    @Override
+    protected void doExecute(Zombie zombie, GameContext ctx) {
+
+    }
+
+    @Override
+    public String getName() {
+        return "";
+    }
 
     @Override
     public void onEnter(Zombie zombie, GameContext ctx) {
@@ -66,7 +85,7 @@ public class WalkState extends ZombieState {
 
     /** Returns the first ready skill (as the next state), else null. */
     private ZombieState checkForSkill(Zombie zombie, GameContext ctx, float dt) {
-        for (ZombieSkill skill : zombie.getSkills()) {
+        for (ZombieState skill : zombie.getSkills()) {
             if (skill.shouldTrigger(zombie, ctx, dt)) {
                 return skill;
             }
