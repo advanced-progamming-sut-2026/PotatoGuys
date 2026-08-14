@@ -10,8 +10,8 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 6350,
-    "diamonds": 146,
+    "coins": 6400,
+    "diamonds": 148,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -193,9 +193,9 @@
     "showGrid": false,
     "debugMode": true,
     "brightness": 0.98999995,
-    "musicVolume": 0.71,
+    "musicVolume": 0.24,
     "sfxVolume": 0.7,
-    "musicMuted": true,
+    "musicMuted": false,
     "sfxMuted": false
   },
   "score": {
@@ -1278,7 +1278,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786687888646
+    "lastDailyReset": 1786725610662
   },
   "questLogRefreshed": true
 }

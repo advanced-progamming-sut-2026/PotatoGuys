@@ -630,7 +630,7 @@
       },
       "skillConfig": {
         "class": "ExplorerTorchSkillConfig",
-        "label": "power",
+        "label": "walk",
         "maxTorchReach": 37
       }
     },
