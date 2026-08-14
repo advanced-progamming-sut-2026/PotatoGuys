@@ -14,20 +14,25 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.pvz.PvZ2;
 import com.pvz.controller.CollectionController;
 import com.pvz.enums.GameAsset;
+import com.pvz.models.entities.plants.enums.PlantCategory;
 
 import pvz.skin.PvzSkin;
 
@@ -49,6 +54,17 @@ public class CollectionMenu extends ScreenAdapter {
     private static final float FACE_H = 68f;
     private static final Color PAGE_BG = new Color(0x1A0E06A0);
     private static final Color PANEL_BG = new Color(0x6B4226FF);
+    private static final Color FILTER_DIALOG_BG = new Color(0x6B4226FF);
+
+    // Same convention SettingsMenu already uses for its tick checkboxes — falls back to
+    // a drawn green/gray checkmark until these PNGs are actually added.
+    private static final String CHECKBOX_ON_PATH = "textures/ui/checkbox_on.png";
+    private static final String CHECKBOX_OFF_PATH = "textures/ui/checkbox_off.png";
+
+    // Filter button icon (funnel), up/down press states — drop the two PNGs at these
+    // paths; falls back to a plain tinted funnel-less button if they're not there yet.
+    private static final String FILTER_ICON_UP_PATH = "textures/ui/filter_button_up.png";
+    private static final String FILTER_ICON_DOWN_PATH = "textures/ui/filter_button_down.png";
 
     private enum Tab {
         PLANTS("IMAGE_UI_ALMANAC_TABS_PLANTS_ACTIVE", "IMAGE_UI_ALMANAC_TABS_PLANTS_DOWN"),
@@ -75,7 +91,19 @@ public class CollectionMenu extends ScreenAdapter {
     private Table detailsOverlay;
     private Table toastOverlay;
     private Table walletBar;
+    private Table filterOverlay;
+    private Label plantsCollectedLabel;
+    private ImageTextButton filterButton;
     private Tab currentTab = Tab.PLANTS;
+
+    // ── filter state: exactly one filter can be active at a time (Locked / Unlocked /
+    // Upgrade Ready / a single Family) — picking a new one replaces whichever was active,
+    // and re-picking the active one clears it back to "show all". The other categories in
+    // the reference screenshot (worlds/mints/favorites/etc.) are deliberately not implemented.
+    private enum FilterKind { NONE, LOCKED, UNLOCKED, UPGRADABLE, CATEGORY }
+
+    private FilterKind activeFilterKind = FilterKind.NONE;
+    private PlantCategory activeCategory = null;
 
     public CollectionMenu(PvZ2 game, Screen previous) {
         this.game = game;
@@ -110,6 +138,7 @@ public class CollectionMenu extends ScreenAdapter {
         buildGrid(Tab.PLANTS);
         buildTabs();
         buildWalletBar();
+        buildFilterBar();
         refreshWallet();
     }
 
@@ -136,10 +165,7 @@ public class CollectionMenu extends ScreenAdapter {
     private void buildHeader() {
         Skin skin = PvzSkin.get();
 
-        ImageButton closeBtn = new ImageButton(new ImageButton.ImageButtonStyle(
-                skin.get("almanac", ImageButton.ImageButtonStyle.class)));
-        closeBtn.getStyle().imageUp = PlantData.regionDrawable("IMAGE_UI_ALMANAC_TABS_CLOSE_TAB");
-        closeBtn.getStyle().imageOver = PlantData.regionDrawable("IMAGE_UI_ALMANAC_TABS_CLOSE_TAB");
+        ImageButton closeBtn = new ImageButton(skin, "generic_close_circle");
         closeBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -167,9 +193,9 @@ public class CollectionMenu extends ScreenAdapter {
         Skin skin = PvzSkin.get();
         walletBar.clearChildren();
         walletBar.add(MenuUiKit.resourceWidget(skin, "textures/ui/coin_icon.png",
-                new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(controller.getCoins()), 195, 63)).padRight(15);
+            new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(controller.getCoins()), 195, 63)).padRight(15);
         walletBar.add(MenuUiKit.resourceWidget(skin, "textures/ui/diamond_icon.png",
-                new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(controller.getDiamonds()), 195, 63));
+            new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(controller.getDiamonds()), 195, 63));
         walletBar.pack();
         walletBar.setPosition(1920f - walletBar.getPrefWidth() - 30f, 1080f - walletBar.getPrefHeight() - 18f);
     }
@@ -192,7 +218,7 @@ public class CollectionMenu extends ScreenAdapter {
         plants.setPosition(PANEL_X + 30f, tabY);
 
         Group zombies = wrapTab(tabButton(Tab.ZOMBIES, group, () -> showTab(Tab.ZOMBIES)),
-                "IMAGE_UI_STORE_TABICONS_ZOMBIES");
+            "IMAGE_UI_STORE_TABICONS_ZOMBIES");
         zombies.setPosition(PANEL_X + 30f + TAB_W + 10f, tabY);
 
         root.addActor(plants);
@@ -215,7 +241,7 @@ public class CollectionMenu extends ScreenAdapter {
     private ImageButton tabButton(Tab tab, ButtonGroup<ImageButton> group, Runnable onSelect) {
         Skin skin = PvzSkin.get();
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle(
-                skin.get("almanac", ImageButton.ImageButtonStyle.class));
+            skin.get("almanac", ImageButton.ImageButtonStyle.class));
         style.imageUp = PlantData.regionDrawable(tab.downId);
         style.imageChecked = PlantData.regionDrawable(tab.activeId);
         ImageButton button = new ImageButton(style);
@@ -246,6 +272,7 @@ public class CollectionMenu extends ScreenAdapter {
             gridScroll.setScrollingDisabled(true, false);
             gridScroll.setOverscroll(false, true);
             contentLayer.add(gridScroll).expand().fill();
+            contentLayer.row();
         }
 
         if (tab == Tab.ZOMBIES) {
@@ -253,6 +280,7 @@ public class CollectionMenu extends ScreenAdapter {
             Label placeholder = new Label("Zombies collection is coming soon", PvzSkin.get(), "big");
             placeholder.setColor(Color.WHITE);
             cardsGrid.add(placeholder).pad(60f);
+            refreshFilterBar();
             return;
         }
 
@@ -263,6 +291,8 @@ public class CollectionMenu extends ScreenAdapter {
 
         int column = 0;
         for (PlantData data : plants) {
+            if (!passesFilters(data)) continue;
+
             PlantCard card = new PlantCard(data);
             cards.add(card);
             group.add(card);
@@ -278,12 +308,288 @@ public class CollectionMenu extends ScreenAdapter {
                 column = 0;
             }
         }
+
+        if (column == 0 && cardsGrid.getChildren().isEmpty()) {
+            Label empty = new Label("No plants match these filters.", PvzSkin.get(), "big");
+            empty.setColor(Color.WHITE);
+            cardsGrid.add(empty).pad(60f);
+        }
+
+        refreshFilterBar();
     }
 
     private void showTab(Tab tab) {
         if (tab == currentTab) return;
         currentTab = tab;
         buildGrid(tab);
+    }
+
+    // ── bottom filter bar: stretched strip with the filter button + collected count ──
+
+    private void buildFilterBar() {
+        Skin skin = PvzSkin.get();
+
+        Table bar = new Table();
+        bar.setBackground(skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.35f)));
+        bar.pad(10f, 16f, 10f, 16f);
+
+        filterButton = new ImageTextButton("Filters", filterButtonStyle(skin));
+        filterButton.getLabel().setFontScale(0.85f);
+        filterButton.getLabelCell().padLeft(8f);
+        filterButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                openFilterDialog();
+            }
+        });
+        bar.add(filterButton).height(46f).left();
+
+        bar.add().expandX();
+
+        plantsCollectedLabel = new Label("", skin);
+        plantsCollectedLabel.setColor(Color.WHITE);
+        plantsCollectedLabel.setFontScale(0.9f);
+        bar.add(plantsCollectedLabel).right();
+
+        contentLayer.add(bar).growX().padTop(8f);
+    }
+
+    /** Funnel icon (your two PNGs) + label, no background box — matches the reference
+     *  bar (icon+text sitting directly on the strip). Falls back to a plain tinted
+     *  funnel-less button if the PNGs aren't added yet, same as everywhere else. */
+    private ImageTextButton.ImageTextButtonStyle filterButtonStyle(Skin skin) {
+        ImageTextButton.ImageTextButtonStyle style = new ImageTextButton.ImageTextButtonStyle();
+        style.imageUp = new TextureRegionDrawable(MenuUiKit.loadTextureSafe(FILTER_ICON_UP_PATH));
+        style.imageDown = new TextureRegionDrawable(MenuUiKit.loadTextureSafe(FILTER_ICON_DOWN_PATH));
+        style.font = skin.get("medium", Label.LabelStyle.class).font;
+        style.fontColor = Color.WHITE;
+        return style;
+    }
+
+    /** Updates the "Plants Collected: X of Y" count and the Filters button label. Called
+     *  after every grid rebuild, so it always reflects the real (unfiltered) totals. */
+    private void refreshFilterBar() {
+        if (plantsCollectedLabel == null) return;
+
+        int unlocked = 0;
+        List<PlantData> all = PlantData.loadAll();
+        for (PlantData data : all) {
+            if (data.isUnlocked()) unlocked++;
+        }
+        plantsCollectedLabel.setText("Plants Collected: " + unlocked + " of " + all.size());
+
+        int activeFilters = activeFilterKind == FilterKind.NONE ? 0 : 1;
+        filterButton.setText(activeFilters == 0 ? "Filters" : "Filters (1)");
+    }
+
+    private boolean isUpgradable(PlantData data) {
+        return data.isUnlocked() && !data.isMaxLevel() && data.seedPackets() >= data.requiredSeedPackets();
+    }
+
+    private boolean passesFilters(PlantData data) {
+        switch (activeFilterKind) {
+            case LOCKED:
+                return !data.isUnlocked();
+            case UNLOCKED:
+                return data.isUnlocked();
+            case UPGRADABLE:
+                return isUpgradable(data);
+            case CATEGORY:
+                return data.getCategory() == activeCategory;
+            case NONE:
+            default:
+                return true;
+        }
+    }
+
+    // ── "Select Filters" popup ───────────────────────────────────────────────────
+
+    private void openFilterDialog() {
+        if (filterOverlay != null) return;
+        Skin skin = PvzSkin.get();
+
+        filterOverlay = new Table();
+        filterOverlay.setFillParent(true);
+        filterOverlay.setBackground(skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.6f)));
+        filterOverlay.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (event.getTarget() == filterOverlay) closeFilterDialog();
+            }
+        });
+        stage.addActor(filterOverlay);
+
+        BorderedPanel dialogPanel = new BorderedPanel(FILTER_DIALOG_BG);
+        Table content = dialogPanel.contentLayer;
+        content.top().left();
+        content.pad(20f);
+
+        Table titleRow = new Table();
+        Label title = new Label("Select Filter", skin, "big");
+        title.setColor(Color.WHITE);
+        // Generic close, same convention as every other popup in the project (news modal,
+        // settings, etc.) instead of a one-off plain "X" text button.
+        ImageButton closeBtn = new ImageButton(skin, "generic_close_circle");
+        closeBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                closeFilterDialog();
+            }
+        });
+        // Spacer matching the close button's width so the title lands truly centered in the
+        // row (not just centered in the leftover space next to the button).
+        titleRow.add().width(44f);
+        titleRow.add(title).expandX().center();
+        titleRow.add(closeBtn).size(44f);
+        content.add(titleRow).growX().padBottom(6f).row();
+
+        TextButton showAllBtn = new TextButton("Show All Plants", skin, "green");
+        showAllBtn.getLabel().setFontScale(0.9f);
+        showAllBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                activeFilterKind = FilterKind.NONE;
+                activeCategory = null;
+                closeFilterDialog();
+                buildGrid(currentTab);
+                openFilterDialog();
+            }
+        });
+        content.add(showAllBtn).width(280f).height(46f).left().padBottom(14f).row();
+
+        ScrollPane scrollPane = buildFilterOptionsScrollPane(skin);
+        content.add(scrollPane).grow();
+
+        filterOverlay.add(dialogPanel).size(900f, 800f);
+    }
+
+    private ScrollPane buildFilterOptionsScrollPane(Skin skin) {
+        Table options = new Table();
+        options.top().left();
+        options.defaults().left().padBottom(6f);
+
+        // One shared group across every option below (Status + Upgrade + Family) — that's
+        // what makes the whole dialog single-select: checking any option here silently
+        // unchecks whichever was active before, in every section, not just its own.
+        ButtonGroup<CheckBox> group = new ButtonGroup<>();
+        group.setMinCheckCount(0);
+        group.setMaxCheckCount(1);
+
+        Label statusHeader = new Label("    Status", skin, "medium");
+        statusHeader.setColor(new Color(1f, 0.85f, 0.5f, 1f));
+        options.add(statusHeader).padTop(4f).row();
+        options.add(filterOption(group, "Locked", activeFilterKind == FilterKind.LOCKED,
+            () -> activeFilterKind = FilterKind.LOCKED)).row();
+        options.add(filterOption(group, "Unlocked", activeFilterKind == FilterKind.UNLOCKED,
+            () -> activeFilterKind = FilterKind.UNLOCKED)).row();
+
+        Label upgradeHeader = new Label("    Upgrade", skin, "medium");
+        upgradeHeader.setColor(new Color(1f, 0.85f, 0.5f, 1f));
+        options.add(upgradeHeader).padTop(14f).row();
+        options.add(filterOption(group, "Upgrade Ready only", activeFilterKind == FilterKind.UPGRADABLE,
+            () -> activeFilterKind = FilterKind.UPGRADABLE)).row();
+
+        Label familyHeader = new Label("    Family", skin, "medium");
+        familyHeader.setColor(new Color(1f, 0.85f, 0.5f, 1f));
+        options.add(familyHeader).padTop(14f).row();
+        for (PlantCategory category : PlantCategory.values()) {
+            boolean checked = activeFilterKind == FilterKind.CATEGORY && activeCategory == category;
+            options.add(filterOption(group, categoryLabel(category), checked, () -> {
+                activeFilterKind = FilterKind.CATEGORY;
+                activeCategory = category;
+            })).row();
+        }
+
+        ScrollPane scrollPane = new ScrollPane(options, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
+        scrollPane.setOverscroll(false, true);
+        return scrollPane;
+    }
+
+    /** One filter row: a label + a tick checkbox in the dialog's single shared ButtonGroup, so
+     *  checking it clears whatever the previous selection was (across every section) and applies
+     *  immediately. Re-checking the currently active one unchecks it — back to "show all".
+     *  Indented a bit from the section headers so it doesn't hug the panel's left edge. */
+    private Table filterOption(ButtonGroup<CheckBox> group, String label, boolean initiallyChecked, Runnable onSelect) {
+        Table row = new Table();
+        row.padLeft(18f);
+        CheckBox checkBox = new CheckBox("  " + label, tickCheckBoxStyle());
+        checkBox.setChecked(initiallyChecked);
+        checkBox.getLabel().setColor(Color.WHITE);
+        group.add(checkBox);
+        checkBox.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (checkBox.isChecked()) {
+                    onSelect.run();
+                } else {
+                    activeFilterKind = FilterKind.NONE;
+                    activeCategory = null;
+                }
+                buildGrid(currentTab);
+            }
+        });
+        row.add(checkBox).left();
+        return row;
+    }
+
+    private void closeFilterDialog() {
+        if (filterOverlay == null) return;
+        filterOverlay.remove();
+        filterOverlay = null;
+    }
+
+    private String categoryLabel(PlantCategory category) {
+        String[] words = category.name().split("_");
+        StringBuilder sb = new StringBuilder();
+        for (String word : words) {
+            if (sb.length() > 0) sb.append(' ');
+            sb.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1).toLowerCase());
+        }
+        return sb.toString();
+    }
+
+    /** Green/gray tick checkbox, same convention SettingsMenu already uses. */
+    private CheckBox.CheckBoxStyle tickCheckBoxStyle() {
+        Skin skin = PvzSkin.get();
+        CheckBox.CheckBoxStyle style = new CheckBox.CheckBoxStyle();
+        style.checkboxOn = new TextureRegionDrawable(loadTickTexture(CHECKBOX_ON_PATH, true));
+        style.checkboxOff = new TextureRegionDrawable(loadTickTexture(CHECKBOX_OFF_PATH, false));
+        style.font = skin.get("medium", Label.LabelStyle.class).font;
+        style.fontColor = Color.WHITE;
+        return style;
+    }
+
+    private Texture loadTickTexture(String path, boolean on) {
+        if (path != null && !path.isEmpty() && Gdx.files.internal(path).exists()) {
+            Texture texture = new Texture(Gdx.files.internal(path));
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            return texture;
+        }
+        return drawnCheckTexture(on);
+    }
+
+    private Texture drawnCheckTexture(boolean on) {
+        int size = 34;
+        com.badlogic.gdx.graphics.Pixmap pixmap =
+            new com.badlogic.gdx.graphics.Pixmap(size, size, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+        Color tileColor = on ? new Color(0.20f, 0.65f, 0.25f, 1f) : new Color(0.55f, 0.55f, 0.5f, 1f);
+        pixmap.setColor(tileColor);
+        pixmap.fillRectangle(2, 2, size - 4, size - 4);
+        pixmap.setColor(Color.WHITE);
+        drawThickLine(pixmap, 8, 18, 14, 24, 3);
+        drawThickLine(pixmap, 14, 24, 26, 10, 3);
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return texture;
+    }
+
+    private void drawThickLine(com.badlogic.gdx.graphics.Pixmap pixmap, int x1, int y1, int x2, int y2, int thickness) {
+        for (int t = -thickness / 2; t <= thickness / 2; t++) {
+            pixmap.drawLine(x1, y1 + t, x2, y2 + t);
+            pixmap.drawLine(x1 + t, y1, x2 + t, y2);
+        }
     }
 
     private void openDetails(PlantData data) {
@@ -294,9 +600,9 @@ public class CollectionMenu extends ScreenAdapter {
         stage.addActor(detailsOverlay);
 
         PlantDetailsTable details = new PlantDetailsTable(data,
-                () -> closeDetails(),
-                () -> tryPurchase(data),
-                () -> tryUpgrade(data));
+            () -> closeDetails(),
+            () -> tryPurchase(data),
+            () -> tryUpgrade(data));
         detailsOverlay.add(details).size(840f, 920f);
     }
 
