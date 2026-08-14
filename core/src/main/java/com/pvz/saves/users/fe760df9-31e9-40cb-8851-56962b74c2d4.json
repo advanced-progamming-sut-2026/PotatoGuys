@@ -10,7 +10,7 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 6250,
+    "coins": 6300,
     "diamonds": 146,
     "plantFood": 1,
     "collection": {
@@ -29,6 +29,12 @@
         },
         {
           "Type": "PrimalPotatoMine",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "CherryBomb",
           "level": 1,
           "seed": 0,
           "isBoosted": false
@@ -275,7 +281,7 @@
       {
         "x": 2,
         "y": 3,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -1246,7 +1252,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786654126387
+    "lastDailyReset": 1786674137441
   },
   "questLogRefreshed": true
 }

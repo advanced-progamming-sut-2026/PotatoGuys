@@ -8,25 +8,30 @@ import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
 import com.pvz.models.entities.plants.enums.PlantType;
-import com.pvz.models.entities.plants.potato_mine.PotatoMine;
-import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.tile.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PotatoMineReadyAction extends PlantAction {
+public class ExplosiveAction extends PlantAction {
     ExplosiveConfig config;
-    String currentClip;
+    float stateTime2;
+    private boolean triggred;
 
-    public PotatoMineReadyAction(ExplosiveConfig config){
+    public ExplosiveAction(ExplosiveConfig config){
         this.config=config;
-        currentClip=config.recoverClip;
+        stateTime2=0;
+        triggred=false;
     }
 
     @Override
     public boolean shouldTrigger(Plant plant, GameContext ctx, float dt) {
+        stateTime2+=dt;
+        if (stateTime2>=config.plantTime && !triggred){
+            triggred=true;
+            return true;
+        }
         return false;
     }
 
@@ -38,32 +43,27 @@ public class PotatoMineReadyAction extends PlantAction {
     @Override
     public void update(Plant plant, GameContext ctx, float dt) {
         super.update(plant, ctx, dt);
-        if (stateTime>config.recoverTime){
-            if (!currentClip.equals(config.readyClip)) {
-                currentClip = config.readyClip;
-            }
-            Zombie target=null;
-            float nearestDistance= PotatoMine.ATTACK_RANGE*2;
-            for (Zombie z: ctx.getZombiesInLane(plant.getLane())){
-                float distance = Math.abs(z.getX()- GameController.colToWorldX(plant.getCol()));
-                if (distance<PotatoMine.ATTACK_RANGE && distance<nearestDistance){
-                    target=z;
-                    nearestDistance=distance;
-                }
-            }
-            if (target!=null){
+        if (stateTime>=config.idleTime) {
+            if (plant.getType()== PlantType.CherryBomb || plant.getType()==PlantType.Jalapeno){
                 List<Tile> targetTiles=new ArrayList<>();
-                if (plant.getType()== PlantType.PrimalPotatoMine){
+                if (plant.getType()== PlantType.CherryBomb){
                     for (int i = plant.getCol()-1; i < plant.getCol()+2; i++) {
                         for (int j = plant.getLane()-1; j < plant.getLane()+2; j++) {
                             Tile tile=ctx.getMap().getTileAt(i,j);
                             if (tile!=null) targetTiles.add(tile);
                         }
                     }
+                } else{
+                    for (int i = 0; i < ctx.getMap().getColumns(); i++) {
+                        Tile tile = ctx.getMap().getTileAt(i, plant.getCol());
+                        if (tile != null) targetTiles.add(tile);
+                    }
                 }
                 plant.changeState(new ExplosionAction(config.explosionClip,
                     config.explosionTime,config.explosionType,config.explosionIntensity,
-                    target,targetTiles, config.baseDamage));
+                    null,targetTiles,config.baseDamage));
+            } else {
+                plant.changeState(new PotatoMineReadyAction(config));
             }
         }
     }
@@ -78,7 +78,7 @@ public class PotatoMineReadyAction extends PlantAction {
         Vector2 position= new Vector2(GameController.colToWorldX(plant.getCol()),GameController.laneToWorldY(plant.getLane()));
         Vector2 scale = new Vector2(0.65f,0.65f);
         PamAnimationConfig pamAnimationConfig = plant.getSheet().pamAnimationConfig;
-        return new FrameConfig(pamAnimationConfig.pamFilePath,currentClip,stateTime,position,scale,null,true);
+        return new FrameConfig(pamAnimationConfig.pamFilePath,config.idleClip,stateTime,position,scale,null,true);
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.pvz.models.entities.plants.actions.explosive.potato_mine;
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
-import com.pvz.models.engine.GameEngine;
 import com.pvz.models.entities.effects.Explosion;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.actions.PlantAction;
@@ -14,8 +13,7 @@ import com.pvz.models.games.map.tile.Tile;
 
 import java.util.List;
 
-public class PotatoMineExplosionAction extends PlantAction {
-    String pamPath;
+public class ExplosionAction extends PlantAction {
     String clip;
     float explosionDuration;
     ExplosionType type;
@@ -23,9 +21,8 @@ public class PotatoMineExplosionAction extends PlantAction {
     Zombie target;
     List<Tile> targetTiles;
     float damage;
-    public PotatoMineExplosionAction(String pamPath, String clip, float explosionDuration
+    public ExplosionAction(String clip, float explosionDuration
         , ExplosionType type, ExplosionIntensity intensity, Zombie target, List<Tile> targetTiles, float damage){
-        this.pamPath=pamPath;
         this.clip=clip;
         this.explosionDuration=explosionDuration;
         this.intensity=intensity;
@@ -57,6 +54,7 @@ public class PotatoMineExplosionAction extends PlantAction {
                     for (Zombie z: ctx.getZombiesAt(t.getCol(),t.getLane())){
                         z.takeDamage(damage);
                     }
+                    t.processHit(damage);
                 }
             }
             plant.dispose();
@@ -72,7 +70,8 @@ public class PotatoMineExplosionAction extends PlantAction {
     public FrameConfig draw(Plant plant, GameContext ctx) {
         Vector2 position= new Vector2(GameController.colToWorldX(plant.getCol()),GameController.laneToWorldY(plant.getLane()));
         Vector2 scale = new Vector2(0.65f,0.65f);
-        return new FrameConfig(pamPath,clip,stateTime,position,scale,null,false);
+        PamAnimationConfig pamAnimationConfig = plant.getSheet().pamAnimationConfig;
+        return new FrameConfig(pamAnimationConfig.pamFilePath, clip,stateTime,position,scale,null,false);
     }
 
     @Override

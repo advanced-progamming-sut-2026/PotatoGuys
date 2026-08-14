@@ -159,30 +159,35 @@ public class GameContext implements TickAware {
 
     public List<Zombie> getZombiesAt(int col, int lane) {
         return getZombies().stream()
-                .filter(z -> GameController.worldYtoLane(z.getY()) == lane && (int) z.getX() == col && !z.isDead())
+                .filter(z -> GameController.worldYtoLane(z.getY()) == lane && GameController.worldXtoCol(z.getX()) == col && !z.isDead())
                 .toList();
     }
+
     public List<Zombie> getZombiesInLane(int lane) {
         return zombies.stream()
                 .filter(z -> GameController.worldYtoLane(z.getY()) == lane && !z.isDead())
                 .toList();
     }
+
     public List<Zombie> getZombiesInColumn(int col) {
         return zombies.stream()
                 .filter(z -> GameController.worldXtoCol(z.getX()) == col && !z.isDead())
                 .toList();
     }
+
     public void spawnZombie(Zombie z) {
         pendingZombiesToAdd.add(z);
         engine.register(z);
         addHitbox(z.getHitbox());
     }
+
     public boolean removeZombie(Zombie z) {
         engine.unRegister(z);
         pendingZombiesToRemove.add(z);
         removeHitbox(z.getHitbox());
         return true;
     }
+
     public boolean isZombieAt(int col, int lane) {
         return !getZombiesAt(col, lane).isEmpty();
     }
