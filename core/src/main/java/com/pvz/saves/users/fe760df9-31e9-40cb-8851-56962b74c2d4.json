@@ -10,7 +10,7 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 6600,
+    "coins": 6650,
     "diamonds": 153,
     "plantFood": 1,
     "collection": {
@@ -160,79 +160,79 @@
         },
         {
           "message": "New Zombie Encountered: BUCKETHEAD!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: BRICKHEAD!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: KNIGHT!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: FLAG!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: IMP!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: GARGANTUAR!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: NEWSPAPER!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: MUMMY!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: MUMMY_CONE!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: MUMMY_BUCKET!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: MUMMY_BRICK!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: TOMB_RAISER!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: EGYPT_IMP!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: ICE_AGE!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: ICE_AGE_CONE!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: ICE_AGE_BUCKET!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: HUNTER!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: TROGLOBITE!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: ICE_AGE_IMP!",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -1373,7 +1373,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786739107725
+    "lastDailyReset": 1786780746457
   },
   "questLogRefreshed": true
 }
