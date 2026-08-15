@@ -98,6 +98,12 @@
           "level": 1,
           "seed": 0,
           "isBoosted": true
+        },
+        {
+          "Type": "Squash",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": true
         }
       ],
       "unlockedZombies": [

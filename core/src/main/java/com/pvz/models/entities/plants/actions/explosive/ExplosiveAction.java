@@ -5,7 +5,6 @@ import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.actions.PlantAction;
-import com.pvz.models.entities.plants.actions.explosive.potato_mine.PotatoMineReadyAction;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -72,7 +71,7 @@ public class ExplosiveAction extends PlantAction {
                 }
                 plant.changeState(new ExplosionAction(config, null, targetTiles));
             } else {
-                plant.changeState(new PotatoMineReadyAction(config));
+                plant.changeState(new ExplosiveReadyAction(config));
             }
         }
     }

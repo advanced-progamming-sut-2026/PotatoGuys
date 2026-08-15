@@ -12406,7 +12406,7 @@ public class PvZ2 extends Game {
         Json json = new Json();
         json.setIgnoreUnknownFields(true);
         AnimationCatalog.setInstance(json.fromJson(AnimationCatalog.class, file));
-        
+
         globalAssetManager.finishLoading();
         textureBank=new TextureBank("768",Gdx.files.internal("./assets/pvz-assets/"));
         pamPlayer=new PamPlayer(textureBank,Gdx.files.internal("./assets/pvz-assets/"));
@@ -20268,7 +20268,7 @@ import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.actions.PlantAction;
-import com.pvz.models.entities.plants.actions.explosive.potato_mine.PotatoMineReadyAction;
+import com.pvz.models.entities.plants.actions.explosive.ExplosiveReadyAction;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -20964,7 +20964,7 @@ public class ShooterAction extends PlantAction {
             patterns.add(newPattern);
         }
 
-        
+
         PamAnimationConfig pam = plant.getSheet().pamAnimationConfig;
         animTime = AnimationCatalog.getInstance().getClipDuration(pam.pamFilePath , config.label);
     }

@@ -2,8 +2,10 @@ package com.pvz.models.entities.plants;
 
 import com.pvz.models.entities.plants.actions.*;
 import com.pvz.models.entities.plants.actions.explosive.ExplosiveAction;
+import com.pvz.models.entities.plants.actions.explosive.squash.SquashAction;
 import com.pvz.models.entities.plants.config.*;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
+import com.pvz.models.entities.plants.config.explosive.SquashConfig;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -59,6 +61,9 @@ public class PlantFactory {
         }
         if (config instanceof ExplosiveConfig explosiveConfig){
             return new ExplosiveAction(explosiveConfig);
+        }
+        if (config instanceof SquashConfig squashConfig){
+            return new SquashAction(squashConfig);
         }
         return null;
     }

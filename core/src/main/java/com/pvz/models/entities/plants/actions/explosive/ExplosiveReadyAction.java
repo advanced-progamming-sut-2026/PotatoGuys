@@ -1,11 +1,10 @@
-package com.pvz.models.entities.plants.actions.explosive.potato_mine;
+package com.pvz.models.entities.plants.actions.explosive;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.actions.PlantAction;
-import com.pvz.models.entities.plants.actions.explosive.ExplosionAction;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -17,11 +16,11 @@ import com.pvz.models.games.map.tile.Tile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PotatoMineReadyAction extends PlantAction {
+public class ExplosiveReadyAction extends PlantAction {
     ExplosiveConfig config;
     String currentClip;
 
-    public PotatoMineReadyAction(ExplosiveConfig config){
+    public ExplosiveReadyAction(ExplosiveConfig config){
         this.config=config;
         currentClip=config.recoverClip;
     }
