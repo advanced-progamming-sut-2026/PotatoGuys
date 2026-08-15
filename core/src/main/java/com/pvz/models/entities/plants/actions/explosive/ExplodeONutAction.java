@@ -58,8 +58,17 @@ public class ExplodeONutAction extends PlantAction {
             }
         }
         for (Zombie z : targets) {
-            z.takeDamage(config.baseDamage);
+            z.takeDamage(effectiveDamage(plant));
         }
+    }
+
+    /** Base explosion damage + the "Explode Dmg +200" level flag. */
+    private float effectiveDamage(Plant plant) {
+        float damage = config.baseDamage;
+        if (plant.getUnlockedFlags().contains("Explode Dmg +200")) {
+            damage += 200f;
+        }
+        return damage;
     }
 
     @Override

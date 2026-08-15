@@ -6,6 +6,7 @@ import java.util.Map;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.data.GrowthProfile;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
+import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.data.ProductionKind;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -39,7 +40,9 @@ public final class PlantConfigRegistry {
         }
     }
 
-    /** Adapts a {@link PlantJsonConfig} into the {@link PlantPropertySheet} shape {@code Plant} already understands. */
+    /** Adapts a {@link PlantJsonConfig} into the {@link PlantPropertySheet} shape {@code Plant} already understands.
+     *  When a profile exists for the same type it also copies the profile's tags, level-upgrades and damage
+     *  profile, so level-scaling and flavour flags keep working for config-driven plants. */
     public PlantPropertySheet toSheet(PlantJsonConfig cfg) {
         GrowthProfile growth = null;
         if (cfg.attackConfig instanceof SunProducerActionConfig sunConfig) {
@@ -48,7 +51,7 @@ public final class PlantConfigRegistry {
             }
         }
 
-        return new PlantPropertySheet.Builder(cfg.id, cfg.name, PlantType.valueOf(cfg.type))
+        PlantPropertySheet.Builder builder = new PlantPropertySheet.Builder(cfg.id, cfg.name, PlantType.valueOf(cfg.type))
                 .category(PlantCategory.valueOf(cfg.category))
                 .sunCost(cfg.sunCost)
                 .baseHp(cfg.baseHp)
@@ -58,7 +61,15 @@ public final class PlantConfigRegistry {
                 .description(cfg.description == null ? "" : cfg.description)
                 .plantAttackConfig(cfg.attackConfig)
                 .plantFeedConfig(cfg.feedConfig)
-                .pamAnimationConfig(cfg.pamAnimationConfig)
-                .build();
+                .pamAnimationConfig(cfg.pamAnimationConfig);
+
+        PlantPropertySheet profile = PlantRegistry.getInstance().getSheet(PlantType.valueOf(cfg.type));
+        if (profile != null) {
+            builder.tags(profile.getTags())
+                   .levelUpgrades(profile.getLevelUpgrades())
+                   .damage(profile.getDamage());
+        }
+
+        return builder.build();
     }
 }

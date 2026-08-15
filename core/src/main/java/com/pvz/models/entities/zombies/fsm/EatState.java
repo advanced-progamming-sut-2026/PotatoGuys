@@ -2,6 +2,7 @@ package com.pvz.models.entities.zombies.fsm;
 
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.PumpkinShield;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.config.ZombieActionConfig;
@@ -20,7 +21,7 @@ import com.pvz.models.games.GameContext;
  */
 public class EatState extends ZombieState {
 
-    private final Plant target;
+    private Plant target;
 
     /**
      * @param target the plant this zombie is chewing on (tracked by reference, not
@@ -58,6 +59,11 @@ public class EatState extends ZombieState {
             // Plant was destroyed or removed — return to walking
             ctx.log("Plant at (" + target.getCol() + "," + target.getLane() + ") is destroyed.");
             return new WalkState();
+        }
+        // A Pumpkin planted over this plant becomes the shield — chew through it first.
+        Plant shield = PumpkinShield.shieldFor(target, ctx);
+        if (shield != null) {
+            target = shield;
         }
         // Deal eat-DPS damage scaled by real dt: the engine runs at render-frame
         // rate (~60 fps), not at TICKS_PER_SECOND, so a flat per-tick amount would

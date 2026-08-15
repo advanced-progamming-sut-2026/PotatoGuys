@@ -10,6 +10,7 @@ import com.pvz.models.entities.plants.config.explosive.SquashConfig;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.enums.PlantType;
+import com.pvz.models.entities.plants.fsm.WallNutState;
 import com.pvz.models.games.GameContext;
 
 public class PlantFactory {
@@ -67,7 +68,7 @@ public class PlantFactory {
             return new SquashAction(squashConfig);
         }
         if (config instanceof NutConfig nutConfig){
-            return new ExplodeONutAction(nutConfig);
+            return nutConfig.explodesOnDestroy ? new ExplodeONutAction(nutConfig) : new WallNutState(nutConfig);
         }
         return null;
     }
@@ -77,6 +78,9 @@ public class PlantFactory {
     private PlantAction buildFeedAction(PlantActionConfig config) {
         if (config instanceof SunProducerActionConfig sunConfig) {
             return new SunProducerAction(sunConfig, false);
+        }
+        if (config instanceof WallNutFeedConfig wallNutFeedConfig) {
+            return new WallNutFeedAction(wallNutFeedConfig);
         }
         return buildConfigAction(config);
     }

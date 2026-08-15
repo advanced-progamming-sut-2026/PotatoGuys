@@ -39,6 +39,7 @@ public class Plant extends Entity {
 
     private float hp;
     private float maxHpBonus;
+    private float reflectDamageBonus;
     private float ageTicks;
     private int growthStageIndex;
 
@@ -201,6 +202,17 @@ public class Plant extends Entity {
 
     public void heal(float amount) {
         hp = Math.min(getMaxHp(), hp + Math.max(0, amount));
+    }
+
+    /** Permanently raises the plant's reflect-damage bonus (Endurian Plant Food). */
+    public void addReflectDamageBonus(float amount) {
+        if (amount <= 0f)
+            return;
+        reflectDamageBonus += amount;
+    }
+
+    public float getReflectDamageBonus() {
+        return reflectDamageBonus;
     }
 
     // ── Plant Food ────────────────────────────────────────────────────────────

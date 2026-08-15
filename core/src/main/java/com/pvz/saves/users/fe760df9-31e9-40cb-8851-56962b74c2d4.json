@@ -10,8 +10,8 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 6750,
-    "diamonds": 155,
+    "coins": 650,
+    "diamonds": 156,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -19,13 +19,13 @@
           "Type": "Peashooter",
           "level": 3,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "PotatoMine",
           "level": 1,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "PrimalPotatoMine",
@@ -43,7 +43,7 @@
           "Type": "Sunflower",
           "level": 3,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "Cabbagepult",
@@ -110,6 +110,60 @@
           "level": 1,
           "seed": 0,
           "isBoosted": false
+        },
+        {
+          "Type": "Tallnut",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Endurian",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Garlic",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "SweetPotato",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Pumpkin",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "SunBean",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "WinterMelon",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Kiwibeast",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Starfruit",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
         }
       ],
       "unlockedZombies": [
@@ -144,7 +198,8 @@
       "seedPackets": {
         "TwinSunflower": 5,
         "Peashooter": 5,
-        "Sunflower": 5
+        "Sunflower": 5,
+        "ElectricBlueberry": 10
       }
     },
     "news": {
@@ -260,6 +315,18 @@
         {
           "message": "New Zombie Encountered: BEACH_BUCKET!",
           "unread": true
+        },
+        {
+          "message": "New Plant Unlocked: WinterMelon!",
+          "unread": true
+        },
+        {
+          "message": "New Plant Unlocked: Kiwibeast!",
+          "unread": true
+        },
+        {
+          "message": "New Plant Unlocked: Starfruit!",
+          "unread": true
         }
       ]
     },
@@ -305,13 +372,13 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": "Enlightenmint",
-    "dailyOfferDate": "2026-08-14",
-    "dailyOfferPurchased": false
+    "dailyOfferPlantType": "ElectricBlueberry",
+    "dailyOfferDate": "2026-08-15",
+    "dailyOfferPurchased": true
   },
   "setting": {
     "difficulty": 3,
-    "gameSpeed": 2,
+    "gameSpeed": 1,
     "showGrid": false,
     "debugMode": true,
     "brightness": 0.98999995,
@@ -335,10 +402,10 @@
         "y": 1,
         "locked": false,
         "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-13T11:01:38.191169",
-          "growthHours": 2
+          "kind": "unlocked",
+          "plantType": "SweetPotato",
+          "plantedTime": "2026-08-15T23:45:06.691813",
+          "growthHours": 8
         }
       },
       {
@@ -348,7 +415,7 @@
         "greenHousePlant": {
           "kind": "mariGold",
           "plantType": null,
-          "plantedTime": "2026-08-13T09:02:54.477890",
+          "plantedTime": "2026-08-15T23:45:09.107236",
           "growthHours": 2
         }
       },
@@ -356,18 +423,18 @@
         "x": 3,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "BonkChoy",
+          "plantedTime": "2026-08-15T23:45:11.418193",
+          "growthHours": 8
+        }
       },
       {
         "x": 4,
         "y": 1,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-14T03:16:30.871656300",
-          "growthHours": 2
-        }
+        "greenHousePlant": null
       },
       {
         "x": 5,
@@ -379,29 +446,29 @@
         "x": 1,
         "y": 2,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "Cabbagepult",
+          "plantedTime": "2026-08-15T23:45:16.435751",
+          "growthHours": 8
+        }
       },
       {
         "x": 2,
         "y": 2,
         "locked": false,
         "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "Sunflower",
-          "plantedTime": "2026-08-14T03:16:39.302384500",
-          "growthHours": 8
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-15T23:45:18.649060",
+          "growthHours": 2
         }
       },
       {
         "x": 3,
         "y": 2,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "PotatoMine",
-          "plantedTime": "2026-08-14T03:16:33.536262700",
-          "growthHours": 8
-        }
+        "greenHousePlant": null
       },
       {
         "x": 4,
@@ -431,12 +498,7 @@
         "x": 3,
         "y": 3,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "Peashooter",
-          "plantedTime": "2026-08-14T03:16:35.866992100",
-          "growthHours": 8
-        }
+        "greenHousePlant": null
       },
       {
         "x": 4,
@@ -1400,7 +1462,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786780927311
+    "lastDailyReset": 1786824722069
   },
   "questLogRefreshed": true
 }

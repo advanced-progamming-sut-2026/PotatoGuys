@@ -15,6 +15,7 @@ import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.PumpkinShield;
 import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
 import com.pvz.models.entities.zombies.armor.ArmorType;
@@ -111,7 +112,8 @@ public class Zombie extends Entity {
                     return;
                 }
                 if (onHit.getOwner() instanceof Plant plant && !plant.isDead() && !plant.isFrozen()) {
-                    startEating(plant);
+                    Plant shield = PumpkinShield.shieldFor(plant, context);
+                    startEating(shield != null ? shield : plant);
                 }
             }
         });
@@ -188,6 +190,13 @@ public class Zombie extends Entity {
         if (currentState!=null) currentState.onExit(this,context);
         this.currentState=state;
         currentState.onExit(this,context);
+    }
+
+    /** Replaces the current FSM state cleanly (onExit → onEnter). */
+    public void setState(ZombieState state){
+        if (currentState != null) currentState.onExit(this, context);
+        currentState = state;
+        if (currentState != null) currentState.onEnter(this, context);
     }
 
     /**

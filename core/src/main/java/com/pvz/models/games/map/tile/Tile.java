@@ -68,6 +68,11 @@ public class Tile implements TickAware {
             }
         }
 
+        // STACK plants (e.g. Pumpkin) may be planted on top of an existing plant.
+        if (!plants.isEmpty() && sheet.getTags().contains(PlantTag.STACK)) {
+            return true;
+        }
+
         if (!plants.isEmpty()) return false;
 
         return true;
