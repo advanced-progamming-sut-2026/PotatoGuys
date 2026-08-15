@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
@@ -41,8 +42,10 @@ import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.user.MyPlant;
+import com.pvz.view.GameModesMenu;
 import com.pvz.view.game.GameScreen;
 import com.pvz.view.game.GameUiModal;
+import com.pvz.view.game.PauseMenuPopup;
 import com.pvz.view.game.PlantSelectModal;
 import pvz.skin.PvzSkin;
 
@@ -80,6 +83,9 @@ public class GameController {
     private float readyPlantTimer = 0f;
     private final float readyPlantDuration = 2.0f;
 
+    private boolean paused = false;
+    private Table pauseOverlay;
+
     /** Debug: draws every entity's hitbox rectangle (toggle with F1). */
     private boolean showHitboxes = true;
 
@@ -101,7 +107,7 @@ public class GameController {
         stage.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (currentState == State.PLAYING) {
+                if (currentState == State.PLAYING && !paused) {
                     if (ctx != null) {
                         // تبدیل ورودی ماوس/لمس به مختصات دقیق World
                         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -153,7 +159,7 @@ public class GameController {
         plantSelectModal = new PlantSelectModal(level, this::startGameSession);
         stage.addActor(plantSelectModal);
 
-        gameUiModal = new GameUiModal();
+        gameUiModal = new GameUiModal(this::pauseGame);
         stage.addActor(gameUiModal);
 
         backgroundTextures=new TextureRegion[3];
@@ -209,6 +215,14 @@ public class GameController {
             showHitboxes = !showHitboxes;
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            if (paused) {
+                resumeGame();
+            } else if (currentState == State.PLAYING) {
+                pauseGame();
+            }
+        }
+
         switch (currentState) {
             case PANNING_FORWARD:
                 stateTime += dt;
@@ -260,7 +274,7 @@ public class GameController {
         }
 
         // Check sun clicks in PLAYING state on left click
-        if (currentState == State.PLAYING && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
+        if (currentState == State.PLAYING && !paused && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             viewport.unproject(touchPos);
             if (checkSunClick(touchPos.x, touchPos.y)) {
@@ -271,9 +285,57 @@ public class GameController {
         }
 
         // ۴. آپدیت Engine
-        if (currentState == State.PLAYING) {
+        if (currentState == State.PLAYING && !paused) {
             GameEngine.getInstance().update(dt);
         }
+    }
+
+    private void pauseGame() {
+        if (currentState != State.PLAYING || paused) {
+            return;
+        }
+
+        paused = true;
+
+        Table overlay = new Table();
+        overlay.setFillParent(true);
+        overlay.setTouchable(Touchable.enabled);
+        overlay.setBackground(PvzSkin.get().newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.62f)));
+
+        overlay.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+
+        PauseMenuPopup popup = new PauseMenuPopup(this::saveAndExit, this::restartLevel, this::resumeGame);
+        overlay.add(popup).center();
+
+        pauseOverlay = overlay;
+        stage.addActor(pauseOverlay);
+        pauseOverlay.toFront();
+    }
+
+    private void resumeGame() {
+        if (!paused) {
+            return;
+        }
+        paused = false;
+        if (pauseOverlay != null) {
+            pauseOverlay.remove();
+            pauseOverlay = null;
+        }
+    }
+
+    private void restartLevel() {
+        resumeGame();
+        Gdx.app.postRunnable(() -> PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber)));
+    }
+
+    private void saveAndExit() {
+        resumeGame();
+        Gdx.app.postRunnable(() -> PvZ2.instance.setScreen(new GameModesMenu(PvZ2.instance)));
     }
 
     public void draw(){

@@ -34,6 +34,7 @@ public class PvZ2 extends Game {
     public static TextureBank textureBank;
     public static PamPlayer pamPlayer;
     public static SpriteBatch batch;
+    public static PvZ2 instance;
     AssetManager globalAssetManager;
 
     // Screen-space overlay used to apply the Settings screen's Brightness slider
@@ -73,6 +74,7 @@ public class PvZ2 extends Game {
     }
     @Override
     public void create() {
+        instance = this;
         FileHandle file = Gdx.files.internal("pvz-assets/animations.json");
         Json json = new Json();
         json.setIgnoreUnknownFields(true);

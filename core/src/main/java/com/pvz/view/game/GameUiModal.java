@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -54,7 +55,7 @@ public class GameUiModal extends Table {
     private final Map<PlantCard, Image> cooldownOverlayByCard = new HashMap<>();
     private Map<PlantType, PlantData> dataByType = new HashMap<>();
 
-    public GameUiModal() {
+    public GameUiModal(Runnable onPauseRequested) {
         super();
         setFillParent(true);
         top();
@@ -93,8 +94,26 @@ public class GameUiModal extends Table {
         gemCell.add(gemLabel).padLeft(8);
         walletTable.add(gemCell);
 
+        // Pause button pinned to the very top-right corner (same look as Rey's
+        // in-match HUD), pushing the coin/gem counters a bit to the left.
+        ImageButton pauseButton = new ImageButton(PvzSkin.get(), "ingame_pause");
+        pauseButton.setTouchable(Touchable.enabled);
+        pauseButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (onPauseRequested != null) {
+                    onPauseRequested.run();
+                }
+            }
+        });
+
+        Table rightControls = new Table();
+        rightControls.top().right();
+        rightControls.add(walletTable).right().padRight(10);
+        rightControls.add(pauseButton).right().size(58f);
+
         add(topBar).top().left().expandX().fillX();
-        add(walletTable).top().right().padTop(15).padRight(15);
+        add(rightControls).top().right().padTop(15).padRight(15);
         row();
 
         // Seed-packet tray: vertical column pinned to the left edge, below the top bar.
