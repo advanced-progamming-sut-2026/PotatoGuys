@@ -1,7 +1,9 @@
 package com.pvz.models.games.map.behaviors;
 
+import com.badlogic.gdx.math.Vector2;
 import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.games.GameContext;
@@ -98,8 +100,10 @@ public class GraveBehavior implements TileBehavior {
     }
 
     @Override
-    public void draw(Tile tile) {
+    public FrameConfig draw(Tile tile) {
         TileBehavior.super.draw(tile);
-        PvZ2.pamPlayer.draw(PvZ2.batch,pamId,clip,stateTime,tile.getX()+Tile.WIDTH/2,tile.getY()+Tile.HEIGHT/2,0.6f,0.6f,false);
+        Vector2 pos = new Vector2(tile.getX()+Tile.WIDTH/2,tile.getY()+Tile.HEIGHT/2);
+        Vector2 scale = new Vector2(0.65f,0.65f);
+        return new FrameConfig(pamId,clip,stateTime,pos,scale,null,false);
     }
 }
