@@ -1,6 +1,7 @@
 package com.pvz.models.entities.plants;
 
 import com.pvz.models.entities.plants.actions.*;
+import com.pvz.models.entities.plants.actions.explosive.ExplodeONutAction;
 import com.pvz.models.entities.plants.actions.explosive.ExplosiveAction;
 import com.pvz.models.entities.plants.actions.explosive.squash.SquashAction;
 import com.pvz.models.entities.plants.config.*;
@@ -64,6 +65,9 @@ public class PlantFactory {
         }
         if (config instanceof SquashConfig squashConfig){
             return new SquashAction(squashConfig);
+        }
+        if (config instanceof NutConfig nutConfig){
+            return new ExplodeONutAction(nutConfig);
         }
         return null;
     }

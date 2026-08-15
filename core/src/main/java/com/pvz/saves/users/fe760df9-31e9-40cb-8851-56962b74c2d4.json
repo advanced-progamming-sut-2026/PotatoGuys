@@ -10,7 +10,7 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 6650,
+    "coins": 6800,
     "diamonds": 153,
     "plantFood": 1,
     "collection": {
@@ -103,7 +103,13 @@
           "Type": "Squash",
           "level": 1,
           "seed": 0,
-          "isBoosted": true
+          "isBoosted": false
+        },
+        {
+          "Type": "Explodeonut",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
         }
       ],
       "unlockedZombies": [
@@ -130,7 +136,17 @@
         "ICE_AGE_BUCKET",
         "HUNTER",
         "TROGLOBITE",
-        "ICE_AGE_IMP"
+        "ICE_AGE_IMP",
+        "BEACH",
+        "BEACH_CONE",
+        "BEACH_BUCKET",
+        "SNORKEL",
+        "FISHERMAN",
+        "OCTOPUS",
+        "BEACH_IMP",
+        "DARK",
+        "DARK_CONE",
+        "DARK_BUCKET"
       ],
       "seedPackets": {
         "TwinSunflower": 5,
@@ -238,6 +254,46 @@
         },
         {
           "message": "New Zombie Encountered: ICE_AGE_IMP!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: BEACH!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: BEACH_CONE!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: BEACH_BUCKET!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: SNORKEL!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: FISHERMAN!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: OCTOPUS!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: BEACH_IMP!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: DARK!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: DARK_CONE!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: DARK_BUCKET!",
           "unread": true
         }
       ]
@@ -1379,7 +1435,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786745262192
+    "lastDailyReset": 1786792287629
   },
   "questLogRefreshed": true
 }
