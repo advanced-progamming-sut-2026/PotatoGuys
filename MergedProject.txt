@@ -6247,7 +6247,8 @@ public final class PamActor extends Actor {
         float cy = getY() + getHeight() / 2f;
         batch.setColor(1f, 1f, 1f, parentAlpha);
         if (partVisibility != null) {
-            drawWithVisibility(batch, pamPath, clipLabel, stateTime, cx, cy, scale, partVisibility);
+            drawWithVisibility(batch, pamPath, clipLabel, stateTime, cx, cy, scale,
+                    true, partVisibility);
         } else {
             PvZ2.pamPlayer.draw(batch, pamPath, clipLabel, stateTime, cx, cy, scale, scale, true);
         }
@@ -6259,9 +6260,9 @@ public final class PamActor extends Actor {
      * {@code PamPlayer} visibility overloads only draw at unit scale, so this mirrors
      * them by invoking the same {@code drawInternal} the public API uses.
      */
-    private static void drawWithVisibility(Batch batch, String pamPath, String clipLabel,
-                                           float stateTime, float cx, float cy, float scale,
-                                           Map<String, Boolean> visibility) {
+    public static void drawWithVisibility(Batch batch, String pamPath, String clipLabel,
+                                          float stateTime, float cx, float cy, float scale,
+                                          boolean loop, Map<String, Boolean> visibility) {
         try {
             ClipRef clip = PvZ2.pamPlayer.getClip(pamPath, clipLabel);
             if (clip == null) return;
@@ -6277,7 +6278,7 @@ public final class PamActor extends Actor {
                     float.class, boolean.class, float.class, float.class,
                     float.class, float.class, Map.class, String.class);
             m.setAccessible(true);
-            m.invoke(PvZ2.pamPlayer, batch, ba, range, stateTime, true,
+            m.invoke(PvZ2.pamPlayer, batch, ba, range, stateTime, loop,
                     cx, cy, scale, scale, visibility, null);
         } catch (ReflectiveOperationException e) {
             PvZ2.pamPlayer.draw(batch, pamPath, clipLabel, stateTime, cx, cy, scale, scale, true);
@@ -11659,13 +11660,25 @@ public final class ZombieCard extends Button {
         for (String alias : sheet.getArmorAliases()) {
             ArmorPropertySheet armor = ZombieRegistry.getInstance().getArmorSheet(alias);
             if (armor == null) continue;
-            String partName;
+            ArmorType type;
             try {
-                partName = ArmorType.fromString(armor.getArmorType()).pamPartName();
+                type = ArmorType.fromString(armor.getArmorType());
             } catch (IllegalArgumentException e) {
                 continue;
             }
-            if (partName != null) parts.put(partName, Boolean.TRUE);
+            // Show the intact layer, explicitly hiding the damaged layers
+            // (their parts may carry no hidden flag and would otherwise stack).
+            String[] layers = type.pamLayers();
+            if (layers == null) continue;
+            for (int i = 0; i < layers.length; i++) {
+                parts.put(layers[i], i == 0);
+            }
+            // Reveal the container part (ARMOR-flagged name culls its children
+            // unless force-shown) and pin the always-on / critical-only extras.
+            String container = type.pamContainerName();
+            if (container != null) parts.put(container, Boolean.TRUE);
+            for (String alive : type.pamAliveParts()) parts.put(alive, Boolean.TRUE);
+            for (String crit : type.pamCriticalParts()) parts.put(crit, Boolean.FALSE);
         }
         return parts.isEmpty() ? null : parts;
     }
@@ -12864,6 +12877,7 @@ import com.pvz.models.user.MyPlant;
 import com.pvz.view.game.GameScreen;
 import com.pvz.view.game.GameUiModal;
 import com.pvz.view.game.PlantSelectModal;
+import com.pvz.view.PamActor;
 import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
@@ -13173,10 +13187,28 @@ public class GameController {
         for (Zombie z: ctx.getZombies()){
             FrameConfig frameConfig = z.draw();
             if (frameConfig!=null){
-                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+                batch.setColor(frameConfig.r,frameConfig.g,frameConfig.b,frameConfig.a);
+                drawFrame(frameConfig);
+                batch.setColor(1f,1f,1f,1f);
             }
+        }
+    }
+
+    /**
+     * Draws one animation frame, honouring the optional {@code partsVisibility}
+     * map (e.g. a zombie's armour damage layers). The normal {@code PamPlayer}
+     * draw has no visibility overload, so this falls back to the reflective
+     * visibility-aware draw (which keeps the requested scale).
+     */
+    private void drawFrame(FrameConfig frameConfig){
+        if (frameConfig.partsVisibility == null){
+            PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
+                frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
+                frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+        } else {
+            PamActor.drawWithVisibility(batch,frameConfig.pamPath,frameConfig.label,
+                frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
+                frameConfig.scale.x,frameConfig.looping,frameConfig.partsVisibility);
         }
     }
 
@@ -18762,9 +18794,12 @@ FILE: PlantFactory.java
 package com.pvz.models.entities.plants;
 
 import com.pvz.models.entities.plants.actions.*;
+import com.pvz.models.entities.plants.actions.explosive.ExplodeONutAction;
 import com.pvz.models.entities.plants.actions.explosive.ExplosiveAction;
+import com.pvz.models.entities.plants.actions.explosive.squash.SquashAction;
 import com.pvz.models.entities.plants.config.*;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
+import com.pvz.models.entities.plants.config.explosive.SquashConfig;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -18821,6 +18856,12 @@ public class PlantFactory {
         if (config instanceof ExplosiveConfig explosiveConfig){
             return new ExplosiveAction(explosiveConfig);
         }
+        if (config instanceof SquashConfig squashConfig){
+            return new SquashAction(squashConfig);
+        }
+        if (config instanceof NutConfig nutConfig){
+            return new ExplodeONutAction(nutConfig);
+        }
         return null;
     }
 
@@ -18858,6 +18899,30 @@ public class PlantFactory {
 }
 
 
+
+
+======================================================
+FILE: SquashConfig.java
+======================================================
+
+package com.pvz.models.entities.plants.config.explosive;
+
+import com.pvz.models.entities.plants.config.PlantActionConfig;
+
+public class SquashConfig extends PlantActionConfig {
+    public String turnClip="turn";
+    public String jumpUpRightClip="jump_up_right";
+    public String jumpUpLeftClip="jump_up_left";
+    public String jumpDownRightClip="jump_down_right";
+    public String jumpDownLeftClip="jump_down_left";
+    public float turnDuration=1.19f;
+    public float jumpUpDuration=0.8f;
+    public float jumpDownDuration=0.8f;
+    public float radarRangeCoefficient=1.2f;
+    public float jumpHeightCoefficient=0.7f;
+    public float baseDamage = 1800f;
+
+}
 
 
 ======================================================
@@ -18978,6 +19043,20 @@ public class SunProducerActionConfig extends PlantActionConfig {
     public Vector2 spawnOffset = new Vector2();
     /** Sun pops out this many seconds into the attack/feed animation (defaults to 0 = instantly). */
     public float delaySeconds = 0f;
+}
+
+
+======================================================
+FILE: NutConfig.java
+======================================================
+
+package com.pvz.models.entities.plants.config;
+
+public class NutConfig extends PlantActionConfig{
+    public String damage1Clip="damage";
+    public String damage2Clip="damage2";
+    public String damage3Clip="damage3";
+    public float baseDamage=1800f;
 }
 
 
@@ -19115,6 +19194,7 @@ import java.nio.file.Paths;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
+import com.pvz.models.entities.plants.config.explosive.SquashConfig;
 
 public final class PlantActionConfigLoader {
 
@@ -19129,6 +19209,8 @@ public final class PlantActionConfigLoader {
         json.addClassTag("BonkChoyConfig", BonkChoyConfig.class);
         json.addClassTag("GraveBusterConfig", GraveBusterConfig.class);
         json.addClassTag("ExplosiveConfig", ExplosiveConfig.class);
+        json.addClassTag("SquashConfig", SquashConfig.class);
+        json.addClassTag("NutConfig", NutConfig.class);
         return json;
     }
 
@@ -20258,6 +20340,249 @@ public enum ExplosionIntensity {
 
 
 ======================================================
+FILE: SquashTurnAction.java
+======================================================
+
+package com.pvz.models.entities.plants.actions.explosive.squash;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.actions.PlantAction;
+import com.pvz.models.entities.plants.config.PamAnimationConfig;
+import com.pvz.models.entities.plants.config.explosive.SquashConfig;
+import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.games.GameContext;
+
+public class SquashTurnAction extends PlantAction {
+    SquashConfig config;
+    Zombie target;
+    public SquashTurnAction(SquashConfig config, Zombie target){
+        this.config=config;
+        this.target=target;
+    }
+    @Override
+    public boolean shouldTrigger(Plant plant, GameContext ctx, float dt) {
+        return false;
+    }
+
+    @Override
+    public void onEnter(Plant plant, GameContext ctx) {
+
+    }
+
+    @Override
+    public void update(Plant plant, GameContext ctx, float dt) {
+        super.update(plant, ctx, dt);
+        if (stateTime>=config.turnDuration) {
+            plant.changeState(new SquashJumpAction(config,target,false));
+        }
+    }
+
+    @Override
+    public void onExit(Plant plant, GameContext ctx) {
+
+    }
+
+    @Override
+    public FrameConfig draw(Plant plant, GameContext ctx) {
+        Vector2 scale = new Vector2(0.65f,0.65f);
+        PamAnimationConfig pamAnimationConfig = plant.getSheet().pamAnimationConfig;
+        return new FrameConfig(pamAnimationConfig.pamFilePath,config.turnClip,stateTime,plant.getPosition(),scale,null,true);
+    }
+
+    @Override
+    public String getLabel() {
+        return "";
+    }
+}
+
+
+======================================================
+FILE: SquashJumpAction.java
+======================================================
+
+package com.pvz.models.entities.plants.actions.explosive.squash;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.actions.PlantAction;
+import com.pvz.models.entities.plants.config.PamAnimationConfig;
+import com.pvz.models.entities.plants.config.explosive.SquashConfig;
+import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.games.GameContext;
+import com.pvz.models.games.map.GameMap;
+
+public class SquashJumpAction extends PlantAction {
+    SquashConfig config;
+    Zombie target;
+    boolean facingRight;
+    String currentClip;
+    Vector2 targetUpPos;
+    Vector2 targetDownPos;
+    Vector2 upVelocity;
+    Vector2 downVelocity;
+    boolean jumpUpOver;
+    public SquashJumpAction(SquashConfig config, Zombie target, boolean facingRight){
+        this.config=config;
+        this.target=target;
+        this.facingRight=facingRight;
+
+        if (facingRight) currentClip=config.jumpUpRightClip;
+        else currentClip=config.jumpUpLeftClip;
+
+        jumpUpOver=false;
+    }
+    @Override
+    public boolean shouldTrigger(Plant plant, GameContext ctx, float dt) {
+        return false;
+    }
+
+    @Override
+    public void onEnter(Plant plant, GameContext ctx) {
+        int col = GameController.worldXtoCol(target.getX());
+        int lane = GameController.worldYtoLane(target.getY());
+
+        float jumpHeight = plant.getPosition().y+ GameMap.TILE_HEIGHT * config.jumpHeightCoefficient;
+        if (plant.getCol() == col && plant.getLane() == lane){
+            targetUpPos=new Vector2(plant.getPosition().x, jumpHeight);
+            targetDownPos=new Vector2(plant.getPosition());
+        } else if(facingRight){
+            targetUpPos=new Vector2(plant.getPosition().x + GameMap.TILE_WIDTH, jumpHeight);
+            targetDownPos=new Vector2(plant.getPosition().x + GameMap.TILE_WIDTH, plant.getPosition().y);
+        } else {
+            targetUpPos=new Vector2(plant.getPosition().x - GameMap.TILE_WIDTH, jumpHeight);
+            targetDownPos=new Vector2(plant.getPosition().x - GameMap.TILE_WIDTH, plant.getPosition().y);
+        }
+
+        float upVelocityX = (targetUpPos.x-plant.getPosition().x)/config.jumpUpDuration;
+        float upVelocityY = (targetUpPos.y - plant.getPosition().y)/config.jumpUpDuration;
+        upVelocity=new Vector2(upVelocityX,upVelocityY);
+
+        float downVelocityX = (targetDownPos.x-targetUpPos.x)/config.jumpDownDuration;
+        float downVelocityY = (targetDownPos.y - targetUpPos.y)/config.jumpDownDuration;
+        downVelocity=new Vector2(downVelocityX,downVelocityY);
+    }
+
+    @Override
+    public void update(Plant plant, GameContext ctx, float dt) {
+        super.update(plant, ctx, dt);
+        if (stateTime<config.jumpUpDuration && !jumpUpOver){
+            plant.getPosition().x+=upVelocity.x*dt;
+            plant.getPosition().y+=upVelocity.y*dt;
+        } else if (stateTime >= config.jumpUpDuration && !jumpUpOver){
+            jumpUpOver=true;
+            stateTime=0;
+
+            if (facingRight) currentClip=config.jumpDownRightClip;
+            else currentClip = config.jumpDownLeftClip;
+        }
+
+        if (stateTime<config.jumpDownDuration && jumpUpOver){
+            plant.getPosition().x+=downVelocity.x*dt;
+            plant.getPosition().y+=downVelocity.y*dt;
+        } else if (stateTime >= config.jumpDownDuration && jumpUpOver){
+            target.takeDamage(config.baseDamage);
+            plant.dispose();
+        }
+    }
+
+    @Override
+    public void onExit(Plant plant, GameContext ctx) {
+
+    }
+
+    @Override
+    public FrameConfig draw(Plant plant, GameContext ctx) {
+        Vector2 scale = new Vector2(0.65f,0.65f);
+        PamAnimationConfig pamAnimationConfig = plant.getSheet().pamAnimationConfig;
+        return new FrameConfig(pamAnimationConfig.pamFilePath,currentClip,stateTime,plant.getPosition(),scale,null,true);
+    }
+
+    @Override
+    public String getLabel() {
+        return "";
+    }
+}
+
+
+======================================================
+FILE: SquashAction.java
+======================================================
+
+package com.pvz.models.entities.plants.actions.explosive.squash;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.actions.PlantAction;
+import com.pvz.models.entities.plants.config.PamAnimationConfig;
+import com.pvz.models.entities.plants.config.explosive.SquashConfig;
+import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.games.GameContext;
+import com.pvz.models.games.map.GameMap;
+
+public class SquashAction extends PlantAction {
+    SquashConfig config;
+    Zombie target;
+
+    public SquashAction(SquashConfig config){
+        this.config=config;
+        this.target=null;
+    }
+
+    @Override
+    public boolean shouldTrigger(Plant plant, GameContext ctx, float dt) {
+        float nearestDistance= config.radarRangeCoefficient* GameMap.TILE_WIDTH *2;
+        for (Zombie z: ctx.getZombiesInLane(plant.getLane())){
+            float distance = Math.abs(z.getX()- GameController.colToWorldX(plant.getCol()));
+            if (distance<config.radarRangeCoefficient*GameMap.TILE_WIDTH && distance<nearestDistance){
+                target=z;
+                nearestDistance=distance;
+            }
+        }
+        return target!=null;
+    }
+
+    @Override
+    public void onEnter(Plant plant, GameContext ctx) {
+
+    }
+
+    @Override
+    public void update(Plant plant, GameContext ctx, float dt) {
+        super.update(plant, ctx, dt);
+        if (target.getX()-plant.getPosition().x>0){
+            plant.changeState(new SquashJumpAction(config,target,true));
+        } else {
+            plant.changeState(new SquashTurnAction(config,target));
+        }
+    }
+
+    @Override
+    public void onExit(Plant plant, GameContext ctx) {
+
+    }
+
+    @Override
+    public FrameConfig draw(Plant plant, GameContext ctx) {
+        Vector2 scale = new Vector2(0.65f,0.65f);
+        PamAnimationConfig pamAnimationConfig = plant.getSheet().pamAnimationConfig;
+        return new FrameConfig(pamAnimationConfig.pamFilePath,pamAnimationConfig.idleLabel,stateTime,plant.getPosition(),scale,null,true);
+    }
+
+    @Override
+    public String getLabel() {
+        return "";
+    }
+}
+
+
+======================================================
 FILE: ExplosiveAction.java
 ======================================================
 
@@ -20268,7 +20593,6 @@ import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.actions.PlantAction;
-import com.pvz.models.entities.plants.actions.explosive.potato_mine.PotatoMineReadyAction;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -20335,7 +20659,7 @@ public class ExplosiveAction extends PlantAction {
                 }
                 plant.changeState(new ExplosionAction(config, null, targetTiles));
             } else {
-                plant.changeState(new PotatoMineReadyAction(config));
+                plant.changeState(new ExplosiveReadyAction(config));
             }
         }
     }
@@ -20360,30 +20684,16 @@ public class ExplosiveAction extends PlantAction {
 
 
 ======================================================
-FILE: ExplosiveAttackType.java
+FILE: ExplosiveReadyAction.java
 ======================================================
 
 package com.pvz.models.entities.plants.actions.explosive;
-
-public enum ExplosiveAttackType {
-    SINGLE,
-    AOE,
-    ROW
-}
-
-
-======================================================
-FILE: PotatoMineReadyAction.java
-======================================================
-
-package com.pvz.models.entities.plants.actions.explosive.potato_mine;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.actions.PlantAction;
-import com.pvz.models.entities.plants.actions.explosive.ExplosionAction;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -20395,11 +20705,11 @@ import com.pvz.models.games.map.tile.Tile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PotatoMineReadyAction extends PlantAction {
+public class ExplosiveReadyAction extends PlantAction {
     ExplosiveConfig config;
     String currentClip;
 
-    public PotatoMineReadyAction(ExplosiveConfig config){
+    public ExplosiveReadyAction(ExplosiveConfig config){
         this.config=config;
         currentClip=config.recoverClip;
     }
@@ -20456,6 +20766,101 @@ public class PotatoMineReadyAction extends PlantAction {
         Vector2 scale = new Vector2(0.65f,0.65f);
         PamAnimationConfig pamAnimationConfig = plant.getSheet().pamAnimationConfig;
         return new FrameConfig(pamAnimationConfig.pamFilePath,currentClip,stateTime,position,scale,null,true);
+    }
+
+    @Override
+    public String getLabel() {
+        return "";
+    }
+}
+
+
+======================================================
+FILE: ExplosiveAttackType.java
+======================================================
+
+package com.pvz.models.entities.plants.actions.explosive;
+
+public enum ExplosiveAttackType {
+    SINGLE,
+    AOE,
+    ROW
+}
+
+
+======================================================
+FILE: ExplodeONutAction.java
+======================================================
+
+package com.pvz.models.entities.plants.actions.explosive;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.effects.Explosion;
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.actions.PlantAction;
+import com.pvz.models.entities.plants.config.NutConfig;
+import com.pvz.models.entities.plants.config.PamAnimationConfig;
+import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.games.GameContext;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ExplodeONutAction extends PlantAction {
+    NutConfig config;
+    String currentClip;
+
+    public ExplodeONutAction(NutConfig config) {
+        this.config = config;
+    }
+
+    @Override
+    public boolean shouldTrigger(Plant plant, GameContext ctx, float dt) {
+        return plant.getHp() <= plant.getSheet().getBaseHp() * 0.75f;
+    }
+
+    @Override
+    public void onEnter(Plant plant, GameContext ctx) {
+        currentClip = config.damage1Clip;
+    }
+
+    @Override
+    public void update(Plant plant, GameContext ctx, float dt) {
+        super.update(plant, ctx, dt);
+
+        float hp = plant.getHp();
+        float baseHp = plant.getSheet().getBaseHp();
+
+        if (hp <= baseHp * 0.5f && hp > baseHp * 0.25f){
+            currentClip = config.damage2Clip;
+        }
+        else if (hp <= baseHp * 0.25f && hp > 0){
+            currentClip = config.damage3Clip;
+        }
+    }
+
+    @Override
+    public void onExit(Plant plant, GameContext ctx) {
+        ctx.addEffect(new Explosion(ctx, plant.getPosition(),
+            ExplosionType.PRIMAL_POTATO_MINE, ExplosionIntensity.LOW));
+        List<Zombie> targets = new ArrayList<>();
+        for (int col = plant.getCol() - 1; col <= plant.getCol() + 1; col++) {
+            for (int lane = plant.getLane() - 1; lane <= plant.getLane() + 1; lane++) {
+                targets.addAll(ctx.getZombiesAt(col, lane));
+            }
+        }
+        for (Zombie z : targets) {
+            z.takeDamage(config.baseDamage);
+        }
+    }
+
+    @Override
+    public FrameConfig draw(Plant plant, GameContext ctx) {
+        Vector2 scale = new Vector2(0.65f, 0.65f);
+        PamAnimationConfig pamAnimationConfig = plant.getSheet().pamAnimationConfig;
+        return new FrameConfig(pamAnimationConfig.pamFilePath, currentClip, stateTime, plant.getPosition(), scale, null, false);
     }
 
     @Override
@@ -21673,6 +22078,7 @@ public class Plant extends Entity {
         if (dead)
             return;
         dead = true;
+        if (currentState!=null) currentState.onExit(this,context);
         currentState = new PlantDeadState();
         context.removePlant(this);
         context.log("[Plant] " + sheet.getName() + " at (" + col + "," + lane + ") was destroyed.");
@@ -22071,6 +22477,129 @@ public class WalkState extends ZombieState {
 
 
 ======================================================
+FILE: SandstormCarryState.java
+======================================================
+
+
+package com.pvz.models.entities.zombies.fsm;
+
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.effects.SandstormCloudEffect;
+import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.games.GameContext;
+
+/**
+ * Initial FSM state for zombies delivered by a sandstorm (see
+ * {@code Wave#spawnZombie}, Ancient Egypt final-wave bursts).
+ *
+ * <p>The zombie is still spawned off-map exactly like any other zombie (so it
+ * never just materializes over the lawn), but instead of immediately walking
+ * it is wrapped in a {@link SandstormCloudEffect} and carried smoothly to its
+ * landing column:
+ * <ol>
+ *   <li>The cloud plays its intro clip while the zombie sits still at its
+ *       spawn point — nothing is on screen yet but the storm forming.</li>
+ *   <li>Once the intro finishes ({@link SandstormCloudEffect#isReadyToMove()}),
+ *       this state starts sliding the zombie toward {@link #targetX}, hidden
+ *       inside the (looping) cloud the whole way.</li>
+ *   <li>On arrival, the cloud is told to dissipate
+ *       ({@link SandstormCloudEffect#beginOutro()}) and the zombie hands off
+ *       to {@link WalkState} immediately — it becomes visible and starts
+ *       walking normally while the storm fades out behind it.</li>
+ * </ol>
+ *
+ * <p>Movement here intentionally does not reuse {@code Zombie}'s normal walk
+ * speed — it's a distinct "carried by the storm" speed, tunable below.
+ */
+public class SandstormCarryState extends ZombieState {
+
+    // TODO: tune to taste — this is a placeholder carry speed (world units/sec),
+    // independent of the zombie's own walk speed.
+    private static final float CARRY_SPEED_PER_SECOND = 900f;
+    private static final float ARRIVAL_EPSILON = 1f;
+
+    private final float targetX;
+    private SandstormCloudEffect cloud;
+
+    /** @param targetX world-space X of the column this zombie should land on. */
+    public SandstormCarryState(float targetX) {
+        super(null);
+        this.targetX = targetX;
+    }
+
+    @Override
+    public void onEnter(Zombie zombie, GameContext ctx) {
+        stateTime = 0f;
+        cloud = new SandstormCloudEffect(ctx, zombie);
+        ctx.addEffect(cloud);
+    }
+
+    @Override
+    public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
+        stateTime += dt;
+
+        if (cloud.isReadyToMove()) {
+            advanceTowardTarget(zombie, dt);
+            if (hasArrived(zombie)) {
+                zombie.setX(targetX);
+                cloud.beginOutro();
+                ctx.log("[Sandstorm] " + zombie.getSheet().getAlias() + " dropped at x="
+                        + String.format("%.1f", targetX));
+                return new WalkState();
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public void onExit(Zombie zombie, GameContext ctx) {
+        // The cloud is intentionally left alive — it keeps playing its own
+        // outro/dispose cycle independently of the zombie's FSM from here on.
+    }
+
+    @Override
+    public FrameConfig draw(Zombie zombie, GameContext ctx) {
+        // The zombie itself stays invisible while inside the storm; the
+        // SandstormCloudEffect (rendered separately via GameContext#getEffects)
+        // is the only thing drawn during this state.
+        return null;
+    }
+
+    @Override
+    public boolean shouldTrigger(Zombie zombie, GameContext ctx, float dt) {
+        return false;
+    }
+
+    @Override
+    protected void doExecute(Zombie zombie, GameContext ctx) {
+        // no-op — all logic lives in onEnter()/update()
+    }
+
+    @Override
+    public String getName() {
+        return "SandstormCarry";
+    }
+
+    @Override
+    public String getLabel() {
+        return "Carried by Sandstorm";
+    }
+
+    // ── Private helpers ───────────────────────────────────────────────────────
+
+    private void advanceTowardTarget(Zombie zombie, float dt) {
+        float step = CARRY_SPEED_PER_SECOND * dt;
+        float newX = Math.max(zombie.getX() - step, targetX);
+        zombie.setX(newX);
+    }
+
+    private boolean hasArrived(Zombie zombie) {
+        return zombie.getX() <= targetX + ARRIVAL_EPSILON;
+    }
+}
+
+
+======================================================
 FILE: EatState.java
 ======================================================
 
@@ -22206,7 +22735,7 @@ public class FrozenState extends ZombieState{
 
     @Override
     public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
-        super.update(zombie, ctx, dt);
+        stateTime+=dt;
         if (stateTime>=duration){
             return lastState;
         }
@@ -22215,8 +22744,10 @@ public class FrozenState extends ZombieState{
 
     @Override
     public FrameConfig draw(Zombie zombie, GameContext ctx) {
-        return new FrameConfig(pamPath,clip,lastStateFrameTime,zombie.getPosition(),
+        FrameConfig frameConfig = new FrameConfig(pamPath,clip,lastStateFrameTime,zombie.getPosition(),
             new Vector2(0.65f,0.65f),partVisibility,false);
+        frameConfig.setColor(0.4f,0.6f,1f,1f);
+        return frameConfig;
     }
 
     @Override
@@ -23203,6 +23734,8 @@ FILE: ZombieAnimationConfig.java
 
 package com.pvz.models.entities.zombies.config;
 
+import java.util.List;
+
 /**
  * Per-zombie PAM animation configuration — the zombie counterpart of
  * {@link com.pvz.models.entities.plants.config.PamAnimationConfig}.
@@ -23224,6 +23757,15 @@ public class ZombieAnimationConfig {
 
     /** Visual scale multiplier; falls back to 0.65 when unset. */
     public Float scale;
+
+    /**
+     * All clip labels the sheet actually defines, in PAM order. Populated from
+     * the baked config data at load time so the model can resolve a requested
+     * state label (e.g. {@code walk}) to an existing clip (e.g. {@code idle})
+     * without touching any graphics engine — the entity layer must stay
+     * server-friendly.
+     */
+    public List<String> availableClips;
 }
 
 
@@ -24077,17 +24619,18 @@ public enum ZombieType {
 FILE: Zombie.java
 ======================================================
 
+
 package com.pvz.models.entities.zombies;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
-import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
@@ -24095,6 +24638,7 @@ import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
+import com.pvz.models.entities.zombies.armor.ArmorType;
 import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
 import com.pvz.models.entities.zombies.data.ScaledProp;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
@@ -24137,6 +24681,8 @@ public class Zombie extends Entity {
 
     // ── FSM ───────────────────────────────────────────────────────────────────
     private ZombieState currentState;
+    /** Optional override for the state {@link #enter()} starts in; see {@link #setPendingInitialState}. */
+    private ZombieState pendingInitialState;
 
     // ── Flags ─────────────────────────────────────────────────────────────────
     private boolean dead;
@@ -24200,11 +24746,26 @@ public class Zombie extends Entity {
 
     @Override
     public void enter() {
-        currentState = new WalkState();
+        currentState = pendingInitialState != null ? pendingInitialState : new WalkState();
         currentState.onEnter(this, context);
         context.log("[Spawn] " + sheet.getAlias()
-                + " entered lane " + GameController.worldYtoLane(position.y) + " at x=" + String.format("%.1f", position.x)
-                + (glowing ? " [GLOWING]" : ""));
+            + " entered lane " + GameController.worldYtoLane(position.y) + " at x=" + String.format("%.1f", position.x)
+            + (glowing ? " [GLOWING]" : ""));
+    }
+
+    /**
+     * Overrides the FSM state this zombie starts in, instead of the default
+     * {@link WalkState}. Must be called before the zombie's first {@code enter()}
+     * tick — i.e. right after construction, before handing it to
+     * {@link GameContext#spawnZombie(Zombie)} — since {@code enter()} runs on
+     * the next engine tick, not synchronously in the constructor.
+     *
+     * <p>Used by sandstorm-driven spawns ({@code Wave#spawnZombie}) to start a
+     * zombie inside {@link com.pvz.models.entities.zombies.fsm.SandstormCarryState}
+     * so it's carried in from off-map instead of appearing mid-lawn.
+     */
+    public void setPendingInitialState(ZombieState state) {
+        this.pendingInitialState = state;
     }
 
     @Override
@@ -24258,11 +24819,98 @@ public class Zombie extends Entity {
     public FrameConfig drawClip(String clipLabel) {
         ZombieAnimationConfig anim = sheet.getAnimationConfig();
         String pamPath = (anim != null && anim.pamFilePath != null)
-                ? anim.pamFilePath
-                : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
+            ? anim.pamFilePath
+            : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
         float scale = (anim != null && anim.scale != null) ? anim.scale : 0.65f;
-        return new FrameConfig(pamPath, clipLabel, stateTime,
-                new Vector2(position.x, position.y), new Vector2(scale, scale), null, true);
+        return new FrameConfig(pamPath, resolveClipLabel(anim, newspaperClipLabel(clipLabel)), stateTime,
+            new Vector2(position.x, position.y), new Vector2(scale, scale),
+            buildPartsVisibility(), true);
+    }
+
+    /**
+     * Resolves the requested clip label to one that actually exists in the
+     * sheet. Not every sheet defines the classic clips (some bosses/fishermen
+     * play {@code intro}/{@code idle}/{@code special} instead of
+     * {@code walk}/{@code eat}), and requesting a missing clip makes the
+     * renderer throw. When the label is absent we fall back to {@code idle} and
+     * finally to the first clip the sheet provides.
+     *
+     * <p>Purely data-driven: the clip list comes from the config, never from a
+     * graphics call, so this runs unchanged on a headless server.
+     */
+    private String resolveClipLabel(ZombieAnimationConfig anim, String requested) {
+        List<String> clips = anim != null ? anim.availableClips : null;
+        if (clips == null || clips.isEmpty() || clips.contains(requested)) return requested;
+        for (String candidate : new String[] { "idle", "idle2", "default", "" }) {
+            if (candidate != null && clips.contains(candidate)) return candidate;
+        }
+        return clips.get(0);
+    }
+
+    /**
+     * While the newspaper armour is alive the sheet plays its dedicated
+     * {@code *_newspaper} clips (the newspaper parts exist only there). Once the
+     * armour is destroyed the zombie falls back to the base clips, which show
+     * it without the paper.
+     */
+    private String newspaperClipLabel(String clipLabel) {
+        if (!hasAliveArmor(ArmorType.NEWSPAPER)) return clipLabel;
+        switch (clipLabel) {
+            case "walk": return "walk_newspaper";
+            case "eat":  return "eat_newspaper";
+            case "idle": return "idle_newspaper";
+            default:     return clipLabel;
+        }
+    }
+
+    private boolean hasAliveArmor(ArmorType type) {
+        for (ArmorPiece armor : armors) {
+            if (!armor.isDestroyed() && armor.getType() == type) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Builds the PAM part-visibility map for this zombie's current armour state.
+     *
+     * <p>Every living armour piece contributes its three damage-layer part names
+     * (from the armour's {@code ArmorLayers} data): the layer matching the
+     * piece's current {@link ArmorPiece#getLayerIndex()} is forced visible
+     * ({@code true}) while the other layers are forced hidden ({@code false}),
+     * so the armour visually cracks as its health drops. Destroyed pieces
+     * contribute nothing, making them fall off the zombie entirely.
+     *
+     * <p>On top of the layer swap, {@link ArmorType#pamContainerName()} may add
+     * a nested container part to force visible (its name carries the ARMOR flag,
+     * so libPVZ would otherwise cull it together with its children), and the
+     * {@code pamAliveParts()}/{@code pamCriticalParts()} extras pin parts such
+     * as the newspaper zombie's hand (always) and flame (critical layer only).
+     *
+     * @return the visibility map, or {@code null} when there is no living armour
+     *         to display (basic zombies / fully destroyed armour)
+     */
+    private Map<String, Boolean> buildPartsVisibility() {
+        if (armors.isEmpty()) return null;
+        Map<String, Boolean> visibility = null;
+        for (ArmorPiece armor : armors) {
+            if (armor.isDestroyed()) continue;
+            String[] layers = armor.getType().pamLayers();
+            if (layers == null) continue;
+            if (visibility == null) visibility = new HashMap<>();
+            int layer = Math.min(armor.getLayerIndex(), layers.length - 1);
+            for (int i = 0; i < layers.length; i++) {
+                visibility.put(layers[i], i == layer);
+            }
+            // Some sheets nest the layer parts under a container part whose
+            // name carries the ARMOR flag; libPVZ culls flagged parts unless
+            // revealed, and culling the container hides its children too, so
+            // force the container visible together with the current layer.
+            String container = armor.getType().pamContainerName();
+            if (container != null) visibility.put(container, true);
+            for (String alive : armor.getType().pamAliveParts()) visibility.put(alive, true);
+            for (String crit : armor.getType().pamCriticalParts()) visibility.put(crit, layer == layers.length - 1);
+        }
+        return visibility;
     }
 
     @Override
@@ -24274,7 +24922,7 @@ public class Zombie extends Entity {
 
     /** Switches to {@link EatState} targeting {@code plant} if not already eating. */
     public void startEating(Plant plant) {
-        if (dead || currentState instanceof EatState) {
+        if (dead || currentState instanceof EatState || currentState instanceof FrozenState) {
             return;
         }
         currentState.onExit(this, context);
@@ -24390,7 +25038,7 @@ public class Zombie extends Entity {
             float overflow = armor.absorbDamage(amount);
             if (armor.isDestroyed()) {
                 context.log(sheet.getAlias() + "'s "
-                        + armor.getType().name() + " armour was destroyed!");
+                    + armor.getType().name() + " armour was destroyed!");
             }
             if (!armor.hasFlag(ArmorFlag.PASSDAMAGE)) {
                 return overflow;
@@ -24417,7 +25065,7 @@ public class Zombie extends Entity {
         context.getGameStats().onZombieKilledInSeason(context.getSeasonName());
         context.removeZombie(this);
         context.log("Zombie of type " + sheet.getAlias()
-                + " is dead at (" + String.format("%.1f", position.x) + "," + GameController.worldYtoLane(position.y) + ")");
+            + " is dead at (" + String.format("%.1f", position.x) + "," + GameController.worldYtoLane(position.y) + ")");
     }
 
     private void updateStatusEffects(float dt) {
@@ -24426,8 +25074,8 @@ public class Zombie extends Entity {
 
     private boolean isParalysed() {
         return hasEffect(EffectType.FROZEN)
-                || hasEffect(EffectType.TRANSFORMED)
-                || hasEffect(EffectType.STUN);
+            || hasEffect(EffectType.TRANSFORMED)
+            || hasEffect(EffectType.STUN);
     }
 
     private void appendArmorDetails(StringBuilder sb) {
@@ -24437,7 +25085,7 @@ public class Zombie extends Entity {
         for (ArmorPiece a : armors) {
             if (!a.isDestroyed()) {
                 sb.append("\n    ").append(a.getType().name().toLowerCase())
-                        .append(": ").append(String.format("%.0f", a.getCurrentHealth()));
+                    .append(": ").append(String.format("%.0f", a.getCurrentHealth()));
             }
         }
     }
@@ -24446,10 +25094,12 @@ public class Zombie extends Entity {
         sb.append("\n  effects:");
         if (activeEffects.isEmpty()) { sb.append(" (none)"); return; }
         activeEffects.forEach((type, eff) ->
-                sb.append("\n    ").append(type.name().toLowerCase())
-                        .append(": ").append(String.format("%.1f", eff.getRemainingDuration())).append("s"));
+            sb.append("\n    ").append(type.name().toLowerCase())
+                .append(": ").append(String.format("%.1f", eff.getRemainingDuration())).append("s"));
     }
 }
+
+
 
 
 ======================================================
@@ -25040,14 +25690,82 @@ public enum ArmorType {
      *         (e.g. the newspaper, which is part of its own PAM's default clips)
      */
     public String pamPartName() {
+        String[] layers = pamLayers();
+        return layers == null ? null : layers[0];
+    }
+
+    /**
+     * PAM part names for this armour piece, one per damage layer: index 0 is the
+     * intact look, index 1 the first (cracked) stage and index 2 the critical
+     * stage. Taken directly from the {@code ArmorLayers} arrays of each armour's
+     * data sheet; the current layer is picked by the armour's remaining-health
+     * percentage ({@code ArmorLayerHealth} thresholds), see
+     * {@link ArmorPiece#getLayerIndex()}.
+     *
+     * @return the three part names, or {@code null} for armours with no PAM part
+     *         to reveal
+     */
+    public String[] pamLayers() {
         switch (this) {
-            case CONE:           return "zombie_armor_cone_norm";
-            case BUCKET:         return "zombie_armor_bucket_norm";
-            case BRICK:          return "zombie_armor_brick_norm";
-            case CROWN:          return "zombie_armor_crown_norm";
-            case SHOULDER_ARMOR: return "zombie_shoulder_armor_norm";
-            case ICE_BLOCK:      return "zombie_armor_iceblock_norm";
+            case CONE:           return new String[]{"zombie_armor_cone_norm",
+                    "zombie_armor_cone_damage_01", "zombie_armor_cone_damage_02"};
+            case BUCKET:         return new String[]{"zombie_armor_bucket_norm",
+                    "zombie_armor_bucket_damage_01", "zombie_armor_bucket_damage_02"};
+            case BRICK:          return new String[]{"zombie_armor_brick_norm",
+                    "zombie_armor_brick_damage_01", "zombie_armor_brick_damage_02"};
+            case CROWN:          return new String[]{"zombie_armor_crown_norm",
+                    "zombie_armor_crown_damage_01", "zombie_armor_crown_damage_02"};
+            case SHOULDER_ARMOR: return new String[]{"zombie_shoulder_armor_norm",
+                    "zombie_shoulder_armor_damage_01", "zombie_shoulder_armor_damage_02"};
+            case NEWSPAPER:      return new String[]{"_zombie_newspaper",
+                    "_zombie_newspaper_dmg1", "_zombie_newspaper_dmg2"};
+            case ICE_BLOCK:      return new String[]{"zombie_armor_iceblock_norm",
+                    "zombie_armor_iceblock_damage1", "zombie_armor_iceblock_damage2"};
             default:             return null;
+        }
+    }
+
+    /**
+     * Name of the container part that groups this armour's damage-layer parts
+     * inside the shared zombie sheet, or {@code null} when the parts are
+     * attached directly to the animation.
+     *
+     * <p>Some sheets nest their armour parts under a container sprite whose
+     * name contains {@code "armor"} (e.g. {@code _zombie_armor_crown_states},
+     * {@code zombie_shoulder_armor}). libPVZ culls any part whose name carries
+     * the ARMOR flag unless the visibility map reveals it — and culling a
+     * container also hides its children — so the container must be force-shown
+     * alongside the layer parts.
+     */
+    public String pamContainerName() {
+        switch (this) {
+            case CROWN:          return "_zombie_armor_crown_states";
+            case SHOULDER_ARMOR: return "zombie_shoulder_armor";
+            default:             return null;
+        }
+    }
+
+    /**
+     * Extra top-level parts that must be shown while this armour is alive,
+     * regardless of the damage layer. These parts have no ARMOR flag, so
+     * without an explicit map entry they would render in every layer.
+     */
+    public String[] pamAliveParts() {
+        switch (this) {
+            case NEWSPAPER: return new String[]{"_zombie_newspaper_hand"};
+            default:        return new String[0];
+        }
+    }
+
+    /**
+     * Extra top-level parts that should only render at the critical (last)
+     * damage layer. Like {@link #pamAliveParts()} they carry no ARMOR flag and
+     * therefore need explicit visibility control.
+     */
+    public String[] pamCriticalParts() {
+        switch (this) {
+            case NEWSPAPER: return new String[]{"_zombie_newspaper_flame"};
+            default:        return new String[0];
         }
     }
 
@@ -25248,6 +25966,129 @@ public class JalapenoFire extends Effect{
     @Override
     public FrameConfig draw() {
         return new FrameConfig(PAM_PATH,currentClip,stateTime,pos,new Vector2(0.65f,0.65f),null,false);
+    }
+}
+
+
+======================================================
+FILE: SandstormCloudEffect.java
+======================================================
+
+
+package com.pvz.models.entities.effects;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.Entity;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
+import com.pvz.models.games.GameContext;
+
+/**
+ * Visual sandstorm cloud used to carry a zombie in from off-map (Ancient
+ * Egypt final-wave bursts). Owns purely the *visual* clip sequencing; the
+ * movement/arrival decision belongs to
+ * {@link com.pvz.models.entities.zombies.fsm.SandstormCarryState}, which
+ * creates one of these per carried zombie and drives it via
+ * {@link #isReadyToMove()} / {@link #beginOutro()}.
+ *
+ * <p>Plays three clips back-to-back, exactly like the in-game sandstorm:
+ * <ol>
+ *   <li><b>INTRO</b> — the storm forms at the zombie's spawn point. The
+ *       zombie does not move yet.</li>
+ *   <li><b>LOOP</b>  — the storm travels with the zombie, looping
+ *       indefinitely until {@link #beginOutro()} is called.</li>
+ *   <li><b>OUTRO</b> — the storm dissipates in place (it stops following the
+ *       rider once this starts). The effect disposes itself once this clip
+ *       finishes, exactly like {@code Explosion}/{@code JalapenoFire} do.</li>
+ * </ol>
+ */
+public class SandstormCloudEffect extends Effect {
+
+    // TODO: replace with the real PAM path once the asset address is known.
+    private static final String SAND_STORM_PAM_PATH = "768/INITIAL/EFFECTS/SANDSTORM_TOP/SANDSTORM_TOP.PAM";
+
+    // TODO: replace with the real clip names baked into the PAM above.
+    private static final String INTRO_CLIP = "intro";
+    private static final String LOOP_CLIP = "loop";
+    private static final String OUTRO_CLIP = "outro";
+
+    private static final Vector2 SCALE = new Vector2(0.65f, 0.65f);
+
+    // Used only if the clip isn't found in the AnimationCatalog yet (e.g. the
+    // placeholder PAM path above hasn't been wired to real data).
+    private static final float FALLBACK_INTRO_DURATION = 0.5f;
+    private static final float FALLBACK_OUTRO_DURATION = 0.5f;
+
+    private enum Phase { INTRO, LOOP, OUTRO }
+
+    /** The entity this cloud stays glued to while traveling (the zombie). */
+    private final Entity rider;
+
+    private final float introDuration;
+    private final float outroDuration;
+
+    private Phase phase = Phase.INTRO;
+    private float clipTime;
+
+    public SandstormCloudEffect(GameContext ctx, Entity rider) {
+        super(ctx, rider.getPosition());
+        this.rider = rider;
+
+        AnimationCatalog catalog = AnimationCatalog.getInstance();
+        this.introDuration = resolveDuration(catalog, INTRO_CLIP, FALLBACK_INTRO_DURATION);
+        this.outroDuration = resolveDuration(catalog, OUTRO_CLIP, FALLBACK_OUTRO_DURATION);
+    }
+
+    private float resolveDuration(AnimationCatalog catalog, String clip, float fallback) {
+        float duration = catalog != null ? catalog.getClipDuration(SAND_STORM_PAM_PATH, clip) : -1f;
+        return duration > 0f ? duration : fallback;
+    }
+
+    /** True once the intro has finished forming, i.e. it's safe to start moving the rider. */
+    public boolean isReadyToMove() {
+        return phase != Phase.INTRO;
+    }
+
+    /**
+     * Freezes the cloud in place and starts the dissipate animation.
+     * Idempotent — safe to call more than once.
+     */
+    public void beginOutro() {
+        if (phase == Phase.OUTRO) return;
+        phase = Phase.OUTRO;
+        clipTime = 0f;
+    }
+
+    @Override
+    public void update(float dt) {
+        super.update(dt);
+
+        // Stay glued to the rider while forming/traveling; once dissipating,
+        // stay put at the drop point instead of trailing the (now-visible,
+        // already-walking) zombie.
+        if (phase != Phase.OUTRO) {
+            pos.set(rider.getPosition());
+        }
+
+        clipTime += dt;
+        if (phase == Phase.INTRO && clipTime >= introDuration) {
+            phase = Phase.LOOP;
+            clipTime = 0f;
+        } else if (phase == Phase.OUTRO && clipTime >= outroDuration) {
+            dispose();
+        }
+    }
+
+    @Override
+    public FrameConfig draw() {
+        String clip = switch (phase) {
+            case INTRO -> INTRO_CLIP;
+            case LOOP -> LOOP_CLIP;
+            case OUTRO -> OUTRO_CLIP;
+        };
+        // Only the LOOP clip should actually loop; intro/outro play once.
+        boolean looping = phase == Phase.LOOP;
+        return new FrameConfig(SAND_STORM_PAM_PATH, clip, clipTime, pos, SCALE, null, looping);
     }
 }
 
@@ -25825,6 +26666,7 @@ public abstract class Level {
 FILE: Wave.java
 ======================================================
 
+
 package com.pvz.models.games.levels;
 
 import java.util.List;
@@ -25835,6 +26677,7 @@ import com.pvz.models.AppContext;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.ZombieType;
+import com.pvz.models.entities.zombies.fsm.SandstormCarryState;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.user.Collection;
 
@@ -25853,7 +26696,7 @@ public class Wave {
     private static Random rand = new Random();
 
     public Wave(int waveNumber, boolean isFinalWave, int totalWaveCost, List<WavePhase> phases,
-            int lanes, int difficulty) {
+                int lanes, int difficulty) {
         this.waveNumber = waveNumber;
         this.isFinalWave = isFinalWave;
         this.baseTotalWaveCost = totalWaveCost;
@@ -25927,7 +26770,7 @@ public class Wave {
             currentPhase++;
             remainingInPhase = phases.get(currentPhase).getZombieCount();
             context.log("Wave " + waveNumber + " phase " + (currentPhase + 1)
-                    + (phases.get(currentPhase).isBurst() ? " [BURST]" : ""));
+                + (phases.get(currentPhase).isBurst() ? " [BURST]" : ""));
         }
 
         secondsUntilNextSpawn = phases.get(currentPhase).getIntervalSeconds();
@@ -25941,29 +26784,36 @@ public class Wave {
         // Guard against unknown/unregistered types deserialized as null by Gson —
         // an invalid enum name in level data must not crash the wave.
         List<ZombieType> valid = allowed.stream()
-                .filter(java.util.Objects::nonNull)
-                .toList();
+            .filter(java.util.Objects::nonNull)
+            .toList();
         if (valid.isEmpty())
             return;
 
         ZombieType type = valid.get(rand.nextInt(valid.size()));
         int lane = rand.nextInt(lanes);
-        int col = context.getMap().getColumns()+1;
+
+        // Every zombie spawns off-map, same as normal — sandstorm zombies are
+        // never teleported directly onto the lawn. What differs is what happens
+        // after spawn: a normal zombie starts walking immediately, while a
+        // sandstorm zombie starts inside SandstormCarryState, which hides it in
+        // a traveling sand-cloud effect until it reaches its landing column.
+        int spawnCol = context.getMap().getColumns() + 1;
 
         // Sandstorm: during final wave burst in Ancient Egypt, zombies are carried
-        // deeper into the map (1-4 columns from the right edge)
+        // deeper into the map (1-4 columns from the right edge) instead of
+        // walking on from the edge like normal zombies.
         boolean isSandstorm = isFinalWave && phase.isBurst()
-                && "ancient egypt".equalsIgnoreCase(context.getSeasonName());
+            && "ancient egypt".equalsIgnoreCase(context.getSeasonName());
 
-        context.log("DEBUG: Checking sandstorm: isFinalWave=" + isFinalWave + ", isBurst=" + phase.isBurst()
-                + ", season=" + context.getSeasonName() + ", isSandstorm=" + isSandstorm);
+        Zombie newZombie = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(spawnCol), lane, context, waveNumber, difficulty);
 
         if (isSandstorm) {
-            col = context.getMap().getColumns() - 2 - rand.nextInt(4);
-            context.log("A sandstorm carries a " + type.getAlias() + " to column " + col + "!");
+            int targetCol = context.getMap().getColumns() - 2 - rand.nextInt(4);
+            float targetX = GameController.colToWorldX(targetCol);
+            newZombie.setPendingInitialState(new SandstormCarryState(targetX));
+            context.log("A sandstorm carries a " + type.getAlias() + " toward column " + targetCol + "!");
         }
 
-        Zombie newZombie = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(col), lane, context, waveNumber, difficulty);
         context.spawnZombie(newZombie);
 
         // Adding this zombie type to user collection if user hasn't seen this type of
@@ -25978,6 +26828,8 @@ public class Wave {
         done = true;
     }
 }
+
+
 
 
 ======================================================
@@ -31276,6 +32128,10 @@ public class FrameConfig {
     public Vector2 scale;
     public Map<String, Boolean> partsVisibility;
     public boolean looping;
+    public float r;
+    public float g;
+    public float b;
+    public float a;
 
     public FrameConfig(String pamPath, String label, float stateTime, Vector2 position,
                        Vector2 scale, Map<String, Boolean> partsVisibility, boolean looping) {
@@ -31286,6 +32142,17 @@ public class FrameConfig {
         this.scale = scale;
         this.partsVisibility = partsVisibility;
         this.looping = looping;
+        this.r=1f;
+        this.g=1f;
+        this.b=1f;
+        this.a=1f;
+    }
+
+    public void setColor(float r, float g, float b, float a){
+        this.r=r;
+        this.g=g;
+        this.b=b;
+        this.a=a;
     }
 }
 
