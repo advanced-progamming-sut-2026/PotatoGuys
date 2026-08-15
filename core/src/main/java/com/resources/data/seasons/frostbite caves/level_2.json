@@ -3,7 +3,7 @@
   "levelNumber": 2,
   "levelType": "NORMAL",
   "initialSun": 200,
-  "effects": [{"type": "COLD_WIND", "intervalTicks": 250, "strength": 1.5}],
+  "effects": [{"type": "COLD_WIND", "intervalTime": 25, "strength": 1.5}],
   "gameMap": {
     "rows": 5,
     "columns": 9,

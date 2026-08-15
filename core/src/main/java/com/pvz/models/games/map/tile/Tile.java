@@ -3,6 +3,7 @@ package com.pvz.models.games.map.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.GameEngine;
 import com.pvz.models.engine.TickAware;
@@ -140,6 +141,10 @@ public class Tile implements TickAware {
         return height;
     }
 
+    public Vector2 getPosition(){
+        return new Vector2(x,y);
+    }
+
     @Override
     public void enter() {
 
@@ -154,10 +159,15 @@ public class Tile implements TickAware {
     @Override
     public FrameConfig draw() {
         TickAware.super.draw();
-        for (TileBehavior b: new ArrayList<>(behaviors)){
-            b.draw(this);
-        }
         return null;
+    }
+
+    public List<FrameConfig> drawBehaviors() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        for (TileBehavior b: new ArrayList<>(behaviors)){
+            frameConfigs.add(b.draw(this));
+        }
+        return frameConfigs;
     }
 
     @Override

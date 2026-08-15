@@ -1,3 +1,4 @@
+
 package com.pvz.models.games.levels;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import com.pvz.models.AppContext;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.ZombieType;
+import com.pvz.models.entities.zombies.fsm.SandstormCarryState;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.user.Collection;
 
@@ -26,7 +28,7 @@ public class Wave {
     private static Random rand = new Random();
 
     public Wave(int waveNumber, boolean isFinalWave, int totalWaveCost, List<WavePhase> phases,
-            int lanes, int difficulty) {
+                int lanes, int difficulty) {
         this.waveNumber = waveNumber;
         this.isFinalWave = isFinalWave;
         this.baseTotalWaveCost = totalWaveCost;
@@ -100,7 +102,7 @@ public class Wave {
             currentPhase++;
             remainingInPhase = phases.get(currentPhase).getZombieCount();
             context.log("Wave " + waveNumber + " phase " + (currentPhase + 1)
-                    + (phases.get(currentPhase).isBurst() ? " [BURST]" : ""));
+                + (phases.get(currentPhase).isBurst() ? " [BURST]" : ""));
         }
 
         secondsUntilNextSpawn = phases.get(currentPhase).getIntervalSeconds();
@@ -114,29 +116,36 @@ public class Wave {
         // Guard against unknown/unregistered types deserialized as null by Gson —
         // an invalid enum name in level data must not crash the wave.
         List<ZombieType> valid = allowed.stream()
-                .filter(java.util.Objects::nonNull)
-                .toList();
+            .filter(java.util.Objects::nonNull)
+            .toList();
         if (valid.isEmpty())
             return;
 
         ZombieType type = valid.get(rand.nextInt(valid.size()));
         int lane = rand.nextInt(lanes);
-        int col = context.getMap().getColumns()+1;
+
+        // Every zombie spawns off-map, same as normal — sandstorm zombies are
+        // never teleported directly onto the lawn. What differs is what happens
+        // after spawn: a normal zombie starts walking immediately, while a
+        // sandstorm zombie starts inside SandstormCarryState, which hides it in
+        // a traveling sand-cloud effect until it reaches its landing column.
+        int spawnCol = context.getMap().getColumns() + 1;
 
         // Sandstorm: during final wave burst in Ancient Egypt, zombies are carried
-        // deeper into the map (1-4 columns from the right edge)
+        // deeper into the map (1-4 columns from the right edge) instead of
+        // walking on from the edge like normal zombies.
         boolean isSandstorm = isFinalWave && phase.isBurst()
-                && "ancient egypt".equalsIgnoreCase(context.getSeasonName());
+            && "ancient egypt".equalsIgnoreCase(context.getSeasonName());
 
-        context.log("DEBUG: Checking sandstorm: isFinalWave=" + isFinalWave + ", isBurst=" + phase.isBurst()
-                + ", season=" + context.getSeasonName() + ", isSandstorm=" + isSandstorm);
+        Zombie newZombie = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(spawnCol), lane, context, waveNumber, difficulty);
 
         if (isSandstorm) {
-            col = context.getMap().getColumns() - 2 - rand.nextInt(4);
-            context.log("A sandstorm carries a " + type.getAlias() + " to column " + col + "!");
+            int targetCol = context.getMap().getColumns() - 2 - rand.nextInt(3);
+            float targetX = GameController.colToWorldX(targetCol);
+            newZombie.setPendingInitialState(new SandstormCarryState(targetX));
+            context.log("A sandstorm carries a " + type.getAlias() + " toward column " + targetCol + "!");
         }
 
-        Zombie newZombie = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(col), lane, context, waveNumber, difficulty);
         context.spawnZombie(newZombie);
 
         // Adding this zombie type to user collection if user hasn't seen this type of
@@ -151,3 +160,5 @@ public class Wave {
         done = true;
     }
 }
+
+

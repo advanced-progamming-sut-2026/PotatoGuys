@@ -19,7 +19,7 @@ public class FrozenState extends ZombieState{
     String clip;
     Map<String, Boolean> partVisibility;
 
-    protected FrozenState(ZombieState lastState, float lastStateFrameTime, float duration,
+    public FrozenState(ZombieState lastState, float lastStateFrameTime, float duration,
                           String pamPath, String clip, Map<String, Boolean> partVisibility) {
         super(null);
         this.lastState=lastState;
@@ -37,7 +37,7 @@ public class FrozenState extends ZombieState{
 
     @Override
     public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
-        super.update(zombie, ctx, dt);
+        stateTime+=dt;
         if (stateTime>=duration){
             return lastState;
         }
@@ -46,8 +46,10 @@ public class FrozenState extends ZombieState{
 
     @Override
     public FrameConfig draw(Zombie zombie, GameContext ctx) {
-        return new FrameConfig(pamPath,clip,lastStateFrameTime,zombie.getPosition(),
+        FrameConfig frameConfig = new FrameConfig(pamPath,clip,lastStateFrameTime,zombie.getPosition(),
             new Vector2(0.65f,0.65f),partVisibility,false);
+        frameConfig.setColor(0.4f,0.6f,1f,1f);
+        return frameConfig;
     }
 
     @Override

@@ -2,24 +2,27 @@ package com.pvz.models.games.effects;
 
 import java.util.Random;
 
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.entities.effects.ChillWind;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.games.GameContext;
 
 public class ColdWindEffect implements ChapterEffect {
-    private final int intervalTicks;
-    private int tickCounter = 0;
+    private final float intervalTime;
+    private float stateTime = 0;
     private final Random rand = new Random();
 
-    public ColdWindEffect(int intervalTicks) {
-        this.intervalTicks = intervalTicks;
+    public ColdWindEffect(int intervalTime) {
+        this.intervalTime = intervalTime;
     }
 
     @Override
-    public void onTick(GameContext ctx) {
-        tickCounter++;
-        if (tickCounter >= intervalTicks) {
+    public void update(GameContext ctx, float dt) {
+        stateTime+=dt;
+        if (stateTime >= intervalTime) {
             triggerColdWind(ctx);
-            tickCounter = 0;
+            stateTime = 0;
         }
     }
 
@@ -33,6 +36,10 @@ public class ColdWindEffect implements ChapterEffect {
 
         for (int i = 0; i < affectedLanes; i++) {
             int lane = rand.nextInt(numLanes);
+
+            int midCol = ctx.getMap().getColumns()/2;
+            Vector2 pos = new Vector2(GameController.colToWorldX(midCol),GameController.laneToWorldY(lane));
+            ctx.addEffect(new ChillWind(ctx, pos));
             ctx.log("[ColdWind] Cold wind blowing in lane " + lane);
             for (Plant p : ctx.getPlantsInLane(lane)) {
                 p.incrementFreezeLevel();

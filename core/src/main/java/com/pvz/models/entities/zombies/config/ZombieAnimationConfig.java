@@ -1,5 +1,7 @@
 package com.pvz.models.entities.zombies.config;
 
+import java.util.List;
+
 /**
  * Per-zombie PAM animation configuration — the zombie counterpart of
  * {@link com.pvz.models.entities.plants.config.PamAnimationConfig}.
@@ -21,4 +23,13 @@ public class ZombieAnimationConfig {
 
     /** Visual scale multiplier; falls back to 0.65 when unset. */
     public Float scale;
+
+    /**
+     * All clip labels the sheet actually defines, in PAM order. Populated from
+     * the baked config data at load time so the model can resolve a requested
+     * state label (e.g. {@code walk}) to an existing clip (e.g. {@code idle})
+     * without touching any graphics engine — the entity layer must stay
+     * server-friendly.
+     */
+    public List<String> availableClips;
 }

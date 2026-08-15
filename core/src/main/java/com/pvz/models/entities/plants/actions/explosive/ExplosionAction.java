@@ -61,7 +61,7 @@ public class ExplosionAction extends PlantAction {
             if (target!=null) {
                 target.takeDamage(config.baseDamage);
                 if (plant.getType()==PlantType.IcebergLettuce){
-                    target.applyEffect(StatusEffect.frozen(config.effectDuration));
+                    target.setFrozen(config.effectDuration);
                 }
             }
             if (targetTiles!=null && !targetTiles.isEmpty()){

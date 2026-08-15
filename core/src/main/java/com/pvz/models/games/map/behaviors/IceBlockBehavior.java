@@ -1,14 +1,21 @@
 package com.pvz.models.games.map.behaviors;
 
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.projectile.ProjectileType;
 import com.pvz.models.games.map.tile.TileTags;
 
 public class IceBlockBehavior implements TileBehavior {
+    private static final String PAM_PATH="768/FULL/EFFECTS/FROSTBITE_ICE_BLOCK_PLANT/FROSTBITE_ICE_BLOCK_PLANT.PAM";
+    private static final String IDLE_CLIP="freeze_idle";
     private float iceHp = 600f;
     private Object entityInside; // Can be Plant or Zombie
+    float stateTime;
 
     public IceBlockBehavior(Object entity) {
         this.entityInside = entity;
@@ -16,6 +23,8 @@ public class IceBlockBehavior implements TileBehavior {
             p.incrementFreezeLevel(); // Set it to frozen state
         }
         // Zombies are already frozen via StatusEffect or this behavior
+
+        this.stateTime=0;
     }
 
     @Override
@@ -40,6 +49,12 @@ public class IceBlockBehavior implements TileBehavior {
         }
     }
 
+    @Override
+    public void update(GameContext ctx, Tile tile, float dt) {
+        TileBehavior.super.update(ctx, tile, dt);
+        stateTime+=dt;
+    }
+
     public void takeDamage(float amount, boolean isFire) {
         if (isFire) {
             iceHp = 0f;
@@ -53,4 +68,14 @@ public class IceBlockBehavior implements TileBehavior {
 
     @Override
     public String getName() { return "IceBlock"; }
+
+    @Override
+    public FrameConfig draw(Tile tile) {
+        TileBehavior.super.draw(tile);
+        Vector2 scale=new Vector2(0.65f,0.65f);
+        Vector2 pos = new Vector2(GameController.colToWorldX(tile.getCol()),GameController.laneToWorldY(tile.getLane()));
+        FrameConfig frameConfig = new FrameConfig(PAM_PATH,IDLE_CLIP,stateTime,pos,scale,null,false);
+        frameConfig.setColor(1,1,1,0.7f);
+        return frameConfig;
+    }
 }

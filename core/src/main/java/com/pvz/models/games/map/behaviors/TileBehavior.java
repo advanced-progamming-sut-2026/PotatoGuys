@@ -1,5 +1,6 @@
 package com.pvz.models.games.map.behaviors;
 
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
@@ -14,5 +15,5 @@ public interface TileBehavior {
     default void update(GameContext ctx, Tile tile, float dt) {}
     default String getStatus() {return null;}
     default String getName() { return "Behavior"; }
-    default void draw(Tile tile){}
+    default FrameConfig draw(Tile tile){return null;}
 }

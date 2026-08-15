@@ -1,14 +1,15 @@
+
 package com.pvz.models.entities.zombies;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
-import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
@@ -16,15 +17,13 @@ import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
+import com.pvz.models.entities.zombies.armor.ArmorType;
 import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
 import com.pvz.models.entities.zombies.data.ScaledProp;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
 import com.pvz.models.entities.zombies.effects.EffectType;
 import com.pvz.models.entities.zombies.effects.StatusEffect;
-import com.pvz.models.entities.zombies.fsm.DeadState;
-import com.pvz.models.entities.zombies.fsm.EatState;
-import com.pvz.models.entities.zombies.fsm.WalkState;
-import com.pvz.models.entities.zombies.fsm.ZombieState;
+import com.pvz.models.entities.zombies.fsm.*;
 import com.pvz.models.entities.zombies.skills.ExplorerTorchSkill;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.behaviors.TileBehavior;
@@ -61,6 +60,8 @@ public class Zombie extends Entity {
 
     // ── FSM ───────────────────────────────────────────────────────────────────
     private ZombieState currentState;
+    /** Optional override for the state {@link #enter()} starts in; see {@link #setPendingInitialState}. */
+    private ZombieState pendingInitialState;
 
     // ── Flags ─────────────────────────────────────────────────────────────────
     private boolean dead;
@@ -124,11 +125,26 @@ public class Zombie extends Entity {
 
     @Override
     public void enter() {
-        currentState = new WalkState();
+        currentState = pendingInitialState != null ? pendingInitialState : new WalkState();
         currentState.onEnter(this, context);
         context.log("[Spawn] " + sheet.getAlias()
-                + " entered lane " + GameController.worldYtoLane(position.y) + " at x=" + String.format("%.1f", position.x)
-                + (glowing ? " [GLOWING]" : ""));
+            + " entered lane " + GameController.worldYtoLane(position.y) + " at x=" + String.format("%.1f", position.x)
+            + (glowing ? " [GLOWING]" : ""));
+    }
+
+    /**
+     * Overrides the FSM state this zombie starts in, instead of the default
+     * {@link WalkState}. Must be called before the zombie's first {@code enter()}
+     * tick — i.e. right after construction, before handing it to
+     * {@link GameContext#spawnZombie(Zombie)} — since {@code enter()} runs on
+     * the next engine tick, not synchronously in the constructor.
+     *
+     * <p>Used by sandstorm-driven spawns ({@code Wave#spawnZombie}) to start a
+     * zombie inside {@link com.pvz.models.entities.zombies.fsm.SandstormCarryState}
+     * so it's carried in from off-map instead of appearing mid-lawn.
+     */
+    public void setPendingInitialState(ZombieState state) {
+        this.pendingInitialState = state;
     }
 
     @Override
@@ -136,18 +152,8 @@ public class Zombie extends Entity {
         stateTime += dt;
         if (dead) return;
 
-        if (frozen){
-            if (frozenDuration>0){
-                frozenDuration-=dt;
-                return;
-            } else {
-                frozenDuration=0;
-                frozen=false;
-            }
-        }
-
         updateStatusEffects(dt);
-        if (isParalysed()) return;
+        //if (isParalysed()) return;
         ZombieState next = currentState.update(this, context,dt);
         if (next != currentState) {
             currentState.onExit(this, context);
@@ -178,6 +184,12 @@ public class Zombie extends Entity {
         return currentState.draw(this, context);
     }
 
+    public void changeState(ZombieState state){
+        if (currentState!=null) currentState.onExit(this,context);
+        this.currentState=state;
+        currentState.onExit(this,context);
+    }
+
     /**
      * Builds the {@link FrameConfig} for the given clip label from the zombie's
      * config-driven animation (pam path + scale), falling back to the classic
@@ -186,11 +198,98 @@ public class Zombie extends Entity {
     public FrameConfig drawClip(String clipLabel) {
         ZombieAnimationConfig anim = sheet.getAnimationConfig();
         String pamPath = (anim != null && anim.pamFilePath != null)
-                ? anim.pamFilePath
-                : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
+            ? anim.pamFilePath
+            : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
         float scale = (anim != null && anim.scale != null) ? anim.scale : 0.65f;
-        return new FrameConfig(pamPath, clipLabel, stateTime,
-                new Vector2(position.x, position.y), new Vector2(scale, scale), null, true);
+        return new FrameConfig(pamPath, resolveClipLabel(anim, newspaperClipLabel(clipLabel)), stateTime,
+            new Vector2(position.x, position.y), new Vector2(scale, scale),
+            buildPartsVisibility(), true);
+    }
+
+    /**
+     * Resolves the requested clip label to one that actually exists in the
+     * sheet. Not every sheet defines the classic clips (some bosses/fishermen
+     * play {@code intro}/{@code idle}/{@code special} instead of
+     * {@code walk}/{@code eat}), and requesting a missing clip makes the
+     * renderer throw. When the label is absent we fall back to {@code idle} and
+     * finally to the first clip the sheet provides.
+     *
+     * <p>Purely data-driven: the clip list comes from the config, never from a
+     * graphics call, so this runs unchanged on a headless server.
+     */
+    private String resolveClipLabel(ZombieAnimationConfig anim, String requested) {
+        List<String> clips = anim != null ? anim.availableClips : null;
+        if (clips == null || clips.isEmpty() || clips.contains(requested)) return requested;
+        for (String candidate : new String[] { "idle", "idle2", "default", "" }) {
+            if (candidate != null && clips.contains(candidate)) return candidate;
+        }
+        return clips.get(0);
+    }
+
+    /**
+     * While the newspaper armour is alive the sheet plays its dedicated
+     * {@code *_newspaper} clips (the newspaper parts exist only there). Once the
+     * armour is destroyed the zombie falls back to the base clips, which show
+     * it without the paper.
+     */
+    private String newspaperClipLabel(String clipLabel) {
+        if (!hasAliveArmor(ArmorType.NEWSPAPER)) return clipLabel;
+        switch (clipLabel) {
+            case "walk": return "walk_newspaper";
+            case "eat":  return "eat_newspaper";
+            case "idle": return "idle_newspaper";
+            default:     return clipLabel;
+        }
+    }
+
+    private boolean hasAliveArmor(ArmorType type) {
+        for (ArmorPiece armor : armors) {
+            if (!armor.isDestroyed() && armor.getType() == type) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Builds the PAM part-visibility map for this zombie's current armour state.
+     *
+     * <p>Every living armour piece contributes its three damage-layer part names
+     * (from the armour's {@code ArmorLayers} data): the layer matching the
+     * piece's current {@link ArmorPiece#getLayerIndex()} is forced visible
+     * ({@code true}) while the other layers are forced hidden ({@code false}),
+     * so the armour visually cracks as its health drops. Destroyed pieces
+     * contribute nothing, making them fall off the zombie entirely.
+     *
+     * <p>On top of the layer swap, {@link ArmorType#pamContainerName()} may add
+     * a nested container part to force visible (its name carries the ARMOR flag,
+     * so libPVZ would otherwise cull it together with its children), and the
+     * {@code pamAliveParts()}/{@code pamCriticalParts()} extras pin parts such
+     * as the newspaper zombie's hand (always) and flame (critical layer only).
+     *
+     * @return the visibility map, or {@code null} when there is no living armour
+     *         to display (basic zombies / fully destroyed armour)
+     */
+    private Map<String, Boolean> buildPartsVisibility() {
+        if (armors.isEmpty()) return null;
+        Map<String, Boolean> visibility = null;
+        for (ArmorPiece armor : armors) {
+            if (armor.isDestroyed()) continue;
+            String[] layers = armor.getType().pamLayers();
+            if (layers == null) continue;
+            if (visibility == null) visibility = new HashMap<>();
+            int layer = Math.min(armor.getLayerIndex(), layers.length - 1);
+            for (int i = 0; i < layers.length; i++) {
+                visibility.put(layers[i], i == layer);
+            }
+            // Some sheets nest the layer parts under a container part whose
+            // name carries the ARMOR flag; libPVZ culls flagged parts unless
+            // revealed, and culling the container hides its children too, so
+            // force the container visible together with the current layer.
+            String container = armor.getType().pamContainerName();
+            if (container != null) visibility.put(container, true);
+            for (String alive : armor.getType().pamAliveParts()) visibility.put(alive, true);
+            for (String crit : armor.getType().pamCriticalParts()) visibility.put(crit, layer == layers.length - 1);
+        }
+        return visibility;
     }
 
     @Override
@@ -202,7 +301,7 @@ public class Zombie extends Entity {
 
     /** Switches to {@link EatState} targeting {@code plant} if not already eating. */
     public void startEating(Plant plant) {
-        if (dead || currentState instanceof EatState) {
+        if (dead || currentState instanceof EatState || currentState instanceof FrozenState) {
             return;
         }
         currentState.onExit(this, context);
@@ -235,8 +334,10 @@ public class Zombie extends Entity {
     }
 
     public void setFrozen(float duration){
-        this.frozen=true;
-        this.frozenDuration=duration;
+        FrameConfig frameConfig = currentState.draw(this,context);
+        currentState=new FrozenState(currentState,currentState.getStateTime(),
+            duration,frameConfig.pamPath,frameConfig.label,frameConfig.partsVisibility);
+        currentState.onEnter(this,context);
     }
 
     /** Convenience: non-poisonous damage. */
@@ -316,7 +417,7 @@ public class Zombie extends Entity {
             float overflow = armor.absorbDamage(amount);
             if (armor.isDestroyed()) {
                 context.log(sheet.getAlias() + "'s "
-                        + armor.getType().name() + " armour was destroyed!");
+                    + armor.getType().name() + " armour was destroyed!");
             }
             if (!armor.hasFlag(ArmorFlag.PASSDAMAGE)) {
                 return overflow;
@@ -343,7 +444,7 @@ public class Zombie extends Entity {
         context.getGameStats().onZombieKilledInSeason(context.getSeasonName());
         context.removeZombie(this);
         context.log("Zombie of type " + sheet.getAlias()
-                + " is dead at (" + String.format("%.1f", position.x) + "," + GameController.worldYtoLane(position.y) + ")");
+            + " is dead at (" + String.format("%.1f", position.x) + "," + GameController.worldYtoLane(position.y) + ")");
     }
 
     private void updateStatusEffects(float dt) {
@@ -352,8 +453,8 @@ public class Zombie extends Entity {
 
     private boolean isParalysed() {
         return hasEffect(EffectType.FROZEN)
-                || hasEffect(EffectType.TRANSFORMED)
-                || hasEffect(EffectType.STUN);
+            || hasEffect(EffectType.TRANSFORMED)
+            || hasEffect(EffectType.STUN);
     }
 
     private void appendArmorDetails(StringBuilder sb) {
@@ -363,7 +464,7 @@ public class Zombie extends Entity {
         for (ArmorPiece a : armors) {
             if (!a.isDestroyed()) {
                 sb.append("\n    ").append(a.getType().name().toLowerCase())
-                        .append(": ").append(String.format("%.0f", a.getCurrentHealth()));
+                    .append(": ").append(String.format("%.0f", a.getCurrentHealth()));
             }
         }
     }
@@ -372,7 +473,9 @@ public class Zombie extends Entity {
         sb.append("\n  effects:");
         if (activeEffects.isEmpty()) { sb.append(" (none)"); return; }
         activeEffects.forEach((type, eff) ->
-                sb.append("\n    ").append(type.name().toLowerCase())
-                        .append(": ").append(String.format("%.1f", eff.getRemainingDuration())).append("s"));
+            sb.append("\n    ").append(type.name().toLowerCase())
+                .append(": ").append(String.format("%.1f", eff.getRemainingDuration())).append("s"));
     }
 }
+
+
