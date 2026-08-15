@@ -1,3 +1,4 @@
+
 package com.pvz.models.entities.zombies;
 
 import java.util.ArrayList;
@@ -59,6 +60,8 @@ public class Zombie extends Entity {
 
     // ── FSM ───────────────────────────────────────────────────────────────────
     private ZombieState currentState;
+    /** Optional override for the state {@link #enter()} starts in; see {@link #setPendingInitialState}. */
+    private ZombieState pendingInitialState;
 
     // ── Flags ─────────────────────────────────────────────────────────────────
     private boolean dead;
@@ -122,11 +125,26 @@ public class Zombie extends Entity {
 
     @Override
     public void enter() {
-        currentState = new WalkState();
+        currentState = pendingInitialState != null ? pendingInitialState : new WalkState();
         currentState.onEnter(this, context);
         context.log("[Spawn] " + sheet.getAlias()
-                + " entered lane " + GameController.worldYtoLane(position.y) + " at x=" + String.format("%.1f", position.x)
-                + (glowing ? " [GLOWING]" : ""));
+            + " entered lane " + GameController.worldYtoLane(position.y) + " at x=" + String.format("%.1f", position.x)
+            + (glowing ? " [GLOWING]" : ""));
+    }
+
+    /**
+     * Overrides the FSM state this zombie starts in, instead of the default
+     * {@link WalkState}. Must be called before the zombie's first {@code enter()}
+     * tick — i.e. right after construction, before handing it to
+     * {@link GameContext#spawnZombie(Zombie)} — since {@code enter()} runs on
+     * the next engine tick, not synchronously in the constructor.
+     *
+     * <p>Used by sandstorm-driven spawns ({@code Wave#spawnZombie}) to start a
+     * zombie inside {@link com.pvz.models.entities.zombies.fsm.SandstormCarryState}
+     * so it's carried in from off-map instead of appearing mid-lawn.
+     */
+    public void setPendingInitialState(ZombieState state) {
+        this.pendingInitialState = state;
     }
 
     @Override
@@ -180,12 +198,12 @@ public class Zombie extends Entity {
     public FrameConfig drawClip(String clipLabel) {
         ZombieAnimationConfig anim = sheet.getAnimationConfig();
         String pamPath = (anim != null && anim.pamFilePath != null)
-                ? anim.pamFilePath
-                : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
+            ? anim.pamFilePath
+            : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
         float scale = (anim != null && anim.scale != null) ? anim.scale : 0.65f;
         return new FrameConfig(pamPath, resolveClipLabel(anim, newspaperClipLabel(clipLabel)), stateTime,
-                new Vector2(position.x, position.y), new Vector2(scale, scale),
-                buildPartsVisibility(), true);
+            new Vector2(position.x, position.y), new Vector2(scale, scale),
+            buildPartsVisibility(), true);
     }
 
     /**
@@ -399,7 +417,7 @@ public class Zombie extends Entity {
             float overflow = armor.absorbDamage(amount);
             if (armor.isDestroyed()) {
                 context.log(sheet.getAlias() + "'s "
-                        + armor.getType().name() + " armour was destroyed!");
+                    + armor.getType().name() + " armour was destroyed!");
             }
             if (!armor.hasFlag(ArmorFlag.PASSDAMAGE)) {
                 return overflow;
@@ -426,7 +444,7 @@ public class Zombie extends Entity {
         context.getGameStats().onZombieKilledInSeason(context.getSeasonName());
         context.removeZombie(this);
         context.log("Zombie of type " + sheet.getAlias()
-                + " is dead at (" + String.format("%.1f", position.x) + "," + GameController.worldYtoLane(position.y) + ")");
+            + " is dead at (" + String.format("%.1f", position.x) + "," + GameController.worldYtoLane(position.y) + ")");
     }
 
     private void updateStatusEffects(float dt) {
@@ -435,8 +453,8 @@ public class Zombie extends Entity {
 
     private boolean isParalysed() {
         return hasEffect(EffectType.FROZEN)
-                || hasEffect(EffectType.TRANSFORMED)
-                || hasEffect(EffectType.STUN);
+            || hasEffect(EffectType.TRANSFORMED)
+            || hasEffect(EffectType.STUN);
     }
 
     private void appendArmorDetails(StringBuilder sb) {
@@ -446,7 +464,7 @@ public class Zombie extends Entity {
         for (ArmorPiece a : armors) {
             if (!a.isDestroyed()) {
                 sb.append("\n    ").append(a.getType().name().toLowerCase())
-                        .append(": ").append(String.format("%.0f", a.getCurrentHealth()));
+                    .append(": ").append(String.format("%.0f", a.getCurrentHealth()));
             }
         }
     }
@@ -455,7 +473,9 @@ public class Zombie extends Entity {
         sb.append("\n  effects:");
         if (activeEffects.isEmpty()) { sb.append(" (none)"); return; }
         activeEffects.forEach((type, eff) ->
-                sb.append("\n    ").append(type.name().toLowerCase())
-                        .append(": ").append(String.format("%.1f", eff.getRemainingDuration())).append("s"));
+            sb.append("\n    ").append(type.name().toLowerCase())
+                .append(": ").append(String.format("%.1f", eff.getRemainingDuration())).append("s"));
     }
 }
+
+

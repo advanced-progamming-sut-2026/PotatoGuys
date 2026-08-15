@@ -10,8 +10,8 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 6800,
-    "diamonds": 153,
+    "coins": 6850,
+    "diamonds": 154,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -352,7 +352,7 @@
     "brightness": 0.98999995,
     "musicVolume": 0.24,
     "sfxVolume": 0.7,
-    "musicMuted": false,
+    "musicMuted": true,
     "sfxMuted": false
   },
   "score": {
@@ -1435,7 +1435,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786792287629
+    "lastDailyReset": 1786813713858
   },
   "questLogRefreshed": true
 }
