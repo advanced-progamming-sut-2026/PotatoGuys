@@ -3,7 +3,7 @@
   "levelNumber": 2,
   "levelType": "NORMAL",
   "initialSun": 200,
-  "effects": [{"type": "DARK_AGES", "intervalTicks": 250}],
+  "effects": [{"type": "DARK_AGES", "intervalTime": 25}],
   "gameMap": {
     "rows": 5,
     "columns": 9,
