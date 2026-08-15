@@ -10,7 +10,7 @@ public class SandStormEffect implements ChapterEffect {
     }
 
     @Override
-    public void onTick(GameContext ctx) {
+    public void update(GameContext ctx, float dt) {
         // Sandstorm visual feedback is handled by Wave.spawnZombie
     }
 }

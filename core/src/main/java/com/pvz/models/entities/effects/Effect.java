@@ -27,7 +27,6 @@ public abstract class Effect implements TickAware {
 
     @Override
     public void dispose() {
-        GameEngine.getInstance().getToRemove().add(this);
         ctx.removeEffect(this);
     }
 }

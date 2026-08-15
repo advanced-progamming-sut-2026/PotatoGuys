@@ -7,14 +7,14 @@ public class EffectFactory {
         if (def.type == null) return null;
         switch (def.type) {
             case "SAND_STORM":
-                return new SandStormEffect(def.intervalTicks);
+                return new SandStormEffect(def.intervalTime);
             case "COLD_WIND":
-                return new ColdWindEffect(def.intervalTicks);
+                return new ColdWindEffect(def.intervalTime);
             case "BIG_WAVE_BEACH":
                 return new BigWaveBeachEffect(def.minWaterColumn, def.maxWaterColumn);
             case "DARK_AGES":
             case "DARK_AGES_EFFECT":
-                return new DarkAgesEffect(def.intervalTicks);
+                return new DarkAgesEffect(def.intervalTime);
             default:
                 return null;
         }

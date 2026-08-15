@@ -25,7 +25,7 @@ public class DarkAgesEffect implements ChapterEffect {
     }
 
     @Override
-    public void onTick(GameContext ctx) {
+    public void update(GameContext ctx, float dt) {
         if (!"dark ages".equalsIgnoreCase(ctx.getSeasonName()))
             return;
 

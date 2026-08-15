@@ -282,8 +282,8 @@ public class GameController {
         batch.begin();
         drawBackground();
         if (ctx != null) {
-            drawTiles();
             drawPlants();
+            drawTileBehaviors();
             drawZombies();
             drawLawnMowers();
             drawSuns();
@@ -323,15 +323,21 @@ public class GameController {
         batch.draw(backgroundTextures[2], backgroundTextures[1].getRegionWidth(), 0);
     }
 
-    private void drawTiles(){
+    private void drawTileBehaviors(){
         if (ctx==null) return;
         for (int lane = 0; lane < ctx.getMap().getLanes(); lane++) {
             for (int col = 0; col < ctx.getMap().getColumns(); col++) {
-                FrameConfig frameConfig = ctx.getMap().getTileAt(col,lane).draw();
-                if (frameConfig!=null){
-                    PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                        frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                        frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+                List<FrameConfig> frameConfigs = ctx.getMap().getTileAt(col,lane).drawBehaviors();
+                if (frameConfigs!=null && !frameConfigs.isEmpty()){
+                    for (FrameConfig frameConfig: frameConfigs) {
+                        if (frameConfig!=null) {
+                            batch.setColor(frameConfig.r,frameConfig.g,frameConfig.b,frameConfig.a);
+                            PvZ2.pamPlayer.draw(batch, frameConfig.pamPath, frameConfig.label,
+                                frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
+                                frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+                            batch.setColor(Color.WHITE);
+                        }
+                    }
                 }
             }
         }
