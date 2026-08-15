@@ -10,9 +10,8 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 6650,
-    "coins": 6650,
-    "diamonds": 153,
+    "coins": 6750,
+    "diamonds": 155,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -125,7 +124,10 @@
         "ICE_AGE_BUCKET",
         "HUNTER",
         "TROGLOBITE",
-        "ICE_AGE_IMP"
+        "ICE_AGE_IMP",
+        "BEACH",
+        "BEACH_CONE",
+        "BEACH_BUCKET"
       ],
       "seedPackets": {
         "TwinSunflower": 5,
@@ -234,6 +236,18 @@
         {
           "message": "New Zombie Encountered: ICE_AGE_IMP!",
           "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: BEACH!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: BEACH_CONE!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: BEACH_BUCKET!",
+          "unread": true
         }
       ]
     },
@@ -1374,7 +1388,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786780746457
+    "lastDailyReset": 1786780927311
   },
   "questLogRefreshed": true
 }
