@@ -40,11 +40,13 @@ import pvz.skin.PvzSkin;
  * <p>Slot size is tuned to the 1280x720 gameplay viewport (see
  * GameController's FitViewport) rather than the 1920x1080 menus use, so all
  * 7 cards fit under the top bar without running off the bottom of the screen.
+ *
+ * <p>The plant-food bank (dots + "+" cheat button) sits at normalized (0.25, 0.1).
  */
 public class GameUiModal extends Table {
 
-    private static final float SLOT_WIDTH = 125f;
-    private static final float SLOT_HEIGHT = 75f;
+    private static final float SLOT_WIDTH = 135f;
+    private static final float SLOT_HEIGHT = 95f;
 
     private static final int CHEAT_SUN_AMOUNT = 25;
     private static final int MAX_PLANT_FOOD = 3;
@@ -52,6 +54,8 @@ public class GameUiModal extends Table {
     private final Label sunLabel;
     private final Label coinLabel;
     private final Label gemLabel;
+    private final Image coinIcon;
+    private final Image gemIcon;
     private final Image[] plantFoodDots = new Image[MAX_PLANT_FOOD];
     private final ImageButton addSunButton;
     private final ImageButton addFoodButton;
@@ -70,7 +74,7 @@ public class GameUiModal extends Table {
 
         Table topBar = new Table();
         topBar.top().left();
-        topBar.pad(15);
+        topBar.pad(10);
 
         // Sun bank with a +25 cheat button, matching the reference HUD (phase-0-group-51).
         Table sunRow = new Table();
@@ -102,7 +106,7 @@ public class GameUiModal extends Table {
         sunBank.add(sunBackground);
         sunBank.add(sunContent);
         sunRow.add(addSunButton).size(50f).padRight(3f);
-        sunRow.add(sunBank).width(150f).height(60f);
+        sunRow.add(sunBank).width(150f).height(54f);
         topBar.add(sunRow).left().row();
 
         // Plant food bank with a +1 cheat button, matching the reference HUD (phase-0-group-51).
@@ -147,14 +151,13 @@ public class GameUiModal extends Table {
         foodDisplay.add(iconLayer);
 
         foodRow.add(addFoodButton).size(50f).padRight(3f);
-        foodRow.add(foodDisplay).width(150f).height(54f);
-        topBar.add(foodRow).left().padTop(3f);
+        foodRow.add(foodDisplay).width(150f).height(46f);
 
         Table walletTable = new Table();
         walletTable.top().right();
 
         Table coinCell = new Table();
-        Image coinIcon = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_coin"));
+        coinIcon = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_coin"));
         coinLabel = new Label("0", PvzSkin.get(), "medium_outline");
         coinLabel.setColor(Color.YELLOW);
         coinLabel.setFontScale(1.4f);
@@ -163,7 +166,7 @@ public class GameUiModal extends Table {
         walletTable.add(coinCell).padRight(20);
 
         Table gemCell = new Table();
-        Image gemIcon = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_gem"));
+        gemIcon = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_gem"));
         gemLabel = new Label("0", PvzSkin.get(), "medium_outline");
         gemLabel.setColor(Color.CYAN);
         gemLabel.setFontScale(1.4f);
@@ -196,17 +199,56 @@ public class GameUiModal extends Table {
         // Seed-packet tray: vertical column pinned to the left edge, below the top bar.
         cardsBarTable = new Table();
         cardsBarTable.top();
-        cardsBarTable.defaults().pad(4f).size(SLOT_WIDTH, SLOT_HEIGHT);
+        cardsBarTable.defaults().pad(-2f).size(SLOT_WIDTH, SLOT_HEIGHT);
 
         Table leftColumnWrapper = new Table();
         leftColumnWrapper.top().left();
         leftColumnWrapper.add(cardsBarTable);
 
-        add(leftColumnWrapper).left().top().colspan(2).padLeft(15).padTop(5);
+        // Seed-packet tray tucked right under the sun bank: the top bar only keeps
+        // the sun row, and padTop(10) starts the first card just under the sun
+        // amount display (the food row moved to the bottom overlay).
+        add(leftColumnWrapper).left().top().colspan(2).padLeft(15).padTop(-17);
+
+        // Plant food pinned at normalized (0.25, 0.1): centered on x = 0.25 * 1280 = 320
+        // and its bottom at y = 0.1 * 720 = 72. 0.25*1280 - (50 + 3 + 150)/2 = 218.5
+        // pushes its center onto x = 320; padBottom(72) lifts it off the bottom edge.
+        //
+        // It lives in its own fill-parent overlay added via addActor(), so it plays
+        // no part in this table's cell layout and can't shift anything else.
+        Table foodOverlay = new Table();
+        foodOverlay.setFillParent(true);
+        foodOverlay.bottom().left();
+        foodOverlay.add(foodRow).padLeft(218.5f).padBottom(15f);
+        addActor(foodOverlay);
     }
 
     public PlantCard getSelectedCard() {
         return selectedCard;
+    }
+
+    /**
+     * Where the coin wallet icon sits in stage (1280x720, bottom-left origin)
+     * coordinates — the target the flying coin-drop animation arcs toward.
+     */
+    public com.badlogic.gdx.math.Vector2 getCoinWalletStagePosition() {
+        if (coinIcon == null) {
+            return new com.badlogic.gdx.math.Vector2(1120f, 695f);
+        }
+        return coinIcon.localToStageCoordinates(
+            new com.badlogic.gdx.math.Vector2(coinIcon.getWidth() / 2f, coinIcon.getHeight() / 2f));
+    }
+
+    /**
+     * Where the gem (diamond) wallet icon sits in stage (1280x720, bottom-left
+     * origin) coordinates — the target the flying diamond-drop animation arcs toward.
+     */
+    public com.badlogic.gdx.math.Vector2 getGemWalletStagePosition() {
+        if (gemIcon == null) {
+            return new com.badlogic.gdx.math.Vector2(980f, 695f);
+        }
+        return gemIcon.localToStageCoordinates(
+            new com.badlogic.gdx.math.Vector2(gemIcon.getWidth() / 2f, gemIcon.getHeight() / 2f));
     }
 
     /**
@@ -276,13 +318,13 @@ public class GameUiModal extends Table {
             plantImage.setScaling(Scaling.fit);
             Table plantLayer = new Table();
             plantLayer.center();
-            plantLayer.add(plantImage).size(SLOT_HEIGHT - 22f);
+            plantLayer.add(plantImage).size(SLOT_HEIGHT - 8f);
             stack.add(plantLayer);
 
             Image badge = new Image(PlantData.regionDrawableOr(data.familyImageId(), fallback));
             Table badgeLayer = new Table();
             badgeLayer.top().left();
-            badgeLayer.add(badge).size(16f).pad(2f);
+            badgeLayer.add(badge).size(18f).pad(2f);
             stack.add(badgeLayer);
         }
 
@@ -292,7 +334,7 @@ public class GameUiModal extends Table {
         cooldownOverlayByCard.put(pc, cooldownOverlay);
 
         Label costLabel = new Label(String.valueOf(pc.getCost()), skin, "medium");
-        costLabel.setFontScale(0.8f);
+        costLabel.setFontScale(0.9f);
         costLabel.setColor(Color.WHITE);
         Table costRow = new Table();
         costRow.bottom().left();

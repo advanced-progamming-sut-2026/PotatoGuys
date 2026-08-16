@@ -10,6 +10,7 @@ import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.LawnMower;
 import com.pvz.models.entities.effects.Effect;
+import com.pvz.models.entities.effects.LootDrop;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.enums.PlantTag;
@@ -47,6 +48,7 @@ public class GameContext implements TickAware {
     private List<Card> cards;
     private List<Sun> suns;
     private List<Effect> effects;
+    private List<LootDrop> lootDrops = new ArrayList<>();
     private LawnMower[] lawnMowers;
     private final List<Hitbox> hitboxes = new ArrayList<>();
     private GameMode mode;
@@ -71,6 +73,8 @@ public class GameContext implements TickAware {
     private final List<Effect> pendingEffectsToRemove = new ArrayList<>();
     private final List<Sun> pendingSunsToAdd = new ArrayList<>();
     private final List<Sun> pendingSunsToRemove = new ArrayList<>();
+    private final List<LootDrop> pendingLootDropsToAdd = new ArrayList<>();
+    private final List<LootDrop> pendingLootDropsToRemove = new ArrayList<>();
 
     public GameContext(Level currentLevel) {
         this.engine         = GameEngine.getInstance();
@@ -288,6 +292,21 @@ public class GameContext implements TickAware {
         return true;
     }
 
+    public List<LootDrop> getLootDrops() {
+        return lootDrops;
+    }
+
+    public void spawnLootDrop(LootDrop c) {
+        pendingLootDropsToAdd.add(c);
+        engine.register(c);
+    }
+
+    public boolean removeLootDrop(LootDrop c) {
+        engine.unRegister(c);
+        pendingLootDropsToRemove.add(c);
+        return true;
+    }
+
     // ── Hitbox registry ─────────────────────────────────────────────────────────
     // Every spawned entity registers its hitbox here so the CollisionSystem can
     // sweep all hitboxes in one pass without caring about entity types.
@@ -333,6 +352,11 @@ public class GameContext implements TickAware {
         suns.removeAll(pendingSunsToRemove);
         pendingSunsToAdd.clear();
         pendingSunsToRemove.clear();
+
+        lootDrops.addAll(pendingLootDropsToAdd);
+        lootDrops.removeAll(pendingLootDropsToRemove);
+        pendingLootDropsToAdd.clear();
+        pendingLootDropsToRemove.clear();
 
         effects.addAll((pendingEffectsToAdd));
         effects.removeAll(pendingEffectsToRemove);

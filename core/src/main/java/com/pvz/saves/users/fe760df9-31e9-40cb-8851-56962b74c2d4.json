@@ -10,8 +10,8 @@
   "profilePicture": "textures/avatars/avatar_luffy.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 9300,
-    "diamonds": 240,
+    "coins": 12500,
+    "diamonds": 257,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -353,7 +353,7 @@
     "musicVolume": 0.24,
     "sfxVolume": 0.7,
     "musicMuted": true,
-    "sfxMuted": false
+    "sfxMuted": true
   },
   "score": {
     "lastSeason": 0,
@@ -1435,7 +1435,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786903726478
+    "lastDailyReset": 1786917408257
   },
   "questLogRefreshed": true
 }

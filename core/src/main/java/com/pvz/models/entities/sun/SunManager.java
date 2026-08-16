@@ -34,7 +34,7 @@ public class SunManager implements TickAware {
         }
 
         double timeInSeconds = totalTicks / 10.0;
-        double xSeconds = Math.min(6 + 0.05 * timeInSeconds, 12);
+        double xSeconds = Math.min(80 + 0.05 * timeInSeconds, 65);
         int xTicks = (int) (xSeconds * 10);
 
         if (ticksSinceLastDrop >= xTicks) {

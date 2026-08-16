@@ -439,7 +439,7 @@ public class Zombie extends Entity {
             context.log(sheet.getAlias() + " dropped " + stolenSun + " stolen sun on death!");
             stolenSun = 0;
         }
-        ZombieLootService.rollAndApplyLoot(context);
+        ZombieLootService.rollAndApplyLoot(context, this);
         context.getGameStats().onZombieKilled();
         context.getGameStats().onZombieKilledInSeason(context.getSeasonName());
         context.removeZombie(this);
