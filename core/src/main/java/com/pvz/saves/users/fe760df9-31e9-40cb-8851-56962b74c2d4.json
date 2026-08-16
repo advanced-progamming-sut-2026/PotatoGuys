@@ -10,13 +10,8 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-<<<<<<< HEAD
     "coins": 950,
     "diamonds": 160,
-=======
-    "coins": 6950,
-    "diamonds": 159,
->>>>>>> 2221dd9e1db55b72b279e396cf3f12ffe77c5f4e
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -1472,11 +1467,7 @@
         "variable": "50"
       }
     ],
-<<<<<<< HEAD
     "lastDailyReset": 1786856152762
-=======
-    "lastDailyReset": 1786898194723
->>>>>>> 2221dd9e1db55b72b279e396cf3f12ffe77c5f4e
   },
   "questLogRefreshed": true
 }
