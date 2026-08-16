@@ -5,24 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="added zombies collection tab pngs and also updated the PlantCardDetails">
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/big wave beach/level_3.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/effects/Effect.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/effects/Effect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/GameContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/GameContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/ChapterEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/ChapterEffect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/ColdWindEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/ColdWindEffect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/DarkAgesEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/DarkAgesEffect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/EffectFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/EffectFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/SandStormEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/effects/SandStormEffect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/levels/data/EffectDefinition.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/levels/data/EffectDefinition.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/big wave beach/level_1.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/big wave beach/level_1.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/big wave beach/level_10.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/dark ages/level_1.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/dark ages/level_1.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/dark ages/level_2.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/dark ages/level_2.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/dark ages/level_3.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/dark ages/level_3.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/frostbite caves/level_1.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/frostbite caves/level_1.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/frostbite caves/level_2.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/resources/data/seasons/frostbite caves/level_2.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,8 +86,8 @@
 }</component>
   <component name="GitLabMergeRequestsSettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;first&quot;: &quot;https://hamgit.ir/sedhhn/plantsvszombies2&quot;,
-    &quot;second&quot;: &quot;83191278-9b68-4e33-a55d-f523d58ebe84&quot;
+    &quot;first&quot;: &quot;https://hamgit.ir/sedhhn/plantsvszombies2.git&quot;,
+    &quot;second&quot;: &quot;304f2ff1-c759-44fd-9fe9-01504ac41863&quot;
   }
 }</component>
   <component name="McpProjectServerCommands">
@@ -166,12 +150,11 @@
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\shop" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Lwjgl3Launcher">
+  <component name="RunManager" selected="Gradle.plantsvszombies2 [:lwjgl3:run]">
     <configuration name="Lwjgl3Launcher" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.pvz.lwjgl3.Lwjgl3Launcher" />
-      <module name="pvz2.lwjgl3.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.pvz.lwjgl3.*" />
@@ -251,8 +234,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Lwjgl3Launcher" />
         <item itemvalue="Gradle.plantsvszombies2 [:lwjgl3:run]" />
+        <item itemvalue="Application.Lwjgl3Launcher" />
         <item itemvalue="Application.ProjectMerger" />
         <item itemvalue="Gradle.plantsvszombies2" />
       </list>
@@ -262,7 +245,6 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
@@ -287,12 +269,6 @@
       <workItem from="1786221623014" duration="5347000" />
       <workItem from="1786547194454" duration="4920000" />
       <workItem from="1786684833223" duration="3935000" />
-      <workItem from="1786734245290" duration="4783000" />
-      <workItem from="1786744426797" duration="2323000" />
-      <workItem from="1786780181016" duration="4272000" />
-      <workItem from="1786784846188" duration="6361000" />
-      <workItem from="1786812757735" duration="2052000" />
-      <workItem from="1786814979667" duration="4928000" />
     </task>
     <task id="LOCAL-00001" summary="added Login and register and forgot password menu to the game">
       <option name="closed" value="true" />
