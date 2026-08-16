@@ -454,8 +454,8 @@ public class GameContext implements TickAware {
 
     public void addPlantFood(int amount){
         plantFoodCount+=amount;
-        if (plantFoodCount>4){
-            plantFoodCount=4;
+        if (plantFoodCount>3){
+            plantFoodCount=3;
         }
     }
 

@@ -122,6 +122,7 @@ public class LeaderboardMenu extends ScreenAdapter {
 
         buildSortBar();
         refreshWallet();
+        controller.reload();
         refreshRows();
     }
 
@@ -332,7 +333,7 @@ public class LeaderboardMenu extends ScreenAdapter {
             && !user.getProfilePicture().isEmpty()) {
             path = user.getProfilePicture();
         }
-        Texture feathered = AvatarImages.featheredCircle(AvatarImages.getTexture(path));
+        Texture feathered = AvatarImages.featheredCircle(path);
         return new Image(new TextureRegionDrawable(feathered));
     }
 

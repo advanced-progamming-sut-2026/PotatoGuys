@@ -7,7 +7,7 @@
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "haa",
-  "profilePicture": null,
+  "profilePicture": "textures/avatars/avatar_luffy.png",
   "profile": {
     "gamePlayed": 0,
     "coins": 950,
@@ -385,7 +385,7 @@
     "difficulty": 3,
     "gameSpeed": 1,
     "showGrid": false,
-    "debugMode": true,
+    "debugMode": false,
     "brightness": 0.98999995,
     "musicVolume": 0.24,
     "sfxVolume": 0.7,

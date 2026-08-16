@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -25,6 +26,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
+
+import com.pvz.models.AppContext;
+import com.pvz.models.user.Profile;
+import com.pvz.models.user.User;
 
 import pvz.skin.PvzSkin;
 
@@ -104,6 +109,109 @@ public final class MenuUiKit {
         Table outer = new Table();
         outer.add(stack).size(width, height);
         return outer;
+    }
+
+    // ---------------------------------------------------------------- wallet "+" buttons
+
+    /** Width of the "+" button, as a fraction of the pill width. */
+    private static final float PLUS_BUTTON_WIDTH_FACTOR = 0.24f;
+    /** Height of the "+" button, as a fraction of the pill height. */
+    private static final float PLUS_BUTTON_HEIGHT_FACTOR = 0.72f;
+    /** Gap between the "+" button and the pill's right edge, as a fraction of the pill width. */
+    private static final float PLUS_BUTTON_PAD_RIGHT_FACTOR = -0.48f;
+
+    /** A coin/diamond pill whose engraved "+" is a real button. Exposes the value {@link #label} and the
+     *  {@link #plusButton} so callers can refresh the number and wire the cheat. */
+    public static class PlusResourceWidget {
+        /** The pill table, add this into your top bar. */
+        public final Table widget;
+        /** The coin/diamond value label, so callers can refresh it after a click. */
+        public final Label label;
+        /** The "+" button overlay (the fake plus turned real). */
+        public final ImageButton plusButton;
+
+        PlusResourceWidget(Table widget, Label label, ImageButton plusButton) {
+            this.widget = widget;
+            this.label = label;
+            this.plusButton = plusButton;
+        }
+    }
+
+    /** Same pill look as {@link #resourceWidget}, but with a working "+" button over the engraved one. */
+    public static PlusResourceWidget resourceWidgetWithPlus(Skin skin, String iconPath, Color fallbackTint, String value,
+                                                           float width, float height) {
+        Stack stack = new Stack();
+
+        Table bg = new Table();
+        Texture iconTexture = loadTextureSafe(iconPath);
+        if (Gdx.files.internal(iconPath) != null && Gdx.files.internal(iconPath).exists()) {
+            bg.setBackground(new TextureRegionDrawable(iconTexture));
+        } else {
+            bg.setBackground(solidDrawable(new Color(0f, 0f, 0f, 0.45f)));
+            Image dot = new Image(solidDrawable(fallbackTint));
+            Table dotWrap = new Table();
+            dotWrap.add(dot).size(20, 20).left().padLeft(6);
+            stack.add(dotWrap);
+        }
+        stack.add(bg);
+
+        Label label = new Label(value, skin);
+        label.setFontScale(1.2f * (width / 130f));
+        Table textTable = new Table();
+        textTable.add(label).left().expand().padLeft(RESOURCE_LABEL_PAD_FACTOR * (width / 130f));
+        stack.add(textTable);
+
+        ImageButton plusButton = new ImageButton(plusButtonStyle(skin));
+        Table plusWrap = new Table();
+        plusWrap.add(plusButton).size(width * PLUS_BUTTON_WIDTH_FACTOR, height * PLUS_BUTTON_HEIGHT_FACTOR)
+            .right().padRight(width * PLUS_BUTTON_PAD_RIGHT_FACTOR);
+        stack.add(plusWrap);
+
+        Table outer = new Table();
+        outer.add(stack).size(width, height);
+        return new PlusResourceWidget(outer, label, plusButton);
+    }
+
+    /** "+" button look: the same coin-buy asset the in-game HUD uses for its cheat buttons. */
+    private static ImageButton.ImageButtonStyle plusButtonStyle(Skin skin) {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        style.imageUp = skin.getDrawable("image_ui_hud_ingame_coin_buy");
+        style.imageDown = skin.getDrawable("image_ui_hud_ingame_coin_buy_down");
+        style.imageOver = skin.getDrawable("image_ui_hud_ingame_coin_buy_down");
+        style.imageChecked = skin.getDrawable("image_ui_hud_ingame_coin_buy_down");
+        return style;
+    }
+
+    /**
+     * Turns the "+" of a wallet pill into a working debug cheat (coins +amount or gems +amount) and saves
+     * the profile on every click. When debug mode is off the button is disabled and tinted out.
+     */
+    public static void wirePlusButton(PlusResourceWidget widget, boolean coins, int amount) {
+        boolean debug = isDebugModeEnabled();
+        widget.plusButton.setTouchable(debug ? Touchable.enabled : Touchable.disabled);
+        if (!debug) widget.plusButton.setColor(0.5f, 0.5f, 0.5f, 0.6f);
+        widget.plusButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!isDebugModeEnabled()) return;
+                User user = AppContext.getInstance().getCurrentUser();
+                if (user == null || user.getProfile() == null) return;
+                Profile profile = user.getProfile();
+                if (coins) {
+                    profile.addCoins(amount);
+                } else {
+                    profile.addDiamonds(amount);
+                }
+                user.saveUser();
+                widget.label.setText(String.valueOf(coins ? profile.getCoins() : profile.getDiamonds()));
+            }
+        });
+    }
+
+    /** True only when a logged-in user exists and has the debug-mode setting on. */
+    private static boolean isDebugModeEnabled() {
+        User user = AppContext.getInstance().getCurrentUser();
+        return user != null && user.getSetting() != null && user.getSetting().isDebugMode();
     }
 
     /** A round-ish icon button with a caption underneath (profile, settings, news...). */

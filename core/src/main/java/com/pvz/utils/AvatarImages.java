@@ -11,6 +11,7 @@ import java.util.Map;
 public class AvatarImages {
 
     private static final Map<String, Texture> cache = new HashMap<>();
+    private static final Map<String, Texture> featheredCache = new HashMap<>();
 
     private AvatarImages() {
     }
@@ -39,6 +40,21 @@ public class AvatarImages {
             pixmap.dispose();
         }
         return placeholder;
+    }
+
+    /**
+     * Returns the feathered-circle avatar for the given texture path, caching the
+     * result so rebuilding UI rows (e.g. re-sorting the leaderboard) never re-runs
+     * the per-pixel feather pass for the same avatar.
+     */
+    public static Texture featheredCircle(String path) {
+        String key = (path == null || !Gdx.files.internal(path).exists()) ? "__placeholder__" : path;
+        Texture feathered = featheredCache.get(key);
+        if (feathered == null) {
+            feathered = featheredCircle(getTexture(path));
+            featheredCache.put(key, feathered);
+        }
+        return feathered;
     }
 
     /**
@@ -114,5 +130,9 @@ public class AvatarImages {
             texture.dispose();
         }
         cache.clear();
+        for (Texture texture : featheredCache.values()) {
+            texture.dispose();
+        }
+        featheredCache.clear();
     }
 }

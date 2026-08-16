@@ -197,10 +197,14 @@ public class CollectionMenu extends ScreenAdapter {
         if (walletBar == null) return;
         Skin skin = PvzSkin.get();
         walletBar.clearChildren();
-        walletBar.add(MenuUiKit.resourceWidget(skin, "textures/ui/coin_icon.png",
-            new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(controller.getCoins()), 195, 63)).padRight(15);
-        walletBar.add(MenuUiKit.resourceWidget(skin, "textures/ui/diamond_icon.png",
-            new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(controller.getDiamonds()), 195, 63));
+        MenuUiKit.PlusResourceWidget coinWidget = MenuUiKit.resourceWidgetWithPlus(skin, "textures/ui/coin_icon.png",
+            new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(controller.getCoins()), 195, 63);
+        MenuUiKit.PlusResourceWidget gemWidget = MenuUiKit.resourceWidgetWithPlus(skin, "textures/ui/diamond_icon.png",
+            new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(controller.getDiamonds()), 195, 63);
+        MenuUiKit.wirePlusButton(coinWidget, true, 200);
+        MenuUiKit.wirePlusButton(gemWidget, false, 10);
+        walletBar.add(coinWidget.widget).padRight(15);
+        walletBar.add(gemWidget.widget);
         walletBar.pack();
         walletBar.setPosition(1920f - walletBar.getPrefWidth() - 30f, 1080f - walletBar.getPrefHeight() - 18f);
     }
