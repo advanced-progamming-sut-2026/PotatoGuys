@@ -48,6 +48,7 @@ import com.pvz.view.game.GameUiModal;
 import com.pvz.view.game.PauseMenuPopup;
 import com.pvz.view.game.PlantSelectModal;
 import com.pvz.view.PamActor;
+import com.pvz.view.PlantData;
 import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
@@ -89,6 +90,10 @@ public class GameController {
 
     /** Debug: draws every entity's hitbox rectangle (toggle with F1). */
     private boolean showHitboxes = true;
+
+    /** Placement-preview ghost: plays the selected plant's idle PAM under the cursor. */
+    private float previewStateTime;
+    private PlantCard previewCard;
 
     public GameController(String seasonName, int levelNumber){
         this.seasonName=seasonName;
@@ -211,6 +216,7 @@ public class GameController {
 
     public void update(float dt){
         camera.update();
+        previewStateTime += dt;
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             showHitboxes = !showHitboxes;
@@ -351,6 +357,7 @@ public class GameController {
             drawSuns();
             drawProjectiles();
             drawEffects();
+            drawPlacementPreview();
         }
         batch.end();
 
@@ -493,6 +500,43 @@ public class GameController {
                     frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
             }
         }
+    }
+
+    /**
+     * Draws the "ghost" of the currently selected seed packet following the mouse:
+     * while a plant card is armed, the plant's idle PAM animation is played under the
+     * cursor, semi-transparent, until the plant is placed on a tile (or deselected).
+     */
+    private void drawPlacementPreview() {
+        if (currentState != State.PLAYING || paused) {
+            return;
+        }
+        if (gameUiModal == null || gameUiModal.getSelectedCard() == null) {
+            return;
+        }
+        PlantCard card = gameUiModal.getSelectedCard();
+        if (card != previewCard) {
+            previewCard = card;
+            previewStateTime = 0f;
+        }
+
+        PlantData data = PlantData.forType(card.getPlant().getType());
+        if (data == null) {
+            return;
+        }
+        String pamPath = data.pamPath();
+        String idleLabel = data.idleLabel();
+        if (pamPath == null) {
+            return;
+        }
+
+        touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+        viewport.unproject(touchPos);
+
+        batch.setColor(1f, 1f, 1f, 0.58f);
+        PvZ2.pamPlayer.draw(batch, pamPath, idleLabel, previewStateTime,
+                touchPos.x, touchPos.y, 0.7f, 0.7f, true);
+        batch.setColor(Color.WHITE);
     }
 
     private void drawDebugShapes(){
