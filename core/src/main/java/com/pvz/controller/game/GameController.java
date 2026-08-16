@@ -533,6 +533,7 @@ public class GameController {
         batch.setColor(Color.WHITE);
     }
 
+
     /**
      * Highlights the whole row (lane) and whole column under the hovered tile in white,
      * matching the reference implementation's placement preview: while a plant card is
