@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
 import com.pvz.models.AppContext;
@@ -44,10 +46,15 @@ public class GameUiModal extends Table {
     private static final float SLOT_WIDTH = 125f;
     private static final float SLOT_HEIGHT = 75f;
 
+    private static final int CHEAT_SUN_AMOUNT = 25;
+    private static final int MAX_PLANT_FOOD = 3;
+
     private final Label sunLabel;
-    private final Label plantFoodLabel;
     private final Label coinLabel;
     private final Label gemLabel;
+    private final Image[] plantFoodDots = new Image[MAX_PLANT_FOOD];
+    private final ImageButton addSunButton;
+    private final ImageButton addFoodButton;
     private final Table cardsBarTable;
     private PlantCard selectedCard = null;
 
@@ -65,13 +72,83 @@ public class GameUiModal extends Table {
         topBar.top().left();
         topBar.pad(15);
 
-        sunLabel = new Label("Sun: 50", PvzSkin.get(), "big");
-        sunLabel.setColor(Color.YELLOW);
-        topBar.add(sunLabel).padRight(25);
+        // Sun bank with a +25 cheat button, matching the reference HUD (phase-0-group-51).
+        Table sunRow = new Table();
+        addSunButton = createCheatButton();
+        addSunButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!isDebugModeEnabled()) return;
+                GameContext context = AppContext.getInstance().getGameContext();
+                if (context == null) return;
+                context.addSun(CHEAT_SUN_AMOUNT);
+                updateHud();
+            }
+        });
 
-        plantFoodLabel = new Label("Plant Food: 0", PvzSkin.get());
-        plantFoodLabel.setColor(Color.GREEN);
-        topBar.add(plantFoodLabel);
+        Stack sunBank = new Stack();
+        Image sunBackground = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_background_3slice"));
+        sunBackground.setScaling(Scaling.stretch);
+        Table sunContent = new Table();
+        Image sunIcon = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_sun"));
+        sunIcon.setScaling(Scaling.fit);
+
+        sunLabel = new Label("0", PvzSkin.get(), "big_outline");
+        sunLabel.setColor(Color.WHITE);
+        sunLabel.setFontScale(1.25f);
+        sunLabel.setAlignment(Align.center);
+        sunContent.add(sunIcon).size(55f).padLeft(-9f);
+        sunContent.add(sunLabel).expandX().center().padRight(8f);
+        sunBank.add(sunBackground);
+        sunBank.add(sunContent);
+        sunRow.add(addSunButton).size(50f).padRight(3f);
+        sunRow.add(sunBank).width(150f).height(60f);
+        topBar.add(sunRow).left().row();
+
+        // Plant food bank with a +1 cheat button, matching the reference HUD (phase-0-group-51).
+        Table foodRow = new Table();
+        addFoodButton = createCheatButton();
+        addFoodButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!isDebugModeEnabled()) return;
+                GameContext context = AppContext.getInstance().getGameContext();
+                if (context == null) return;
+                context.addPlantFood(1);
+                updateHud();
+            }
+        });
+
+        Stack foodDisplay = new Stack();
+        Stack dotsBank = new Stack();
+        Image dotsBackground = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_demo"));
+        dotsBackground.setScaling(Scaling.stretch);
+        dotsBank.add(dotsBackground);
+
+        Table dots = new Table();
+        dots.center();
+        for (int i = 0; i < MAX_PLANT_FOOD; i++) {
+            Image dot = new Image(PvzSkin.get().getDrawable("image_ui_generic_navdot_fill"));
+            plantFoodDots[i] = dot;
+            dots.add(dot).size(17f).pad(2f);
+        }
+        dotsBank.add(dots);
+
+        Table rectangleLayer = new Table();
+        rectangleLayer.right();
+        rectangleLayer.add(dotsBank).width(104f).height(40f);
+        foodDisplay.add(rectangleLayer);
+
+        Image foodIcon = new Image(PvzSkin.get().getDrawable("image_ui_almanac_plant_food_stat_icon"));
+        foodIcon.setScaling(Scaling.fit);
+        Table iconLayer = new Table();
+        iconLayer.left();
+        iconLayer.add(foodIcon).size(72f);
+        foodDisplay.add(iconLayer);
+
+        foodRow.add(addFoodButton).size(50f).padRight(3f);
+        foodRow.add(foodDisplay).width(150f).height(54f);
+        topBar.add(foodRow).left().padTop(3f);
 
         Table walletTable = new Table();
         walletTable.top().right();
@@ -130,6 +207,24 @@ public class GameUiModal extends Table {
 
     public PlantCard getSelectedCard() {
         return selectedCard;
+    }
+
+    /**
+     * The "+" cheat button used next to the sun and plant food banks, using the same
+     * coin-buy asset the reference HUD (phase-0-group-51) uses for both buttons.
+     */
+    private ImageButton createCheatButton() {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        style.imageUp = PvzSkin.get().getDrawable("image_ui_hud_ingame_coin_buy");
+        style.imageDown = PvzSkin.get().getDrawable("image_ui_hud_ingame_coin_buy_down");
+        style.imageOver = PvzSkin.get().getDrawable("image_ui_hud_ingame_coin_buy_down");
+        style.imageChecked = PvzSkin.get().getDrawable("image_ui_hud_ingame_coin_buy_down");
+        return new ImageButton(style);
+    }
+
+    private boolean isDebugModeEnabled() {
+        User user = AppContext.getInstance().getCurrentUser();
+        return user != null && user.getSetting() != null && user.getSetting().isDebugMode();
     }
 
     public void setSelectedCard(PlantCard card) {
@@ -228,8 +323,23 @@ public class GameUiModal extends Table {
         GameContext context = AppContext.getInstance().getGameContext();
         if (context == null) return;
 
-        sunLabel.setText("Sun: " + context.getCurrentSun());
-        plantFoodLabel.setText("Plant Food: " + context.getPlantFoodCount());
+        // The + buttons only work while Debug Mode is enabled in settings.
+        boolean debug = isDebugModeEnabled();
+        addSunButton.setTouchable(debug ? Touchable.enabled : Touchable.disabled);
+        addFoodButton.setTouchable(debug ? Touchable.enabled : Touchable.disabled);
+        addSunButton.setColor(debug ? Color.WHITE : new Color(0.5f, 0.5f, 0.5f, 0.6f));
+        addFoodButton.setColor(debug ? Color.WHITE : new Color(0.5f, 0.5f, 0.5f, 0.6f));
+
+        sunLabel.setText(String.valueOf(context.getCurrentSun()));
+
+        int foodCount = MathUtils.clamp(context.getPlantFoodCount(), 0, MAX_PLANT_FOOD);
+        for (int i = 0; i < plantFoodDots.length; i++) {
+            if (i < foodCount) {
+                plantFoodDots[i].setColor(Color.valueOf("65D44B"));
+            } else {
+                plantFoodDots[i].setColor(new Color(0.20f, 0.30f, 0.20f, 0.30f));
+            }
+        }
 
         User user = AppContext.getInstance().getCurrentUser();
         if (user != null && user.getProfile() != null) {
