@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="...">
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="added plants idle animation before planting">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PlantData.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PlantData.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -456,7 +455,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786832546143</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="added plants idle animation before planting">
+      <option name="closed" value="true" />
+      <created>1786898657114</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1786898657114</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -481,7 +488,8 @@
     <MESSAGE value="added zombies collection tab" />
     <MESSAGE value="added zombies collection tab pngs and also updated the PlantCardDetails" />
     <MESSAGE value="..." />
-    <option name="LAST_COMMIT_MESSAGE" value="..." />
+    <MESSAGE value="added plants idle animation before planting" />
+    <option name="LAST_COMMIT_MESSAGE" value="added plants idle animation before planting" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -499,7 +507,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/grave_buster/GraveBuster.java</url>
           <line>19</line>
-          <properties class="com.pvz.models.entities.plants.grave_buster.GraveBuster" method="isPlantableOnTile">
+          <properties class="com.pvz.models.entities.plants.grave_buster.GraveBuster">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>

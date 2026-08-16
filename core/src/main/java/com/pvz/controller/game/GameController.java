@@ -368,13 +368,7 @@ public class GameController {
             Tile hoveredTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
 
             if (hoveredTile != null) {
-                Gdx.gl.glEnable(GL20.GL_BLEND);
-                Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                shapeRenderer.setColor(0f, 1f, 0f, 0.4f);
-                shapeRenderer.rect(hoveredTile.getX(), hoveredTile.getY(), hoveredTile.getWidth(), hoveredTile.getHeight());
-                shapeRenderer.end();
-                Gdx.gl.glDisable(GL20.GL_BLEND);
+                drawPlacementHighlights(hoveredTile);
             }
         }
         drawDebugShapes();
@@ -533,10 +527,39 @@ public class GameController {
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         viewport.unproject(touchPos);
 
-        batch.setColor(1f, 1f, 1f, 0.58f);
+        batch.setColor(1f, 1f, 1f, 0.90f);
         PvZ2.pamPlayer.draw(batch, pamPath, idleLabel, previewStateTime,
                 touchPos.x, touchPos.y, 0.7f, 0.7f, true);
         batch.setColor(Color.WHITE);
+    }
+
+    /**
+     * Highlights the whole row (lane) and whole column under the hovered tile in white,
+     * matching the reference implementation's placement preview: while a plant card is
+     * armed, hovering a tile paints its entire lane and column so the player sees exactly
+     * which row/column the plant will land in.
+     */
+    private void drawPlacementHighlights(Tile tile) {
+        GameMap map = ctx.getMap();
+        int lanes = map.getLanes();
+        int cols = map.getColumns();
+
+        float boardWidth = cols * GameMap.TILE_WIDTH;
+        // Tiles use bottom-left coordinates: lane 0 spans [TOP_LANE_Y, TOP_LANE_Y + TILE_HEIGHT],
+        // so the grid's lowest edge sits one tile below TOP_LANE_Y.
+        float gridBottom = GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT;
+
+        float rowY = tile.getY();
+        float colX = tile.getX();
+
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(1f, 1f, 1f, 0.40f);
+        shapeRenderer.rect(GameMap.START_X, rowY, boardWidth, GameMap.TILE_HEIGHT);
+        shapeRenderer.rect(colX, gridBottom, GameMap.TILE_WIDTH, lanes * GameMap.TILE_HEIGHT);
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     private void drawDebugShapes(){
