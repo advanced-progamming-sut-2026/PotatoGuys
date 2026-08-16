@@ -10,8 +10,8 @@
   "profilePicture": null,
   "profile": {
     "gamePlayed": 0,
-    "coins": 650,
-    "diamonds": 156,
+    "coins": 950,
+    "diamonds": 160,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -19,7 +19,7 @@
           "Type": "Peashooter",
           "level": 3,
           "seed": 0,
-          "isBoosted": true
+          "isBoosted": false
         },
         {
           "Type": "PotatoMine",
@@ -43,7 +43,7 @@
           "Type": "Sunflower",
           "level": 3,
           "seed": 0,
-          "isBoosted": true
+          "isBoosted": false
         },
         {
           "Type": "Cabbagepult",
@@ -193,7 +193,8 @@
         "ICE_AGE_IMP",
         "BEACH",
         "BEACH_CONE",
-        "BEACH_BUCKET"
+        "BEACH_BUCKET",
+        "SNORKEL"
       ],
       "seedPackets": {
         "TwinSunflower": 5,
@@ -326,6 +327,10 @@
         },
         {
           "message": "New Plant Unlocked: Starfruit!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: SNORKEL!",
           "unread": true
         }
       ]
@@ -1462,7 +1467,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786824722069
+    "lastDailyReset": 1786828686800
   },
   "questLogRefreshed": true
 }
