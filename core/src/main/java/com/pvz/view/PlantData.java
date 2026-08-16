@@ -71,6 +71,17 @@ public final class PlantData {
         return result;
     }
 
+    /** Resolves the read-only plant data for a single plant type (used by in-game
+     *  placement previews to look up the idle PAM path without loading every plant). */
+    public static PlantData forType(PlantType type) {
+        if (type == null) return null;
+        PlantRegistry registry = PlantRegistry.getInstance();
+        PlantConfigRegistry configs = PlantConfigRegistry.getInstance();
+        PlantPropertySheet sheet = registry.getSheet(type);
+        if (sheet == null || sheet.isMint()) return null;
+        return new PlantData(type, sheet, configs.getConfig(type));
+    }
+
     private static Profile currentProfile() {
         User user = AppContext.getInstance().getCurrentUser();
         return user != null ? user.getProfile() : null;
