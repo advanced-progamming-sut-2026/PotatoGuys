@@ -232,96 +232,77 @@
         {
           "message": "New Zombie Encountered: BUCKETHEAD!",
           "unread": false
-          "unread": false
         },
         {
           "message": "New Zombie Encountered: BRICKHEAD!",
-          "unread": false
           "unread": false
         },
         {
           "message": "New Zombie Encountered: KNIGHT!",
           "unread": false
-          "unread": false
         },
         {
           "message": "New Zombie Encountered: FLAG!",
-          "unread": false
           "unread": false
         },
         {
           "message": "New Zombie Encountered: IMP!",
           "unread": false
-          "unread": false
         },
         {
           "message": "New Zombie Encountered: GARGANTUAR!",
-          "unread": false
           "unread": false
         },
         {
           "message": "New Zombie Encountered: NEWSPAPER!",
           "unread": false
-          "unread": false
         },
         {
           "message": "New Zombie Encountered: MUMMY!",
-          "unread": false
           "unread": false
         },
         {
           "message": "New Zombie Encountered: MUMMY_CONE!",
           "unread": false
-          "unread": false
         },
         {
           "message": "New Zombie Encountered: MUMMY_BUCKET!",
-          "unread": false
           "unread": false
         },
         {
           "message": "New Zombie Encountered: MUMMY_BRICK!",
           "unread": false
-          "unread": false
         },
         {
           "message": "New Zombie Encountered: TOMB_RAISER!",
-          "unread": false
           "unread": false
         },
         {
           "message": "New Zombie Encountered: EGYPT_IMP!",
           "unread": false
-          "unread": false
         },
         {
           "message": "New Zombie Encountered: ICE_AGE!",
-          "unread": false
           "unread": false
         },
         {
           "message": "New Zombie Encountered: ICE_AGE_CONE!",
           "unread": false
-          "unread": false
         },
         {
           "message": "New Zombie Encountered: ICE_AGE_BUCKET!",
-          "unread": false
           "unread": false
         },
         {
           "message": "New Zombie Encountered: HUNTER!",
           "unread": false
-          "unread": false
         },
         {
           "message": "New Zombie Encountered: TROGLOBITE!",
           "unread": false
-          "unread": false
         },
         {
           "message": "New Zombie Encountered: ICE_AGE_IMP!",
-          "unread": false
           "unread": false
         },
         {
@@ -338,19 +319,19 @@
         },
         {
           "message": "New Plant Unlocked: WinterMelon!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Plant Unlocked: Kiwibeast!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Plant Unlocked: Starfruit!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: SNORKEL!",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -1486,7 +1467,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786828686800
+    "lastDailyReset": 1786856152762
   },
   "questLogRefreshed": true
 }
