@@ -7,7 +7,7 @@
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "haa",
-  "profilePicture": null,
+  "profilePicture": "textures/avatars/avatar_luffy.png",
   "profile": {
     "gamePlayed": 0,
     "coins": 9300,
