@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "PvzServer",
+            "request": "launch",
+            "mainClass": "com.pvz.server.PvzServer",
+            "projectName": "core"
+        },
+        {
+            "type": "java",
             "name": "ProjectMerger",
             "request": "launch",
             "mainClass": "com.pvz.ProjectMerger",
