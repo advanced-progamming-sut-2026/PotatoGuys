@@ -32,6 +32,7 @@ import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.greenhouse.GreenHouse;
 import com.pvz.models.greenhouse.GreenHousePlant;
 import com.pvz.models.greenhouse.GreenHousePot;
+import com.pvz.models.greenhouse.HarvestResult;
 import com.pvz.models.user.Profile;
 import pvz.libpvz.pam.ClipRef;
 import pvz.skin.BorderedTable;
@@ -127,6 +128,10 @@ public class GreenHouseMenu extends ScreenAdapter {
     private int growTargetX;
     private int growTargetY;
 
+    private Table harvestModal;
+    private Label harvestTitleLabel;
+    private Label harvestDescLabel;
+
     public GreenHouseMenu(PvZ2 game) {
         this.game = game;
         this.controller = new GreenHouseController();
@@ -171,6 +176,7 @@ public class GreenHouseMenu extends ScreenAdapter {
         rootTable.add(buildPotGrid()).expand().top().padTop(GRID_UP_OFFSET).row();
 
         stack.add(buildGrowModal());
+        stack.add(buildHarvestModal());
         stack.add(shopMenu);
     }
 
@@ -383,8 +389,12 @@ public class GreenHouseMenu extends ScreenAdapter {
 
         GreenHousePlant plant = pot.getPlant();
         if (plant.isReady()) {
-            controller.collect(x, y);
-            rebuild();
+            HarvestResult result = controller.collect(x, y);
+            if (result != null) {
+                showHarvestModal(result);
+            } else {
+                rebuild();
+            }
         } else {
             showGrowDialog(x, y);
         }
@@ -430,11 +440,13 @@ public class GreenHouseMenu extends ScreenAdapter {
             }
         });
 
-        float contentW = GROW_DIALOG_WIDTH - GROW_DIALOG_PAD_SIDE * 2;
+        float contentW = GROW_DIALOG_WIDTH - GROW_DIALOG_PAD_SIDE * 2 - 20;
 
-        BorderedTable panel = new BorderedTable();
-        panel.setBackground(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
-        panel.pad(GROW_DIALOG_PAD_TOP, GROW_DIALOG_PAD_SIDE, GROW_DIALOG_PAD_BOTTOM, GROW_DIALOG_PAD_SIDE);
+        BorderedTable frame = new BorderedTable();
+
+        Table inner = new Table();
+        inner.setBackground(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
+        inner.pad(GROW_DIALOG_PAD_TOP, GROW_DIALOG_PAD_SIDE, GROW_DIALOG_PAD_BOTTOM, GROW_DIALOG_PAD_SIDE);
 
         growPlantLabel = new Label("", skin, "big_outline");
         growPlantLabel.setFontScale(1.25f);
@@ -485,12 +497,13 @@ public class GreenHouseMenu extends ScreenAdapter {
         buttonRow.add(growBtn).size(260, 84).padRight(20);
         buttonRow.add(cancelBtn).size(200, 84);
 
-        panel.add(growPlantLabel).width(contentW).padBottom(16).row();
-        panel.add(growCostLabel).width(contentW).padBottom(8).row();
-        panel.add(growHintLabel).width(contentW).padBottom(30).row();
-        panel.add(buttonRow).width(contentW).center();
+        inner.add(growPlantLabel).width(contentW).padBottom(16).row();
+        inner.add(growCostLabel).width(contentW).padBottom(8).row();
+        inner.add(growHintLabel).width(contentW).padBottom(30).row();
+        inner.add(buttonRow).width(contentW).center();
 
-        growModal.add(panel).width(GROW_DIALOG_WIDTH);
+        frame.add(inner).width(GROW_DIALOG_WIDTH - 20);
+        growModal.add(frame).width(GROW_DIALOG_WIDTH);
         return growModal;
     }
 
@@ -511,6 +524,85 @@ public class GreenHouseMenu extends ScreenAdapter {
         growHintLabel.setText("");
         growModal.setVisible(true);
         growModal.toFront();
+    }
+
+    private Table buildHarvestModal() {
+        harvestModal = new Table();
+        harvestModal.setFillParent(true);
+        harvestModal.setVisible(false);
+        harvestModal.setBackground(MenuUiKit.solidDrawable(new Color(0f, 0f, 0f, 0.55f)));
+        harvestModal.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (event.getTarget() == harvestModal) {
+                    harvestModal.setVisible(false);
+                    rebuild();
+                }
+            }
+        });
+
+        float contentW = GROW_DIALOG_WIDTH - GROW_DIALOG_PAD_SIDE * 2 - 20;
+
+        BorderedTable frame = new BorderedTable();
+
+        Table inner = new Table();
+        inner.setBackground(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
+        inner.pad(GROW_DIALOG_PAD_TOP, GROW_DIALOG_PAD_SIDE, GROW_DIALOG_PAD_BOTTOM, GROW_DIALOG_PAD_SIDE);
+
+        harvestTitleLabel = new Label("", skin, "big_outline");
+        harvestTitleLabel.setFontScale(1.35f);
+        harvestTitleLabel.setColor(new Color(0.85f, 0.65f, 0.05f, 1f));
+        harvestTitleLabel.setWrap(true);
+        harvestTitleLabel.setAlignment(Align.center);
+
+        harvestDescLabel = new Label("", skin, "medium");
+        harvestDescLabel.setFontScale(1.1f);
+        harvestDescLabel.setColor(new Color(0.1f, 0.1f, 0.1f, 1f));
+        harvestDescLabel.setWrap(true);
+        harvestDescLabel.setAlignment(Align.center);
+
+        TextButton.TextButtonStyle buttonStyle = growDialogButtonStyle();
+
+        TextButton okBtn = new TextButton("OK", buttonStyle);
+        okBtn.getLabel().setFontScale(1.25f);
+        okBtn.getLabel().setColor(Color.WHITE);
+        okBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                harvestModal.setVisible(false);
+                rebuild();
+            }
+        });
+
+        inner.add(harvestTitleLabel).width(contentW).padBottom(18).row();
+        inner.add(harvestDescLabel).width(contentW).padBottom(32).row();
+        inner.add(okBtn).size(220, 84).center();
+
+        frame.add(inner).width(GROW_DIALOG_WIDTH - 20);
+        harvestModal.add(frame).width(GROW_DIALOG_WIDTH);
+        return harvestModal;
+    }
+
+    private void showHarvestModal(HarvestResult result) {
+        switch (result.getType()) {
+            case MARIGOLD_COINS:
+                harvestTitleLabel.setText("MariGold Harvested!");
+                harvestTitleLabel.setColor(new Color(0.85f, 0.65f, 0.05f, 1f));
+                harvestDescLabel.setText("You earned " + result.getCoins() + " coins!");
+                break;
+            case NEW_BOOST:
+                harvestTitleLabel.setText(result.getPlantTypeName() + " Harvested!");
+                harvestTitleLabel.setColor(new Color(0.15f, 0.65f, 0.15f, 1f));
+                harvestDescLabel.setText(result.getPlantTypeName() + " is now boosted for your next game!");
+                break;
+            case ALREADY_BOOSTED:
+                harvestTitleLabel.setText(result.getPlantTypeName() + " Harvested!");
+                harvestTitleLabel.setColor(new Color(0.5f, 0.5f, 0.5f, 1f));
+                harvestDescLabel.setText(result.getPlantTypeName() + " already has the boost!");
+                break;
+        }
+        harvestModal.setVisible(true);
+        harvestModal.toFront();
     }
 
     private TextButton.TextButtonStyle growDialogButtonStyle() {

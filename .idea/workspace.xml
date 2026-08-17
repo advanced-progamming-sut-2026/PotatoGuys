@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="leaderboard delay fixed">
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="added zombie loot drop animation and updated the game appearance">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/sun/SunManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/sun/SunManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/Zombie.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/Zombie.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/ZombieLootService.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/ZombieLootService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/GameContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/GameContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/GreenHouseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/GreenHouseController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/GameUiModal.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/GameUiModal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/GreenHouseMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -500,7 +496,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786904246459</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="added zombie loot drop animation and updated the game appearance">
+      <option name="closed" value="true" />
+      <created>1786918192456</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1786918192457</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -530,7 +534,8 @@
     <MESSAGE value="sun and plant food amount in game updated and wired to debug mode" />
     <MESSAGE value="added coins and gems cheat and wired it to debug mode" />
     <MESSAGE value="leaderboard delay fixed" />
-    <option name="LAST_COMMIT_MESSAGE" value="leaderboard delay fixed" />
+    <MESSAGE value="added zombie loot drop animation and updated the game appearance" />
+    <option name="LAST_COMMIT_MESSAGE" value="added zombie loot drop animation and updated the game appearance" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -548,7 +553,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/grave_buster/GraveBuster.java</url>
           <line>19</line>
-          <properties class="com.pvz.models.entities.plants.grave_buster.GraveBuster">
+          <properties class="com.pvz.models.entities.plants.grave_buster.GraveBuster" method="isPlantableOnTile">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>

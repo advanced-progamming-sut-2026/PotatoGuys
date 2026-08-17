@@ -8,6 +8,7 @@ import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.greenhouse.GreenHouse;
 import com.pvz.models.greenhouse.GreenHousePlant;
 import com.pvz.models.greenhouse.GreenHousePot;
+import com.pvz.models.greenhouse.HarvestResult;
 import com.pvz.models.user.MyPlant;
 import com.pvz.models.user.User;
 
@@ -68,8 +69,8 @@ public class GreenHouseController {
         return planted;
     }
 
-    /** Harvests a ready plant: MariGold pays coins, an unlocked plant stores a boost. Returns what was collected, or null. */
-    public GreenHousePlant collect(int x, int y) {
+    /** Harvests a ready plant: MariGold pays coins, an unlocked plant stores a boost. Returns a HarvestResult describing the prize, or null. */
+    public HarvestResult collect(int x, int y) {
         GreenHouse greenHouse = getGreenHouse();
         if (!greenHouse.isValidCoordinate(x, y)) return null;
 
@@ -77,28 +78,43 @@ public class GreenHouseController {
         if (plant == null) return null;
 
         User user = getCurrentUser();
-        if (user == null) return plant;
+        if (user == null) return HarvestResult.marigoldCoins(GreenHousePlant.MARIGOLD_REWARD);
 
         if (plant.isMariGold()) {
             user.getProfile().setCoins(user.getProfile().getCoins() + GreenHousePlant.MARIGOLD_REWARD);
-        } else {
-            String plantTypeName = plant.getPlantType();
-            PlantType plantType = null;
-            for (PlantType pt : PlantType.values()) {
-                if (pt.name().equals(plantTypeName)) {
-                    plantType = pt;
-                    break;
-                }
-            }
-            if (plantType != null) {
-                MyPlant myPlant = user.getProfile().getCollection().getPlant(plantType);
-                if (myPlant != null && !myPlant.isBoosted()) {
-                    myPlant.setBoosted(true);
-                }
+            user.saveUser();
+            return HarvestResult.marigoldCoins(GreenHousePlant.MARIGOLD_REWARD);
+        }
+
+        String plantTypeName = plant.getPlantType();
+        PlantType plantType = null;
+        for (PlantType pt : PlantType.values()) {
+            if (pt.name().equals(plantTypeName)) {
+                plantType = pt;
+                break;
             }
         }
+
+        if (plantType == null) {
+            user.saveUser();
+            return HarvestResult.newBoost(plantTypeName);
+        }
+
+        MyPlant myPlant = user.getProfile().getCollection().getPlant(plantType);
+        if (myPlant == null) {
+            user.saveUser();
+            return HarvestResult.newBoost(plantTypeName);
+        }
+
+        HarvestResult result;
+        if (!myPlant.isBoosted()) {
+            myPlant.setBoosted(true);
+            result = HarvestResult.newBoost(plantTypeName);
+        } else {
+            result = HarvestResult.alreadyBoosted(plantTypeName);
+        }
         user.saveUser();
-        return plant;
+        return result;
     }
 
     /**
