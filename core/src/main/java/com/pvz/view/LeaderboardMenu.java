@@ -122,8 +122,8 @@ public class LeaderboardMenu extends ScreenAdapter {
 
         buildSortBar();
         refreshWallet();
-        controller.reload();
-        refreshRows();
+        refreshRows();                    // اول با کش خالی نمایش می‌ده (empty state)
+        controller.reload(this::refreshRows);  // وقتی سرور جواب داد، جدول دوباره ساخته می‌شه
     }
 
     // --- Top bar --------------------------------------------------------

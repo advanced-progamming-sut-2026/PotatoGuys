@@ -22,6 +22,7 @@ import com.pvz.controller.AudioManager;
 import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.User;
+import com.pvz.network.NetworkClient;
 import com.pvz.utils.PasswordUtils;
 import com.pvz.utils.SaveManager;
 import pvz.skin.PvzSkin;
@@ -108,40 +109,24 @@ public class LoginMenu extends ScreenAdapter {
     private void handleLogin() {
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
-
         if (username.isEmpty() || password.isEmpty()) {
             statusLabel.setText("Please fill in all fields.");
             return;
         }
 
-        SaveManager saveManager = SaveManager.getInstance();
-        HashMap<String, String> usernames = saveManager.load("users/username.json", HashMap.class);
-        if (usernames == null) {
-            statusLabel.setText("No users found. Please register first.");
-            return;
-        }
-        String id = usernames.get(username);
-        if (id == null) {
-            statusLabel.setText("Username is incorrect!");
-            return;
-        }
-        User user = saveManager.load("users/" + id + ".json", User.class);
-        if (user == null) {
-            statusLabel.setText("User data not found.");
-            return;
-        }
-        if (!PasswordUtils.verifyPassword(password, user.getPasswordHash())) {
-            statusLabel.setText("Password is incorrect!");
-            return;
-        }
+        statusLabel.setText("Connecting...");
+        NetworkClient.getInstance().login(username, password, response -> {
+            if (!response.success) {
+                statusLabel.setText(response.errorMessage);
+                return;
+            }
+            User user = NetworkClient.getInstance().parsePayload(response, User.class);
+            AppContext.getInstance().setCurrentUser(user);
+            SaveManager.getInstance().save(username, "session.json"); // فقط کش محلیِ «آخرین کاربر»
 
-        AppContext.getInstance().setCurrentUser(user);
-        user.refreshQuestLog();
-        user.saveUser();
-        saveManager.save(username, "session.json");
-
-        statusLabel.setText("Welcome " + user.getNickName() + "!");
-        Gdx.app.postRunnable(() -> game.setScreen(new MainMenu(game)));
+            statusLabel.setText("Welcome " + user.getNickName() + "!");
+            game.setScreen(new MainMenu(game));
+        });
     }
 
     @Override
