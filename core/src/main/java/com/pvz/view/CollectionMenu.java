@@ -652,7 +652,7 @@ public class CollectionMenu extends ScreenAdapter {
         stage.addActor(detailsOverlay);
 
         ZombieDetailsTable details = new ZombieDetailsTable(data, this::closeDetails);
-        detailsOverlay.add(details).size(840f, 920f);
+        detailsOverlay.add(details).size(960f, 700f);
     }
 
     private void closeDetails() {

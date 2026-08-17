@@ -70,6 +70,10 @@ public final class ZombiePropertySheet {
     // ── Size/misc ─────────────────────────────────────────────────────────────
     private final boolean imp; // size == "imp" in JSON → smaller/faster unit
 
+    // ── Descriptions ─────────────────────────────────────────────────────────
+    private final String overallDisc;
+    private final String funDisc;
+
     // ── Config-driven animation/actions (from zombie_actions.json) ────────────
     public final ZombieAnimationConfig animationConfig;
     public final ZombieActionConfig walkConfig;
@@ -105,6 +109,8 @@ public final class ZombiePropertySheet {
         this.nearAttackRange = b.nearAttackRange;
         this.numberOfIceblocksToSpawnWith = b.numberOfIceblocksToSpawnWith;
         this.imp = b.imp;
+        this.overallDisc = b.overallDisc;
+        this.funDisc = b.funDisc;
         this.animationConfig = b.animationConfig;
         this.walkConfig = b.walkConfig;
         this.eatConfig = b.eatConfig;
@@ -139,6 +145,8 @@ public final class ZombiePropertySheet {
     public int getNearAttackRange()               { return nearAttackRange; }
     public int getNumberOfIceblocksToSpawnWith()  { return numberOfIceblocksToSpawnWith; }
     public boolean isImp()                        { return imp; }
+    public String getOverallDisc()                { return overallDisc; }
+    public String getFunDisc()                    { return funDisc; }
     public ZombieAnimationConfig getAnimationConfig() { return animationConfig; }
 
     @Override
@@ -178,6 +186,8 @@ public final class ZombiePropertySheet {
         private int nearAttackRange = 1;
         private int numberOfIceblocksToSpawnWith = 0;
         private boolean imp = false;
+        private String overallDisc = null;
+        private String funDisc = null;
         private ZombieAnimationConfig animationConfig = null;
         private ZombieActionConfig walkConfig = null;
         private ZombieActionConfig eatConfig = null;
@@ -212,6 +222,8 @@ public final class ZombiePropertySheet {
         public Builder nearAttackRange(int v)            { nearAttackRange = v; return this; }
         public Builder numberOfIceblocksToSpawnWith(int v){ numberOfIceblocksToSpawnWith = v; return this; }
         public Builder imp(boolean v)                    { imp = v; return this; }
+        public Builder overallDisc(String v)             { overallDisc = v; return this; }
+        public Builder funDisc(String v)                 { funDisc = v; return this; }
         public Builder animationConfig(ZombieAnimationConfig v) { animationConfig = v; return this; }
         public Builder walkConfig(ZombieActionConfig v)   { walkConfig = v; return this; }
         public Builder eatConfig(ZombieActionConfig v)    { eatConfig = v; return this; }

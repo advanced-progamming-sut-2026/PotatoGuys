@@ -1,0 +1,186 @@
+{
+  "ZombieTutorialDefault": {
+    "overallDisc": "Regular Garden-variety zombie.",
+    "funDisc": "Basic Zombie hates the term \"Basic\". He doesn't consider himself some generic foe or common corpse. He's an individual, darn it, and he's going to make a difference even if it kills you."
+  },
+  "ZombieMummyDefault": {
+    "overallDisc": "Regular Garden-variety zombie.",
+    "funDisc": "Basic Zombie hates the term \"Basic\". He doesn't consider himself some generic foe or common corpse. He's an individual, darn it, and he's going to make a difference even if it kills you."
+  },
+  "ZombieIceageDefault": {
+    "overallDisc": "Regular Garden-variety zombie.",
+    "funDisc": "Basic Zombie hates the term \"Basic\". He doesn't consider himself some generic foe or common corpse. He's an individual, darn it, and he's going to make a difference even if it kills you."
+  },
+  "ZombieBeachDefault": {
+    "overallDisc": "Regular Garden-variety zombie.",
+    "funDisc": "Basic Zombie hates the term \"Basic\". He doesn't consider himself some generic foe or common corpse. He's an individual, darn it, and he's going to make a difference even if it kills you."
+  },
+  "ZombieDarkDefault": {
+    "overallDisc": "Regular Garden-variety zombie.",
+    "funDisc": "Basic Zombie hates the term \"Basic\". He doesn't consider himself some generic foe or common corpse. He's an individual, darn it, and he's going to make a difference even if it kills you."
+  },
+  "ZombieTutorialArmor1Default": {
+    "overallDisc": "His traffic cone headpiece makes him twice as tough as normal zombies.",
+    "funDisc": "After a wild night, Conehead Zombie woke up holding a mysterious receipt for a cone and industrial strength adhesive."
+  },
+  "ZombieMummyArmor1Default": {
+    "overallDisc": "His traffic cone headpiece makes him twice as tough as normal zombies.",
+    "funDisc": "After a wild night, Conehead Zombie woke up holding a mysterious receipt for a cone and industrial strength adhesive."
+  },
+  "ZombieIceageArmor1Default": {
+    "overallDisc": "His traffic cone headpiece makes him twice as tough as normal zombies.",
+    "funDisc": "After a wild night, Conehead Zombie woke up holding a mysterious receipt for a cone and industrial strength adhesive."
+  },
+  "ZombieBeachArmor1Default": {
+    "overallDisc": "His traffic cone headpiece makes him twice as tough as normal zombies.",
+    "funDisc": "After a wild night, Conehead Zombie woke up holding a mysterious receipt for a cone and industrial strength adhesive."
+  },
+  "ZombieDarkArmor1Default": {
+    "overallDisc": "His traffic cone headpiece makes him twice as tough as normal zombies.",
+    "funDisc": "After a wild night, Conehead Zombie woke up holding a mysterious receipt for a cone and industrial strength adhesive."
+  },
+  "ZombieTutorialArmor2Default": {
+    "overallDisc": "His bucket hat makes him extremely resistant to damage.",
+    "funDisc": "There was a time when Buckethead Zombie was hailed as a zombie genius for his innovative bucket-on-head strategy. It's been a few years, though, and zombies wonder if he's got any surprises left. His secret? He doesn't."
+  },
+  "ZombieMummyArmor2Default": {
+    "overallDisc": "His bucket hat makes him extremely resistant to damage.",
+    "funDisc": "There was a time when Buckethead Zombie was hailed as a zombie genius for his innovative bucket-on-head strategy. It's been a few years, though, and zombies wonder if he's got any surprises left. His secret? He doesn't."
+  },
+  "ZombieIceageArmor2Default": {
+    "overallDisc": "His bucket hat makes him extremely resistant to damage.",
+    "funDisc": "There was a time when Buckethead Zombie was hailed as a zombie genius for his innovative bucket-on-head strategy. It's been a few years, though, and zombies wonder if he's got any surprises left. His secret? He doesn't."
+  },
+  "ZombieBeachArmor2Default": {
+    "overallDisc": "His bucket hat makes him extremely resistant to damage.",
+    "funDisc": "There was a time when Buckethead Zombie was hailed as a zombie genius for his innovative bucket-on-head strategy. It's been a few years, though, and zombies wonder if he's got any surprises left. His secret? He doesn't."
+  },
+  "ZombieDarkArmor2Default": {
+    "overallDisc": "His bucket hat makes him extremely resistant to damage.",
+    "funDisc": "There was a time when Buckethead Zombie was hailed as a zombie genius for his innovative bucket-on-head strategy. It's been a few years, though, and zombies wonder if he's got any surprises left. His secret? He doesn't."
+  },
+  "ZombieTutorialArmor4Default": {
+    "overallDisc": "Brickhead Zombie's brick head provides thorough brickheaded brickheadness.",
+    "funDisc": "After consultation with various storybook wolves, it was determined that straw helmets and wood helmets were not up to snuff, and that brick helmets had to be seriously considered."
+  },
+  "ZombieMummyArmor4Default": {
+    "overallDisc": "Brickhead Zombie's brick head provides thorough brickheaded brickheadness.",
+    "funDisc": "After consultation with various storybook wolves, it was determined that straw helmets and wood helmets were not up to snuff, and that brick helmets had to be seriously considered."
+  },
+  "ZombieDarkArmor4Default": {
+    "overallDisc": "Brickhead Zombie's brick head provides thorough brickheaded brickheadness.",
+    "funDisc": "After consultation with various storybook wolves, it was determined that straw helmets and wood helmets were not up to snuff, and that brick helmets had to be seriously considered."
+  },
+  "ZombieDarkArmor3Default": {
+    "overallDisc": "His king appointed helm provides amazing protection from damage.",
+    "funDisc": "Knight Zombie was just as surprised as anyone when Zombie King promoted him. He'd never say this out loud, but he's not sure he deserves the position. He's not sure he has what it takes to wear the armor. But like they say, \"Fake it 'til you make it.\""
+  },
+  "ZombieGargantuarBasic": {
+    "overallDisc": "Gargantuar really is kind of a big deal.",
+    "funDisc": "Gargantuar is the embodiment of power, made real. He is a juggernaut of hunger, from which there is no escape. He is fear unleashed. Well, he's fear slightly leashed."
+  },
+  "ZombieEgyptGargantuar": {
+    "overallDisc": "Gargantuar really is kind of a big deal.",
+    "funDisc": "Gargantuar is the embodiment of power, made real. He is a juggernaut of hunger, from which there is no escape. He is fear unleashed. Well, he's fear slightly leashed."
+  },
+  "ZombieIceAgeGargantuar": {
+    "overallDisc": "Gargantuar really is kind of a big deal.",
+    "funDisc": "Gargantuar is the embodiment of power, made real. He is a juggernaut of hunger, from which there is no escape. He is fear unleashed. Well, he's fear slightly leashed."
+  },
+  "ZombieBeachGargantuar": {
+    "overallDisc": "Gargantuar really is kind of a big deal.",
+    "funDisc": "Gargantuar is the embodiment of power, made real. He is a juggernaut of hunger, from which there is no escape. He is fear unleashed. Well, he's fear slightly leashed."
+  },
+  "ZombieDarkGargantuar": {
+    "overallDisc": "Gargantuar really is kind of a big deal.",
+    "funDisc": "Gargantuar is the embodiment of power, made real. He is a juggernaut of hunger, from which there is no escape. He is fear unleashed. Well, he's fear slightly leashed."
+  },
+  "ZombieTutorialImpDefault": {
+    "overallDisc": "Is hurled onto the lawn past your defenses, then shuffles ahead.",
+    "funDisc": "What he lacks in reach he more than makes up for with his bad attitude, or Zombattitude as he likes to call it. Don't encourage him."
+  },
+  "ZombieEgyptImpDefault": {
+    "overallDisc": "Is hurled onto the lawn past your defenses, then shuffles ahead.",
+    "funDisc": "What he lacks in reach he more than makes up for with his bad attitude, or Zombattitude as he likes to call it. Don't encourage him."
+  },
+  "ZombieIceageImpDefault": {
+    "overallDisc": "Is hurled onto the lawn past your defenses, then shuffles ahead.",
+    "funDisc": "What he lacks in reach he more than makes up for with his bad attitude, or Zombattitude as he likes to call it. Don't encourage him."
+  },
+  "ZombieBeachImpDefault": {
+    "overallDisc": "Is hurled onto the lawn past your defenses, then shuffles ahead.",
+    "funDisc": "What he lacks in reach he more than makes up for with his bad attitude, or Zombattitude as he likes to call it. Don't encourage him."
+  },
+  "ZombieDarkImpDefault": {
+    "overallDisc": "Spit past most your defenses, then claws forward.",
+    "funDisc": "Imp Zombie knows he's too old to wear a dragon costume like a kid on Halloween. But he doesn't care. Let the others judge. His spirit animal is a dragon, and he feels closer to his true self when he's dressed like this."
+  },
+  "ZombieRaDefault": {
+    "overallDisc": "Tries to steal sun, just for safe keeping.",
+    "funDisc": "Ra Zombie isn't actually named after the Sun God Ra, though that's a common mistake. He just likes to say \"Ra\" a lot."
+  },
+  "ZombieExplorerDefault": {
+    "overallDisc": "Carries a torch that can instantly destroy your plants.",
+    "funDisc": "His impressive friendly mutton chops has always kept food in them for weeks, making sure his explorations are filled with snacks."
+  },
+  "ZombieTombRaiserDefault": {
+    "overallDisc": "Throws out bones to create tombstones.",
+    "funDisc": "He dreams about playing fetch, running for brains. He loves burying himself in the yard, and is not yet indoor trained. He's still looking for his tail."
+  },
+  "ZombieIceAgeDodo": {
+    "overallDisc": "Dodo bird with an imp rider. The dodo can flap and jump over barricades as well as troublesome plants.",
+    "funDisc": "Dodo Rider believes dodos are the future of transportation. He believes a public dodo-riding system is not only a wise expenditure of tax dollars but would help the vast majority of zombies get where they need to go more efficiently. Everyone keeps telling him there's no future in dodos, but he refuses to listen."
+  },
+  "ZombieIceAgeHunter": {
+    "overallDisc": "Zombie that can throw snow balls at range to cool down plants until they freeze into blocks.",
+    "funDisc": "Shhhhh ... Hunter Zombie didn't actually kill that sabertooth tiger. He found the skin at a thrift store. Also, he's a vegetarian. Tell no one."
+  },
+  "ZombieIceAgeTroglobite": {
+    "overallDisc": "Strong zombie that can push blocks of ice across the lawn.",
+    "funDisc": "Troglobite has been pushing ice blocks across the tundra day in and day out for as long as he can remember. It's cold and exhausting work, and frankly, he's ready for a vacation. He'd like to go somewhere sunny and warm for a change. He'd like to relax in the sand. He hears Big Wave Beach is nice this time of year."
+  },
+  "ZombieBeachFisherman": {
+    "overallDisc": "Casts line to pull far plants to him.",
+    "funDisc": "Everyone is tired of Fisherman Zombie's fishing stories. He's always bragging about the size of his catch. Time and time again, he claims to have caught \"the big one.\" But the fact of the matter is, no one has seen him actually catch a fish. Not once. It's more than a little suspicious."
+  },
+  "ZombieBeachOctopus": {
+    "overallDisc": "Throws octopi at your plants to bind them up.",
+    "funDisc": "It started innocently enough. One day, Octo Zombie decided to get a pet octopus. But he loved that octopus so much, he got another and another... and another. Next thing you know, he was volunteering at an octopus rescue shelter. And now, well, no one wants to tell him, but he's pretty much the undersea equivalent of a cat lady. You should see how many are living at his house. It's quite startling."
+  },
+  "ZombieBeachSnorkel": {
+    "overallDisc": "Snorkel zombies can swim underwater.",
+    "funDisc": "Snorkel Zombie has a hard time getting the Bikini Zombies. He's tried offering them flowers, jewelry, and even chocolate-covered brains. But nothing seems to work. They just can't seem to see past the snorkel on his face."
+  },
+  "ZombieDarkJugglerDefault": {
+    "overallDisc": "Returns projectiles that are shot at him.",
+    "funDisc": "Oh sure, everyone loves to laugh at Jester Zombie's clownish routines. But what no one knows is that he has a Master of Fine Arts from the Chewliard Performing Arts School. Heck, he's been on stage with some of the finest classical theatre companies this side of the lawn. But sometimes you just gotta go where the paycheck is."
+  },
+  "ZombieWizardDefault": {
+    "overallDisc": "Transforms plants into passive sheep.",
+    "funDisc": "All the zombies agree, Wizard Zombie's powers of transmutation are impressive. But what they don't get is ... why sheep? Everyone knows it would be more helpful if the Wizard used his powers to turn plants into, say, more zombies. But yeah, no one is going to say that to his face."
+  },
+  "ZombieDarkKing": {
+    "overallDisc": "Grants knight helms to nearby peasant zombies.",
+    "funDisc": "As Shakespeare once wrote, \"Uneasy lies the head that wears a crown.\" And Zombie King couldn't agree more. It is incredibly difficult to get a good night's sleep with a crown on your head. That thing is all kinds of uncomfortable."
+  },
+  "ZombieModernNewspaperDefault": {
+    "overallDisc": "Newspaper protects zombie, who is then enraged when it is destroyed.",
+    "funDisc": "You can't really blame him for getting so upset; he was THIS close to finishing the crossword (23 down was \"Brains\")."
+  },
+  "ZombieZombossMechEgypt": {
+    "overallDisc": "The ultimate zombie overlord in his mechanized suit.",
+    "funDisc": "Dr. Zomboss has been planning this invasion for years. He even had matching curtains made for the Zombot."
+  },
+  "ZombieZombossMechPirate": {
+    "overallDisc": "The ultimate zombie overlord in his mechanized suit.",
+    "funDisc": "Dr. Zomboss has been planning this invasion for years. He even had matching curtains made for the Zombot."
+  },
+  "ZombieZombossMechCowboy": {
+    "overallDisc": "The ultimate zombie overlord in his mechanized suit.",
+    "funDisc": "Dr. Zomboss has been planning this invasion for years. He even had matching curtains made for the Zombot."
+  },
+  "ZombieZombossMechDark": {
+    "overallDisc": "The ultimate zombie overlord in his mechanized suit.",
+    "funDisc": "Dr. Zomboss has been planning this invasion for years. He even had matching curtains made for the Zombot."
+  }
+}

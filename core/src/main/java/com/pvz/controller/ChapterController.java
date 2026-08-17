@@ -10,6 +10,7 @@ public class ChapterController {
     }
 
     public boolean isLevelUnlocked(int levelNumber){
+        if (season == null) return true;
         return season.isLevelUnlocked(levelNumber);
     }
 }
