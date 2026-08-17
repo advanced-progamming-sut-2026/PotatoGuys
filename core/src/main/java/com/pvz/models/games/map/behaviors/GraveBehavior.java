@@ -12,8 +12,13 @@ import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
 
 public class GraveBehavior implements TileBehavior {
-    private static final String pamId="768/INITIAL/GRAVESTONES/EGYPT_HIEROGLYPH/EGYPT_HIEROGLYPH.PAM";
-    private static final String[] DAMAGE_CLIPS = {"undamaged","damage1","damage2","damage3","damage4"};
+    private static final String EGYPT_PAM = "768/INITIAL/GRAVESTONES/EGYPT_HIEROGLYPH/EGYPT_HIEROGLYPH.PAM";
+    private static final String DARK_NOOP_PAM = "768/FULL/GRAVESTONES/DARK_NOOP/DARK_NOOP.PAM";
+    private static final String DARK_SUN_PAM = "768/FULL/GRAVESTONES/DARK_SUN/DARK_SUN.PAM";
+    private static final String DARK_PLANTFOOD_PAM = "768/FULL/GRAVESTONES/DARK_PLANTFOOD/DARK_PLANTFOOD.PAM";
+
+    private static final String[] EGYPT_DAMAGE_CLIPS = {"undamaged","damage1","damage2","damage3","damage4"};
+    private static final String[] DARK_DAMAGE_CLIPS = {"undamaged","damage1","damage2","damage3","damage4"};
 
     float stateTime;
 
@@ -112,6 +117,24 @@ public class GraveBehavior implements TileBehavior {
         else if (ratio > 0.6f) idx = 1;
         else if (ratio > 0.4f) idx = 2;
         else idx = 3;
-        return new FrameConfig(pamId, DAMAGE_CLIPS[idx], stateTime, pos, scale, null, false);
+
+        String pamId;
+        String[] clips;
+        GameContext ctx = AppContext.getInstance().getGameContext();
+        boolean isDarkAges = ctx != null && "dark ages".equalsIgnoreCase(ctx.getSeasonName());
+
+        if (isDarkAges) {
+            switch (reward) {
+                case SUN_50 -> pamId = DARK_SUN_PAM;
+                case PLANT_FOOD -> pamId = DARK_PLANTFOOD_PAM;
+                default -> pamId = DARK_NOOP_PAM;
+            }
+            clips = DARK_DAMAGE_CLIPS;
+        } else {
+            pamId = EGYPT_PAM;
+            clips = EGYPT_DAMAGE_CLIPS;
+        }
+
+        return new FrameConfig(pamId, clips[idx], stateTime, pos, scale, null, false);
     }
 }

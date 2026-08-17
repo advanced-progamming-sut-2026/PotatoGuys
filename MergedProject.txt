@@ -3917,7 +3917,6 @@ import com.badlogic.gdx.utils.Scaling;
 import com.pvz.models.entities.zombies.ZombieType;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
 import com.pvz.models.entities.zombies.data.ZombieRegistry;
-import com.pvz.models.entities.zombies.data.ZombieStatEntry;
 
 import pvz.skin.PvzSkin;
 
@@ -3949,14 +3948,6 @@ public final class ZombieDetailsTable extends Table {
     private static final String BACK_PRESSED = "IMAGE_UI_ALMANAC_BUTTONS_HUD_BACK_SELECTED";
     private static final String TOUGHNESS_ICON = "IMAGE_UI_ALMANAC_ZOMBIES_ZOMBIETOUGHNESS_ICON";
     private static final String SPEED_ICON = "IMAGE_UI_ALMANAC_ZOMBIES_ZOMBIESPEED_ICON";
-
-    private static final String[] TOUGHNESS_LABELS = {
-        "", "Fragile", "Low", "Below Average", "Basic",
-        "Protected", "Hardy", "Very High", "Ultimate"
-    };
-    private static final String[] SPEED_LABELS = {
-        "Stationary", "Very Slow", "Slow", "Basic", "Fast", "Very Fast"
-    };
 
     public ZombieDetailsTable(ZombieCard.ViewData data, Runnable onBack) {
         if (data == null) throw new IllegalArgumentException("data cannot be null");
@@ -4037,8 +4028,10 @@ public final class ZombieDetailsTable extends Table {
 
         Table stats = new Table();
         stats.top().left();
-        stats.add(statColumn(TOUGHNESS_ICON, "TOUGHNESS", tierLabel(sheet, true))).width(230f).left();
-        stats.add(statColumn(SPEED_ICON, "SPEED", tierLabel(sheet, false))).width(230f).left().row();
+        stats.add(statColumn(TOUGHNESS_ICON, "TOUGHNESS",
+                Math.round(sheet.getHitPoints()) + " HP")).width(230f).left();
+        stats.add(statColumn(SPEED_ICON, "ATTACK",
+                Math.round(sheet.getEatDps()) + "/s")).width(230f).left().row();
         right.add(stats).growX().left().row();
 
         if (!sheet.getArmorAliases().isEmpty()) {
@@ -4046,11 +4039,24 @@ public final class ZombieDetailsTable extends Table {
                 .width(500f).left().padTop(18f).row();
         }
 
-        String statsText = "Health: " + Math.round(sheet.getHitPoints())
-            + "   Attack: " + Math.round(sheet.getEatDps()) + "/s";
-        right.add(textStat("Stats", statsText)).width(500f).left().padTop(18f).row();
+        String[] descs = ZombieRegistry.getInstance().getDescriptions(sheet.getAlias());
+        if (descs != null) {
+            if (descs[0] != null && !descs[0].isEmpty()) {
+                right.add(descriptionLabel(descs[0], Color.WHITE)).width(480f).left().padTop(18f).row();
+            }
+            if (descs[1] != null && !descs[1].isEmpty()) {
+                right.add(descriptionLabel(descs[1], Color.valueOf("FFD75A"))).width(480f).left().padTop(6f).row();
+            }
+        }
 
         return right;
+    }
+
+    private Label descriptionLabel(String text, Color color) {
+        Label label = new Label(text, PvzSkin.get().get("big", Label.LabelStyle.class));
+        label.setColor(color);
+        label.setWrap(true);
+        return label;
     }
 
     private Table statColumn(String iconId, String title, String value) {
@@ -4085,20 +4091,6 @@ public final class ZombieDetailsTable extends Table {
         row.add(titleLabel).top().left().padRight(6f);
         row.add(valueLabel).width(400f).top().left();
         return row;
-    }
-
-    private String tierLabel(ZombiePropertySheet sheet, boolean toughness) {
-        for (ZombieStatEntry entry : sheet.getZombieStats()) {
-            if (toughness && entry.isToughness()) {
-                int tier = entry.getTier();
-                return (tier >= 1 && tier < TOUGHNESS_LABELS.length) ? TOUGHNESS_LABELS[tier] : "-";
-            }
-            if (!toughness && entry.isSpeed()) {
-                int tier = entry.getTier();
-                return (tier >= 0 && tier < SPEED_LABELS.length) ? SPEED_LABELS[tier] : "-";
-            }
-        }
-        return "-";
     }
 
     private String displayName(ZombieType type) {
@@ -8252,7 +8244,7 @@ public class CollectionMenu extends ScreenAdapter {
         stage.addActor(detailsOverlay);
 
         ZombieDetailsTable details = new ZombieDetailsTable(data, this::closeDetails);
-        detailsOverlay.add(details).size(840f, 920f);
+        detailsOverlay.add(details).size(960f, 700f);
     }
 
     private void closeDetails() {
@@ -12438,6 +12430,7 @@ public class RegisterMenu extends ScreenAdapter {
         User user = new User(username, passwordHash, nickname, email, gender);
         user.setSecurityQuestion(String.valueOf(questionIndex));
         user.setSecurityAnswer(answer);
+        grantStarterProgress(user);
 
         statusLabel.setText("Connecting...");
         NetworkClient.getInstance().register(user, response -> {
@@ -16212,6 +16205,7 @@ public class ChapterController {
     }
 
     public boolean isLevelUnlocked(int levelNumber){
+        if (season == null) return true;
         return season.isLevelUnlocked(levelNumber);
     }
 }
@@ -18427,6 +18421,7 @@ import com.pvz.models.entities.projectile.effects.ProjectileEffectState;
 import com.pvz.models.entities.projectile.fsm.ProjectileMotionState;
 import com.pvz.models.entities.projectile.fsm.StraightMotionState;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.effects.SplatEffect;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.tile.Tile;
 
@@ -18461,6 +18456,9 @@ public class Projectile extends Entity {
 
     private final Set<Zombie> hitZombies = new HashSet<>();
 
+    private boolean lobbed = false;
+    private int launchLane = -1;
+
     private ProjectileMotionState motionState;
     private ProjectileEffectState effectState;
 
@@ -18479,6 +18477,9 @@ public class Projectile extends Entity {
                     return;
                 }
                 if (onHit.getOwner() instanceof Zombie zombie && !zombie.isDead()) {
+                    if (lobbed && GameController.worldYtoLane(zombie.getY()) != launchLane) {
+                        return;
+                    }
                     onHitZombie(zombie);
                 }
             }
@@ -18498,6 +18499,11 @@ public class Projectile extends Entity {
 
     public void setEffectState(ProjectileEffectState effectState) {
         this.effectState = effectState;
+    }
+
+    public void setLobbed(int launchLane) {
+        this.lobbed = true;
+        this.launchLane = launchLane;
     }
 
     public ProjectileMotionState getMotionState() {
@@ -18546,16 +18552,18 @@ public class Projectile extends Entity {
             lastCol = col;
             lastLane = lane;
 
-            try {
-                Tile tile = ctx.getTileAt(lastCol, lastLane);
-                tile.processHit(this);
-            } catch (Exception ex) {
-                destroy();
-                return;
-            }
+            if (!lobbed || lane == launchLane) {
+                try {
+                    Tile tile = ctx.getTileAt(lastCol, lastLane);
+                    tile.processHit(this);
+                } catch (Exception ex) {
+                    destroy();
+                    return;
+                }
 
-            if (isDead) {
-                return;
+                if (isDead) {
+                    return;
+                }
             }
         }
     }
@@ -18624,6 +18632,9 @@ public class Projectile extends Entity {
             return;
         }
         this.isDead = true;
+        if (type.hasSplat()) {
+            ctx.addEffect(new SplatEffect(ctx, position, type.splatPamPath, type.splatClip, type.splatScale));
+        }
         ctx.removeProjectile(this);
     }
 
@@ -18814,46 +18825,72 @@ FILE: ProjectileType.java
 package com.pvz.models.entities.projectile;
 
 public enum ProjectileType {
-    PEA("768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM", "animation"),
-    SNOW_PEA("768/INITIAL/EFFECTS/T_SNOW_PEA/T_SNOW_PEA.PAM", "animation"),
-    FIRE_PEA("768/INITIAL/EFFECTS/T_FIRE_PEA/T_FIRE_PEA.PAM", "animation"),
-    GOO_PEA("768/INITIAL/EFFECTS/GOOPEASHOOTER_PROJECTILES/GOOPEASHOOTER_PROJECTILES.PAM", "projectile_t1"),
-    SPIKE("768/INITIAL/EFFECTS/CACTUS_PROJECTILE/CACTUS_PROJECTILE.PAM", "idle"),
-    FUME("768/INITIAL/EFFECTS/FUMESHROOM_BUBBLES/FUMESHROOM_BUBBLES.PAM", "special"),
-    SPORE("768/INITIAL/EFFECTS/T_SPORESHROOM_PROJECTILE/T_SPORESHROOM_PROJECTILE.PAM", "animation"),
-    STAR("768/INITIAL/EFFECTS/T_STARFRUIT_PROJECTILE/T_STARFRUIT_PROJECTILE.PAM", "animation"),
-    ROTOBAGA_PROJECTILE("768/FULL/EFFECTS/ROTORUTABAGA_PROJECTILE2/ROTORUTABAGA_PROJECTILE2.PAM", "animation"),
-    CITRON_BALL("768/FULL/EFFECTS/CITRON_CITRUS_ORB/CITRON_CITRUS_ORB.PAM", "Citron_Citrus_Orb"),
-    BULB_CYAN("768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE1/BOWLINGBULB_PROJECTILE1.PAM", "animation"),
-    BULB_BLUE("768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE2/BOWLINGBULB_PROJECTILE2.PAM", "animation"),
-    HOMING_BOLT("768/INITIAL/EFFECTS/HOMING_THISTLE_PROJECTILE/HOMING_THISTLE_PROJECTILE.PAM", "animation"),
-    BULB_ORANGE("768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE3/BOWLINGBULB_PROJECTILE3.PAM", "animation"),
-
-    // --- New for the projectile State Pattern pass ---
-    PEPPER_BALL("768/FULL/EFFECTS/PEPPERPULT_PROJECTILE/PEPPERPULT_PROJECTILE.PAM", "animation"),   // Pepper-pult: lobbed, area fire effect
-    MELON("768/INITIAL/EFFECTS/T_MELON_PROJECTILE/T_MELON_PROJECTILE.PAM", "animation" , 0.45f),         // Melon-pult: lobbed, area effect
-    WINTER_MELON("768/FULL/EFFECTS/T_WINTERMELON_PROJECTILE/T_WINTERMELON_PROJECTILE.PAM", "animation" , 0.45f),  // Winter Melon-pult: lobbed, area effect + chill
-    CABBAGE("768/INITIAL/EFFECTS/T_CABBAGEPULT_PROJECTILE/T_CABBAGEPULT_PROJECTILE.PAM", "animation", 0.45f),  // Cabbage-pult: lobbed, single target (scaled down, the PAM art is very large)
-    KERNEL("768/INITIAL/EFFECTS/T_KERNALPULT_PROJECTILE/T_KERNALPULT_PROJECTILE.PAM", "animation"),  // Kernel-pult: lobbed kernel, single target
-    BUTTER("768/INITIAL/EFFECTS/SPLAT_KERNALPULT_BUTTER/SPLAT_KERNALPULT_BUTTER.PAM", "animation");  // Kernel-pult butter: lobbed, stuns target
+    PEA("768/INITIAL/EFFECTS/T_PEA_PROJECTILE/T_PEA_PROJECTILE.PAM", "animation",
+        "768/INITIAL/EFFECTS/SPLAT_PEA/SPLAT_PEA.PAM", "animation", 1f),
+    SNOW_PEA("768/INITIAL/EFFECTS/T_SNOW_PEA/T_SNOW_PEA.PAM", "animation",
+        "768/INITIAL/EFFECTS/SPLAT_SNOW_PEA/SPLAT_SNOW_PEA.PAM", "animation", 1f),
+    FIRE_PEA("768/INITIAL/EFFECTS/T_FIRE_PEA/T_FIRE_PEA.PAM", "animation",
+        "768/INITIAL/EFFECTS/SPLAT_FIRE_PEA_BLUE/SPLAT_FIRE_PEA_BLUE.PAM", "animation", 1f),
+    GOO_PEA("768/INITIAL/EFFECTS/GOOPEASHOOTER_PROJECTILES/GOOPEASHOOTER_PROJECTILES.PAM", "projectile_t1",
+        null, null, 1f),
+    SPIKE("768/INITIAL/EFFECTS/CACTUS_PROJECTILE/CACTUS_PROJECTILE.PAM", "idle",
+        null, null, 1f),
+    FUME("768/INITIAL/EFFECTS/FUMESHROOM_BUBBLES/FUMESHROOM_BUBBLES.PAM", "special",
+        null, null, 1f),
+    SPORE("768/INITIAL/EFFECTS/T_SPORESHROOM_PROJECTILE/T_SPORESHROOM_PROJECTILE.PAM", "animation",
+        null, null, 1f),
+    STAR("768/INITIAL/EFFECTS/T_STARFRUIT_PROJECTILE/T_STARFRUIT_PROJECTILE.PAM", "animation",
+        null, null, 1f),
+    ROTOBAGA_PROJECTILE("768/FULL/EFFECTS/ROTORUTABAGA_PROJECTILE2/ROTORUTABAGA_PROJECTILE2.PAM", "animation",
+        null, null, 1f),
+    CITRON_BALL("768/FULL/EFFECTS/CITRON_CITRUS_ORB/CITRON_CITRUS_ORB.PAM", "Citron_Citrus_Orb",
+        null, null, 1f),
+    BULB_CYAN("768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE1/BOWLINGBULB_PROJECTILE1.PAM", "animation",
+        null, null, 1f),
+    BULB_BLUE("768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE2/BOWLINGBULB_PROJECTILE2.PAM", "animation",
+        null, null, 1f),
+    HOMING_BOLT("768/INITIAL/EFFECTS/HOMING_THISTLE_PROJECTILE/HOMING_THISTLE_PROJECTILE.PAM", "animation",
+        null, null, 1f),
+    BULB_ORANGE("768/FULL/EFFECTS/BOWLINGBULB_PROJECTILE3/BOWLINGBULB_PROJECTILE3.PAM", "animation",
+        null, null, 1f),
+    PEPPER_BALL("768/FULL/EFFECTS/PEPPERPULT_PROJECTILE/PEPPERPULT_PROJECTILE.PAM", "animation",
+        "768/FULL/EFFECTS/PEPPERPULT_PROJECTILE_SPLAT/PEPPERPULT_PROJECTILE_SPLAT.PAM", "animation", 1f),
+    MELON("768/INITIAL/EFFECTS/T_MELON_PROJECTILE/T_MELON_PROJECTILE.PAM", "animation", 0.45f,
+        "768/INITIAL/EFFECTS/T_SPLAT_MELONPULT/T_SPLAT_MELONPULT.PAM", "animation", 1f),
+    WINTER_MELON("768/FULL/EFFECTS/T_WINTERMELON_PROJECTILE/T_WINTERMELON_PROJECTILE.PAM", "animation", 0.45f,
+        "768/FULL/EFFECTS/T_SPLAT_WINTERMELON/T_SPLAT_WINTERMELON.PAM", "animation", 1f),
+    CABBAGE("768/INITIAL/EFFECTS/T_CABBAGEPULT_PROJECTILE/T_CABBAGEPULT_PROJECTILE.PAM", "animation", 0.45f,
+        "768/INITIAL/EFFECTS/SPLAT_CABBAGEPULT/SPLAT_CABBAGEPULT.PAM", "animation", 1f),
+    KERNEL("768/INITIAL/EFFECTS/T_KERNALPULT_PROJECTILE/T_KERNALPULT_PROJECTILE.PAM", "animation",
+        "768/INITIAL/EFFECTS/SPLAT_KERNALPULT_KERNAL/SPLAT_KERNALPULT_KERNAL.PAM", "animation", 1f),
+    BUTTER("768/INITIAL/EFFECTS/T_KERNALPULT_PROJECTILE/T_KERNALPULT_PROJECTILE.PAM", "animation",
+        "768/INITIAL/EFFECTS/SPLAT_KERNALPULT_BUTTER/SPLAT_KERNALPULT_BUTTER.PAM", "animation", 1f);
 
 
     public String path;
     public String lable;
-    /** Uniform render scale for this projectile's animation; defaults to 1 (full size). */
     public float scale = 1f;
+    public String splatPamPath;
+    public String splatClip;
+    public float splatScale;
 
-    ProjectileType(String animPath, String lable) {
-        this(animPath, lable, 1f);
+    ProjectileType(String animPath, String lable, String splatPamPath, String splatClip, float splatScale) {
+        this(animPath, lable, 1f, splatPamPath, splatClip, splatScale);
     }
 
-    ProjectileType(String animPath, String lable, float scale) {
+    ProjectileType(String animPath, String lable, float projectileScale,
+                   String splatPamPath, String splatClip, float splatScale) {
         this.path = animPath;
         this.lable = lable;
-        this.scale = scale;
+        this.scale = projectileScale;
+        this.splatPamPath = splatPamPath;
+        this.splatClip = splatClip;
+        this.splatScale = splatScale;
     }
 
-
+    public boolean hasSplat() {
+        return splatPamPath != null;
+    }
 }
 
 
@@ -18916,18 +18953,15 @@ package com.pvz.models.entities.projectile.effects;
 
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.zombies.Zombie;
-import com.pvz.models.entities.zombies.effects.EffectType;
-import com.pvz.models.entities.zombies.effects.StatusEffect;
 import com.pvz.models.games.GameContext;
 
 /**
- * Kernel-pult's butter: single-target damage plus a brief stun — the zombie is
- * temporarily buttered and cannot move or attack (see {@link EffectType#STUN}).
+ * Kernel-pult's butter: single-target damage plus a 4.5-second stun.
+ * The butter part is shown on the zombie's head via partVisibility in ButterStunState.
  */
 public class ButterEffectState extends ProjectileEffectState {
 
-    /** 20 ticks == 2 in-game seconds at Zombie.TICKS_PER_SECOND (10). */
-    private static final int STUN_TICKS = 20;
+    private static final float STUN_DURATION = 4.5f;
 
     @Override
     public void onImpact(Projectile projectile, Zombie primaryTarget, GameContext ctx) {
@@ -18935,7 +18969,7 @@ public class ButterEffectState extends ProjectileEffectState {
             return;
         }
         primaryTarget.takeDamage(projectile.getDamage(), bypassesArmor());
-        primaryTarget.applyEffect(new StatusEffect(EffectType.STUN, STUN_TICKS));
+        primaryTarget.setButterStunned(STUN_DURATION);
     }
 
     @Override
@@ -19206,6 +19240,7 @@ FILE: ProjectileFactory.java
 package com.pvz.models.entities.projectile;
 
 import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.projectile.effects.AreaFireEffectState;
 import com.pvz.models.entities.projectile.effects.ButterEffectState;
 import com.pvz.models.entities.projectile.effects.FireEffectState;
@@ -19254,6 +19289,7 @@ public class ProjectileFactory {
     public static Projectile create(ProjectileType type, GameContext ctx, Vector2 startPos,
                                      Vector2 vel, float damage, Zombie target) {
         Projectile projectile = new Projectile(ctx, type, startPos.x, startPos.y, vel.x, vel.y, damage);
+        int launchLane = GameController.worldYtoLane(startPos.y);
 
         switch (type) {
             case FIRE_PEA -> {
@@ -19267,22 +19303,27 @@ public class ProjectileFactory {
             case PEPPER_BALL -> {
                 projectile.setMotionState(lobbedTowards(target));
                 projectile.setEffectState(new AreaFireEffectState());
+                projectile.setLobbed(launchLane);
             }
             case MELON -> {
                 projectile.setMotionState(lobbedTowards(target));
                 projectile.setEffectState(new MelonEffectState(false));
+                projectile.setLobbed(launchLane);
             }
             case WINTER_MELON -> {
                 projectile.setMotionState(lobbedTowards(target));
                 projectile.setEffectState(new MelonEffectState(true));
+                projectile.setLobbed(launchLane);
             }
             case CABBAGE, KERNEL -> {
                 projectile.setMotionState(lobbedTowards(target));
                 projectile.setEffectState(new NormalEffectState());
+                projectile.setLobbed(launchLane);
             }
             case BUTTER -> {
                 projectile.setMotionState(lobbedTowards(target));
                 projectile.setEffectState(new ButterEffectState());
+                projectile.setLobbed(launchLane);
             }
             case FUME, SPIKE -> {
                 projectile.setMotionState(new StraightMotionState());
@@ -24060,6 +24101,87 @@ public class SandstormCarryState extends ZombieState {
 
 
 ======================================================
+FILE: ButterStunState.java
+======================================================
+
+package com.pvz.models.entities.zombies.fsm;
+
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.games.GameContext;
+
+/**
+ * Zombie is stunned by Kernel-pult butter — frozen in place with a yellow
+ * tint for the duration, then returns to whatever state it was in before.
+ * The butter part is shown via buildPartsVisibility() in Zombie.
+ */
+public class ButterStunState extends ZombieState {
+
+    private final ZombieState lastState;
+    private final float lastStateFrameTime;
+    private final float duration;
+    private final String pamPath;
+    private final String clip;
+
+    public ButterStunState(ZombieState lastState, float lastStateFrameTime, float duration,
+                           String pamPath, String clip) {
+        super(null);
+        this.lastState = lastState;
+        this.lastStateFrameTime = lastStateFrameTime;
+        this.duration = duration;
+        this.pamPath = pamPath;
+        this.clip = clip;
+    }
+
+    @Override
+    public void onEnter(Zombie zombie, GameContext ctx) {
+        super.onEnter(zombie, ctx);
+    }
+
+    @Override
+    public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
+        stateTime += dt;
+        if (stateTime >= duration) {
+            return lastState;
+        }
+        return this;
+    }
+
+    @Override
+    public FrameConfig draw(Zombie zombie, GameContext ctx) {
+        FrameConfig fc = zombie.drawClip(clip, lastStateFrameTime, false);
+        if (fc != null) {
+            fc.setColor(1f, 0.9f, 0.5f, 0.85f);
+        }
+        return fc;
+    }
+
+    @Override
+    public void onExit(Zombie zombie, GameContext ctx) {
+        super.onExit(zombie, ctx);
+    }
+
+    @Override
+    public boolean shouldTrigger(Zombie zombie, GameContext ctx, float dt) {
+        return false;
+    }
+
+    @Override
+    protected void doExecute(Zombie zombie, GameContext ctx) {
+    }
+
+    @Override
+    public String getName() {
+        return "ButterStun";
+    }
+
+    public float getRemainingDuration() {
+        return Math.max(0, duration - stateTime);
+    }
+}
+
+
+======================================================
 FILE: EatState.java
 ======================================================
 
@@ -25225,6 +25347,8 @@ public class ZombieJsonConfig {
     public ZombieSkillConfig skillConfig;
 
     public String description;
+    public String overallDisc;
+    public String funDisc;
 }
 
 
@@ -25782,10 +25906,17 @@ FILE: ZombieRegistry.java
 
 package com.pvz.models.entities.zombies.data;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+import com.pvz.models.Constants;
 
 import com.pvz.models.entities.zombies.config.ScaledPropConfig;
 import com.pvz.models.entities.zombies.config.ZombieArmorConfig;
@@ -25812,9 +25943,11 @@ public final class ZombieRegistry {
 
     private final Map<String, ZombiePropertySheet> zombieSheets = new HashMap<>();
     private final Map<String, ArmorPropertySheet>  armorSheets  = new HashMap<>();
+    private final Map<String, String[]> descriptions = new HashMap<>();
 
     private ZombieRegistry() {
         load();
+        loadDescriptions();
     }
 
     public static ZombieRegistry getInstance() { return INSTANCE; }
@@ -25826,6 +25959,9 @@ public final class ZombieRegistry {
     public ArmorPropertySheet getArmorSheet(String alias) { return armorSheets.get(alias); }
 
     public int size() { return zombieSheets.size(); }
+
+    /** @return {overallDisc, funDisc} or null if no descriptions for this alias */
+    public String[] getDescriptions(String alias) { return descriptions.get(alias); }
 
     // ── Loading (from zombie_actions.json only) ───────────────────────────────
 
@@ -25878,6 +26014,8 @@ public final class ZombieRegistry {
                 .nearAttackRange(cfg.nearAttackRange)
                 .numberOfIceblocksToSpawnWith(cfg.numberOfIceblocksToSpawnWith)
                 .imp(cfg.imp)
+                .overallDisc(cfg.overallDisc)
+                .funDisc(cfg.funDisc)
                 .animationConfig(cfg.animationConfig)
                 .walkConfig(cfg.walkConfig)
                 .eatConfig(cfg.eatConfig)
@@ -25898,6 +26036,22 @@ public final class ZombieRegistry {
             props.add(new ScaledProp(dto.key, dto.formula, dto.arg1, dto.arg2));
         }
         return props;
+    }
+
+    private void loadDescriptions() {
+        String path = Constants.ZOMBIE_ACTIONS_PATH.replace("zombie_actions.json", "zombie_descriptions.json");
+        try {
+            String content = Files.readString(Paths.get(path));
+            JsonValue root = new JsonReader().parse(content);
+            for (JsonValue entry = root.child; entry != null; entry = entry.next) {
+                String alias = entry.name;
+                String overall = entry.has("overallDisc") ? entry.getString("overallDisc") : "";
+                String fun = entry.has("funDisc") ? entry.getString("funDisc") : "";
+                descriptions.put(alias, new String[]{overall, fun});
+            }
+        } catch (IOException e) {
+            System.err.println("[ZombieRegistry] Could not load zombie_descriptions.json: " + e.getMessage());
+        }
     }
 }
 
@@ -25978,6 +26132,10 @@ public final class ZombiePropertySheet {
     // ── Size/misc ─────────────────────────────────────────────────────────────
     private final boolean imp; // size == "imp" in JSON → smaller/faster unit
 
+    // ── Descriptions ─────────────────────────────────────────────────────────
+    private final String overallDisc;
+    private final String funDisc;
+
     // ── Config-driven animation/actions (from zombie_actions.json) ────────────
     public final ZombieAnimationConfig animationConfig;
     public final ZombieActionConfig walkConfig;
@@ -26013,6 +26171,8 @@ public final class ZombiePropertySheet {
         this.nearAttackRange = b.nearAttackRange;
         this.numberOfIceblocksToSpawnWith = b.numberOfIceblocksToSpawnWith;
         this.imp = b.imp;
+        this.overallDisc = b.overallDisc;
+        this.funDisc = b.funDisc;
         this.animationConfig = b.animationConfig;
         this.walkConfig = b.walkConfig;
         this.eatConfig = b.eatConfig;
@@ -26047,6 +26207,8 @@ public final class ZombiePropertySheet {
     public int getNearAttackRange()               { return nearAttackRange; }
     public int getNumberOfIceblocksToSpawnWith()  { return numberOfIceblocksToSpawnWith; }
     public boolean isImp()                        { return imp; }
+    public String getOverallDisc()                { return overallDisc; }
+    public String getFunDisc()                    { return funDisc; }
     public ZombieAnimationConfig getAnimationConfig() { return animationConfig; }
 
     @Override
@@ -26086,6 +26248,8 @@ public final class ZombiePropertySheet {
         private int nearAttackRange = 1;
         private int numberOfIceblocksToSpawnWith = 0;
         private boolean imp = false;
+        private String overallDisc = null;
+        private String funDisc = null;
         private ZombieAnimationConfig animationConfig = null;
         private ZombieActionConfig walkConfig = null;
         private ZombieActionConfig eatConfig = null;
@@ -26120,6 +26284,8 @@ public final class ZombiePropertySheet {
         public Builder nearAttackRange(int v)            { nearAttackRange = v; return this; }
         public Builder numberOfIceblocksToSpawnWith(int v){ numberOfIceblocksToSpawnWith = v; return this; }
         public Builder imp(boolean v)                    { imp = v; return this; }
+        public Builder overallDisc(String v)             { overallDisc = v; return this; }
+        public Builder funDisc(String v)                 { funDisc = v; return this; }
         public Builder animationConfig(ZombieAnimationConfig v) { animationConfig = v; return this; }
         public Builder walkConfig(ZombieActionConfig v)   { walkConfig = v; return this; }
         public Builder eatConfig(ZombieActionConfig v)    { eatConfig = v; return this; }
@@ -26596,8 +26762,12 @@ public class Zombie extends Entity {
      *         to display (basic zombies / fully destroyed armour)
      */
     private Map<String, Boolean> buildPartsVisibility() {
-        if (armors.isEmpty() && !throwImpSpawned) return null;
-        Map<String, Boolean> visibility = armors.isEmpty() ? null : new HashMap<>();
+        boolean buttered = currentState instanceof ButterStunState;
+        if (armors.isEmpty() && !throwImpSpawned && !buttered) return null;
+        Map<String, Boolean> visibility = (armors.isEmpty() && !buttered) ? null : new HashMap<>();
+        if (buttered) {
+            visibility.put("butter", true);
+        }
         for (ArmorPiece armor : armors) {
             if (armor.isDestroyed()) continue;
             String[] layers = armor.getType().pamLayers();
@@ -26693,6 +26863,13 @@ public class Zombie extends Entity {
         currentState.onEnter(this,context);
     }
 
+    public void setButterStunned(float duration){
+        FrameConfig frameConfig = currentState.draw(this,context);
+        currentState=new ButterStunState(currentState,currentState.getStateTime(),
+            duration,frameConfig.pamPath,frameConfig.label);
+        currentState.onEnter(this,context);
+    }
+
     /** Convenience: non-poisonous damage. */
     public void takeDamage(float amount) {
         takeDamage(amount, false);
@@ -26712,6 +26889,10 @@ public class Zombie extends Entity {
     public boolean hasEffect(EffectType type) {
         StatusEffect e = activeEffects.get(type);
         return e != null && e.isActive();
+    }
+
+    public boolean hasStunEffect() {
+        return currentState instanceof ButterStunState;
     }
 
 
@@ -27647,6 +27828,46 @@ public abstract class Effect implements TickAware {
     @Override
     public void dispose() {
         ctx.removeEffect(this);
+    }
+}
+
+
+======================================================
+FILE: SplatEffect.java
+======================================================
+
+package com.pvz.models.entities.effects;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
+import com.pvz.models.games.GameContext;
+
+public class SplatEffect extends Effect {
+    private final String pamPath;
+    private final String clip;
+    private final float scale;
+    private final float clipDuration;
+
+    public SplatEffect(GameContext ctx, Vector2 pos, String pamPath, String clip, float scale) {
+        super(ctx, pos);
+        this.pamPath = pamPath;
+        this.clip = clip;
+        this.scale = scale;
+        this.clipDuration = AnimationCatalog.getInstance().getClipDuration(pamPath, clip);
+    }
+
+    @Override
+    public void update(float dt) {
+        super.update(dt);
+        if (stateTime >= clipDuration) {
+            dispose();
+        }
+    }
+
+    @Override
+    public FrameConfig draw() {
+        return new FrameConfig(pamPath, clip, stateTime, pos, new Vector2(scale, scale), null, false);
     }
 }
 
@@ -29448,8 +29669,13 @@ import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
 
 public class GraveBehavior implements TileBehavior {
-    private static final String pamId="768/INITIAL/GRAVESTONES/EGYPT_HIEROGLYPH/EGYPT_HIEROGLYPH.PAM";
-    private static final String clip="undamaged";
+    private static final String EGYPT_PAM = "768/INITIAL/GRAVESTONES/EGYPT_HIEROGLYPH/EGYPT_HIEROGLYPH.PAM";
+    private static final String DARK_NOOP_PAM = "768/FULL/GRAVESTONES/DARK_NOOP/DARK_NOOP.PAM";
+    private static final String DARK_SUN_PAM = "768/FULL/GRAVESTONES/DARK_SUN/DARK_SUN.PAM";
+    private static final String DARK_PLANTFOOD_PAM = "768/FULL/GRAVESTONES/DARK_PLANTFOOD/DARK_PLANTFOOD.PAM";
+
+    private static final String[] EGYPT_DAMAGE_CLIPS = {"undamaged","damage1","damage2","damage3","damage4"};
+    private static final String[] DARK_DAMAGE_CLIPS = {"undamaged","damage1","damage2","damage3","damage4"};
 
     float stateTime;
 
@@ -29458,6 +29684,7 @@ public class GraveBehavior implements TileBehavior {
     }
 
     private float hp;
+    private final float maxHp;
     private final String name;
     private final GraveReward reward;
     private final Tile tile;
@@ -29469,6 +29696,7 @@ public class GraveBehavior implements TileBehavior {
     public GraveBehavior(Tile tile, float hp, String name, GraveReward reward) {
         this.tile=tile;
         this.hp = hp;
+        this.maxHp = hp;
         this.name = name;
         this.reward = reward;
         stateTime=0;
@@ -29540,7 +29768,31 @@ public class GraveBehavior implements TileBehavior {
         TileBehavior.super.draw(tile);
         Vector2 pos = new Vector2(tile.getX()+Tile.WIDTH/2,tile.getY()+Tile.HEIGHT/2);
         Vector2 scale = new Vector2(0.65f,0.65f);
-        return new FrameConfig(pamId,clip,stateTime,pos,scale,null,false);
+        float ratio = Math.max(0f, hp / maxHp);
+        int idx;
+        if (ratio > 0.8f) idx = 0;
+        else if (ratio > 0.6f) idx = 1;
+        else if (ratio > 0.4f) idx = 2;
+        else idx = 3;
+
+        String pamId;
+        String[] clips;
+        GameContext ctx = AppContext.getInstance().getGameContext();
+        boolean isDarkAges = ctx != null && "dark ages".equalsIgnoreCase(ctx.getSeasonName());
+
+        if (isDarkAges) {
+            switch (reward) {
+                case SUN_50 -> pamId = DARK_SUN_PAM;
+                case PLANT_FOOD -> pamId = DARK_PLANTFOOD_PAM;
+                default -> pamId = DARK_NOOP_PAM;
+            }
+            clips = DARK_DAMAGE_CLIPS;
+        } else {
+            pamId = EGYPT_PAM;
+            clips = EGYPT_DAMAGE_CLIPS;
+        }
+
+        return new FrameConfig(pamId, clips[idx], stateTime, pos, scale, null, false);
     }
 }
 

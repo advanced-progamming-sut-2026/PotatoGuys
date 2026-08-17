@@ -1,5 +1,6 @@
 package com.pvz.models.games.effects;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.AppContext;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.zombies.Zombie;
@@ -16,12 +17,12 @@ import java.util.List;
 import java.util.Random;
 
 public class DarkAgesEffect implements ChapterEffect {
-    private final int intervalTicks;
-    private int tickCounter = 0;
+    private final float interval;
+    private float stateTime = 0;
     private final Random rand = new Random();
 
-    public DarkAgesEffect(int intervalTicks) {
-        this.intervalTicks = intervalTicks > 0 ? intervalTicks : 350; // every ~35 seconds
+    public DarkAgesEffect(float interval) {
+        this.interval = interval > 0 ? interval : 350; // every ~35 seconds
     }
 
     @Override
@@ -29,10 +30,10 @@ public class DarkAgesEffect implements ChapterEffect {
         if (!"dark ages".equalsIgnoreCase(ctx.getSeasonName()))
             return;
 
-        tickCounter++;
-        if (tickCounter >= intervalTicks) {
+        stateTime+=dt;
+        if (stateTime >= interval) {
             growRandomGrave(ctx);
-            tickCounter = 0;
+            stateTime = 0;
         }
     }
 
@@ -95,7 +96,7 @@ public class DarkAgesEffect implements ChapterEffect {
                         && tile.getTags().contains(TileTags.GRAVE)) {
                     int difficulty = AppContext.getInstance().getCurrentUser().getSetting().getDifficulty();
                     ZombieType type = ZombieType.BASIC;
-                    Zombie z = new ZombieFactory().create(type.getAlias(), c, l, ctx, wave.getWaveNumber(), difficulty);
+                    Zombie z = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(c), l, ctx, wave.getWaveNumber(), difficulty);
                     if (z != null) {
                         ctx.spawnZombie(z);
                         ctx.log("A zombie dug up and emerged from the necromancy grave at (" + c + "," + l + ")!");
