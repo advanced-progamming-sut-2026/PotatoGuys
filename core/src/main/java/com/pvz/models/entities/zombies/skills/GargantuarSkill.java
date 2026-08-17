@@ -1,6 +1,5 @@
 package com.pvz.models.entities.zombies.skills;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.pvz.controller.game.GameController;
@@ -88,16 +87,7 @@ public class GargantuarSkill extends ZombieState {
     @Override
     public FrameConfig draw(Zombie zombie, GameContext ctx) {
         String clip = secondPhase ? "cannon_fire" : "fire";
-        FrameConfig frame = zombie.drawClip(clip, stateTime, false);
-
-        if (zombie.isThrowImpSpawned() && frame.partsVisibility == null) {
-            frame.partsVisibility = new HashMap<>();
-        }
-        if (zombie.isThrowImpSpawned() && frame.partsVisibility != null) {
-            hideImpParts(frame.partsVisibility);
-        }
-
-        return frame;
+        return zombie.drawClip(clip, stateTime, false);
     }
 
     @Override
@@ -132,28 +122,4 @@ public class GargantuarSkill extends ZombieState {
                 + targetCol + " in lane " + lane + " (parabolic flight)!");
     }
 
-    private void hideImpParts(Map<String, Boolean> visibility) {
-        visibility.put("zombie_imp_hand_inner", false);
-        visibility.put("zombie_imp_arm_inner_upper", false);
-        visibility.put("zombie_imp_arm_inner_lower", false);
-        visibility.put("zombie_imp_leg_inner_lower", false);
-        visibility.put("zombie_imp_toe_inner", false);
-        visibility.put("zombie_imp_leg_inner_upper", false);
-        visibility.put("zombie_imp_leg_outer_lower", false);
-        visibility.put("zombie_imp_toe_outer", false);
-        visibility.put("zombie_imp_waist", false);
-        visibility.put("zombie_imp_leg_outer_upper", false);
-        visibility.put("zombie_imp_torso", false);
-        visibility.put("zombie_imp_jaw", false);
-        visibility.put("zombie_imp_eye", false);
-        visibility.put("zombie_imp_pupil", false);
-        visibility.put("zombie_imp_eye_sm", false);
-        visibility.put("zombie_imp_skull", false);
-        visibility.put("_zombie_imp_head_top", false);
-        visibility.put("zombie_imp_arm_outer_upper_02", false);
-        visibility.put("zombie_imp_arm_outer_upper_01", false);
-        visibility.put("zombie_imp_arms_outer_upper", false);
-        visibility.put("zombie_imp_hand_outer", false);
-        visibility.put("zombie_imp_arm_outer_lower", false);
-    }
 }

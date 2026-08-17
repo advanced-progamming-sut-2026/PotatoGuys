@@ -20,7 +20,7 @@ public class ImpFlyState extends ZombieState {
 
     private static final float FLIGHT_DURATION = 1.0f;
     private static final float PEAK_HEIGHT = 200f;
-    private static final int COLUMNS_AHEAD = 2;
+    private static final int COLUMNS_AHEAD = 3;
 
     private final float launchX;
     private final float launchY;

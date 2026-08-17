@@ -395,7 +395,7 @@
     "difficulty": 3,
     "gameSpeed": 1,
     "showGrid": false,
-    "debugMode": false,
+    "debugMode": true,
     "brightness": 0.97999996,
     "musicVolume": 0.24,
     "sfxVolume": 0.7,
@@ -1462,7 +1462,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786957332022
+    "lastDailyReset": 1786959291639
   },
   "questLogRefreshed": true
 }
