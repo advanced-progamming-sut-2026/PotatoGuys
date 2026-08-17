@@ -10,8 +10,8 @@
   "profilePicture": "textures/avatars/avatar_luffy.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 2000,
-    "diamonds": 160,
+    "coins": 400,
+    "diamonds": 162,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -25,7 +25,6 @@
           "Type": "PotatoMine",
           "level": 1,
           "seed": 0,
-          "isBoosted": true
           "isBoosted": true
         },
         {
@@ -162,6 +161,12 @@
         },
         {
           "Type": "Starfruit",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "MegaGatlingPea",
           "level": 1,
           "seed": 0,
           "isBoosted": false
@@ -332,6 +337,10 @@
         },
         {
           "message": "New Zombie Encountered: SNORKEL!",
+          "unread": false
+        },
+        {
+          "message": "New Plant Unlocked: MegaGatlingPea!",
           "unread": false
         }
       ]
@@ -1453,7 +1462,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786909779356
+    "lastDailyReset": 1786957332022
   },
   "questLogRefreshed": true
 }

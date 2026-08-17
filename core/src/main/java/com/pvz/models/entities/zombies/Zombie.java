@@ -70,6 +70,9 @@ public class Zombie extends Entity {
     private boolean frozen;
     private float frozenDuration;
     private boolean impAlreadyThrown = false;
+    private boolean throwInProgress = false;
+    private float throwProgress = 0f;
+    private boolean throwImpSpawned = false;
     private int stolenSun;
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -205,14 +208,18 @@ public class Zombie extends Entity {
      * tutorial PAM when no config is attached.
      */
     public FrameConfig drawClip(String clipLabel) {
+        return drawClip(clipLabel, stateTime, true);
+    }
+
+    public FrameConfig drawClip(String clipLabel, float time, boolean looping) {
         ZombieAnimationConfig anim = sheet.getAnimationConfig();
         String pamPath = (anim != null && anim.pamFilePath != null)
             ? anim.pamFilePath
             : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
         float scale = (anim != null && anim.scale != null) ? anim.scale : 0.65f;
-        return new FrameConfig(pamPath, resolveClipLabel(anim, newspaperClipLabel(clipLabel)), stateTime,
+        return new FrameConfig(pamPath, resolveClipLabel(anim, newspaperClipLabel(clipLabel)), time,
             new Vector2(position.x, position.y), new Vector2(scale, scale),
-            buildPartsVisibility(), true);
+            buildPartsVisibility(), looping);
     }
 
     /**
@@ -314,7 +321,8 @@ public class Zombie extends Entity {
             return;
         }
         currentState.onExit(this, context);
-        EatState eat = new EatState(plant);
+        boolean garg = sheet.getSmashDamage() > 0;
+        EatState eat = new EatState(plant, garg);
         eat.onEnter(this, context);
         currentState = eat;
     }
@@ -398,6 +406,12 @@ public class Zombie extends Entity {
     public void addStolenSun(int amount)        { stolenSun += amount; }
     public boolean isImpAlreadyThrown()         { return impAlreadyThrown; }
     public void markImpThrown()                 { impAlreadyThrown = true; }
+    public boolean isThrowInProgress()          { return throwInProgress; }
+    public void setThrowInProgress(boolean v)   { throwInProgress = v; }
+    public float getThrowProgress()             { return throwProgress; }
+    public void setThrowProgress(float v)       { throwProgress = v; }
+    public boolean isThrowImpSpawned()          { return throwImpSpawned; }
+    public void setThrowImpSpawned(boolean v)   { throwImpSpawned = v; }
     public ZombieState getCurrentState()        { return currentState; }
     public List<ZombieState> getSkills()        { return Collections.unmodifiableList(skills); }
     public List<ArmorPiece> getArmors()         { return Collections.unmodifiableList(armors); }

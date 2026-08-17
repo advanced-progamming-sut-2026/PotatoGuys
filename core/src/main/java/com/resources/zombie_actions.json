@@ -433,7 +433,7 @@
       "skillConfig": {
         "class": "GargantuarSkillConfig",
         "label": "smash_left",
-        "durationSeconds": 1.5,
+        "durationSeconds": 1.7667,
         "impType": "ZombieTutorialImpDefault",
         "throwHpFraction": 0.5
       }
@@ -841,7 +841,7 @@
       "skillConfig": {
         "class": "GargantuarSkillConfig",
         "label": "smash_left",
-        "durationSeconds": 1.5,
+        "durationSeconds": 1.7667,
         "impType": "ZombieEgyptImpDefault",
         "throwHpFraction": 0.5
       }
@@ -1194,7 +1194,7 @@
       "skillConfig": {
         "class": "GargantuarSkillConfig",
         "label": "smash_left",
-        "durationSeconds": 1.5,
+        "durationSeconds": 1.7667,
         "impType": "ZombieIceageImpDefault",
         "throwHpFraction": 0.5
       }
@@ -1538,7 +1538,7 @@
       "skillConfig": {
         "class": "GargantuarSkillConfig",
         "label": "smash_left",
-        "durationSeconds": 1.5,
+        "durationSeconds": 1.7667,
         "impType": "ZombieBeachImpDefault",
         "throwHpFraction": 0.5
       }
@@ -1969,7 +1969,7 @@
       "skillConfig": {
         "class": "GargantuarSkillConfig",
         "label": "smash_left",
-        "durationSeconds": 1.5,
+        "durationSeconds": 1.7667,
         "impType": "ZombieDarkImpDefault",
         "throwHpFraction": 0.5
       }

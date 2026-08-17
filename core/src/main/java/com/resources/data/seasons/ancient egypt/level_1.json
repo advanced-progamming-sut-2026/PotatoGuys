@@ -19,12 +19,8 @@
       "lanes": 5,
       "difficulty": 1,
       "phases": [
-        { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["BASIC"], "isBurst": false },
-        { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["CONEHEAD"], "isBurst": false },
-        { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["BUCKETHEAD"], "isBurst": false },
-        { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["BRICKHEAD"], "isBurst": false },
-        { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["FLAG"], "isBurst": false },
-        { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["IMP"], "isBurst": false },
+        { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["GARGANTUAR"], "isBurst": false },
+    
         
         { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["NEWSPAPER"], "isBurst": false },
         { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["MUMMY"], "isBurst": false },
