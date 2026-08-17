@@ -117,6 +117,7 @@ public class LoginMenu extends ScreenAdapter {
         form.add().colspan(1);
         form.add(stayRow).colspan(1).left().padTop(2f).padBottom(2f).row();
 
+
         // ── Buttons ───────────────────────────────────────────────────────
         TextButton loginBtn = new TextButton("Login", skin, "purple");
         loginBtn.addListener(new ClickListener() {
