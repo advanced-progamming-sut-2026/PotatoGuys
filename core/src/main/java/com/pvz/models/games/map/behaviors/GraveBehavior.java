@@ -13,7 +13,7 @@ import com.pvz.models.games.map.tile.TileTags;
 
 public class GraveBehavior implements TileBehavior {
     private static final String pamId="768/INITIAL/GRAVESTONES/EGYPT_HIEROGLYPH/EGYPT_HIEROGLYPH.PAM";
-    private static final String clip="undamaged";
+    private static final String[] DAMAGE_CLIPS = {"undamaged","damage1","damage2","damage3","damage4"};
 
     float stateTime;
 
@@ -22,6 +22,7 @@ public class GraveBehavior implements TileBehavior {
     }
 
     private float hp;
+    private final float maxHp;
     private final String name;
     private final GraveReward reward;
     private final Tile tile;
@@ -33,6 +34,7 @@ public class GraveBehavior implements TileBehavior {
     public GraveBehavior(Tile tile, float hp, String name, GraveReward reward) {
         this.tile=tile;
         this.hp = hp;
+        this.maxHp = hp;
         this.name = name;
         this.reward = reward;
         stateTime=0;
@@ -104,6 +106,12 @@ public class GraveBehavior implements TileBehavior {
         TileBehavior.super.draw(tile);
         Vector2 pos = new Vector2(tile.getX()+Tile.WIDTH/2,tile.getY()+Tile.HEIGHT/2);
         Vector2 scale = new Vector2(0.65f,0.65f);
-        return new FrameConfig(pamId,clip,stateTime,pos,scale,null,false);
+        float ratio = Math.max(0f, hp / maxHp);
+        int idx;
+        if (ratio > 0.8f) idx = 0;
+        else if (ratio > 0.6f) idx = 1;
+        else if (ratio > 0.4f) idx = 2;
+        else idx = 3;
+        return new FrameConfig(pamId, DAMAGE_CLIPS[idx], stateTime, pos, scale, null, false);
     }
 }

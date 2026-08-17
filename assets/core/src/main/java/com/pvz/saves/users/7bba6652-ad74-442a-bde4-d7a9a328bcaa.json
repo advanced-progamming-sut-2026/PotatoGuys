@@ -9,73 +9,89 @@
   "securityAnswer": "hamid",
   "profile": {
     "gamePlayed": 0,
-    "coins": 0,
-    "diamonds": 0,
-    "plantFood": 0,
+    "coins": 100000,
+    "diamonds": 100000,
+    "plantFood": 99,
     "collection": {
       "unlockedPlants": [
-        {
-          "Type": "Peashooter",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "Sunflower",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "Cabbagepult",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "BonkChoy",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "Repeater",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "TwinSunflower",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "Jalapeno",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "SnowPea",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "CherryBomb",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        },
-        {
-          "Type": "Wallnut",
-          "level": 1,
-          "seed": 0,
-          "isBoosted": false
-        }
+        {"Type": "Sunflower", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "TwinSunflower", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Sunshroom", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "PrimalSunflower", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "GoldBloom", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Peashooter", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Repeater", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Threepeater", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "SnowPea", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Rotobaga", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "PeaPod", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "SplitPea", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Citron", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Caulipower", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "ElectricBlueberry", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "BowlingBulb", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Cactus", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "FirePeashooter", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Starfruit", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "GooPeashooter", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "MegaGatlingPea", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Seashroom", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Puffshroom", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Fumeshroom", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Cabbagepult", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Kernelpult", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Melonpult", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "WinterMelon", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Pepperpult", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "PotatoMine", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "PrimalPotatoMine", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "CherryBomb", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Squash", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Grapeshot", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Jalapeno", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Doomshroom", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "TangleKelp", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "IcebergLettuce", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "BonkChoy", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "PhatBeet", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Chomper", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "WasabiWhip", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Kiwibeast", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Wallnut", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Tallnut", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Endurian", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Garlic", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "SweetPotato", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Explodeonut", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Pumpkin", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "SunBean", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Torchwood", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Magnetshroom", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Hypnoshroom", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Cattail", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Imitater", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Iceshroom", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "LilyPad", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "HotPotato", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "GraveBuster", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Enlightenmint", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Appeasemint", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Armamint", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Bombardmint", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Enforcemint", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Reinforcemint", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Enchantmint", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "Piercemint", "level": 1, "seed": 0, "isBoosted": false},
+        {"Type": "catTailmint", "level": 1, "seed": 0, "isBoosted": false}
       ],
-      "unlockedZombies": [],
+      "unlockedZombies": [
+        "BASIC", "CONEHEAD", "BUCKETHEAD", "BRICKHEAD", "FLAG", "IMP", "GARGANTUAR", "NEWSPAPER",
+        "MUMMY", "MUMMY_CONE", "MUMMY_BUCKET", "MUMMY_BRICK", "RA", "EXPLORER", "TOMB_RAISER", "EGYPT_GARG", "EGYPT_IMP",
+        "ICE_AGE", "ICE_AGE_CONE", "ICE_AGE_BUCKET", "HUNTER", "TROGLOBITE", "DODO", "ICE_AGE_GARG", "ICE_AGE_IMP",
+        "BEACH", "BEACH_CONE", "BEACH_BUCKET", "SNORKEL", "FISHERMAN", "OCTOPUS", "BEACH_GARG", "BEACH_IMP",
+        "DARK", "DARK_CONE", "DARK_BUCKET", "KNIGHT", "DARK_BRICK", "WIZARD", "JUGGLER", "KING", "DARK_GARG", "DARK_IMP",
+        "ZOMBOSS_EGYPT", "ZOMBOSS_PIRATE", "ZOMBOSS_COWBOY", "ZOMBOSS_DARK"
+      ],
       "seedPackets": {}
     },
     "news": {
@@ -94,23 +110,37 @@
         "name": "Ancient Egypt",
         "locked": false,
         "levelUnlocked": {
-          "1": true
+          "1": true,
+          "2": true,
+          "3": true
         }
       },
       {
         "name": "Frostbite Caves",
-        "locked": true,
-        "levelUnlocked": {}
+        "locked": false,
+        "levelUnlocked": {
+          "1": true,
+          "2": true,
+          "3": true
+        }
       },
       {
         "name": "Dark Ages",
-        "locked": true,
-        "levelUnlocked": {}
+        "locked": false,
+        "levelUnlocked": {
+          "1": true,
+          "2": true,
+          "3": true
+        }
       },
       {
         "name": "Big Wave Beach",
-        "locked": true,
-        "levelUnlocked": {}
+        "locked": false,
+        "levelUnlocked": {
+          "1": true,
+          "2": true,
+          "3": true
+        }
       }
     ],
     "maxMiopoint": 0,
@@ -131,126 +161,26 @@
   },
   "greenHouse": {
     "greenHousePots": [
-      {
-        "x": 1,
-        "y": 1,
-        "locked": false,
-        "greenHousePlant": null
-      },
-      {
-        "x": 2,
-        "y": 1,
-        "locked": false,
-        "greenHousePlant": null
-      },
-      {
-        "x": 3,
-        "y": 1,
-        "locked": false,
-        "greenHousePlant": null
-      },
-      {
-        "x": 4,
-        "y": 1,
-        "locked": false,
-        "greenHousePlant": null
-      },
-      {
-        "x": 5,
-        "y": 1,
-        "locked": false,
-        "greenHousePlant": null
-      },
-      {
-        "x": 1,
-        "y": 2,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 2,
-        "y": 2,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 3,
-        "y": 2,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 4,
-        "y": 2,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 5,
-        "y": 2,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 1,
-        "y": 3,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 2,
-        "y": 3,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 3,
-        "y": 3,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 4,
-        "y": 3,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 5,
-        "y": 3,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 1,
-        "y": 4,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 2,
-        "y": 4,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 3,
-        "y": 4,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 4,
-        "y": 4,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 5,
-        "y": 4,
-        "locked": true,
-        "greenHousePlant": null
-      }
+      {"x": 1, "y": 1, "locked": false, "greenHousePlant": null},
+      {"x": 2, "y": 1, "locked": false, "greenHousePlant": null},
+      {"x": 3, "y": 1, "locked": false, "greenHousePlant": null},
+      {"x": 4, "y": 1, "locked": false, "greenHousePlant": null},
+      {"x": 5, "y": 1, "locked": false, "greenHousePlant": null},
+      {"x": 1, "y": 2, "locked": false, "greenHousePlant": null},
+      {"x": 2, "y": 2, "locked": false, "greenHousePlant": null},
+      {"x": 3, "y": 2, "locked": false, "greenHousePlant": null},
+      {"x": 4, "y": 2, "locked": false, "greenHousePlant": null},
+      {"x": 5, "y": 2, "locked": false, "greenHousePlant": null},
+      {"x": 1, "y": 3, "locked": false, "greenHousePlant": null},
+      {"x": 2, "y": 3, "locked": false, "greenHousePlant": null},
+      {"x": 3, "y": 3, "locked": false, "greenHousePlant": null},
+      {"x": 4, "y": 3, "locked": false, "greenHousePlant": null},
+      {"x": 5, "y": 3, "locked": false, "greenHousePlant": null},
+      {"x": 1, "y": 4, "locked": false, "greenHousePlant": null},
+      {"x": 2, "y": 4, "locked": false, "greenHousePlant": null},
+      {"x": 3, "y": 4, "locked": false, "greenHousePlant": null},
+      {"x": 4, "y": 4, "locked": false, "greenHousePlant": null},
+      {"x": 5, "y": 4, "locked": false, "greenHousePlant": null}
     ]
   },
   "questLog": {
@@ -261,10 +191,7 @@
         "description": "Collect 3000 units of sun during one day.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 3000,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 3000, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -276,10 +203,7 @@
         "description": "Collect 4000 units of sun during one day.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 4000,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 4000, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -291,10 +215,7 @@
         "description": "Collect 5000 units of sun during one day.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 5000,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 5000, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -306,10 +227,7 @@
         "description": "Defeat 50 zombies from the Ancient Egypt chapter.",
         "category": "MAIN",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 50,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 50, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -321,10 +239,7 @@
         "description": "Defeat 50 zombies from the Frostbite Caves chapter.",
         "category": "MAIN",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 50,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 50, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -336,10 +251,7 @@
         "description": "Defeat 50 zombies from the Big Wave Beach chapter.",
         "category": "MAIN",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 50,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 50, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -351,10 +263,7 @@
         "description": "Defeat 50 zombies from the Dark Ages chapter.",
         "category": "MAIN",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 50,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 50, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -366,10 +275,7 @@
         "description": "Kill 10 zombies only with Peashooter.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 10,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 10, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -381,10 +287,7 @@
         "description": "Kill 10 zombies only with Cabbage-pult.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 10,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 10, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -396,10 +299,7 @@
         "description": "Kill 10 zombies only with Melon-pult.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 10,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 10, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -411,10 +311,7 @@
         "description": "Kill 10 zombies only with Bonk Choy.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 10,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 10, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -426,10 +323,7 @@
         "description": "Kill 10 zombies only with cactus.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 10,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 10, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -441,10 +335,7 @@
         "description": "Victory in a level without losing more than 0 plants.",
         "category": "MAIN",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -456,10 +347,7 @@
         "description": "Victory in a level without losing more than 1 plants.",
         "category": "MAIN",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -471,10 +359,7 @@
         "description": "Victory in a level without losing more than 2 plants.",
         "category": "MAIN",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -486,10 +371,7 @@
         "description": "Victory in a level without losing more than 3 plants.",
         "category": "MAIN",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -501,10 +383,7 @@
         "description": "Victory in a level without losing more than 4 plants.",
         "category": "MAIN",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -516,10 +395,7 @@
         "description": "Victory in a level without losing more than 5 plants.",
         "category": "MAIN",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -531,10 +407,7 @@
         "description": "Completing a level with exactly zero sun.",
         "category": "EPIC",
         "priority": "CRITICAL",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -546,10 +419,7 @@
         "description": "Killing 10 zombies in less than 30 seconds from the start of the first zombie attack wave.",
         "category": "MAIN",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 10,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 10, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -561,10 +431,7 @@
         "description": "Using 3 explosive plants in one level.",
         "category": "DAILY",
         "priority": "LOW",
-        "progress": {
-          "targetAmount": 3,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 3, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -576,10 +443,7 @@
         "description": "The game garden must be symmetrical at the end.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -591,10 +455,7 @@
         "description": "Finishing a day game level with night plants (mushrooms).",
         "category": "EPIC",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -606,10 +467,7 @@
         "description": "Win 5 consecutive levels on the highest difficulty.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 5,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 5, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -621,10 +479,7 @@
         "description": "Kill 10 zombies in the first column of a row that has no lawnmower.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 10,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 10, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -636,10 +491,7 @@
         "description": "Win a level where there is no symmetry in the garden (except the middle row).",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -651,10 +503,7 @@
         "description": "Win a level with only 3 sun-producing plants.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -666,10 +515,7 @@
         "description": "Only SHOOTER plants are used to kill zombies.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -681,10 +527,7 @@
         "description": "To win the level, no plants from the SHOOTER family should be used.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -696,10 +539,7 @@
         "description": "Only LOBBER plants are used to kill zombies.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -711,10 +551,7 @@
         "description": "To win the level, no plants from the LOBBER family should be used.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -726,10 +563,7 @@
         "description": "Only EXPLOSIVE plants are used to kill zombies.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -741,10 +575,7 @@
         "description": "To win the level, no plants from the EXPLOSIVE family should be used.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -756,10 +587,7 @@
         "description": "Only WALL_NUT plants are used to kill zombies.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -771,10 +599,7 @@
         "description": "To win the level, no plants from the WALL_NUT family should be used.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -786,10 +611,7 @@
         "description": "Only MELEE plants are used to kill zombies.",
         "category": "DAILY",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -801,10 +623,7 @@
         "description": "To win the level, no plants from the MELEE family should be used.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -816,10 +635,7 @@
         "description": "Win a level provided that no plant is planted in column 0.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -831,10 +647,7 @@
         "description": "Win a level provided that no plant is planted in column 1.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -846,10 +659,7 @@
         "description": "Win a level provided that no plant is planted in column 2.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -861,10 +671,7 @@
         "description": "Win a level provided that no plant is planted in column 3.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -876,10 +683,7 @@
         "description": "Win a level provided that no plant is planted in column 4.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -891,10 +695,7 @@
         "description": "Win a level provided that no plant is planted in column 5.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -906,10 +707,7 @@
         "description": "Win a level provided that no plant is planted in column 6.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -921,10 +719,7 @@
         "description": "Win a level provided that no plant is planted in column 7.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -936,10 +731,7 @@
         "description": "Win a level provided that no plant is planted in column 8.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -951,10 +743,7 @@
         "description": "Win a level provided that no plant is planted in row 0.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -966,10 +755,7 @@
         "description": "Win a level provided that no plant is planted in row 1.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -981,10 +767,7 @@
         "description": "Win a level provided that no plant is planted in row 2.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -996,10 +779,7 @@
         "description": "Win a level provided that no plant is planted in row 3.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -1011,10 +791,7 @@
         "description": "Win a level provided that no plant is planted in row 4.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -1026,10 +803,7 @@
         "description": "Win a level provided that column 0 and row 0 are empty.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -1041,10 +815,7 @@
         "description": "Win a level provided that column 1 and row 1 are empty.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -1056,10 +827,7 @@
         "description": "Win a level provided that column 2 and row 2 are empty.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -1071,10 +839,7 @@
         "description": "Win a level provided that column 3 and row 3 are empty.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -1086,10 +851,7 @@
         "description": "Win a level provided that column 4 and row 4 are empty.",
         "category": "DAILY",
         "priority": "HIGH",
-        "progress": {
-          "targetAmount": 1,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 1, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": true,
@@ -1101,10 +863,7 @@
         "description": "Kill at least 10 zombies with a lawnmower.",
         "category": "EPIC",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 10,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 10, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -1116,10 +875,7 @@
         "description": "Kill at least 20 zombies with a lawnmower.",
         "category": "EPIC",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 20,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 20, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -1131,10 +887,7 @@
         "description": "Kill at least 30 zombies with a lawnmower.",
         "category": "EPIC",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 30,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 30, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -1146,10 +899,7 @@
         "description": "Kill at least 40 zombies with a lawnmower.",
         "category": "EPIC",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 40,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 40, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
@@ -1161,10 +911,7 @@
         "description": "Kill at least 50 zombies with a lawnmower.",
         "category": "EPIC",
         "priority": "MEDIUM",
-        "progress": {
-          "targetAmount": 50,
-          "currentAmount": 0
-        },
+        "progress": {"targetAmount": 50, "currentAmount": 0},
         "active": true,
         "claimed": false,
         "repeatable": false,
