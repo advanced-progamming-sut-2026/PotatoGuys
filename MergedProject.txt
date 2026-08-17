@@ -5784,6 +5784,7 @@ import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.greenhouse.GreenHouse;
 import com.pvz.models.greenhouse.GreenHousePlant;
 import com.pvz.models.greenhouse.GreenHousePot;
+import com.pvz.models.greenhouse.HarvestResult;
 import com.pvz.models.user.Profile;
 import pvz.libpvz.pam.ClipRef;
 import pvz.skin.BorderedTable;
@@ -5879,6 +5880,10 @@ public class GreenHouseMenu extends ScreenAdapter {
     private int growTargetX;
     private int growTargetY;
 
+    private Table harvestModal;
+    private Label harvestTitleLabel;
+    private Label harvestDescLabel;
+
     public GreenHouseMenu(PvZ2 game) {
         this.game = game;
         this.controller = new GreenHouseController();
@@ -5923,6 +5928,7 @@ public class GreenHouseMenu extends ScreenAdapter {
         rootTable.add(buildPotGrid()).expand().top().padTop(GRID_UP_OFFSET).row();
 
         stack.add(buildGrowModal());
+        stack.add(buildHarvestModal());
         stack.add(shopMenu);
     }
 
@@ -6135,8 +6141,12 @@ public class GreenHouseMenu extends ScreenAdapter {
 
         GreenHousePlant plant = pot.getPlant();
         if (plant.isReady()) {
-            controller.collect(x, y);
-            rebuild();
+            HarvestResult result = controller.collect(x, y);
+            if (result != null) {
+                showHarvestModal(result);
+            } else {
+                rebuild();
+            }
         } else {
             showGrowDialog(x, y);
         }
@@ -6182,11 +6192,13 @@ public class GreenHouseMenu extends ScreenAdapter {
             }
         });
 
-        float contentW = GROW_DIALOG_WIDTH - GROW_DIALOG_PAD_SIDE * 2;
+        float contentW = GROW_DIALOG_WIDTH - GROW_DIALOG_PAD_SIDE * 2 - 20;
 
-        BorderedTable panel = new BorderedTable();
-        panel.setBackground(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
-        panel.pad(GROW_DIALOG_PAD_TOP, GROW_DIALOG_PAD_SIDE, GROW_DIALOG_PAD_BOTTOM, GROW_DIALOG_PAD_SIDE);
+        BorderedTable frame = new BorderedTable();
+
+        Table inner = new Table();
+        inner.setBackground(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
+        inner.pad(GROW_DIALOG_PAD_TOP, GROW_DIALOG_PAD_SIDE, GROW_DIALOG_PAD_BOTTOM, GROW_DIALOG_PAD_SIDE);
 
         growPlantLabel = new Label("", skin, "big_outline");
         growPlantLabel.setFontScale(1.25f);
@@ -6237,12 +6249,13 @@ public class GreenHouseMenu extends ScreenAdapter {
         buttonRow.add(growBtn).size(260, 84).padRight(20);
         buttonRow.add(cancelBtn).size(200, 84);
 
-        panel.add(growPlantLabel).width(contentW).padBottom(16).row();
-        panel.add(growCostLabel).width(contentW).padBottom(8).row();
-        panel.add(growHintLabel).width(contentW).padBottom(30).row();
-        panel.add(buttonRow).width(contentW).center();
+        inner.add(growPlantLabel).width(contentW).padBottom(16).row();
+        inner.add(growCostLabel).width(contentW).padBottom(8).row();
+        inner.add(growHintLabel).width(contentW).padBottom(30).row();
+        inner.add(buttonRow).width(contentW).center();
 
-        growModal.add(panel).width(GROW_DIALOG_WIDTH);
+        frame.add(inner).width(GROW_DIALOG_WIDTH - 20);
+        growModal.add(frame).width(GROW_DIALOG_WIDTH);
         return growModal;
     }
 
@@ -6263,6 +6276,85 @@ public class GreenHouseMenu extends ScreenAdapter {
         growHintLabel.setText("");
         growModal.setVisible(true);
         growModal.toFront();
+    }
+
+    private Table buildHarvestModal() {
+        harvestModal = new Table();
+        harvestModal.setFillParent(true);
+        harvestModal.setVisible(false);
+        harvestModal.setBackground(MenuUiKit.solidDrawable(new Color(0f, 0f, 0f, 0.55f)));
+        harvestModal.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (event.getTarget() == harvestModal) {
+                    harvestModal.setVisible(false);
+                    rebuild();
+                }
+            }
+        });
+
+        float contentW = GROW_DIALOG_WIDTH - GROW_DIALOG_PAD_SIDE * 2 - 20;
+
+        BorderedTable frame = new BorderedTable();
+
+        Table inner = new Table();
+        inner.setBackground(skin.getDrawable("image_ui_dialog_asset_inner_bkgd_10"));
+        inner.pad(GROW_DIALOG_PAD_TOP, GROW_DIALOG_PAD_SIDE, GROW_DIALOG_PAD_BOTTOM, GROW_DIALOG_PAD_SIDE);
+
+        harvestTitleLabel = new Label("", skin, "big_outline");
+        harvestTitleLabel.setFontScale(1.35f);
+        harvestTitleLabel.setColor(new Color(0.85f, 0.65f, 0.05f, 1f));
+        harvestTitleLabel.setWrap(true);
+        harvestTitleLabel.setAlignment(Align.center);
+
+        harvestDescLabel = new Label("", skin, "medium");
+        harvestDescLabel.setFontScale(1.1f);
+        harvestDescLabel.setColor(new Color(0.1f, 0.1f, 0.1f, 1f));
+        harvestDescLabel.setWrap(true);
+        harvestDescLabel.setAlignment(Align.center);
+
+        TextButton.TextButtonStyle buttonStyle = growDialogButtonStyle();
+
+        TextButton okBtn = new TextButton("OK", buttonStyle);
+        okBtn.getLabel().setFontScale(1.25f);
+        okBtn.getLabel().setColor(Color.WHITE);
+        okBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                harvestModal.setVisible(false);
+                rebuild();
+            }
+        });
+
+        inner.add(harvestTitleLabel).width(contentW).padBottom(18).row();
+        inner.add(harvestDescLabel).width(contentW).padBottom(32).row();
+        inner.add(okBtn).size(220, 84).center();
+
+        frame.add(inner).width(GROW_DIALOG_WIDTH - 20);
+        harvestModal.add(frame).width(GROW_DIALOG_WIDTH);
+        return harvestModal;
+    }
+
+    private void showHarvestModal(HarvestResult result) {
+        switch (result.getType()) {
+            case MARIGOLD_COINS:
+                harvestTitleLabel.setText("MariGold Harvested!");
+                harvestTitleLabel.setColor(new Color(0.85f, 0.65f, 0.05f, 1f));
+                harvestDescLabel.setText("You earned " + result.getCoins() + " coins!");
+                break;
+            case NEW_BOOST:
+                harvestTitleLabel.setText(result.getPlantTypeName() + " Harvested!");
+                harvestTitleLabel.setColor(new Color(0.15f, 0.65f, 0.15f, 1f));
+                harvestDescLabel.setText(result.getPlantTypeName() + " is now boosted for your next game!");
+                break;
+            case ALREADY_BOOSTED:
+                harvestTitleLabel.setText(result.getPlantTypeName() + " Harvested!");
+                harvestTitleLabel.setColor(new Color(0.5f, 0.5f, 0.5f, 1f));
+                harvestDescLabel.setText(result.getPlantTypeName() + " already has the boost!");
+                break;
+        }
+        harvestModal.setVisible(true);
+        harvestModal.toFront();
     }
 
     private TextButton.TextButtonStyle growDialogButtonStyle() {
@@ -8674,8 +8766,8 @@ public class LeaderboardMenu extends ScreenAdapter {
 
         buildSortBar();
         refreshWallet();
-        controller.reload();
-        refreshRows();
+        refreshRows();                    // اول با کش خالی نمایش می‌ده (empty state)
+        controller.reload(this::refreshRows);  // وقتی سرور جواب داد، جدول دوباره ساخته می‌شه
     }
 
     // --- Top bar --------------------------------------------------------
@@ -12170,6 +12262,7 @@ import com.pvz.models.games.seasons.Season;
 import com.pvz.models.user.Gender;
 import com.pvz.models.user.Message;
 import com.pvz.models.user.User;
+import com.pvz.network.NetworkClient;
 import com.pvz.utils.PasswordUtils;
 import com.pvz.utils.SaveManager;
 import pvz.skin.PvzSkin;
@@ -12346,25 +12439,15 @@ public class RegisterMenu extends ScreenAdapter {
         user.setSecurityQuestion(String.valueOf(questionIndex));
         user.setSecurityAnswer(answer);
 
-        SaveManager saveManager = SaveManager.getInstance();
-        String id = UUID.randomUUID().toString();
-        user.setId(id);
-
-        grantStarterProgress(user);
-
-        user.getProfile().getNews().getMessages()
-            .add(new Message("Welcome   to   Plants   vs   Zombies 2   " + user.getNickName() + " ! "));
-
-        HashMap<String, String> usernames = saveManager.load("users/username.json", HashMap.class);
-        if (usernames == null) {
-            usernames = new HashMap<>();
-        }
-        usernames.put(user.getUsername(), user.getId());
-        saveManager.save(usernames, "users/username.json");
-        saveManager.save(user, "users/" + user.getId() + ".json");
-
-        statusLabel.setText("Registration successful! Please login.");
-        Gdx.app.postRunnable(() -> game.setScreen(new LoginMenu(game)));
+        statusLabel.setText("Connecting...");
+        NetworkClient.getInstance().register(user, response -> {
+            if (!response.success) {
+                statusLabel.setText(response.errorMessage);
+                return;
+            }
+            statusLabel.setText("Registration successful! Please login.");
+            game.setScreen(new LoginMenu(game));
+        });
     }
 
     /** Unlocks the default starter plants and first chapter for a brand-new account. */
@@ -12619,6 +12702,7 @@ import com.pvz.controller.AudioManager;
 import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.User;
+import com.pvz.network.NetworkClient;
 import com.pvz.utils.PasswordUtils;
 import com.pvz.utils.SaveManager;
 import pvz.skin.PvzSkin;
@@ -12705,40 +12789,24 @@ public class LoginMenu extends ScreenAdapter {
     private void handleLogin() {
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
-
         if (username.isEmpty() || password.isEmpty()) {
             statusLabel.setText("Please fill in all fields.");
             return;
         }
 
-        SaveManager saveManager = SaveManager.getInstance();
-        HashMap<String, String> usernames = saveManager.load("users/username.json", HashMap.class);
-        if (usernames == null) {
-            statusLabel.setText("No users found. Please register first.");
-            return;
-        }
-        String id = usernames.get(username);
-        if (id == null) {
-            statusLabel.setText("Username is incorrect!");
-            return;
-        }
-        User user = saveManager.load("users/" + id + ".json", User.class);
-        if (user == null) {
-            statusLabel.setText("User data not found.");
-            return;
-        }
-        if (!PasswordUtils.verifyPassword(password, user.getPasswordHash())) {
-            statusLabel.setText("Password is incorrect!");
-            return;
-        }
+        statusLabel.setText("Connecting...");
+        NetworkClient.getInstance().login(username, password, response -> {
+            if (!response.success) {
+                statusLabel.setText(response.errorMessage);
+                return;
+            }
+            User user = NetworkClient.getInstance().parsePayload(response, User.class);
+            AppContext.getInstance().setCurrentUser(user);
+            SaveManager.getInstance().save(username, "session.json"); // فقط کش محلیِ «آخرین کاربر»
 
-        AppContext.getInstance().setCurrentUser(user);
-        user.refreshQuestLog();
-        user.saveUser();
-        saveManager.save(username, "session.json");
-
-        statusLabel.setText("Welcome " + user.getNickName() + "!");
-        Gdx.app.postRunnable(() -> game.setScreen(new MainMenu(game)));
+            statusLabel.setText("Welcome " + user.getNickName() + "!");
+            game.setScreen(new MainMenu(game));
+        });
     }
 
     @Override
@@ -12758,6 +12826,233 @@ public class LoginMenu extends ScreenAdapter {
     public void dispose() {
         stage.dispose();
         skin.dispose();
+    }
+}
+
+
+======================================================
+FILE: PvzServer.java
+======================================================
+
+package com.pvz.server;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+/**
+ * Phase-1 server: owns the save directory (accounts + leaderboard data) and
+ * answers REGISTER / LOGIN / SAVE_USER / GET_USER / GET_LEADERBOARD requests.
+ *
+ * This class has no libGDX dependency and doesn't need a graphics context —
+ * run it as a plain "java -cp ... com.pvz.server.PvzServer" process, separate
+ * from the game client. It reuses your existing SaveManager/User/Leaderboard
+ * classes as-is, so it must run with the same working directory the client
+ * normally uses (Constants.SAVE_PATH is a relative path — start the server
+ * from your project root, same place you'd normally launch the desktop
+ * client from, e.g. via your Gradle project's root directory).
+ *
+ * IMPORTANT: this becomes the single source of truth for account data.
+ * Once this is wired in, the desktop client should stop writing directly
+ * to "users/*.json" itself — see the integration notes for User.saveUser(),
+ * LoginMenu, RegisterMenu, and LeaderBoardController.
+ */
+public class PvzServer {
+
+    public static final int DEFAULT_PORT = 5454;
+
+    public static void main(String[] args) {
+        int port = args.length > 0 ? Integer.parseInt(args[0]) : DEFAULT_PORT;
+
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("[PvzServer] Listening on port " + port);
+
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("[PvzServer] Client connected: " + clientSocket.getRemoteSocketAddress());
+
+                Thread handlerThread = new Thread(new ClientHandler(clientSocket), "client-" + clientSocket.getPort());
+                handlerThread.setDaemon(true);
+                handlerThread.start();
+            }
+        } catch (IOException e) {
+            System.err.println("[PvzServer] Fatal error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}
+
+
+======================================================
+FILE: ClientHandler.java
+======================================================
+
+package com.pvz.server;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
+import com.google.gson.Gson;
+
+import com.pvz.models.leaderboard.Leaderboard;
+import com.pvz.models.leaderboard.Leaderboard.LeaderBoardEntry;
+import com.pvz.models.user.User;
+import com.pvz.network.NetworkClient.LoginRequest;
+import com.pvz.network.NetworkMessage;
+import com.pvz.utils.PasswordUtils;
+import com.pvz.utils.SaveManager;
+
+/**
+ * Handles one connected client for its whole lifetime (one thread per client
+ * — fine at this scale; a course project won't need a thread pool).
+ *
+ * All reads/writes to "users/username.json" go through {@link #ACCOUNTS_LOCK}
+ * so two clients registering/saving at the same instant can't corrupt it —
+ * SaveManager itself does plain unsynchronized file I/O.
+ */
+public class ClientHandler implements Runnable {
+
+    /** Guards read-modify-write access to the shared username index and user files. */
+    private static final Object ACCOUNTS_LOCK = new Object();
+
+    private final Socket socket;
+    private final Gson gson = new Gson();
+
+    public ClientHandler(Socket socket) {
+        this.socket = socket;
+    }
+
+    @Override
+    public void run() {
+        try (
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+            PrintWriter out = new PrintWriter(new java.io.OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true)
+        ) {
+            String line;
+            while ((line = in.readLine()) != null) {
+                NetworkMessage request = gson.fromJson(line, NetworkMessage.class);
+                NetworkMessage response = handle(request);
+                out.println(gson.toJson(response));
+            }
+        } catch (IOException e) {
+            System.out.println("[ClientHandler] Client disconnected: " + socket.getRemoteSocketAddress());
+        } finally {
+            try { socket.close(); } catch (IOException ignored) { }
+        }
+    }
+
+    private NetworkMessage handle(NetworkMessage request) {
+        try {
+            switch (request.type) {
+                case REGISTER:
+                    return handleRegister(request);
+                case LOGIN:
+                    return handleLogin(request);
+                case SAVE_USER:
+                    return handleSaveUser(request);
+                case GET_USER:
+                    return handleGetUser(request);
+                case GET_LEADERBOARD:
+                    return handleGetLeaderboard(request);
+                default:
+                    return NetworkMessage.error(request, "Unknown message type: " + request.type);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return NetworkMessage.error(request, "Server error: " + e.getMessage());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private NetworkMessage handleRegister(NetworkMessage request) {
+        User incoming = gson.fromJson(request.payload, User.class);
+
+        synchronized (ACCOUNTS_LOCK) {
+            HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+            if (usernames == null) {
+                usernames = new HashMap<>();
+            }
+            if (usernames.containsKey(incoming.getUsername())) {
+                return NetworkMessage.error(request, "Username is already taken!");
+            }
+
+            String id = UUID.randomUUID().toString();
+            incoming.setId(id);
+
+            usernames.put(incoming.getUsername(), id);
+            SaveManager.getInstance().save(usernames, "users/username.json");
+            SaveManager.getInstance().save(incoming, "users/" + id + ".json");
+        }
+
+        return NetworkMessage.ok(request, gson.toJson(incoming));
+    }
+
+    @SuppressWarnings("unchecked")
+    private NetworkMessage handleLogin(NetworkMessage request) {
+        LoginRequest req = gson.fromJson(request.payload, LoginRequest.class);
+
+        HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+        if (usernames == null || !usernames.containsKey(req.username)) {
+            return NetworkMessage.error(request, "Username is incorrect!");
+        }
+        String id = usernames.get(req.username);
+
+        User user = SaveManager.getInstance().load("users/" + id + ".json", User.class);
+        if (user == null) {
+            return NetworkMessage.error(request, "User data not found.");
+        }
+        if (!PasswordUtils.verifyPassword(req.password, user.getPasswordHash())) {
+            return NetworkMessage.error(request, "Password is incorrect!");
+        }
+
+        user.refreshQuestLog();
+        synchronized (ACCOUNTS_LOCK) {
+            SaveManager.getInstance().save(user, "users/" + id + ".json");
+        }
+
+        return NetworkMessage.ok(request, gson.toJson(user));
+    }
+
+    private NetworkMessage handleSaveUser(NetworkMessage request) {
+        User updated = gson.fromJson(request.payload, User.class);
+        if (updated.getId() == null || updated.getId().isEmpty()) {
+            return NetworkMessage.error(request, "Cannot save a user with no id.");
+        }
+
+        synchronized (ACCOUNTS_LOCK) {
+            SaveManager.getInstance().save(updated, "users/" + updated.getId() + ".json");
+        }
+
+        return NetworkMessage.ok(request, null);
+    }
+
+    @SuppressWarnings("unchecked")
+    private NetworkMessage handleGetUser(NetworkMessage request) {
+        String username = gson.fromJson(request.payload, String.class);
+
+        HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+        if (usernames == null || !usernames.containsKey(username)) {
+            return NetworkMessage.error(request, "No such user.");
+        }
+        String id = usernames.get(username);
+        User user = SaveManager.getInstance().load("users/" + id + ".json", User.class);
+        if (user == null) {
+            return NetworkMessage.error(request, "User data not found.");
+        }
+
+        return NetworkMessage.ok(request, gson.toJson(user));
+    }
+
+    private NetworkMessage handleGetLeaderboard(NetworkMessage request) {
+        List<LeaderBoardEntry> entries = Leaderboard.loadAll();
+        return NetworkMessage.ok(request, gson.toJson(entries));
     }
 }
 
@@ -12788,6 +13083,8 @@ import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.user.Setting;
 import com.pvz.models.user.User;
+import com.pvz.network.NetworkClient;
+import com.pvz.server.PvzServer;
 import com.pvz.utils.SaveManager;
 import com.pvz.view.MainMenu;
 import com.pvz.view.RegisterMenu;
@@ -12795,6 +13092,7 @@ import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -12843,11 +13141,18 @@ public class PvZ2 extends Game {
     @Override
     public void create() {
         instance = this;
+
+        try {
+            NetworkClient.getInstance().connect("localhost", PvzServer.DEFAULT_PORT);
+        } catch (IOException e) {
+            // نمایش خطا به کاربر / fallback به حالت آفلاین
+        }
+
         FileHandle file = Gdx.files.internal("pvz-assets/animations.json");
         Json json = new Json();
         json.setIgnoreUnknownFields(true);
         AnimationCatalog.setInstance(json.fromJson(AnimationCatalog.class, file));
-        
+
         globalAssetManager.finishLoading();
         textureBank=new TextureBank("768",Gdx.files.internal("./assets/pvz-assets/"));
         pamPlayer=new PamPlayer(textureBank,Gdx.files.internal("./assets/pvz-assets/"));
@@ -14723,6 +15028,7 @@ import com.pvz.models.leaderboard.Leaderboard;
 import com.pvz.models.leaderboard.Leaderboard.LeaderBoardEntry;
 import com.pvz.models.leaderboard.LeaderboardSortField;
 import com.pvz.models.leaderboard.SortTypes;
+import com.pvz.network.NetworkClient;
 
 /**
  * Controller for the Leaderboard screen. Loads every saved user's stats
@@ -14739,38 +15045,39 @@ public class LeaderBoardController {
      * from disk on each sort click was the main delay, so it's loaded once and only
      * re-read when {@link #reload()} is called (each time the screen opens).
      */
-    private List<LeaderBoardEntry> cachedEntries;
+    private List<LeaderBoardEntry> cachedEntries = new ArrayList<>();
 
     public List<LeaderBoardEntry> getEntries() {
-        if (cachedEntries == null) {
-            cachedEntries = Leaderboard.loadAll();
-        }
-        // sort() mutates the list in place, so hand it a copy to keep the cache pristine.
         return Leaderboard.sort(new ArrayList<>(cachedEntries), sortField, sortOrder);
     }
 
-    /** Forces the next {@link #getEntries()} to re-read all user JSONs from disk. */
-    public void reload() {
+    public void loadEntries(java.util.function.Consumer<List<LeaderBoardEntry>> onLoaded) {
+        NetworkClient.getInstance().getLeaderboard(entries -> {
+            cachedEntries = entries;
+            onLoaded.accept(Leaderboard.sort(new ArrayList<>(cachedEntries), sortField, sortOrder));
+        });
+    }
+
+    public void reload(java.util.function.Consumer<List<LeaderBoardEntry>> onLoaded) {
         cachedEntries = null;
+        loadEntries(onLoaded);
     }
 
-    public LeaderboardSortField getSortField() {
-        return sortField;
+    /** Forces the next {@link #getEntries()} to re-read all user JSONs from disk. */
+    public void reload(Runnable onLoaded) {
+        com.pvz.network.NetworkClient.getInstance().getLeaderboard(entries -> {
+            cachedEntries = entries;
+            if (onLoaded != null) onLoaded.run();
+        });
     }
 
-    public SortTypes getSortOrder() {
-        return sortOrder;
-    }
-
-    public void setSortField(LeaderboardSortField field) {
-        this.sortField = field;
-    }
-
+    public LeaderboardSortField getSortField() { return sortField; }
+    public SortTypes getSortOrder() { return sortOrder; }
+    public void setSortField(LeaderboardSortField field) { this.sortField = field; }
     public void toggleSortOrder() {
         sortOrder = (sortOrder == SortTypes.DESCENDING) ? SortTypes.ASCENDING : SortTypes.DESCENDING;
     }
 
-    /** Username of the currently logged-in user, so the view can highlight their row. */
     public String getCurrentUsername() {
         return AppContext.getInstance().getCurrentUser() != null
             ? AppContext.getInstance().getCurrentUser().getUsername()
@@ -14888,6 +15195,7 @@ import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.greenhouse.GreenHouse;
 import com.pvz.models.greenhouse.GreenHousePlant;
 import com.pvz.models.greenhouse.GreenHousePot;
+import com.pvz.models.greenhouse.HarvestResult;
 import com.pvz.models.user.MyPlant;
 import com.pvz.models.user.User;
 
@@ -14948,8 +15256,8 @@ public class GreenHouseController {
         return planted;
     }
 
-    /** Harvests a ready plant: MariGold pays coins, an unlocked plant stores a boost. Returns what was collected, or null. */
-    public GreenHousePlant collect(int x, int y) {
+    /** Harvests a ready plant: MariGold pays coins, an unlocked plant stores a boost. Returns a HarvestResult describing the prize, or null. */
+    public HarvestResult collect(int x, int y) {
         GreenHouse greenHouse = getGreenHouse();
         if (!greenHouse.isValidCoordinate(x, y)) return null;
 
@@ -14957,28 +15265,43 @@ public class GreenHouseController {
         if (plant == null) return null;
 
         User user = getCurrentUser();
-        if (user == null) return plant;
+        if (user == null) return HarvestResult.marigoldCoins(GreenHousePlant.MARIGOLD_REWARD);
 
         if (plant.isMariGold()) {
             user.getProfile().setCoins(user.getProfile().getCoins() + GreenHousePlant.MARIGOLD_REWARD);
-        } else {
-            String plantTypeName = plant.getPlantType();
-            PlantType plantType = null;
-            for (PlantType pt : PlantType.values()) {
-                if (pt.name().equals(plantTypeName)) {
-                    plantType = pt;
-                    break;
-                }
-            }
-            if (plantType != null) {
-                MyPlant myPlant = user.getProfile().getCollection().getPlant(plantType);
-                if (myPlant != null && !myPlant.isBoosted()) {
-                    myPlant.setBoosted(true);
-                }
+            user.saveUser();
+            return HarvestResult.marigoldCoins(GreenHousePlant.MARIGOLD_REWARD);
+        }
+
+        String plantTypeName = plant.getPlantType();
+        PlantType plantType = null;
+        for (PlantType pt : PlantType.values()) {
+            if (pt.name().equals(plantTypeName)) {
+                plantType = pt;
+                break;
             }
         }
+
+        if (plantType == null) {
+            user.saveUser();
+            return HarvestResult.newBoost(plantTypeName);
+        }
+
+        MyPlant myPlant = user.getProfile().getCollection().getPlant(plantType);
+        if (myPlant == null) {
+            user.saveUser();
+            return HarvestResult.newBoost(plantTypeName);
+        }
+
+        HarvestResult result;
+        if (!myPlant.isBoosted()) {
+            myPlant.setBoosted(true);
+            result = HarvestResult.newBoost(plantTypeName);
+        } else {
+            result = HarvestResult.alreadyBoosted(plantTypeName);
+        }
         user.saveUser();
-        return plant;
+        return result;
     }
 
     /**
@@ -19442,6 +19765,260 @@ FILE: PlantActionState.java
 
 
 ======================================================
+FILE: WallNutState.java
+======================================================
+
+package com.pvz.models.entities.plants.fsm;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.effects.Effect;
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.actions.PlantAction;
+import com.pvz.models.entities.plants.config.NutConfig;
+import com.pvz.models.entities.plants.config.PamAnimationConfig;
+import com.pvz.models.entities.sun.Sun;
+import com.pvz.models.entities.sun.SunType;
+import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.fsm.EatState;
+import com.pvz.models.entities.zombies.fsm.WalkState;
+import com.pvz.models.games.GameContext;
+import com.pvz.models.games.map.tile.Tile;
+
+/**
+ * Behaviour state for wall-nut category plants (Wall-nut, Tall-nut, Endurian,
+ * Garlic, Sweet Potato, Pumpkin, Sun Bean).
+ *
+ * <p>Takes over from {@link PlantIdleState} immediately on spawn so it can
+ * switch between the sheet's idle / damage clips as the plant loses HP, and
+ * runs the config-driven passive on-bite behaviours (Endurian reflect, Garlic
+ * redirect, Sun Bean sun-on-hit, Sweet Potato attraction).
+ *
+ * <p>Explode-o-nut does not use this state — it keeps the existing
+ * {@code ExplodeONutAction} so its detonation-on-destroy behaviour is reused.
+ */
+public class WallNutState extends PlantAction {
+
+    private final NutConfig config;
+    private String currentClip;
+    private float biteTimer = 0f;
+    private float attractTimer = 0f;
+
+    public WallNutState(NutConfig config) {
+        this.config = config;
+        this.currentClip = config.idleClip;
+    }
+
+    @Override
+    public boolean shouldTrigger(Plant plant, GameContext ctx, float dt) {
+        return true;
+    }
+
+    @Override
+    public void onEnter(Plant plant, GameContext ctx) {
+        stateTime = 0f;
+        biteTimer = 0f;
+        attractTimer = 0f;
+        currentClip = config.idleClip;
+    }
+
+    @Override
+    public void update(Plant plant, GameContext ctx, float dt) {
+        super.update(plant, ctx, dt);
+        updateClip(plant);
+        List<Zombie> eaters = eaters(plant, ctx);
+        updateBiteBehaviours(plant, ctx, eaters, dt);
+        updateAttract(plant, ctx, dt);
+    }
+
+    private void updateClip(Plant plant) {
+        float maxHp = plant.getMaxHp();
+        float fraction = maxHp <= 0f ? 1f : plant.getHp() / maxHp;
+        if (fraction <= 0.25f) {
+            currentClip = config.damage3Clip;
+        } else if (fraction <= 0.5f) {
+            currentClip = config.damage2Clip;
+        } else if (fraction <= 0.75f) {
+            currentClip = config.damage1Clip;
+        } else {
+            currentClip = config.idleClip;
+        }
+    }
+
+    private List<Zombie> eaters(Plant plant, GameContext ctx) {
+        List<Zombie> eaters = new ArrayList<>();
+        for (Zombie zombie : ctx.getZombiesAt(plant.getCol(), plant.getLane())) {
+            if (zombie.getCurrentState() instanceof EatState eatState && eatState.getTarget() == plant) {
+                eaters.add(zombie);
+            }
+        }
+        return eaters;
+    }
+
+    private void updateBiteBehaviours(Plant plant, GameContext ctx, List<Zombie> eaters, float dt) {
+        if (eaters.isEmpty()) {
+            biteTimer = 0f;
+            return;
+        }
+        biteTimer += dt;
+        if (biteTimer < 1f) {
+            return;
+        }
+        float reflect = effectiveReflect(plant);
+        if (reflect > 0f) {
+            for (Zombie zombie : eaters) {
+                zombie.takeDamage(reflect);
+            }
+        }
+        if (config.redirectEaters) {
+            for (Zombie zombie : eaters) {
+                redirectToAdjacentLane(zombie, plant, ctx);
+            }
+        }
+        int sunAmount = effectiveSunOnHit(plant);
+        if (sunAmount > 0) {
+            Sun sun = new Sun(SunType.NORMAL, plant.getCol(), plant.getLane(), sunAmount, false, ctx);
+            ctx.spawnSun(sun);
+            ctx.log("[WallNut] " + plant.getSheet().getName() + " dropped " + sunAmount + " sun.");
+        }
+        biteTimer = 0f;
+    }
+
+    /** Base reflect damage + permanent plant-food bonus + the "Reflect Dmg +5" level flag. */
+    private float effectiveReflect(Plant plant) {
+        float reflect = config.reflectDamage + plant.getReflectDamageBonus();
+        if (plant.getUnlockedFlags().contains("Reflect Dmg +5")) {
+            reflect += 5f;
+        }
+        return reflect;
+    }
+
+    /** Base sun-per-bite + the "Sun Drop +5" level flag. */
+    private int effectiveSunOnHit(Plant plant) {
+        int sun = config.sunOnHit;
+        if (plant.getUnlockedFlags().contains("Sun Drop +5")) {
+            sun += 5;
+        }
+        return sun;
+    }
+
+    private void updateAttract(Plant plant, GameContext ctx, float dt) {
+        if (!config.attractAdjacent) {
+            return;
+        }
+        attractTimer += dt;
+        if (attractTimer < 1f) {
+            return;
+        }
+        attractTimer = 0f;
+        for (int adjacent : adjacentLanes(plant, ctx)) {
+            for (Zombie zombie : ctx.getZombiesInLane(adjacent)) {
+                if (zombie.getCurrentState() instanceof WalkState
+                        && Math.abs(zombie.getX() - plant.getX()) <= 2f * Tile.WIDTH) {
+                    moveZombieToLane(zombie, plant.getLane(), ctx);
+                }
+            }
+        }
+    }
+
+    /** The lane one step above/below the plant's own (skipping out-of-bounds). */
+    public static int[] adjacentLanes(Plant plant, GameContext ctx) {
+        int lanes = ctx.getMap().getLanes();
+        int above = plant.getLane() - 1;
+        int below = plant.getLane() + 1;
+        boolean hasAbove = above >= 0;
+        boolean hasBelow = below < lanes;
+        if (hasAbove && hasBelow) {
+            return new int[] { above, below };
+        }
+        if (hasAbove) {
+            return new int[] { above };
+        }
+        if (hasBelow) {
+            return new int[] { below };
+        }
+        return new int[0];
+    }
+
+    /** Moves a zombie into {@code lane}; chewing zombies are forced back to walking. */
+    public static void moveZombieToLane(Zombie zombie, int lane, GameContext ctx) {
+        if (zombie.getCurrentState() instanceof EatState) {
+            zombie.setState(new WalkState());
+        }
+        zombie.setY(GameController.laneToWorldY(lane));
+    }
+
+    /** Redirects an eater to an adjacent lane (Garlic passive / plant food). */
+    public static void redirectToAdjacentLane(Zombie zombie, Plant plant, GameContext ctx) {
+        int[] adjacent = adjacentLanes(plant, ctx);
+        if (adjacent.length == 0) {
+            return;
+        }
+        moveZombieToLane(zombie, adjacent[0], ctx);
+        ctx.log("[WallNut] Garlic redirected " + zombie.getSheet().getAlias() + " to lane " + adjacent[0] + ".");
+    }
+
+    @Override
+    public void onExit(Plant plant, GameContext ctx) {
+        // nothing
+    }
+
+    @Override
+    public FrameConfig draw(Plant plant, GameContext ctx) {
+        PamAnimationConfig pam = plant.getSheet().pamAnimationConfig;
+        Vector2 pos = new Vector2(GameController.colToWorldX(plant.getCol()), GameController.laneToWorldY(plant.getLane()));
+        Vector2 scale = new Vector2(0.65f, 0.65f);
+        return new FrameConfig(pam.pamFilePath, currentClip, stateTime, pos, scale, null, true);
+    }
+
+    @Override
+    public String getLabel() {
+        return "WallNut[" + currentClip + "]";
+    }
+}
+
+
+======================================================
+FILE: PumpkinShield.java
+======================================================
+
+package com.pvz.models.entities.plants;
+
+import com.pvz.models.entities.plants.enums.PlantType;
+import com.pvz.models.games.GameContext;
+
+/**
+ * Pumpkin acts as a protective cover: any zombie trying to eat a plant that
+ * shares a tile with a living Pumpkin must chew through the Pumpkin first.
+ */
+public final class PumpkinShield {
+
+    private PumpkinShield() {
+    }
+
+    /**
+     * Returns the living Pumpkin shielding {@code protectedPlant}, or {@code null}
+     * when the plant is unprotected (or is itself a Pumpkin).
+     */
+    public static Plant shieldFor(Plant protectedPlant, GameContext ctx) {
+        if (protectedPlant.getType() == PlantType.Pumpkin) {
+            return null;
+        }
+        for (Plant other : ctx.getPlantsAt(protectedPlant.getCol(), protectedPlant.getLane())) {
+            if (other.getType() == PlantType.Pumpkin && !other.isDead()) {
+                return other;
+            }
+        }
+        return null;
+    }
+}
+
+
+======================================================
 FILE: PlantFactory.java
 ======================================================
 
@@ -19457,6 +20034,7 @@ import com.pvz.models.entities.plants.config.explosive.SquashConfig;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.enums.PlantType;
+import com.pvz.models.entities.plants.fsm.WallNutState;
 import com.pvz.models.games.GameContext;
 
 public class PlantFactory {
@@ -19514,7 +20092,7 @@ public class PlantFactory {
             return new SquashAction(squashConfig);
         }
         if (config instanceof NutConfig nutConfig){
-            return new ExplodeONutAction(nutConfig);
+            return nutConfig.explodesOnDestroy ? new ExplodeONutAction(nutConfig) : new WallNutState(nutConfig);
         }
         return null;
     }
@@ -19524,6 +20102,9 @@ public class PlantFactory {
     private PlantAction buildFeedAction(PlantActionConfig config) {
         if (config instanceof SunProducerActionConfig sunConfig) {
             return new SunProducerAction(sunConfig, false);
+        }
+        if (config instanceof WallNutFeedConfig wallNutFeedConfig) {
+            return new WallNutFeedAction(wallNutFeedConfig);
         }
         return buildConfigAction(config);
     }
@@ -19605,6 +20186,35 @@ public class ExplosiveConfig extends PlantActionConfig {
     public String explosionClip="attack";
     public ExplosionType explosionType=ExplosionType.POTATO_MINE;
     public ExplosionIntensity explosionIntensity=ExplosionIntensity.LOW;
+}
+
+
+======================================================
+FILE: WallNutFeedConfig.java
+======================================================
+
+package com.pvz.models.entities.plants.config;
+
+/**
+ * Plant Food config for wall-nut category plants.
+ *
+ * <p>{@code kind} mirrors the profile-level {@code PlantFoodKind} values:
+ * <ul>
+ *   <li>{@code ARMOR} — permanently raises max HP by {@code amount}.</li>
+ *   <li>{@code FORCE_MOVE_ALL_IN_LANE} — pushes every zombie in the lane to an adjacent lane.</li>
+ *   <li>{@code FULL_HEAL_AND_ABSORB} — fully heals and pulls nearby zombies into the lane.</li>
+ * </ul>
+ *
+ * <p>{@code clips} is the plant-food animation sequence played while the effect
+ * applies (each clip for its own catalog duration); empty falls back to a brief
+ * hold on the sheet's idle clip.
+ */
+public class WallNutFeedConfig extends PlantActionConfig {
+    public String kind = "ARMOR";
+    public float amount = 0f;
+    /** Optional permanent reflect-damage bonus applied alongside {@code ARMOR} (Endurian). */
+    public float reflectBonus = 0f;
+    public String[] clips = new String[0];
 }
 
 
@@ -19707,10 +20317,22 @@ FILE: NutConfig.java
 package com.pvz.models.entities.plants.config;
 
 public class NutConfig extends PlantActionConfig{
+    public String idleClip="idle";
     public String damage1Clip="damage";
     public String damage2Clip="damage2";
     public String damage3Clip="damage3";
     public float baseDamage=1800f;
+
+    /** Explode-o-nut: detonates when destroyed (routes to ExplodeONutAction). */
+    public boolean explodesOnDestroy=false;
+    /** Endurian: damage reflected back onto zombies chewing the plant. */
+    public float reflectDamage=0f;
+    /** Sun Bean: sun amount dropped per bite while being eaten. */
+    public int sunOnHit=0;
+    /** Garlic: forces any eater to an adjacent lane. */
+    public boolean redirectEaters=false;
+    /** Sweet Potato: continuously pulls nearby zombies into its lane. */
+    public boolean attractAdjacent=false;
 }
 
 
@@ -19777,6 +20399,7 @@ import java.util.Map;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.data.GrowthProfile;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
+import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.data.ProductionKind;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -19810,7 +20433,9 @@ public final class PlantConfigRegistry {
         }
     }
 
-    /** Adapts a {@link PlantJsonConfig} into the {@link PlantPropertySheet} shape {@code Plant} already understands. */
+    /** Adapts a {@link PlantJsonConfig} into the {@link PlantPropertySheet} shape {@code Plant} already understands.
+     *  When a profile exists for the same type it also copies the profile's tags, level-upgrades and damage
+     *  profile, so level-scaling and flavour flags keep working for config-driven plants. */
     public PlantPropertySheet toSheet(PlantJsonConfig cfg) {
         GrowthProfile growth = null;
         if (cfg.attackConfig instanceof SunProducerActionConfig sunConfig) {
@@ -19819,7 +20444,7 @@ public final class PlantConfigRegistry {
             }
         }
 
-        return new PlantPropertySheet.Builder(cfg.id, cfg.name, PlantType.valueOf(cfg.type))
+        PlantPropertySheet.Builder builder = new PlantPropertySheet.Builder(cfg.id, cfg.name, PlantType.valueOf(cfg.type))
                 .category(PlantCategory.valueOf(cfg.category))
                 .sunCost(cfg.sunCost)
                 .baseHp(cfg.baseHp)
@@ -19829,8 +20454,16 @@ public final class PlantConfigRegistry {
                 .description(cfg.description == null ? "" : cfg.description)
                 .plantAttackConfig(cfg.attackConfig)
                 .plantFeedConfig(cfg.feedConfig)
-                .pamAnimationConfig(cfg.pamAnimationConfig)
-                .build();
+                .pamAnimationConfig(cfg.pamAnimationConfig);
+
+        PlantPropertySheet profile = PlantRegistry.getInstance().getSheet(PlantType.valueOf(cfg.type));
+        if (profile != null) {
+            builder.tags(profile.getTags())
+                   .levelUpgrades(profile.getLevelUpgrades())
+                   .damage(profile.getDamage());
+        }
+
+        return builder.build();
     }
 }
 
@@ -19865,6 +20498,7 @@ public final class PlantActionConfigLoader {
         json.addClassTag("ExplosiveConfig", ExplosiveConfig.class);
         json.addClassTag("SquashConfig", SquashConfig.class);
         json.addClassTag("NutConfig", NutConfig.class);
+        json.addClassTag("WallNutFeedConfig", WallNutFeedConfig.class);
         return json;
     }
 
@@ -21506,8 +22140,17 @@ public class ExplodeONutAction extends PlantAction {
             }
         }
         for (Zombie z : targets) {
-            z.takeDamage(config.baseDamage);
+            z.takeDamage(effectiveDamage(plant));
         }
+    }
+
+    /** Base explosion damage + the "Explode Dmg +200" level flag. */
+    private float effectiveDamage(Plant plant) {
+        float damage = config.baseDamage;
+        if (plant.getUnlockedFlags().contains("Explode Dmg +200")) {
+            damage += 200f;
+        }
+        return damage;
     }
 
     @Override
@@ -21866,6 +22509,157 @@ FILE: ConfigFeedAction.java
 //     @Override
 //     public String getName() { return "Feed"; }
 // }
+
+
+======================================================
+FILE: WallNutFeedAction.java
+======================================================
+
+package com.pvz.models.entities.plants.actions;
+
+import java.util.List;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
+import com.pvz.models.entities.plants.config.PamAnimationConfig;
+import com.pvz.models.entities.plants.config.WallNutFeedConfig;
+import com.pvz.models.entities.plants.fsm.PlantIdleState;
+import com.pvz.models.entities.plants.fsm.WallNutState;
+import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.fsm.WalkState;
+import com.pvz.models.games.GameContext;
+import com.pvz.models.games.map.tile.Tile;
+
+/**
+ * Plant Food for wall-nut category plants, driven by {@link WallNutFeedConfig}.
+ *
+ * <p>Applies the configured effect on entry, plays the sheet's plant-food clip
+ * sequence, then hands the plant back to {@link PlantIdleState} (and therefore
+ * back to its {@code WallNutState}).
+ */
+public class WallNutFeedAction extends PlantAction {
+
+    private final WallNutFeedConfig config;
+    private float totalDuration;
+
+    public WallNutFeedAction(WallNutFeedConfig config) {
+        this.config = config;
+    }
+
+    @Override
+    public boolean shouldTrigger(Plant plant, GameContext ctx, float dt) {
+        return false;
+    }
+
+    @Override
+    public void onEnter(Plant plant, GameContext ctx) {
+        stateTime = 0f;
+        applyEffect(plant, ctx);
+        totalDuration = computeTotalDuration(plant);
+    }
+
+    private void applyEffect(Plant plant, GameContext ctx) {
+        switch (config.kind) {
+            case "FORCE_MOVE_ALL_IN_LANE" -> {
+                for (Zombie zombie : ctx.getZombiesInLane(plant.getLane())) {
+                    WallNutState.redirectToAdjacentLane(zombie, plant, ctx);
+                }
+            }
+            case "FULL_HEAL_AND_ABSORB" -> {
+                plant.heal(plant.getMaxHp());
+                absorbNearbyZombies(plant, ctx);
+            }
+            default -> {
+                if (config.amount > 0f) {
+                    plant.boostMaxHp(config.amount);
+                    ctx.log("[PlantFood] " + plant.getSheet().getName() + " gained " + (int) config.amount
+                            + " permanent armor HP.");
+                }
+                if (config.reflectBonus > 0f) {
+                    plant.addReflectDamageBonus(config.reflectBonus);
+                    ctx.log("[PlantFood] " + plant.getSheet().getName() + " gained +"
+                            + (int) config.reflectBonus + " reflect damage.");
+                }
+            }
+        }
+    }
+
+    private void absorbNearbyZombies(Plant plant, GameContext ctx) {
+        for (int adjacent : WallNutState.adjacentLanes(plant, ctx)) {
+            for (Zombie zombie : ctx.getZombiesInLane(adjacent)) {
+                if (zombie.getCurrentState() instanceof WalkState
+                        && Math.abs(zombie.getX() - plant.getX()) <= 2f * Tile.WIDTH) {
+                    WallNutState.moveZombieToLane(zombie, plant.getLane(), ctx);
+                }
+            }
+        }
+    }
+
+    private float computeTotalDuration(Plant plant) {
+        float total = 0f;
+        for (String clip : config.clips) {
+            total += clipDuration(plant, clip);
+        }
+        return total > 0f ? total : 0.5f;
+    }
+
+    private float clipDuration(Plant plant, String clip) {
+        PamAnimationConfig pam = plant.getSheet().pamAnimationConfig;
+        if (pam == null || pam.pamFilePath == null || clip == null) {
+            return -1f;
+        }
+        AnimationCatalog catalog = AnimationCatalog.getInstance();
+        if (catalog == null) {
+            return -1f;
+        }
+        return catalog.getClipDuration(pam.pamFilePath, clip);
+    }
+
+    private String currentClip(Plant plant) {
+        if (config.clips.length == 0) {
+            PamAnimationConfig pam = plant.getSheet().pamAnimationConfig;
+            return pam != null && pam.idleLabel != null ? pam.idleLabel : "idle";
+        }
+        float acc = 0f;
+        for (String clip : config.clips) {
+            float duration = clipDuration(plant, clip);
+            if (stateTime < acc + duration || duration <= 0f) {
+                return clip;
+            }
+            acc += duration;
+        }
+        return config.clips[config.clips.length - 1];
+    }
+
+    @Override
+    public void update(Plant plant, GameContext ctx, float dt) {
+        super.update(plant, ctx, dt);
+        if (stateTime >= totalDuration) {
+            plant.changeState(new PlantIdleState());
+        }
+    }
+
+    @Override
+    public void onExit(Plant plant, GameContext ctx) {
+        // nothing
+    }
+
+    @Override
+    public FrameConfig draw(Plant plant, GameContext ctx) {
+        PamAnimationConfig pam = plant.getSheet().pamAnimationConfig;
+        Vector2 pos = new Vector2(GameController.colToWorldX(plant.getCol()), GameController.laneToWorldY(plant.getLane()));
+        Vector2 scale = new Vector2(0.65f, 0.65f);
+        return new FrameConfig(pam.pamFilePath, currentClip(plant), stateTime, pos, scale, null, true);
+    }
+
+    @Override
+    public String getLabel() {
+        return "PlantFood";
+    }
+}
 
 
 ======================================================
@@ -22578,6 +23372,7 @@ public class Plant extends Entity {
 
     private float hp;
     private float maxHpBonus;
+    private float reflectDamageBonus;
     private float ageTicks;
     private int growthStageIndex;
 
@@ -22740,6 +23535,17 @@ public class Plant extends Entity {
 
     public void heal(float amount) {
         hp = Math.min(getMaxHp(), hp + Math.max(0, amount));
+    }
+
+    /** Permanently raises the plant's reflect-damage bonus (Endurian Plant Food). */
+    public void addReflectDamageBonus(float amount) {
+        if (amount <= 0f)
+            return;
+        reflectDamageBonus += amount;
+    }
+
+    public float getReflectDamageBonus() {
+        return reflectDamageBonus;
     }
 
     // ── Plant Food ────────────────────────────────────────────────────────────
@@ -23261,33 +24067,29 @@ package com.pvz.models.entities.zombies.fsm;
 
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.PumpkinShield;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.config.ZombieActionConfig;
+import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
 import com.pvz.models.games.GameContext;
 
-/**
- * The zombie is eating a plant it has collided with.
- *
- * <p>Each tick it deals {@link Zombie#getEatDpsPerTick()} damage to the
- * {@link Plant} it bumped into.
- *
- * <p><b>Transitions:</b>
- * <ul>
- *   <li>→ {@link WalkState} when the target plant is destroyed (or removed/frozen).</li>
- * </ul>
- */
 public class EatState extends ZombieState {
 
-    private final Plant target;
+    private Plant target;
+    private boolean isGargantuar;
+    private boolean smashPhase;
 
-    /**
-     * @param target the plant this zombie is chewing on (tracked by reference, not
-     *               grid cell, so it keeps chewing the same plant as it moves).
-     */
     public EatState(Plant target) {
         super(null);
         this.target = target;
+    }
+
+    public EatState(Plant target, boolean isGargantuar) {
+        super(null);
+        this.target = target;
+        this.isGargantuar = isGargantuar;
     }
 
     @Override
@@ -23297,7 +24099,6 @@ public class EatState extends ZombieState {
 
     @Override
     protected void doExecute(Zombie zombie, GameContext ctx) {
-
     }
 
     @Override
@@ -23313,14 +24114,39 @@ public class EatState extends ZombieState {
 
     @Override
     public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
+        stateTime += dt;
+
+        if (isGargantuar) {
+            float eatDur = getClipDuration(zombie, "eat");
+            float smashDur = getClipDuration(zombie, "smash_left");
+
+            if (!smashPhase) {
+                if (stateTime >= eatDur) {
+                    smashPhase = true;
+                    stateTime = 0f;
+                }
+            } else {
+                if (stateTime >= smashDur) {
+                    if (!target.isDead() && ctx.getPlants().contains(target)) {
+                        Plant shield = PumpkinShield.shieldFor(target, ctx);
+                        if (shield != null) target = shield;
+                        float totalDmg = zombie.getEatDpsPerTick() * Zombie.TICKS_PER_SECOND * (eatDur + smashDur);
+                        target.takeDamage(totalDmg, DamageKind.FIXED);
+                    }
+                    return new WalkState();
+                }
+            }
+            return this;
+        }
+
         if (target.isDead() || target.isFrozen() || !ctx.getPlants().contains(target)) {
-            // Plant was destroyed or removed — return to walking
             ctx.log("Plant at (" + target.getCol() + "," + target.getLane() + ") is destroyed.");
             return new WalkState();
         }
-        // Deal eat-DPS damage scaled by real dt: the engine runs at render-frame
-        // rate (~60 fps), not at TICKS_PER_SECOND, so a flat per-tick amount would
-        // make chewing ~6× too fast. dps == sheet eatDps (damage per second).
+        Plant shield = PumpkinShield.shieldFor(target, ctx);
+        if (shield != null) {
+            target = shield;
+        }
         float dps = zombie.getEatDpsPerTick() * Zombie.TICKS_PER_SECOND;
         target.takeDamage(dps * dt, DamageKind.FIXED);
         return this;
@@ -23328,7 +24154,6 @@ public class EatState extends ZombieState {
 
     @Override
     public void onExit(Zombie zombie, GameContext ctx) {
-        // nothing
     }
 
     @Override
@@ -23338,11 +24163,27 @@ public class EatState extends ZombieState {
 
     @Override
     public FrameConfig draw(Zombie zombie, GameContext ctx) {
+        if (isGargantuar) {
+            String clip = smashPhase ? "smash_left" : "eat";
+            return zombie.drawClip(clip, stateTime, false);
+        }
         ZombieActionConfig eat = zombie.getSheet().eatConfig;
         return zombie.drawClip(eat != null ? eat.label : "eat");
     }
 
-    public Plant getTarget()  { return target; }
+    private float getClipDuration(Zombie zombie, String clipName) {
+        ZombieAnimationConfig anim = zombie.getSheet().getAnimationConfig();
+        if (anim != null && anim.pamFilePath != null) {
+            AnimationCatalog catalog = AnimationCatalog.getInstance();
+            if (catalog != null) {
+                float dur = catalog.getClipDuration(anim.pamFilePath, clipName);
+                if (dur > 0f) return dur;
+            }
+        }
+        return 1f;
+    }
+
+    public Plant getTarget() { return target; }
 }
 
 
@@ -23427,29 +24268,95 @@ public class FrozenState extends ZombieState{
 
 
 ======================================================
-FILE: DeadState.java
+FILE: ImpFlyState.java
 ======================================================
 
 package com.pvz.models.entities.zombies.fsm;
 
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.zombies.Zombie;
-import com.pvz.models.entities.zombies.config.ZombieActionConfig;
-import com.pvz.models.entities.zombies.config.ZombieSkillConfig;
 import com.pvz.models.games.GameContext;
 
 /**
- * Terminal FSM state — the zombie is dead.
+ * Imp flying state — the Imp is thrown by a Gargantuar and travels
+ * along a parabolic arc from behind the Gargantuar's back to a
+ * target column ahead (to the left).
  *
- * <p>The engine detects a dead zombie via {@link Zombie#isDead()} and
- * removes it from the game on the next tick cycle. This state exists
- * solely so the {@code zombies info} CLI command can show "Dead" for
- * zombies that died mid-tick before the engine processes removals.
+ * <p>During flight the Imp is rendered at the parabolic position
+ * while its actual world position is set at the landing spot.
+ * Once the flight duration elapses, the Imp lands and transitions
+ * to {@link WalkState}.
  */
-public class DeadState extends ZombieState {
+public class ImpFlyState extends ZombieState {
 
-    public DeadState() {
+    private static final float FLIGHT_DURATION = 1.0f;
+    private static final float PEAK_HEIGHT = 200f;
+    private static final int COLUMNS_AHEAD = 3;
+
+    private final float launchX;
+    private final float launchY;
+    private final float landX;
+    private float flightTime;
+
+    /**
+     * @param launchX  world X of the launch point (behind Gargantuar's back)
+     * @param launchY  world Y of the launch point (above Gargantuar)
+     * @param landX    Gargantuar's world X (used to compute target column)
+     * @param landY    Gargantuar's world Y (same lane, for landing)
+     * @param lane     the lane the Imp is in
+     * @param ctx      game context (for map columns)
+     */
+    public ImpFlyState(float launchX, float launchY, float landX, float landY, int lane, GameContext ctx) {
         super(null);
+        this.launchX = launchX;
+        this.launchY = launchY;
+
+        int gargCol = GameController.worldXtoCol(landX);
+        int targetCol = Math.max(1, gargCol - COLUMNS_AHEAD);
+        this.landX = GameController.colToWorldX(targetCol);
+    }
+
+    @Override
+    public void onEnter(Zombie zombie, GameContext ctx) {
+        stateTime = 0f;
+        flightTime = 0f;
+    }
+
+    @Override
+    public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
+        stateTime += dt;
+        flightTime += dt;
+
+        if (flightTime >= FLIGHT_DURATION) {
+            zombie.setX(landX);
+            return new WalkState();
+        }
+        return this;
+    }
+
+    @Override
+    public void onExit(Zombie zombie, GameContext ctx) {
+        zombie.setX(landX);
+    }
+
+    @Override
+    public FrameConfig draw(Zombie zombie, GameContext ctx) {
+        float t = flightTime / FLIGHT_DURATION;
+        float renderX = launchX + (landX - launchX) * t;
+        float renderY = launchY + PEAK_HEIGHT * (1f - (2f * t - 1f) * (2f * t - 1f));
+
+        FrameConfig base = zombie.drawClip("fly");
+        return new FrameConfig(
+            base.pamPath,
+            base.label,
+            stateTime,
+            new Vector2(renderX, renderY),
+            base.scale,
+            base.partsVisibility,
+            false
+        );
     }
 
     @Override
@@ -23459,28 +24366,81 @@ public class DeadState extends ZombieState {
 
     @Override
     protected void doExecute(Zombie zombie, GameContext ctx) {
-
     }
 
     @Override
     public String getName() {
-        return "";
+        return "ImpFly";
+    }
+
+    @Override
+    public String getLabel() {
+        return "Imp Flying";
+    }
+}
+
+
+======================================================
+FILE: DeadState.java
+======================================================
+
+package com.pvz.models.entities.zombies.fsm;
+
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
+import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.config.ZombieActionConfig;
+import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
+import com.pvz.models.games.GameContext;
+
+public class DeadState extends ZombieState {
+
+    private float dieDuration;
+    private boolean removed;
+
+    public DeadState() {
+        super(null);
     }
 
     @Override
     public void onEnter(Zombie zombie, GameContext ctx) {
-        // Death logging is handled inside Zombie.onDeath() to ensure it fires
-        // exactly once regardless of how death was triggered.
+        stateTime = 0f;
+        removed = false;
+        dieDuration = resolveDieDuration(zombie);
     }
 
     @Override
     public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
-        return this; // stay in dead state; engine will deregister this zombie
+        if (removed) return this;
+        stateTime += dt;
+        if (stateTime >= dieDuration) {
+            removed = true;
+            ctx.removeZombie(zombie);
+        }
+        return this;
+    }
+
+    @Override
+    public FrameConfig draw(Zombie zombie, GameContext ctx) {
+        return zombie.drawClip("die", stateTime, false);
     }
 
     @Override
     public void onExit(Zombie zombie, GameContext ctx) {
-        // nothing — dead zombies don't exit this state
+    }
+
+    @Override
+    public boolean shouldTrigger(Zombie zombie, GameContext ctx, float dt) {
+        return false;
+    }
+
+    @Override
+    protected void doExecute(Zombie zombie, GameContext ctx) {
+    }
+
+    @Override
+    public String getName() {
+        return "Dead";
     }
 
     @Override
@@ -23488,10 +24448,16 @@ public class DeadState extends ZombieState {
         return "Dead";
     }
 
-    @Override
-    public FrameConfig draw(Zombie zombie, GameContext ctx) {
-        ZombieActionConfig die = zombie.getSheet().dieConfig;
-        return zombie.drawClip(die != null ? die.label : "die");
+    private float resolveDieDuration(Zombie zombie) {
+        ZombieAnimationConfig anim = zombie.getSheet().getAnimationConfig();
+        if (anim != null && anim.pamFilePath != null) {
+            AnimationCatalog catalog = AnimationCatalog.getInstance();
+            if (catalog != null) {
+                float dur = catalog.getClipDuration(anim.pamFilePath, "die");
+                if (dur > 0f) return dur;
+            }
+        }
+        return 1.5f;
     }
 }
 
@@ -23559,34 +24525,29 @@ FILE: GargantuarSkill.java
 
 package com.pvz.models.entities.zombies.skills;
 
+import java.util.Map;
+
 import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.config.GargantuarSkillConfig;
+import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
+import com.pvz.models.entities.zombies.fsm.ImpFlyState;
+import com.pvz.models.entities.zombies.fsm.WalkState;
 import com.pvz.models.entities.zombies.fsm.ZombieState;
 import com.pvz.models.games.GameContext;
 
-/**
- * Gargantuar — throws an Imp when the zombie drops to {@code throwHpFraction} % HP.
- *
- * <p>From JSON {@code ZombieGargantuarProps}:
- * <ul>
- *   <li>{@code HealthPercentThrowImp = 0.5}</li>
- *   <li>{@code ImpType = "ZombieTutorialImpDefault"} → resolved to a zombie alias by the registry</li>
- * </ul>
- *
- * <p>The skill fires its throw on state entry, then holds the "smash_left"
- * clip until it finishes. The Gargantuar also smashes plants it walks into
- * instead of eating them — that part lives in {@code EatState} via the
- * smashDamage stat.
- */
 public class GargantuarSkill extends ZombieState {
 
-    /** Imp lands 2 columns from the left edge. */
-    private static final int IMP_TARGET_COL = 3;
+    private static final int IMP_TARGET_COL = 2;
+    private static final float IMP_OFFSET_X = 20f;
+    private static final float IMP_OFFSET_Y = 80f;
 
     private final String impAlias;
     private final float throwHpFraction;
+    private boolean secondPhase;
 
     public GargantuarSkill(GargantuarSkillConfig config) {
         super(config);
@@ -23603,19 +24564,89 @@ public class GargantuarSkill extends ZombieState {
     }
 
     @Override
+    public void onEnter(Zombie zombie, GameContext ctx) {
+        if (zombie.isThrowInProgress()) {
+            stateTime = zombie.getThrowProgress();
+            secondPhase = zombie.isThrowImpSpawned();
+        } else {
+            stateTime = 0f;
+            secondPhase = false;
+            zombie.setThrowInProgress(true);
+            zombie.setThrowImpSpawned(false);
+        }
+    }
+
+    @Override
     protected void doExecute(Zombie zombie, GameContext ctx) {
-        zombie.markImpThrown();
-        int targetCol = Math.max(1, Math.min((int)zombie.getX() - IMP_TARGET_COL, ctx.getMap().getColumns() - 1));
-        Zombie imp = new ZombieFactory().create(impAlias, zombie.getX(), (int)zombie.getY(), ctx, 1, 2);
-        ctx.spawnZombie(imp);
-        ctx.log("Gargantuar threw Imp [" + impAlias + "] to column "
-                + targetCol + " in lane " + GameController.worldYtoLane(zombie.getY()) + "!");
+    }
+
+    @Override
+    public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
+        float fireDur = getClipDuration(zombie, "fire");
+        float cannonDur = getClipDuration(zombie, "cannon_fire");
+
+        if (!secondPhase) {
+            stateTime += dt;
+            zombie.setThrowProgress(stateTime);
+            if (stateTime >= fireDur) {
+                secondPhase = true;
+                stateTime = 0f;
+                spawnImp(zombie, ctx);
+            }
+        } else {
+            stateTime += dt;
+            zombie.setThrowProgress(stateTime);
+            if (stateTime >= cannonDur) {
+                zombie.setThrowInProgress(false);
+                return new WalkState();
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public void onExit(Zombie zombie, GameContext ctx) {
+        zombie.setThrowInProgress(false);
+    }
+
+    @Override
+    public FrameConfig draw(Zombie zombie, GameContext ctx) {
+        String clip = secondPhase ? "cannon_fire" : "fire";
+        return zombie.drawClip(clip, stateTime, false);
     }
 
     @Override
     public String getName() {
         return "ThrowImp[" + impAlias + "]";
     }
+
+    private float getClipDuration(Zombie zombie, String clipName) {
+        ZombieAnimationConfig anim = zombie.getSheet().getAnimationConfig();
+        if (anim != null && anim.pamFilePath != null) {
+            AnimationCatalog catalog = AnimationCatalog.getInstance();
+            if (catalog != null) {
+                float dur = catalog.getClipDuration(anim.pamFilePath, clipName);
+                if (dur > 0f) return dur;
+            }
+        }
+        return config != null && config.durationSeconds > 0f ? config.durationSeconds : 1f;
+    }
+
+    private void spawnImp(Zombie zombie, GameContext ctx) {
+        zombie.setThrowImpSpawned(true);
+        zombie.markImpThrown();
+        int lane = GameController.worldYtoLane(zombie.getY());
+        float launchX = zombie.getX() + IMP_OFFSET_X;
+        float launchY = zombie.getY() + IMP_OFFSET_Y;
+        Zombie imp = new ZombieFactory().create(impAlias, zombie.getX(), lane, ctx, 1, 2);
+        int gargCol = GameController.worldXtoCol(zombie.getX());
+        int targetCol = Math.max(1, gargCol - IMP_TARGET_COL);
+        imp.setPendingInitialState(new ImpFlyState(launchX, launchY, zombie.getX(), zombie.getY(), lane, ctx));
+        ctx.spawnZombie(imp);
+        ctx.log("Gargantuar threw Imp [" + impAlias + "] to column "
+                + targetCol + " in lane " + lane + " (parabolic flight)!");
+    }
+
 }
 
 
@@ -25290,6 +26321,7 @@ import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.PumpkinShield;
 import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
 import com.pvz.models.entities.zombies.armor.ArmorType;
@@ -25344,6 +26376,9 @@ public class Zombie extends Entity {
     private boolean frozen;
     private float frozenDuration;
     private boolean impAlreadyThrown = false;
+    private boolean throwInProgress = false;
+    private float throwProgress = 0f;
+    private boolean throwImpSpawned = false;
     private int stolenSun;
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -25386,7 +26421,8 @@ public class Zombie extends Entity {
                     return;
                 }
                 if (onHit.getOwner() instanceof Plant plant && !plant.isDead() && !plant.isFrozen()) {
-                    startEating(plant);
+                    Plant shield = PumpkinShield.shieldFor(plant, context);
+                    startEating(shield != null ? shield : plant);
                 }
             }
         });
@@ -25425,7 +26461,12 @@ public class Zombie extends Entity {
     @Override
     public void update(float dt) {
         stateTime += dt;
-        if (dead) return;
+        if (dead) {
+            if (currentState instanceof DeadState) {
+                currentState.update(this, context, dt);
+            }
+            return;
+        }
 
         updateStatusEffects(dt);
         //if (isParalysed()) return;
@@ -25465,20 +26506,31 @@ public class Zombie extends Entity {
         currentState.onExit(this,context);
     }
 
+    /** Replaces the current FSM state cleanly (onExit → onEnter). */
+    public void setState(ZombieState state){
+        if (currentState != null) currentState.onExit(this, context);
+        currentState = state;
+        if (currentState != null) currentState.onEnter(this, context);
+    }
+
     /**
      * Builds the {@link FrameConfig} for the given clip label from the zombie's
      * config-driven animation (pam path + scale), falling back to the classic
      * tutorial PAM when no config is attached.
      */
     public FrameConfig drawClip(String clipLabel) {
+        return drawClip(clipLabel, stateTime, true);
+    }
+
+    public FrameConfig drawClip(String clipLabel, float time, boolean looping) {
         ZombieAnimationConfig anim = sheet.getAnimationConfig();
         String pamPath = (anim != null && anim.pamFilePath != null)
             ? anim.pamFilePath
             : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
         float scale = (anim != null && anim.scale != null) ? anim.scale : 0.65f;
-        return new FrameConfig(pamPath, resolveClipLabel(anim, newspaperClipLabel(clipLabel)), stateTime,
+        return new FrameConfig(pamPath, resolveClipLabel(anim, newspaperClipLabel(clipLabel)), time,
             new Vector2(position.x, position.y), new Vector2(scale, scale),
-            buildPartsVisibility(), true);
+            buildPartsVisibility(), looping);
     }
 
     /**
@@ -25544,8 +26596,8 @@ public class Zombie extends Entity {
      *         to display (basic zombies / fully destroyed armour)
      */
     private Map<String, Boolean> buildPartsVisibility() {
-        if (armors.isEmpty()) return null;
-        Map<String, Boolean> visibility = null;
+        if (armors.isEmpty() && !throwImpSpawned) return null;
+        Map<String, Boolean> visibility = armors.isEmpty() ? null : new HashMap<>();
         for (ArmorPiece armor : armors) {
             if (armor.isDestroyed()) continue;
             String[] layers = armor.getType().pamLayers();
@@ -25555,16 +26607,41 @@ public class Zombie extends Entity {
             for (int i = 0; i < layers.length; i++) {
                 visibility.put(layers[i], i == layer);
             }
-            // Some sheets nest the layer parts under a container part whose
-            // name carries the ARMOR flag; libPVZ culls flagged parts unless
-            // revealed, and culling the container hides its children too, so
-            // force the container visible together with the current layer.
             String container = armor.getType().pamContainerName();
             if (container != null) visibility.put(container, true);
             for (String alive : armor.getType().pamAliveParts()) visibility.put(alive, true);
             for (String crit : armor.getType().pamCriticalParts()) visibility.put(crit, layer == layers.length - 1);
         }
+        if (throwImpSpawned) {
+            if (visibility == null) visibility = new HashMap<>();
+            hideImpParts(visibility);
+        }
         return visibility;
+    }
+
+    private static void hideImpParts(Map<String, Boolean> v) {
+        v.put("zombie_imp_hand_inner", false);
+        v.put("zombie_imp_arm_inner_upper", false);
+        v.put("zombie_imp_arm_inner_lower", false);
+        v.put("zombie_imp_leg_inner_lower", false);
+        v.put("zombie_imp_toe_inner", false);
+        v.put("zombie_imp_leg_inner_upper", false);
+        v.put("zombie_imp_leg_outer_lower", false);
+        v.put("zombie_imp_toe_outer", false);
+        v.put("zombie_imp_waist", false);
+        v.put("zombie_imp_leg_outer_upper", false);
+        v.put("zombie_imp_torso", false);
+        v.put("zombie_imp_jaw", false);
+        v.put("zombie_imp_eye", false);
+        v.put("zombie_imp_pupil", false);
+        v.put("zombie_imp_eye_sm", false);
+        v.put("zombie_imp_skull", false);
+        v.put("_zombie_imp_head_top", false);
+        v.put("zombie_imp_arm_outer_upper_02", false);
+        v.put("zombie_imp_arm_outer_upper_01", false);
+        v.put("zombie_imp_arms_outer_upper", false);
+        v.put("zombie_imp_hand_outer", false);
+        v.put("zombie_imp_arm_outer_lower", false);
     }
 
     @Override
@@ -25580,7 +26657,8 @@ public class Zombie extends Entity {
             return;
         }
         currentState.onExit(this, context);
-        EatState eat = new EatState(plant);
+        boolean garg = sheet.getSmashDamage() > 0;
+        EatState eat = new EatState(plant, garg);
         eat.onEnter(this, context);
         currentState = eat;
     }
@@ -25664,6 +26742,12 @@ public class Zombie extends Entity {
     public void addStolenSun(int amount)        { stolenSun += amount; }
     public boolean isImpAlreadyThrown()         { return impAlreadyThrown; }
     public void markImpThrown()                 { impAlreadyThrown = true; }
+    public boolean isThrowInProgress()          { return throwInProgress; }
+    public void setThrowInProgress(boolean v)   { throwInProgress = v; }
+    public float getThrowProgress()             { return throwProgress; }
+    public void setThrowProgress(float v)       { throwProgress = v; }
+    public boolean isThrowImpSpawned()          { return throwImpSpawned; }
+    public void setThrowImpSpawned(boolean v)   { throwImpSpawned = v; }
     public ZombieState getCurrentState()        { return currentState; }
     public List<ZombieState> getSkills()        { return Collections.unmodifiableList(skills); }
     public List<ArmorPiece> getArmors()         { return Collections.unmodifiableList(armors); }
@@ -25705,6 +26789,7 @@ public class Zombie extends Entity {
     private void triggerDeath() {
         dead = true;
         currentState = new DeadState();
+        currentState.onEnter(this, context);
         if (glowing) {
             context.addPlantFood(1);
             context.log("The glowing zombie dropped a plant food! [" + sheet.getAlias() + "]");
@@ -25717,7 +26802,6 @@ public class Zombie extends Entity {
         ZombieLootService.rollAndApplyLoot(context, this);
         context.getGameStats().onZombieKilled();
         context.getGameStats().onZombieKilledInSeason(context.getSeasonName());
-        context.removeZombie(this);
         context.log("Zombie of type " + sheet.getAlias()
             + " is dead at (" + String.format("%.1f", position.x) + "," + GameController.worldYtoLane(position.y) + ")");
     }
@@ -28779,6 +29863,11 @@ public class Tile implements TickAware {
             else if (plants.size()<2){
                 return true;
             }
+        }
+
+        // STACK plants (e.g. Pumpkin) may be planted on top of an existing plant.
+        if (!plants.isEmpty() && sheet.getTags().contains(PlantTag.STACK)) {
+            return true;
         }
 
         if (!plants.isEmpty()) return false;
@@ -32532,7 +33621,11 @@ public class User {
     private QuestLog questLog;
 
     public void saveUser(){
-        SaveManager.getInstance().save(this, "users/" + id + ".json");
+        if (com.pvz.network.NetworkClient.getInstance().isConnected()) {
+            com.pvz.network.NetworkClient.getInstance().saveUser(this, null);
+        } else {
+            SaveManager.getInstance().save(this, "users/" + id + ".json");
+        }
     }
 
 
@@ -33275,6 +34368,56 @@ public class GreenHousePot {
 
 
 ======================================================
+FILE: HarvestResult.java
+======================================================
+
+package com.pvz.models.greenhouse;
+
+public class HarvestResult {
+
+    public enum Type {
+        MARIGOLD_COINS,
+        NEW_BOOST,
+        ALREADY_BOOSTED
+    }
+
+    private final Type type;
+    private final String plantTypeName;
+    private final int coins;
+
+    private HarvestResult(Type type, String plantTypeName, int coins) {
+        this.type = type;
+        this.plantTypeName = plantTypeName;
+        this.coins = coins;
+    }
+
+    public static HarvestResult marigoldCoins(int coins) {
+        return new HarvestResult(Type.MARIGOLD_COINS, "MariGold", coins);
+    }
+
+    public static HarvestResult newBoost(String plantTypeName) {
+        return new HarvestResult(Type.NEW_BOOST, plantTypeName, 0);
+    }
+
+    public static HarvestResult alreadyBoosted(String plantTypeName) {
+        return new HarvestResult(Type.ALREADY_BOOSTED, plantTypeName, 0);
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public String getPlantTypeName() {
+        return plantTypeName;
+    }
+
+    public int getCoins() {
+        return coins;
+    }
+}
+
+
+======================================================
 FILE: GreenHousePlant.java
 ======================================================
 
@@ -33926,5 +35069,264 @@ public class UserSaveManager {
             return null;
         }
         return SaveManager.getInstance().load("users/" + id + ".json", User.class);
+    }
+}
+
+======================================================
+FILE: NetworkClient.java
+======================================================
+
+package com.pvz.network;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+
+import com.badlogic.gdx.Gdx;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import com.pvz.models.leaderboard.Leaderboard.LeaderBoardEntry;
+import com.pvz.models.user.User;
+
+/**
+ * One persistent TCP connection to {@link com.pvz.server.PvzServer}.
+ *
+ * Usage pattern everywhere in the client: fire a request, get a callback.
+ * The callback always runs back on the libGDX render thread
+ * (via {@code Gdx.app.postRunnable}), so it's always safe to touch
+ * Stage/Actor/Label objects directly inside it — never call this from
+ * a Gdx-UI-touching context off the render thread.
+ *
+ * Call {@link #connect(String, int)} once at app startup (e.g. in
+ * PvZ2#create() or your FirstScreen) before using any other method.
+ */
+public class NetworkClient {
+
+    private static NetworkClient instance;
+
+    public static NetworkClient getInstance() {
+        if (instance == null) {
+            instance = new NetworkClient();
+        }
+        return instance;
+    }
+
+    private final Gson gson = new Gson();
+    private Socket socket;
+    private PrintWriter out;
+    private BufferedReader in;
+    private Thread readerThread;
+    private volatile boolean connected = false;
+
+    private final Map<String, Consumer<NetworkMessage>> pending = new ConcurrentHashMap<>();
+
+    private NetworkClient() { }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    /** Blocking connect — call this off the render thread (e.g. in a loading screen) if you can. */
+    public synchronized void connect(String host, int port) throws IOException {
+        socket = new Socket(host, port);
+        OutputStream rawOut = socket.getOutputStream();
+        out = new PrintWriter(new java.io.OutputStreamWriter(rawOut, StandardCharsets.UTF_8), true);
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+        connected = true;
+
+        readerThread = new Thread(this::readLoop, "network-client-reader");
+        readerThread.setDaemon(true);
+        readerThread.start();
+    }
+
+    public synchronized void disconnect() {
+        connected = false;
+        try {
+            if (socket != null) socket.close();
+        } catch (IOException ignored) { }
+    }
+
+    private void readLoop() {
+        try {
+            String line;
+            while (connected && (line = in.readLine()) != null) {
+                NetworkMessage msg = gson.fromJson(line, NetworkMessage.class);
+                if (msg == null || msg.requestId == null) continue;
+
+                Consumer<NetworkMessage> callback = pending.remove(msg.requestId);
+                if (callback != null) {
+                    // Bounce back to the GL thread — the callback will usually touch
+                    // Stage/Label/AppContext, which is only safe there.
+                    Gdx.app.postRunnable(() -> callback.accept(msg));
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("[NetworkClient] Connection lost: " + e.getMessage());
+        } finally {
+            connected = false;
+        }
+    }
+
+    /**
+     * Fires a request and returns immediately. {@code callback} runs later,
+     * on the GL thread, once the server responds. Always check
+     * {@code response.success} first inside the callback.
+     */
+    public synchronized void sendRequest(MessageType type, Object payloadObject, Consumer<NetworkMessage> callback) {
+        if (!connected) {
+            NetworkMessage fake = new NetworkMessage();
+            fake.type = type;
+            fake.success = false;
+            fake.errorMessage = "Not connected to server.";
+            Gdx.app.postRunnable(() -> callback.accept(fake));
+            return;
+        }
+
+        String requestId = UUID.randomUUID().toString();
+        String payloadJson = payloadObject != null ? gson.toJson(payloadObject) : null;
+        NetworkMessage request = NetworkMessage.request(type, requestId, payloadJson);
+
+        if (callback != null) {
+            pending.put(requestId, callback);
+        }
+        out.println(gson.toJson(request));
+    }
+
+    /** Deserializes {@code response.payload} into {@code clazz}. Null if payload is null. */
+    public <T> T parsePayload(NetworkMessage response, Class<T> clazz) {
+        if (response.payload == null) return null;
+        return gson.fromJson(response.payload, clazz);
+    }
+
+    // ---- Typed convenience wrappers -------------------------------------------------
+
+    /** {@code newUser} should be fully built client-side (starter progress, security Q&A...)
+     *  but with a null id — the server assigns the id and checks username uniqueness. */
+    public void register(User newUser, Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.REGISTER, newUser, callback);
+    }
+
+    public void login(String username, String password, Consumer<NetworkMessage> callback) {
+        LoginRequest req = new LoginRequest(username, password);
+        sendRequest(MessageType.LOGIN, req, callback);
+    }
+
+    /** Fire-and-forget is fine: pass null as callback if you don't need confirmation. */
+    public void saveUser(User user, Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.SAVE_USER, user, callback);
+    }
+
+    public void getUser(String username, Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.GET_USER, username, callback);
+    }
+
+    public void getLeaderboard(Consumer<List<LeaderBoardEntry>> onLoaded) {
+        sendRequest(MessageType.GET_LEADERBOARD, null, response -> {
+            if (!response.success) {
+                System.err.println("[NetworkClient] getLeaderboard failed: " + response.errorMessage);
+                onLoaded.accept(List.of());
+                return;
+            }
+            List<LeaderBoardEntry> entries = gson.fromJson(response.payload,
+                    new TypeToken<List<LeaderBoardEntry>>() { }.getType());
+            onLoaded.accept(entries);
+        });
+    }
+
+    public static class LoginRequest {
+        public String username;
+        public String password;
+
+        public LoginRequest(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+    }
+}
+
+
+======================================================
+FILE: MessageType.java
+======================================================
+
+package com.pvz.network;
+
+/**
+ * All message kinds understood by the Phase-1 server (accounts + leaderboard).
+ * Extend this enum in later phases (matchmaking, I-Zombie sync, reactions...)
+ * instead of creating a second protocol — everything rides the same
+ * {@link NetworkMessage} envelope.
+ */
+public enum MessageType {
+    REGISTER,
+    LOGIN,
+    SAVE_USER,
+    GET_USER,
+    GET_LEADERBOARD
+}
+
+
+======================================================
+FILE: NetworkMessage.java
+======================================================
+
+package com.pvz.network;
+
+/**
+ * One line of this (as JSON, via Gson) = one message over the socket.
+ * Both requests and responses use the same envelope:
+ *
+ *   - Client -> Server: type + requestId + payload (the request body)
+ *   - Server -> Client: same requestId echoed back, success/errorMessage set,
+ *                       payload = the response body (or null)
+ *
+ * Keeping requests and responses in one class means you don't need a second
+ * protocol later for pushed (server-initiated) messages, like game invites
+ * in Phase 3 — those just skip requestId matching on the client.
+ */
+public class NetworkMessage {
+    public MessageType type;
+    public String requestId;
+    public boolean success = true;
+    public String errorMessage;
+    /** JSON-encoded body. What it deserializes to depends on {@link #type}. */
+    public String payload;
+
+    public NetworkMessage() { }
+
+    public static NetworkMessage request(MessageType type, String requestId, String payload) {
+        NetworkMessage m = new NetworkMessage();
+        m.type = type;
+        m.requestId = requestId;
+        m.payload = payload;
+        return m;
+    }
+
+    public static NetworkMessage ok(NetworkMessage request, String payload) {
+        NetworkMessage m = new NetworkMessage();
+        m.type = request.type;
+        m.requestId = request.requestId;
+        m.success = true;
+        m.payload = payload;
+        return m;
+    }
+
+    public static NetworkMessage error(NetworkMessage request, String errorMessage) {
+        NetworkMessage m = new NetworkMessage();
+        m.type = request.type;
+        m.requestId = request.requestId;
+        m.success = false;
+        m.errorMessage = errorMessage;
+        return m;
     }
 }

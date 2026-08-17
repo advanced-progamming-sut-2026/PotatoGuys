@@ -203,6 +203,7 @@ public class RegisterMenu extends ScreenAdapter {
         User user = new User(username, passwordHash, nickname, email, gender);
         user.setSecurityQuestion(String.valueOf(questionIndex));
         user.setSecurityAnswer(answer);
+        grantStarterProgress(user);
 
         statusLabel.setText("Connecting...");
         NetworkClient.getInstance().register(user, response -> {

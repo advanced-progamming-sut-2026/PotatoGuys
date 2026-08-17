@@ -7,15 +7,6 @@
     <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="leaderboard delay fixed">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MergedProject.txt" beforeDir="false" afterPath="$PROJECT_DIR$/MergedProject.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/PvZ2.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/PvZ2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/LeaderBoardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/LeaderBoardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/user/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/session.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/session.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/fe760df9-31e9-40cb-8851-56962b74c2d4.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/username.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/saves/users/username.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/LeaderboardMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/LeaderboardMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/LoginMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/LoginMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/RegisterMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/RegisterMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,12 +84,12 @@
     }
   }
 }</component>
-  <component name="GitLabMergeRequestsSettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "first": "https://hamgit.ir/sedhhn/plantsvszombies2",
-    "second": "83191278-9b68-4e33-a55d-f523d58ebe84"
+  <component name="GitLabMergeRequestsSettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;first&quot;: &quot;https://hamgit.ir/sedhhn/plantsvszombies2&quot;,
+    &quot;second&quot;: &quot;83191278-9b68-4e33-a55d-f523d58ebe84&quot;
   }
-}]]></component>
+}</component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -297,7 +288,7 @@
       <workItem from="1786547194454" duration="4920000" />
       <workItem from="1786684833223" duration="3935000" />
       <workItem from="1786945016250" duration="3889000" />
-      <workItem from="1786959755105" duration="3097000" />
+      <workItem from="1786959755105" duration="5011000" />
     </task>
     <task id="LOCAL-00001" summary="added Login and register and forgot password menu to the game">
       <option name="closed" value="true" />
