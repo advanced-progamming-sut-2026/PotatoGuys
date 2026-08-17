@@ -37,6 +37,9 @@ public class ProfileEditMenu extends ScreenAdapter {
     private TextField emailField;
     private Label statusLabel;
 
+    private static final float FIELD_WIDTH = 420f;
+    private static final float FIELD_HEIGHT = 70f;
+
     public ProfileEditMenu(PvZ2 game) {
         this.game = game;
     }
@@ -55,9 +58,9 @@ public class ProfileEditMenu extends ScreenAdapter {
         currentUser = AppContext.getInstance().getCurrentUser();
 
         BorderedTable mainPanel = new BorderedTable();
-        mainPanel.setSize(600, 650);
-        mainPanel.setPosition((1920 - 600) / 2, (1080 - 650) / 2);
-        mainPanel.defaults().space(15);
+        mainPanel.setSize(600, 700);
+        mainPanel.setPosition((1920 - 600) / 2, (1080 - 700) / 2);
+        mainPanel.defaults().space(18);
         mainPanel.center();
         stage.addActor(mainPanel);
 
@@ -66,26 +69,23 @@ public class ProfileEditMenu extends ScreenAdapter {
         titleLabel.setColor(Color.BLACK);
         mainPanel.add(titleLabel).padBottom(30).row();
 
-        usernameField = new TextField("", skin);
-        usernameField.setMessageText("Username");
+        usernameField = createField("Username");
         if (currentUser != null) {
             usernameField.setText(currentUser.getUsername());
         }
-        mainPanel.add(usernameField).width(350).height(50).row();
+        mainPanel.add(usernameField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
 
-        nicknameField = new TextField("", skin);
-        nicknameField.setMessageText("Nickname");
+        nicknameField = createField("Nickname");
         if (currentUser != null) {
             nicknameField.setText(currentUser.getNickName());
         }
-        mainPanel.add(nicknameField).width(350).height(50).row();
+        mainPanel.add(nicknameField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
 
-        emailField = new TextField("", skin);
-        emailField.setMessageText("Email");
+        emailField = createField("Email");
         if (currentUser != null) {
             emailField.setText(currentUser.getEmail());
         }
-        mainPanel.add(emailField).width(350).height(50).row();
+        mainPanel.add(emailField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
 
         statusLabel = new Label("", skin);
         statusLabel.setFontScale(1.2f);
@@ -167,7 +167,7 @@ public class ProfileEditMenu extends ScreenAdapter {
         usernames.put(newUsername, currentUser.getId());
 
         saveManager.save(usernames, "users/username.json");
-        saveManager.save(currentUser, "users/" + currentUser.getId() + ".json");
+        currentUser.saveUser();
 
         statusLabel.setText("Profile updated successfully!");
         statusLabel.setColor(Color.GREEN);
@@ -191,6 +191,25 @@ public class ProfileEditMenu extends ScreenAdapter {
         statusLabel.setColor(Color.RED);
     }
 
+    private TextField createField(String placeholder) {
+        TextField f = new TextField("", skin);
+        f.setMessageText(placeholder);
+        useBigFont(f);
+        return f;
+    }
+
+    private void useBigFont(TextField field) {
+        Label.LabelStyle bigStyle = skin.get("big", Label.LabelStyle.class);
+        TextField.TextFieldStyle old = field.getStyle();
+        TextField.TextFieldStyle ts = new TextField.TextFieldStyle(
+                bigStyle.font, old.fontColor, old.cursor, old.selection,
+                old.background);
+        ts.messageFont = bigStyle.font;
+        ts.messageFontColor = old.messageFontColor;
+        ts.focusedBackground = old.focusedBackground;
+        field.setStyle(ts);
+    }
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -207,6 +226,5 @@ public class ProfileEditMenu extends ScreenAdapter {
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose();
     }
 }

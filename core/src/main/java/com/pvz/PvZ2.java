@@ -23,6 +23,7 @@ import com.pvz.models.user.User;
 import com.pvz.network.NetworkClient;
 import com.pvz.server.PvzServer;
 import com.pvz.utils.SaveManager;
+import com.pvz.view.LoginMenu;
 import com.pvz.view.MainMenu;
 import com.pvz.view.RegisterMenu;
 import pvz.libpvz.pam.PamPlayer;
@@ -57,23 +58,6 @@ public class PvZ2 extends Game {
         globalAssetManager.load("textures/ui/buttons_hud_back_normal.png", Texture.class);
         globalAssetManager.load("textures/ui/leaderboard.png", Texture.class);
 
-        String savedUsername = SaveManager.getInstance().load("session.json", String.class);
-        if (savedUsername != null) {
-            HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
-            if (usernames != null) {
-                String id = usernames.get(savedUsername);
-                if (id != null) {
-                    User user = SaveManager.getInstance().load("users/" + id + ".json", User.class);
-                    if (user != null) {
-                        user.refreshQuestLog();
-                        AppContext.getInstance().setCurrentUser(user);
-                        System.out.println("Welcome back, " + user.getNickName() + "!");
-                        return;
-                    }
-                }
-            }
-            SaveManager.getInstance().delete("session.json");
-        }
     }
     @Override
     public void create() {
@@ -102,11 +86,26 @@ public class PvZ2 extends Game {
         whitePixmap.dispose();
         applyWindowIcon();
         applyCustomCursor();
-        if (AppContext.getInstance().getCurrentUser()==null){
-            setScreen(new RegisterMenu(this));
-        } else {
-            setScreen(new MainMenu(this));
+
+        java.util.HashMap<String, String> savedCreds = SaveManager.getInstance().load("session.json", java.util.HashMap.class);
+        if (savedCreds != null) {
+            String savedUsername = savedCreds.get("username");
+            String savedPassword = savedCreds.get("password");
+            if (savedUsername != null && savedPassword != null) {
+                NetworkClient.getInstance().login(savedUsername, savedPassword, response -> {
+                    if (response.success) {
+                        User user = NetworkClient.getInstance().parsePayload(response, User.class);
+                        AppContext.getInstance().setCurrentUser(user);
+                        setScreen(new MainMenu(this));
+                    } else {
+                        SaveManager.getInstance().delete("session.json");
+                        setScreen(new LoginMenu(this));
+                    }
+                });
+                return;
+            }
         }
+        setScreen(new LoginMenu(this));
     }
 
     /**

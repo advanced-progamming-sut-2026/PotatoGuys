@@ -20,12 +20,14 @@ import com.pvz.controller.user.PatternManager;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.User;
 import com.pvz.utils.PasswordUtils;
-import com.pvz.utils.SaveManager;
 
 import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
 public class PasswordChangeMenu extends ScreenAdapter {
+    private static final float FIELD_WIDTH = 420f;
+    private static final float FIELD_HEIGHT = 70f;
+
     private final PvZ2 game;
     private Stage stage;
     private Skin skin;
@@ -53,9 +55,9 @@ public class PasswordChangeMenu extends ScreenAdapter {
         currentUser = AppContext.getInstance().getCurrentUser();
 
         BorderedTable mainPanel = new BorderedTable();
-        mainPanel.setSize(600, 650);
-        mainPanel.setPosition((1920 - 600) / 2, (1080 - 650) / 2);
-        mainPanel.defaults().space(15);
+        mainPanel.setSize(600, 700);
+        mainPanel.setPosition((1920 - 600) / 2, (1080 - 700) / 2);
+        mainPanel.defaults().space(18);
         mainPanel.center();
         stage.addActor(mainPanel);
 
@@ -64,23 +66,14 @@ public class PasswordChangeMenu extends ScreenAdapter {
         titleLabel.setColor(Color.BLACK);
         mainPanel.add(titleLabel).padBottom(30).row();
 
-        oldPasswordField = new TextField("", skin);
-        oldPasswordField.setMessageText("Current Password");
-        oldPasswordField.setPasswordMode(true);
-        oldPasswordField.setPasswordCharacter('*');
-        mainPanel.add(oldPasswordField).width(350).height(50).row();
+        oldPasswordField = createPasswordField("Current Password");
+        mainPanel.add(oldPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
 
-        newPasswordField = new TextField("", skin);
-        newPasswordField.setMessageText("New Password");
-        newPasswordField.setPasswordMode(true);
-        newPasswordField.setPasswordCharacter('*');
-        mainPanel.add(newPasswordField).width(350).height(50).row();
+        newPasswordField = createPasswordField("New Password");
+        mainPanel.add(newPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
 
-        confirmPasswordField = new TextField("", skin);
-        confirmPasswordField.setMessageText("Confirm New Password");
-        confirmPasswordField.setPasswordMode(true);
-        confirmPasswordField.setPasswordCharacter('*');
-        mainPanel.add(confirmPasswordField).width(350).height(50).row();
+        confirmPasswordField = createPasswordField("Confirm New Password");
+        mainPanel.add(confirmPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
 
         statusLabel = new Label("", skin);
         statusLabel.setFontScale(1.2f);
@@ -137,7 +130,7 @@ public class PasswordChangeMenu extends ScreenAdapter {
         }
 
         currentUser.setPasswordHash(PasswordUtils.hashPassword(newPassword));
-        SaveManager.getInstance().save(currentUser, "users/" + currentUser.getId() + ".json");
+        currentUser.saveUser();
 
         statusLabel.setText("Password changed successfully!");
         statusLabel.setColor(Color.GREEN);
@@ -149,6 +142,27 @@ public class PasswordChangeMenu extends ScreenAdapter {
     private void setError(String message) {
         statusLabel.setText(message);
         statusLabel.setColor(Color.RED);
+    }
+
+    private TextField createPasswordField(String placeholder) {
+        TextField f = new TextField("", skin);
+        f.setMessageText(placeholder);
+        f.setPasswordMode(true);
+        f.setPasswordCharacter('*');
+        useBigFont(f);
+        return f;
+    }
+
+    private void useBigFont(TextField field) {
+        Label.LabelStyle bigStyle = skin.get("big", Label.LabelStyle.class);
+        TextField.TextFieldStyle old = field.getStyle();
+        TextField.TextFieldStyle ts = new TextField.TextFieldStyle(
+                bigStyle.font, old.fontColor, old.cursor, old.selection,
+                old.background);
+        ts.messageFont = bigStyle.font;
+        ts.messageFontColor = old.messageFontColor;
+        ts.focusedBackground = old.focusedBackground;
+        field.setStyle(ts);
     }
 
     @Override
@@ -167,6 +181,5 @@ public class PasswordChangeMenu extends ScreenAdapter {
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose();
     }
 }

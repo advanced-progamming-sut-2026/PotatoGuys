@@ -346,7 +346,7 @@ public class ProfileMenu extends ScreenAdapter {
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
                     currentUser.setProfilePicture(path);
-                    SaveManager.getInstance().save(currentUser, "users/" + currentUser.getId() + ".json");
+                    currentUser.saveUser();
                     updateAvatarImage(path);
                     avatarPicker.setVisible(false);
                 }

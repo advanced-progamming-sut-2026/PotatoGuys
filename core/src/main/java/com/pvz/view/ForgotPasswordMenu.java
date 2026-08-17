@@ -202,7 +202,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
                 }
 
                 currentUser.setPasswordHash(PasswordUtils.hashPassword(newPassword));
-                SaveManager.getInstance().save(currentUser, "users/" + currentUser.getId() + ".json");
+                currentUser.saveUser();
 
                 resetStatus.setText("Password reset successfully! Please login.");
                 Gdx.app.postRunnable(() -> game.setScreen(new LoginMenu(game)));

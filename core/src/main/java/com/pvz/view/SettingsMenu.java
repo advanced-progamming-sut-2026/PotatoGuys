@@ -339,7 +339,7 @@ public class SettingsMenu extends ScreenAdapter {
             return;
         }
         user.setSetting(setting);
-        SaveManager.getInstance().save(user, "users/" + user.getId() + ".json");
+        user.saveUser();
     }
 
     private Slider.SliderStyle safeSliderStyle() {

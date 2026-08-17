@@ -1,13 +1,13 @@
 {
   "id": "9d6e164e-58c5-4061-ae71-10c49b3c4727",
-  "username": "Mahdi",
+  "username": "Mahdi68",
   "passwordHash": "c3ef54ab870f466f6cd24c7044721f94acebf0586743fe043c7fa4b17086e84a",
   "nickName": "mahdirrz",
   "email": "mahdi@gmail.com",
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "teh",
-  "profilePicture": null,
+  "profilePicture": "textures/avatars/avatar_franky.png",
   "profile": {
     "gamePlayed": 0,
     "coins": 3250,
@@ -98,59 +98,59 @@
       "messages": [
         {
           "message": "New Zombie Encountered: GARGANTUAR!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: NEWSPAPER!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: MUMMY!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: MUMMY_CONE!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: MUMMY_BUCKET!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: MUMMY_BRICK!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: RA!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: EXPLORER!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: TOMB_RAISER!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: EGYPT_IMP!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: ICE_AGE!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: ICE_AGE_CONE!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: ICE_AGE_BUCKET!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: HUNTER!",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -187,15 +187,15 @@
     "dailyOfferPurchased": false
   },
   "setting": {
-    "difficulty": 3,
-    "gameSpeed": 2,
+    "difficulty": 1,
+    "gameSpeed": 1,
     "showGrid": false,
-    "debugMode": true,
+    "debugMode": false,
     "brightness": 1.0,
-    "musicVolume": 0.7,
-    "sfxVolume": 0.7,
-    "musicMuted": false,
-    "sfxMuted": false
+    "musicVolume": 0.28,
+    "sfxVolume": 0.31,
+    "musicMuted": true,
+    "sfxMuted": true
   },
   "score": {
     "lastSeason": 0,
@@ -217,13 +217,23 @@
         "x": 2,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "SnowPea",
+          "plantedTime": "2026-08-17T21:33:48.147810700",
+          "growthHours": 8
+        }
       },
       {
         "x": 3,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-17T21:33:50.500839600",
+          "growthHours": 2
+        }
       },
       {
         "x": 4,
@@ -1199,7 +1209,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786977713320
+    "lastDailyReset": 1786991664974
   },
-  "questLogRefreshed": false
+  "questLogRefreshed": true
 }

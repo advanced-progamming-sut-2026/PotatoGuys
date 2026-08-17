@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.Message;
 import com.pvz.models.user.User;
-import com.pvz.utils.SaveManager;
 import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
@@ -190,7 +189,7 @@ public class NewsModal extends Table {
                 addNewsRow(msg, true);
                 msg.setUnread(false);
             }
-            SaveManager.getInstance().save(user, "users/" + user.getId() + ".json");
+            user.saveUser();
         } else {
             for (Message msg : messages) {
                 addNewsRow(msg, msg.isUnread());

@@ -1,20 +1,22 @@
 package com.pvz.view;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import java.util.HashMap;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
@@ -25,26 +27,32 @@ import com.pvz.enums.SecurityQuestions;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.seasons.Season;
 import com.pvz.models.user.Gender;
-import com.pvz.models.user.Message;
 import com.pvz.models.user.User;
 import com.pvz.network.NetworkClient;
 import com.pvz.utils.PasswordUtils;
-import com.pvz.utils.SaveManager;
+import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
-import java.util.UUID;
-
 public class RegisterMenu extends ScreenAdapter {
+
+    private static final float FIELD_WIDTH = 420f;
+    private static final float FIELD_HEIGHT = 70f;
+    private static final float PAIR_GAP = 20f;
+    private static final Color LABEL_COLOR = new Color(0xD8E6FFFF);
+    private static final Color ERROR_COLOR = new Color(0xFF6666FF);
+    private static final Color SUCCESS_COLOR = new Color(0x66FF66FF);
+
     private final PvZ2 game;
     private Stage stage;
     private Skin skin;
+
     private TextField usernameField;
     private TextField passwordField;
     private TextField confirmPasswordField;
     private TextField nicknameField;
     private TextField emailField;
-    private TextField genderField;
-    private TextField questionField;
+    private SelectBox<String> genderSelect;
+    private SelectBox<String> questionSelect;
     private TextField answerField;
     private TextField confirmAnswerField;
     private Label statusLabel;
@@ -60,65 +68,95 @@ public class RegisterMenu extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
         skin = PvzSkin.get();
 
-        Texture bgTexture = game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
-        Image bgImage = new Image(bgTexture);
+        // ── Background ────────────────────────────────────────────────────
+        Drawable bgDrawable = PlantData.regionDrawableOr(
+                "IMAGE_TITLEBACKGROUNDS_BACKDROP_I",
+                new TextureRegionDrawable(MenuUiKit.solidTexture(Color.valueOf("1A1A2E"))));
+        Image bgImage = new Image(bgDrawable);
         bgImage.setFillParent(true);
         stage.addActor(bgImage);
 
-        Table table = new Table();
-        table.setFillParent(true);
-        table.defaults().space(10);
-        table.center();
-        stage.addActor(table);
+        // ── Root layout ───────────────────────────────────────────────────
+        Table root = new Table();
+        root.setFillParent(true);
+        root.center();
+        stage.addActor(root);
 
-        Label titleLabel = new Label("Register", skin);
-        titleLabel.setFontScale(2f);
-        table.add(titleLabel).padBottom(90).row();
+        // ── Title ─────────────────────────────────────────────────────────
+        Label titleLabel = new Label("Create Account", skin, "big");
+        titleLabel.setColor(Color.WHITE);
+        root.add(titleLabel).padBottom(40f).row();
 
+        // ── Form panel ─────────────────────────────────────────────────────
+        BorderedTable panel = new BorderedTable();
+        panel.setColor(Color.valueOf("8B4513"));
+        panel.pad(20f, 36f, 20f, 36f);
 
-        usernameField = new TextField("", skin);
-        usernameField.setMessageText("Username");
-        table.add(usernameField).width(300).height(45).row();
+        Table form = new Table();
+        form.defaults().height(FIELD_HEIGHT).spaceBottom(10f);
 
-        passwordField = new TextField("", skin);
-        passwordField.setMessageText("Password");
-        passwordField.setPasswordMode(true);
-        passwordField.setPasswordCharacter('*');
-        table.add(passwordField).width(300).height(45).row();
+        // ── Account section ───────────────────────────────────────────────
+        Label sectionAccount = new Label("Account", skin, "big");
+        sectionAccount.setColor(new Color(0xFFD75AFF));
+        form.add(sectionAccount).colspan(4).left().padBottom(6f).row();
 
-        confirmPasswordField = new TextField("", skin);
-        confirmPasswordField.setMessageText("Confirm Password");
-        confirmPasswordField.setPasswordMode(true);
-        confirmPasswordField.setPasswordCharacter('*');
-        table.add(confirmPasswordField).width(300).height(45).row();
+        usernameField = createField("Username");
+        form.add(label("Username")).right().padRight(8f);
+        form.add(usernameField).width(FIELD_WIDTH).left().padRight(PAIR_GAP);
 
-        nicknameField = new TextField("", skin);
-        nicknameField.setMessageText("Nickname");
-        table.add(nicknameField).width(300).height(45).row();
+        nicknameField = createField("Nickname");
+        form.add(label("Nickname")).right().padRight(8f);
+        form.add(nicknameField).width(FIELD_WIDTH).left().row();
 
-        emailField = new TextField("", skin);
-        emailField.setMessageText("Email");
-        table.add(emailField).width(300).height(45).row();
+        passwordField = createPasswordField("Password");
+        form.add(label("Password")).right().padRight(8f);
+        form.add(passwordField).width(FIELD_WIDTH).left().padRight(PAIR_GAP);
 
-        genderField = new TextField("", skin);
-        genderField.setMessageText("Gender (Male/Female)");
-        table.add(genderField).width(300).height(45).row();
+        confirmPasswordField = createPasswordField("Confirm Password");
+        form.add(label("Confirm")).right().padRight(8f);
+        form.add(confirmPasswordField).width(FIELD_WIDTH).left().row();
 
-        questionField = new TextField("", skin);
-        questionField.setMessageText("Security Question # (1-" + SecurityQuestions.QUESTIONS.size() + ")");
-        table.add(questionField).width(300).height(45).row();
+        // ── Profile section ───────────────────────────────────────────────
+        Label sectionProfile = new Label("Profile", skin, "big");
+        sectionProfile.setColor(new Color(0xFFD75AFF));
+        form.add(sectionProfile).colspan(4).left().padTop(10f).padBottom(6f).row();
 
-        answerField = new TextField("", skin);
-        answerField.setMessageText("Security Answer");
-        table.add(answerField).width(300).height(45).row();
+        emailField = createField("Email");
+        form.add(label("Email")).right().padRight(8f);
+        form.add(emailField).width(FIELD_WIDTH).left().padRight(PAIR_GAP);
 
-        confirmAnswerField = new TextField("", skin);
-        confirmAnswerField.setMessageText("Confirm Security Answer");
-        table.add(confirmAnswerField).width(300).height(45).row();
+        genderSelect = createSelectBox("Male", "Female");
+        form.add(label("Gender")).right().padRight(8f);
+        form.add(genderSelect).width(FIELD_WIDTH).left().row();
 
-        statusLabel = new Label("", skin);
-        table.add(statusLabel).padTop(10).row();
+        // ── Security section ──────────────────────────────────────────────
+        Label sectionSecurity = new Label("Security", skin, "big");
+        sectionSecurity.setColor(new Color(0xFFD75AFF));
+        form.add(sectionSecurity).colspan(4).left().padTop(10f).padBottom(6f).row();
 
+        String[] questions = new String[SecurityQuestions.QUESTIONS.size()];
+        for (int i = 0; i < questions.length; i++) {
+            questions[i] = SecurityQuestions.QUESTIONS.get(i);
+        }
+        questionSelect = createSelectBox(questions);
+        form.add(label("Question")).right().padRight(8f);
+        form.add(questionSelect).width(FIELD_WIDTH + PAIR_GAP + 200f).colspan(2).left().row();
+
+        answerField = createField("Answer");
+        form.add(label("Answer")).right().padRight(8f);
+        form.add(answerField).width(FIELD_WIDTH).left().padRight(PAIR_GAP);
+
+        confirmAnswerField = createField("Confirm Answer");
+        form.add(label("Confirm")).right().padRight(8f);
+        form.add(confirmAnswerField).width(FIELD_WIDTH).left().row();
+
+        // ── Status ────────────────────────────────────────────────────────
+        statusLabel = new Label("", skin, "big");
+        statusLabel.setWrap(true);
+        statusLabel.setAlignment(Align.center);
+        form.add(statusLabel).colspan(4).width(FIELD_WIDTH * 2 + PAIR_GAP).padTop(8f).row();
+
+        // ── Buttons ───────────────────────────────────────────────────────
         TextButton registerBtn = new TextButton("Register", skin, "purple");
         registerBtn.addListener(new ClickListener() {
             @Override
@@ -127,7 +165,7 @@ public class RegisterMenu extends ScreenAdapter {
                 handleRegister();
             }
         });
-        table.add(registerBtn).width(200).height(60).row();
+        form.add(registerBtn).colspan(4).width(260f).height(58f).padTop(6f).row();
 
         TextButton loginBtn = new TextButton("Already have an account? Login", skin, "brown");
         loginBtn.addListener(new ClickListener() {
@@ -137,9 +175,71 @@ public class RegisterMenu extends ScreenAdapter {
                 game.setScreen(new LoginMenu(game));
             }
         });
-        table.add(loginBtn).width(300).height(60);
-        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,AudioManager.getInstance().getUserMusicVolume());
+        form.add(loginBtn).colspan(4).width(320f).height(50f).padTop(2f).row();
+
+        panel.add(form);
+        root.add(panel).row();
+
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU, true,
+                AudioManager.getInstance().getUserMusicVolume());
     }
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    private Label label(String text) {
+        Label l = new Label(text, skin, "big");
+        l.setColor(LABEL_COLOR);
+        return l;
+    }
+
+    private TextField createField(String placeholder) {
+        TextField f = new TextField("", skin);
+        f.setMessageText(placeholder);
+        useBigFont(f);
+        return f;
+    }
+
+    private TextField createPasswordField(String placeholder) {
+        TextField f = new TextField("", skin);
+        f.setMessageText(placeholder);
+        f.setPasswordMode(true);
+        f.setPasswordCharacter('*');
+        useBigFont(f);
+        return f;
+    }
+
+    @SafeVarargs
+    private final SelectBox<String> createSelectBox(String... items) {
+        SelectBox<String> sb = new SelectBox<>(skin);
+        Label.LabelStyle bigStyle = skin.get("big", Label.LabelStyle.class);
+        SelectBox.SelectBoxStyle old = sb.getStyle();
+        SelectBox.SelectBoxStyle ts = new SelectBox.SelectBoxStyle(
+                bigStyle.font, old.fontColor, old.background,
+                old.scrollStyle, old.listStyle);
+        ts.overFontColor = old.overFontColor;
+        sb.setStyle(ts);
+        sb.setItems(items);
+        return sb;
+    }
+
+    private void useBigFont(TextField field) {
+        Label.LabelStyle bigStyle = skin.get("big", Label.LabelStyle.class);
+        TextField.TextFieldStyle old = field.getStyle();
+        TextField.TextFieldStyle ts = new TextField.TextFieldStyle(
+                bigStyle.font, old.fontColor, old.cursor, old.selection,
+                old.background);
+        ts.messageFont = bigStyle.font;
+        ts.messageFontColor = old.messageFontColor;
+        ts.focusedBackground = old.focusedBackground;
+        field.setStyle(ts);
+    }
+
+    private void showStatus(String msg, Color color) {
+        statusLabel.setText(msg);
+        statusLabel.setColor(color);
+    }
+
+    // ── Register logic ───────────────────────────────────────────────────────
 
     private void handleRegister() {
         String username = usernameField.getText().trim();
@@ -147,71 +247,59 @@ public class RegisterMenu extends ScreenAdapter {
         String passwordConfirm = confirmPasswordField.getText().trim();
         String nickname = nicknameField.getText().trim();
         String email = emailField.getText().trim();
-        String genderString = genderField.getText().trim();
-        String questionText = questionField.getText().trim();
+        int genderIndex = genderSelect.getSelectedIndex();
+        int questionIndex = questionSelect.getSelectedIndex();
         String answer = answerField.getText().trim();
         String confirmAnswer = confirmAnswerField.getText().trim();
 
         String usernameValidation = PatternManager.validateUsername(username);
         if (usernameValidation != null) {
-            statusLabel.setText(usernameValidation);
+            showStatus(usernameValidation, ERROR_COLOR);
             return;
         }
 
         String passwordValidation = PatternManager.validatePassword(password, passwordConfirm);
         if (passwordValidation != null) {
-            statusLabel.setText(passwordValidation);
+            showStatus(passwordValidation, ERROR_COLOR);
             return;
         }
 
         String nicknameValidation = PatternManager.validateNickname(nickname);
         if (nicknameValidation != null) {
-            statusLabel.setText(nicknameValidation);
+            showStatus(nicknameValidation, ERROR_COLOR);
             return;
         }
 
         String emailValidation = PatternManager.validateEmail(email);
         if (emailValidation != null) {
-            statusLabel.setText(emailValidation);
+            showStatus(emailValidation, ERROR_COLOR);
+            return;
+        }
+
+        Gender gender = Gender.getGender(genderSelect.getSelected().toLowerCase());
+        if (gender == null) {
+            showStatus("Please select a valid gender.", ERROR_COLOR);
             return;
         }
 
         if (!answer.equals(confirmAnswer)) {
-            statusLabel.setText("Security answers don't match!");
+            showStatus("Security answers don't match!", ERROR_COLOR);
             return;
         }
 
         String passwordHash = PasswordUtils.hashPassword(password);
-        Gender gender = Gender.getGender(genderString.toLowerCase());
-        if (gender == null) {
-            statusLabel.setText("Invalid gender. Use Male or Female.");
-            return;
-        }
-
-        int questionIndex;
-        try {
-            questionIndex = Integer.parseInt(questionText);
-        } catch (NumberFormatException e) {
-            statusLabel.setText("Invalid question number.");
-            return;
-        }
-        if (questionIndex < 1 || questionIndex > SecurityQuestions.QUESTIONS.size()) {
-            statusLabel.setText("Question number must be between 1 and " + SecurityQuestions.QUESTIONS.size());
-            return;
-        }
-
         User user = new User(username, passwordHash, nickname, email, gender);
-        user.setSecurityQuestion(String.valueOf(questionIndex));
+        user.setSecurityQuestion(String.valueOf(questionIndex + 1));
         user.setSecurityAnswer(answer);
         grantStarterProgress(user);
 
-        statusLabel.setText("Connecting...");
+        showStatus("Connecting...", new Color(0xCCCCCCFF));
         NetworkClient.getInstance().register(user, response -> {
             if (!response.success) {
-                statusLabel.setText(response.errorMessage);
+                showStatus(response.errorMessage, ERROR_COLOR);
                 return;
             }
-            statusLabel.setText("Registration successful! Please login.");
+            showStatus("Registration successful! Please login.", SUCCESS_COLOR);
             game.setScreen(new LoginMenu(game));
         });
     }
@@ -254,6 +342,5 @@ public class RegisterMenu extends ScreenAdapter {
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose();
     }
 }
