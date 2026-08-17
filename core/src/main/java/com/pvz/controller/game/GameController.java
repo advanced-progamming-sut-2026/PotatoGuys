@@ -53,6 +53,8 @@ import com.pvz.view.GameModesMenu;
 import com.pvz.view.TravelLogMenu;
 import com.pvz.view.game.GameScreen;
 import com.pvz.view.game.GameUiModal;
+import com.pvz.view.game.GameOverPopup;
+import com.pvz.view.game.GameWinPopup;
 import com.pvz.view.game.PauseMenuPopup;
 import com.pvz.view.game.PlantSelectModal;
 import com.pvz.view.PamActor;
@@ -424,39 +426,34 @@ public class GameController {
             won = ctx.getZombies().isEmpty();
         }
 
-        Table overlay = new Table();
-        overlay.setFillParent(true);
-        overlay.setTouchable(Touchable.enabled);
-        overlay.setBackground(PvzSkin.get().newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.7f)));
-
-        Table popup = new Table();
-        popup.setBackground(PvzSkin.get().newDrawable("white_pixel", new Color(0.15f, 0.15f, 0.2f, 0.95f)));
-        popup.pad(40);
-
-        Label msgLabel = new Label(won ? "VICTORY!" : "GAME OVER", PvzSkin.get(), "big");
-        msgLabel.setColor(won ? Color.GREEN : Color.RED);
-        msgLabel.setFontScale(2f);
-        popup.add(msgLabel).padBottom(30).row();
-
-        Label detailLabel = new Label(won ? "You ate all the brains!" : "No sun and no zombies left.", PvzSkin.get(), "big");
-        detailLabel.setColor(Color.WHITE);
-        detailLabel.setFontScale(1.2f);
-        popup.add(detailLabel).padBottom(40).row();
-
-        TextButton exitBtn = new TextButton("Back to Travel Log", PvzSkin.get(), "purple");
-        exitBtn.getLabel().setFontScale(1.2f);
-        exitBtn.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.postRunnable(() -> PvZ2.instance.setScreen(new TravelLogMenu(PvZ2.instance)));
+        Runnable exitAction = () -> Gdx.app.postRunnable(() -> {
+            if (ctx.getMode() instanceof IZombieMode) {
+                PvZ2.instance.setScreen(new TravelLogMenu(PvZ2.instance));
+            } else {
+                PvZ2.instance.setScreen(new GameModesMenu(PvZ2.instance));
             }
         });
-        popup.add(exitBtn).width(300).height(65).row();
 
-        overlay.add(popup).center();
-        pauseOverlay = overlay;
-        stage.addActor(pauseOverlay);
-        pauseOverlay.toFront();
+        Table popup;
+        if (won) {
+            String title = "Level Complete!";
+            String msg = "You defeated the zombies!";
+            if (ctx.getMode() instanceof IZombieMode) {
+                title = "I, ZOMBIE COMPLETE!";
+                msg = "All five brains were eaten!";
+            }
+            Runnable nextAction = () -> Gdx.app.postRunnable(() ->
+                    PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber + 1)));
+            popup = new GameWinPopup(title, msg, "EXIT TO MAP", exitAction, "NEXT LEVEL", nextAction);
+        } else {
+            String title = "THE ZOMBIES\nATE YOUR\nBRAINS!";
+            Runnable retryAction = () -> Gdx.app.postRunnable(() ->
+                    PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber)));
+            popup = new GameOverPopup(title, "EXIT TO MAP", exitAction, "RETRY", retryAction);
+        }
+
+        stage.addActor(popup);
+        popup.toFront();
     }
 
     private void saveAndExit() {

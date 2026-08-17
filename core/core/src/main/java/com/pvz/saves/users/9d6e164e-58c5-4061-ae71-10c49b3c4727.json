@@ -90,7 +90,15 @@
         "ICE_AGE",
         "ICE_AGE_CONE",
         "ICE_AGE_BUCKET",
-        "HUNTER"
+        "HUNTER",
+        "TROGLOBITE",
+        "DODO",
+        "ICE_AGE_IMP",
+        "BEACH",
+        "BEACH_CONE",
+        "BEACH_BUCKET",
+        "SNORKEL",
+        "FISHERMAN"
       ],
       "seedPackets": {}
     },
@@ -151,6 +159,38 @@
         {
           "message": "New Zombie Encountered: HUNTER!",
           "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: TROGLOBITE!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: DODO!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: ICE_AGE_IMP!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: BEACH!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: BEACH_CONE!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: BEACH_BUCKET!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: SNORKEL!",
+          "unread": true
+        },
+        {
+          "message": "New Zombie Encountered: FISHERMAN!",
+          "unread": true
         }
       ]
     },
@@ -250,7 +290,7 @@
       {
         "x": 2,
         "y": 2,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -1209,7 +1249,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1787006988403
+    "lastDailyReset": 1787007689619
   },
   "questLogRefreshed": true
 }
