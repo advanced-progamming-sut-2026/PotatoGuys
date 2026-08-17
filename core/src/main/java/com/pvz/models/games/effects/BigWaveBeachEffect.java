@@ -1,5 +1,6 @@
 package com.pvz.models.games.effects;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -104,7 +105,7 @@ public class BigWaveBeachEffect implements ChapterEffect {
 
     private void spawnLowTideZombie(GameContext ctx, int col, int lane, Wave wave) {
         ZombieType type = ZombieType.SNORKEL;
-        Zombie z = new ZombieFactory().create(type.getAlias(), col, lane, ctx, wave.getWaveNumber(), 5);
+        Zombie z = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(col), lane, ctx, wave.getWaveNumber(), 5);
         if (z != null) {
             ctx.spawnZombie(z);
             ctx.log("A Snorkel Zombie emerged from the low tide at (" + col + "," + lane + ")!");
