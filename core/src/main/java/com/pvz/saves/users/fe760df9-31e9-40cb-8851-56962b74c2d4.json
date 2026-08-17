@@ -10,7 +10,7 @@
   "profilePicture": "textures/avatars/avatar_luffy.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 12500,
+    "coins": 14050,
     "diamonds": 257,
     "plantFood": 1,
     "collection": {
@@ -25,7 +25,7 @@
           "Type": "PotatoMine",
           "level": 1,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "PrimalPotatoMine",
@@ -340,8 +340,8 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": "Enlightenmint",
-    "dailyOfferDate": "2026-08-14",
+    "dailyOfferPlantType": "Puffshroom",
+    "dailyOfferDate": "2026-08-17",
     "dailyOfferPurchased": false
   },
   "setting": {
@@ -370,10 +370,10 @@
         "y": 1,
         "locked": false,
         "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-13T11:01:38.191169",
-          "growthHours": 2
+          "kind": "unlocked",
+          "plantType": "TwinSunflower",
+          "plantedTime": "2026-08-17T05:46:19.231841101",
+          "growthHours": 8
         }
       },
       {
@@ -383,7 +383,7 @@
         "greenHousePlant": {
           "kind": "mariGold",
           "plantType": null,
-          "plantedTime": "2026-08-13T09:02:54.477890",
+          "plantedTime": "2026-08-17T05:46:22.264451846",
           "growthHours": 2
         }
       },
@@ -397,12 +397,7 @@
         "x": 4,
         "y": 1,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-14T03:16:30.871656300",
-          "growthHours": 2
-        }
+        "greenHousePlant": null
       },
       {
         "x": 5,
@@ -420,23 +415,13 @@
         "x": 2,
         "y": 2,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "Sunflower",
-          "plantedTime": "2026-08-14T03:16:39.302384500",
-          "growthHours": 8
-        }
+        "greenHousePlant": null
       },
       {
         "x": 3,
         "y": 2,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "PotatoMine",
-          "plantedTime": "2026-08-14T03:16:33.536262700",
-          "growthHours": 8
-        }
+        "greenHousePlant": null
       },
       {
         "x": 4,
@@ -466,12 +451,7 @@
         "x": 3,
         "y": 3,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "Peashooter",
-          "plantedTime": "2026-08-14T03:16:35.866992100",
-          "growthHours": 8
-        }
+        "greenHousePlant": null
       },
       {
         "x": 4,
@@ -1435,7 +1415,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786917408257
+    "lastDailyReset": 1786945630845
   },
   "questLogRefreshed": true
 }

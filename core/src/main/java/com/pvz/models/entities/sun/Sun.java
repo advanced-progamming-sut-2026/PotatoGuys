@@ -17,6 +17,7 @@ import com.pvz.view.game.GameScreen;
 public class Sun extends Entity {
     private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
     private static final String SUN_CLIP = "animation";
+    private static final String RADIOACTIVE_SUN_PAM="768/FULL/EFFECTS/SUN_BOMB/SUN_BOMB.PAM";
 
     private static final float DEFAULT_LIFESPAN_SECONDS = 50f;
     private static final float DEFAULT_FALL_SPEED = 70f;
@@ -62,8 +63,13 @@ public class Sun extends Entity {
 
     @Override
     public FrameConfig draw(){
-        PvZ2.pamPlayer.draw(PvZ2.batch, SUN_PAM, SUN_CLIP, stateTime, position.x, position.y,0.7f,0.7f, true);
-        return null;
+        if (type==SunType.NORMAL){
+            return new FrameConfig(SUN_PAM,SUN_CLIP,stateTime, position, new Vector2(0.65f, 0.65f), null, true);
+        } else if (type==SunType.SPECIAL){
+            return new FrameConfig(SUN_PAM,SUN_CLIP,stateTime, position, new Vector2(0.75f, 0.75f), null, true);
+        } else {
+            return new FrameConfig(RADIOACTIVE_SUN_PAM,SUN_CLIP,stateTime, position, new Vector2(0.75f, 0.75f), null, true);
+        }
     }
 
     @Override
