@@ -17,7 +17,6 @@ import com.badlogic.gdx.utils.Scaling;
 import com.pvz.models.entities.zombies.ZombieType;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
 import com.pvz.models.entities.zombies.data.ZombieRegistry;
-import com.pvz.models.entities.zombies.data.ZombieStatEntry;
 
 import pvz.skin.PvzSkin;
 
@@ -49,14 +48,6 @@ public final class ZombieDetailsTable extends Table {
     private static final String BACK_PRESSED = "IMAGE_UI_ALMANAC_BUTTONS_HUD_BACK_SELECTED";
     private static final String TOUGHNESS_ICON = "IMAGE_UI_ALMANAC_ZOMBIES_ZOMBIETOUGHNESS_ICON";
     private static final String SPEED_ICON = "IMAGE_UI_ALMANAC_ZOMBIES_ZOMBIESPEED_ICON";
-
-    private static final String[] TOUGHNESS_LABELS = {
-        "", "Fragile", "Low", "Below Average", "Basic",
-        "Protected", "Hardy", "Very High", "Ultimate"
-    };
-    private static final String[] SPEED_LABELS = {
-        "Stationary", "Very Slow", "Slow", "Basic", "Fast", "Very Fast"
-    };
 
     public ZombieDetailsTable(ZombieCard.ViewData data, Runnable onBack) {
         if (data == null) throw new IllegalArgumentException("data cannot be null");
@@ -137,8 +128,10 @@ public final class ZombieDetailsTable extends Table {
 
         Table stats = new Table();
         stats.top().left();
-        stats.add(statColumn(TOUGHNESS_ICON, "TOUGHNESS", tierLabel(sheet, true))).width(230f).left();
-        stats.add(statColumn(SPEED_ICON, "SPEED", tierLabel(sheet, false))).width(230f).left().row();
+        stats.add(statColumn(TOUGHNESS_ICON, "TOUGHNESS",
+                Math.round(sheet.getHitPoints()) + " HP")).width(230f).left();
+        stats.add(statColumn(SPEED_ICON, "ATTACK",
+                Math.round(sheet.getEatDps()) + "/s")).width(230f).left().row();
         right.add(stats).growX().left().row();
 
         if (!sheet.getArmorAliases().isEmpty()) {
@@ -146,11 +139,24 @@ public final class ZombieDetailsTable extends Table {
                 .width(500f).left().padTop(18f).row();
         }
 
-        String statsText = "Health: " + Math.round(sheet.getHitPoints())
-            + "   Attack: " + Math.round(sheet.getEatDps()) + "/s";
-        right.add(textStat("Stats", statsText)).width(500f).left().padTop(18f).row();
+        String[] descs = ZombieRegistry.getInstance().getDescriptions(sheet.getAlias());
+        if (descs != null) {
+            if (descs[0] != null && !descs[0].isEmpty()) {
+                right.add(descriptionLabel(descs[0], Color.WHITE)).width(480f).left().padTop(18f).row();
+            }
+            if (descs[1] != null && !descs[1].isEmpty()) {
+                right.add(descriptionLabel(descs[1], Color.valueOf("FFD75A"))).width(480f).left().padTop(6f).row();
+            }
+        }
 
         return right;
+    }
+
+    private Label descriptionLabel(String text, Color color) {
+        Label label = new Label(text, PvzSkin.get().get("big", Label.LabelStyle.class));
+        label.setColor(color);
+        label.setWrap(true);
+        return label;
     }
 
     private Table statColumn(String iconId, String title, String value) {
@@ -185,20 +191,6 @@ public final class ZombieDetailsTable extends Table {
         row.add(titleLabel).top().left().padRight(6f);
         row.add(valueLabel).width(400f).top().left();
         return row;
-    }
-
-    private String tierLabel(ZombiePropertySheet sheet, boolean toughness) {
-        for (ZombieStatEntry entry : sheet.getZombieStats()) {
-            if (toughness && entry.isToughness()) {
-                int tier = entry.getTier();
-                return (tier >= 1 && tier < TOUGHNESS_LABELS.length) ? TOUGHNESS_LABELS[tier] : "-";
-            }
-            if (!toughness && entry.isSpeed()) {
-                int tier = entry.getTier();
-                return (tier >= 0 && tier < SPEED_LABELS.length) ? SPEED_LABELS[tier] : "-";
-            }
-        }
-        return "-";
     }
 
     private String displayName(ZombieType type) {

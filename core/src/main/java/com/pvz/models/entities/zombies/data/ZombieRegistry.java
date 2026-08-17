@@ -1,9 +1,16 @@
 package com.pvz.models.entities.zombies.data;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+import com.pvz.models.Constants;
 
 import com.pvz.models.entities.zombies.config.ScaledPropConfig;
 import com.pvz.models.entities.zombies.config.ZombieArmorConfig;
@@ -30,9 +37,11 @@ public final class ZombieRegistry {
 
     private final Map<String, ZombiePropertySheet> zombieSheets = new HashMap<>();
     private final Map<String, ArmorPropertySheet>  armorSheets  = new HashMap<>();
+    private final Map<String, String[]> descriptions = new HashMap<>();
 
     private ZombieRegistry() {
         load();
+        loadDescriptions();
     }
 
     public static ZombieRegistry getInstance() { return INSTANCE; }
@@ -44,6 +53,9 @@ public final class ZombieRegistry {
     public ArmorPropertySheet getArmorSheet(String alias) { return armorSheets.get(alias); }
 
     public int size() { return zombieSheets.size(); }
+
+    /** @return {overallDisc, funDisc} or null if no descriptions for this alias */
+    public String[] getDescriptions(String alias) { return descriptions.get(alias); }
 
     // ── Loading (from zombie_actions.json only) ───────────────────────────────
 
@@ -96,6 +108,8 @@ public final class ZombieRegistry {
                 .nearAttackRange(cfg.nearAttackRange)
                 .numberOfIceblocksToSpawnWith(cfg.numberOfIceblocksToSpawnWith)
                 .imp(cfg.imp)
+                .overallDisc(cfg.overallDisc)
+                .funDisc(cfg.funDisc)
                 .animationConfig(cfg.animationConfig)
                 .walkConfig(cfg.walkConfig)
                 .eatConfig(cfg.eatConfig)
@@ -116,5 +130,21 @@ public final class ZombieRegistry {
             props.add(new ScaledProp(dto.key, dto.formula, dto.arg1, dto.arg2));
         }
         return props;
+    }
+
+    private void loadDescriptions() {
+        String path = Constants.ZOMBIE_ACTIONS_PATH.replace("zombie_actions.json", "zombie_descriptions.json");
+        try {
+            String content = Files.readString(Paths.get(path));
+            JsonValue root = new JsonReader().parse(content);
+            for (JsonValue entry = root.child; entry != null; entry = entry.next) {
+                String alias = entry.name;
+                String overall = entry.has("overallDisc") ? entry.getString("overallDisc") : "";
+                String fun = entry.has("funDisc") ? entry.getString("funDisc") : "";
+                descriptions.put(alias, new String[]{overall, fun});
+            }
+        } catch (IOException e) {
+            System.err.println("[ZombieRegistry] Could not load zombie_descriptions.json: " + e.getMessage());
+        }
     }
 }

@@ -20,3 +20,8 @@ dependencies {
 jar {
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+task runServer(type: JavaExec) {
+  classpath = sourceSets.main.runtimeClasspath
+  mainClass = 'com.pvz.server.PvzServer'
+}

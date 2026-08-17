@@ -68,4 +68,6 @@ public class ZombieJsonConfig {
     public ZombieSkillConfig skillConfig;
 
     public String description;
+    public String overallDisc;
+    public String funDisc;
 }
