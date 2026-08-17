@@ -10,8 +10,8 @@
   "profilePicture": "textures/avatars/avatar_luffy.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 400,
-    "diamonds": 162,
+    "coins": 1400,
+    "diamonds": 163,
     "plantFood": 1,
     "collection": {
       "unlockedPlants": [
@@ -387,9 +387,9 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": "ElectricBlueberry",
-    "dailyOfferDate": "2026-08-15",
-    "dailyOfferPurchased": true
+    "dailyOfferPlantType": "Pumpkin",
+    "dailyOfferDate": "2026-08-17",
+    "dailyOfferPurchased": false
   },
   "setting": {
     "difficulty": 3,
@@ -416,12 +416,7 @@
         "x": 1,
         "y": 1,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-16T23:17:34.468347",
-          "growthHours": 2
-        }
+        "greenHousePlant": null
       },
       {
         "x": 2,
@@ -451,12 +446,7 @@
         "x": 1,
         "y": 2,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-16T23:17:37.125647",
-          "growthHours": 2
-        }
+        "greenHousePlant": null
       },
       {
         "x": 2,
@@ -1462,7 +1452,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786959291639
+    "lastDailyReset": 1786970259754
   },
   "questLogRefreshed": true
 }

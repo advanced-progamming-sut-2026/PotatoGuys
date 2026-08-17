@@ -14,6 +14,7 @@ import com.pvz.models.entities.projectile.effects.ProjectileEffectState;
 import com.pvz.models.entities.projectile.fsm.ProjectileMotionState;
 import com.pvz.models.entities.projectile.fsm.StraightMotionState;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.effects.SplatEffect;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.tile.Tile;
 
@@ -211,6 +212,9 @@ public class Projectile extends Entity {
             return;
         }
         this.isDead = true;
+        if (type.hasSplat()) {
+            ctx.addEffect(new SplatEffect(ctx, position, type.splatPamPath, type.splatClip, type.splatScale));
+        }
         ctx.removeProjectile(this);
     }
 
