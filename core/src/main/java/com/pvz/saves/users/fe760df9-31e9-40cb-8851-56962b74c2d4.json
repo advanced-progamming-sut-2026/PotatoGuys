@@ -26,6 +26,7 @@
           "level": 1,
           "seed": 0,
           "isBoosted": true
+          "isBoosted": true
         },
         {
           "Type": "PrimalPotatoMine",
@@ -390,7 +391,7 @@
     "musicVolume": 0.24,
     "sfxVolume": 0.7,
     "musicMuted": true,
-    "sfxMuted": false
+    "sfxMuted": true
   },
   "score": {
     "lastSeason": 0,

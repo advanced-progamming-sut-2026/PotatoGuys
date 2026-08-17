@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -26,6 +27,7 @@ import com.pvz.models.engine.GameEngine;
 import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.LawnMower;
+import com.pvz.models.entities.effects.LootDrop;
 import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
@@ -121,6 +123,14 @@ public class GameController {
 
                         // ۱. ابتدا کلیک روی خورشید بررسی می‌شود
                         if (checkSunClick(touchPos.x, touchPos.y)) {
+                            if (gameUiModal != null) {
+                                gameUiModal.setSelectedCard(null);
+                            }
+                            return true;
+                        }
+
+                        // ۱.۱. کلیک روی سکه‌ی افتاده از زامبی بررسی می‌شود
+                        if (checkLootClick(touchPos.x, touchPos.y)) {
                             if (gameUiModal != null) {
                                 gameUiModal.setSelectedCard(null);
                             }
@@ -280,11 +290,11 @@ public class GameController {
                 break;
         }
 
-        // Check sun clicks in PLAYING state on left click
+        // Check sun & coin-drop clicks in PLAYING state on left click
         if (currentState == State.PLAYING && !paused && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             viewport.unproject(touchPos);
-            if (checkSunClick(touchPos.x, touchPos.y)) {
+            if (checkSunClick(touchPos.x, touchPos.y) || checkLootClick(touchPos.x, touchPos.y)) {
                 if (gameUiModal != null) {
                     gameUiModal.setSelectedCard(null);
                 }
@@ -355,6 +365,7 @@ public class GameController {
             drawZombies();
             drawLawnMowers();
             drawSuns();
+            drawLootDrops();
             drawProjectiles();
             drawEffects();
             drawPlacementPreview();
@@ -488,6 +499,18 @@ public class GameController {
         if (ctx==null) return;
         for (Effect e: ctx.getEffects()){
             FrameConfig frameConfig = e.draw();
+            if (frameConfig!=null){
+                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
+                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
+                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+            }
+        }
+    }
+
+    private void drawLootDrops(){
+        if (ctx==null) return;
+        for (LootDrop c: ctx.getLootDrops()){
+            FrameConfig frameConfig = c.draw();
             if (frameConfig!=null){
                 PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
                     frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
@@ -690,6 +713,51 @@ public class GameController {
             }
         }
         return false;
+    }
+
+    /**
+     * If the click lands on a fully-landed zombie loot drop, coins and diamonds
+     * fly to their on-screen wallet (banked on arrival); the pot unlocks a random
+     * locked greenhouse pot immediately.
+     */
+    private boolean checkLootClick(float worldX, float worldY) {
+        if (ctx == null) {
+            return false;
+        }
+        for (LootDrop drop : new ArrayList<>(ctx.getLootDrops())) {
+            if (drop.isDone() || !drop.isCollectable()) continue;
+            float dist = (float) Math.hypot(worldX - drop.getX(), worldY - drop.getY());
+            if (dist < 55f) {
+                if (drop.getType() == LootDrop.LootType.POT) {
+                    drop.collect();
+                    Gdx.app.log("GameScreen", "Pot drop clicked, a greenhouse pot was unlocked.");
+                } else {
+                    Vector2 target = lootWalletWorld(drop.getType());
+                    drop.flyTo(target.x, target.y);
+                    Gdx.app.log("GameScreen", "Loot drop clicked, flying to wallet: +" + drop.getAmount() + " "
+                        + drop.getType().name().toLowerCase() + "s.");
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * The on-screen wallet for a loot type, in world coordinates. The game viewport
+     * and the HUD stage are both FitViewport(1280, 720) with a bottom-left origin,
+     * so the wallet's stage position is already a valid world position.
+     */
+    private Vector2 lootWalletWorld(LootDrop.LootType type) {
+        if (gameUiModal == null) {
+            return type == LootDrop.LootType.DIAMOND
+                ? new Vector2(980f, 680f)
+                : new Vector2(1150f, 680f);
+        }
+        Vector2 stagePos = type == LootDrop.LootType.DIAMOND
+            ? gameUiModal.getGemWalletStagePosition()
+            : gameUiModal.getCoinWalletStagePosition();
+        return new Vector2(stagePos.x, stagePos.y);
     }
 
     /**
