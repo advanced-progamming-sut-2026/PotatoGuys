@@ -15,6 +15,7 @@ import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.PumpkinShield;
 import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
 import com.pvz.models.entities.zombies.armor.ArmorType;
@@ -69,6 +70,9 @@ public class Zombie extends Entity {
     private boolean frozen;
     private float frozenDuration;
     private boolean impAlreadyThrown = false;
+    private boolean throwInProgress = false;
+    private float throwProgress = 0f;
+    private boolean throwImpSpawned = false;
     private int stolenSun;
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -111,7 +115,8 @@ public class Zombie extends Entity {
                     return;
                 }
                 if (onHit.getOwner() instanceof Plant plant && !plant.isDead() && !plant.isFrozen()) {
-                    startEating(plant);
+                    Plant shield = PumpkinShield.shieldFor(plant, context);
+                    startEating(shield != null ? shield : plant);
                 }
             }
         });
@@ -150,7 +155,12 @@ public class Zombie extends Entity {
     @Override
     public void update(float dt) {
         stateTime += dt;
-        if (dead) return;
+        if (dead) {
+            if (currentState instanceof DeadState) {
+                currentState.update(this, context, dt);
+            }
+            return;
+        }
 
         updateStatusEffects(dt);
         //if (isParalysed()) return;
@@ -190,20 +200,31 @@ public class Zombie extends Entity {
         currentState.onExit(this,context);
     }
 
+    /** Replaces the current FSM state cleanly (onExit → onEnter). */
+    public void setState(ZombieState state){
+        if (currentState != null) currentState.onExit(this, context);
+        currentState = state;
+        if (currentState != null) currentState.onEnter(this, context);
+    }
+
     /**
      * Builds the {@link FrameConfig} for the given clip label from the zombie's
      * config-driven animation (pam path + scale), falling back to the classic
      * tutorial PAM when no config is attached.
      */
     public FrameConfig drawClip(String clipLabel) {
+        return drawClip(clipLabel, stateTime, true);
+    }
+
+    public FrameConfig drawClip(String clipLabel, float time, boolean looping) {
         ZombieAnimationConfig anim = sheet.getAnimationConfig();
         String pamPath = (anim != null && anim.pamFilePath != null)
             ? anim.pamFilePath
             : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
         float scale = (anim != null && anim.scale != null) ? anim.scale : 0.65f;
-        return new FrameConfig(pamPath, resolveClipLabel(anim, newspaperClipLabel(clipLabel)), stateTime,
+        return new FrameConfig(pamPath, resolveClipLabel(anim, newspaperClipLabel(clipLabel)), time,
             new Vector2(position.x, position.y), new Vector2(scale, scale),
-            buildPartsVisibility(), true);
+            buildPartsVisibility(), looping);
     }
 
     /**
@@ -269,8 +290,8 @@ public class Zombie extends Entity {
      *         to display (basic zombies / fully destroyed armour)
      */
     private Map<String, Boolean> buildPartsVisibility() {
-        if (armors.isEmpty()) return null;
-        Map<String, Boolean> visibility = null;
+        if (armors.isEmpty() && !throwImpSpawned) return null;
+        Map<String, Boolean> visibility = armors.isEmpty() ? null : new HashMap<>();
         for (ArmorPiece armor : armors) {
             if (armor.isDestroyed()) continue;
             String[] layers = armor.getType().pamLayers();
@@ -280,16 +301,41 @@ public class Zombie extends Entity {
             for (int i = 0; i < layers.length; i++) {
                 visibility.put(layers[i], i == layer);
             }
-            // Some sheets nest the layer parts under a container part whose
-            // name carries the ARMOR flag; libPVZ culls flagged parts unless
-            // revealed, and culling the container hides its children too, so
-            // force the container visible together with the current layer.
             String container = armor.getType().pamContainerName();
             if (container != null) visibility.put(container, true);
             for (String alive : armor.getType().pamAliveParts()) visibility.put(alive, true);
             for (String crit : armor.getType().pamCriticalParts()) visibility.put(crit, layer == layers.length - 1);
         }
+        if (throwImpSpawned) {
+            if (visibility == null) visibility = new HashMap<>();
+            hideImpParts(visibility);
+        }
         return visibility;
+    }
+
+    private static void hideImpParts(Map<String, Boolean> v) {
+        v.put("zombie_imp_hand_inner", false);
+        v.put("zombie_imp_arm_inner_upper", false);
+        v.put("zombie_imp_arm_inner_lower", false);
+        v.put("zombie_imp_leg_inner_lower", false);
+        v.put("zombie_imp_toe_inner", false);
+        v.put("zombie_imp_leg_inner_upper", false);
+        v.put("zombie_imp_leg_outer_lower", false);
+        v.put("zombie_imp_toe_outer", false);
+        v.put("zombie_imp_waist", false);
+        v.put("zombie_imp_leg_outer_upper", false);
+        v.put("zombie_imp_torso", false);
+        v.put("zombie_imp_jaw", false);
+        v.put("zombie_imp_eye", false);
+        v.put("zombie_imp_pupil", false);
+        v.put("zombie_imp_eye_sm", false);
+        v.put("zombie_imp_skull", false);
+        v.put("_zombie_imp_head_top", false);
+        v.put("zombie_imp_arm_outer_upper_02", false);
+        v.put("zombie_imp_arm_outer_upper_01", false);
+        v.put("zombie_imp_arms_outer_upper", false);
+        v.put("zombie_imp_hand_outer", false);
+        v.put("zombie_imp_arm_outer_lower", false);
     }
 
     @Override
@@ -305,7 +351,8 @@ public class Zombie extends Entity {
             return;
         }
         currentState.onExit(this, context);
-        EatState eat = new EatState(plant);
+        boolean garg = sheet.getSmashDamage() > 0;
+        EatState eat = new EatState(plant, garg);
         eat.onEnter(this, context);
         currentState = eat;
     }
@@ -389,6 +436,12 @@ public class Zombie extends Entity {
     public void addStolenSun(int amount)        { stolenSun += amount; }
     public boolean isImpAlreadyThrown()         { return impAlreadyThrown; }
     public void markImpThrown()                 { impAlreadyThrown = true; }
+    public boolean isThrowInProgress()          { return throwInProgress; }
+    public void setThrowInProgress(boolean v)   { throwInProgress = v; }
+    public float getThrowProgress()             { return throwProgress; }
+    public void setThrowProgress(float v)       { throwProgress = v; }
+    public boolean isThrowImpSpawned()          { return throwImpSpawned; }
+    public void setThrowImpSpawned(boolean v)   { throwImpSpawned = v; }
     public ZombieState getCurrentState()        { return currentState; }
     public List<ZombieState> getSkills()        { return Collections.unmodifiableList(skills); }
     public List<ArmorPiece> getArmors()         { return Collections.unmodifiableList(armors); }
@@ -430,6 +483,7 @@ public class Zombie extends Entity {
     private void triggerDeath() {
         dead = true;
         currentState = new DeadState();
+        currentState.onEnter(this, context);
         if (glowing) {
             context.addPlantFood(1);
             context.log("The glowing zombie dropped a plant food! [" + sheet.getAlias() + "]");
@@ -442,7 +496,6 @@ public class Zombie extends Entity {
         ZombieLootService.rollAndApplyLoot(context, this);
         context.getGameStats().onZombieKilled();
         context.getGameStats().onZombieKilledInSeason(context.getSeasonName());
-        context.removeZombie(this);
         context.log("Zombie of type " + sheet.getAlias()
             + " is dead at (" + String.format("%.1f", position.x) + "," + GameController.worldYtoLane(position.y) + ")");
     }

@@ -1401,33 +1401,250 @@
     "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
   },
   {
-    "id": 42,
-    "name": "Explode-O-Nut",
-    "type": "Explodeonut",
-    "category": "EXPLOSIVE",
+    "id": 44,
+    "name": "Wall-nut",
+    "type": "Wallnut",
+    "category": "WALL_NUT",
     "sunCost": 50,
     "baseHp": 4000.0,
-    "actionIntervalSeconds": 12.0,
+    "actionIntervalSeconds": null,
     "rechargeSeconds": 20.0,
     "attackConfig": {
       "class": "NutConfig",
-      "baseDamage": 1800.0
+      "idleClip": "idle2",
+      "damage1Clip": "damage",
+      "damage2Clip": "damage2",
+      "damage3Clip": "damage3"
     },
     "feedConfig": {
-      "class": "ShooterActionConfig",
-      "label": "plantfood",
-      "patterns": [
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
-      ]
+      "class": "WallNutFeedConfig",
+      "kind": "ARMOR",
+      "amount": 4000.0,
+      "clips": ["plantfood_on", "plantfood", "plantfood2", "plantfood3", "plantfood_off"]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/WALLNUT/WALLNUT.PAM",
+      "idleLabel": "idle2",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 0
+    },
+    "description": "سد دفاعی مقاوم برای متوقف کردن زامبی‌ها."
+  },
+  {
+    "id": 45,
+    "name": "Tall-nut",
+    "type": "Tallnut",
+    "category": "WALL_NUT",
+    "sunCost": 125,
+    "baseHp": 8000.0,
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "attackConfig": {
+      "class": "NutConfig",
+      "idleClip": "idle",
+      "damage1Clip": "damage",
+      "damage2Clip": "damage2",
+      "damage3Clip": "damage2"
+    },
+    "feedConfig": {
+      "class": "WallNutFeedConfig",
+      "kind": "ARMOR",
+      "amount": 8000.0,
+      "clips": []
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/TALLNUT/TALLNUT.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 0
+    },
+    "description": "سد بلند؛ جلوگیری از پریدن زامبی‌ها از روی آن."
+  },
+  {
+    "id": 46,
+    "name": "Endurian",
+    "type": "Endurian",
+    "category": "WALL_NUT",
+    "sunCost": 100,
+    "baseHp": 3000.0,
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 15.0,
+    "attackConfig": {
+      "class": "NutConfig",
+      "idleClip": "idle",
+      "damage1Clip": "damage",
+      "damage2Clip": "damage2",
+      "damage3Clip": "damage3",
+      "reflectDamage": 20.0
+    },
+    "feedConfig": {
+      "class": "WallNutFeedConfig",
+      "kind": "ARMOR",
+      "amount": 1000.0,
+      "reflectBonus": 20.0,
+      "clips": ["plantfood_on"]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/ENDURIAN/ENDURIAN.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 0
+    },
+    "description": "سد دفاعی با قابلیت بازتاب دمیج به زامبی مهاجم."
+  },
+  {
+    "id": 47,
+    "name": "Garlic",
+    "type": "Garlic",
+    "category": "WALL_NUT",
+    "sunCost": 50,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "attackConfig": {
+      "class": "NutConfig",
+      "idleClip": "idle2",
+      "damage1Clip": "idle_damage",
+      "damage2Clip": "idle_damage2",
+      "damage3Clip": "idle_damage2",
+      "redirectEaters": true
+    },
+    "feedConfig": {
+      "class": "WallNutFeedConfig",
+      "kind": "FORCE_MOVE_ALL_IN_LANE",
+      "amount": 0.0,
+      "clips": ["plantfood"]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/GARLIC/GARLIC.PAM",
+      "idleLabel": "idle2",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 0
+    },
+    "description": "با خورده شدن، زامبی را مجبور به حرکت به لاین مجاور می‌کند."
+  },
+  {
+    "id": 48,
+    "name": "Sweet Potato",
+    "type": "SweetPotato",
+    "category": "WALL_NUT",
+    "sunCost": 150,
+    "baseHp": 3000.0,
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "attackConfig": {
+      "class": "NutConfig",
+      "idleClip": "idle2",
+      "damage1Clip": "idle_damage",
+      "damage2Clip": "idle_damage2",
+      "damage3Clip": "idle_damage3",
+      "attractAdjacent": true
+    },
+    "feedConfig": {
+      "class": "WallNutFeedConfig",
+      "kind": "FULL_HEAL_AND_ABSORB",
+      "amount": 0.0,
+      "clips": ["plantfood"]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/SWEETPOTATO/SWEETPOTATO.PAM",
+      "idleLabel": "idle2",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 0
+    },
+    "description": "جذب‌کننده؛ زامبی‌های لاین‌های مجاور را به لاین خود می‌کشد."
+  },
+  {
+    "id": 49,
+    "name": "Explode-o-nut",
+    "type": "Explodeonut",
+    "category": "WALL_NUT",
+    "sunCost": 50,
+    "baseHp": 4000.0,
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "attackConfig": {
+      "class": "NutConfig",
+      "idleClip": "idle",
+      "damage1Clip": "damage",
+      "damage2Clip": "damage2",
+      "damage3Clip": "damage3",
+      "baseDamage": 1800.0,
+      "explodesOnDestroy": true
+    },
+    "feedConfig": {
+      "class": "WallNutFeedConfig",
+      "kind": "ARMOR",
+      "amount": 1000.0,
+      "clips": ["plantfood_on", "plantfood", "plantfood2", "plantfood3", "plantfood_off"]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/EXPLODEONUT/EXPLODEONUT.PAM",
       "idleLabel": "idle2",
       "animSpeed": 1.0,
-      "actionTriggerFrame": 8
+      "actionTriggerFrame": 0
     },
-    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
+    "description": "سد دفاعی که به محض از بین رفتن جانش، انفجار مساحتی ایجاد می‌کند."
+  },
+  {
+    "id": 50,
+    "name": "Pumpkin",
+    "type": "Pumpkin",
+    "category": "WALL_NUT",
+    "sunCost": 150,
+    "baseHp": 4000.0,
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "attackConfig": {
+      "class": "NutConfig",
+      "idleClip": "idle",
+      "damage1Clip": "idle",
+      "damage2Clip": "idle2",
+      "damage3Clip": "idle3"
+    },
+    "feedConfig": {
+      "class": "WallNutFeedConfig",
+      "kind": "ARMOR",
+      "amount": 1000.0,
+      "clips": ["idle_plantfood", "idle_plantfood2", "idle_plantfood3", "idle_plantfood4"]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/PUMPKIN/PUMPKIN.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 0
+    },
+    "description": "سد دفاعی پوششی؛ روی سایر گیاهان کاشته می‌شود تا از آن‌ها محافظت کند."
+  },
+  {
+    "id": 51,
+    "name": "Sun Bean",
+    "type": "SunBean",
+    "category": "WALL_NUT",
+    "sunCost": 50,
+    "baseHp": 1000.0,
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "attackConfig": {
+      "class": "NutConfig",
+      "idleClip": "idle",
+      "damage1Clip": "idle",
+      "damage2Clip": "idle2",
+      "damage3Clip": "idle2",
+      "sunOnHit": 5
+    },
+    "feedConfig": {
+      "class": "WallNutFeedConfig",
+      "kind": "ARMOR",
+      "amount": 1000.0,
+      "clips": ["plantfood_on", "plantfood"]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/SUNBEAN/SUNBEAN.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 0
+    },
+    "description": "با هر بار گاز گرفته شدن، خورشید تولید می‌کند."
   }
 ]

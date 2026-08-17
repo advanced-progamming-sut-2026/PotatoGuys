@@ -1,23 +1,46 @@
 package com.pvz.models.entities.zombies.fsm;
 
 import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.config.ZombieActionConfig;
-import com.pvz.models.entities.zombies.config.ZombieSkillConfig;
+import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
 import com.pvz.models.games.GameContext;
 
-/**
- * Terminal FSM state — the zombie is dead.
- *
- * <p>The engine detects a dead zombie via {@link Zombie#isDead()} and
- * removes it from the game on the next tick cycle. This state exists
- * solely so the {@code zombies info} CLI command can show "Dead" for
- * zombies that died mid-tick before the engine processes removals.
- */
 public class DeadState extends ZombieState {
+
+    private float dieDuration;
+    private boolean removed;
 
     public DeadState() {
         super(null);
+    }
+
+    @Override
+    public void onEnter(Zombie zombie, GameContext ctx) {
+        stateTime = 0f;
+        removed = false;
+        dieDuration = resolveDieDuration(zombie);
+    }
+
+    @Override
+    public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
+        if (removed) return this;
+        stateTime += dt;
+        if (stateTime >= dieDuration) {
+            removed = true;
+            ctx.removeZombie(zombie);
+        }
+        return this;
+    }
+
+    @Override
+    public FrameConfig draw(Zombie zombie, GameContext ctx) {
+        return zombie.drawClip("die", stateTime, false);
+    }
+
+    @Override
+    public void onExit(Zombie zombie, GameContext ctx) {
     }
 
     @Override
@@ -27,28 +50,11 @@ public class DeadState extends ZombieState {
 
     @Override
     protected void doExecute(Zombie zombie, GameContext ctx) {
-
     }
 
     @Override
     public String getName() {
-        return "";
-    }
-
-    @Override
-    public void onEnter(Zombie zombie, GameContext ctx) {
-        // Death logging is handled inside Zombie.onDeath() to ensure it fires
-        // exactly once regardless of how death was triggered.
-    }
-
-    @Override
-    public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
-        return this; // stay in dead state; engine will deregister this zombie
-    }
-
-    @Override
-    public void onExit(Zombie zombie, GameContext ctx) {
-        // nothing — dead zombies don't exit this state
+        return "Dead";
     }
 
     @Override
@@ -56,9 +62,15 @@ public class DeadState extends ZombieState {
         return "Dead";
     }
 
-    @Override
-    public FrameConfig draw(Zombie zombie, GameContext ctx) {
-        ZombieActionConfig die = zombie.getSheet().dieConfig;
-        return zombie.drawClip(die != null ? die.label : "die");
+    private float resolveDieDuration(Zombie zombie) {
+        ZombieAnimationConfig anim = zombie.getSheet().getAnimationConfig();
+        if (anim != null && anim.pamFilePath != null) {
+            AnimationCatalog catalog = AnimationCatalog.getInstance();
+            if (catalog != null) {
+                float dur = catalog.getClipDuration(anim.pamFilePath, "die");
+                if (dur > 0f) return dur;
+            }
+        }
+        return 1.5f;
     }
 }

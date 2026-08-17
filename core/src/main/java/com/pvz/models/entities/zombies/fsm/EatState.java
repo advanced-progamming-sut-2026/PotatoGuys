@@ -2,33 +2,29 @@ package com.pvz.models.entities.zombies.fsm;
 
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.PumpkinShield;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.config.ZombieActionConfig;
+import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
 import com.pvz.models.games.GameContext;
 
-/**
- * The zombie is eating a plant it has collided with.
- *
- * <p>Each tick it deals {@link Zombie#getEatDpsPerTick()} damage to the
- * {@link Plant} it bumped into.
- *
- * <p><b>Transitions:</b>
- * <ul>
- *   <li>→ {@link WalkState} when the target plant is destroyed (or removed/frozen).</li>
- * </ul>
- */
 public class EatState extends ZombieState {
 
-    private final Plant target;
+    private Plant target;
+    private boolean isGargantuar;
+    private boolean smashPhase;
 
-    /**
-     * @param target the plant this zombie is chewing on (tracked by reference, not
-     *               grid cell, so it keeps chewing the same plant as it moves).
-     */
     public EatState(Plant target) {
         super(null);
         this.target = target;
+    }
+
+    public EatState(Plant target, boolean isGargantuar) {
+        super(null);
+        this.target = target;
+        this.isGargantuar = isGargantuar;
     }
 
     @Override
@@ -38,7 +34,6 @@ public class EatState extends ZombieState {
 
     @Override
     protected void doExecute(Zombie zombie, GameContext ctx) {
-
     }
 
     @Override
@@ -54,14 +49,39 @@ public class EatState extends ZombieState {
 
     @Override
     public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
+        stateTime += dt;
+
+        if (isGargantuar) {
+            float eatDur = getClipDuration(zombie, "eat");
+            float smashDur = getClipDuration(zombie, "smash_left");
+
+            if (!smashPhase) {
+                if (stateTime >= eatDur) {
+                    smashPhase = true;
+                    stateTime = 0f;
+                }
+            } else {
+                if (stateTime >= smashDur) {
+                    if (!target.isDead() && ctx.getPlants().contains(target)) {
+                        Plant shield = PumpkinShield.shieldFor(target, ctx);
+                        if (shield != null) target = shield;
+                        float totalDmg = zombie.getEatDpsPerTick() * Zombie.TICKS_PER_SECOND * (eatDur + smashDur);
+                        target.takeDamage(totalDmg, DamageKind.FIXED);
+                    }
+                    return new WalkState();
+                }
+            }
+            return this;
+        }
+
         if (target.isDead() || target.isFrozen() || !ctx.getPlants().contains(target)) {
-            // Plant was destroyed or removed — return to walking
             ctx.log("Plant at (" + target.getCol() + "," + target.getLane() + ") is destroyed.");
             return new WalkState();
         }
-        // Deal eat-DPS damage scaled by real dt: the engine runs at render-frame
-        // rate (~60 fps), not at TICKS_PER_SECOND, so a flat per-tick amount would
-        // make chewing ~6× too fast. dps == sheet eatDps (damage per second).
+        Plant shield = PumpkinShield.shieldFor(target, ctx);
+        if (shield != null) {
+            target = shield;
+        }
         float dps = zombie.getEatDpsPerTick() * Zombie.TICKS_PER_SECOND;
         target.takeDamage(dps * dt, DamageKind.FIXED);
         return this;
@@ -69,7 +89,6 @@ public class EatState extends ZombieState {
 
     @Override
     public void onExit(Zombie zombie, GameContext ctx) {
-        // nothing
     }
 
     @Override
@@ -79,9 +98,25 @@ public class EatState extends ZombieState {
 
     @Override
     public FrameConfig draw(Zombie zombie, GameContext ctx) {
+        if (isGargantuar) {
+            String clip = smashPhase ? "smash_left" : "eat";
+            return zombie.drawClip(clip, stateTime, false);
+        }
         ZombieActionConfig eat = zombie.getSheet().eatConfig;
         return zombie.drawClip(eat != null ? eat.label : "eat");
     }
 
-    public Plant getTarget()  { return target; }
+    private float getClipDuration(Zombie zombie, String clipName) {
+        ZombieAnimationConfig anim = zombie.getSheet().getAnimationConfig();
+        if (anim != null && anim.pamFilePath != null) {
+            AnimationCatalog catalog = AnimationCatalog.getInstance();
+            if (catalog != null) {
+                float dur = catalog.getClipDuration(anim.pamFilePath, clipName);
+                if (dur > 0f) return dur;
+            }
+        }
+        return 1f;
+    }
+
+    public Plant getTarget() { return target; }
 }
