@@ -1,7 +1,5 @@
 package com.pvz;
 
-import java.util.HashMap;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -9,20 +7,30 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Json;
 import com.pvz.controller.AudioManager;
+import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.user.Setting;
 import com.pvz.models.user.User;
+import com.pvz.network.NetworkClient;
+import com.pvz.server.PvzServer;
 import com.pvz.utils.SaveManager;
 import com.pvz.view.MainMenu;
 import com.pvz.view.RegisterMenu;
-
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
+import pvz.skin.PvzSkin;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class PvZ2 extends Game {
@@ -70,11 +78,18 @@ public class PvZ2 extends Game {
     @Override
     public void create() {
         instance = this;
+
+        try {
+            NetworkClient.getInstance().connect("localhost", PvzServer.DEFAULT_PORT);
+        } catch (IOException e) {
+            // نمایش خطا به کاربر / fallback به حالت آفلاین
+        }
+
         FileHandle file = Gdx.files.internal("pvz-assets/animations.json");
         Json json = new Json();
         json.setIgnoreUnknownFields(true);
         AnimationCatalog.setInstance(json.fromJson(AnimationCatalog.class, file));
-        
+
         globalAssetManager.finishLoading();
         textureBank=new TextureBank("768",Gdx.files.internal("./assets/pvz-assets/"));
         pamPlayer=new PamPlayer(textureBank,Gdx.files.internal("./assets/pvz-assets/"));

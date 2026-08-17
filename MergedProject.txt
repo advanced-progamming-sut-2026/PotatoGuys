@@ -662,9 +662,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -672,6 +674,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
 import com.pvz.models.AppContext;
@@ -694,16 +697,25 @@ import pvz.skin.PvzSkin;
  * <p>Slot size is tuned to the 1280x720 gameplay viewport (see
  * GameController's FitViewport) rather than the 1920x1080 menus use, so all
  * 7 cards fit under the top bar without running off the bottom of the screen.
+ *
+ * <p>The plant-food bank (dots + "+" cheat button) sits at normalized (0.25, 0.1).
  */
 public class GameUiModal extends Table {
 
-    private static final float SLOT_WIDTH = 125f;
-    private static final float SLOT_HEIGHT = 75f;
+    private static final float SLOT_WIDTH = 135f;
+    private static final float SLOT_HEIGHT = 95f;
+
+    private static final int CHEAT_SUN_AMOUNT = 25;
+    private static final int MAX_PLANT_FOOD = 3;
 
     private final Label sunLabel;
-    private final Label plantFoodLabel;
     private final Label coinLabel;
     private final Label gemLabel;
+    private final Image coinIcon;
+    private final Image gemIcon;
+    private final Image[] plantFoodDots = new Image[MAX_PLANT_FOOD];
+    private final ImageButton addSunButton;
+    private final ImageButton addFoodButton;
     private final Table cardsBarTable;
     private PlantCard selectedCard = null;
 
@@ -711,7 +723,7 @@ public class GameUiModal extends Table {
     private final Map<PlantCard, Image> cooldownOverlayByCard = new HashMap<>();
     private Map<PlantType, PlantData> dataByType = new HashMap<>();
 
-    public GameUiModal() {
+    public GameUiModal(Runnable onPauseRequested) {
         super();
         setFillParent(true);
         top();
@@ -719,21 +731,90 @@ public class GameUiModal extends Table {
 
         Table topBar = new Table();
         topBar.top().left();
-        topBar.pad(15);
+        topBar.pad(10);
 
-        sunLabel = new Label("Sun: 50", PvzSkin.get(), "big");
-        sunLabel.setColor(Color.YELLOW);
-        topBar.add(sunLabel).padRight(25);
+        // Sun bank with a +25 cheat button, matching the reference HUD (phase-0-group-51).
+        Table sunRow = new Table();
+        addSunButton = createCheatButton();
+        addSunButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!isDebugModeEnabled()) return;
+                GameContext context = AppContext.getInstance().getGameContext();
+                if (context == null) return;
+                context.addSun(CHEAT_SUN_AMOUNT);
+                updateHud();
+            }
+        });
 
-        plantFoodLabel = new Label("Plant Food: 0", PvzSkin.get());
-        plantFoodLabel.setColor(Color.GREEN);
-        topBar.add(plantFoodLabel);
+        Stack sunBank = new Stack();
+        Image sunBackground = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_background_3slice"));
+        sunBackground.setScaling(Scaling.stretch);
+        Table sunContent = new Table();
+        Image sunIcon = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_sun"));
+        sunIcon.setScaling(Scaling.fit);
+
+        sunLabel = new Label("0", PvzSkin.get(), "big_outline");
+        sunLabel.setColor(Color.WHITE);
+        sunLabel.setFontScale(1.25f);
+        sunLabel.setAlignment(Align.center);
+        sunContent.add(sunIcon).size(55f).padLeft(-9f);
+        sunContent.add(sunLabel).expandX().center().padRight(8f);
+        sunBank.add(sunBackground);
+        sunBank.add(sunContent);
+        sunRow.add(addSunButton).size(50f).padRight(3f);
+        sunRow.add(sunBank).width(150f).height(54f);
+        topBar.add(sunRow).left().row();
+
+        // Plant food bank with a +1 cheat button, matching the reference HUD (phase-0-group-51).
+        Table foodRow = new Table();
+        addFoodButton = createCheatButton();
+        addFoodButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!isDebugModeEnabled()) return;
+                GameContext context = AppContext.getInstance().getGameContext();
+                if (context == null) return;
+                context.addPlantFood(1);
+                updateHud();
+            }
+        });
+
+        Stack foodDisplay = new Stack();
+        Stack dotsBank = new Stack();
+        Image dotsBackground = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_demo"));
+        dotsBackground.setScaling(Scaling.stretch);
+        dotsBank.add(dotsBackground);
+
+        Table dots = new Table();
+        dots.center();
+        for (int i = 0; i < MAX_PLANT_FOOD; i++) {
+            Image dot = new Image(PvzSkin.get().getDrawable("image_ui_generic_navdot_fill"));
+            plantFoodDots[i] = dot;
+            dots.add(dot).size(17f).pad(2f);
+        }
+        dotsBank.add(dots);
+
+        Table rectangleLayer = new Table();
+        rectangleLayer.right();
+        rectangleLayer.add(dotsBank).width(104f).height(40f);
+        foodDisplay.add(rectangleLayer);
+
+        Image foodIcon = new Image(PvzSkin.get().getDrawable("image_ui_almanac_plant_food_stat_icon"));
+        foodIcon.setScaling(Scaling.fit);
+        Table iconLayer = new Table();
+        iconLayer.left();
+        iconLayer.add(foodIcon).size(72f);
+        foodDisplay.add(iconLayer);
+
+        foodRow.add(addFoodButton).size(50f).padRight(3f);
+        foodRow.add(foodDisplay).width(150f).height(46f);
 
         Table walletTable = new Table();
         walletTable.top().right();
 
         Table coinCell = new Table();
-        Image coinIcon = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_coin"));
+        coinIcon = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_coin"));
         coinLabel = new Label("0", PvzSkin.get(), "medium_outline");
         coinLabel.setColor(Color.YELLOW);
         coinLabel.setFontScale(1.4f);
@@ -742,7 +823,7 @@ public class GameUiModal extends Table {
         walletTable.add(coinCell).padRight(20);
 
         Table gemCell = new Table();
-        Image gemIcon = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_gem"));
+        gemIcon = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_gem"));
         gemLabel = new Label("0", PvzSkin.get(), "medium_outline");
         gemLabel.setColor(Color.CYAN);
         gemLabel.setFontScale(1.4f);
@@ -750,24 +831,99 @@ public class GameUiModal extends Table {
         gemCell.add(gemLabel).padLeft(8);
         walletTable.add(gemCell);
 
+        // Pause button pinned to the very top-right corner (same look as Rey's
+        // in-match HUD), pushing the coin/gem counters a bit to the left.
+        ImageButton pauseButton = new ImageButton(PvzSkin.get(), "ingame_pause");
+        pauseButton.setTouchable(Touchable.enabled);
+        pauseButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (onPauseRequested != null) {
+                    onPauseRequested.run();
+                }
+            }
+        });
+
+        Table rightControls = new Table();
+        rightControls.top().right();
+        rightControls.add(walletTable).right().padRight(10);
+        rightControls.add(pauseButton).right().size(58f);
+
         add(topBar).top().left().expandX().fillX();
-        add(walletTable).top().right().padTop(15).padRight(15);
+        add(rightControls).top().right().padTop(15).padRight(15);
         row();
 
         // Seed-packet tray: vertical column pinned to the left edge, below the top bar.
         cardsBarTable = new Table();
         cardsBarTable.top();
-        cardsBarTable.defaults().pad(4f).size(SLOT_WIDTH, SLOT_HEIGHT);
+        cardsBarTable.defaults().pad(-2f).size(SLOT_WIDTH, SLOT_HEIGHT);
 
         Table leftColumnWrapper = new Table();
         leftColumnWrapper.top().left();
         leftColumnWrapper.add(cardsBarTable);
 
-        add(leftColumnWrapper).left().top().colspan(2).padLeft(15).padTop(5);
+        // Seed-packet tray tucked right under the sun bank: the top bar only keeps
+        // the sun row, and padTop(10) starts the first card just under the sun
+        // amount display (the food row moved to the bottom overlay).
+        add(leftColumnWrapper).left().top().colspan(2).padLeft(15).padTop(-17);
+
+        // Plant food pinned at normalized (0.25, 0.1): centered on x = 0.25 * 1280 = 320
+        // and its bottom at y = 0.1 * 720 = 72. 0.25*1280 - (50 + 3 + 150)/2 = 218.5
+        // pushes its center onto x = 320; padBottom(72) lifts it off the bottom edge.
+        //
+        // It lives in its own fill-parent overlay added via addActor(), so it plays
+        // no part in this table's cell layout and can't shift anything else.
+        Table foodOverlay = new Table();
+        foodOverlay.setFillParent(true);
+        foodOverlay.bottom().left();
+        foodOverlay.add(foodRow).padLeft(218.5f).padBottom(15f);
+        addActor(foodOverlay);
     }
 
     public PlantCard getSelectedCard() {
         return selectedCard;
+    }
+
+    /**
+     * Where the coin wallet icon sits in stage (1280x720, bottom-left origin)
+     * coordinates — the target the flying coin-drop animation arcs toward.
+     */
+    public com.badlogic.gdx.math.Vector2 getCoinWalletStagePosition() {
+        if (coinIcon == null) {
+            return new com.badlogic.gdx.math.Vector2(1120f, 695f);
+        }
+        return coinIcon.localToStageCoordinates(
+            new com.badlogic.gdx.math.Vector2(coinIcon.getWidth() / 2f, coinIcon.getHeight() / 2f));
+    }
+
+    /**
+     * Where the gem (diamond) wallet icon sits in stage (1280x720, bottom-left
+     * origin) coordinates — the target the flying diamond-drop animation arcs toward.
+     */
+    public com.badlogic.gdx.math.Vector2 getGemWalletStagePosition() {
+        if (gemIcon == null) {
+            return new com.badlogic.gdx.math.Vector2(980f, 695f);
+        }
+        return gemIcon.localToStageCoordinates(
+            new com.badlogic.gdx.math.Vector2(gemIcon.getWidth() / 2f, gemIcon.getHeight() / 2f));
+    }
+
+    /**
+     * The "+" cheat button used next to the sun and plant food banks, using the same
+     * coin-buy asset the reference HUD (phase-0-group-51) uses for both buttons.
+     */
+    private ImageButton createCheatButton() {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        style.imageUp = PvzSkin.get().getDrawable("image_ui_hud_ingame_coin_buy");
+        style.imageDown = PvzSkin.get().getDrawable("image_ui_hud_ingame_coin_buy_down");
+        style.imageOver = PvzSkin.get().getDrawable("image_ui_hud_ingame_coin_buy_down");
+        style.imageChecked = PvzSkin.get().getDrawable("image_ui_hud_ingame_coin_buy_down");
+        return new ImageButton(style);
+    }
+
+    private boolean isDebugModeEnabled() {
+        User user = AppContext.getInstance().getCurrentUser();
+        return user != null && user.getSetting() != null && user.getSetting().isDebugMode();
     }
 
     public void setSelectedCard(PlantCard card) {
@@ -819,13 +975,13 @@ public class GameUiModal extends Table {
             plantImage.setScaling(Scaling.fit);
             Table plantLayer = new Table();
             plantLayer.center();
-            plantLayer.add(plantImage).size(SLOT_HEIGHT - 22f);
+            plantLayer.add(plantImage).size(SLOT_HEIGHT - 8f);
             stack.add(plantLayer);
 
             Image badge = new Image(PlantData.regionDrawableOr(data.familyImageId(), fallback));
             Table badgeLayer = new Table();
             badgeLayer.top().left();
-            badgeLayer.add(badge).size(16f).pad(2f);
+            badgeLayer.add(badge).size(18f).pad(2f);
             stack.add(badgeLayer);
         }
 
@@ -835,7 +991,7 @@ public class GameUiModal extends Table {
         cooldownOverlayByCard.put(pc, cooldownOverlay);
 
         Label costLabel = new Label(String.valueOf(pc.getCost()), skin, "medium");
-        costLabel.setFontScale(0.8f);
+        costLabel.setFontScale(0.9f);
         costLabel.setColor(Color.WHITE);
         Table costRow = new Table();
         costRow.bottom().left();
@@ -866,8 +1022,23 @@ public class GameUiModal extends Table {
         GameContext context = AppContext.getInstance().getGameContext();
         if (context == null) return;
 
-        sunLabel.setText("Sun: " + context.getCurrentSun());
-        plantFoodLabel.setText("Plant Food: " + context.getPlantFoodCount());
+        // The + buttons only work while Debug Mode is enabled in settings.
+        boolean debug = isDebugModeEnabled();
+        addSunButton.setTouchable(debug ? Touchable.enabled : Touchable.disabled);
+        addFoodButton.setTouchable(debug ? Touchable.enabled : Touchable.disabled);
+        addSunButton.setColor(debug ? Color.WHITE : new Color(0.5f, 0.5f, 0.5f, 0.6f));
+        addFoodButton.setColor(debug ? Color.WHITE : new Color(0.5f, 0.5f, 0.5f, 0.6f));
+
+        sunLabel.setText(String.valueOf(context.getCurrentSun()));
+
+        int foodCount = MathUtils.clamp(context.getPlantFoodCount(), 0, MAX_PLANT_FOOD);
+        for (int i = 0; i < plantFoodDots.length; i++) {
+            if (i < foodCount) {
+                plantFoodDots[i].setColor(Color.valueOf("65D44B"));
+            } else {
+                plantFoodDots[i].setColor(new Color(0.20f, 0.30f, 0.20f, 0.30f));
+            }
+        }
 
         User user = AppContext.getInstance().getCurrentUser();
         if (user != null && user.getProfile() != null) {
@@ -997,6 +1168,7 @@ import com.pvz.view.PlantCard;
 import com.pvz.view.PlantData;
 
 import pvz.skin.BorderedTable;
+
 import pvz.skin.PvzSkin;
 
 /**
@@ -1293,6 +1465,126 @@ public class PlantSelectModal extends Table {
 
 
 ======================================================
+FILE: PauseMenuPopup.java
+======================================================
+
+package com.pvz.view.game;
+
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
+
+import com.pvz.PvZ2;
+import com.pvz.view.BorderedPanel;
+
+import pvz.skin.PvzSkin;
+
+/**
+ * Rey-style pause dialog: the PvZ2 pause menu window with the decorative
+ * topper banner + sunflower, "Game Paused" title, music/sound sliders and the
+ * SAVE AND EXIT / RESTART / RESUME buttons. Layout is a verbatim port of the
+ * PauseMenuPopup from the phase-0 group project, adapted to this codebase's
+ * static skin/texture accessors.
+ */
+public class PauseMenuPopup extends BorderedPanel {
+
+    public PauseMenuPopup(Runnable onSaveAndQuit, Runnable onRestart, Runnable onResume) {
+        super(Color.valueOf("8F4909"));
+
+        TextureRegion topperRegion = PvZ2.textureBank.region("IMAGE_UI_PAUSEMENU_WINDOWTOPPER");
+        TextureRegion sunflowerRegion = PvZ2.textureBank.region("IMAGE_UI_PAUSEMENU_SUNFLOWER_TOPPER");
+        TextureRegion sliderKnob = PvZ2.textureBank.region("IMAGE_UI_PAUSEMENU_SLIDER_BOLT");
+
+        Stack topDecoration = new Stack();
+        Image topperImage = new Image(topperRegion);
+        Image sunflowerImage = new Image(sunflowerRegion);
+
+        topperImage.setScaling(Scaling.none);
+        sunflowerImage.setScaling(Scaling.none);
+
+        Container<Image> sunflowerContainer = new Container<>(sunflowerImage);
+        sunflowerContainer.align(Align.top | Align.center);
+
+        sunflowerContainer.padTop(-25f);
+
+        topDecoration.add(topperImage);
+        topDecoration.add(sunflowerContainer);
+
+        Label titleLabel = new Label("Game Paused", PvzSkin.get().get("big_outline", Label.LabelStyle.class));
+        titleLabel.setAlignment(Align.center);
+
+        Slider.SliderStyle sliderStyle = new Slider.SliderStyle(PvzSkin.get().get("default-horizontal", Slider.SliderStyle.class));
+        sliderStyle.knob = new TextureRegionDrawable(sliderKnob);
+
+        Table slidersTable = new Table();
+        Label musicLabel = new Label("Music", PvzSkin.get().get("medium_outline", Label.LabelStyle.class));
+        Slider musicSlider = new Slider(0, 100, 1, false, sliderStyle);
+        slidersTable.add(musicLabel).padRight(15).align(Align.right);
+        slidersTable.add(musicSlider).width(200).row();
+
+        Label sfxLabel = new Label("Sound FX", PvzSkin.get().get("medium_outline", Label.LabelStyle.class));
+        Slider sfxSlider = new Slider(0, 100, 1, false, sliderStyle);
+        slidersTable.add(sfxLabel).padRight(15).align(Align.right).padTop(10);
+        slidersTable.add(sfxSlider).width(200).padTop(10).row();
+
+        TextButton exitButton = new TextButton("SAVE AND EXIT", PvzSkin.get().get("purple", TextButton.TextButtonStyle.class));
+        TextButton restartButton = new TextButton("RESTART", PvzSkin.get(), "purple");
+        TextButton resumeButton = new TextButton("RESUME", PvzSkin.get(), "brown");
+
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (onSaveAndQuit != null) {
+                    onSaveAndQuit.run();
+                }
+            }
+        });
+
+        restartButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (onRestart != null) {
+                    onRestart.run();
+                }
+            }
+        });
+
+        resumeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (onResume != null) {
+                    onResume.run();
+                }
+            }
+        });
+
+        Table buttonsTable = new Table();
+        buttonsTable.add(exitButton).padRight(10);
+        buttonsTable.add(restartButton).padRight(10);
+        buttonsTable.add(resumeButton);
+
+        this.contentLayer.add(topDecoration).align(Align.center).padTop(-50).row();
+        this.contentLayer.add(titleLabel).padTop(-400).row();
+        this.contentLayer.add(slidersTable).padBottom(30).row();
+        this.contentLayer.add(buttonsTable).align(Align.bottom).padBottom(-100);
+
+        this.pack();
+    }
+}
+
+
+======================================================
 FILE: PasswordChangeMenu.java
 ======================================================
 
@@ -1545,6 +1837,17 @@ public final class PlantData {
         }
         result.sort((a, b) -> Integer.compare(a.sheet.getId(), b.sheet.getId()));
         return result;
+    }
+
+    /** Resolves the read-only plant data for a single plant type (used by in-game
+     *  placement previews to look up the idle PAM path without loading every plant). */
+    public static PlantData forType(PlantType type) {
+        if (type == null) return null;
+        PlantRegistry registry = PlantRegistry.getInstance();
+        PlantConfigRegistry configs = PlantConfigRegistry.getInstance();
+        PlantPropertySheet sheet = registry.getSheet(type);
+        if (sheet == null || sheet.isMint()) return null;
+        return new PlantData(type, sheet, configs.getConfig(type));
     }
 
     private static Profile currentProfile() {
@@ -3149,6 +3452,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -3161,6 +3465,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
+
+import com.pvz.models.AppContext;
+import com.pvz.models.user.Profile;
+import com.pvz.models.user.User;
 
 import pvz.skin.PvzSkin;
 
@@ -3240,6 +3548,109 @@ public final class MenuUiKit {
         Table outer = new Table();
         outer.add(stack).size(width, height);
         return outer;
+    }
+
+    // ---------------------------------------------------------------- wallet "+" buttons
+
+    /** Width of the "+" button, as a fraction of the pill width. */
+    private static final float PLUS_BUTTON_WIDTH_FACTOR = 0.24f;
+    /** Height of the "+" button, as a fraction of the pill height. */
+    private static final float PLUS_BUTTON_HEIGHT_FACTOR = 0.72f;
+    /** Gap between the "+" button and the pill's right edge, as a fraction of the pill width. */
+    private static final float PLUS_BUTTON_PAD_RIGHT_FACTOR = -0.48f;
+
+    /** A coin/diamond pill whose engraved "+" is a real button. Exposes the value {@link #label} and the
+     *  {@link #plusButton} so callers can refresh the number and wire the cheat. */
+    public static class PlusResourceWidget {
+        /** The pill table, add this into your top bar. */
+        public final Table widget;
+        /** The coin/diamond value label, so callers can refresh it after a click. */
+        public final Label label;
+        /** The "+" button overlay (the fake plus turned real). */
+        public final ImageButton plusButton;
+
+        PlusResourceWidget(Table widget, Label label, ImageButton plusButton) {
+            this.widget = widget;
+            this.label = label;
+            this.plusButton = plusButton;
+        }
+    }
+
+    /** Same pill look as {@link #resourceWidget}, but with a working "+" button over the engraved one. */
+    public static PlusResourceWidget resourceWidgetWithPlus(Skin skin, String iconPath, Color fallbackTint, String value,
+                                                           float width, float height) {
+        Stack stack = new Stack();
+
+        Table bg = new Table();
+        Texture iconTexture = loadTextureSafe(iconPath);
+        if (Gdx.files.internal(iconPath) != null && Gdx.files.internal(iconPath).exists()) {
+            bg.setBackground(new TextureRegionDrawable(iconTexture));
+        } else {
+            bg.setBackground(solidDrawable(new Color(0f, 0f, 0f, 0.45f)));
+            Image dot = new Image(solidDrawable(fallbackTint));
+            Table dotWrap = new Table();
+            dotWrap.add(dot).size(20, 20).left().padLeft(6);
+            stack.add(dotWrap);
+        }
+        stack.add(bg);
+
+        Label label = new Label(value, skin);
+        label.setFontScale(1.2f * (width / 130f));
+        Table textTable = new Table();
+        textTable.add(label).left().expand().padLeft(RESOURCE_LABEL_PAD_FACTOR * (width / 130f));
+        stack.add(textTable);
+
+        ImageButton plusButton = new ImageButton(plusButtonStyle(skin));
+        Table plusWrap = new Table();
+        plusWrap.add(plusButton).size(width * PLUS_BUTTON_WIDTH_FACTOR, height * PLUS_BUTTON_HEIGHT_FACTOR)
+            .right().padRight(width * PLUS_BUTTON_PAD_RIGHT_FACTOR);
+        stack.add(plusWrap);
+
+        Table outer = new Table();
+        outer.add(stack).size(width, height);
+        return new PlusResourceWidget(outer, label, plusButton);
+    }
+
+    /** "+" button look: the same coin-buy asset the in-game HUD uses for its cheat buttons. */
+    private static ImageButton.ImageButtonStyle plusButtonStyle(Skin skin) {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        style.imageUp = skin.getDrawable("image_ui_hud_ingame_coin_buy");
+        style.imageDown = skin.getDrawable("image_ui_hud_ingame_coin_buy_down");
+        style.imageOver = skin.getDrawable("image_ui_hud_ingame_coin_buy_down");
+        style.imageChecked = skin.getDrawable("image_ui_hud_ingame_coin_buy_down");
+        return style;
+    }
+
+    /**
+     * Turns the "+" of a wallet pill into a working debug cheat (coins +amount or gems +amount) and saves
+     * the profile on every click. When debug mode is off the button is disabled and tinted out.
+     */
+    public static void wirePlusButton(PlusResourceWidget widget, boolean coins, int amount) {
+        boolean debug = isDebugModeEnabled();
+        widget.plusButton.setTouchable(debug ? Touchable.enabled : Touchable.disabled);
+        if (!debug) widget.plusButton.setColor(0.5f, 0.5f, 0.5f, 0.6f);
+        widget.plusButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!isDebugModeEnabled()) return;
+                User user = AppContext.getInstance().getCurrentUser();
+                if (user == null || user.getProfile() == null) return;
+                Profile profile = user.getProfile();
+                if (coins) {
+                    profile.addCoins(amount);
+                } else {
+                    profile.addDiamonds(amount);
+                }
+                user.saveUser();
+                widget.label.setText(String.valueOf(coins ? profile.getCoins() : profile.getDiamonds()));
+            }
+        });
+    }
+
+    /** True only when a logged-in user exists and has the debug-mode setting on. */
+    private static boolean isDebugModeEnabled() {
+        User user = AppContext.getInstance().getCurrentUser();
+        return user != null && user.getSetting() != null && user.getSetting().isDebugMode();
     }
 
     /** A round-ish icon button with a caption underneath (profile, settings, news...). */
@@ -5566,10 +5977,15 @@ public class GreenHouseMenu extends ScreenAdapter {
         Profile profile = currentProfile();
         int coins = profile != null ? profile.getCoins() : 0;
         int diamonds = profile != null ? profile.getDiamonds() : 0;
-        topRight.add(MenuUiKit.resourceWidget(skin, "textures/ui/coin_icon.png",
-            new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(coins), 195, 63)).padRight(15);
-        topRight.add(MenuUiKit.resourceWidget(skin, "textures/ui/diamond_icon.png",
-            new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(diamonds), 195, 63));
+
+        MenuUiKit.PlusResourceWidget coinWidget = MenuUiKit.resourceWidgetWithPlus(skin, "textures/ui/coin_icon.png",
+            new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(coins), 195, 63);
+        MenuUiKit.PlusResourceWidget gemWidget = MenuUiKit.resourceWidgetWithPlus(skin, "textures/ui/diamond_icon.png",
+            new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(diamonds), 195, 63);
+        MenuUiKit.wirePlusButton(coinWidget, true, 200);
+        MenuUiKit.wirePlusButton(gemWidget, false, 10);
+        topRight.add(coinWidget.widget).padRight(15);
+        topRight.add(gemWidget.widget);
 
         topBar.add(topLeft).left().expandX().top().padTop(40);
         topBar.add(topRight).right().top().padTop(40).padRight(20);
@@ -7289,10 +7705,14 @@ public class CollectionMenu extends ScreenAdapter {
         if (walletBar == null) return;
         Skin skin = PvzSkin.get();
         walletBar.clearChildren();
-        walletBar.add(MenuUiKit.resourceWidget(skin, "textures/ui/coin_icon.png",
-            new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(controller.getCoins()), 195, 63)).padRight(15);
-        walletBar.add(MenuUiKit.resourceWidget(skin, "textures/ui/diamond_icon.png",
-            new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(controller.getDiamonds()), 195, 63));
+        MenuUiKit.PlusResourceWidget coinWidget = MenuUiKit.resourceWidgetWithPlus(skin, "textures/ui/coin_icon.png",
+            new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(controller.getCoins()), 195, 63);
+        MenuUiKit.PlusResourceWidget gemWidget = MenuUiKit.resourceWidgetWithPlus(skin, "textures/ui/diamond_icon.png",
+            new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(controller.getDiamonds()), 195, 63);
+        MenuUiKit.wirePlusButton(coinWidget, true, 200);
+        MenuUiKit.wirePlusButton(gemWidget, false, 10);
+        walletBar.add(coinWidget.widget).padRight(15);
+        walletBar.add(gemWidget.widget);
         walletBar.pack();
         walletBar.setPosition(1920f - walletBar.getPrefWidth() - 30f, 1080f - walletBar.getPrefHeight() - 18f);
     }
@@ -7987,10 +8407,15 @@ public class GameModesMenu extends ScreenAdapter {
         Profile profile = currentProfile();
         int coins = profile != null ? profile.getCoins() : 0;
         int diamonds = profile != null ? profile.getDiamonds() : 0;
-        topRight.add(MenuUiKit.resourceWidget(skin, "textures/ui/coin_icon.png",
-            new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(coins), 220, 70)).padRight(15);
-        topRight.add(MenuUiKit.resourceWidget(skin, "textures/ui/diamond_icon.png",
-            new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(diamonds), 220, 70));
+
+        MenuUiKit.PlusResourceWidget coinWidget = MenuUiKit.resourceWidgetWithPlus(skin, "textures/ui/coin_icon.png",
+            new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(coins), 220, 70);
+        MenuUiKit.PlusResourceWidget gemWidget = MenuUiKit.resourceWidgetWithPlus(skin, "textures/ui/diamond_icon.png",
+            new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(diamonds), 220, 70);
+        MenuUiKit.wirePlusButton(coinWidget, true, 200);
+        MenuUiKit.wirePlusButton(gemWidget, false, 10);
+        topRight.add(coinWidget.widget).padRight(15);
+        topRight.add(gemWidget.widget);
 
         topBar.add(topLeft).left().expandX();
         topBar.add(topRight).right();
@@ -8249,6 +8674,7 @@ public class LeaderboardMenu extends ScreenAdapter {
 
         buildSortBar();
         refreshWallet();
+        controller.reload();
         refreshRows();
     }
 
@@ -8459,7 +8885,7 @@ public class LeaderboardMenu extends ScreenAdapter {
             && !user.getProfilePicture().isEmpty()) {
             path = user.getProfilePicture();
         }
-        Texture feathered = AvatarImages.featheredCircle(AvatarImages.getTexture(path));
+        Texture feathered = AvatarImages.featheredCircle(path);
         return new Image(new TextureRegionDrawable(feathered));
     }
 
@@ -12376,6 +12802,7 @@ public class PvZ2 extends Game {
     public static TextureBank textureBank;
     public static PamPlayer pamPlayer;
     public static SpriteBatch batch;
+    public static PvZ2 instance;
     AssetManager globalAssetManager;
 
     // Screen-space overlay used to apply the Settings screen's Brightness slider
@@ -12415,6 +12842,7 @@ public class PvZ2 extends Game {
     }
     @Override
     public void create() {
+        instance = this;
         FileHandle file = Gdx.files.internal("pvz-assets/animations.json");
         Json json = new Json();
         json.setIgnoreUnknownFields(true);
@@ -12842,10 +13270,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
@@ -12858,6 +13288,7 @@ import com.pvz.models.engine.GameEngine;
 import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.LawnMower;
+import com.pvz.models.entities.effects.LootDrop;
 import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
@@ -12874,10 +13305,13 @@ import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.user.MyPlant;
+import com.pvz.view.GameModesMenu;
 import com.pvz.view.game.GameScreen;
 import com.pvz.view.game.GameUiModal;
+import com.pvz.view.game.PauseMenuPopup;
 import com.pvz.view.game.PlantSelectModal;
 import com.pvz.view.PamActor;
+import com.pvz.view.PlantData;
 import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
@@ -12914,8 +13348,15 @@ public class GameController {
     private float readyPlantTimer = 0f;
     private final float readyPlantDuration = 2.0f;
 
+    private boolean paused = false;
+    private Table pauseOverlay;
+
     /** Debug: draws every entity's hitbox rectangle (toggle with F1). */
     private boolean showHitboxes = true;
+
+    /** Placement-preview ghost: plays the selected plant's idle PAM under the cursor. */
+    private float previewStateTime;
+    private PlantCard previewCard;
 
     public GameController(String seasonName, int levelNumber){
         this.seasonName=seasonName;
@@ -12935,7 +13376,7 @@ public class GameController {
         stage.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (currentState == State.PLAYING) {
+                if (currentState == State.PLAYING && !paused) {
                     if (ctx != null) {
                         // تبدیل ورودی ماوس/لمس به مختصات دقیق World
                         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -12943,6 +13384,14 @@ public class GameController {
 
                         // ۱. ابتدا کلیک روی خورشید بررسی می‌شود
                         if (checkSunClick(touchPos.x, touchPos.y)) {
+                            if (gameUiModal != null) {
+                                gameUiModal.setSelectedCard(null);
+                            }
+                            return true;
+                        }
+
+                        // ۱.۱. کلیک روی سکه‌ی افتاده از زامبی بررسی می‌شود
+                        if (checkLootClick(touchPos.x, touchPos.y)) {
                             if (gameUiModal != null) {
                                 gameUiModal.setSelectedCard(null);
                             }
@@ -12987,7 +13436,7 @@ public class GameController {
         plantSelectModal = new PlantSelectModal(level, this::startGameSession);
         stage.addActor(plantSelectModal);
 
-        gameUiModal = new GameUiModal();
+        gameUiModal = new GameUiModal(this::pauseGame);
         stage.addActor(gameUiModal);
 
         backgroundTextures=new TextureRegion[3];
@@ -13038,9 +13487,18 @@ public class GameController {
 
     public void update(float dt){
         camera.update();
+        previewStateTime += dt;
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             showHitboxes = !showHitboxes;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            if (paused) {
+                resumeGame();
+            } else if (currentState == State.PLAYING) {
+                pauseGame();
+            }
         }
 
         switch (currentState) {
@@ -13093,11 +13551,11 @@ public class GameController {
                 break;
         }
 
-        // Check sun clicks in PLAYING state on left click
-        if (currentState == State.PLAYING && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
+        // Check sun & coin-drop clicks in PLAYING state on left click
+        if (currentState == State.PLAYING && !paused && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             viewport.unproject(touchPos);
-            if (checkSunClick(touchPos.x, touchPos.y)) {
+            if (checkSunClick(touchPos.x, touchPos.y) || checkLootClick(touchPos.x, touchPos.y)) {
                 if (gameUiModal != null) {
                     gameUiModal.setSelectedCard(null);
                 }
@@ -13105,9 +13563,57 @@ public class GameController {
         }
 
         // ۴. آپدیت Engine
-        if (currentState == State.PLAYING) {
+        if (currentState == State.PLAYING && !paused) {
             GameEngine.getInstance().update(dt);
         }
+    }
+
+    private void pauseGame() {
+        if (currentState != State.PLAYING || paused) {
+            return;
+        }
+
+        paused = true;
+
+        Table overlay = new Table();
+        overlay.setFillParent(true);
+        overlay.setTouchable(Touchable.enabled);
+        overlay.setBackground(PvzSkin.get().newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.62f)));
+
+        overlay.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+
+        PauseMenuPopup popup = new PauseMenuPopup(this::saveAndExit, this::restartLevel, this::resumeGame);
+        overlay.add(popup).center();
+
+        pauseOverlay = overlay;
+        stage.addActor(pauseOverlay);
+        pauseOverlay.toFront();
+    }
+
+    private void resumeGame() {
+        if (!paused) {
+            return;
+        }
+        paused = false;
+        if (pauseOverlay != null) {
+            pauseOverlay.remove();
+            pauseOverlay = null;
+        }
+    }
+
+    private void restartLevel() {
+        resumeGame();
+        Gdx.app.postRunnable(() -> PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber)));
+    }
+
+    private void saveAndExit() {
+        resumeGame();
+        Gdx.app.postRunnable(() -> PvZ2.instance.setScreen(new GameModesMenu(PvZ2.instance)));
     }
 
     public void draw(){
@@ -13115,13 +13621,15 @@ public class GameController {
         batch.begin();
         drawBackground();
         if (ctx != null) {
-            drawTiles();
             drawPlants();
+            drawTileBehaviors();
             drawZombies();
             drawLawnMowers();
             drawSuns();
+            drawLootDrops();
             drawProjectiles();
             drawEffects();
+            drawPlacementPreview();
         }
         batch.end();
 
@@ -13132,13 +13640,7 @@ public class GameController {
             Tile hoveredTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
 
             if (hoveredTile != null) {
-                Gdx.gl.glEnable(GL20.GL_BLEND);
-                Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                shapeRenderer.setColor(0f, 1f, 0f, 0.4f);
-                shapeRenderer.rect(hoveredTile.getX(), hoveredTile.getY(), hoveredTile.getWidth(), hoveredTile.getHeight());
-                shapeRenderer.end();
-                Gdx.gl.glDisable(GL20.GL_BLEND);
+                drawPlacementHighlights(hoveredTile);
             }
         }
         drawDebugShapes();
@@ -13156,15 +13658,21 @@ public class GameController {
         batch.draw(backgroundTextures[2], backgroundTextures[1].getRegionWidth(), 0);
     }
 
-    private void drawTiles(){
+    private void drawTileBehaviors(){
         if (ctx==null) return;
         for (int lane = 0; lane < ctx.getMap().getLanes(); lane++) {
             for (int col = 0; col < ctx.getMap().getColumns(); col++) {
-                FrameConfig frameConfig = ctx.getMap().getTileAt(col,lane).draw();
-                if (frameConfig!=null){
-                    PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                        frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                        frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+                List<FrameConfig> frameConfigs = ctx.getMap().getTileAt(col,lane).drawBehaviors();
+                if (frameConfigs!=null && !frameConfigs.isEmpty()){
+                    for (FrameConfig frameConfig: frameConfigs) {
+                        if (frameConfig!=null) {
+                            batch.setColor(frameConfig.r,frameConfig.g,frameConfig.b,frameConfig.a);
+                            PvZ2.pamPlayer.draw(batch, frameConfig.pamPath, frameConfig.label,
+                                frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
+                                frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+                            batch.setColor(Color.WHITE);
+                        }
+                    }
                 }
             }
         }
@@ -13258,6 +13766,85 @@ public class GameController {
                     frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
             }
         }
+    }
+
+    private void drawLootDrops(){
+        if (ctx==null) return;
+        for (LootDrop c: ctx.getLootDrops()){
+            FrameConfig frameConfig = c.draw();
+            if (frameConfig!=null){
+                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
+                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
+                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+            }
+        }
+    }
+
+    /**
+     * Draws the "ghost" of the currently selected seed packet following the mouse:
+     * while a plant card is armed, the plant's idle PAM animation is played under the
+     * cursor, semi-transparent, until the plant is placed on a tile (or deselected).
+     */
+    private void drawPlacementPreview() {
+        if (currentState != State.PLAYING || paused) {
+            return;
+        }
+        if (gameUiModal == null || gameUiModal.getSelectedCard() == null) {
+            return;
+        }
+        PlantCard card = gameUiModal.getSelectedCard();
+        if (card != previewCard) {
+            previewCard = card;
+            previewStateTime = 0f;
+        }
+
+        PlantData data = PlantData.forType(card.getPlant().getType());
+        if (data == null) {
+            return;
+        }
+        String pamPath = data.pamPath();
+        String idleLabel = data.idleLabel();
+        if (pamPath == null) {
+            return;
+        }
+
+        touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+        viewport.unproject(touchPos);
+
+        batch.setColor(1f, 1f, 1f, 0.90f);
+        PvZ2.pamPlayer.draw(batch, pamPath, idleLabel, previewStateTime,
+                touchPos.x, touchPos.y, 0.7f, 0.7f, true);
+        batch.setColor(Color.WHITE);
+    }
+
+
+    /**
+     * Highlights the whole row (lane) and whole column under the hovered tile in white,
+     * matching the reference implementation's placement preview: while a plant card is
+     * armed, hovering a tile paints its entire lane and column so the player sees exactly
+     * which row/column the plant will land in.
+     */
+    private void drawPlacementHighlights(Tile tile) {
+        GameMap map = ctx.getMap();
+        int lanes = map.getLanes();
+        int cols = map.getColumns();
+
+        float boardWidth = cols * GameMap.TILE_WIDTH;
+        // Tiles use bottom-left coordinates: lane 0 spans [TOP_LANE_Y, TOP_LANE_Y + TILE_HEIGHT],
+        // so the grid's lowest edge sits one tile below TOP_LANE_Y.
+        float gridBottom = GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT;
+
+        float rowY = tile.getY();
+        float colX = tile.getX();
+
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(1f, 1f, 1f, 0.40f);
+        shapeRenderer.rect(GameMap.START_X, rowY, boardWidth, GameMap.TILE_HEIGHT);
+        shapeRenderer.rect(colX, gridBottom, GameMap.TILE_WIDTH, lanes * GameMap.TILE_HEIGHT);
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     private void drawDebugShapes(){
@@ -13387,6 +13974,51 @@ public class GameController {
             }
         }
         return false;
+    }
+
+    /**
+     * If the click lands on a fully-landed zombie loot drop, coins and diamonds
+     * fly to their on-screen wallet (banked on arrival); the pot unlocks a random
+     * locked greenhouse pot immediately.
+     */
+    private boolean checkLootClick(float worldX, float worldY) {
+        if (ctx == null) {
+            return false;
+        }
+        for (LootDrop drop : new ArrayList<>(ctx.getLootDrops())) {
+            if (drop.isDone() || !drop.isCollectable()) continue;
+            float dist = (float) Math.hypot(worldX - drop.getX(), worldY - drop.getY());
+            if (dist < 55f) {
+                if (drop.getType() == LootDrop.LootType.POT) {
+                    drop.collect();
+                    Gdx.app.log("GameScreen", "Pot drop clicked, a greenhouse pot was unlocked.");
+                } else {
+                    Vector2 target = lootWalletWorld(drop.getType());
+                    drop.flyTo(target.x, target.y);
+                    Gdx.app.log("GameScreen", "Loot drop clicked, flying to wallet: +" + drop.getAmount() + " "
+                        + drop.getType().name().toLowerCase() + "s.");
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * The on-screen wallet for a loot type, in world coordinates. The game viewport
+     * and the HUD stage are both FitViewport(1280, 720) with a bottom-left origin,
+     * so the wallet's stage position is already a valid world position.
+     */
+    private Vector2 lootWalletWorld(LootDrop.LootType type) {
+        if (gameUiModal == null) {
+            return type == LootDrop.LootType.DIAMOND
+                ? new Vector2(980f, 680f)
+                : new Vector2(1150f, 680f);
+        }
+        Vector2 stagePos = type == LootDrop.LootType.DIAMOND
+            ? gameUiModal.getGemWalletStagePosition()
+            : gameUiModal.getCoinWalletStagePosition();
+        return new Vector2(stagePos.x, stagePos.y);
     }
 
     /**
@@ -14083,6 +14715,7 @@ FILE: LeaderBoardController.java
 
 package com.pvz.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.pvz.models.AppContext;
@@ -14101,9 +14734,24 @@ public class LeaderBoardController {
     private LeaderboardSortField sortField = LeaderboardSortField.HIGHEST_SCORING_GAME_SCORE;
     private SortTypes sortOrder = SortTypes.DESCENDING;
 
+    /**
+     * Cached list of all saved players. Reading and deserializing every user JSON
+     * from disk on each sort click was the main delay, so it's loaded once and only
+     * re-read when {@link #reload()} is called (each time the screen opens).
+     */
+    private List<LeaderBoardEntry> cachedEntries;
+
     public List<LeaderBoardEntry> getEntries() {
-        List<LeaderBoardEntry> all = Leaderboard.loadAll();
-        return Leaderboard.sort(all, sortField, sortOrder);
+        if (cachedEntries == null) {
+            cachedEntries = Leaderboard.loadAll();
+        }
+        // sort() mutates the list in place, so hand it a copy to keep the cache pristine.
+        return Leaderboard.sort(new ArrayList<>(cachedEntries), sortField, sortOrder);
+    }
+
+    /** Forces the next {@link #getEntries()} to re-read all user JSONs from disk. */
+    public void reload() {
+        cachedEntries = null;
     }
 
     public LeaderboardSortField getSortField() {
@@ -17040,6 +17688,7 @@ import com.pvz.view.game.GameScreen;
 public class Sun extends Entity {
     private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
     private static final String SUN_CLIP = "animation";
+    private static final String RADIOACTIVE_SUN_PAM="768/FULL/EFFECTS/SUN_BOMB/SUN_BOMB.PAM";
 
     private static final float DEFAULT_LIFESPAN_SECONDS = 50f;
     private static final float DEFAULT_FALL_SPEED = 70f;
@@ -17085,8 +17734,13 @@ public class Sun extends Entity {
 
     @Override
     public FrameConfig draw(){
-        PvZ2.pamPlayer.draw(PvZ2.batch, SUN_PAM, SUN_CLIP, stateTime, position.x, position.y,0.7f,0.7f, true);
-        return null;
+        if (type==SunType.NORMAL){
+            return new FrameConfig(SUN_PAM,SUN_CLIP,stateTime, position, new Vector2(0.65f, 0.65f), null, true);
+        } else if (type==SunType.SPECIAL){
+            return new FrameConfig(SUN_PAM,SUN_CLIP,stateTime, position, new Vector2(0.75f, 0.75f), null, true);
+        } else {
+            return new FrameConfig(RADIOACTIVE_SUN_PAM,SUN_CLIP,stateTime, position, new Vector2(0.75f, 0.75f), null, true);
+        }
     }
 
     @Override
@@ -17218,7 +17872,7 @@ public class SunManager implements TickAware {
         }
 
         double timeInSeconds = totalTicks / 10.0;
-        double xSeconds = Math.min(6 + 0.05 * timeInSeconds, 12);
+        double xSeconds = Math.min(80 + 0.05 * timeInSeconds, 65);
         int xTicks = (int) (xSeconds * 10);
 
         if (ticksSinceLastDrop >= xTicks) {
@@ -22515,7 +23169,7 @@ public class SandstormCarryState extends ZombieState {
 
     // TODO: tune to taste — this is a placeholder carry speed (world units/sec),
     // independent of the zombie's own walk speed.
-    private static final float CARRY_SPEED_PER_SECOND = 900f;
+    private static final float CARRY_SPEED_PER_SECOND = 150f;
     private static final float ARRIVAL_EPSILON = 1f;
 
     private final float targetX;
@@ -25060,7 +25714,7 @@ public class Zombie extends Entity {
             context.log(sheet.getAlias() + " dropped " + stolenSun + " stolen sun on death!");
             stolenSun = 0;
         }
-        ZombieLootService.rollAndApplyLoot(context);
+        ZombieLootService.rollAndApplyLoot(context, this);
         context.getGameStats().onZombieKilled();
         context.getGameStats().onZombieKilledInSeason(context.getSeasonName());
         context.removeZombie(this);
@@ -25111,9 +25765,9 @@ package com.pvz.models.entities.zombies;
 import java.util.Random;
 
 import com.pvz.models.AppContext;
+import com.pvz.models.entities.effects.LootDrop;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.greenhouse.GreenHouse;
-import com.pvz.models.greenhouse.GreenHousePot;
 import com.pvz.models.user.Profile;
 import com.pvz.models.user.User;
 
@@ -25125,19 +25779,26 @@ import com.pvz.models.user.User;
  * are equally likely once the 10% roll succeeds. This is invoked once from
  * {@code Zombie.triggerDeath()}, mirroring how the glowing-zombie plant-food drop is handled
  * right next to it, so {@link GameContext} itself stays unaware of coins/diamonds/greenhouse.
+ *
+ * <p>All three outcomes are interactive: a {@link LootDrop} pops out of the zombie's head and
+ * only pays out once the player clicks it in the level — coins/diamonds are banked when the
+ * drop arcs into its on-screen wallet, and the pot unlocks a random locked greenhouse pot
+ * (if every pot is already unlocked, the drop turns into coins instead).
  */
 public final class ZombieLootService {
 
     private static final float DROP_CHANCE = 0.10f;
     private static final int COIN_REWARD = 50;
     private static final int DIAMOND_REWARD = 1;
+    /** The loot pops out at roughly head height, above the zombie's feet/center position. */
+    private static final float HEAD_OFFSET = 70f;
 
     private static final Random RANDOM = new Random();
 
     private ZombieLootService() {
     }
 
-    public static void rollAndApplyLoot(GameContext context) {
+    public static void rollAndApplyLoot(GameContext context, Zombie zombie) {
         if (RANDOM.nextFloat() >= DROP_CHANCE) {
             return;
         }
@@ -25149,37 +25810,36 @@ public final class ZombieLootService {
 
         int roll = RANDOM.nextInt(3);
         switch (roll) {
-            case 0 -> dropCoins(context, user);
-            case 1 -> dropDiamond(context, user);
-            default -> dropPot(context, user);
+            case 0 -> dropCoins(context, zombie);
+            case 1 -> dropDiamond(context, zombie);
+            default -> dropPot(context, zombie, user);
         }
 
         user.saveUser();
     }
 
-    private static void dropCoins(GameContext context, User user) {
-        Profile profile = user.getProfile();
-        profile.addCoins(COIN_REWARD);
-        context.log("A zombie droped 50 coins; you have " + profile.getCoins() + " coins now.");
+    private static void dropCoins(GameContext context, Zombie zombie) {
+        context.spawnLootDrop(LootDrop.coin(context, zombie.getX(), zombie.getY() + HEAD_OFFSET, COIN_REWARD));
+        context.log("A zombie dropped a coin! Click it to collect.");
     }
 
-    private static void dropDiamond(GameContext context, User user) {
-        Profile profile = user.getProfile();
-        profile.addDiamonds(DIAMOND_REWARD);
-        context.log("A zombie droped a diamond; you have " + profile.getDiamonds() + " diamonds now.");
+    private static void dropDiamond(GameContext context, Zombie zombie) {
+        context.spawnLootDrop(LootDrop.diamond(context, zombie.getX(), zombie.getY() + HEAD_OFFSET, DIAMOND_REWARD));
+        context.log("A zombie dropped a diamond! Click it to collect.");
     }
 
-    private static void dropPot(GameContext context, User user) {
+    private static void dropPot(GameContext context, Zombie zombie, User user) {
         GreenHouse greenHouse = resolveGreenHouse(user);
-        GreenHousePot unlocked = greenHouse.unlockRandomPot();
-
-        if (unlocked == null) {
+        if (greenHouse.getLockedPotCount() <= 0) {
             // Every pot is already unlocked: don't waste the drop, give coins instead.
-            dropCoins(context, user);
+            Profile profile = user.getProfile();
+            profile.addCoins(COIN_REWARD);
+            context.log("A zombie droped " + COIN_REWARD + " coins; you have " + profile.getCoins() + " coins now.");
             return;
         }
 
-        context.log("A zombie droped a pot; you have " + greenHouse.getUnlockedPotCount() + " pots now.");
+        context.spawnLootDrop(LootDrop.pot(context, zombie.getX(), zombie.getY() + HEAD_OFFSET));
+        context.log("A zombie dropped a greenhouse pot! Click it to unlock.");
     }
 
     /** Mirrors GreenHouseController's own resolution so the drop always touches the live instance. */
@@ -25902,7 +26562,6 @@ public abstract class Effect implements TickAware {
 
     @Override
     public void dispose() {
-        GameEngine.getInstance().getToRemove().add(this);
         ctx.removeEffect(this);
     }
 }
@@ -25966,6 +26625,288 @@ public class JalapenoFire extends Effect{
     @Override
     public FrameConfig draw() {
         return new FrameConfig(PAM_PATH,currentClip,stateTime,pos,new Vector2(0.65f,0.65f),null,false);
+    }
+}
+
+
+======================================================
+FILE: LootDrop.java
+======================================================
+
+package com.pvz.models.entities.effects;
+
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.PvZ2;
+import com.pvz.models.AppContext;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.Entity;
+import com.pvz.models.games.GameContext;
+import com.pvz.models.greenhouse.GreenHouse;
+import com.pvz.models.greenhouse.GreenHousePot;
+import com.pvz.models.user.Profile;
+import com.pvz.models.user.User;
+
+/**
+ * A clickable loot drop a zombie can leave behind on death (spawned by
+ * {@code ZombieLootService} when the 10% loot roll picks the coin, diamond or
+ * greenhouse-pot outcome).
+ *
+ * <p>Life cycle:
+ * <ol>
+ *   <li>{@code POP} — pops straight up out of the zombie's head and falls back
+ *       down to its exact start point (one smooth arc);</li>
+ *   <li>{@code READY} — sits there until the player clicks it (expires after a while);</li>
+ *   <li>{@code FLY} / {@code COLLECT} — the click response: coins and diamonds arc
+ *       into their on-screen wallet and are banked on arrival; the pot unlocks a
+ *       random locked greenhouse pot the moment it is clicked.</li>
+ * </ol>
+ *
+ * <p>Rendered with the matching PAM (gold coin / diamond / sprout). Clicking is
+ * handled by {@code GameController}, which passes the wallet's world position to
+ * {@link #flyTo(float, float)} or calls {@link #collect()} for the pot.
+ */
+public class LootDrop extends Entity {
+
+    /** Per-loot-type presentation data: PAM + clip label + sizes. */
+    public enum LootType {
+        COIN("768/INITIAL/EFFECTS/COIN_GOLD/COIN_GOLD.PAM", "animation", 0.6f, 0.4f),
+        DIAMOND("768/INITIAL/EFFECTS/COIN_DIAMOND/COIN_DIAMOND.PAM", "idle", 0.4f, 0.3f),
+        POT("768/INITIAL/ZEN_GARDEN/SPROUTDOOBER/SPROUTDOOBER.PAM", "animation", 0.7f, 0.5f);
+
+        final String pamPath;
+        final String clip;
+        final float baseScale;
+        final float startScale;
+
+        LootType(String pamPath, String clip, float baseScale, float startScale) {
+            this.pamPath = pamPath;
+            this.clip = clip;
+            this.baseScale = baseScale;
+            this.startScale = startScale;
+        }
+    }
+
+    /** How high above its start point the loot pops up to. */
+    private static final float POP_UP_HEIGHT = 150f;
+    /** Duration of the whole up-and-back-down pop. */
+    private static final float POP_DURATION = 0.85f;
+    private static final float FLY_DURATION = 0.50f;
+    /** Uncollected loot vanishes (unbanked) after this long in READY state. */
+    private static final float READY_TIMEOUT = 30f;
+    /** How high the wallet-fly arc bends above the straight line. */
+    private static final float FLY_ARC_HEIGHT = 140f;
+    private static final float COLLECT_DURATION = 0.30f;
+    private static final float COLLECT_SCALE_UP = 1.4f;
+
+    private enum Phase { POP, READY, FLY, COLLECT, DONE }
+
+    private final GameContext context;
+    private final LootType type;
+    private final int amount;
+
+    private final Vector2 startPos = new Vector2();
+    private final Vector2 flyStart = new Vector2();
+    private final Vector2 flyTarget = new Vector2();
+    private final Vector2 flyControl = new Vector2();
+
+    private Phase phase;
+    private float phaseTime;
+    private float stateTime;
+    private float scale;
+    private float flyStartScale;
+
+    private LootDrop(GameContext context, LootType type, float spawnX, float spawnY, int amount) {
+        this.context = context;
+        this.type = type;
+        this.amount = amount;
+        this.phase = Phase.POP;
+        this.phaseTime = 0f;
+        this.stateTime = 0f;
+        this.scale = type.startScale;
+
+        startPos.set(spawnX, spawnY);
+        setPosition(spawnX, spawnY);
+    }
+
+    public static LootDrop coin(GameContext context, float spawnX, float spawnY, int amount) {
+        return new LootDrop(context, LootType.COIN, spawnX, spawnY, amount);
+    }
+
+    public static LootDrop diamond(GameContext context, float spawnX, float spawnY, int amount) {
+        return new LootDrop(context, LootType.DIAMOND, spawnX, spawnY, amount);
+    }
+
+    public static LootDrop pot(GameContext context, float spawnX, float spawnY) {
+        return new LootDrop(context, LootType.POT, spawnX, spawnY, 0);
+    }
+
+    @Override
+    public void enter() {
+    }
+
+    @Override
+    public void update(float dt) {
+        stateTime += dt;
+        phaseTime += dt;
+
+        switch (phase) {
+            case POP -> {
+                // A single smooth arc: up to the peak, then back down to the exact
+                // start point. sin() drives y from start -> peak -> start, so the
+                // motion never overshoots and is clean on both legs.
+                float t = Math.min(1f, phaseTime / POP_DURATION);
+                float arc = MathUtils.sin(t * MathUtils.PI);
+                position.set(startPos.x, startPos.y + POP_UP_HEIGHT * arc);
+                scale = MathUtils.lerp(type.startScale, type.baseScale, arc);
+                if (t >= 1f) {
+                    position.set(startPos);
+                    scale = type.baseScale;
+                    phase = Phase.READY;
+                    phaseTime = 0f;
+                }
+            }
+            case READY -> {
+                if (phaseTime >= READY_TIMEOUT) {
+                    phase = Phase.DONE;
+                    context.removeLootDrop(this);
+                }
+            }
+            case FLY -> {
+                float t = Math.min(1f, phaseTime / FLY_DURATION);
+                float eased = Interpolation.pow2In.apply(t);
+                float inv = 1f - eased;
+                position.set(
+                    inv * inv * flyStart.x + 2f * inv * eased * flyControl.x + eased * eased * flyTarget.x,
+                    inv * inv * flyStart.y + 2f * inv * eased * flyControl.y + eased * eased * flyTarget.y);
+                scale = MathUtils.lerp(flyStartScale, 0.25f, eased);
+                if (t >= 1f) {
+                    position.set(flyTarget);
+                    phase = Phase.DONE;
+                    grantReward();
+                    context.removeLootDrop(this);
+                }
+            }
+            case COLLECT -> {
+                // Instant-collect types (pot): a quick celebratory pop, then vanish.
+                float t = Math.min(1f, phaseTime / COLLECT_DURATION);
+                scale = type.baseScale * MathUtils.lerp(1f, COLLECT_SCALE_UP, t);
+                if (t >= 1f) {
+                    phase = Phase.DONE;
+                    context.removeLootDrop(this);
+                }
+            }
+            case DONE -> {
+            }
+        }
+        syncHitbox();
+    }
+
+    @Override
+    public FrameConfig draw() {
+        PvZ2.pamPlayer.draw(PvZ2.batch, type.pamPath, type.clip, stateTime, position.x, position.y, scale, scale, true);
+        return null;
+    }
+
+    @Override
+    public void dispose() {
+    }
+
+    /**
+     * Starts the "collected" flight toward the wallet (coins / diamonds). The loot
+     * accelerates along a bezier arc, shrinking as it nears the wallet; the reward
+     * is banked only when it actually arrives.
+     */
+    public void flyTo(float worldX, float worldY) {
+        if (phase != Phase.READY) {
+            return;
+        }
+        flyStart.set(position);
+        flyTarget.set(worldX, worldY);
+        flyControl.set((flyStart.x + flyTarget.x) / 2f, (flyStart.y + flyTarget.y) / 2f + FLY_ARC_HEIGHT);
+        flyStartScale = scale;
+        phase = Phase.FLY;
+        phaseTime = 0f;
+    }
+
+    /**
+     * Instantly collects a loot type with no wallet target (the greenhouse pot):
+     * the reward is granted right away and the drop pops before disappearing.
+     */
+    public void collect() {
+        if (phase != Phase.READY) {
+            return;
+        }
+        grantReward();
+        phase = Phase.COLLECT;
+        phaseTime = 0f;
+    }
+
+    /** Only fully-landed loot can be clicked. */
+    public boolean isCollectable() {
+        return phase == Phase.READY;
+    }
+
+    public boolean isDone() {
+        return phase == Phase.DONE;
+    }
+
+    public LootType getType() {
+        return type;
+    }
+
+    public float getX() {
+        return position.x;
+    }
+
+    public float getY() {
+        return position.y;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    private void grantReward() {
+        User user = AppContext.getInstance().getCurrentUser();
+        if (user == null || user.getProfile() == null) {
+            return;
+        }
+        Profile profile = user.getProfile();
+        switch (type) {
+            case COIN -> {
+                profile.addCoins(amount);
+                context.log("A zombie coin drop was collected: +" + amount + " coins!");
+            }
+            case DIAMOND -> {
+                profile.addDiamonds(amount);
+                context.log("A zombie diamond drop was collected: +" + amount + " diamonds!");
+            }
+            case POT -> collectPot(user);
+        }
+        user.saveUser();
+    }
+
+    /** Mirrors ZombieLootService's own resolution so the drop always touches the live instance. */
+    private void collectPot(User user) {
+        GreenHouse greenHouse = AppContext.getInstance().getGreenHouse();
+        if (greenHouse == null) {
+            greenHouse = user.getGreenHouse();
+        }
+        if (greenHouse == null) {
+            greenHouse = new GreenHouse();
+            user.setGreenHouse(greenHouse);
+        }
+
+        GreenHousePot unlocked = greenHouse.unlockRandomPot();
+        if (unlocked == null) {
+            // Every pot is already unlocked: don't waste the drop, give coins instead.
+            user.getProfile().addCoins(50);
+            context.log("All greenhouse pots were already unlocked: +50 coins instead.");
+            return;
+        }
+        context.log("A zombie dropped a greenhouse pot: a new pot is now unlocked in the greenhouse!");
     }
 }
 
@@ -26089,6 +27030,44 @@ public class SandstormCloudEffect extends Effect {
         // Only the LOOP clip should actually loop; intro/outro play once.
         boolean looping = phase == Phase.LOOP;
         return new FrameConfig(SAND_STORM_PAM_PATH, clip, clipTime, pos, SCALE, null, looping);
+    }
+}
+
+
+======================================================
+FILE: ChillWind.java
+======================================================
+
+package com.pvz.models.entities.effects;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
+import com.pvz.models.games.GameContext;
+
+public class ChillWind extends Effect{
+    private static final String PAM_PATH="768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM";
+    private static final String CLIP="animation";
+
+    private float duration;
+
+    public ChillWind(GameContext ctx, Vector2 pos) {
+        super(ctx, pos);
+        duration=AnimationCatalog.instance.getClipDuration(PAM_PATH,CLIP);
+    }
+
+    @Override
+    public void update(float dt) {
+        super.update(dt);
+        if (stateTime>= duration){
+            dispose();
+        }
+    }
+
+    @Override
+    public FrameConfig draw() {
+        Vector2 scale=new Vector2(0.65f,0.65f);
+        return new FrameConfig(PAM_PATH,CLIP,stateTime,pos,scale,null,false);
     }
 }
 
@@ -26563,7 +27542,7 @@ package com.pvz.models.games.levels.data;
 
 public class EffectDefinition {
     public String type;
-    public int intervalTicks;
+    public int intervalTime;
     public float strength;
     public int minWaterColumn;
     public int maxWaterColumn;
@@ -26808,7 +27787,7 @@ public class Wave {
         Zombie newZombie = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(spawnCol), lane, context, waveNumber, difficulty);
 
         if (isSandstorm) {
-            int targetCol = context.getMap().getColumns() - 2 - rand.nextInt(4);
+            int targetCol = context.getMap().getColumns() - 2 - rand.nextInt(3);
             float targetX = GameController.colToWorldX(targetCol);
             newZombie.setPendingInitialState(new SandstormCarryState(targetX));
             context.log("A sandstorm carries a " + type.getAlias() + " toward column " + targetCol + "!");
@@ -27373,8 +28352,10 @@ FILE: GraveBehavior.java
 
 package com.pvz.models.games.map.behaviors;
 
+import com.badlogic.gdx.math.Vector2;
 import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.games.GameContext;
@@ -27471,9 +28452,11 @@ public class GraveBehavior implements TileBehavior {
     }
 
     @Override
-    public void draw(Tile tile) {
+    public FrameConfig draw(Tile tile) {
         TileBehavior.super.draw(tile);
-        PvZ2.pamPlayer.draw(PvZ2.batch,pamId,clip,stateTime,tile.getX()+Tile.WIDTH/2,tile.getY()+Tile.HEIGHT/2,0.6f,0.6f,false);
+        Vector2 pos = new Vector2(tile.getX()+Tile.WIDTH/2,tile.getY()+Tile.HEIGHT/2);
+        Vector2 scale = new Vector2(0.65f,0.65f);
+        return new FrameConfig(pamId,clip,stateTime,pos,scale,null,false);
     }
 }
 
@@ -27541,6 +28524,7 @@ FILE: TileBehavior.java
 
 package com.pvz.models.games.map.behaviors;
 
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
@@ -27555,7 +28539,7 @@ public interface TileBehavior {
     default void update(GameContext ctx, Tile tile, float dt) {}
     default String getStatus() {return null;}
     default String getName() { return "Behavior"; }
-    default void draw(Tile tile){}
+    default FrameConfig draw(Tile tile){return null;}
 }
 
 
@@ -27565,15 +28549,22 @@ FILE: IceBlockBehavior.java
 
 package com.pvz.models.games.map.behaviors;
 
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.projectile.ProjectileType;
 import com.pvz.models.games.map.tile.TileTags;
 
 public class IceBlockBehavior implements TileBehavior {
+    private static final String PAM_PATH="768/FULL/EFFECTS/FROSTBITE_ICE_BLOCK_PLANT/FROSTBITE_ICE_BLOCK_PLANT.PAM";
+    private static final String IDLE_CLIP="freeze_idle";
     private float iceHp = 600f;
     private Object entityInside; // Can be Plant or Zombie
+    float stateTime;
 
     public IceBlockBehavior(Object entity) {
         this.entityInside = entity;
@@ -27581,6 +28572,8 @@ public class IceBlockBehavior implements TileBehavior {
             p.incrementFreezeLevel(); // Set it to frozen state
         }
         // Zombies are already frozen via StatusEffect or this behavior
+
+        this.stateTime=0;
     }
 
     @Override
@@ -27605,6 +28598,12 @@ public class IceBlockBehavior implements TileBehavior {
         }
     }
 
+    @Override
+    public void update(GameContext ctx, Tile tile, float dt) {
+        TileBehavior.super.update(ctx, tile, dt);
+        stateTime+=dt;
+    }
+
     public void takeDamage(float amount, boolean isFire) {
         if (isFire) {
             iceHp = 0f;
@@ -27618,6 +28617,16 @@ public class IceBlockBehavior implements TileBehavior {
 
     @Override
     public String getName() { return "IceBlock"; }
+
+    @Override
+    public FrameConfig draw(Tile tile) {
+        TileBehavior.super.draw(tile);
+        Vector2 scale=new Vector2(0.65f,0.65f);
+        Vector2 pos = new Vector2(GameController.colToWorldX(tile.getCol()),GameController.laneToWorldY(tile.getLane()));
+        FrameConfig frameConfig = new FrameConfig(PAM_PATH,IDLE_CLIP,stateTime,pos,scale,null,false);
+        frameConfig.setColor(1,1,1,0.7f);
+        return frameConfig;
+    }
 }
 
 
@@ -27706,6 +28715,7 @@ package com.pvz.models.games.map.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.GameEngine;
 import com.pvz.models.engine.TickAware;
@@ -27843,6 +28853,10 @@ public class Tile implements TickAware {
         return height;
     }
 
+    public Vector2 getPosition(){
+        return new Vector2(x,y);
+    }
+
     @Override
     public void enter() {
 
@@ -27857,10 +28871,15 @@ public class Tile implements TickAware {
     @Override
     public FrameConfig draw() {
         TickAware.super.draw();
-        for (TileBehavior b: new ArrayList<>(behaviors)){
-            b.draw(this);
-        }
         return null;
+    }
+
+    public List<FrameConfig> drawBehaviors() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        for (TileBehavior b: new ArrayList<>(behaviors)){
+            frameConfigs.add(b.draw(this));
+        }
+        return frameConfigs;
     }
 
     @Override
@@ -27972,6 +28991,7 @@ import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.LawnMower;
 import com.pvz.models.entities.effects.Effect;
+import com.pvz.models.entities.effects.LootDrop;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.enums.PlantTag;
@@ -28009,6 +29029,7 @@ public class GameContext implements TickAware {
     private List<Card> cards;
     private List<Sun> suns;
     private List<Effect> effects;
+    private List<LootDrop> lootDrops = new ArrayList<>();
     private LawnMower[] lawnMowers;
     private final List<Hitbox> hitboxes = new ArrayList<>();
     private GameMode mode;
@@ -28033,6 +29054,8 @@ public class GameContext implements TickAware {
     private final List<Effect> pendingEffectsToRemove = new ArrayList<>();
     private final List<Sun> pendingSunsToAdd = new ArrayList<>();
     private final List<Sun> pendingSunsToRemove = new ArrayList<>();
+    private final List<LootDrop> pendingLootDropsToAdd = new ArrayList<>();
+    private final List<LootDrop> pendingLootDropsToRemove = new ArrayList<>();
 
     public GameContext(Level currentLevel) {
         this.engine         = GameEngine.getInstance();
@@ -28250,6 +29273,21 @@ public class GameContext implements TickAware {
         return true;
     }
 
+    public List<LootDrop> getLootDrops() {
+        return lootDrops;
+    }
+
+    public void spawnLootDrop(LootDrop c) {
+        pendingLootDropsToAdd.add(c);
+        engine.register(c);
+    }
+
+    public boolean removeLootDrop(LootDrop c) {
+        engine.unRegister(c);
+        pendingLootDropsToRemove.add(c);
+        return true;
+    }
+
     // ── Hitbox registry ─────────────────────────────────────────────────────────
     // Every spawned entity registers its hitbox here so the CollisionSystem can
     // sweep all hitboxes in one pass without caring about entity types.
@@ -28295,6 +29333,11 @@ public class GameContext implements TickAware {
         suns.removeAll(pendingSunsToRemove);
         pendingSunsToAdd.clear();
         pendingSunsToRemove.clear();
+
+        lootDrops.addAll(pendingLootDropsToAdd);
+        lootDrops.removeAll(pendingLootDropsToRemove);
+        pendingLootDropsToAdd.clear();
+        pendingLootDropsToRemove.clear();
 
         effects.addAll((pendingEffectsToAdd));
         effects.removeAll(pendingEffectsToRemove);
@@ -28350,7 +29393,7 @@ public class GameContext implements TickAware {
     public void update(float dt) {
         applyFireAuras();
         for (ChapterEffect effect : activeEffects) {
-            effect.onTick(this);
+            effect.update(this,dt);
         }
         mode.updateMode(this , dt);
     }
@@ -28416,8 +29459,8 @@ public class GameContext implements TickAware {
 
     public void addPlantFood(int amount){
         plantFoodCount+=amount;
-        if (plantFoodCount>4){
-            plantFoodCount=4;
+        if (plantFoodCount>3){
+            plantFoodCount=3;
         }
     }
 
@@ -30695,24 +31738,27 @@ package com.pvz.models.games.effects;
 
 import java.util.Random;
 
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.entities.effects.ChillWind;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.games.GameContext;
 
 public class ColdWindEffect implements ChapterEffect {
-    private final int intervalTicks;
-    private int tickCounter = 0;
+    private final float intervalTime;
+    private float stateTime = 0;
     private final Random rand = new Random();
 
-    public ColdWindEffect(int intervalTicks) {
-        this.intervalTicks = intervalTicks;
+    public ColdWindEffect(int intervalTime) {
+        this.intervalTime = intervalTime;
     }
 
     @Override
-    public void onTick(GameContext ctx) {
-        tickCounter++;
-        if (tickCounter >= intervalTicks) {
+    public void update(GameContext ctx, float dt) {
+        stateTime+=dt;
+        if (stateTime >= intervalTime) {
             triggerColdWind(ctx);
-            tickCounter = 0;
+            stateTime = 0;
         }
     }
 
@@ -30726,6 +31772,10 @@ public class ColdWindEffect implements ChapterEffect {
 
         for (int i = 0; i < affectedLanes; i++) {
             int lane = rand.nextInt(numLanes);
+
+            int midCol = ctx.getMap().getColumns()/2;
+            Vector2 pos = new Vector2(GameController.colToWorldX(midCol),GameController.laneToWorldY(lane));
+            ctx.addEffect(new ChillWind(ctx, pos));
             ctx.log("[ColdWind] Cold wind blowing in lane " + lane);
             for (Plant p : ctx.getPlantsInLane(lane)) {
                 p.incrementFreezeLevel();
@@ -30885,7 +31935,7 @@ public class DarkAgesEffect implements ChapterEffect {
     }
 
     @Override
-    public void onTick(GameContext ctx) {
+    public void update(GameContext ctx, float dt) {
         if (!"dark ages".equalsIgnoreCase(ctx.getSeasonName()))
             return;
 
@@ -30977,7 +32027,7 @@ import com.pvz.models.games.GameContext;
 import com.pvz.models.games.levels.Wave;
 
 public interface ChapterEffect {
-    default void onTick(GameContext ctx) {}
+    default void update(GameContext ctx, float dt) {}
     default void onWaveStart(Wave wave, GameContext ctx) {}
 }
 
@@ -30995,14 +32045,14 @@ public class EffectFactory {
         if (def.type == null) return null;
         switch (def.type) {
             case "SAND_STORM":
-                return new SandStormEffect(def.intervalTicks);
+                return new SandStormEffect(def.intervalTime);
             case "COLD_WIND":
-                return new ColdWindEffect(def.intervalTicks);
+                return new ColdWindEffect(def.intervalTime);
             case "BIG_WAVE_BEACH":
                 return new BigWaveBeachEffect(def.minWaterColumn, def.maxWaterColumn);
             case "DARK_AGES":
             case "DARK_AGES_EFFECT":
-                return new DarkAgesEffect(def.intervalTicks);
+                return new DarkAgesEffect(def.intervalTime);
             default:
                 return null;
         }
@@ -31026,7 +32076,7 @@ public class SandStormEffect implements ChapterEffect {
     }
 
     @Override
-    public void onTick(GameContext ctx) {
+    public void update(GameContext ctx, float dt) {
         // Sandstorm visual feedback is handled by Wave.spawnZombie
     }
 }
@@ -32613,6 +33663,7 @@ import java.util.Map;
 public class AvatarImages {
 
     private static final Map<String, Texture> cache = new HashMap<>();
+    private static final Map<String, Texture> featheredCache = new HashMap<>();
 
     private AvatarImages() {
     }
@@ -32641,6 +33692,21 @@ public class AvatarImages {
             pixmap.dispose();
         }
         return placeholder;
+    }
+
+    /**
+     * Returns the feathered-circle avatar for the given texture path, caching the
+     * result so rebuilding UI rows (e.g. re-sorting the leaderboard) never re-runs
+     * the per-pixel feather pass for the same avatar.
+     */
+    public static Texture featheredCircle(String path) {
+        String key = (path == null || !Gdx.files.internal(path).exists()) ? "__placeholder__" : path;
+        Texture feathered = featheredCache.get(key);
+        if (feathered == null) {
+            feathered = featheredCircle(getTexture(path));
+            featheredCache.put(key, feathered);
+        }
+        return feathered;
     }
 
     /**
@@ -32716,6 +33782,10 @@ public class AvatarImages {
             texture.dispose();
         }
         cache.clear();
+        for (Texture texture : featheredCache.values()) {
+            texture.dispose();
+        }
+        featheredCache.clear();
     }
 }
 

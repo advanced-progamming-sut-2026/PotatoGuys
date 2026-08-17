@@ -8,6 +8,7 @@ import com.pvz.models.leaderboard.Leaderboard;
 import com.pvz.models.leaderboard.Leaderboard.LeaderBoardEntry;
 import com.pvz.models.leaderboard.LeaderboardSortField;
 import com.pvz.models.leaderboard.SortTypes;
+import com.pvz.network.NetworkClient;
 
 /**
  * Controller for the Leaderboard screen. Loads every saved user's stats
@@ -24,38 +25,39 @@ public class LeaderBoardController {
      * from disk on each sort click was the main delay, so it's loaded once and only
      * re-read when {@link #reload()} is called (each time the screen opens).
      */
-    private List<LeaderBoardEntry> cachedEntries;
+    private List<LeaderBoardEntry> cachedEntries = new ArrayList<>();
 
     public List<LeaderBoardEntry> getEntries() {
-        if (cachedEntries == null) {
-            cachedEntries = Leaderboard.loadAll();
-        }
-        // sort() mutates the list in place, so hand it a copy to keep the cache pristine.
         return Leaderboard.sort(new ArrayList<>(cachedEntries), sortField, sortOrder);
     }
 
-    /** Forces the next {@link #getEntries()} to re-read all user JSONs from disk. */
-    public void reload() {
+    public void loadEntries(java.util.function.Consumer<List<LeaderBoardEntry>> onLoaded) {
+        NetworkClient.getInstance().getLeaderboard(entries -> {
+            cachedEntries = entries;
+            onLoaded.accept(Leaderboard.sort(new ArrayList<>(cachedEntries), sortField, sortOrder));
+        });
+    }
+
+    public void reload(java.util.function.Consumer<List<LeaderBoardEntry>> onLoaded) {
         cachedEntries = null;
+        loadEntries(onLoaded);
     }
 
-    public LeaderboardSortField getSortField() {
-        return sortField;
+    /** Forces the next {@link #getEntries()} to re-read all user JSONs from disk. */
+    public void reload(Runnable onLoaded) {
+        com.pvz.network.NetworkClient.getInstance().getLeaderboard(entries -> {
+            cachedEntries = entries;
+            if (onLoaded != null) onLoaded.run();
+        });
     }
 
-    public SortTypes getSortOrder() {
-        return sortOrder;
-    }
-
-    public void setSortField(LeaderboardSortField field) {
-        this.sortField = field;
-    }
-
+    public LeaderboardSortField getSortField() { return sortField; }
+    public SortTypes getSortOrder() { return sortOrder; }
+    public void setSortField(LeaderboardSortField field) { this.sortField = field; }
     public void toggleSortOrder() {
         sortOrder = (sortOrder == SortTypes.DESCENDING) ? SortTypes.ASCENDING : SortTypes.DESCENDING;
     }
 
-    /** Username of the currently logged-in user, so the view can highlight their row. */
     public String getCurrentUsername() {
         return AppContext.getInstance().getCurrentUser() != null
             ? AppContext.getInstance().getCurrentUser().getUsername()

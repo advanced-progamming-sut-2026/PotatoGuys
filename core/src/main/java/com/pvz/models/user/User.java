@@ -26,7 +26,11 @@ public class User {
     private QuestLog questLog;
 
     public void saveUser(){
-        SaveManager.getInstance().save(this, "users/" + id + ".json");
+        if (com.pvz.network.NetworkClient.getInstance().isConnected()) {
+            com.pvz.network.NetworkClient.getInstance().saveUser(this, null);
+        } else {
+            SaveManager.getInstance().save(this, "users/" + id + ".json");
+        }
     }
 
 

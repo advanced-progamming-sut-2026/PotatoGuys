@@ -27,6 +27,7 @@ import com.pvz.models.games.seasons.Season;
 import com.pvz.models.user.Gender;
 import com.pvz.models.user.Message;
 import com.pvz.models.user.User;
+import com.pvz.network.NetworkClient;
 import com.pvz.utils.PasswordUtils;
 import com.pvz.utils.SaveManager;
 import pvz.skin.PvzSkin;
@@ -203,25 +204,15 @@ public class RegisterMenu extends ScreenAdapter {
         user.setSecurityQuestion(String.valueOf(questionIndex));
         user.setSecurityAnswer(answer);
 
-        SaveManager saveManager = SaveManager.getInstance();
-        String id = UUID.randomUUID().toString();
-        user.setId(id);
-
-        grantStarterProgress(user);
-
-        user.getProfile().getNews().getMessages()
-            .add(new Message("Welcome   to   Plants   vs   Zombies 2   " + user.getNickName() + " ! "));
-
-        HashMap<String, String> usernames = saveManager.load("users/username.json", HashMap.class);
-        if (usernames == null) {
-            usernames = new HashMap<>();
-        }
-        usernames.put(user.getUsername(), user.getId());
-        saveManager.save(usernames, "users/username.json");
-        saveManager.save(user, "users/" + user.getId() + ".json");
-
-        statusLabel.setText("Registration successful! Please login.");
-        Gdx.app.postRunnable(() -> game.setScreen(new LoginMenu(game)));
+        statusLabel.setText("Connecting...");
+        NetworkClient.getInstance().register(user, response -> {
+            if (!response.success) {
+                statusLabel.setText(response.errorMessage);
+                return;
+            }
+            statusLabel.setText("Registration successful! Please login.");
+            game.setScreen(new LoginMenu(game));
+        });
     }
 
     /** Unlocks the default starter plants and first chapter for a brand-new account. */
