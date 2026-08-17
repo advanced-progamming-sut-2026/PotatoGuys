@@ -87,11 +87,15 @@ public class GameContext implements TickAware {
         this.effects        = new ArrayList<>();
         this.cards          = new ArrayList<>();
         this.map = GameMapFactory.createGameMap(currentLevel.getGameMapDefinition());
-        this.lawnMowers=new LawnMower[map.getLanes()];
-        for (int i = 0; i < lawnMowers.length; i++) {
-            lawnMowers[i]=new LawnMower(this,i);
-            hitboxes.add(lawnMowers[i].getHitbox());
-            GameEngine.getInstance().getToAdd().add(lawnMowers[i]);
+        if (currentLevel.getGameMode() != com.pvz.models.games.modes.GameModeType.IZOMBIE) {
+            this.lawnMowers=new LawnMower[map.getLanes()];
+            for (int i = 0; i < lawnMowers.length; i++) {
+                lawnMowers[i]=new LawnMower(this,i);
+                hitboxes.add(lawnMowers[i].getHitbox());
+                GameEngine.getInstance().getToAdd().add(lawnMowers[i]);
+            }
+        } else {
+            this.lawnMowers = new LawnMower[0];
         }
         this.mode = GameModeFactory.createGameMode(currentLevel);
         this.setLevelNumber(currentLevel.getLevelNumber());

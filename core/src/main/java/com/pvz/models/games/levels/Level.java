@@ -11,12 +11,15 @@ import com.pvz.models.games.modes.GameModeType;
 public abstract class Level {
     protected GameModeType gameType;
     protected GameMapDefinition gameMap;
-    protected final LevelType levelType;
-    protected final int initialSun;
-    protected final int levelNumber;
+    protected LevelType levelType;
+    protected int initialSun;
+    protected int levelNumber;
     protected String seasonName;
     protected List<EffectDefinition> effects;
 
+    protected Level() {
+        this.effects = new ArrayList<>();
+    }
 
     public Level(GameModeType gameMode, GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun){
         this.gameType=gameMode;

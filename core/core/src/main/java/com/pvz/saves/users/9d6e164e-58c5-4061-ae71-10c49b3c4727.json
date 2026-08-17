@@ -262,7 +262,7 @@
       {
         "x": 4,
         "y": 2,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -280,7 +280,7 @@
       {
         "x": 3,
         "y": 3,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       },
       {
@@ -1209,7 +1209,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1786991664974
+    "lastDailyReset": 1787006988403
   },
   "questLogRefreshed": true
 }

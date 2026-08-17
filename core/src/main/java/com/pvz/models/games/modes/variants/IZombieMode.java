@@ -1,12 +1,18 @@
 package com.pvz.models.games.modes.variants;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
+import com.pvz.models.entities.sun.Sun;
+import com.pvz.models.entities.sun.SunType;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.ZombieType;
@@ -23,10 +29,66 @@ public class IZombieMode implements GameMode, ZombiePlacer {
     private final List<MyPlant> basedPlants;
     private final List<ZombieType> basedZombies;
     private final boolean[] brainsEaten;
-    private int redLineColumn = 4;
+    private int redLineColumn = 6;
 
     private int ticksElapsed = 0;
-    private int sunZombieInterval = 150;
+    private boolean sunProducersSpawned = false;
+    private final java.util.Map<Zombie, Float> brainEatTimers = new java.util.IdentityHashMap<>();
+    private static final float BRAIN_EAT_DURATION = 3.0f;
+
+    private static final String SUN_PRODUCER_ALIAS = "ZombieTutorialArmor2Default";
+    private static final int SUN_PRODUCER_HP = 1290;
+    private static final int SUN_AMOUNT = 25;
+    private int sunProducerIntervalTicks = 300;
+    private int sunProducerCountdown = 300;
+    private final List<Zombie> sunProducers = new ArrayList<>();
+
+    private static final Map<ZombieType, Integer> ZOMBIE_SUN_COSTS = new HashMap<>();
+    static {
+        ZOMBIE_SUN_COSTS.put(ZombieType.IMP, 25);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BASIC, 50);
+        ZOMBIE_SUN_COSTS.put(ZombieType.CONEHEAD, 75);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BUCKETHEAD, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BRICKHEAD, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.NEWSPAPER, 75);
+        ZOMBIE_SUN_COSTS.put(ZombieType.FLAG, 50);
+        ZOMBIE_SUN_COSTS.put(ZombieType.GARGANTUAR, 300);
+        ZOMBIE_SUN_COSTS.put(ZombieType.MUMMY, 50);
+        ZOMBIE_SUN_COSTS.put(ZombieType.MUMMY_CONE, 75);
+        ZOMBIE_SUN_COSTS.put(ZombieType.MUMMY_BUCKET, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.MUMMY_BRICK, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.RA, 150);
+        ZOMBIE_SUN_COSTS.put(ZombieType.EXPLORER, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.TOMB_RAISER, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.EGYPT_GARG, 300);
+        ZOMBIE_SUN_COSTS.put(ZombieType.EGYPT_IMP, 25);
+        ZOMBIE_SUN_COSTS.put(ZombieType.ICE_AGE, 50);
+        ZOMBIE_SUN_COSTS.put(ZombieType.ICE_AGE_CONE, 75);
+        ZOMBIE_SUN_COSTS.put(ZombieType.ICE_AGE_BUCKET, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.HUNTER, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.TROGLOBITE, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DODO, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.ICE_AGE_GARG, 300);
+        ZOMBIE_SUN_COSTS.put(ZombieType.ICE_AGE_IMP, 25);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BEACH, 50);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BEACH_CONE, 75);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BEACH_BUCKET, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.SNORKEL, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.FISHERMAN, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.OCTOPUS, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BEACH_GARG, 300);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BEACH_IMP, 25);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DARK, 50);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DARK_CONE, 75);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DARK_BUCKET, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.KNIGHT, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DARK_BRICK, 150);
+        ZOMBIE_SUN_COSTS.put(ZombieType.WIZARD, 150);
+        ZOMBIE_SUN_COSTS.put(ZombieType.JUGGLER, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.KING, 200);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DARK_GARG, 300);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DARK_IMP, 25);
+    }
 
     public IZombieMode(Level level) {
         if (level instanceof IZombieLevel iZombieLevel) {
@@ -36,179 +98,189 @@ public class IZombieMode implements GameMode, ZombiePlacer {
         } else {
             throw new IllegalArgumentException("Level must be an instance of IZombieLevel.");
         }
-
         this.brainsEaten = new boolean[5];
-        for (int i = 0; i < 5; i++) {
-            brainsEaten[i] = false;
-        }
     }
+
+    public boolean[] getBrainsEaten() { return brainsEaten; }
+    public int getRedLineColumn() { return redLineColumn; }
+    public List<Zombie> getSunProducers() { return sunProducers; }
 
     @Override
-    public boolean supportsFallingSuns() {
-        return false;
-    }
+    public boolean supportsFallingSuns() { return false; }
 
     @Override
     public void initMode(GameContext context) {
-        context.log("\n=========================================================");
-        context.log("  I, ZOMBIE MODE ACTIVATED!");
-        context.log("• Deploy zombies to eat all 5 brains!");
-        context.log("• Placement: You can only place zombies to the right of Column " + (redLineColumn - 1));
-        context.log("=========================================================\n");
-
         Random random = new Random();
+        int lanes = context.getMap().getLanes();
+        int plantEndCol = redLineColumn - 1;
 
         if (basedPlants != null && !basedPlants.isEmpty()) {
-            for (int col = 0; col < redLineColumn; col++) {
-                for (int lane = 0; lane < context.getMap().getLanes(); lane++) {
-                    MyPlant randomPlant = basedPlants.get(random.nextInt(basedPlants.size()));
-
-                    Plant plant = new PlantFactory().create(
-                            randomPlant.getType(),
-                            col,
-                            lane,
-                            randomPlant.getLevel(),
-                            randomPlant.isBoosted(),
-                            context);
+            for (int lane = 0; lane < lanes; lane++) {
+                boolean planted = false;
+                for (int col = 1; col <= plantEndCol; col++) {
+                    if (random.nextFloat() < 0.45f) {
+                        MyPlant rp = basedPlants.get(random.nextInt(basedPlants.size()));
+                        Plant plant = new PlantFactory().create(rp.getType(), col, lane, rp.getLevel(), rp.isBoosted(), context);
+                        if (plant == null) continue;
+                        context.spawnPlant(plant);
+                        planted = true;
+                    }
+                }
+            if (!planted) {
+                int col = 1 + random.nextInt(Math.max(1, plantEndCol));
+                MyPlant rp = basedPlants.get(random.nextInt(basedPlants.size()));
+                Plant plant = new PlantFactory().create(rp.getType(), col, lane, rp.getLevel(), rp.isBoosted(), context);
+                if (plant != null) {
                     context.spawnPlant(plant);
                 }
             }
-            context.log("Plants have been randomly spawned on the board!");
+            }
         }
 
-        setupRandomZombieCards(context, random);
+        setupZombieCards(context);
+        context.log("I, Zombie ready! " + basedZombies.size() + " zombie types available.");
     }
 
-    private void setupRandomZombieCards(GameContext context, Random random) {
-        if (basedZombies == null || basedZombies.isEmpty()) {
-            context.log("⚠️ No base zombies defined for this level!");
-            return;
+    private void setupZombieCards(GameContext context) {
+        if (basedZombies == null || basedZombies.isEmpty()) return;
+
+        for (ZombieType zt : basedZombies) {
+            if (zt == null) continue;
+            int cost = ZOMBIE_SUN_COSTS.getOrDefault(zt, 50);
+            float cooldown = Math.max(3f, Math.min(12f, 2f + cost / 50f));
+            ZombieCard card = new ZombieCard(zt, cost, cooldown);
+            card.setCooldownEnable(false);
+            context.addCard(card);
         }
-
-        int targetCards = Math.min(7, basedZombies.size());
-        int addedCards = 0;
-        int maxAttempts = 100;
-
-        while (addedCards < targetCards && maxAttempts > 0) {
-            maxAttempts--;
-
-            ZombieType randomZombieType = basedZombies.get(random.nextInt(basedZombies.size()));
-
-            if (randomZombieType == null || randomZombieType.getAlias() == null) {
-                continue;
-            }
-
-            if (findCard(context, randomZombieType.toString()) != null) {
-                continue;
-            }
-
-            ZombieCard zombieCard = new ZombieCard(randomZombieType, 50, 5.0f);
-            context.addCard(zombieCard);
-            addedCards++;
-        }
-
-        context.log("🧟 " + addedCards + " Random Zombie cards selected for this match!");
     }
 
     @Override
     public void updateMode(GameContext context, float dt) {
         ticksElapsed++;
 
-        if (ticksElapsed % 200 == 0 && sunZombieInterval > 40) {
-            sunZombieInterval -= 10;
-        }
-
-        // ─── ۲. بررسی رسیدن زامبی‌ها به انتهای لاین (خوردن مغز) ─────────────────
-        for (Zombie z : context.getZombies()) {
-            if (!z.isDead() && z.getX() <= 0f) {
-                int lane = GameController.worldYtoLane(z.getY());
-                if (!brainsEaten[lane]) {
-                    brainsEaten[lane] = true;
-                    context.log("🧠 BRAIN EATEN in Lane " + lane + "! Yummy!");
-                    context.removeZombie(z);
+        if (!sunProducersSpawned) {
+            sunProducersSpawned = true;
+            int lastCol = context.getMap().getColumns() - 1;
+            float spawnX = GameController.colToWorldX(lastCol);
+            int lanes = context.getMap().getLanes();
+            for (int lane = 0; lane < lanes; lane++) {
+                try {
+                    Zombie producer = new ZombieFactory().create(SUN_PRODUCER_ALIAS, spawnX, lane, context, 1, 1);
+                    context.spawnZombie(producer);
+                    sunProducers.add(producer);
+                } catch (Exception e) {
+                    Gdx.app.error("IZombieMode", "Failed to spawn sun producer: " + e.getMessage());
                 }
             }
         }
 
-        boolean allBrainsEaten = true;
-        for (boolean eaten : brainsEaten) {
-            if (!eaten) {
-                allBrainsEaten = false;
-                break;
+        List<Zombie> toRemove = new ArrayList<>();
+        for (Zombie z : context.getZombies()) {
+            if (z.isDead() || sunProducers.contains(z)) continue;
+            float brainX = GameController.colToWorldX(0);
+            if (z.getX() <= brainX + 10f) {
+                int lane = GameController.worldYtoLane(z.getY());
+                if (lane >= 0 && lane < brainsEaten.length && !brainsEaten[lane]) {
+                    if (!brainEatTimers.containsKey(z)) {
+                        brainEatTimers.put(z, BRAIN_EAT_DURATION);
+                        z.setVelocity(0, 0);
+                    }
+                    float remaining = brainEatTimers.get(z) - dt;
+                    brainEatTimers.put(z, remaining);
+                    if (remaining <= 0) {
+                        brainsEaten[lane] = true;
+                        toRemove.add(z);
+                    }
+                }
             }
         }
+        for (Zombie z : toRemove) {
+            brainEatTimers.remove(z);
+            context.removeZombie(z);
+        }
 
+        boolean allBrainsEaten = true;
+        for (boolean eaten : brainsEaten) {
+            if (!eaten) { allBrainsEaten = false; break; }
+        }
         if (allBrainsEaten) {
             context.setGameOver(true);
-            context.log("🎉 VICTORY! You ate all the brains! Humanz are defeated! 🎉");
             return;
         }
 
-        if (context.getZombies().isEmpty()) {
-            int minZombieCost = getCheapestZombieCost(context);
-            if (context.getCurrentSun() < minZombieCost) {
+        sunProducerCountdown--;
+        if (sunProducerCountdown <= 0) {
+            spawnSunDrop(context);
+            sunProducerCountdown = sunProducerIntervalTicks;
+            if (sunProducerIntervalTicks > 120) {
+                sunProducerIntervalTicks = Math.max(120, sunProducerIntervalTicks - 10);
+            }
+        }
+
+        boolean hasLivingPlayerZombies = false;
+        boolean hasLivingSunProducers = false;
+        for (Zombie z : context.getZombies()) {
+            if (z.isDead()) continue;
+            if (sunProducers.contains(z)) {
+                hasLivingSunProducers = true;
+            } else {
+                hasLivingPlayerZombies = true;
+            }
+        }
+        if (!hasLivingPlayerZombies) {
+            int cheapest = Integer.MAX_VALUE;
+            for (Card card : context.getCards()) {
+                if (card instanceof ZombieCard zc && context.getCurrentSun() >= zc.getCost()) {
+                    cheapest = Math.min(cheapest, zc.getCost());
+                }
+            }
+            if (cheapest == Integer.MAX_VALUE && !hasLivingSunProducers) {
                 context.setGameOver(true);
-                context.log("❌ GAME OVER! Out of Sun and no zombies left on the field! ❌");
             }
         }
     }
 
+    private void spawnSunDrop(GameContext context) {
+        Random rng = new Random();
+        int lane = rng.nextInt(context.getMap().getLanes());
+        int col = 1 + rng.nextInt(Math.max(1, redLineColumn - 1));
+        Sun sun = new Sun(SunType.NORMAL, col, lane, SUN_AMOUNT, true, context);
+        context.spawnSun(sun);
+    }
+
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
-        if (card == null) {
-            context.log("[Placement Failed] Selected card is null.");
-            return false;
-        }
-
-        if (!(card instanceof ZombieCard zombieCard)) {
-            context.log("[Placement Failed] Card is not a valid zombie card.");
-            return false;
-        }
-
-        if (col < redLineColumn || col >= context.getMap().getColumns() || lane < 0 || lane >= context.getMap().getLanes()) {
-            context.log("[Placement Failed] Must place zombies to the right of Column " + (redLineColumn - 1)
-                        + "! Invalid position: (" + col + ", " + lane + ")");
-            return false;
-        }
-
-        if (!zombieCard.canUse()) {
-            context.log("[Placement Failed] Zombie card " + zombieCard.getZombieType() + " is on cooldown.");
-            return false;
-        }
-
-        if (context.getCurrentSun() < zombieCard.getCost()) {
-            context.log("[Placement Failed] Not enough sun for " + zombieCard.getZombieType()
-                        + "! Required: " + zombieCard.getCost() + ", Current: " + context.getCurrentSun());
-            return false;
-        }
-
+        if (card == null || !(card instanceof ZombieCard zombieCard)) return false;
+        if (col < redLineColumn || col >= context.getMap().getColumns()) return false;
+        if (lane < 0 || lane >= context.getMap().getLanes()) return false;
+        if (!zombieCard.canUse()) return false;
+        if (context.getCurrentSun() < zombieCard.getCost()) return false;
         return true;
     }
 
     @Override
     public void handlePlacement(GameContext context, int col, int lane, Card card) {
-        if (!(card instanceof ZombieCard zombieCard))
-            return;
-
+        if (!(card instanceof ZombieCard zombieCard)) return;
         if (!context.spendSun(zombieCard.getCost())) {
-            context.log("Error: Not enough sun.");
+            Gdx.app.log("IZombieMode", "Not enough sun for " + zombieCard.getZombieType());
             return;
         }
-
-        Zombie zombie = new ZombieFactory().create(zombieCard.getZombieType().getAlias(), col, lane, context, 1, 1);
-        context.spawnZombie(zombie);
-
-        zombieCard.use();
-        context.log(zombieCard.getZombieType() + " deployed at (" + col + ", " + lane + ").");
+        try {
+            float spawnX = GameController.colToWorldX(col);
+            Zombie zombie = new ZombieFactory().create(zombieCard.getZombieType().getAlias(), spawnX, lane, context, 1, 1);
+            context.spawnZombie(zombie);
+            zombieCard.use();
+        } catch (Exception e) {
+            Gdx.app.error("IZombieMode", "Failed to place " + zombieCard.getZombieType() + ": " + e.getMessage());
+            context.addSun(zombieCard.getCost());
+        }
     }
 
     @Override
     public ZombieCard findCard(GameContext context, String zombieType) {
         for (Card card : context.getCards()) {
-            if (card instanceof ZombieCard zombieCard) {
-                if (zombieCard.getZombieType().toString().equalsIgnoreCase(zombieType)) {
-                    return zombieCard;
-                }
+            if (card instanceof ZombieCard zc && zc.getZombieType().toString().equalsIgnoreCase(zombieType)) {
+                return zc;
             }
         }
         return null;
@@ -217,34 +289,11 @@ public class IZombieMode implements GameMode, ZombiePlacer {
     @Override
     public String getCardsStatus(GameContext context) {
         StringBuilder sb = new StringBuilder();
-        List<Card> cards = context.getCards();
-
-        if (cards == null || cards.isEmpty()) {
-            sb.append("No zombie cards available.");
-        } else {
-            sb.append("=== ZOMBIE CARDS ===");
-            int cardWidth = 40;
-
-            for (Card card : cards) {
-                if (card instanceof ZombieCard zc) {
-                    String cardInfo = String.format("- %s | Cost:%d | Cooldown:%.1f",
-                            zc.getZombieType(),
-                            zc.getCost(),
-                            (float) zc.getCooldown() / (float) Constants.TICK_PER_SECOND);
-                    sb.append("\n").append(String.format("%-" + cardWidth + "s", cardInfo));
-                }
+        for (Card card : context.getCards()) {
+            if (card instanceof ZombieCard zc) {
+                sb.append(String.format("%s | %d sun%n", zc.getZombieType(), zc.getCost()));
             }
         }
         return sb.toString();
-    }
-
-    private int getCheapestZombieCost(GameContext context) {
-        int minCost = Integer.MAX_VALUE;
-        for (Card card : context.getCards()) {
-            if (card instanceof ZombieCard zc) {
-                minCost = Math.min(minCost, zc.getCost());
-            }
-        }
-        return minCost == Integer.MAX_VALUE ? 50 : minCost;
     }
 }

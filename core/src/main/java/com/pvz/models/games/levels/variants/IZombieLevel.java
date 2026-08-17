@@ -14,6 +14,11 @@ public class IZombieLevel extends Level {
     private List<ZombieType> basedZombies;
     private int redLineColumn;
 
+    public IZombieLevel() {
+        super();
+        this.redLineColumn = 6;
+    }
+
     public IZombieLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun,
                         List<MyPlant> basedPlants, List<ZombieType> basedZombies) {
         super(GameModeType.IZOMBIE, gameMap, levelNumber, type, initialSun);

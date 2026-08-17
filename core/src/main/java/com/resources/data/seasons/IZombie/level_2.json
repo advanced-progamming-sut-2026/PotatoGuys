@@ -1,8 +1,8 @@
 {
   "gameType": "IZOMBIE",
   "levelNumber": 2,
-  "levelType": "IZOMBIE",
-  "initialSun": 750,
+  "levelType": "MINIGAME",
+  "initialSun": 150,
   "seasonName": "Default",
   "redLineColumn": 6,
   "gameMap": {
@@ -67,14 +67,10 @@
   ],
   "basedZombies": [
     "BASIC",
-    "CONEHEAD",
     "BUCKETHEAD",
     "NEWSPAPER",
     "DARK",
-    "DARK_CONE",
-    "DARK_BUCKET",
-    "WIZARD",
-    "IMP"
+    "WIZARD"
   ],
   "effects": []
 }

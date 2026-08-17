@@ -1,8 +1,8 @@
 {
   "gameType": "IZOMBIE",
   "levelNumber": 1,
-  "levelType": "IZOMBIE",
-  "initialSun": 500,
+  "levelType": "MINIGAME",
+  "initialSun": 150,
   "seasonName": "Default",
   "redLineColumn": 6,
   "gameMap": {
@@ -61,12 +61,7 @@
     "BASIC",
     "CONEHEAD",
     "BUCKETHEAD",
-    "BRICKHEAD",
     "IMP",
-    "NEWSPAPER",
-    "POLE_VAULTING",
-    "FOOTBALL",
-    "DANCING",
     "GARGANTUAR"
   ],
   "effects": []

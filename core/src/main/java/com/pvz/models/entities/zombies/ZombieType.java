@@ -19,6 +19,9 @@ public enum ZombieType {
     IMP             ("ZombieTutorialImpDefault"),
     GARGANTUAR      ("ZombieGargantuarBasic"),
     NEWSPAPER       ("ZombieModernNewspaperDefault"),
+    POLE_VAULTING   ("ZombiePoleVaultingDefault"),
+    FOOTBALL        ("ZombieFootballDefault"),
+    DANCING         ("ZombieDancingDefault"),
 
     // ── Ancient Egypt ─────────────────────────────────────────────────────────
     MUMMY           ("ZombieMummyDefault"),

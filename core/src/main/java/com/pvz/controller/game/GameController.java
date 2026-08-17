@@ -17,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -43,8 +45,12 @@ import com.pvz.models.games.levels.LevelLoader;
 import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
+import com.pvz.models.games.modes.capabilities.ZombiePlacer;
+import com.pvz.models.games.modes.variants.IZombieMode;
+import com.pvz.models.games.card.ZombieCard;
 import com.pvz.models.user.MyPlant;
 import com.pvz.view.GameModesMenu;
+import com.pvz.view.TravelLogMenu;
 import com.pvz.view.game.GameScreen;
 import com.pvz.view.game.GameUiModal;
 import com.pvz.view.game.PauseMenuPopup;
@@ -74,6 +80,7 @@ public class GameController {
     private State currentState = State.PANNING_FORWARD;
 
     private TextureRegion[] backgroundTextures;
+    private boolean isIZombie = false;
 
     private final Vector3 touchPos = new Vector3();
 
@@ -89,13 +96,15 @@ public class GameController {
 
     private boolean paused = false;
     private Table pauseOverlay;
+    private boolean cardsInitialized = false;
 
     /** Debug: draws every entity's hitbox rectangle (toggle with F1). */
     private boolean showHitboxes = true;
 
     /** Placement-preview ghost: plays the selected plant's idle PAM under the cursor. */
     private float previewStateTime;
-    private PlantCard previewCard;
+    private PlantCard previewPlantCard;
+    private ZombieCard previewZombieCard;
 
     public GameController(String seasonName, int levelNumber){
         this.seasonName=seasonName;
@@ -121,27 +130,32 @@ public class GameController {
                         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                         viewport.unproject(touchPos);
 
-                        // ۱. ابتدا کلیک روی خورشید بررسی می‌شود
-                        if (checkSunClick(touchPos.x, touchPos.y)) {
-                            if (gameUiModal != null) {
-                                gameUiModal.setSelectedCard(null);
-                            }
-                            return true;
-                        }
+                        // If a zombie card is selected, prioritize zombie placement
+                        boolean zombieCardSelected = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
 
-                        // ۱.۱. کلیک روی سکه‌ی افتاده از زامبی بررسی می‌شود
-                        if (checkLootClick(touchPos.x, touchPos.y)) {
-                            if (gameUiModal != null) {
-                                gameUiModal.setSelectedCard(null);
-                            }
-                            return true;
-                        }
-
-                        // ۱.۱. اگر کارتی انتخاب نشده باشد، کلیک روی گیاهِ کاشته‌شده
-                        //      پلنت‌فود آن را اجرا می‌کند
-                        if (gameUiModal == null || gameUiModal.getSelectedCard() == null) {
-                            if (checkPlantFoodClick(touchPos.x, touchPos.y)) {
+                        if (!zombieCardSelected) {
+                            // ۱. ابتدا کلیک روی خورشید بررسی می‌شود
+                            if (checkSunClick(touchPos.x, touchPos.y)) {
+                                if (gameUiModal != null) {
+                                    gameUiModal.setSelectedCard(null);
+                                }
                                 return true;
+                            }
+
+                            // ۱.۱. کلیک روی سکه‌ی افتاده از زامبی بررسی می‌شود
+                            if (checkLootClick(touchPos.x, touchPos.y)) {
+                                if (gameUiModal != null) {
+                                    gameUiModal.setSelectedCard(null);
+                                }
+                                return true;
+                            }
+
+                            // ۱.۱. اگر کارتی انتخاب نشده باشد، کلیک روی گیاهِ کاشته‌شده
+                            //      پلنت‌فود آن را اجرا می‌کند
+                            if (gameUiModal == null || gameUiModal.getSelectedCard() == null) {
+                                if (checkPlantFoodClick(touchPos.x, touchPos.y)) {
+                                    return true;
+                                }
                             }
                         }
 
@@ -157,6 +171,24 @@ public class GameController {
                                     if (placer.isValidPlacement(ctx, col, lane, card)) {
                                         placer.handlePlacement(ctx, col, lane, card);
                                         gameUiModal.setSelectedCard(null);
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+
+                        // ۲.۱. کاشت زامبی در صورت انتخاب کارت زامبی (IZombie)
+                        if (gameUiModal != null && gameUiModal.getSelectedZombieCard() != null) {
+                            Tile hoveredTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
+                            if (hoveredTile != null) {
+                                ZombieCard zCard = gameUiModal.getSelectedZombieCard();
+                                if (ctx.getMode() instanceof ZombiePlacer placer) {
+                                    int col = hoveredTile.getCol();
+                                    int lane = hoveredTile.getLane();
+
+                                    if (placer.isValidPlacement(ctx, col, lane, zCard)) {
+                                        placer.handlePlacement(ctx, col, lane, zCard);
+                                        gameUiModal.setSelectedZombieCard(null);
                                         return true;
                                     }
                                 }
@@ -199,6 +231,20 @@ public class GameController {
                 backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE_LEFT");
                 backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE");
                 backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE_RIGHT");
+            }
+            case "izombie"->{
+                isIZombie = true;
+                com.badlogic.gdx.graphics.Texture left = new com.badlogic.gdx.graphics.Texture(Gdx.files.internal("textures/backgrounds/IZOMBIE/texture_left.png"));
+                com.badlogic.gdx.graphics.Texture mid = new com.badlogic.gdx.graphics.Texture(Gdx.files.internal("textures/backgrounds/IZOMBIE/texture.png"));
+                com.badlogic.gdx.graphics.Texture right = new com.badlogic.gdx.graphics.Texture(Gdx.files.internal("textures/backgrounds/IZOMBIE/texture_right.png"));
+                backgroundTextures[0] = new TextureRegion(left);
+                backgroundTextures[1] = new TextureRegion(mid);
+                backgroundTextures[2] = new TextureRegion(right);
+            }
+            default->{
+                backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE_LEFT");
+                backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE");
+                backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE_RIGHT");
             }
         }
 
@@ -249,9 +295,13 @@ public class GameController {
                 camera.position.set(currentXFwd, 720f / 2f, 0);
 
                 if (progressFwd >= 1f) {
-                    currentState = State.PLANT_SELECT;
-                    plantSelectModal.setVisible(true);   // show plant selection instead
-                    Gdx.input.setInputProcessor(stage);
+                    if (level != null && !level.hasPreGame()) {
+                        startGameSession();
+                    } else {
+                        currentState = State.PLANT_SELECT;
+                        plantSelectModal.setVisible(true);
+                        Gdx.input.setInputProcessor(stage);
+                    }
                 }
                 break;
 
@@ -279,7 +329,6 @@ public class GameController {
                 if (readyPlantTimer >= readyPlantDuration) {
                     readyPlantLabel.setVisible(false);
                     currentState = State.PLAYING;
-                    gameUiModal.setVisible(true);
                     gameStarted = true;
                 }
                 break;
@@ -287,16 +336,22 @@ public class GameController {
             case PLAYING:
                 camera.position.set(startX, 720f / 2f, 0);
                 gameUiModal.updateHud();
+                if (ctx.isGameOver() && !paused) {
+                    showGameEndPopup();
+                }
                 break;
         }
 
-        // Check sun & coin-drop clicks in PLAYING state on left click
+        // Check sun & coin-drop clicks in PLAYING state on left click (only when no card selected)
         if (currentState == State.PLAYING && !paused && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            viewport.unproject(touchPos);
-            if (checkSunClick(touchPos.x, touchPos.y) || checkLootClick(touchPos.x, touchPos.y)) {
-                if (gameUiModal != null) {
-                    gameUiModal.setSelectedCard(null);
+            boolean zombieCardActive = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
+            if (!zombieCardActive) {
+                touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                viewport.unproject(touchPos);
+                if (checkSunClick(touchPos.x, touchPos.y) || checkLootClick(touchPos.x, touchPos.y)) {
+                    if (gameUiModal != null) {
+                        gameUiModal.setSelectedCard(null);
+                    }
                 }
             }
         }
@@ -304,6 +359,11 @@ public class GameController {
         // ۴. آپدیت Engine
         if (currentState == State.PLAYING && !paused) {
             GameEngine.getInstance().update(dt);
+            if (!cardsInitialized) {
+                cardsInitialized = true;
+                gameUiModal.initCards();
+                gameUiModal.setVisible(true);
+            }
         }
     }
 
@@ -350,9 +410,64 @@ public class GameController {
         Gdx.app.postRunnable(() -> PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber)));
     }
 
+    private void showGameEndPopup() {
+        paused = true;
+
+        boolean won = false;
+        if (ctx.getMode() instanceof IZombieMode izMode) {
+            boolean[] brains = izMode.getBrainsEaten();
+            won = true;
+            for (boolean b : brains) {
+                if (!b) { won = false; break; }
+            }
+        } else {
+            won = ctx.getZombies().isEmpty();
+        }
+
+        Table overlay = new Table();
+        overlay.setFillParent(true);
+        overlay.setTouchable(Touchable.enabled);
+        overlay.setBackground(PvzSkin.get().newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.7f)));
+
+        Table popup = new Table();
+        popup.setBackground(PvzSkin.get().newDrawable("white_pixel", new Color(0.15f, 0.15f, 0.2f, 0.95f)));
+        popup.pad(40);
+
+        Label msgLabel = new Label(won ? "VICTORY!" : "GAME OVER", PvzSkin.get(), "big");
+        msgLabel.setColor(won ? Color.GREEN : Color.RED);
+        msgLabel.setFontScale(2f);
+        popup.add(msgLabel).padBottom(30).row();
+
+        Label detailLabel = new Label(won ? "You ate all the brains!" : "No sun and no zombies left.", PvzSkin.get(), "big");
+        detailLabel.setColor(Color.WHITE);
+        detailLabel.setFontScale(1.2f);
+        popup.add(detailLabel).padBottom(40).row();
+
+        TextButton exitBtn = new TextButton("Back to Travel Log", PvzSkin.get(), "purple");
+        exitBtn.getLabel().setFontScale(1.2f);
+        exitBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.postRunnable(() -> PvZ2.instance.setScreen(new TravelLogMenu(PvZ2.instance)));
+            }
+        });
+        popup.add(exitBtn).width(300).height(65).row();
+
+        overlay.add(popup).center();
+        pauseOverlay = overlay;
+        stage.addActor(pauseOverlay);
+        pauseOverlay.toFront();
+    }
+
     private void saveAndExit() {
         resumeGame();
-        Gdx.app.postRunnable(() -> PvZ2.instance.setScreen(new GameModesMenu(PvZ2.instance)));
+        Gdx.app.postRunnable(() -> {
+            if (ctx != null && ctx.getMode() instanceof IZombieMode) {
+                PvZ2.instance.setScreen(new TravelLogMenu(PvZ2.instance));
+            } else {
+                PvZ2.instance.setScreen(new GameModesMenu(PvZ2.instance));
+            }
+        });
     }
 
     public void draw(){
@@ -369,17 +484,21 @@ public class GameController {
             drawProjectiles();
             drawEffects();
             drawPlacementPreview();
+            drawIZombieOverlay();
         }
         batch.end();
 
-        if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null && ctx != null) {
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            viewport.unproject(touchPos);
+        if (currentState == State.PLAYING && gameUiModal != null && ctx != null) {
+            boolean hasSelectedCard = gameUiModal.getSelectedCard() != null || gameUiModal.getSelectedZombieCard() != null;
+            if (hasSelectedCard) {
+                touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                viewport.unproject(touchPos);
 
-            Tile hoveredTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
+                Tile hoveredTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
 
-            if (hoveredTile != null) {
-                drawPlacementHighlights(hoveredTile);
+                if (hoveredTile != null) {
+                    drawPlacementHighlights(hoveredTile);
+                }
             }
         }
         drawDebugShapes();
@@ -525,35 +644,85 @@ public class GameController {
      * cursor, semi-transparent, until the plant is placed on a tile (or deselected).
      */
     private void drawPlacementPreview() {
-        if (currentState != State.PLAYING || paused) {
-            return;
-        }
-        if (gameUiModal == null || gameUiModal.getSelectedCard() == null) {
-            return;
-        }
-        PlantCard card = gameUiModal.getSelectedCard();
-        if (card != previewCard) {
-            previewCard = card;
-            previewStateTime = 0f;
-        }
-
-        PlantData data = PlantData.forType(card.getPlant().getType());
-        if (data == null) {
-            return;
-        }
-        String pamPath = data.pamPath();
-        String idleLabel = data.idleLabel();
-        if (pamPath == null) {
-            return;
-        }
+        if (currentState != State.PLAYING || paused) return;
 
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         viewport.unproject(touchPos);
 
-        batch.setColor(1f, 1f, 1f, 0.90f);
-        PvZ2.pamPlayer.draw(batch, pamPath, idleLabel, previewStateTime,
-                touchPos.x, touchPos.y, 0.7f, 0.7f, true);
-        batch.setColor(Color.WHITE);
+        // Plant preview
+        if (gameUiModal != null && gameUiModal.getSelectedCard() != null) {
+            PlantCard card = gameUiModal.getSelectedCard();
+            if (card != previewPlantCard) {
+                previewPlantCard = card;
+                previewStateTime = 0f;
+            }
+            PlantData data = PlantData.forType(card.getPlant().getType());
+            if (data != null) {
+                String pamPath = data.pamPath();
+                String idleLabel = data.idleLabel();
+                if (pamPath != null) {
+                    batch.setColor(1f, 1f, 1f, 0.90f);
+                    PvZ2.pamPlayer.draw(batch, pamPath, idleLabel, previewStateTime,
+                            touchPos.x, touchPos.y, 0.7f, 0.7f, true);
+                    batch.setColor(Color.WHITE);
+                }
+            }
+            return;
+        }
+
+        // Zombie preview
+        if (gameUiModal != null && gameUiModal.getSelectedZombieCard() != null) {
+            ZombieCard zCard = gameUiModal.getSelectedZombieCard();
+            if (zCard != previewZombieCard) {
+                previewZombieCard = zCard;
+                previewStateTime = 0f;
+            }
+            com.pvz.models.entities.zombies.data.ZombiePropertySheet sheet =
+                com.pvz.models.entities.zombies.data.ZombieRegistry.getInstance().getSheet(
+                    zCard.getZombieType().getAlias());
+            if (sheet != null && sheet.getAnimationConfig() != null) {
+                String pamPath = sheet.getAnimationConfig().pamFilePath;
+                String idleLabel = sheet.getAnimationConfig().idleLabel;
+                float scale = sheet.getAnimationConfig().scale != null ? sheet.getAnimationConfig().scale : 0.65f;
+                if (pamPath != null && idleLabel != null) {
+                    java.util.Map<String, Boolean> partsVisibility = buildPreviewPartsVisibility(sheet);
+                    batch.setColor(1f, 1f, 1f, 0.90f);
+                    if (partsVisibility != null) {
+                        PamActor.drawWithVisibility(batch, pamPath, idleLabel, previewStateTime,
+                                touchPos.x, touchPos.y, scale, true, partsVisibility);
+                    } else {
+                        PvZ2.pamPlayer.draw(batch, pamPath, idleLabel, previewStateTime,
+                                touchPos.x, touchPos.y, scale, scale, true);
+                    }
+                    batch.setColor(Color.WHITE);
+                }
+            }
+        }
+    }
+
+    private java.util.Map<String, Boolean> buildPreviewPartsVisibility(
+            com.pvz.models.entities.zombies.data.ZombiePropertySheet sheet) {
+        java.util.Map<String, Boolean> visibility = null;
+        for (String armorAlias : sheet.getArmorAliases()) {
+            String cleanAlias = armorAlias.contains(":")
+                ? armorAlias.substring(armorAlias.indexOf(':') + 1) : armorAlias;
+            com.pvz.models.entities.zombies.data.ArmorPropertySheet aSheet =
+                com.pvz.models.entities.zombies.data.ZombieRegistry.getInstance().getArmorSheet(cleanAlias);
+            if (aSheet == null) continue;
+            com.pvz.models.entities.zombies.armor.ArmorType type =
+                com.pvz.models.entities.zombies.armor.ArmorType.fromString(aSheet.getArmorType());
+            String[] layers = type.pamLayers();
+            if (layers == null) continue;
+            if (visibility == null) visibility = new java.util.HashMap<>();
+            for (int i = 0; i < layers.length; i++) {
+                visibility.put(layers[i], i == 0);
+            }
+            String container = type.pamContainerName();
+            if (container != null) visibility.put(container, true);
+            for (String alive : type.pamAliveParts()) visibility.put(alive, true);
+            for (String crit : type.pamCriticalParts()) visibility.put(crit, false);
+        }
+        return visibility;
     }
 
 
@@ -569,8 +738,6 @@ public class GameController {
         int cols = map.getColumns();
 
         float boardWidth = cols * GameMap.TILE_WIDTH;
-        // Tiles use bottom-left coordinates: lane 0 spans [TOP_LANE_Y, TOP_LANE_Y + TILE_HEIGHT],
-        // so the grid's lowest edge sits one tile below TOP_LANE_Y.
         float gridBottom = GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT;
 
         float rowY = tile.getY();
@@ -584,6 +751,59 @@ public class GameController {
         shapeRenderer.rect(colX, gridBottom, GameMap.TILE_WIDTH, lanes * GameMap.TILE_HEIGHT);
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
+    }
+
+    private void drawIZombieOverlay() {
+        if (!(ctx.getMode() instanceof IZombieMode izMode)) return;
+
+        int lanes = ctx.getMap().getLanes();
+
+        // Red line at the placement boundary (shapeRenderer)
+        batch.end();
+        float redLineX = colToWorldX(izMode.getRedLineColumn()) - GameMap.TILE_WIDTH / 2f;
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.rect(redLineX, GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT, 4f, lanes * GameMap.TILE_HEIGHT);
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+
+        // Brain indicators at column 0 for each lane
+        com.badlogic.gdx.graphics.g2d.TextureRegion brainRegion = PvZ2.textureBank.region("IMAGE_UI_CURRENCY_VALENBRAINZ_STACK_0");
+        boolean[] brainsEaten = izMode.getBrainsEaten();
+        float brainX = colToWorldX(0);
+        float brainSize = 65f;
+        for (int lane = 0; lane < lanes; lane++) {
+            if (lane < brainsEaten.length && !brainsEaten[lane]) {
+                float brainY = laneToWorldY(lane);
+                if (brainRegion != null) {
+                    batch.draw(brainRegion, brainX - brainSize / 2f, brainY - brainSize / 2f, brainSize, brainSize);
+                } else {
+                    batch.end();
+                    shapeRenderer.setProjectionMatrix(camera.combined);
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                    shapeRenderer.setColor(Color.MAGENTA);
+                    shapeRenderer.circle(brainX, brainY, 18f);
+                    shapeRenderer.end();
+                    batch.setProjectionMatrix(camera.combined);
+                    batch.begin();
+                }
+            }
+        }
+
+        // Sun icon above sun-producer zombies
+        List<Zombie> sunProducers = izMode.getSunProducers();
+        float bob = 4f * (float) Math.sin(stateTime * 2.0f);
+        float sunScale = 0.45f;
+        for (Zombie z : sunProducers) {
+            if (z.isDead()) continue;
+            PvZ2.pamPlayer.draw(batch, "768/INITIAL/EFFECTS/SUN/SUN.PAM", "animation",
+                    stateTime, z.getX(), z.getY() + 55f + bob, sunScale, sunScale, true);
+        }
     }
 
     private void drawDebugShapes(){
@@ -683,11 +903,11 @@ public class GameController {
                 }
                 AppContext.getInstance().setGameContext(newContext);
                 ctx = newContext;
-                gameUiModal.initCards();
 
                 plantSelectModal.setVisible(false);
                 currentState = State.PANNING_BACK;
                 panBackTime = 0f;
+                Gdx.input.setInputProcessor(stage);
 
                 Gdx.app.log("GameScreen", "Starting camera pan back for " + seasonName + " Level " + levelNumber);
             } else {

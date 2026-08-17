@@ -20,11 +20,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
+import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.Card;
 import com.pvz.models.games.card.PlantCard;
+import com.pvz.models.games.card.ZombieCard;
 import com.pvz.models.user.User;
 import com.pvz.view.MenuUiKit;
 import com.pvz.view.PlantData;
@@ -61,9 +63,12 @@ public class GameUiModal extends Table {
     private final ImageButton addFoodButton;
     private final Table cardsBarTable;
     private PlantCard selectedCard = null;
+    private ZombieCard selectedZombieCard = null;
 
     private final Map<PlantCard, Table> slotByCard = new HashMap<>();
     private final Map<PlantCard, Image> cooldownOverlayByCard = new HashMap<>();
+    private final Map<ZombieCard, Table> zombieSlotByCard = new HashMap<>();
+    private final Map<ZombieCard, Image> zombieCooldownOverlayByCard = new HashMap<>();
     private Map<PlantType, PlantData> dataByType = new HashMap<>();
 
     public GameUiModal(Runnable onPauseRequested) {
@@ -227,6 +232,15 @@ public class GameUiModal extends Table {
         return selectedCard;
     }
 
+    public ZombieCard getSelectedZombieCard() {
+        return selectedZombieCard;
+    }
+
+    public void setSelectedZombieCard(ZombieCard card) {
+        this.selectedZombieCard = card;
+        updateCardStyles();
+    }
+
     /**
      * Where the coin wallet icon sits in stage (1280x720, bottom-left origin)
      * coordinates — the target the flying coin-drop animation arcs toward.
@@ -278,6 +292,10 @@ public class GameUiModal extends Table {
         cardsBarTable.clearChildren();
         slotByCard.clear();
         cooldownOverlayByCard.clear();
+        zombieSlotByCard.clear();
+        zombieCooldownOverlayByCard.clear();
+        selectedCard = null;
+        selectedZombieCard = null;
 
         GameContext context = AppContext.getInstance().getGameContext();
         if (context == null) return;
@@ -291,6 +309,8 @@ public class GameUiModal extends Table {
         for (Card card : context.getCards()) {
             if (card instanceof PlantCard pc) {
                 cardsBarTable.add(buildSlot(pc)).row();
+            } else if (card instanceof ZombieCard zc) {
+                cardsBarTable.add(buildZombieSlot(zc)).row();
             }
         }
         updateCardStyles();
@@ -352,12 +372,84 @@ public class GameUiModal extends Table {
                     selectedCard = null;
                 } else {
                     selectedCard = pc;
+                    selectedZombieCard = null;
                 }
                 updateCardStyles();
             }
         });
 
         slotByCard.put(pc, slot);
+        return slot;
+    }
+
+    private Table buildZombieSlot(ZombieCard zc) {
+        Skin skin = PvzSkin.get();
+        Drawable fallback = skin.newDrawable("white_pixel", new Color(0.35f, 0.15f, 0.15f, 1f));
+
+        Table slot = new Table();
+        com.badlogic.gdx.graphics.g2d.TextureRegion bgRegion = PvZ2.textureBank.region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_READY");
+        if (bgRegion != null) {
+            slot.setBackground(new TextureRegionDrawable(bgRegion));
+        } else {
+            slot.setBackground(new TextureRegionDrawable(MenuUiKit.solidTexture(new Color(0.4f, 0.1f, 0.1f, 0.85f))));
+        }
+
+        Stack stack = new Stack();
+
+        String artPath = "textures/zombies/" + zc.getZombieType().name() + ".png";
+        if (com.badlogic.gdx.Gdx.files.internal(artPath).exists()) {
+            com.badlogic.gdx.graphics.Texture tex = new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(artPath));
+            tex.setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear, com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
+            Image zombieImg = new Image(new TextureRegionDrawable(tex));
+            zombieImg.setScaling(Scaling.fit);
+            Table imgLayer = new Table();
+            imgLayer.center();
+            imgLayer.add(zombieImg).size(SLOT_HEIGHT - 8f);
+            stack.add(imgLayer);
+        } else {
+            String zombieName = zc.getZombieType().name().replace("_", " ");
+            Label nameLabel = new Label(zombieName, skin, "medium");
+            nameLabel.setFontScale(0.65f);
+            nameLabel.setColor(Color.WHITE);
+            nameLabel.setWrap(true);
+            nameLabel.setAlignment(Align.center);
+            Table nameLayer = new Table();
+            nameLayer.center();
+            nameLayer.add(nameLabel).size(SLOT_HEIGHT - 10f);
+            stack.add(nameLayer);
+        }
+
+        Image cooldownOverlay = new Image(new TextureRegionDrawable(MenuUiKit.solidTexture(new Color(0f, 0f, 0f, 0.6f))));
+        cooldownOverlay.setTouchable(Touchable.disabled);
+        stack.add(cooldownOverlay);
+        zombieCooldownOverlayByCard.put(zc, cooldownOverlay);
+
+        Label costLabel = new Label(String.valueOf(zc.getCost()), skin, "medium");
+        costLabel.setFontScale(0.9f);
+        costLabel.setColor(Color.WHITE);
+        Table costRow = new Table();
+        costRow.bottom().left();
+        costRow.add(costLabel).pad(1f, 4f, 1f, 4f);
+        stack.add(costRow);
+
+        slot.add(stack).grow();
+        slot.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!zc.canUse()) {
+                    return;
+                }
+                if (selectedZombieCard == zc) {
+                    selectedZombieCard = null;
+                } else {
+                    selectedCard = null;
+                    selectedZombieCard = zc;
+                }
+                updateCardStyles();
+            }
+        });
+
+        zombieSlotByCard.put(zc, slot);
         return slot;
     }
 
@@ -395,8 +487,15 @@ public class GameUiModal extends Table {
             float base = pc.getBaseCooldown();
             float fraction = base > 0 ? pc.getCooldown() / base : 0f;
             overlay.setVisible(fraction > 0f);
-            // Sweep the dark overlay's height with the remaining cooldown fraction,
-            // same idea as PvZ's classic recharge shade shrinking from the bottom up.
+            overlay.setHeight(SLOT_HEIGHT * fraction);
+        }
+
+        for (Map.Entry<ZombieCard, Image> entry : zombieCooldownOverlayByCard.entrySet()) {
+            ZombieCard zc = entry.getKey();
+            Image overlay = entry.getValue();
+            float base = zc.getBaseCooldown();
+            float fraction = base > 0 ? zc.getCooldown() / base : 0f;
+            overlay.setVisible(fraction > 0f);
             overlay.setHeight(SLOT_HEIGHT * fraction);
         }
     }
@@ -406,7 +505,16 @@ public class GameUiModal extends Table {
             PlantCard pc = entry.getKey();
             Table slot = entry.getValue();
             if (selectedCard == pc) {
-                slot.setColor(0.8f, 0.5f, 1f, 1f); // highlighted tint when selected
+                slot.setColor(0.8f, 0.5f, 1f, 1f);
+            } else {
+                slot.setColor(1f, 1f, 1f, 1f);
+            }
+        }
+        for (Map.Entry<ZombieCard, Table> entry : zombieSlotByCard.entrySet()) {
+            ZombieCard zc = entry.getKey();
+            Table slot = entry.getValue();
+            if (selectedZombieCard == zc) {
+                slot.setColor(0.8f, 0.5f, 1f, 1f);
             } else {
                 slot.setColor(1f, 1f, 1f, 1f);
             }

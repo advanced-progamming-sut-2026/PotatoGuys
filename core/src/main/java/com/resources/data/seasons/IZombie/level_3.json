@@ -1,8 +1,8 @@
 {
   "gameType": "IZOMBIE",
   "levelNumber": 3,
-  "levelType": "IZOMBIE",
-  "initialSun": 1000,
+  "levelType": "MINIGAME",
+  "initialSun": 150,
   "seasonName": "Default",
   "redLineColumn": 5,
   "gameMap": {
@@ -75,13 +75,8 @@
   ],
   "basedZombies": [
     "MUMMY",
-    "MUMMY_CONE",
     "MUMMY_BUCKET",
     "EXPLORER",
-    "ICE_AGE",
-    "ICE_AGE_CONE",
-    "DODO",
-    "HUNTER",
     "ICE_AGE_GARG",
     "GARGANTUAR"
   ],
