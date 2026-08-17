@@ -2,18 +2,15 @@ package com.pvz.models.entities.projectile.effects;
 
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.zombies.Zombie;
-import com.pvz.models.entities.zombies.effects.EffectType;
-import com.pvz.models.entities.zombies.effects.StatusEffect;
 import com.pvz.models.games.GameContext;
 
 /**
- * Kernel-pult's butter: single-target damage plus a brief stun — the zombie is
- * temporarily buttered and cannot move or attack (see {@link EffectType#STUN}).
+ * Kernel-pult's butter: single-target damage plus a 4.5-second stun.
+ * The butter part is shown on the zombie's head via partVisibility in ButterStunState.
  */
 public class ButterEffectState extends ProjectileEffectState {
 
-    /** 20 ticks == 2 in-game seconds at Zombie.TICKS_PER_SECOND (10). */
-    private static final int STUN_TICKS = 20;
+    private static final float STUN_DURATION = 4.5f;
 
     @Override
     public void onImpact(Projectile projectile, Zombie primaryTarget, GameContext ctx) {
@@ -21,7 +18,7 @@ public class ButterEffectState extends ProjectileEffectState {
             return;
         }
         primaryTarget.takeDamage(projectile.getDamage(), bypassesArmor());
-        primaryTarget.applyEffect(new StatusEffect(EffectType.STUN, STUN_TICKS));
+        primaryTarget.setButterStunned(STUN_DURATION);
     }
 
     @Override

@@ -170,3 +170,4 @@ Thumbs.db
 /assets/pvz-assets/
 /assets/browser.jar
 /core/src/main/java/com/pvz/saves/
+core/src/main/java/com/pvz/saves/session.json

@@ -290,8 +290,12 @@ public class Zombie extends Entity {
      *         to display (basic zombies / fully destroyed armour)
      */
     private Map<String, Boolean> buildPartsVisibility() {
-        if (armors.isEmpty() && !throwImpSpawned) return null;
-        Map<String, Boolean> visibility = armors.isEmpty() ? null : new HashMap<>();
+        boolean buttered = currentState instanceof ButterStunState;
+        if (armors.isEmpty() && !throwImpSpawned && !buttered) return null;
+        Map<String, Boolean> visibility = (armors.isEmpty() && !buttered) ? null : new HashMap<>();
+        if (buttered) {
+            visibility.put("butter", true);
+        }
         for (ArmorPiece armor : armors) {
             if (armor.isDestroyed()) continue;
             String[] layers = armor.getType().pamLayers();
@@ -387,6 +391,13 @@ public class Zombie extends Entity {
         currentState.onEnter(this,context);
     }
 
+    public void setButterStunned(float duration){
+        FrameConfig frameConfig = currentState.draw(this,context);
+        currentState=new ButterStunState(currentState,currentState.getStateTime(),
+            duration,frameConfig.pamPath,frameConfig.label);
+        currentState.onEnter(this,context);
+    }
+
     /** Convenience: non-poisonous damage. */
     public void takeDamage(float amount) {
         takeDamage(amount, false);
@@ -406,6 +417,10 @@ public class Zombie extends Entity {
     public boolean hasEffect(EffectType type) {
         StatusEffect e = activeEffects.get(type);
         return e != null && e.isActive();
+    }
+
+    public boolean hasStunEffect() {
+        return currentState instanceof ButterStunState;
     }
 
 

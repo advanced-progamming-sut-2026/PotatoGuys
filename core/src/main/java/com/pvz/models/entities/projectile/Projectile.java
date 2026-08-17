@@ -49,6 +49,9 @@ public class Projectile extends Entity {
 
     private final Set<Zombie> hitZombies = new HashSet<>();
 
+    private boolean lobbed = false;
+    private int launchLane = -1;
+
     private ProjectileMotionState motionState;
     private ProjectileEffectState effectState;
 
@@ -67,6 +70,9 @@ public class Projectile extends Entity {
                     return;
                 }
                 if (onHit.getOwner() instanceof Zombie zombie && !zombie.isDead()) {
+                    if (lobbed && GameController.worldYtoLane(zombie.getY()) != launchLane) {
+                        return;
+                    }
                     onHitZombie(zombie);
                 }
             }
@@ -86,6 +92,11 @@ public class Projectile extends Entity {
 
     public void setEffectState(ProjectileEffectState effectState) {
         this.effectState = effectState;
+    }
+
+    public void setLobbed(int launchLane) {
+        this.lobbed = true;
+        this.launchLane = launchLane;
     }
 
     public ProjectileMotionState getMotionState() {
@@ -134,16 +145,18 @@ public class Projectile extends Entity {
             lastCol = col;
             lastLane = lane;
 
-            try {
-                Tile tile = ctx.getTileAt(lastCol, lastLane);
-                tile.processHit(this);
-            } catch (Exception ex) {
-                destroy();
-                return;
-            }
+            if (!lobbed || lane == launchLane) {
+                try {
+                    Tile tile = ctx.getTileAt(lastCol, lastLane);
+                    tile.processHit(this);
+                } catch (Exception ex) {
+                    destroy();
+                    return;
+                }
 
-            if (isDead) {
-                return;
+                if (isDead) {
+                    return;
+                }
             }
         }
     }

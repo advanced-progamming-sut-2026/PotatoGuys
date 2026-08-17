@@ -1,6 +1,7 @@
 package com.pvz.models.entities.projectile;
 
 import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.projectile.effects.AreaFireEffectState;
 import com.pvz.models.entities.projectile.effects.ButterEffectState;
 import com.pvz.models.entities.projectile.effects.FireEffectState;
@@ -49,6 +50,7 @@ public class ProjectileFactory {
     public static Projectile create(ProjectileType type, GameContext ctx, Vector2 startPos,
                                      Vector2 vel, float damage, Zombie target) {
         Projectile projectile = new Projectile(ctx, type, startPos.x, startPos.y, vel.x, vel.y, damage);
+        int launchLane = GameController.worldYtoLane(startPos.y);
 
         switch (type) {
             case FIRE_PEA -> {
@@ -62,22 +64,27 @@ public class ProjectileFactory {
             case PEPPER_BALL -> {
                 projectile.setMotionState(lobbedTowards(target));
                 projectile.setEffectState(new AreaFireEffectState());
+                projectile.setLobbed(launchLane);
             }
             case MELON -> {
                 projectile.setMotionState(lobbedTowards(target));
                 projectile.setEffectState(new MelonEffectState(false));
+                projectile.setLobbed(launchLane);
             }
             case WINTER_MELON -> {
                 projectile.setMotionState(lobbedTowards(target));
                 projectile.setEffectState(new MelonEffectState(true));
+                projectile.setLobbed(launchLane);
             }
             case CABBAGE, KERNEL -> {
                 projectile.setMotionState(lobbedTowards(target));
                 projectile.setEffectState(new NormalEffectState());
+                projectile.setLobbed(launchLane);
             }
             case BUTTER -> {
                 projectile.setMotionState(lobbedTowards(target));
                 projectile.setEffectState(new ButterEffectState());
+                projectile.setLobbed(launchLane);
             }
             case FUME, SPIKE -> {
                 projectile.setMotionState(new StraightMotionState());

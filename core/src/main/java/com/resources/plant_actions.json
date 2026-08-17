@@ -842,8 +842,7 @@
       "class": "LobberActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"CABBAGE","damage":40.0,"targets":3,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.0},
-        {"projectileType":"CABBAGE","damage":40.0,"targets":3,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.5}
+        {"projectileType":"CABBAGE","damage":40.0,"targets":5,"allLanes":true,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.55}
       ]
     },
     "pamAnimationConfig": {
@@ -876,8 +875,7 @@
       "class": "LobberActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"BUTTER","damage":40.0,"targets":0,"positionOffset":{"x":0,"y":40},"delaySeconds":0.0,"chance":0.2,"allLanes":true},
-        {"projectileType":"BUTTER","damage":40.0,"targets":0,"positionOffset":{"x":0,"y":40},"delaySeconds":0.4,"chance":0.2,"allLanes":true}
+        {"projectileType":"BUTTER","damage":40.0,"targets":5,"positionOffset":{"x":0,"y":40},"delaySeconds":0.57,"allLanes":true}
       ]
     },
     "pamAnimationConfig": {
@@ -909,8 +907,10 @@
       "class": "LobberActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"MELON","damage":80.0,"targets":3,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.0,"allLanes":true},
-        {"projectileType":"MELON","damage":80.0,"targets":3,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.6,"allLanes":true}
+        {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.0,"allLanes":true},
+        {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.55,"allLanes":true},
+        {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.9,"allLanes":true},
+        {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":2.15,"allLanes":true}
       ]
     },
     "pamAnimationConfig": {
@@ -942,8 +942,10 @@
       "class": "LobberActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"WINTER_MELON","damage":80.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":0.0,"allLanes":true},
-        {"projectileType":"WINTER_MELON","damage":80.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":0.6,"allLanes":true}
+        {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.0,"allLanes":true},
+        {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.55,"allLanes":true},
+        {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.9,"allLanes":true},
+        {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":2.15,"allLanes":true}
       ]
     },
     "pamAnimationConfig": {
@@ -975,8 +977,9 @@
       "class": "LobberActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":0.0},
-        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":0.6}
+        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":1.30},
+        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":1.63},
+        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":2.35}
       ]
     },
     "pamAnimationConfig": {
