@@ -64,6 +64,9 @@ public class GameUiModal extends Table {
     private final Table cardsBarTable;
     private PlantCard selectedCard = null;
     private ZombieCard selectedZombieCard = null;
+    private boolean shovelSelected = false;
+    private Runnable onShovelRequested = null;
+    private ImageButton shovelButton = null;
 
     private final Map<PlantCard, Table> slotByCard = new HashMap<>();
     private final Map<PlantCard, Image> cooldownOverlayByCard = new HashMap<>();
@@ -192,6 +195,21 @@ public class GameUiModal extends Table {
             }
         });
 
+        // Shovel button: uses the same art and checked-state behaviour as the
+        // phase-0 reference HUD. The imageChecked drawable keeps the "down"
+        // texture visible while the shovel is armed. It lives in its own
+        // bottom-right overlay so it stays pinned to the corner.
+        shovelButton = createShovelButton();
+        shovelButton.setTouchable(Touchable.enabled);
+        shovelButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (onShovelRequested != null) {
+                    onShovelRequested.run();
+                }
+            }
+        });
+
         Table rightControls = new Table();
         rightControls.top().right();
         rightControls.add(walletTable).right().padRight(10);
@@ -226,6 +244,14 @@ public class GameUiModal extends Table {
         foodOverlay.bottom().left();
         foodOverlay.add(foodRow).padLeft(218.5f).padBottom(15f);
         addActor(foodOverlay);
+
+        // Shovel pinned to the bottom-right corner (58x58, matching the top-bar
+        // buttons), in its own overlay so it never affects the table layout.
+        Table shovelOverlay = new Table();
+        shovelOverlay.setFillParent(true);
+        shovelOverlay.bottom().right();
+        shovelOverlay.add(shovelButton).size(58f).padRight(20f).padBottom(15f);
+        addActor(shovelOverlay);
     }
 
     public PlantCard getSelectedCard() {
@@ -238,6 +264,10 @@ public class GameUiModal extends Table {
 
     public void setSelectedZombieCard(ZombieCard card) {
         this.selectedZombieCard = card;
+        if (card != null) {
+            this.shovelSelected = false;
+            if (shovelButton != null) shovelButton.setChecked(false);
+        }
         updateCardStyles();
     }
 
@@ -278,6 +308,21 @@ public class GameUiModal extends Table {
         return new ImageButton(style);
     }
 
+    /**
+     * Shovel tool button mirroring the phase-0 reference HUD: the up/down art is
+     * taken from the shared PvZ skin, and {@code imageChecked} is wired to the
+     * "down" drawable so {@code setChecked(true)} keeps the pressed look while
+     * the shovel is armed.
+     */
+    private ImageButton createShovelButton() {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        style.imageUp = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button");
+        style.imageDown = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button_down");
+        style.imageOver = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button_down");
+        style.imageChecked = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button_down");
+        return new ImageButton(style);
+    }
+
     private boolean isDebugModeEnabled() {
         User user = AppContext.getInstance().getCurrentUser();
         return user != null && user.getSetting() != null && user.getSetting().isDebugMode();
@@ -285,7 +330,31 @@ public class GameUiModal extends Table {
 
     public void setSelectedCard(PlantCard card) {
         this.selectedCard = card;
+        if (card != null) {
+            this.shovelSelected = false;
+            if (shovelButton != null) shovelButton.setChecked(false);
+        }
         updateCardStyles();
+    }
+
+    public void setOnShovelRequested(Runnable onShovelRequested) {
+        this.onShovelRequested = onShovelRequested;
+    }
+
+    public boolean isShovelSelected() {
+        return shovelSelected;
+    }
+
+    public void setShovelSelected(boolean selected) {
+        this.shovelSelected = selected;
+        if (shovelButton != null) {
+            shovelButton.setChecked(selected);
+        }
+        if (selected) {
+            this.selectedCard = null;
+            this.selectedZombieCard = null;
+            updateCardStyles();
+        }
     }
 
     public void initCards() {

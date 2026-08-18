@@ -7,17 +7,17 @@
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "teh",
-  "profilePicture": "textures/avatars/avatar_franky.png",
+  "profilePicture": "textures/avatars/avatar_jinbe.png",
   "profile": {
     "gamePlayed": 0,
     "coins": 3250,
-    "diamonds": 170,
+    "diamonds": 126,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
         {
           "Type": "Peashooter",
-          "level": 1,
+          "level": 4,
           "seed": 0,
           "isBoosted": false
         },
@@ -98,9 +98,12 @@
         "BEACH_CONE",
         "BEACH_BUCKET",
         "SNORKEL",
-        "FISHERMAN"
+        "FISHERMAN",
+        "OCTOPUS"
       ],
-      "seedPackets": {}
+      "seedPackets": {
+        "Peashooter": 55
+      }
     },
     "news": {
       "messages": [
@@ -191,6 +194,10 @@
         {
           "message": "New Zombie Encountered: FISHERMAN!",
           "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: OCTOPUS!",
+          "unread": false
         }
       ]
     },
@@ -222,8 +229,8 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": null,
-    "dailyOfferDate": null,
+    "dailyOfferPlantType": "BowlingBulb",
+    "dailyOfferDate": "2026-08-18",
     "dailyOfferPurchased": false
   },
   "setting": {
@@ -1249,7 +1256,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1787061269269
+    "lastDailyReset": 1787063817622
   },
   "questLogRefreshed": true
 }

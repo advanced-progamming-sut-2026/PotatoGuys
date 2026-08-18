@@ -96,6 +96,9 @@ public class GameController {
     private Label readyPlantLabel;
     private float readyPlantTimer = 0f;
     private final float readyPlantDuration = 2.0f;
+    private Label errorMessageLabel;
+    private float errorMessageTimer = 0f;
+    private final float errorMessageDuration = 2.5f;
 
     private boolean paused = false;
     private Table pauseOverlay;
@@ -108,6 +111,10 @@ public class GameController {
     private float previewStateTime;
     private PlantCard previewPlantCard;
     private ZombieCard previewZombieCard;
+
+    /** Shovel tool: translucent shovel icon that follows the mouse while armed. */
+    private com.badlogic.gdx.scenes.scene2d.ui.Image shovelCursorPreview;
+    private final com.badlogic.gdx.math.Vector2 shovelCursorPosition = new com.badlogic.gdx.math.Vector2();
 
     public GameController(String seasonName, int levelNumber){
         this.seasonName=seasonName;
@@ -135,6 +142,28 @@ public class GameController {
 
                         // If a zombie card is selected, prioritize zombie placement
                         boolean zombieCardSelected = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
+
+                        // Shovel: clicking a planted tile digs the plant up (no sun refund)
+                        if (gameUiModal != null && gameUiModal.isShovelSelected()) {
+                            Tile shovelTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
+                            if (shovelTile != null) {
+                                List<Plant> plantsAtTile = new java.util.ArrayList<>(ctx.getPlantsAt(shovelTile.getCol(), shovelTile.getLane()));
+                                if (!plantsAtTile.isEmpty()) {
+                                    Plant target = plantsAtTile.get(0);
+                                    if (target != null && !target.isDead()) {
+                                        ctx.removePlant(target);
+                                        gameUiModal.setShovelSelected(false);
+                                        hideShovelCursor();
+                                        Gdx.app.log("Shovel", "Dug up " + target.getType() + " (no sun refund).");
+                                        return true;
+                                    }
+                                } else {
+                                    // Clicked empty tile with shovel armed: keep it armed, but no error
+                                    return true;
+                                }
+                            }
+                            return true;
+                        }
 
                         if (!zombieCardSelected) {
                             // ۱. ابتدا کلیک روی خورشید بررسی می‌شود
@@ -197,6 +226,9 @@ public class GameController {
                                         placer.handlePlacement(ctx, col, lane, card);
                                         gameUiModal.setSelectedCard(null);
                                         return true;
+                                    } else if (card.getCost() > ctx.getCurrentSun()) {
+                                        showErrorMessage("Not enough sun! You need "
+                                                + card.getCost() + " sun (you have " + ctx.getCurrentSun() + ").");
                                     }
                                 }
                             }
@@ -233,6 +265,7 @@ public class GameController {
         stage.addActor(plantSelectModal);
 
         gameUiModal = new GameUiModal(this::pauseGame);
+        gameUiModal.setOnShovelRequested(this::toggleShovelMode);
         stage.addActor(gameUiModal);
 
         backgroundTextures=new TextureRegion[3];
@@ -291,13 +324,35 @@ public class GameController {
         Table labelTable = new Table();
         labelTable.setFillParent(true);
         labelTable.center();
-        labelTable.add(readyPlantLabel);
+        labelTable.add(readyPlantLabel).padTop(-80).row();
         stage.addActor(labelTable);
+
+        errorMessageLabel = new Label("", PvzSkin.get(), "medium");
+        errorMessageLabel.setColor(Color.RED);
+        errorMessageLabel.setFontScale(1.2f);
+        errorMessageLabel.setAlignment(Align.center);
+        errorMessageLabel.setVisible(false);
+        errorMessageLabel.setWrap(true);
+        errorMessageLabel.setWidth(600f);
+
+        Table errorTable = new Table();
+        errorTable.setFillParent(true);
+        errorTable.top();
+        errorTable.add(errorMessageLabel).padTop(80).width(600f);
+        stage.addActor(errorTable);
     }
 
     public void update(float dt){
         camera.update();
         previewStateTime += dt;
+        updateShovelCursorPreview();
+
+        if (errorMessageLabel != null && errorMessageLabel.isVisible()) {
+            errorMessageTimer += dt;
+            if (errorMessageTimer >= errorMessageDuration) {
+                errorMessageLabel.setVisible(false);
+            }
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             showHitboxes = !showHitboxes;
@@ -516,7 +571,8 @@ public class GameController {
 
         if (currentState == State.PLAYING && gameUiModal != null && ctx != null) {
             boolean hasSelectedCard = gameUiModal.getSelectedCard() != null || gameUiModal.getSelectedZombieCard() != null;
-            if (hasSelectedCard) {
+            boolean shovelArmed = gameUiModal.isShovelSelected();
+            if (hasSelectedCard || shovelArmed) {
                 touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                 viewport.unproject(touchPos);
 
@@ -869,6 +925,66 @@ public class GameController {
             PvZ2.pamPlayer.draw(batch, "768/INITIAL/EFFECTS/SUN/SUN.PAM", "animation",
                     stateTime, z.getX(), z.getY() + 55f + bob, sunScale, sunScale, true);
         }
+    }
+
+    private void showErrorMessage(String message) {
+        if (errorMessageLabel == null) return;
+        errorMessageLabel.setText(message);
+        errorMessageLabel.setVisible(true);
+        errorMessageTimer = 0f;
+        errorMessageLabel.toFront();
+    }
+
+    /**
+     * Toggles the shovel tool. Selecting it clears any armed plant/zombie card
+     * and shows a translucent shovel cursor following the mouse; clicking a
+     * planted tile then digs the plant up (refunding its sun cost). Clicking
+     * the shovel again disarms it. Mirrors the phase-0 reference behaviour.
+     */
+    private void toggleShovelMode() {
+        if (gameUiModal == null) return;
+        boolean willSelect = !gameUiModal.isShovelSelected();
+        gameUiModal.setShovelSelected(willSelect);
+        if (willSelect) {
+            showShovelCursor();
+        } else {
+            hideShovelCursor();
+        }
+    }
+
+    private void showShovelCursor() {
+        com.badlogic.gdx.graphics.g2d.TextureRegion region =
+                PvZ2.textureBank.region("IMAGE_UI_HUD_INGAME_SHOVEL_ICON");
+        if (region == null) {
+            Gdx.app.error("GameController", "Shovel cursor region not found.");
+            return;
+        }
+        if (shovelCursorPreview == null) {
+            shovelCursorPreview = new com.badlogic.gdx.scenes.scene2d.ui.Image();
+            shovelCursorPreview.setTouchable(Touchable.disabled);
+            stage.addActor(shovelCursorPreview);
+        }
+        shovelCursorPreview.setDrawable(new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(region));
+        shovelCursorPreview.setSize(region.getRegionWidth() * 0.65f, region.getRegionHeight() * 0.65f);
+        shovelCursorPreview.setColor(1f, 1f, 1f, 0.58f);
+        shovelCursorPreview.setVisible(true);
+        shovelCursorPreview.toFront();
+    }
+
+    private void hideShovelCursor() {
+        if (shovelCursorPreview != null) {
+            shovelCursorPreview.setVisible(false);
+        }
+    }
+
+    private void updateShovelCursorPreview() {
+        if (shovelCursorPreview == null || !shovelCursorPreview.isVisible()) return;
+        shovelCursorPosition.set(Gdx.input.getX(), Gdx.input.getY());
+        stage.screenToStageCoordinates(shovelCursorPosition);
+        shovelCursorPreview.setPosition(
+                shovelCursorPosition.x - shovelCursorPreview.getWidth() / 2f,
+                shovelCursorPosition.y - shovelCursorPreview.getHeight() / 2f);
+        shovelCursorPreview.toFront();
     }
 
     private void drawDebugShapes(){
