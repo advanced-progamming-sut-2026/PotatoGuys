@@ -1,6 +1,8 @@
 package com.pvz.view;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -8,6 +10,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -20,6 +24,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
@@ -47,6 +53,11 @@ public class TravelLogMenu extends ScreenAdapter {
 
     private static final String[] MINI_GAME_SEASON_FOLDERS = { "VaseBreaker", "Wallnut Bowling", "IZombie" };
     private static final String[] MINI_GAME_LABELS = { "Vasebreaker", "Wallnut Bowling", "I, Zombie" };
+    private static final String[] MINI_GAME_WALLPAPERS = {
+        "textures/backgrounds/VASEBREAKER/wallpaper.png",
+        "textures/backgrounds/WALLNUTBOWLING/wallpaper.png",
+        "textures/backgrounds/IZOMBIE/wallpaper.png"
+    };
     private static final float BAR_WIDTH = 420f;
     private static final float BAR_HEIGHT = 20f;
     private static final float CARD_WIDTH = 1000f;
@@ -63,6 +74,10 @@ public class TravelLogMenu extends ScreenAdapter {
 
     private Texture barBgTexture;
     private Texture barFillTexture;
+    private Texture darkBgTexture;
+    private Texture cardBgTexture;
+
+    private final Map<String, Texture> wallpaperCache = new HashMap<>();
 
     private Tab currentTab = Tab.DAILY;
 
@@ -82,18 +97,22 @@ public class TravelLogMenu extends ScreenAdapter {
         barBgTexture = solidTexture(new Color(0f, 0f, 0f, 0.45f));
         barFillTexture = solidTexture(new Color(0.30f, 0.75f, 0.30f, 1f));
 
-        Stack stack = new Stack();
-        stack.setFillParent(true);
-        stage.addActor(stack);
-
         Texture bgTexture = GameAsset.MAIN_MENU_BG.get(game.getGlobalAssetManager());
         Image bgImage = new Image(bgTexture);
-        stack.add(bgImage);
+        bgImage.setFillParent(true);
+        stage.addActor(bgImage);
 
         BorderedTable mainPanel = new BorderedTable();
-        mainPanel.setSize(1100, 940);
-        mainPanel.setPosition((1920 - 1100) / 2f, (1080 - 940) / 2f);
-        stack.add(mainPanel);
+        mainPanel.setSize(1200, 1000);
+        mainPanel.setPosition((1920 - 1200) / 2f, (1080 - 1000) / 2f);
+        stage.addActor(mainPanel);
+
+        darkBgTexture = roundedRectTexture(1166, 968, 20, new Color(0.24f, 0.14f, 0.06f, 1f));
+        Image darkBg = new Image(darkBgTexture);
+        darkBg.setBounds(17, 16, 1166, 968);
+        mainPanel.addActor(darkBg);
+
+        cardBgTexture = roundedRectTexture(966, 168, 20, new Color(0.36f, 0.24f, 0.12f, 1f));
 
         mainPanel.add(buildTopBar()).fillX().padTop(15).padLeft(25).padRight(25).row();
 
@@ -104,7 +123,7 @@ public class TravelLogMenu extends ScreenAdapter {
         listTable.top();
         ScrollPane scrollPane = new ScrollPane(listTable, skin);
         scrollPane.setFadeScrollBars(false);
-        mainPanel.add(scrollPane).width(CARD_WIDTH + 40).height(680).padTop(10).padBottom(15).row();
+        mainPanel.add(scrollPane).width(CARD_WIDTH + 40).height(720).padTop(10).padBottom(15).row();
 
         buildTabs();
         refreshWallet();
@@ -127,7 +146,7 @@ public class TravelLogMenu extends ScreenAdapter {
 
         Label titleLabel = new Label("TRAVEL LOG", skin, "big");
         titleLabel.setFontScale(1.4f);
-        titleLabel.setColor(Color.BLACK);
+        titleLabel.setColor(Color.valueOf("F1E4C0"));
 
         top.add(backBtn).size(75, 70).left();
         top.add(titleLabel).expandX().center();
@@ -137,7 +156,7 @@ public class TravelLogMenu extends ScreenAdapter {
 
     private Table buildWallet() {
         Table table = new Table();
-        Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"));
 
         Image coinIcon = new Image(skin.getDrawable("image_ui_generic_coin_icon_small"));
         coinsLabel = new Label("0", descStyle);
@@ -206,45 +225,49 @@ public class TravelLogMenu extends ScreenAdapter {
 
         if (quests.isEmpty()) {
             Label empty = new Label("No quests here right now.", skin);
-            empty.setColor(Color.DARK_GRAY);
+            empty.setColor(Color.valueOf("D8C9A8"));
             listTable.add(empty).pad(20).row();
             return;
         }
 
         for (Quest quest : quests) {
-            listTable.add(buildQuestCard(quest)).width(CARD_WIDTH).height(180).padBottom(14).row();
+            listTable.add(buildQuestCard(quest)).width(CARD_WIDTH).height(200).padBottom(14).row();
         }
     }
 
     private Table buildQuestCard(Quest quest) {
         BorderedTable card = new BorderedTable();
         card.pad(10).padLeft(40).padRight(40);
-        Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Image cardBg = new Image(cardBgTexture);
+        cardBg.setBounds(17, 16, 966, 168);
+        card.addActor(cardBg);
+        Label.LabelStyle titleStyle = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_1"), Color.valueOf("F1E4C0"));
+        Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_2"), Color.valueOf("F1E4C0"));
 
         Table header = new Table();
-        Label titleLabel = new Label(quest.getTitle(), descStyle);
-        titleLabel.setFontScale(1.5f);
+        Label titleLabel = new Label(quest.getTitle(), titleStyle);
+        titleLabel.setFontScale(1.0f);
         header.add(titleLabel).left().expandX();
         header.add(priorityBadge(quest.getPriority())).right();
         card.add(header).fillX().row();
 
         Label descLabel = new Label(quest.getDescription(), descStyle);
-        descLabel.setFontScale(1.15f);
-        descLabel.setColor(Color.valueOf("444444"));
+        descLabel.setFontScale(1.1f);
+        descLabel.setColor(Color.valueOf("D8C9A8"));
         descLabel.setWrap(true);
         card.add(descLabel).width(CARD_WIDTH - 100).left().padTop(6).row();
 
         Table progressRow = new Table();
         progressRow.add(buildProgressBar(quest)).size(BAR_WIDTH, BAR_HEIGHT).left();
         Label progressLabel = new Label(quest.getProgress().toString(), descStyle);
-        progressLabel.setFontScale(1.1f);
+        progressLabel.setFontScale(1.0f);
         progressRow.add(progressLabel).padLeft(10);
         card.add(progressRow).left().padTop(10).row();
 
         Table footer = new Table();
         Label rewardLabel = new Label("Reward: " + quest.getRewardDescription(), descStyle);
-        rewardLabel.setFontScale(1.05f);
-        rewardLabel.setColor(Color.valueOf("1b5e20"));
+        rewardLabel.setFontScale(1.0f);
+        rewardLabel.setColor(Color.valueOf("8FCE7E"));
         footer.add(rewardLabel).left().expandX();
         footer.add(statusWidget(quest)).right();
         card.add(footer).fillX().padTop(10).row();
@@ -254,12 +277,12 @@ public class TravelLogMenu extends ScreenAdapter {
 
     private Label priorityBadge(QuestPriority priority) {
         Color color = switch (priority) {
-            case CRITICAL -> Color.SCARLET;
-            case HIGH -> Color.ORANGE;
-            case MEDIUM -> Color.GOLD;
-            case LOW -> Color.LIGHT_GRAY;
+            case CRITICAL -> Color.valueOf("FF5252");
+            case HIGH -> Color.valueOf("FFA726");
+            case MEDIUM -> Color.valueOf("FFD54F");
+            case LOW -> Color.valueOf("BDBDBD");
         };
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), color);
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_2"), color);
         Label badge = new Label(priority.name(), style);
         badge.setFontScale(1.0f);
         return badge;
@@ -281,11 +304,11 @@ public class TravelLogMenu extends ScreenAdapter {
     }
 
     private Actor statusWidget(Quest quest) {
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.DARK_GRAY);
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_2"), Color.valueOf("D8C9A8"));
 
         if (!quest.isCompleted()) {
             Label label = new Label("In Progress", style);
-            label.setFontScale(1.05f);
+            label.setFontScale(1.0f);
             return label;
         }
         if (!quest.isClaimed()) {
@@ -303,32 +326,102 @@ public class TravelLogMenu extends ScreenAdapter {
             return claimBtn;
         }
         Label claimed = new Label("Claimed", style);
-        claimed.setFontScale(1.05f);
-        claimed.setColor(Color.valueOf("1b5e20"));
+        claimed.setFontScale(1.0f);
+        claimed.setColor(Color.valueOf("8FCE7E"));
         return claimed;
     }
 
     private void buildMinigamesList() {
         for (int i = 0; i < MINI_GAME_SEASON_FOLDERS.length; i++) {
-            listTable.add(buildMinigameCard(MINI_GAME_SEASON_FOLDERS[i], MINI_GAME_LABELS[i]))
-                .width(CARD_WIDTH).height(150).padBottom(14).row();
+            listTable.add(buildMinigameCard(MINI_GAME_SEASON_FOLDERS[i], MINI_GAME_LABELS[i], MINI_GAME_WALLPAPERS[i]))
+                .width(CARD_WIDTH).height(300).padBottom(14).row();
         }
     }
 
-    private Table buildMinigameCard(String seasonFolder, String displayName) {
-        BorderedTable card = new BorderedTable();
-        card.pad(10).padLeft(40).padRight(40);
+    /**
+     * Loads a wallpaper, scales it to width x height, cuts the corners into
+     * rounded arcs and draws a narrow frame around the card. The result is
+     * cached per path so tab switches do not re-process the image.
+     */
+    private Image buildWallpaperImage(String path, int width, int height, int radius, int frameWidth) {
+        Texture cached = wallpaperCache.get(path);
+        if (cached != null) {
+            return new Image(cached);
+        }
+
+        Texture source = MenuUiKit.loadTextureSafe(path);
+        TextureData data = source.getTextureData();
+        if (!data.isPrepared()) {
+            data.prepare();
+        }
+        Pixmap sourcePixmap = data.consumePixmap();
+        data.disposePixmap();
+        source.dispose();
+
+        Pixmap scaled = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        scaled.setFilter(Pixmap.Filter.BiLinear);
+        scaled.drawPixmap(sourcePixmap, 0, 0, sourcePixmap.getWidth(), sourcePixmap.getHeight(), 0, 0, width, height);
+        sourcePixmap.dispose();
+
+        Color frameColor = new Color(0xC9A227FF);
+        int frameBits = frameColor.toIntBits();
+        int innerRadius = radius - frameWidth;
+        int innerRadius2 = innerRadius * innerRadius;
+        int outerRadius2 = radius * radius;
+
+        Pixmap out = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                boolean corner = (x < radius && y < radius)
+                    || (x >= width - radius && y < radius)
+                    || (x < radius && y >= height - radius)
+                    || (x >= width - radius && y >= height - radius);
+                if (corner) {
+                    float dx;
+                    float dy;
+                    if (x < radius && y < radius) {
+                        dx = x - radius;
+                        dy = y - radius;
+                    } else if (x >= width - radius && y < radius) {
+                        dx = x - (width - radius);
+                        dy = y - radius;
+                    } else if (x < radius && y >= height - radius) {
+                        dx = x - radius;
+                        dy = y - (height - radius);
+                    } else {
+                        dx = x - (width - radius);
+                        dy = y - (height - radius);
+                    }
+                    float distance2 = dx * dx + dy * dy;
+                    if (distance2 > outerRadius2) {
+                        out.drawPixel(x, y, 0);
+                    } else if (distance2 > innerRadius2) {
+                        out.drawPixel(x, y, frameBits);
+                    } else {
+                        out.drawPixel(x, y, scaled.getPixel(x, y));
+                    }
+                } else if (x < frameWidth || y < frameWidth
+                    || x >= width - frameWidth || y >= height - frameWidth) {
+                    out.drawPixel(x, y, frameBits);
+                } else {
+                    out.drawPixel(x, y, scaled.getPixel(x, y));
+                }
+            }
+        }
+        scaled.dispose();
+
+        Texture texture = new Texture(out);
+        out.dispose();
+        wallpaperCache.put(path, texture);
+        return new Image(texture);
+    }
+
+    private Table buildMinigameCard(String seasonFolder, String displayName, String wallpaperPath) {
         Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_1"), Color.BLACK);
 
-        Table info = new Table();
-        Label nameLabel = new Label(displayName, descStyle);
-        nameLabel.setFontScale(1.5f);
-        info.add(nameLabel).left().row();
         Label subLabel = new Label("Choose a level to play.", descStyle);
         subLabel.setFontScale(1.05f);
-        subLabel.setColor(Color.valueOf("555555"));
-        info.add(subLabel).left().padTop(6).row();
-        card.add(info).expandX().left();
+        subLabel.setColor(Color.valueOf("D8C9A8"));
 
         Table levels = new Table();
         for (int level = 1; level <= 3; level++) {
@@ -348,7 +441,37 @@ public class TravelLogMenu extends ScreenAdapter {
             });
             levels.add(levelBtn).size(140, 55).padLeft(6);
         }
-        card.add(levels).right();
+
+        Table rightPanel = new Table();
+        rightPanel.add(subLabel).padBottom(8).row();
+        rightPanel.add(levels).row();
+
+        // Wallpaper-backed card: the texture fills the card (rounded corners
+        // and a narrow frame baked into it), with the "Choose a level to
+        // play." label and the level buttons stacked on top, bottom-right.
+        // Falls back to the plain bordered card when no wallpaper is
+        // configured or the file is missing.
+        if (wallpaperPath != null && Gdx.files.internal(wallpaperPath).exists()) {
+            Image wallpaper = buildWallpaperImage(wallpaperPath, (int) CARD_WIDTH, 300, 28, 5);
+
+            Table content = new Table();
+            content.pad(14).padLeft(40).padRight(40);
+            content.bottom().right();
+            content.add(rightPanel).right();
+
+            Stack stack = new Stack();
+            stack.add(wallpaper);
+            stack.add(content);
+
+            Table wrapper = new Table();
+            wrapper.add(stack).grow();
+            return wrapper;
+        }
+
+        BorderedTable card = new BorderedTable();
+        card.pad(14).padLeft(40).padRight(40);
+        card.bottom().right();
+        card.add(rightPanel).right();
         return card;
     }
 
@@ -356,6 +479,21 @@ public class TravelLogMenu extends ScreenAdapter {
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(color);
         pixmap.fill();
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return texture;
+    }
+
+    private Texture roundedRectTexture(int width, int height, int radius, Color color) {
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        pixmap.setBlending(Pixmap.Blending.None);
+        pixmap.setColor(color);
+        pixmap.fillCircle(radius, radius, radius);
+        pixmap.fillCircle(width - radius - 1, radius, radius);
+        pixmap.fillCircle(radius, height - radius - 1, radius);
+        pixmap.fillCircle(width - radius - 1, height - radius - 1, radius);
+        pixmap.fillRectangle(radius, 0, width - 2 * radius, height);
+        pixmap.fillRectangle(0, radius, width, height - 2 * radius);
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
         return texture;
@@ -380,5 +518,11 @@ public class TravelLogMenu extends ScreenAdapter {
         skin.dispose();
         barBgTexture.dispose();
         barFillTexture.dispose();
+        darkBgTexture.dispose();
+        cardBgTexture.dispose();
+        for (Texture texture : wallpaperCache.values()) {
+            texture.dispose();
+        }
+        wallpaperCache.clear();
     }
 }
