@@ -45,7 +45,7 @@ public class Zombie extends Entity {
 
     private float stateTime = 0f;
     // ── Grid position ─────────────────────────────────────────────────────────
-    private int lastX;
+    private int lastCol;
     private int lastLane;
 
     // ── Runtime stats (scaled at spawn) ───────────────────────────────────────
@@ -94,7 +94,7 @@ public class Zombie extends Entity {
                   GameContext ctx, int waveIndex, int difficulty) {
         this.sheet = sheet;
         this.position.set(startX, GameController.laneToWorldY(lane));
-        lastX = (int) startX;
+        lastCol = GameController.worldXtoCol(startX);
         this.armors = new ArrayList<>(armors);
         this.skills = new ArrayList<>(skills);
         this.activeEffects = new EnumMap<>(EffectType.class);
@@ -171,14 +171,15 @@ public class Zombie extends Entity {
             currentState = next;
         }
 
-        if (Math.floor(position.x) != lastX || GameController.worldYtoLane(position.y) != lastLane) {
-            lastX = (int) Math.floor(position.x);
-            lastLane = GameController.worldYtoLane(position.y);
-            Tile tile = context.getTileAt(lastX, GameController.worldYtoLane(position.y));
+        int currentCol = GameController.worldXtoCol(position.x);
+        int currentLane = GameController.worldYtoLane(position.y);
+
+        if (currentCol != lastCol || currentLane != lastLane) {
+            lastCol = currentCol;
+            lastLane = currentLane;
+            Tile tile = context.getTileAt(currentCol, currentLane);
             if (tile != null) {
-                for (TileBehavior b : tile.getBehaviors()) {
-                    b.onZombieEnter(this, tile);
-                }
+                tile.onZombieEnter(this);
             }
         }
 

@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="...">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/VaseBreakerMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/VaseBreakerMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/behaviors/SlipperyBehavior.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/map/behaviors/SlipperyBehavior.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -293,7 +292,7 @@
       <workItem from="1787021608766" duration="1762000" />
       <workItem from="1787023842885" duration="666000" />
       <workItem from="1787025649614" duration="652000" />
-      <workItem from="1787027491619" duration="276000" />
+      <workItem from="1787027491619" duration="1902000" />
     </task>
     <task id="LOCAL-00001" summary="added Login and register and forgot password menu to the game">
       <option name="closed" value="true" />
