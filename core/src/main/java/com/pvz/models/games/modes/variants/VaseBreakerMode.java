@@ -1,49 +1,39 @@
 package com.pvz.models.games.modes.variants;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import com.pvz.controller.game.GameController;
-import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.ZombieType;
 import com.pvz.models.games.GameContext;
+import com.pvz.models.games.card.Card;
+import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.data.VaseDefinition;
 import com.pvz.models.games.levels.data.VaseType;
 import com.pvz.models.games.levels.variants.VaseBreakerLevel;
+import com.pvz.models.games.map.behaviors.VaseBehavior;
+import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.GameMode;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.games.modes.capabilities.VaseBreaker;
-import com.pvz.models.games.card.Card;
-import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.user.MyPlant;
 
 public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
-    private static class VaseTile {
-        VaseType type;
-        boolean isBroken;
-
-        VaseTile(VaseType type) {
-            this.type = type;
-            this.isBroken = false;
-        }
-    }
-
-    private final VaseTile[][] vaseGrid;
     private final List<MyPlant> plantPool;
     private final List<ZombieType> zombiePool;
     private final Boolean[] lawnMower;
     private final Random random = new Random();
+    private GameContext cachedContext;
 
     public VaseBreakerMode(Level level) {
         int rows = level.getGameMapDefinition().rows;
-        int cols = level.getGameMapDefinition().columns;
-        this.vaseGrid = new VaseTile[rows][cols];
 
         if (level instanceof VaseBreakerLevel vaseLevel) {
             this.plantPool = vaseLevel.getBasedPlants();
@@ -51,9 +41,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
             if (vaseLevel.getVases() != null) {
                 for (VaseDefinition def : vaseLevel.getVases()) {
-                    if (def.getLane() >= 0 && def.getLane() < rows && def.getCol() >= 0 && def.getCol() < cols) {
-                        this.vaseGrid[def.getLane()][def.getCol()] = new VaseTile(def.getVaseType());
-                    }
+                    vasesToPlace.add(def);
                 }
             }
         } else {
@@ -67,63 +55,72 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         }
     }
 
+    private final List<VaseDefinition> vasesToPlace = new ArrayList<>();
+
     @Override
     public void initMode(GameContext context) {
-        context.log("Vasebreaker level started! Break vases to find plants or zombies.");
+        this.cachedContext = context;
+        for (VaseDefinition def : vasesToPlace) {
+            Tile tile = context.getTileAt(def.getCol(), def.getLane());
+            if (tile != null) {
+                tile.addBehavior(new VaseBehavior(def.getVaseType()));
+            }
+        }
+        context.log("Vasebreaker level started! Click vases to break them.");
     }
 
     @Override
     public void updateMode(GameContext context, float dt) {
-        // شرط پایان بازی و پیروزی
         if (!anyVasesRemain() && context.getZombies().isEmpty()) {
             context.setGameOver(true);
             context.log("VICTORY! All vases cleared and all zombies defeated!");
             return;
         }
 
-        // بررسی ورود زامبی‌ها به انتهای خانه و چمن‌زن
-        for (int i = 0; i < context.getZombies().size(); i++) {
+        for (int i = context.getZombies().size() - 1; i >= 0; i--) {
             Zombie z = context.getZombies().get(i);
-            if (z.getX() <= 0f) {
-                if (!lawnMower[GameController.worldYtoLane(z.getY())]) {
-                    runLawnMowers(context, GameController.worldYtoLane(z.getY()));
-                    i--;
+            if (z.getX() <= GameController.colToWorldX(-1)) {
+                int lane = GameController.worldYtoLane(z.getY());
+                if (!lawnMower[lane]) {
+                    runLawnMowers(context, lane);
                     continue;
                 }
-                if (lawnMower[GameController.worldYtoLane(z.getY())]) {
-                    context.setGameOver(true);
-                    context.log("The zombie ate your brain; LOOSER!!!");
-                    context.removeZombie(z);
-                }
+                context.setGameOver(true);
+                context.log("The zombie ate your brain; LOOSER!!!");
+                context.removeZombie(z);
             }
         }
 
-        for (int i = 0; i < context.getCards().size(); i++) {
+        for (int i = context.getCards().size() - 1; i >= 0; i--) {
             Card card = context.getCards().get(i);
             if (card.getCooldown() <= 0.01f) {
                 context.removeCard(card);
-                i--;
             }
         }
     }
 
     @Override
     public void breakVase(GameContext context, int col, int lane) {
-        if (lane < 0 || lane >= vaseGrid.length || col < 0 || col >= vaseGrid[0].length) {
-            context.log("Error: Target tile (" + col + ", " + lane + ") is out of bounds.");
-            return;
-        }
+        Tile tile = context.getTileAt(col, lane);
+        if (tile == null) return;
 
-        VaseTile vase = vaseGrid[lane][col];
-        if (vase == null || vase.isBroken) {
+        VaseBehavior vase = findVaseBehavior(tile);
+        if (vase == null || vase.isBroken()) {
             context.log("There is no intact vase at (" + col + ", " + lane + ").");
             return;
         }
 
-        vase.isBroken = true;
+        vase.breakVase();
         context.log("Vase at (" + col + ", " + lane + ") shattered!");
 
-        spawnRandomContent(context, vase.type, col, lane);
+        spawnRandomContent(context, vase.getVaseType(), col, lane);
+    }
+
+    private VaseBehavior findVaseBehavior(Tile tile) {
+        for (var b : tile.getBehaviors()) {
+            if (b instanceof VaseBehavior vb) return vb;
+        }
+        return null;
     }
 
     private void spawnRandomContent(GameContext context, VaseType vaseType, int col, int lane) {
@@ -137,19 +134,18 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             return;
         }
 
-        // کوزه معمولی (NORMAL): تعیین محتوا بر اساس درصد شانس
         double roll = random.nextDouble();
-        if (roll < 0.45) { // ۴۵٪ شانس زامبی
+        if (roll < 0.45) {
             if (!zombiePool.isEmpty()) {
                 ZombieType randomZombie = zombiePool.get(random.nextInt(zombiePool.size()));
                 spawnZombie(context, randomZombie, col, lane);
             }
-        } else if (roll < 0.85) { // ۴۰٪ شانس کارت گیاه
+        } else if (roll < 0.85) {
             spawnRandomPlantCard(context);
-        } else if (roll < 0.95) { // ۱۰٪ شانس خورشید
+        } else if (roll < 0.95) {
             context.addSun(50);
             context.log("Collected 50 Sun from the vase!");
-        } else { // ۵٪ پوچ
+        } else {
             context.log("The vase was empty!");
         }
     }
@@ -174,28 +170,31 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     @Override
     public void showVases(GameContext context) {
         context.log("=== VASES ON BOARD ===");
-        for (int r = 0; r < vaseGrid.length; r++) {
-            for (int c = 0; c < vaseGrid[0].length; c++) {
-                if (vaseGrid[r][c] != null && !vaseGrid[r][c].isBroken) {
-                    context.log(String.format("Vase at (%d, %d) -> Type: %s", c, r, vaseGrid[r][c].type));
+        for (int lane = 0; lane < context.getMap().getLanes(); lane++) {
+            for (int col = 0; col < context.getMap().getColumns(); col++) {
+                Tile tile = context.getTileAt(col, lane);
+                VaseBehavior vase = findVaseBehavior(tile);
+                if (vase != null && !vase.isBroken()) {
+                    context.log(String.format("Vase at (%d, %d) -> Type: %s", col, lane, vase.getVaseType()));
                 }
             }
         }
     }
 
     private boolean anyVasesRemain() {
-        for (VaseTile[] row : vaseGrid) {
-            for (VaseTile tile : row) {
-                if (tile != null && !tile.isBroken)
-                    return true;
+        if (cachedContext == null) return false;
+        for (int lane = 0; lane < cachedContext.getMap().getLanes(); lane++) {
+            for (int col = 0; col < cachedContext.getMap().getColumns(); col++) {
+                Tile tile = cachedContext.getTileAt(col, lane);
+                VaseBehavior vase = findVaseBehavior(tile);
+                if (vase != null && !vase.isBroken()) return true;
             }
         }
         return false;
     }
 
     private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane])
-            return;
+        if (lawnMower[lane]) return;
         context.getZombiesInLane(lane).forEach(z -> {
             z.takeDamage(Float.MAX_VALUE);
             context.removeZombie(z);
@@ -204,7 +203,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         lawnMower[lane] = true;
     }
 
-    // ── قابلیت PlantPlacer ───────────────────────────────────────────────────
+    // -- PlantPlacer capability --
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
@@ -212,23 +211,21 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             context.log("[Placement Failed] Selected card is null.");
             return false;
         }
-
         if (col < 0 || col >= context.getMap().getColumns() || lane < 0 || lane >= context.getMap().getLanes()) {
             context.log("[Placement Failed] Out of bounds: (" + col + ", " + lane + ")");
             return false;
         }
-
         if (!context.getPlantsAt(col, lane).isEmpty()) {
             context.log("[Placement Failed] Tile (" + col + ", " + lane + ") is already occupied by another plant.");
             return false;
         }
-
-        if (vaseGrid[lane][col] != null && !vaseGrid[lane][col].isBroken) {
+        Tile tile = context.getTileAt(col, lane);
+        VaseBehavior vase = findVaseBehavior(tile);
+        if (vase != null && !vase.isBroken()) {
             context.log("[Placement Failed] Tile (" + col + ", " + lane + ") has an intact vase. Break it first!");
             return false;
         }
-
-        if (!context.getTileAt(col, lane).isPlantable(card)) {
+        if (!tile.isPlantable(card)) {
             context.log("[Placement Failed] Tile (" + col + ", " + lane + ") does not support planting "
                         + card.getPlant().getType());
             return false;
@@ -241,7 +238,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         Plant plant = new PlantFactory().create(card.getPlant().getType(), col, lane,
                 card.getPlant().getLevel(), card.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
-        card.use();
+        context.getGameStats().onPlantPlaced(col, lane, card.getPlant().getType());
         context.removeCard(card);
         context.log(card.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
     }
@@ -266,13 +263,14 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             result.append("=== HELD SEED PACKETS ===");
             for (Card card : cards) {
                 if (card instanceof PlantCard ps) {
-                    result.append(String.format("\n- %s | Lvl:%d | Expires in:%.1fs", ps.getPlant().getType(),
-                            ps.getPlant().getLevel(), (float) ps.getCooldown() / (float) Constants.TICK_PER_SECOND));
+                    result.append(String.format("\n- %s | Lvl:%d", ps.getPlant().getType(),
+                            ps.getPlant().getLevel()));
                 }
             }
         }
         return result.toString();
     }
+
     @Override
     public boolean supportsFallingSuns() {
         return false;

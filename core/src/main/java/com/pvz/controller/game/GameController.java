@@ -47,6 +47,7 @@ import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.games.modes.capabilities.ZombiePlacer;
 import com.pvz.models.games.modes.variants.IZombieMode;
+import com.pvz.models.games.modes.variants.VaseBreakerMode;
 import com.pvz.models.games.card.ZombieCard;
 import com.pvz.models.user.MyPlant;
 import com.pvz.view.GameModesMenu;
@@ -157,6 +158,28 @@ public class GameController {
                             if (gameUiModal == null || gameUiModal.getSelectedCard() == null) {
                                 if (checkPlantFoodClick(touchPos.x, touchPos.y)) {
                                     return true;
+                                }
+                            }
+
+                            // Vase breaking: click on a vase tile to break it (no card selected)
+                            if (gameUiModal == null || gameUiModal.getSelectedCard() == null) {
+                                if (ctx.getMode() instanceof VaseBreakerMode vbMode) {
+                                    Tile clickedTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
+                                    if (clickedTile != null) {
+                                        int col = clickedTile.getCol();
+                                        int lane = clickedTile.getLane();
+                                        com.pvz.models.games.map.behaviors.VaseBehavior vase = null;
+                                        for (var b : clickedTile.getBehaviors()) {
+                                            if (b instanceof com.pvz.models.games.map.behaviors.VaseBehavior vb) {
+                                                vase = vb;
+                                                break;
+                                            }
+                                        }
+                                        if (vase != null && !vase.isBroken()) {
+                                            vbMode.breakVase(ctx, col, lane);
+                                            return true;
+                                        }
+                                    }
                                 }
                             }
                         }
