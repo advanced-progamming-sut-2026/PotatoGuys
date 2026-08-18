@@ -15,8 +15,11 @@ import com.google.gson.Gson;
 import com.pvz.models.leaderboard.Leaderboard;
 import com.pvz.models.leaderboard.Leaderboard.LeaderBoardEntry;
 import com.pvz.models.user.User;
+import com.pvz.network.MatchDTOs;
+import com.pvz.network.MessageType;
 import com.pvz.network.NetworkClient.LoginRequest;
 import com.pvz.network.NetworkMessage;
+import com.pvz.network.PlayerRole;
 import com.pvz.utils.PasswordUtils;
 import com.pvz.utils.SaveManager;
 
@@ -27,6 +30,12 @@ import com.pvz.utils.SaveManager;
  * All reads/writes to "users/username.json" go through {@link #ACCOUNTS_LOCK}
  * so two clients registering/saving at the same instant can't corrupt it —
  * SaveManager itself does plain unsynchronized file I/O.
+ *
+ * Phase 2: once a client logs in, this handler registers itself in
+ * {@link MatchmakingRegistry} under that username, so other clients' invites
+ * and the random queue can reach it — including from a *different* handler's
+ * thread, hence {@link #out} is now an instance field guarded by
+ * {@link #push}, not a local variable.
  */
 public class ClientHandler implements Runnable {
 
@@ -36,6 +45,10 @@ public class ClientHandler implements Runnable {
     private final Socket socket;
     private final Gson gson = new Gson();
 
+    /** Set once LOGIN succeeds. Read from other handlers' threads too — see class doc. */
+    private volatile String username;
+    private volatile PrintWriter out;
+
     public ClientHandler(Socket socket) {
         this.socket = socket;
     }
@@ -43,9 +56,10 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try (
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-            PrintWriter out = new PrintWriter(new java.io.OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true)
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))
         ) {
+            out = new PrintWriter(new java.io.OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
+
             String line;
             while ((line = in.readLine()) != null) {
                 NetworkMessage request = gson.fromJson(line, NetworkMessage.class);
@@ -55,8 +69,21 @@ public class ClientHandler implements Runnable {
         } catch (IOException e) {
             System.out.println("[ClientHandler] Client disconnected: " + socket.getRemoteSocketAddress());
         } finally {
+            MatchmakingRegistry.markOffline(username, this);
             try { socket.close(); } catch (IOException ignored) { }
         }
+    }
+
+    /** Writes a message to this client without it being a response to any request —
+     *  used to notify a client about something another client (or the server) did. */
+    public synchronized void push(MessageType type, String payloadJson) {
+        if (out == null) return;
+        NetworkMessage msg = new NetworkMessage();
+        msg.type = type;
+        msg.requestId = null;
+        msg.success = true;
+        msg.payload = payloadJson;
+        out.println(gson.toJson(msg));
     }
 
     private NetworkMessage handle(NetworkMessage request) {
@@ -72,6 +99,16 @@ public class ClientHandler implements Runnable {
                     return handleGetUser(request);
                 case GET_LEADERBOARD:
                     return handleGetLeaderboard(request);
+                case INVITE_SEND:
+                    return handleInviteSend(request);
+                case INVITE_RESPONSE:
+                    return handleInviteResponse(request);
+                case QUEUE_JOIN:
+                    return handleQueueJoin(request);
+                case QUEUE_CANCEL:
+                    return handleQueueCancel(request);
+                case MATCH_MESSAGE:
+                    return handleMatchMessage(request);
                 default:
                     return NetworkMessage.error(request, "Unknown message type: " + request.type);
             }
@@ -80,6 +117,8 @@ public class ClientHandler implements Runnable {
             return NetworkMessage.error(request, "Server error: " + e.getMessage());
         }
     }
+
+    // ---- Accounts (Phase 1, unchanged) --------------------------------------------------
 
     @SuppressWarnings("unchecked")
     private NetworkMessage handleRegister(NetworkMessage request) {
@@ -128,6 +167,9 @@ public class ClientHandler implements Runnable {
             SaveManager.getInstance().save(user, "users/" + id + ".json");
         }
 
+        this.username = user.getUsername();
+        MatchmakingRegistry.markOnline(this.username, this);
+
         return NetworkMessage.ok(request, gson.toJson(user));
     }
 
@@ -164,5 +206,108 @@ public class ClientHandler implements Runnable {
     private NetworkMessage handleGetLeaderboard(NetworkMessage request) {
         List<LeaderBoardEntry> entries = Leaderboard.loadAll();
         return NetworkMessage.ok(request, gson.toJson(entries));
+    }
+
+    // ---- I,Zombie matchmaking (Phase 2) -----------------------------------------------
+
+    private NetworkMessage handleInviteSend(NetworkMessage request) {
+        MatchDTOs.InviteSendRequest req = gson.fromJson(request.payload, MatchDTOs.InviteSendRequest.class);
+
+        ClientHandler target = MatchmakingRegistry.findOnline(req.targetUsername);
+        if (target == null) {
+            return NetworkMessage.error(request, "That user is offline or doesn't exist.");
+        }
+        if (target == this) {
+            return NetworkMessage.error(request, "You can't invite yourself.");
+        }
+
+        MatchmakingRegistry.PendingInvite invite =
+            MatchmakingRegistry.createInvite(this, target, req.requestedRole);
+
+        MatchDTOs.InviteIncomingPayload pushPayload = new MatchDTOs.InviteIncomingPayload();
+        pushPayload.matchId = invite.matchId;
+        pushPayload.fromUsername = this.username;
+        pushPayload.yourRole = req.requestedRole.opposite();
+        target.push(MessageType.INVITE_INCOMING, gson.toJson(pushPayload));
+
+        return NetworkMessage.ok(request, gson.toJson(invite.matchId));
+    }
+
+    private NetworkMessage handleInviteResponse(NetworkMessage request) {
+        MatchDTOs.InviteResponseRequest req = gson.fromJson(request.payload, MatchDTOs.InviteResponseRequest.class);
+
+        MatchmakingRegistry.PendingInvite invite = MatchmakingRegistry.consumeInvite(req.matchId);
+        if (invite == null) {
+            return NetworkMessage.error(request, "This invite is no longer valid.");
+        }
+
+        if (!req.accepted) {
+            MatchDTOs.InviteRejectedPayload rejected = new MatchDTOs.InviteRejectedPayload();
+            rejected.matchId = invite.matchId;
+            rejected.byUsername = this.username;
+            invite.from.push(MessageType.INVITE_REJECTED, gson.toJson(rejected));
+            return NetworkMessage.ok(request, null);
+        }
+
+        MatchmakingRegistry.registerMatch(invite.matchId, invite.from, invite.to);
+
+        MatchDTOs.MatchFoundPayload toInviter = new MatchDTOs.MatchFoundPayload();
+        toInviter.matchId = invite.matchId;
+        toInviter.opponentUsername = invite.to.username;
+        toInviter.yourRole = invite.fromRole;
+        invite.from.push(MessageType.MATCH_FOUND, gson.toJson(toInviter));
+
+        MatchDTOs.MatchFoundPayload toInvitee = new MatchDTOs.MatchFoundPayload();
+        toInvitee.matchId = invite.matchId;
+        toInvitee.opponentUsername = invite.from.username;
+        toInvitee.yourRole = invite.fromRole.opposite();
+        invite.to.push(MessageType.MATCH_FOUND, gson.toJson(toInvitee));
+
+        return NetworkMessage.ok(request, null);
+    }
+
+    private NetworkMessage handleQueueJoin(NetworkMessage request) {
+        ClientHandler opponent = MatchmakingRegistry.joinRandomQueue(this);
+
+        if (opponent != null) {
+            String matchId = UUID.randomUUID().toString();
+            MatchmakingRegistry.registerMatch(matchId, opponent, this);
+
+            // Whoever queued first defends (arbitrary but deterministic — no real reason
+            // it couldn't be a coin flip instead).
+            MatchDTOs.MatchFoundPayload toOpponent = new MatchDTOs.MatchFoundPayload();
+            toOpponent.matchId = matchId;
+            toOpponent.opponentUsername = this.username;
+            toOpponent.yourRole = PlayerRole.PLANT;
+            opponent.push(MessageType.MATCH_FOUND, gson.toJson(toOpponent));
+
+            MatchDTOs.MatchFoundPayload toSelf = new MatchDTOs.MatchFoundPayload();
+            toSelf.matchId = matchId;
+            toSelf.opponentUsername = opponent.username;
+            toSelf.yourRole = PlayerRole.ZOMBIE;
+            this.push(MessageType.MATCH_FOUND, gson.toJson(toSelf));
+        }
+        // If opponent == null, `this` is now waiting in the queue — the eventual
+        // MATCH_FOUND arrives later as a push, whenever someone else joins.
+
+        return NetworkMessage.ok(request, null);
+    }
+
+    private NetworkMessage handleQueueCancel(NetworkMessage request) {
+        MatchmakingRegistry.leaveRandomQueue(this);
+        return NetworkMessage.ok(request, null);
+    }
+
+    private NetworkMessage handleMatchMessage(NetworkMessage request) {
+        MatchDTOs.MatchMessageEnvelope envelope = gson.fromJson(request.payload, MatchDTOs.MatchMessageEnvelope.class);
+
+        ClientHandler other = MatchmakingRegistry.otherParticipant(envelope.matchId, this);
+        if (other == null) {
+            return NetworkMessage.error(request, "Match not found or already ended.");
+        }
+
+        // Blind relay: forward the same envelope untouched, server never looks inside it.
+        other.push(MessageType.MATCH_MESSAGE, request.payload);
+        return NetworkMessage.ok(request, null);
     }
 }

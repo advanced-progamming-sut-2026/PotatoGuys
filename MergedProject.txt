@@ -677,11 +677,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
+import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.Card;
 import com.pvz.models.games.card.PlantCard;
+import com.pvz.models.games.card.ZombieCard;
 import com.pvz.models.user.User;
 import com.pvz.view.MenuUiKit;
 import com.pvz.view.PlantData;
@@ -718,9 +720,12 @@ public class GameUiModal extends Table {
     private final ImageButton addFoodButton;
     private final Table cardsBarTable;
     private PlantCard selectedCard = null;
+    private ZombieCard selectedZombieCard = null;
 
     private final Map<PlantCard, Table> slotByCard = new HashMap<>();
     private final Map<PlantCard, Image> cooldownOverlayByCard = new HashMap<>();
+    private final Map<ZombieCard, Table> zombieSlotByCard = new HashMap<>();
+    private final Map<ZombieCard, Image> zombieCooldownOverlayByCard = new HashMap<>();
     private Map<PlantType, PlantData> dataByType = new HashMap<>();
 
     public GameUiModal(Runnable onPauseRequested) {
@@ -884,6 +889,15 @@ public class GameUiModal extends Table {
         return selectedCard;
     }
 
+    public ZombieCard getSelectedZombieCard() {
+        return selectedZombieCard;
+    }
+
+    public void setSelectedZombieCard(ZombieCard card) {
+        this.selectedZombieCard = card;
+        updateCardStyles();
+    }
+
     /**
      * Where the coin wallet icon sits in stage (1280x720, bottom-left origin)
      * coordinates — the target the flying coin-drop animation arcs toward.
@@ -935,6 +949,10 @@ public class GameUiModal extends Table {
         cardsBarTable.clearChildren();
         slotByCard.clear();
         cooldownOverlayByCard.clear();
+        zombieSlotByCard.clear();
+        zombieCooldownOverlayByCard.clear();
+        selectedCard = null;
+        selectedZombieCard = null;
 
         GameContext context = AppContext.getInstance().getGameContext();
         if (context == null) return;
@@ -948,6 +966,8 @@ public class GameUiModal extends Table {
         for (Card card : context.getCards()) {
             if (card instanceof PlantCard pc) {
                 cardsBarTable.add(buildSlot(pc)).row();
+            } else if (card instanceof ZombieCard zc) {
+                cardsBarTable.add(buildZombieSlot(zc)).row();
             }
         }
         updateCardStyles();
@@ -1009,12 +1029,84 @@ public class GameUiModal extends Table {
                     selectedCard = null;
                 } else {
                     selectedCard = pc;
+                    selectedZombieCard = null;
                 }
                 updateCardStyles();
             }
         });
 
         slotByCard.put(pc, slot);
+        return slot;
+    }
+
+    private Table buildZombieSlot(ZombieCard zc) {
+        Skin skin = PvzSkin.get();
+        Drawable fallback = skin.newDrawable("white_pixel", new Color(0.35f, 0.15f, 0.15f, 1f));
+
+        Table slot = new Table();
+        com.badlogic.gdx.graphics.g2d.TextureRegion bgRegion = PvZ2.textureBank.region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_READY");
+        if (bgRegion != null) {
+            slot.setBackground(new TextureRegionDrawable(bgRegion));
+        } else {
+            slot.setBackground(new TextureRegionDrawable(MenuUiKit.solidTexture(new Color(0.4f, 0.1f, 0.1f, 0.85f))));
+        }
+
+        Stack stack = new Stack();
+
+        String artPath = "textures/zombies/" + zc.getZombieType().name() + ".png";
+        if (com.badlogic.gdx.Gdx.files.internal(artPath).exists()) {
+            com.badlogic.gdx.graphics.Texture tex = new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(artPath));
+            tex.setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear, com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
+            Image zombieImg = new Image(new TextureRegionDrawable(tex));
+            zombieImg.setScaling(Scaling.fit);
+            Table imgLayer = new Table();
+            imgLayer.center();
+            imgLayer.add(zombieImg).size(SLOT_HEIGHT - 8f);
+            stack.add(imgLayer);
+        } else {
+            String zombieName = zc.getZombieType().name().replace("_", " ");
+            Label nameLabel = new Label(zombieName, skin, "medium");
+            nameLabel.setFontScale(0.65f);
+            nameLabel.setColor(Color.WHITE);
+            nameLabel.setWrap(true);
+            nameLabel.setAlignment(Align.center);
+            Table nameLayer = new Table();
+            nameLayer.center();
+            nameLayer.add(nameLabel).size(SLOT_HEIGHT - 10f);
+            stack.add(nameLayer);
+        }
+
+        Image cooldownOverlay = new Image(new TextureRegionDrawable(MenuUiKit.solidTexture(new Color(0f, 0f, 0f, 0.6f))));
+        cooldownOverlay.setTouchable(Touchable.disabled);
+        stack.add(cooldownOverlay);
+        zombieCooldownOverlayByCard.put(zc, cooldownOverlay);
+
+        Label costLabel = new Label(String.valueOf(zc.getCost()), skin, "medium");
+        costLabel.setFontScale(0.9f);
+        costLabel.setColor(Color.WHITE);
+        Table costRow = new Table();
+        costRow.bottom().left();
+        costRow.add(costLabel).pad(1f, 4f, 1f, 4f);
+        stack.add(costRow);
+
+        slot.add(stack).grow();
+        slot.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!zc.canUse()) {
+                    return;
+                }
+                if (selectedZombieCard == zc) {
+                    selectedZombieCard = null;
+                } else {
+                    selectedCard = null;
+                    selectedZombieCard = zc;
+                }
+                updateCardStyles();
+            }
+        });
+
+        zombieSlotByCard.put(zc, slot);
         return slot;
     }
 
@@ -1052,8 +1144,15 @@ public class GameUiModal extends Table {
             float base = pc.getBaseCooldown();
             float fraction = base > 0 ? pc.getCooldown() / base : 0f;
             overlay.setVisible(fraction > 0f);
-            // Sweep the dark overlay's height with the remaining cooldown fraction,
-            // same idea as PvZ's classic recharge shade shrinking from the bottom up.
+            overlay.setHeight(SLOT_HEIGHT * fraction);
+        }
+
+        for (Map.Entry<ZombieCard, Image> entry : zombieCooldownOverlayByCard.entrySet()) {
+            ZombieCard zc = entry.getKey();
+            Image overlay = entry.getValue();
+            float base = zc.getBaseCooldown();
+            float fraction = base > 0 ? zc.getCooldown() / base : 0f;
+            overlay.setVisible(fraction > 0f);
             overlay.setHeight(SLOT_HEIGHT * fraction);
         }
     }
@@ -1063,11 +1162,125 @@ public class GameUiModal extends Table {
             PlantCard pc = entry.getKey();
             Table slot = entry.getValue();
             if (selectedCard == pc) {
-                slot.setColor(0.8f, 0.5f, 1f, 1f); // highlighted tint when selected
+                slot.setColor(0.8f, 0.5f, 1f, 1f);
             } else {
                 slot.setColor(1f, 1f, 1f, 1f);
             }
         }
+        for (Map.Entry<ZombieCard, Table> entry : zombieSlotByCard.entrySet()) {
+            ZombieCard zc = entry.getKey();
+            Table slot = entry.getValue();
+            if (selectedZombieCard == zc) {
+                slot.setColor(0.8f, 0.5f, 1f, 1f);
+            } else {
+                slot.setColor(1f, 1f, 1f, 1f);
+            }
+        }
+    }
+}
+
+
+======================================================
+FILE: GameWinPopup.java
+======================================================
+
+package com.pvz.view.game;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+
+import com.pvz.PvZ2;
+import com.pvz.view.BorderedPanel;
+
+import pvz.skin.PvzSkin;
+
+public class GameWinPopup extends Table {
+
+    private final String titleText;
+    private final String messageText;
+    private final String exitText;
+    private final String nextText;
+    private final Runnable exitAction;
+    private final Runnable nextAction;
+
+    public GameWinPopup(String titleText, String messageText,
+                        String exitText, Runnable exitAction,
+                        String nextText, Runnable nextAction) {
+        this.titleText = titleText;
+        this.messageText = messageText;
+        this.exitText = exitText;
+        this.exitAction = exitAction;
+        this.nextText = nextText;
+        this.nextAction = nextAction;
+
+        setFillParent(true);
+
+        setBackground(PvzSkin.get().newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.85f)));
+
+        getColor().a = 0f;
+        addAction(Actions.fadeIn(1.5f));
+        buildUi();
+    }
+
+    private void buildUi() {
+        BorderedPanel boardPanel = new BorderedPanel(Color.valueOf("F5DEB3"));
+        Table content = boardPanel.contentLayer;
+        content.pad(25f, 30f, 30f, 30f);
+
+        Label.LabelStyle textStyle = PvzSkin.get().get("medium_outline", Label.LabelStyle.class);
+
+        Label titleLbl = new Label(titleText, textStyle);
+        titleLbl.setColor(Color.valueOf("FF8C00"));
+        titleLbl.setFontScale(2.0f);
+        titleLbl.setAlignment(Align.center);
+
+        Image separatorLine = new Image(PvzSkin.get().newDrawable("white_pixel", Color.valueOf("D2B48C")));
+
+        Label msgLbl = new Label(messageText, textStyle);
+        msgLbl.setColor(Color.valueOf("556B2F"));
+        msgLbl.setFontScale(1.2f);
+        msgLbl.setAlignment(Align.center);
+
+        Table btnTable = new Table();
+
+        TextButton exitBtn = new TextButton(exitText, PvzSkin.get(), "brown");
+        exitBtn.getLabel().setFontScale(0.85f);
+        exitBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (exitAction != null) exitAction.run();
+            }
+        });
+
+        TextButton nextBtn = new TextButton(nextText, PvzSkin.get(), "purple");
+        nextBtn.getLabel().setFontScale(0.85f);
+        nextBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (nextAction != null) nextAction.run();
+            }
+        });
+
+        btnTable.add(exitBtn).size(180, 55).padRight(30);
+        btnTable.add(nextBtn).size(180, 55);
+
+        content.add(titleLbl).padBottom(15f).row();
+        content.add(separatorLine).growX().height(3f).padBottom(20f).row();
+        content.add(msgLbl).width(650f).height(100f).center().row();
+        content.add(btnTable).padBottom(10);
+
+        boardPanel.pack();
+        add(boardPanel).center();
     }
 }
 
@@ -1585,6 +1798,99 @@ public class PauseMenuPopup extends BorderedPanel {
 
 
 ======================================================
+FILE: GameOverPopup.java
+======================================================
+
+package com.pvz.view.game;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
+
+import com.pvz.PvZ2;
+
+import pvz.skin.PvzSkin;
+
+public class GameOverPopup extends Table {
+
+    private final String titleText;
+    private final String exitText;
+    private final String retryText;
+    private final Runnable exitAction;
+    private final Runnable retryAction;
+
+    public GameOverPopup(String titleText,
+                         String exitText, Runnable exitAction,
+                         String retryText, Runnable retryAction) {
+        this.titleText = titleText;
+        this.exitText = exitText;
+        this.exitAction = exitAction;
+        this.retryText = retryText;
+        this.retryAction = retryAction;
+
+        setFillParent(true);
+
+        setBackground(PvzSkin.get().newDrawable("white_pixel", new Color(0f, 0f, 0f, 1f)));
+
+        getColor().a = 0f;
+        addAction(Actions.fadeIn(2f));
+        buildUi();
+    }
+
+    private void buildUi() {
+        Label.LabelStyle titleStyle = new Label.LabelStyle(
+                PvzSkin.get().get("big_outline", Label.LabelStyle.class));
+        titleStyle.fontColor = Color.valueOf("39FF14");
+
+        Label titleLbl = new Label(titleText, titleStyle);
+        titleLbl.setAlignment(Align.center);
+        titleLbl.setFontScale(2.1f);
+
+        TextureRegion brainRegion = PvZ2.textureBank.region("IMAGE_UI_GAMEOVER_FAIL_SCREEN_BRAIN_ONLY");
+        Image brainImg = new Image(brainRegion);
+        brainImg.setScaling(Scaling.fit);
+
+        Table btnTable = new Table();
+
+        TextButton exitBtn = new TextButton(exitText, PvzSkin.get(), "brown");
+        exitBtn.getLabel().setFontScale(0.85f);
+        exitBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (exitAction != null) exitAction.run();
+            }
+        });
+
+        TextButton retryBtn = new TextButton(retryText, PvzSkin.get(), "purple");
+        retryBtn.getLabel().setFontScale(0.85f);
+        retryBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (retryAction != null) retryAction.run();
+            }
+        });
+
+        btnTable.add(exitBtn).size(180, 60).padRight(30);
+        btnTable.add(retryBtn).size(180, 60);
+
+        add(titleLbl).padTop(30).padBottom(30).row();
+        add(brainImg).size(350, 280).row();
+        add(btnTable).expandY().bottom().padBottom(60);
+    }
+}
+
+
+======================================================
 FILE: PasswordChangeMenu.java
 ======================================================
 
@@ -1610,12 +1916,14 @@ import com.pvz.controller.user.PatternManager;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.User;
 import com.pvz.utils.PasswordUtils;
-import com.pvz.utils.SaveManager;
 
 import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
 public class PasswordChangeMenu extends ScreenAdapter {
+    private static final float FIELD_WIDTH = 420f;
+    private static final float FIELD_HEIGHT = 70f;
+
     private final PvZ2 game;
     private Stage stage;
     private Skin skin;
@@ -1643,9 +1951,9 @@ public class PasswordChangeMenu extends ScreenAdapter {
         currentUser = AppContext.getInstance().getCurrentUser();
 
         BorderedTable mainPanel = new BorderedTable();
-        mainPanel.setSize(600, 650);
-        mainPanel.setPosition((1920 - 600) / 2, (1080 - 650) / 2);
-        mainPanel.defaults().space(15);
+        mainPanel.setSize(600, 700);
+        mainPanel.setPosition((1920 - 600) / 2, (1080 - 700) / 2);
+        mainPanel.defaults().space(18);
         mainPanel.center();
         stage.addActor(mainPanel);
 
@@ -1654,23 +1962,14 @@ public class PasswordChangeMenu extends ScreenAdapter {
         titleLabel.setColor(Color.BLACK);
         mainPanel.add(titleLabel).padBottom(30).row();
 
-        oldPasswordField = new TextField("", skin);
-        oldPasswordField.setMessageText("Current Password");
-        oldPasswordField.setPasswordMode(true);
-        oldPasswordField.setPasswordCharacter('*');
-        mainPanel.add(oldPasswordField).width(350).height(50).row();
+        oldPasswordField = createPasswordField("Current Password");
+        mainPanel.add(oldPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
 
-        newPasswordField = new TextField("", skin);
-        newPasswordField.setMessageText("New Password");
-        newPasswordField.setPasswordMode(true);
-        newPasswordField.setPasswordCharacter('*');
-        mainPanel.add(newPasswordField).width(350).height(50).row();
+        newPasswordField = createPasswordField("New Password");
+        mainPanel.add(newPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
 
-        confirmPasswordField = new TextField("", skin);
-        confirmPasswordField.setMessageText("Confirm New Password");
-        confirmPasswordField.setPasswordMode(true);
-        confirmPasswordField.setPasswordCharacter('*');
-        mainPanel.add(confirmPasswordField).width(350).height(50).row();
+        confirmPasswordField = createPasswordField("Confirm New Password");
+        mainPanel.add(confirmPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
 
         statusLabel = new Label("", skin);
         statusLabel.setFontScale(1.2f);
@@ -1727,7 +2026,7 @@ public class PasswordChangeMenu extends ScreenAdapter {
         }
 
         currentUser.setPasswordHash(PasswordUtils.hashPassword(newPassword));
-        SaveManager.getInstance().save(currentUser, "users/" + currentUser.getId() + ".json");
+        currentUser.saveUser();
 
         statusLabel.setText("Password changed successfully!");
         statusLabel.setColor(Color.GREEN);
@@ -1739,6 +2038,27 @@ public class PasswordChangeMenu extends ScreenAdapter {
     private void setError(String message) {
         statusLabel.setText(message);
         statusLabel.setColor(Color.RED);
+    }
+
+    private TextField createPasswordField(String placeholder) {
+        TextField f = new TextField("", skin);
+        f.setMessageText(placeholder);
+        f.setPasswordMode(true);
+        f.setPasswordCharacter('*');
+        useBigFont(f);
+        return f;
+    }
+
+    private void useBigFont(TextField field) {
+        Label.LabelStyle bigStyle = skin.get("big", Label.LabelStyle.class);
+        TextField.TextFieldStyle old = field.getStyle();
+        TextField.TextFieldStyle ts = new TextField.TextFieldStyle(
+                bigStyle.font, old.fontColor, old.cursor, old.selection,
+                old.background);
+        ts.messageFont = bigStyle.font;
+        ts.messageFontColor = old.messageFontColor;
+        ts.focusedBackground = old.focusedBackground;
+        field.setStyle(ts);
     }
 
     @Override
@@ -1757,7 +2077,6 @@ public class PasswordChangeMenu extends ScreenAdapter {
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose();
     }
 }
 
@@ -4161,6 +4480,9 @@ public class ProfileEditMenu extends ScreenAdapter {
     private TextField emailField;
     private Label statusLabel;
 
+    private static final float FIELD_WIDTH = 420f;
+    private static final float FIELD_HEIGHT = 70f;
+
     public ProfileEditMenu(PvZ2 game) {
         this.game = game;
     }
@@ -4179,9 +4501,9 @@ public class ProfileEditMenu extends ScreenAdapter {
         currentUser = AppContext.getInstance().getCurrentUser();
 
         BorderedTable mainPanel = new BorderedTable();
-        mainPanel.setSize(600, 650);
-        mainPanel.setPosition((1920 - 600) / 2, (1080 - 650) / 2);
-        mainPanel.defaults().space(15);
+        mainPanel.setSize(600, 700);
+        mainPanel.setPosition((1920 - 600) / 2, (1080 - 700) / 2);
+        mainPanel.defaults().space(18);
         mainPanel.center();
         stage.addActor(mainPanel);
 
@@ -4190,26 +4512,23 @@ public class ProfileEditMenu extends ScreenAdapter {
         titleLabel.setColor(Color.BLACK);
         mainPanel.add(titleLabel).padBottom(30).row();
 
-        usernameField = new TextField("", skin);
-        usernameField.setMessageText("Username");
+        usernameField = createField("Username");
         if (currentUser != null) {
             usernameField.setText(currentUser.getUsername());
         }
-        mainPanel.add(usernameField).width(350).height(50).row();
+        mainPanel.add(usernameField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
 
-        nicknameField = new TextField("", skin);
-        nicknameField.setMessageText("Nickname");
+        nicknameField = createField("Nickname");
         if (currentUser != null) {
             nicknameField.setText(currentUser.getNickName());
         }
-        mainPanel.add(nicknameField).width(350).height(50).row();
+        mainPanel.add(nicknameField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
 
-        emailField = new TextField("", skin);
-        emailField.setMessageText("Email");
+        emailField = createField("Email");
         if (currentUser != null) {
             emailField.setText(currentUser.getEmail());
         }
-        mainPanel.add(emailField).width(350).height(50).row();
+        mainPanel.add(emailField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
 
         statusLabel = new Label("", skin);
         statusLabel.setFontScale(1.2f);
@@ -4291,7 +4610,7 @@ public class ProfileEditMenu extends ScreenAdapter {
         usernames.put(newUsername, currentUser.getId());
 
         saveManager.save(usernames, "users/username.json");
-        saveManager.save(currentUser, "users/" + currentUser.getId() + ".json");
+        currentUser.saveUser();
 
         statusLabel.setText("Profile updated successfully!");
         statusLabel.setColor(Color.GREEN);
@@ -4315,6 +4634,25 @@ public class ProfileEditMenu extends ScreenAdapter {
         statusLabel.setColor(Color.RED);
     }
 
+    private TextField createField(String placeholder) {
+        TextField f = new TextField("", skin);
+        f.setMessageText(placeholder);
+        useBigFont(f);
+        return f;
+    }
+
+    private void useBigFont(TextField field) {
+        Label.LabelStyle bigStyle = skin.get("big", Label.LabelStyle.class);
+        TextField.TextFieldStyle old = field.getStyle();
+        TextField.TextFieldStyle ts = new TextField.TextFieldStyle(
+                bigStyle.font, old.fontColor, old.cursor, old.selection,
+                old.background);
+        ts.messageFont = bigStyle.font;
+        ts.messageFontColor = old.messageFontColor;
+        ts.focusedBackground = old.focusedBackground;
+        field.setStyle(ts);
+    }
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -4331,7 +4669,6 @@ public class ProfileEditMenu extends ScreenAdapter {
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose();
     }
 }
 
@@ -4681,7 +5018,7 @@ public class SettingsMenu extends ScreenAdapter {
             return;
         }
         user.setSetting(setting);
-        SaveManager.getInstance().save(user, "users/" + user.getId() + ".json");
+        user.saveUser();
     }
 
     private Slider.SliderStyle safeSliderStyle() {
@@ -5734,6 +6071,383 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
         return new TextureRegion(texture);
+    }
+}
+
+
+======================================================
+FILE: OpponentSelectMenu.java
+======================================================
+
+package com.pvz.view;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.pvz.PvZ2;
+import com.pvz.enums.GameAsset;
+import com.pvz.models.AppContext;
+import com.pvz.models.MatchSession;
+import com.pvz.network.MatchDTOs;
+import com.pvz.network.MessageType;
+import com.pvz.network.NetworkClient;
+import com.pvz.network.PlayerRole;
+import com.pvz.view.game.GameScreen;
+
+import pvz.skin.BorderedTable;
+import pvz.skin.PvzSkin;
+
+/**
+ * Opponent-selection screen for online I,Zombie, shown instead of jumping
+ * straight into {@link GameScreen} the way the other minigames do.
+ *
+ * Flow:
+ *  - "Play vs friend": type a username + pick your role, send an invite,
+ *    wait for accept/reject.
+ *  - "Play random": join the server's random queue, wait to be paired.
+ *  - Either way, once the server pushes MATCH_FOUND, the match info is
+ *    stashed on {@link AppContext#setMatchSession} and we hand off to
+ *    GameScreen exactly like the single-player minigames do.
+ *
+ * Known limitation: incoming-invite popups only show up while this screen
+ * is open. If the invited user is elsewhere in the app (MainMenu, shop,
+ * ...), the invite waits on the server but they won't see a popup until
+ * they open this screen themselves. A fully global popup would need a
+ * persistent overlay Stage layered above every screen — not done here.
+ */
+public class OpponentSelectMenu extends ScreenAdapter {
+
+    private static final float PANEL_WIDTH = 900f;
+    private static final float PANEL_HEIGHT = 620f;
+
+    private final PvZ2 game;
+    private final String seasonFolder;
+    private final int levelNumber;
+
+    private Stage stage;
+    private Skin skin;
+    private Stack rootStack;
+    private BorderedTable mainPanel;
+    private Table contentTable;
+
+    /** Non-null while we're waiting on our own invite's response. */
+    private String pendingMatchId;
+    /** True while we're sitting in the random queue. */
+    private boolean inRandomQueue;
+
+    public OpponentSelectMenu(PvZ2 game, String seasonFolder, int levelNumber) {
+        this.game = game;
+        this.seasonFolder = seasonFolder;
+        this.levelNumber = levelNumber;
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        Viewport viewport = new FitViewport(1920, 1080);
+        stage = new Stage(viewport);
+        Gdx.input.setInputProcessor(stage);
+        skin = PvzSkin.get();
+
+        rootStack = new Stack();
+        rootStack.setFillParent(true);
+        stage.addActor(rootStack);
+
+        Texture bgTexture = GameAsset.MAIN_MENU_BG.get(game.getGlobalAssetManager());
+        rootStack.add(new Image(bgTexture));
+
+        mainPanel = new BorderedTable();
+        mainPanel.setSize(PANEL_WIDTH, PANEL_HEIGHT);
+        mainPanel.setPosition((1920 - PANEL_WIDTH) / 2f, (1080 - PANEL_HEIGHT) / 2f);
+        rootStack.add(mainPanel);
+
+        mainPanel.add(buildTopBar()).fillX().padTop(15).padLeft(25).padRight(25).row();
+
+        contentTable = new Table();
+        mainPanel.add(contentTable).expand().fill().pad(20).row();
+
+        registerPushListeners();
+        showSelectState();
+    }
+
+    // --- Push listeners (server-initiated events) --------------------------------------
+
+    private void registerPushListeners() {
+        NetworkClient.getInstance().onInviteIncoming(this::handleIncomingInvite);
+
+        NetworkClient.getInstance().onInviteRejected(payload -> {
+            if (payload.matchId.equals(pendingMatchId)) {
+                pendingMatchId = null;
+                showSelectState();
+                setStatus(payload.byUsername + " declined your invite.", Color.FIREBRICK);
+            }
+        });
+
+        NetworkClient.getInstance().onMatchFound(payload -> {
+            pendingMatchId = null;
+            inRandomQueue = false;
+            AppContext.getInstance().setMatchSession(
+                new MatchSession(payload.matchId, payload.opponentUsername, payload.yourRole));
+            game.setScreen(new GameScreen(seasonFolder, levelNumber));
+        });
+    }
+
+    private void handleIncomingInvite(MatchDTOs.InviteIncomingPayload invite) {
+        Table blocker = new Table();
+        blocker.setFillParent(true);
+        blocker.setBackground(solidDrawable(new Color(0f, 0f, 0f, 0.55f)));
+        rootStack.add(blocker);
+
+        BorderedTable popup = new BorderedTable();
+        popup.pad(30);
+
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Label message = new Label(invite.fromUsername + " wants to play I, Zombie with you!\nYou would play as: "
+            + invite.yourRole, style);
+        message.setFontScale(1.1f);
+        message.setAlignment(com.badlogic.gdx.utils.Align.center);
+        message.setWrap(true);
+        popup.add(message).width(500).padBottom(25).row();
+
+        Table buttons = new Table();
+        TextButton accept = new TextButton("Accept", skin, "green_small");
+        accept.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                rootStack.removeActor(blocker);
+                NetworkClient.getInstance().respondToInvite(invite.matchId, true, null);
+            }
+        });
+        TextButton reject = new TextButton("Decline", skin, "brown");
+        reject.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                rootStack.removeActor(blocker);
+                NetworkClient.getInstance().respondToInvite(invite.matchId, false, null);
+            }
+        });
+        buttons.add(accept).size(160, 55).padRight(15);
+        buttons.add(reject).size(160, 55);
+        popup.add(buttons);
+
+        blocker.add(popup);
+    }
+
+    // --- Screen states -----------------------------------------------------------------
+
+    private void showSelectState() {
+        contentTable.clearChildren();
+
+        Label.LabelStyle labelStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+
+        // -- Play vs a specific friend --
+        Label friendHeader = new Label("Play vs a friend", labelStyle);
+        friendHeader.setFontScale(1.3f);
+        contentTable.add(friendHeader).left().padBottom(10).row();
+
+        TextField usernameField = new TextField("", skin);
+        usernameField.setMessageText("Friend's username");
+        contentTable.add(usernameField).width(400).height(55).left().padBottom(12).row();
+
+        Table roleRow = new Table();
+        Label roleLabel = new Label("Play as:", labelStyle);
+        roleLabel.setFontScale(1.05f);
+        roleRow.add(roleLabel).padRight(10);
+
+        final PlayerRole[] chosenRole = { PlayerRole.PLANT };
+        TextButton plantBtn = new TextButton("Plants", skin, "purple");
+        TextButton zombieBtn = new TextButton("Zombies", skin, "brown");
+        plantBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                chosenRole[0] = PlayerRole.PLANT;
+                plantBtn.setStyle(skin.get("purple", TextButton.TextButtonStyle.class));
+                zombieBtn.setStyle(skin.get("brown", TextButton.TextButtonStyle.class));
+            }
+        });
+        zombieBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                chosenRole[0] = PlayerRole.ZOMBIE;
+                zombieBtn.setStyle(skin.get("purple", TextButton.TextButtonStyle.class));
+                plantBtn.setStyle(skin.get("brown", TextButton.TextButtonStyle.class));
+            }
+        });
+        roleRow.add(plantBtn).size(120, 46).padRight(8);
+        roleRow.add(zombieBtn).size(120, 46);
+        contentTable.add(roleRow).left().padBottom(15).row();
+
+        TextButton inviteBtn = new TextButton("Send Invite", skin, "green_small");
+        inviteBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                String target = usernameField.getText().trim();
+                if (target.isEmpty()) {
+                    setStatus("Enter a username first.", Color.FIREBRICK);
+                    return;
+                }
+                setStatus("Sending invite...", Color.DARK_GRAY);
+                NetworkClient.getInstance().sendInvite(target, chosenRole[0], response -> {
+                    if (!response.success) {
+                        setStatus(response.errorMessage, Color.FIREBRICK);
+                        return;
+                    }
+                    pendingMatchId = NetworkClient.getInstance().parsePayload(response, String.class);
+                    showWaitingState("Waiting for " + target + " to respond...", () -> {
+                        pendingMatchId = null;
+                        showSelectState();
+                    });
+                });
+            }
+        });
+        contentTable.add(inviteBtn).size(220, 55).left().padBottom(30).row();
+
+        // -- Play random --
+        Label randomHeader = new Label("Or play a random opponent", labelStyle);
+        randomHeader.setFontScale(1.3f);
+        contentTable.add(randomHeader).left().padBottom(10).row();
+
+        TextButton randomBtn = new TextButton("Find Random Opponent", skin, "purple");
+        randomBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                inRandomQueue = true;
+                NetworkClient.getInstance().joinRandomQueue(response -> {
+                    if (!response.success) {
+                        inRandomQueue = false;
+                        setStatus(response.errorMessage, Color.FIREBRICK);
+                        return;
+                    }
+                    showWaitingState("Looking for an opponent...", () -> {
+                        inRandomQueue = false;
+                        NetworkClient.getInstance().cancelRandomQueue(null);
+                        showSelectState();
+                    });
+                });
+            }
+        });
+        contentTable.add(randomBtn).size(320, 55).left().padBottom(20).row();
+
+        statusLabelRow();
+    }
+
+    private Label statusLabel;
+
+    private void statusLabelRow() {
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.DARK_GRAY);
+        statusLabel = new Label("", style);
+        statusLabel.setFontScale(1.0f);
+        contentTable.add(statusLabel).left().row();
+    }
+
+    private void setStatus(String text, Color color) {
+        if (statusLabel == null) return;
+        statusLabel.setText(text);
+        statusLabel.setColor(color);
+    }
+
+    private void showWaitingState(String message, Runnable onCancel) {
+        contentTable.clearChildren();
+
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Label waitingLabel = new Label(message, style);
+        waitingLabel.setFontScale(1.2f);
+        contentTable.add(waitingLabel).padBottom(30).row();
+
+        TextButton cancelBtn = new TextButton("Cancel", skin, "brown");
+        cancelBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                onCancel.run();
+            }
+        });
+        contentTable.add(cancelBtn).size(180, 55);
+    }
+
+    // --- Top bar -------------------------------------------------------------------------
+
+    private Table buildTopBar() {
+        Table top = new Table();
+
+        ImageButton backBtn = new ImageButton(
+            MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
+        backBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                if (inRandomQueue) {
+                    NetworkClient.getInstance().cancelRandomQueue(null);
+                }
+                game.setScreen(new TravelLogMenu(game));
+            }
+        });
+
+        Label titleLabel = new Label("I, ZOMBIE — CHOOSE OPPONENT", skin, "big");
+        titleLabel.setFontScale(1.2f);
+        titleLabel.setColor(Color.BLACK);
+
+        top.add(backBtn).size(75, 70).left();
+        top.add(titleLabel).expandX().center();
+        return top;
+    }
+
+    private com.badlogic.gdx.scenes.scene2d.utils.Drawable solidDrawable(Color color) {
+        Pixmap pixmap = new Pixmap(4, 4, Pixmap.Format.RGBA8888);
+        pixmap.setColor(color);
+        pixmap.fill();
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return new TextureRegionDrawable(texture);
+    }
+
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.act(delta);
+        stage.draw();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
+    }
+
+    @Override
+    public void hide() {
+        // Stop reacting to invites/matches meant for whichever screen replaced this one.
+        NetworkClient.getInstance().clearPushListener(MessageType.INVITE_INCOMING);
+        NetworkClient.getInstance().clearPushListener(MessageType.INVITE_REJECTED);
+        NetworkClient.getInstance().clearPushListener(MessageType.MATCH_FOUND);
+    }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
     }
 }
 
@@ -7139,7 +7853,7 @@ public class ProfileMenu extends ScreenAdapter {
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
                     currentUser.setProfilePicture(path);
-                    SaveManager.getInstance().save(currentUser, "users/" + currentUser.getId() + ".json");
+                    currentUser.saveUser();
                     updateAvatarImage(path);
                     avatarPicker.setVisible(false);
                 }
@@ -7545,7 +8259,11 @@ public class TravelLogMenu extends ScreenAdapter {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
-                    game.setScreen(new GameScreen(seasonFolder, chosenLevel));
+                    if (seasonFolder.equals("IZombie")) {
+                        game.setScreen(new OpponentSelectMenu(game, seasonFolder, chosenLevel));
+                    } else {
+                        game.setScreen(new GameScreen(seasonFolder, chosenLevel));
+                    }
                 }
             });
             levels.add(levelBtn).size(140, 55).padLeft(6);
@@ -10020,7 +10738,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
                 }
 
                 currentUser.setPasswordHash(PasswordUtils.hashPassword(newPassword));
-                SaveManager.getInstance().save(currentUser, "users/" + currentUser.getId() + ".json");
+                currentUser.saveUser();
 
                 resetStatus.setText("Password reset successfully! Please login.");
                 Gdx.app.postRunnable(() -> game.setScreen(new LoginMenu(game)));
@@ -11726,7 +12444,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.Message;
 import com.pvz.models.user.User;
-import com.pvz.utils.SaveManager;
 import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
@@ -11899,7 +12616,7 @@ public class NewsModal extends Table {
                 addNewsRow(msg, true);
                 msg.setUnread(false);
             }
-            SaveManager.getInstance().save(user, "users/" + user.getId() + ".json");
+            user.saveUser();
         } else {
             for (Message msg : messages) {
                 addNewsRow(msg, msg.isUnread());
@@ -12227,21 +12944,23 @@ FILE: RegisterMenu.java
 
 package com.pvz.view;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import java.util.HashMap;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
@@ -12252,26 +12971,32 @@ import com.pvz.enums.SecurityQuestions;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.seasons.Season;
 import com.pvz.models.user.Gender;
-import com.pvz.models.user.Message;
 import com.pvz.models.user.User;
 import com.pvz.network.NetworkClient;
 import com.pvz.utils.PasswordUtils;
-import com.pvz.utils.SaveManager;
+import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
-import java.util.UUID;
-
 public class RegisterMenu extends ScreenAdapter {
+
+    private static final float FIELD_WIDTH = 420f;
+    private static final float FIELD_HEIGHT = 70f;
+    private static final float PAIR_GAP = 20f;
+    private static final Color LABEL_COLOR = new Color(0xD8E6FFFF);
+    private static final Color ERROR_COLOR = new Color(0xFF6666FF);
+    private static final Color SUCCESS_COLOR = new Color(0x66FF66FF);
+
     private final PvZ2 game;
     private Stage stage;
     private Skin skin;
+
     private TextField usernameField;
     private TextField passwordField;
     private TextField confirmPasswordField;
     private TextField nicknameField;
     private TextField emailField;
-    private TextField genderField;
-    private TextField questionField;
+    private SelectBox<String> genderSelect;
+    private SelectBox<String> questionSelect;
     private TextField answerField;
     private TextField confirmAnswerField;
     private Label statusLabel;
@@ -12287,65 +13012,95 @@ public class RegisterMenu extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
         skin = PvzSkin.get();
 
-        Texture bgTexture = game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
-        Image bgImage = new Image(bgTexture);
+        // ── Background ────────────────────────────────────────────────────
+        Drawable bgDrawable = PlantData.regionDrawableOr(
+                "IMAGE_TITLEBACKGROUNDS_BACKDROP_I",
+                new TextureRegionDrawable(MenuUiKit.solidTexture(Color.valueOf("1A1A2E"))));
+        Image bgImage = new Image(bgDrawable);
         bgImage.setFillParent(true);
         stage.addActor(bgImage);
 
-        Table table = new Table();
-        table.setFillParent(true);
-        table.defaults().space(10);
-        table.center();
-        stage.addActor(table);
+        // ── Root layout ───────────────────────────────────────────────────
+        Table root = new Table();
+        root.setFillParent(true);
+        root.center();
+        stage.addActor(root);
 
-        Label titleLabel = new Label("Register", skin);
-        titleLabel.setFontScale(2f);
-        table.add(titleLabel).padBottom(90).row();
+        // ── Title ─────────────────────────────────────────────────────────
+        Label titleLabel = new Label("Create Account", skin, "big");
+        titleLabel.setColor(Color.WHITE);
+        root.add(titleLabel).padBottom(40f).row();
 
+        // ── Form panel ─────────────────────────────────────────────────────
+        BorderedTable panel = new BorderedTable();
+        panel.setColor(Color.valueOf("8B4513"));
+        panel.pad(20f, 36f, 20f, 36f);
 
-        usernameField = new TextField("", skin);
-        usernameField.setMessageText("Username");
-        table.add(usernameField).width(300).height(45).row();
+        Table form = new Table();
+        form.defaults().height(FIELD_HEIGHT).spaceBottom(10f);
 
-        passwordField = new TextField("", skin);
-        passwordField.setMessageText("Password");
-        passwordField.setPasswordMode(true);
-        passwordField.setPasswordCharacter('*');
-        table.add(passwordField).width(300).height(45).row();
+        // ── Account section ───────────────────────────────────────────────
+        Label sectionAccount = new Label("Account", skin, "big");
+        sectionAccount.setColor(new Color(0xFFD75AFF));
+        form.add(sectionAccount).colspan(4).left().padBottom(6f).row();
 
-        confirmPasswordField = new TextField("", skin);
-        confirmPasswordField.setMessageText("Confirm Password");
-        confirmPasswordField.setPasswordMode(true);
-        confirmPasswordField.setPasswordCharacter('*');
-        table.add(confirmPasswordField).width(300).height(45).row();
+        usernameField = createField("Username");
+        form.add(label("Username")).right().padRight(8f);
+        form.add(usernameField).width(FIELD_WIDTH).left().padRight(PAIR_GAP);
 
-        nicknameField = new TextField("", skin);
-        nicknameField.setMessageText("Nickname");
-        table.add(nicknameField).width(300).height(45).row();
+        nicknameField = createField("Nickname");
+        form.add(label("Nickname")).right().padRight(8f);
+        form.add(nicknameField).width(FIELD_WIDTH).left().row();
 
-        emailField = new TextField("", skin);
-        emailField.setMessageText("Email");
-        table.add(emailField).width(300).height(45).row();
+        passwordField = createPasswordField("Password");
+        form.add(label("Password")).right().padRight(8f);
+        form.add(passwordField).width(FIELD_WIDTH).left().padRight(PAIR_GAP);
 
-        genderField = new TextField("", skin);
-        genderField.setMessageText("Gender (Male/Female)");
-        table.add(genderField).width(300).height(45).row();
+        confirmPasswordField = createPasswordField("Confirm Password");
+        form.add(label("Confirm")).right().padRight(8f);
+        form.add(confirmPasswordField).width(FIELD_WIDTH).left().row();
 
-        questionField = new TextField("", skin);
-        questionField.setMessageText("Security Question # (1-" + SecurityQuestions.QUESTIONS.size() + ")");
-        table.add(questionField).width(300).height(45).row();
+        // ── Profile section ───────────────────────────────────────────────
+        Label sectionProfile = new Label("Profile", skin, "big");
+        sectionProfile.setColor(new Color(0xFFD75AFF));
+        form.add(sectionProfile).colspan(4).left().padTop(10f).padBottom(6f).row();
 
-        answerField = new TextField("", skin);
-        answerField.setMessageText("Security Answer");
-        table.add(answerField).width(300).height(45).row();
+        emailField = createField("Email");
+        form.add(label("Email")).right().padRight(8f);
+        form.add(emailField).width(FIELD_WIDTH).left().padRight(PAIR_GAP);
 
-        confirmAnswerField = new TextField("", skin);
-        confirmAnswerField.setMessageText("Confirm Security Answer");
-        table.add(confirmAnswerField).width(300).height(45).row();
+        genderSelect = createSelectBox("Male", "Female");
+        form.add(label("Gender")).right().padRight(8f);
+        form.add(genderSelect).width(FIELD_WIDTH).left().row();
 
-        statusLabel = new Label("", skin);
-        table.add(statusLabel).padTop(10).row();
+        // ── Security section ──────────────────────────────────────────────
+        Label sectionSecurity = new Label("Security", skin, "big");
+        sectionSecurity.setColor(new Color(0xFFD75AFF));
+        form.add(sectionSecurity).colspan(4).left().padTop(10f).padBottom(6f).row();
 
+        String[] questions = new String[SecurityQuestions.QUESTIONS.size()];
+        for (int i = 0; i < questions.length; i++) {
+            questions[i] = SecurityQuestions.QUESTIONS.get(i);
+        }
+        questionSelect = createSelectBox(questions);
+        form.add(label("Question")).right().padRight(8f);
+        form.add(questionSelect).width(FIELD_WIDTH + PAIR_GAP + 200f).colspan(2).left().row();
+
+        answerField = createField("Answer");
+        form.add(label("Answer")).right().padRight(8f);
+        form.add(answerField).width(FIELD_WIDTH).left().padRight(PAIR_GAP);
+
+        confirmAnswerField = createField("Confirm Answer");
+        form.add(label("Confirm")).right().padRight(8f);
+        form.add(confirmAnswerField).width(FIELD_WIDTH).left().row();
+
+        // ── Status ────────────────────────────────────────────────────────
+        statusLabel = new Label("", skin, "big");
+        statusLabel.setWrap(true);
+        statusLabel.setAlignment(Align.center);
+        form.add(statusLabel).colspan(4).width(FIELD_WIDTH * 2 + PAIR_GAP).padTop(8f).row();
+
+        // ── Buttons ───────────────────────────────────────────────────────
         TextButton registerBtn = new TextButton("Register", skin, "purple");
         registerBtn.addListener(new ClickListener() {
             @Override
@@ -12354,7 +13109,7 @@ public class RegisterMenu extends ScreenAdapter {
                 handleRegister();
             }
         });
-        table.add(registerBtn).width(200).height(60).row();
+        form.add(registerBtn).colspan(4).width(260f).height(58f).padTop(6f).row();
 
         TextButton loginBtn = new TextButton("Already have an account? Login", skin, "brown");
         loginBtn.addListener(new ClickListener() {
@@ -12364,9 +13119,71 @@ public class RegisterMenu extends ScreenAdapter {
                 game.setScreen(new LoginMenu(game));
             }
         });
-        table.add(loginBtn).width(300).height(60);
-        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,AudioManager.getInstance().getUserMusicVolume());
+        form.add(loginBtn).colspan(4).width(320f).height(50f).padTop(2f).row();
+
+        panel.add(form);
+        root.add(panel).row();
+
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU, true,
+                AudioManager.getInstance().getUserMusicVolume());
     }
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    private Label label(String text) {
+        Label l = new Label(text, skin, "big");
+        l.setColor(LABEL_COLOR);
+        return l;
+    }
+
+    private TextField createField(String placeholder) {
+        TextField f = new TextField("", skin);
+        f.setMessageText(placeholder);
+        useBigFont(f);
+        return f;
+    }
+
+    private TextField createPasswordField(String placeholder) {
+        TextField f = new TextField("", skin);
+        f.setMessageText(placeholder);
+        f.setPasswordMode(true);
+        f.setPasswordCharacter('*');
+        useBigFont(f);
+        return f;
+    }
+
+    @SafeVarargs
+    private final SelectBox<String> createSelectBox(String... items) {
+        SelectBox<String> sb = new SelectBox<>(skin);
+        Label.LabelStyle bigStyle = skin.get("big", Label.LabelStyle.class);
+        SelectBox.SelectBoxStyle old = sb.getStyle();
+        SelectBox.SelectBoxStyle ts = new SelectBox.SelectBoxStyle(
+                bigStyle.font, old.fontColor, old.background,
+                old.scrollStyle, old.listStyle);
+        ts.overFontColor = old.overFontColor;
+        sb.setStyle(ts);
+        sb.setItems(items);
+        return sb;
+    }
+
+    private void useBigFont(TextField field) {
+        Label.LabelStyle bigStyle = skin.get("big", Label.LabelStyle.class);
+        TextField.TextFieldStyle old = field.getStyle();
+        TextField.TextFieldStyle ts = new TextField.TextFieldStyle(
+                bigStyle.font, old.fontColor, old.cursor, old.selection,
+                old.background);
+        ts.messageFont = bigStyle.font;
+        ts.messageFontColor = old.messageFontColor;
+        ts.focusedBackground = old.focusedBackground;
+        field.setStyle(ts);
+    }
+
+    private void showStatus(String msg, Color color) {
+        statusLabel.setText(msg);
+        statusLabel.setColor(color);
+    }
+
+    // ── Register logic ───────────────────────────────────────────────────────
 
     private void handleRegister() {
         String username = usernameField.getText().trim();
@@ -12374,71 +13191,59 @@ public class RegisterMenu extends ScreenAdapter {
         String passwordConfirm = confirmPasswordField.getText().trim();
         String nickname = nicknameField.getText().trim();
         String email = emailField.getText().trim();
-        String genderString = genderField.getText().trim();
-        String questionText = questionField.getText().trim();
+        int genderIndex = genderSelect.getSelectedIndex();
+        int questionIndex = questionSelect.getSelectedIndex();
         String answer = answerField.getText().trim();
         String confirmAnswer = confirmAnswerField.getText().trim();
 
         String usernameValidation = PatternManager.validateUsername(username);
         if (usernameValidation != null) {
-            statusLabel.setText(usernameValidation);
+            showStatus(usernameValidation, ERROR_COLOR);
             return;
         }
 
         String passwordValidation = PatternManager.validatePassword(password, passwordConfirm);
         if (passwordValidation != null) {
-            statusLabel.setText(passwordValidation);
+            showStatus(passwordValidation, ERROR_COLOR);
             return;
         }
 
         String nicknameValidation = PatternManager.validateNickname(nickname);
         if (nicknameValidation != null) {
-            statusLabel.setText(nicknameValidation);
+            showStatus(nicknameValidation, ERROR_COLOR);
             return;
         }
 
         String emailValidation = PatternManager.validateEmail(email);
         if (emailValidation != null) {
-            statusLabel.setText(emailValidation);
+            showStatus(emailValidation, ERROR_COLOR);
+            return;
+        }
+
+        Gender gender = Gender.getGender(genderSelect.getSelected().toLowerCase());
+        if (gender == null) {
+            showStatus("Please select a valid gender.", ERROR_COLOR);
             return;
         }
 
         if (!answer.equals(confirmAnswer)) {
-            statusLabel.setText("Security answers don't match!");
+            showStatus("Security answers don't match!", ERROR_COLOR);
             return;
         }
 
         String passwordHash = PasswordUtils.hashPassword(password);
-        Gender gender = Gender.getGender(genderString.toLowerCase());
-        if (gender == null) {
-            statusLabel.setText("Invalid gender. Use Male or Female.");
-            return;
-        }
-
-        int questionIndex;
-        try {
-            questionIndex = Integer.parseInt(questionText);
-        } catch (NumberFormatException e) {
-            statusLabel.setText("Invalid question number.");
-            return;
-        }
-        if (questionIndex < 1 || questionIndex > SecurityQuestions.QUESTIONS.size()) {
-            statusLabel.setText("Question number must be between 1 and " + SecurityQuestions.QUESTIONS.size());
-            return;
-        }
-
         User user = new User(username, passwordHash, nickname, email, gender);
-        user.setSecurityQuestion(String.valueOf(questionIndex));
+        user.setSecurityQuestion(String.valueOf(questionIndex + 1));
         user.setSecurityAnswer(answer);
         grantStarterProgress(user);
 
-        statusLabel.setText("Connecting...");
+        showStatus("Connecting...", new Color(0xCCCCCCFF));
         NetworkClient.getInstance().register(user, response -> {
             if (!response.success) {
-                statusLabel.setText(response.errorMessage);
+                showStatus(response.errorMessage, ERROR_COLOR);
                 return;
             }
-            statusLabel.setText("Registration successful! Please login.");
+            showStatus("Registration successful! Please login.", SUCCESS_COLOR);
             game.setScreen(new LoginMenu(game));
         });
     }
@@ -12481,7 +13286,6 @@ public class RegisterMenu extends ScreenAdapter {
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose();
     }
 }
 
@@ -12673,13 +13477,14 @@ FILE: LoginMenu.java
 
 package com.pvz.view;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -12687,7 +13492,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import java.util.HashMap;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
@@ -12696,17 +13503,24 @@ import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.User;
 import com.pvz.network.NetworkClient;
-import com.pvz.utils.PasswordUtils;
 import com.pvz.utils.SaveManager;
+import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
 public class LoginMenu extends ScreenAdapter {
+
+    private static final float FIELD_WIDTH = 420f;
+    private static final float FIELD_HEIGHT = 70f;
+    private static final Color LABEL_COLOR = new Color(0xD8E6FFFF);
+    private static final Color ERROR_COLOR = new Color(0xFF6666FF);
+
     private final PvZ2 game;
     private Stage stage;
     private Skin skin;
     private TextField usernameField;
     private TextField passwordField;
     private Label statusLabel;
+    private ImageButton stayLoggedInBtn;
 
     public LoginMenu(PvZ2 game) {
         this.game = game;
@@ -12719,34 +13533,69 @@ public class LoginMenu extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
         skin = PvzSkin.get();
 
-        Texture bgTexture = game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
-        Image bgImage = new Image(bgTexture);
+        // ── Background ────────────────────────────────────────────────────
+        Texture bgTex = new com.badlogic.gdx.graphics.Texture(Gdx.files.internal("textures/backgrounds/img_2.png"));
+        Image bgImage = new Image(bgTex);
         bgImage.setFillParent(true);
         stage.addActor(bgImage);
 
-        Table table = new Table();
-        table.setFillParent(true);
-        table.defaults().space(20);
-        table.center();
-        stage.addActor(table);
+        // ── Root layout ───────────────────────────────────────────────────
+        Table root = new Table();
+        root.setFillParent(true);
+        root.bottom().padBottom(120f);
+        stage.addActor(root);
 
-        Label titleLabel = new Label("Login", skin);
-        titleLabel.setFontScale(2f);
-        table.add(titleLabel).padBottom(200).row();
+        // ── Logo ───────────────────────────────────────────────────────────
+        Texture logoTex = new Texture(Gdx.files.internal("textures/pvz2_logo_horizontal.png"));
+        Image logo = new Image(logoTex);
+        logo.setScaling(com.badlogic.gdx.utils.Scaling.fit);
+        root.add(logo).width(500f).padTop(20f).padBottom(60f).row();
 
-        usernameField = new TextField("", skin);
-        usernameField.setMessageText("Username");
-        table.add(usernameField).width(300).height(50).row();
+        // ── Title ─────────────────────────────────────────────────────────
+        //Label titleLabel = new Label("Welcome Back", skin, "big");
+        //titleLabel.setColor(Color.WHITE);
+        //root.add(titleLabel).padBottom(80f).row();
 
-        passwordField = new TextField("", skin);
-        passwordField.setMessageText("Password");
-        passwordField.setPasswordMode(true);
-        passwordField.setPasswordCharacter('*');
-        table.add(passwordField).width(300).height(50).row();
+        // ── Form panel ────────────────────────────────────────────────────
+        BorderedTable panel = new BorderedTable();
+        panel.setColor(Color.valueOf("8B4513"));
+        panel.pad(24f, 40f, 24f, 40f);
 
-        statusLabel = new Label("", skin);
-        table.add(statusLabel).padTop(10).row();
+        Table form = new Table();
+        form.defaults().height(FIELD_HEIGHT).spaceBottom(16f);
 
+        // ── Fields ────────────────────────────────────────────────────────
+        usernameField = createField("Username");
+        form.add(label("Username")).right().padRight(12f).padTop(12);
+        form.add(usernameField).width(FIELD_WIDTH).left().row();
+
+        passwordField = createPasswordField("Password");
+        form.add(label("Password")).right().padRight(12f).padTop(15);
+        form.add(passwordField).width(FIELD_WIDTH).left().row();
+
+        // ── Status ────────────────────────────────────────────────────────
+        statusLabel = new Label("", skin, "big");
+        statusLabel.setWrap(true);
+        statusLabel.setAlignment(Align.center);
+        form.add(statusLabel).colspan(2).width(FIELD_WIDTH + 12f).padTop(4f).row();
+
+        // ── Stay Logged In ─────────────────────────────────────────────────
+        TextureRegionDrawable onDrawable = new TextureRegionDrawable(new Texture(Gdx.files.internal("textures/ui/checkbox_on.png")));
+        TextureRegionDrawable offDrawable = new TextureRegionDrawable(new Texture(Gdx.files.internal("textures/ui/checkbox_off.png")));
+        stayLoggedInBtn = new ImageButton(offDrawable);
+        stayLoggedInBtn.getImage().setScaling(com.badlogic.gdx.utils.Scaling.fit);
+        stayLoggedInBtn.getImageCell().size(40f, 40f);
+        stayLoggedInBtn.getStyle().imageChecked = onDrawable;
+        stayLoggedInBtn.getStyle().imageCheckedOver = onDrawable;
+        Label stayLabel = label("Stay Logged In");
+        Table stayRow = new Table();
+        stayRow.add(stayLabel).left().padRight(30f);
+        stayRow.add(stayLoggedInBtn).size(70f);
+        form.add().colspan(1);
+        form.add(stayRow).colspan(1).left().padTop(2f).padBottom(2f).row();
+
+
+        // ── Buttons ───────────────────────────────────────────────────────
         TextButton loginBtn = new TextButton("Login", skin, "purple");
         loginBtn.addListener(new ClickListener() {
             @Override
@@ -12755,49 +13604,111 @@ public class LoginMenu extends ScreenAdapter {
                 handleLogin();
             }
         });
-        table.add(loginBtn).width(200).height(60).row();
+        form.add(loginBtn).colspan(2).width(320f).height(65f).padTop(-8f).row();
 
-        TextButton forgotPasswordBtn = new TextButton("Forgot Password?", skin, "green");
-        forgotPasswordBtn.addListener(new ClickListener() {
+        TextButton forgotBtn = new TextButton("Forgot Password?", skin, "green");
+        forgotBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 game.setScreen(new ForgotPasswordMenu(game));
             }
         });
-        table.add(forgotPasswordBtn).width(200).height(60).row();
+        form.add(forgotBtn).colspan(2).width(320f).height(65f).padTop(14f).row();
 
-        TextButton backBtn = new TextButton("Register", skin, "brown");
-        backBtn.addListener(new ClickListener() {
+        TextButton registerBtn = new TextButton("Create an Account", skin, "brown");
+        registerBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 game.setScreen(new RegisterMenu(game));
             }
         });
-        table.add(backBtn).width(200).height(60).row();
-        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU,true,AudioManager.getInstance().getUserMusicVolume());
+        form.add(registerBtn).colspan(2).width(320f).height(65f).padTop(14f).row();
+
+        panel.add(form);
+        root.add(panel).row();
+
+        // Restore saved username if session exists
+        try {
+            String saved = SaveManager.getInstance().load("session.json", String.class);
+            if (saved != null && !saved.isEmpty()) {
+                usernameField.setText(saved);
+            }
+        } catch (Exception ignored) {}
+
+        AudioManager.getInstance().playMusic(AudioPaths.MAIN_MENU, true,
+                AudioManager.getInstance().getUserMusicVolume());
     }
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    private Label label(String text) {
+        Label l = new Label(text, skin, "big");
+        l.setColor(LABEL_COLOR);
+        return l;
+    }
+
+    private TextField createField(String placeholder) {
+        TextField f = new TextField("", skin);
+        f.setMessageText(placeholder);
+        useBigFont(f);
+        return f;
+    }
+
+    private TextField createPasswordField(String placeholder) {
+        TextField f = new TextField("", skin);
+        f.setMessageText(placeholder);
+        f.setPasswordMode(true);
+        f.setPasswordCharacter('*');
+        useBigFont(f);
+        return f;
+    }
+
+    private void useBigFont(TextField field) {
+        Label.LabelStyle bigStyle = skin.get("big", Label.LabelStyle.class);
+        TextField.TextFieldStyle old = field.getStyle();
+        TextField.TextFieldStyle ts = new TextField.TextFieldStyle(
+                bigStyle.font, old.fontColor, old.cursor, old.selection,
+                old.background);
+        ts.messageFont = bigStyle.font;
+        ts.messageFontColor = old.messageFontColor;
+        ts.focusedBackground = old.focusedBackground;
+        field.setStyle(ts);
+    }
+
+    // ── Login logic ──────────────────────────────────────────────────────────
 
     private void handleLogin() {
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
         if (username.isEmpty() || password.isEmpty()) {
             statusLabel.setText("Please fill in all fields.");
+            statusLabel.setColor(ERROR_COLOR);
             return;
         }
 
         statusLabel.setText("Connecting...");
+        statusLabel.setColor(new Color(0xCCCCCCFF));
         NetworkClient.getInstance().login(username, password, response -> {
             if (!response.success) {
                 statusLabel.setText(response.errorMessage);
+                statusLabel.setColor(ERROR_COLOR);
                 return;
             }
             User user = NetworkClient.getInstance().parsePayload(response, User.class);
             AppContext.getInstance().setCurrentUser(user);
-            SaveManager.getInstance().save(username, "session.json"); // فقط کش محلیِ «آخرین کاربر»
+        if (stayLoggedInBtn.isChecked()) {
+                java.util.HashMap<String, String> creds = new java.util.HashMap<>();
+                creds.put("username", username);
+                creds.put("password", password);
+                SaveManager.getInstance().save(creds, "session.json");
+            } else {
+                SaveManager.getInstance().delete("session.json");
+            }
 
             statusLabel.setText("Welcome " + user.getNickName() + "!");
+            statusLabel.setColor(new Color(0x66FF66FF));
             game.setScreen(new MainMenu(game));
         });
     }
@@ -12818,7 +13729,134 @@ public class LoginMenu extends ScreenAdapter {
     @Override
     public void dispose() {
         stage.dispose();
-        skin.dispose();
+    }
+}
+
+
+======================================================
+FILE: MatchmakingRegistry.java
+======================================================
+
+package com.pvz.server;
+
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.pvz.network.PlayerRole;
+
+/**
+ * All server-side matchmaking state, shared across every {@link ClientHandler}
+ * thread. Everything here is static since there's exactly one of these per
+ * server process (unlike ClientHandler, which is one-per-connection).
+ */
+public class MatchmakingRegistry {
+
+    /** Guards the random queue (a plain LinkedList isn't thread-safe on its own). */
+    private static final Object QUEUE_LOCK = new Object();
+
+    /** username -> the handler currently serving that logged-in user. */
+    private static final Map<String, ClientHandler> ONLINE = new ConcurrentHashMap<>();
+
+    /** Players waiting for a random opponent, FIFO. */
+    private static final LinkedList<ClientHandler> RANDOM_QUEUE = new LinkedList<>();
+
+    /** matchId -> an invite waiting for the invitee's accept/reject. */
+    private static final Map<String, PendingInvite> PENDING_INVITES = new ConcurrentHashMap<>();
+
+    /** matchId -> the two participants of an accepted/established match (for MATCH_MESSAGE relay). */
+    private static final Map<String, ClientHandler[]> ACTIVE_MATCHES = new ConcurrentHashMap<>();
+
+    private MatchmakingRegistry() { }
+
+    // ---- Online presence ----------------------------------------------------------
+
+    public static void markOnline(String username, ClientHandler handler) {
+        ONLINE.put(username, handler);
+    }
+
+    public static void markOffline(String username, ClientHandler handler) {
+        if (username != null) {
+            ONLINE.remove(username, handler);
+        }
+        synchronized (QUEUE_LOCK) {
+            RANDOM_QUEUE.remove(handler);
+        }
+    }
+
+    public static ClientHandler findOnline(String username) {
+        return ONLINE.get(username);
+    }
+
+    // ---- Specific-opponent invites --------------------------------------------------
+
+    public static class PendingInvite {
+        public final String matchId;
+        public final ClientHandler from;
+        public final ClientHandler to;
+        public final PlayerRole fromRole;
+
+        public PendingInvite(String matchId, ClientHandler from, ClientHandler to, PlayerRole fromRole) {
+            this.matchId = matchId;
+            this.from = from;
+            this.to = to;
+            this.fromRole = fromRole;
+        }
+    }
+
+    public static PendingInvite createInvite(ClientHandler from, ClientHandler to, PlayerRole fromRole) {
+        String matchId = UUID.randomUUID().toString();
+        PendingInvite invite = new PendingInvite(matchId, from, to, fromRole);
+        PENDING_INVITES.put(matchId, invite);
+        return invite;
+    }
+
+    /** Removes and returns the invite so it can only be answered once. Null if already handled/expired. */
+    public static PendingInvite consumeInvite(String matchId) {
+        return PENDING_INVITES.remove(matchId);
+    }
+
+    // ---- Random queue ----------------------------------------------------------------
+
+    /**
+     * Tries to pair {@code handler} with whoever's waiting. Returns the opponent to
+     * pair with, or null if there was nobody waiting (in which case {@code handler}
+     * itself is now the one waiting in the queue).
+     */
+    public static ClientHandler joinRandomQueue(ClientHandler handler) {
+        synchronized (QUEUE_LOCK) {
+            ClientHandler waiting = RANDOM_QUEUE.poll();
+            if (waiting == null || waiting == handler) {
+                if (!RANDOM_QUEUE.contains(handler)) {
+                    RANDOM_QUEUE.add(handler);
+                }
+                return null;
+            }
+            return waiting;
+        }
+    }
+
+    public static void leaveRandomQueue(ClientHandler handler) {
+        synchronized (QUEUE_LOCK) {
+            RANDOM_QUEUE.remove(handler);
+        }
+    }
+
+    // ---- Active matches (for MATCH_MESSAGE relay, Phase 3) ----------------------------
+
+    public static void registerMatch(String matchId, ClientHandler a, ClientHandler b) {
+        ACTIVE_MATCHES.put(matchId, new ClientHandler[]{a, b});
+    }
+
+    public static ClientHandler otherParticipant(String matchId, ClientHandler self) {
+        ClientHandler[] pair = ACTIVE_MATCHES.get(matchId);
+        if (pair == null) return null;
+        return pair[0] == self ? pair[1] : pair[0];
+    }
+
+    public static void endMatch(String matchId) {
+        ACTIVE_MATCHES.remove(matchId);
     }
 }
 
@@ -12897,8 +13935,11 @@ import com.google.gson.Gson;
 import com.pvz.models.leaderboard.Leaderboard;
 import com.pvz.models.leaderboard.Leaderboard.LeaderBoardEntry;
 import com.pvz.models.user.User;
+import com.pvz.network.MatchDTOs;
+import com.pvz.network.MessageType;
 import com.pvz.network.NetworkClient.LoginRequest;
 import com.pvz.network.NetworkMessage;
+import com.pvz.network.PlayerRole;
 import com.pvz.utils.PasswordUtils;
 import com.pvz.utils.SaveManager;
 
@@ -12909,6 +13950,12 @@ import com.pvz.utils.SaveManager;
  * All reads/writes to "users/username.json" go through {@link #ACCOUNTS_LOCK}
  * so two clients registering/saving at the same instant can't corrupt it —
  * SaveManager itself does plain unsynchronized file I/O.
+ *
+ * Phase 2: once a client logs in, this handler registers itself in
+ * {@link MatchmakingRegistry} under that username, so other clients' invites
+ * and the random queue can reach it — including from a *different* handler's
+ * thread, hence {@link #out} is now an instance field guarded by
+ * {@link #push}, not a local variable.
  */
 public class ClientHandler implements Runnable {
 
@@ -12918,6 +13965,10 @@ public class ClientHandler implements Runnable {
     private final Socket socket;
     private final Gson gson = new Gson();
 
+    /** Set once LOGIN succeeds. Read from other handlers' threads too — see class doc. */
+    private volatile String username;
+    private volatile PrintWriter out;
+
     public ClientHandler(Socket socket) {
         this.socket = socket;
     }
@@ -12925,9 +13976,10 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try (
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-            PrintWriter out = new PrintWriter(new java.io.OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true)
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))
         ) {
+            out = new PrintWriter(new java.io.OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
+
             String line;
             while ((line = in.readLine()) != null) {
                 NetworkMessage request = gson.fromJson(line, NetworkMessage.class);
@@ -12937,8 +13989,21 @@ public class ClientHandler implements Runnable {
         } catch (IOException e) {
             System.out.println("[ClientHandler] Client disconnected: " + socket.getRemoteSocketAddress());
         } finally {
+            MatchmakingRegistry.markOffline(username, this);
             try { socket.close(); } catch (IOException ignored) { }
         }
+    }
+
+    /** Writes a message to this client without it being a response to any request —
+     *  used to notify a client about something another client (or the server) did. */
+    public synchronized void push(MessageType type, String payloadJson) {
+        if (out == null) return;
+        NetworkMessage msg = new NetworkMessage();
+        msg.type = type;
+        msg.requestId = null;
+        msg.success = true;
+        msg.payload = payloadJson;
+        out.println(gson.toJson(msg));
     }
 
     private NetworkMessage handle(NetworkMessage request) {
@@ -12954,6 +14019,16 @@ public class ClientHandler implements Runnable {
                     return handleGetUser(request);
                 case GET_LEADERBOARD:
                     return handleGetLeaderboard(request);
+                case INVITE_SEND:
+                    return handleInviteSend(request);
+                case INVITE_RESPONSE:
+                    return handleInviteResponse(request);
+                case QUEUE_JOIN:
+                    return handleQueueJoin(request);
+                case QUEUE_CANCEL:
+                    return handleQueueCancel(request);
+                case MATCH_MESSAGE:
+                    return handleMatchMessage(request);
                 default:
                     return NetworkMessage.error(request, "Unknown message type: " + request.type);
             }
@@ -12962,6 +14037,8 @@ public class ClientHandler implements Runnable {
             return NetworkMessage.error(request, "Server error: " + e.getMessage());
         }
     }
+
+    // ---- Accounts (Phase 1, unchanged) --------------------------------------------------
 
     @SuppressWarnings("unchecked")
     private NetworkMessage handleRegister(NetworkMessage request) {
@@ -13010,6 +14087,9 @@ public class ClientHandler implements Runnable {
             SaveManager.getInstance().save(user, "users/" + id + ".json");
         }
 
+        this.username = user.getUsername();
+        MatchmakingRegistry.markOnline(this.username, this);
+
         return NetworkMessage.ok(request, gson.toJson(user));
     }
 
@@ -13047,6 +14127,109 @@ public class ClientHandler implements Runnable {
         List<LeaderBoardEntry> entries = Leaderboard.loadAll();
         return NetworkMessage.ok(request, gson.toJson(entries));
     }
+
+    // ---- I,Zombie matchmaking (Phase 2) -----------------------------------------------
+
+    private NetworkMessage handleInviteSend(NetworkMessage request) {
+        MatchDTOs.InviteSendRequest req = gson.fromJson(request.payload, MatchDTOs.InviteSendRequest.class);
+
+        ClientHandler target = MatchmakingRegistry.findOnline(req.targetUsername);
+        if (target == null) {
+            return NetworkMessage.error(request, "That user is offline or doesn't exist.");
+        }
+        if (target == this) {
+            return NetworkMessage.error(request, "You can't invite yourself.");
+        }
+
+        MatchmakingRegistry.PendingInvite invite =
+            MatchmakingRegistry.createInvite(this, target, req.requestedRole);
+
+        MatchDTOs.InviteIncomingPayload pushPayload = new MatchDTOs.InviteIncomingPayload();
+        pushPayload.matchId = invite.matchId;
+        pushPayload.fromUsername = this.username;
+        pushPayload.yourRole = req.requestedRole.opposite();
+        target.push(MessageType.INVITE_INCOMING, gson.toJson(pushPayload));
+
+        return NetworkMessage.ok(request, gson.toJson(invite.matchId));
+    }
+
+    private NetworkMessage handleInviteResponse(NetworkMessage request) {
+        MatchDTOs.InviteResponseRequest req = gson.fromJson(request.payload, MatchDTOs.InviteResponseRequest.class);
+
+        MatchmakingRegistry.PendingInvite invite = MatchmakingRegistry.consumeInvite(req.matchId);
+        if (invite == null) {
+            return NetworkMessage.error(request, "This invite is no longer valid.");
+        }
+
+        if (!req.accepted) {
+            MatchDTOs.InviteRejectedPayload rejected = new MatchDTOs.InviteRejectedPayload();
+            rejected.matchId = invite.matchId;
+            rejected.byUsername = this.username;
+            invite.from.push(MessageType.INVITE_REJECTED, gson.toJson(rejected));
+            return NetworkMessage.ok(request, null);
+        }
+
+        MatchmakingRegistry.registerMatch(invite.matchId, invite.from, invite.to);
+
+        MatchDTOs.MatchFoundPayload toInviter = new MatchDTOs.MatchFoundPayload();
+        toInviter.matchId = invite.matchId;
+        toInviter.opponentUsername = invite.to.username;
+        toInviter.yourRole = invite.fromRole;
+        invite.from.push(MessageType.MATCH_FOUND, gson.toJson(toInviter));
+
+        MatchDTOs.MatchFoundPayload toInvitee = new MatchDTOs.MatchFoundPayload();
+        toInvitee.matchId = invite.matchId;
+        toInvitee.opponentUsername = invite.from.username;
+        toInvitee.yourRole = invite.fromRole.opposite();
+        invite.to.push(MessageType.MATCH_FOUND, gson.toJson(toInvitee));
+
+        return NetworkMessage.ok(request, null);
+    }
+
+    private NetworkMessage handleQueueJoin(NetworkMessage request) {
+        ClientHandler opponent = MatchmakingRegistry.joinRandomQueue(this);
+
+        if (opponent != null) {
+            String matchId = UUID.randomUUID().toString();
+            MatchmakingRegistry.registerMatch(matchId, opponent, this);
+
+            // Whoever queued first defends (arbitrary but deterministic — no real reason
+            // it couldn't be a coin flip instead).
+            MatchDTOs.MatchFoundPayload toOpponent = new MatchDTOs.MatchFoundPayload();
+            toOpponent.matchId = matchId;
+            toOpponent.opponentUsername = this.username;
+            toOpponent.yourRole = PlayerRole.PLANT;
+            opponent.push(MessageType.MATCH_FOUND, gson.toJson(toOpponent));
+
+            MatchDTOs.MatchFoundPayload toSelf = new MatchDTOs.MatchFoundPayload();
+            toSelf.matchId = matchId;
+            toSelf.opponentUsername = opponent.username;
+            toSelf.yourRole = PlayerRole.ZOMBIE;
+            this.push(MessageType.MATCH_FOUND, gson.toJson(toSelf));
+        }
+        // If opponent == null, `this` is now waiting in the queue — the eventual
+        // MATCH_FOUND arrives later as a push, whenever someone else joins.
+
+        return NetworkMessage.ok(request, null);
+    }
+
+    private NetworkMessage handleQueueCancel(NetworkMessage request) {
+        MatchmakingRegistry.leaveRandomQueue(this);
+        return NetworkMessage.ok(request, null);
+    }
+
+    private NetworkMessage handleMatchMessage(NetworkMessage request) {
+        MatchDTOs.MatchMessageEnvelope envelope = gson.fromJson(request.payload, MatchDTOs.MatchMessageEnvelope.class);
+
+        ClientHandler other = MatchmakingRegistry.otherParticipant(envelope.matchId, this);
+        if (other == null) {
+            return NetworkMessage.error(request, "Match not found or already ended.");
+        }
+
+        // Blind relay: forward the same envelope untouched, server never looks inside it.
+        other.push(MessageType.MATCH_MESSAGE, request.payload);
+        return NetworkMessage.ok(request, null);
+    }
 }
 
 
@@ -13079,6 +14262,7 @@ import com.pvz.models.user.User;
 import com.pvz.network.NetworkClient;
 import com.pvz.server.PvzServer;
 import com.pvz.utils.SaveManager;
+import com.pvz.view.LoginMenu;
 import com.pvz.view.MainMenu;
 import com.pvz.view.RegisterMenu;
 import pvz.libpvz.pam.PamPlayer;
@@ -13113,23 +14297,6 @@ public class PvZ2 extends Game {
         globalAssetManager.load("textures/ui/buttons_hud_back_normal.png", Texture.class);
         globalAssetManager.load("textures/ui/leaderboard.png", Texture.class);
 
-        String savedUsername = SaveManager.getInstance().load("session.json", String.class);
-        if (savedUsername != null) {
-            HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
-            if (usernames != null) {
-                String id = usernames.get(savedUsername);
-                if (id != null) {
-                    User user = SaveManager.getInstance().load("users/" + id + ".json", User.class);
-                    if (user != null) {
-                        user.refreshQuestLog();
-                        AppContext.getInstance().setCurrentUser(user);
-                        System.out.println("Welcome back, " + user.getNickName() + "!");
-                        return;
-                    }
-                }
-            }
-            SaveManager.getInstance().delete("session.json");
-        }
     }
     @Override
     public void create() {
@@ -13158,11 +14325,26 @@ public class PvZ2 extends Game {
         whitePixmap.dispose();
         applyWindowIcon();
         applyCustomCursor();
-        if (AppContext.getInstance().getCurrentUser()==null){
-            setScreen(new RegisterMenu(this));
-        } else {
-            setScreen(new MainMenu(this));
+
+        java.util.HashMap<String, String> savedCreds = SaveManager.getInstance().load("session.json", java.util.HashMap.class);
+        if (savedCreds != null) {
+            String savedUsername = savedCreds.get("username");
+            String savedPassword = savedCreds.get("password");
+            if (savedUsername != null && savedPassword != null) {
+                NetworkClient.getInstance().login(savedUsername, savedPassword, response -> {
+                    if (response.success) {
+                        User user = NetworkClient.getInstance().parsePayload(response, User.class);
+                        AppContext.getInstance().setCurrentUser(user);
+                        setScreen(new MainMenu(this));
+                    } else {
+                        SaveManager.getInstance().delete("session.json");
+                        setScreen(new LoginMenu(this));
+                    }
+                });
+                return;
+            }
         }
+        setScreen(new LoginMenu(this));
     }
 
     /**
@@ -13576,6 +14758,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -13602,10 +14786,16 @@ import com.pvz.models.games.levels.LevelLoader;
 import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
+import com.pvz.models.games.modes.capabilities.ZombiePlacer;
+import com.pvz.models.games.modes.variants.IZombieMode;
+import com.pvz.models.games.card.ZombieCard;
 import com.pvz.models.user.MyPlant;
 import com.pvz.view.GameModesMenu;
+import com.pvz.view.TravelLogMenu;
 import com.pvz.view.game.GameScreen;
 import com.pvz.view.game.GameUiModal;
+import com.pvz.view.game.GameOverPopup;
+import com.pvz.view.game.GameWinPopup;
 import com.pvz.view.game.PauseMenuPopup;
 import com.pvz.view.game.PlantSelectModal;
 import com.pvz.view.PamActor;
@@ -13633,6 +14823,7 @@ public class GameController {
     private State currentState = State.PANNING_FORWARD;
 
     private TextureRegion[] backgroundTextures;
+    private boolean isIZombie = false;
 
     private final Vector3 touchPos = new Vector3();
 
@@ -13648,13 +14839,15 @@ public class GameController {
 
     private boolean paused = false;
     private Table pauseOverlay;
+    private boolean cardsInitialized = false;
 
     /** Debug: draws every entity's hitbox rectangle (toggle with F1). */
     private boolean showHitboxes = true;
 
     /** Placement-preview ghost: plays the selected plant's idle PAM under the cursor. */
     private float previewStateTime;
-    private PlantCard previewCard;
+    private PlantCard previewPlantCard;
+    private ZombieCard previewZombieCard;
 
     public GameController(String seasonName, int levelNumber){
         this.seasonName=seasonName;
@@ -13680,27 +14873,32 @@ public class GameController {
                         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                         viewport.unproject(touchPos);
 
-                        // ۱. ابتدا کلیک روی خورشید بررسی می‌شود
-                        if (checkSunClick(touchPos.x, touchPos.y)) {
-                            if (gameUiModal != null) {
-                                gameUiModal.setSelectedCard(null);
-                            }
-                            return true;
-                        }
+                        // If a zombie card is selected, prioritize zombie placement
+                        boolean zombieCardSelected = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
 
-                        // ۱.۱. کلیک روی سکه‌ی افتاده از زامبی بررسی می‌شود
-                        if (checkLootClick(touchPos.x, touchPos.y)) {
-                            if (gameUiModal != null) {
-                                gameUiModal.setSelectedCard(null);
-                            }
-                            return true;
-                        }
-
-                        // ۱.۱. اگر کارتی انتخاب نشده باشد، کلیک روی گیاهِ کاشته‌شده
-                        //      پلنت‌فود آن را اجرا می‌کند
-                        if (gameUiModal == null || gameUiModal.getSelectedCard() == null) {
-                            if (checkPlantFoodClick(touchPos.x, touchPos.y)) {
+                        if (!zombieCardSelected) {
+                            // ۱. ابتدا کلیک روی خورشید بررسی می‌شود
+                            if (checkSunClick(touchPos.x, touchPos.y)) {
+                                if (gameUiModal != null) {
+                                    gameUiModal.setSelectedCard(null);
+                                }
                                 return true;
+                            }
+
+                            // ۱.۱. کلیک روی سکه‌ی افتاده از زامبی بررسی می‌شود
+                            if (checkLootClick(touchPos.x, touchPos.y)) {
+                                if (gameUiModal != null) {
+                                    gameUiModal.setSelectedCard(null);
+                                }
+                                return true;
+                            }
+
+                            // ۱.۱. اگر کارتی انتخاب نشده باشد، کلیک روی گیاهِ کاشته‌شده
+                            //      پلنت‌فود آن را اجرا می‌کند
+                            if (gameUiModal == null || gameUiModal.getSelectedCard() == null) {
+                                if (checkPlantFoodClick(touchPos.x, touchPos.y)) {
+                                    return true;
+                                }
                             }
                         }
 
@@ -13716,6 +14914,24 @@ public class GameController {
                                     if (placer.isValidPlacement(ctx, col, lane, card)) {
                                         placer.handlePlacement(ctx, col, lane, card);
                                         gameUiModal.setSelectedCard(null);
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+
+                        // ۲.۱. کاشت زامبی در صورت انتخاب کارت زامبی (IZombie)
+                        if (gameUiModal != null && gameUiModal.getSelectedZombieCard() != null) {
+                            Tile hoveredTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
+                            if (hoveredTile != null) {
+                                ZombieCard zCard = gameUiModal.getSelectedZombieCard();
+                                if (ctx.getMode() instanceof ZombiePlacer placer) {
+                                    int col = hoveredTile.getCol();
+                                    int lane = hoveredTile.getLane();
+
+                                    if (placer.isValidPlacement(ctx, col, lane, zCard)) {
+                                        placer.handlePlacement(ctx, col, lane, zCard);
+                                        gameUiModal.setSelectedZombieCard(null);
                                         return true;
                                     }
                                 }
@@ -13758,6 +14974,20 @@ public class GameController {
                 backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE_LEFT");
                 backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE");
                 backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE_RIGHT");
+            }
+            case "izombie"->{
+                isIZombie = true;
+                com.badlogic.gdx.graphics.Texture left = new com.badlogic.gdx.graphics.Texture(Gdx.files.internal("textures/backgrounds/IZOMBIE/texture_left.png"));
+                com.badlogic.gdx.graphics.Texture mid = new com.badlogic.gdx.graphics.Texture(Gdx.files.internal("textures/backgrounds/IZOMBIE/texture.png"));
+                com.badlogic.gdx.graphics.Texture right = new com.badlogic.gdx.graphics.Texture(Gdx.files.internal("textures/backgrounds/IZOMBIE/texture_right.png"));
+                backgroundTextures[0] = new TextureRegion(left);
+                backgroundTextures[1] = new TextureRegion(mid);
+                backgroundTextures[2] = new TextureRegion(right);
+            }
+            default->{
+                backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE_LEFT");
+                backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE");
+                backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE_RIGHT");
             }
         }
 
@@ -13808,9 +15038,13 @@ public class GameController {
                 camera.position.set(currentXFwd, 720f / 2f, 0);
 
                 if (progressFwd >= 1f) {
-                    currentState = State.PLANT_SELECT;
-                    plantSelectModal.setVisible(true);   // show plant selection instead
-                    Gdx.input.setInputProcessor(stage);
+                    if (level != null && !level.hasPreGame()) {
+                        startGameSession();
+                    } else {
+                        currentState = State.PLANT_SELECT;
+                        plantSelectModal.setVisible(true);
+                        Gdx.input.setInputProcessor(stage);
+                    }
                 }
                 break;
 
@@ -13838,7 +15072,6 @@ public class GameController {
                 if (readyPlantTimer >= readyPlantDuration) {
                     readyPlantLabel.setVisible(false);
                     currentState = State.PLAYING;
-                    gameUiModal.setVisible(true);
                     gameStarted = true;
                 }
                 break;
@@ -13846,16 +15079,22 @@ public class GameController {
             case PLAYING:
                 camera.position.set(startX, 720f / 2f, 0);
                 gameUiModal.updateHud();
+                if (ctx.isGameOver() && !paused) {
+                    showGameEndPopup();
+                }
                 break;
         }
 
-        // Check sun & coin-drop clicks in PLAYING state on left click
+        // Check sun & coin-drop clicks in PLAYING state on left click (only when no card selected)
         if (currentState == State.PLAYING && !paused && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            viewport.unproject(touchPos);
-            if (checkSunClick(touchPos.x, touchPos.y) || checkLootClick(touchPos.x, touchPos.y)) {
-                if (gameUiModal != null) {
-                    gameUiModal.setSelectedCard(null);
+            boolean zombieCardActive = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
+            if (!zombieCardActive) {
+                touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                viewport.unproject(touchPos);
+                if (checkSunClick(touchPos.x, touchPos.y) || checkLootClick(touchPos.x, touchPos.y)) {
+                    if (gameUiModal != null) {
+                        gameUiModal.setSelectedCard(null);
+                    }
                 }
             }
         }
@@ -13863,6 +15102,11 @@ public class GameController {
         // ۴. آپدیت Engine
         if (currentState == State.PLAYING && !paused) {
             GameEngine.getInstance().update(dt);
+            if (!cardsInitialized) {
+                cardsInitialized = true;
+                gameUiModal.initCards();
+                gameUiModal.setVisible(true);
+            }
         }
     }
 
@@ -13909,9 +15153,59 @@ public class GameController {
         Gdx.app.postRunnable(() -> PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber)));
     }
 
+    private void showGameEndPopup() {
+        paused = true;
+
+        boolean won = false;
+        if (ctx.getMode() instanceof IZombieMode izMode) {
+            boolean[] brains = izMode.getBrainsEaten();
+            won = true;
+            for (boolean b : brains) {
+                if (!b) { won = false; break; }
+            }
+        } else {
+            won = ctx.getZombies().isEmpty();
+        }
+
+        Runnable exitAction = () -> Gdx.app.postRunnable(() -> {
+            if (ctx.getMode() instanceof IZombieMode) {
+                PvZ2.instance.setScreen(new TravelLogMenu(PvZ2.instance));
+            } else {
+                PvZ2.instance.setScreen(new GameModesMenu(PvZ2.instance));
+            }
+        });
+
+        Table popup;
+        if (won) {
+            String title = "Level Complete!";
+            String msg = "You defeated the zombies!";
+            if (ctx.getMode() instanceof IZombieMode) {
+                title = "I, ZOMBIE COMPLETE!";
+                msg = "All five brains were eaten!";
+            }
+            Runnable nextAction = () -> Gdx.app.postRunnable(() ->
+                    PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber + 1)));
+            popup = new GameWinPopup(title, msg, "EXIT TO MAP", exitAction, "NEXT LEVEL", nextAction);
+        } else {
+            String title = "THE ZOMBIES\nATE YOUR\nBRAINS!";
+            Runnable retryAction = () -> Gdx.app.postRunnable(() ->
+                    PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber)));
+            popup = new GameOverPopup(title, "EXIT TO MAP", exitAction, "RETRY", retryAction);
+        }
+
+        stage.addActor(popup);
+        popup.toFront();
+    }
+
     private void saveAndExit() {
         resumeGame();
-        Gdx.app.postRunnable(() -> PvZ2.instance.setScreen(new GameModesMenu(PvZ2.instance)));
+        Gdx.app.postRunnable(() -> {
+            if (ctx != null && ctx.getMode() instanceof IZombieMode) {
+                PvZ2.instance.setScreen(new TravelLogMenu(PvZ2.instance));
+            } else {
+                PvZ2.instance.setScreen(new GameModesMenu(PvZ2.instance));
+            }
+        });
     }
 
     public void draw(){
@@ -13928,17 +15222,21 @@ public class GameController {
             drawProjectiles();
             drawEffects();
             drawPlacementPreview();
+            drawIZombieOverlay();
         }
         batch.end();
 
-        if (currentState == State.PLAYING && gameUiModal != null && gameUiModal.getSelectedCard() != null && ctx != null) {
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            viewport.unproject(touchPos);
+        if (currentState == State.PLAYING && gameUiModal != null && ctx != null) {
+            boolean hasSelectedCard = gameUiModal.getSelectedCard() != null || gameUiModal.getSelectedZombieCard() != null;
+            if (hasSelectedCard) {
+                touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                viewport.unproject(touchPos);
 
-            Tile hoveredTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
+                Tile hoveredTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
 
-            if (hoveredTile != null) {
-                drawPlacementHighlights(hoveredTile);
+                if (hoveredTile != null) {
+                    drawPlacementHighlights(hoveredTile);
+                }
             }
         }
         drawDebugShapes();
@@ -14084,35 +15382,85 @@ public class GameController {
      * cursor, semi-transparent, until the plant is placed on a tile (or deselected).
      */
     private void drawPlacementPreview() {
-        if (currentState != State.PLAYING || paused) {
-            return;
-        }
-        if (gameUiModal == null || gameUiModal.getSelectedCard() == null) {
-            return;
-        }
-        PlantCard card = gameUiModal.getSelectedCard();
-        if (card != previewCard) {
-            previewCard = card;
-            previewStateTime = 0f;
-        }
-
-        PlantData data = PlantData.forType(card.getPlant().getType());
-        if (data == null) {
-            return;
-        }
-        String pamPath = data.pamPath();
-        String idleLabel = data.idleLabel();
-        if (pamPath == null) {
-            return;
-        }
+        if (currentState != State.PLAYING || paused) return;
 
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         viewport.unproject(touchPos);
 
-        batch.setColor(1f, 1f, 1f, 0.90f);
-        PvZ2.pamPlayer.draw(batch, pamPath, idleLabel, previewStateTime,
-                touchPos.x, touchPos.y, 0.7f, 0.7f, true);
-        batch.setColor(Color.WHITE);
+        // Plant preview
+        if (gameUiModal != null && gameUiModal.getSelectedCard() != null) {
+            PlantCard card = gameUiModal.getSelectedCard();
+            if (card != previewPlantCard) {
+                previewPlantCard = card;
+                previewStateTime = 0f;
+            }
+            PlantData data = PlantData.forType(card.getPlant().getType());
+            if (data != null) {
+                String pamPath = data.pamPath();
+                String idleLabel = data.idleLabel();
+                if (pamPath != null) {
+                    batch.setColor(1f, 1f, 1f, 0.90f);
+                    PvZ2.pamPlayer.draw(batch, pamPath, idleLabel, previewStateTime,
+                            touchPos.x, touchPos.y, 0.7f, 0.7f, true);
+                    batch.setColor(Color.WHITE);
+                }
+            }
+            return;
+        }
+
+        // Zombie preview
+        if (gameUiModal != null && gameUiModal.getSelectedZombieCard() != null) {
+            ZombieCard zCard = gameUiModal.getSelectedZombieCard();
+            if (zCard != previewZombieCard) {
+                previewZombieCard = zCard;
+                previewStateTime = 0f;
+            }
+            com.pvz.models.entities.zombies.data.ZombiePropertySheet sheet =
+                com.pvz.models.entities.zombies.data.ZombieRegistry.getInstance().getSheet(
+                    zCard.getZombieType().getAlias());
+            if (sheet != null && sheet.getAnimationConfig() != null) {
+                String pamPath = sheet.getAnimationConfig().pamFilePath;
+                String idleLabel = sheet.getAnimationConfig().idleLabel;
+                float scale = sheet.getAnimationConfig().scale != null ? sheet.getAnimationConfig().scale : 0.65f;
+                if (pamPath != null && idleLabel != null) {
+                    java.util.Map<String, Boolean> partsVisibility = buildPreviewPartsVisibility(sheet);
+                    batch.setColor(1f, 1f, 1f, 0.90f);
+                    if (partsVisibility != null) {
+                        PamActor.drawWithVisibility(batch, pamPath, idleLabel, previewStateTime,
+                                touchPos.x, touchPos.y, scale, true, partsVisibility);
+                    } else {
+                        PvZ2.pamPlayer.draw(batch, pamPath, idleLabel, previewStateTime,
+                                touchPos.x, touchPos.y, scale, scale, true);
+                    }
+                    batch.setColor(Color.WHITE);
+                }
+            }
+        }
+    }
+
+    private java.util.Map<String, Boolean> buildPreviewPartsVisibility(
+            com.pvz.models.entities.zombies.data.ZombiePropertySheet sheet) {
+        java.util.Map<String, Boolean> visibility = null;
+        for (String armorAlias : sheet.getArmorAliases()) {
+            String cleanAlias = armorAlias.contains(":")
+                ? armorAlias.substring(armorAlias.indexOf(':') + 1) : armorAlias;
+            com.pvz.models.entities.zombies.data.ArmorPropertySheet aSheet =
+                com.pvz.models.entities.zombies.data.ZombieRegistry.getInstance().getArmorSheet(cleanAlias);
+            if (aSheet == null) continue;
+            com.pvz.models.entities.zombies.armor.ArmorType type =
+                com.pvz.models.entities.zombies.armor.ArmorType.fromString(aSheet.getArmorType());
+            String[] layers = type.pamLayers();
+            if (layers == null) continue;
+            if (visibility == null) visibility = new java.util.HashMap<>();
+            for (int i = 0; i < layers.length; i++) {
+                visibility.put(layers[i], i == 0);
+            }
+            String container = type.pamContainerName();
+            if (container != null) visibility.put(container, true);
+            for (String alive : type.pamAliveParts()) visibility.put(alive, true);
+            for (String crit : type.pamCriticalParts()) visibility.put(crit, false);
+        }
+        return visibility;
     }
 
 
@@ -14128,8 +15476,6 @@ public class GameController {
         int cols = map.getColumns();
 
         float boardWidth = cols * GameMap.TILE_WIDTH;
-        // Tiles use bottom-left coordinates: lane 0 spans [TOP_LANE_Y, TOP_LANE_Y + TILE_HEIGHT],
-        // so the grid's lowest edge sits one tile below TOP_LANE_Y.
         float gridBottom = GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT;
 
         float rowY = tile.getY();
@@ -14143,6 +15489,59 @@ public class GameController {
         shapeRenderer.rect(colX, gridBottom, GameMap.TILE_WIDTH, lanes * GameMap.TILE_HEIGHT);
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
+    }
+
+    private void drawIZombieOverlay() {
+        if (!(ctx.getMode() instanceof IZombieMode izMode)) return;
+
+        int lanes = ctx.getMap().getLanes();
+
+        // Red line at the placement boundary (shapeRenderer)
+        batch.end();
+        float redLineX = colToWorldX(izMode.getRedLineColumn()) - GameMap.TILE_WIDTH / 2f;
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.rect(redLineX, GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT, 4f, lanes * GameMap.TILE_HEIGHT);
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+
+        // Brain indicators at column 0 for each lane
+        com.badlogic.gdx.graphics.g2d.TextureRegion brainRegion = PvZ2.textureBank.region("IMAGE_UI_CURRENCY_VALENBRAINZ_STACK_0");
+        boolean[] brainsEaten = izMode.getBrainsEaten();
+        float brainX = colToWorldX(0);
+        float brainSize = 65f;
+        for (int lane = 0; lane < lanes; lane++) {
+            if (lane < brainsEaten.length && !brainsEaten[lane]) {
+                float brainY = laneToWorldY(lane);
+                if (brainRegion != null) {
+                    batch.draw(brainRegion, brainX - brainSize / 2f, brainY - brainSize / 2f, brainSize, brainSize);
+                } else {
+                    batch.end();
+                    shapeRenderer.setProjectionMatrix(camera.combined);
+                    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                    shapeRenderer.setColor(Color.MAGENTA);
+                    shapeRenderer.circle(brainX, brainY, 18f);
+                    shapeRenderer.end();
+                    batch.setProjectionMatrix(camera.combined);
+                    batch.begin();
+                }
+            }
+        }
+
+        // Sun icon above sun-producer zombies
+        List<Zombie> sunProducers = izMode.getSunProducers();
+        float bob = 4f * (float) Math.sin(stateTime * 2.0f);
+        float sunScale = 0.45f;
+        for (Zombie z : sunProducers) {
+            if (z.isDead()) continue;
+            PvZ2.pamPlayer.draw(batch, "768/INITIAL/EFFECTS/SUN/SUN.PAM", "animation",
+                    stateTime, z.getX(), z.getY() + 55f + bob, sunScale, sunScale, true);
+        }
     }
 
     private void drawDebugShapes(){
@@ -14242,11 +15641,11 @@ public class GameController {
                 }
                 AppContext.getInstance().setGameContext(newContext);
                 ctx = newContext;
-                gameUiModal.initCards();
 
                 plantSelectModal.setVisible(false);
                 currentState = State.PANNING_BACK;
                 panBackTime = 0f;
+                Gdx.input.setInputProcessor(stage);
 
                 Gdx.app.log("GameScreen", "Starting camera pan back for " + seasonName + " Level " + levelNumber);
             } else {
@@ -15569,7 +16968,7 @@ public class LoginController {
     public String resetPassword(Matcher matcher) {
         String newPassword = matcher.group("newPassword");
         currentUser.setPasswordHash(PasswordUtils.hashPassword(newPassword));
-        SaveManager.getInstance().save(currentUser, "users/" + currentUser.getId() + ".json");
+        currentUser.saveUser();
         return "Password reset successfully!";
     }
 }
@@ -26384,6 +27783,9 @@ public enum ZombieType {
     IMP             ("ZombieTutorialImpDefault"),
     GARGANTUAR      ("ZombieGargantuarBasic"),
     NEWSPAPER       ("ZombieModernNewspaperDefault"),
+    POLE_VAULTING   ("ZombiePoleVaultingDefault"),
+    FOOTBALL        ("ZombieFootballDefault"),
+    DANCING         ("ZombieDancingDefault"),
 
     // ── Ancient Egypt ─────────────────────────────────────────────────────────
     MUMMY           ("ZombieMummyDefault"),
@@ -28655,6 +30057,11 @@ public class IZombieLevel extends Level {
     private List<ZombieType> basedZombies;
     private int redLineColumn;
 
+    public IZombieLevel() {
+        super();
+        this.redLineColumn = 6;
+    }
+
     public IZombieLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun,
                         List<MyPlant> basedPlants, List<ZombieType> basedZombies) {
         super(GameModeType.IZOMBIE, gameMap, levelNumber, type, initialSun);
@@ -28871,12 +30278,15 @@ import com.pvz.models.games.modes.GameModeType;
 public abstract class Level {
     protected GameModeType gameType;
     protected GameMapDefinition gameMap;
-    protected final LevelType levelType;
-    protected final int initialSun;
-    protected final int levelNumber;
+    protected LevelType levelType;
+    protected int initialSun;
+    protected int levelNumber;
     protected String seasonName;
     protected List<EffectDefinition> effects;
 
+    protected Level() {
+        this.effects = new ArrayList<>();
+    }
 
     public Level(GameModeType gameMode, GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun){
         this.gameType=gameMode;
@@ -29614,15 +31024,23 @@ FILE: WaterBehavior.java
 
 package com.pvz.models.games.map.behaviors;
 
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.plants.enums.PlantType;
+import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.map.tile.Tile;
 
 public class WaterBehavior implements TileBehavior {
+    private static final String PAM_PATH = "768/FULL/BACKGROUNDS/WATER_SQUARE/WATER_SQUARE.PAM";
+    private static final String CLIP = "Water";
+
+    float stateTime;
 
     @Override
     public boolean canPlant(PlantCard card, Tile tile) {
@@ -29642,6 +31060,20 @@ public class WaterBehavior implements TileBehavior {
         }
 
         return sheet.getTags().contains(PlantTag.STACK);
+    }
+
+    @Override
+    public void update(GameContext ctx, Tile tile, float dt) {
+        TileBehavior.super.update(ctx, tile, dt);
+        stateTime += dt;
+    }
+
+    @Override
+    public FrameConfig draw(Tile tile) {
+        TileBehavior.super.draw(tile);
+        Vector2 pos = new Vector2(GameController.colToWorldX(tile.getCol()), GameController.laneToWorldY(tile.getLane()));
+        Vector2 scale = new Vector2(0.65f, 0.65f);
+        return new FrameConfig(PAM_PATH, CLIP, stateTime, pos, scale, null, true);
     }
 
     @Override
@@ -30409,11 +31841,15 @@ public class GameContext implements TickAware {
         this.effects        = new ArrayList<>();
         this.cards          = new ArrayList<>();
         this.map = GameMapFactory.createGameMap(currentLevel.getGameMapDefinition());
-        this.lawnMowers=new LawnMower[map.getLanes()];
-        for (int i = 0; i < lawnMowers.length; i++) {
-            lawnMowers[i]=new LawnMower(this,i);
-            hitboxes.add(lawnMowers[i].getHitbox());
-            GameEngine.getInstance().getToAdd().add(lawnMowers[i]);
+        if (currentLevel.getGameMode() != com.pvz.models.games.modes.GameModeType.IZOMBIE) {
+            this.lawnMowers=new LawnMower[map.getLanes()];
+            for (int i = 0; i < lawnMowers.length; i++) {
+                lawnMowers[i]=new LawnMower(this,i);
+                hitboxes.add(lawnMowers[i].getHitbox());
+                GameEngine.getInstance().getToAdd().add(lawnMowers[i]);
+            }
+        } else {
+            this.lawnMowers = new LawnMower[0];
         }
         this.mode = GameModeFactory.createGameMode(currentLevel);
         this.setLevelNumber(currentLevel.getLevelNumber());
@@ -31601,13 +33037,19 @@ FILE: IZombieMode.java
 
 package com.pvz.models.games.modes.variants;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
+import com.pvz.models.entities.sun.Sun;
+import com.pvz.models.entities.sun.SunType;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.ZombieType;
@@ -31624,10 +33066,66 @@ public class IZombieMode implements GameMode, ZombiePlacer {
     private final List<MyPlant> basedPlants;
     private final List<ZombieType> basedZombies;
     private final boolean[] brainsEaten;
-    private int redLineColumn = 4;
+    private int redLineColumn = 6;
 
     private int ticksElapsed = 0;
-    private int sunZombieInterval = 150;
+    private boolean sunProducersSpawned = false;
+    private final java.util.Map<Zombie, Float> brainEatTimers = new java.util.IdentityHashMap<>();
+    private static final float BRAIN_EAT_DURATION = 3.0f;
+
+    private static final String SUN_PRODUCER_ALIAS = "ZombieTutorialArmor2Default";
+    private static final int SUN_PRODUCER_HP = 1290;
+    private static final int SUN_AMOUNT = 25;
+    private int sunProducerIntervalTicks = 300;
+    private int sunProducerCountdown = 300;
+    private final List<Zombie> sunProducers = new ArrayList<>();
+
+    private static final Map<ZombieType, Integer> ZOMBIE_SUN_COSTS = new HashMap<>();
+    static {
+        ZOMBIE_SUN_COSTS.put(ZombieType.IMP, 25);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BASIC, 50);
+        ZOMBIE_SUN_COSTS.put(ZombieType.CONEHEAD, 75);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BUCKETHEAD, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BRICKHEAD, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.NEWSPAPER, 75);
+        ZOMBIE_SUN_COSTS.put(ZombieType.FLAG, 50);
+        ZOMBIE_SUN_COSTS.put(ZombieType.GARGANTUAR, 300);
+        ZOMBIE_SUN_COSTS.put(ZombieType.MUMMY, 50);
+        ZOMBIE_SUN_COSTS.put(ZombieType.MUMMY_CONE, 75);
+        ZOMBIE_SUN_COSTS.put(ZombieType.MUMMY_BUCKET, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.MUMMY_BRICK, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.RA, 150);
+        ZOMBIE_SUN_COSTS.put(ZombieType.EXPLORER, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.TOMB_RAISER, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.EGYPT_GARG, 300);
+        ZOMBIE_SUN_COSTS.put(ZombieType.EGYPT_IMP, 25);
+        ZOMBIE_SUN_COSTS.put(ZombieType.ICE_AGE, 50);
+        ZOMBIE_SUN_COSTS.put(ZombieType.ICE_AGE_CONE, 75);
+        ZOMBIE_SUN_COSTS.put(ZombieType.ICE_AGE_BUCKET, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.HUNTER, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.TROGLOBITE, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DODO, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.ICE_AGE_GARG, 300);
+        ZOMBIE_SUN_COSTS.put(ZombieType.ICE_AGE_IMP, 25);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BEACH, 50);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BEACH_CONE, 75);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BEACH_BUCKET, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.SNORKEL, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.FISHERMAN, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.OCTOPUS, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BEACH_GARG, 300);
+        ZOMBIE_SUN_COSTS.put(ZombieType.BEACH_IMP, 25);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DARK, 50);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DARK_CONE, 75);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DARK_BUCKET, 100);
+        ZOMBIE_SUN_COSTS.put(ZombieType.KNIGHT, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DARK_BRICK, 150);
+        ZOMBIE_SUN_COSTS.put(ZombieType.WIZARD, 150);
+        ZOMBIE_SUN_COSTS.put(ZombieType.JUGGLER, 125);
+        ZOMBIE_SUN_COSTS.put(ZombieType.KING, 200);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DARK_GARG, 300);
+        ZOMBIE_SUN_COSTS.put(ZombieType.DARK_IMP, 25);
+    }
 
     public IZombieMode(Level level) {
         if (level instanceof IZombieLevel iZombieLevel) {
@@ -31637,179 +33135,189 @@ public class IZombieMode implements GameMode, ZombiePlacer {
         } else {
             throw new IllegalArgumentException("Level must be an instance of IZombieLevel.");
         }
-
         this.brainsEaten = new boolean[5];
-        for (int i = 0; i < 5; i++) {
-            brainsEaten[i] = false;
-        }
     }
+
+    public boolean[] getBrainsEaten() { return brainsEaten; }
+    public int getRedLineColumn() { return redLineColumn; }
+    public List<Zombie> getSunProducers() { return sunProducers; }
 
     @Override
-    public boolean supportsFallingSuns() {
-        return false;
-    }
+    public boolean supportsFallingSuns() { return false; }
 
     @Override
     public void initMode(GameContext context) {
-        context.log("\n=========================================================");
-        context.log("  I, ZOMBIE MODE ACTIVATED!");
-        context.log("• Deploy zombies to eat all 5 brains!");
-        context.log("• Placement: You can only place zombies to the right of Column " + (redLineColumn - 1));
-        context.log("=========================================================\n");
-
         Random random = new Random();
+        int lanes = context.getMap().getLanes();
+        int plantEndCol = redLineColumn - 1;
 
         if (basedPlants != null && !basedPlants.isEmpty()) {
-            for (int col = 0; col < redLineColumn; col++) {
-                for (int lane = 0; lane < context.getMap().getLanes(); lane++) {
-                    MyPlant randomPlant = basedPlants.get(random.nextInt(basedPlants.size()));
-
-                    Plant plant = new PlantFactory().create(
-                            randomPlant.getType(),
-                            col,
-                            lane,
-                            randomPlant.getLevel(),
-                            randomPlant.isBoosted(),
-                            context);
+            for (int lane = 0; lane < lanes; lane++) {
+                boolean planted = false;
+                for (int col = 1; col <= plantEndCol; col++) {
+                    if (random.nextFloat() < 0.45f) {
+                        MyPlant rp = basedPlants.get(random.nextInt(basedPlants.size()));
+                        Plant plant = new PlantFactory().create(rp.getType(), col, lane, rp.getLevel(), rp.isBoosted(), context);
+                        if (plant == null) continue;
+                        context.spawnPlant(plant);
+                        planted = true;
+                    }
+                }
+            if (!planted) {
+                int col = 1 + random.nextInt(Math.max(1, plantEndCol));
+                MyPlant rp = basedPlants.get(random.nextInt(basedPlants.size()));
+                Plant plant = new PlantFactory().create(rp.getType(), col, lane, rp.getLevel(), rp.isBoosted(), context);
+                if (plant != null) {
                     context.spawnPlant(plant);
                 }
             }
-            context.log("Plants have been randomly spawned on the board!");
+            }
         }
 
-        setupRandomZombieCards(context, random);
+        setupZombieCards(context);
+        context.log("I, Zombie ready! " + basedZombies.size() + " zombie types available.");
     }
 
-    private void setupRandomZombieCards(GameContext context, Random random) {
-        if (basedZombies == null || basedZombies.isEmpty()) {
-            context.log("⚠️ No base zombies defined for this level!");
-            return;
+    private void setupZombieCards(GameContext context) {
+        if (basedZombies == null || basedZombies.isEmpty()) return;
+
+        for (ZombieType zt : basedZombies) {
+            if (zt == null) continue;
+            int cost = ZOMBIE_SUN_COSTS.getOrDefault(zt, 50);
+            float cooldown = Math.max(3f, Math.min(12f, 2f + cost / 50f));
+            ZombieCard card = new ZombieCard(zt, cost, cooldown);
+            card.setCooldownEnable(false);
+            context.addCard(card);
         }
-
-        int targetCards = Math.min(7, basedZombies.size());
-        int addedCards = 0;
-        int maxAttempts = 100;
-
-        while (addedCards < targetCards && maxAttempts > 0) {
-            maxAttempts--;
-
-            ZombieType randomZombieType = basedZombies.get(random.nextInt(basedZombies.size()));
-
-            if (randomZombieType == null || randomZombieType.getAlias() == null) {
-                continue;
-            }
-
-            if (findCard(context, randomZombieType.toString()) != null) {
-                continue;
-            }
-
-            ZombieCard zombieCard = new ZombieCard(randomZombieType, 50, 5.0f);
-            context.addCard(zombieCard);
-            addedCards++;
-        }
-
-        context.log("🧟 " + addedCards + " Random Zombie cards selected for this match!");
     }
 
     @Override
     public void updateMode(GameContext context, float dt) {
         ticksElapsed++;
 
-        if (ticksElapsed % 200 == 0 && sunZombieInterval > 40) {
-            sunZombieInterval -= 10;
-        }
-
-        // ─── ۲. بررسی رسیدن زامبی‌ها به انتهای لاین (خوردن مغز) ─────────────────
-        for (Zombie z : context.getZombies()) {
-            if (!z.isDead() && z.getX() <= 0f) {
-                int lane = GameController.worldYtoLane(z.getY());
-                if (!brainsEaten[lane]) {
-                    brainsEaten[lane] = true;
-                    context.log("🧠 BRAIN EATEN in Lane " + lane + "! Yummy!");
-                    context.removeZombie(z);
+        if (!sunProducersSpawned) {
+            sunProducersSpawned = true;
+            int lastCol = context.getMap().getColumns() - 1;
+            float spawnX = GameController.colToWorldX(lastCol);
+            int lanes = context.getMap().getLanes();
+            for (int lane = 0; lane < lanes; lane++) {
+                try {
+                    Zombie producer = new ZombieFactory().create(SUN_PRODUCER_ALIAS, spawnX, lane, context, 1, 1);
+                    context.spawnZombie(producer);
+                    sunProducers.add(producer);
+                } catch (Exception e) {
+                    Gdx.app.error("IZombieMode", "Failed to spawn sun producer: " + e.getMessage());
                 }
             }
         }
 
-        boolean allBrainsEaten = true;
-        for (boolean eaten : brainsEaten) {
-            if (!eaten) {
-                allBrainsEaten = false;
-                break;
+        List<Zombie> toRemove = new ArrayList<>();
+        for (Zombie z : context.getZombies()) {
+            if (z.isDead() || sunProducers.contains(z)) continue;
+            float brainX = GameController.colToWorldX(0);
+            if (z.getX() <= brainX + 10f) {
+                int lane = GameController.worldYtoLane(z.getY());
+                if (lane >= 0 && lane < brainsEaten.length && !brainsEaten[lane]) {
+                    if (!brainEatTimers.containsKey(z)) {
+                        brainEatTimers.put(z, BRAIN_EAT_DURATION);
+                        z.setVelocity(0, 0);
+                    }
+                    float remaining = brainEatTimers.get(z) - dt;
+                    brainEatTimers.put(z, remaining);
+                    if (remaining <= 0) {
+                        brainsEaten[lane] = true;
+                        toRemove.add(z);
+                    }
+                }
             }
         }
+        for (Zombie z : toRemove) {
+            brainEatTimers.remove(z);
+            context.removeZombie(z);
+        }
 
+        boolean allBrainsEaten = true;
+        for (boolean eaten : brainsEaten) {
+            if (!eaten) { allBrainsEaten = false; break; }
+        }
         if (allBrainsEaten) {
             context.setGameOver(true);
-            context.log("🎉 VICTORY! You ate all the brains! Humanz are defeated! 🎉");
             return;
         }
 
-        if (context.getZombies().isEmpty()) {
-            int minZombieCost = getCheapestZombieCost(context);
-            if (context.getCurrentSun() < minZombieCost) {
+        sunProducerCountdown--;
+        if (sunProducerCountdown <= 0) {
+            spawnSunDrop(context);
+            sunProducerCountdown = sunProducerIntervalTicks;
+            if (sunProducerIntervalTicks > 120) {
+                sunProducerIntervalTicks = Math.max(120, sunProducerIntervalTicks - 10);
+            }
+        }
+
+        boolean hasLivingPlayerZombies = false;
+        boolean hasLivingSunProducers = false;
+        for (Zombie z : context.getZombies()) {
+            if (z.isDead()) continue;
+            if (sunProducers.contains(z)) {
+                hasLivingSunProducers = true;
+            } else {
+                hasLivingPlayerZombies = true;
+            }
+        }
+        if (!hasLivingPlayerZombies) {
+            int cheapest = Integer.MAX_VALUE;
+            for (Card card : context.getCards()) {
+                if (card instanceof ZombieCard zc && context.getCurrentSun() >= zc.getCost()) {
+                    cheapest = Math.min(cheapest, zc.getCost());
+                }
+            }
+            if (cheapest == Integer.MAX_VALUE && !hasLivingSunProducers) {
                 context.setGameOver(true);
-                context.log("❌ GAME OVER! Out of Sun and no zombies left on the field! ❌");
             }
         }
     }
 
+    private void spawnSunDrop(GameContext context) {
+        Random rng = new Random();
+        int lane = rng.nextInt(context.getMap().getLanes());
+        int col = 1 + rng.nextInt(Math.max(1, redLineColumn - 1));
+        Sun sun = new Sun(SunType.NORMAL, col, lane, SUN_AMOUNT, true, context);
+        context.spawnSun(sun);
+    }
+
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
-        if (card == null) {
-            context.log("[Placement Failed] Selected card is null.");
-            return false;
-        }
-
-        if (!(card instanceof ZombieCard zombieCard)) {
-            context.log("[Placement Failed] Card is not a valid zombie card.");
-            return false;
-        }
-
-        if (col < redLineColumn || col >= context.getMap().getColumns() || lane < 0 || lane >= context.getMap().getLanes()) {
-            context.log("[Placement Failed] Must place zombies to the right of Column " + (redLineColumn - 1)
-                        + "! Invalid position: (" + col + ", " + lane + ")");
-            return false;
-        }
-
-        if (!zombieCard.canUse()) {
-            context.log("[Placement Failed] Zombie card " + zombieCard.getZombieType() + " is on cooldown.");
-            return false;
-        }
-
-        if (context.getCurrentSun() < zombieCard.getCost()) {
-            context.log("[Placement Failed] Not enough sun for " + zombieCard.getZombieType()
-                        + "! Required: " + zombieCard.getCost() + ", Current: " + context.getCurrentSun());
-            return false;
-        }
-
+        if (card == null || !(card instanceof ZombieCard zombieCard)) return false;
+        if (col < redLineColumn || col >= context.getMap().getColumns()) return false;
+        if (lane < 0 || lane >= context.getMap().getLanes()) return false;
+        if (!zombieCard.canUse()) return false;
+        if (context.getCurrentSun() < zombieCard.getCost()) return false;
         return true;
     }
 
     @Override
     public void handlePlacement(GameContext context, int col, int lane, Card card) {
-        if (!(card instanceof ZombieCard zombieCard))
-            return;
-
+        if (!(card instanceof ZombieCard zombieCard)) return;
         if (!context.spendSun(zombieCard.getCost())) {
-            context.log("Error: Not enough sun.");
+            Gdx.app.log("IZombieMode", "Not enough sun for " + zombieCard.getZombieType());
             return;
         }
-
-        Zombie zombie = new ZombieFactory().create(zombieCard.getZombieType().getAlias(), col, lane, context, 1, 1);
-        context.spawnZombie(zombie);
-
-        zombieCard.use();
-        context.log(zombieCard.getZombieType() + " deployed at (" + col + ", " + lane + ").");
+        try {
+            float spawnX = GameController.colToWorldX(col);
+            Zombie zombie = new ZombieFactory().create(zombieCard.getZombieType().getAlias(), spawnX, lane, context, 1, 1);
+            context.spawnZombie(zombie);
+            zombieCard.use();
+        } catch (Exception e) {
+            Gdx.app.error("IZombieMode", "Failed to place " + zombieCard.getZombieType() + ": " + e.getMessage());
+            context.addSun(zombieCard.getCost());
+        }
     }
 
     @Override
     public ZombieCard findCard(GameContext context, String zombieType) {
         for (Card card : context.getCards()) {
-            if (card instanceof ZombieCard zombieCard) {
-                if (zombieCard.getZombieType().toString().equalsIgnoreCase(zombieType)) {
-                    return zombieCard;
-                }
+            if (card instanceof ZombieCard zc && zc.getZombieType().toString().equalsIgnoreCase(zombieType)) {
+                return zc;
             }
         }
         return null;
@@ -31818,35 +33326,12 @@ public class IZombieMode implements GameMode, ZombiePlacer {
     @Override
     public String getCardsStatus(GameContext context) {
         StringBuilder sb = new StringBuilder();
-        List<Card> cards = context.getCards();
-
-        if (cards == null || cards.isEmpty()) {
-            sb.append("No zombie cards available.");
-        } else {
-            sb.append("=== ZOMBIE CARDS ===");
-            int cardWidth = 40;
-
-            for (Card card : cards) {
-                if (card instanceof ZombieCard zc) {
-                    String cardInfo = String.format("- %s | Cost:%d | Cooldown:%.1f",
-                            zc.getZombieType(),
-                            zc.getCost(),
-                            (float) zc.getCooldown() / (float) Constants.TICK_PER_SECOND);
-                    sb.append("\n").append(String.format("%-" + cardWidth + "s", cardInfo));
-                }
+        for (Card card : context.getCards()) {
+            if (card instanceof ZombieCard zc) {
+                sb.append(String.format("%s | %d sun%n", zc.getZombieType(), zc.getCost()));
             }
         }
         return sb.toString();
-    }
-
-    private int getCheapestZombieCost(GameContext context) {
-        int minCost = Integer.MAX_VALUE;
-        for (Card card : context.getCards()) {
-            if (card instanceof ZombieCard zc) {
-                minCost = Math.min(minCost, zc.getCost());
-            }
-        }
-        return minCost == Integer.MAX_VALUE ? 50 : minCost;
     }
 }
 
@@ -33132,6 +34617,7 @@ FILE: BigWaveBeachEffect.java
 
 package com.pvz.models.games.effects;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -33236,7 +34722,7 @@ public class BigWaveBeachEffect implements ChapterEffect {
 
     private void spawnLowTideZombie(GameContext ctx, int col, int lane, Wave wave) {
         ZombieType type = ZombieType.SNORKEL;
-        Zombie z = new ZombieFactory().create(type.getAlias(), col, lane, ctx, wave.getWaveNumber(), 5);
+        Zombie z = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(col), lane, ctx, wave.getWaveNumber(), 5);
         if (z != null) {
             ctx.spawnZombie(z);
             ctx.log("A Snorkel Zombie emerged from the low tide at (" + col + "," + lane + ")!");
@@ -33251,6 +34737,7 @@ FILE: DarkAgesEffect.java
 
 package com.pvz.models.games.effects;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.AppContext;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.zombies.Zombie;
@@ -33267,12 +34754,12 @@ import java.util.List;
 import java.util.Random;
 
 public class DarkAgesEffect implements ChapterEffect {
-    private final int intervalTicks;
-    private int tickCounter = 0;
+    private final float interval;
+    private float stateTime = 0;
     private final Random rand = new Random();
 
-    public DarkAgesEffect(int intervalTicks) {
-        this.intervalTicks = intervalTicks > 0 ? intervalTicks : 350; // every ~35 seconds
+    public DarkAgesEffect(float interval) {
+        this.interval = interval > 0 ? interval : 350; // every ~35 seconds
     }
 
     @Override
@@ -33280,10 +34767,10 @@ public class DarkAgesEffect implements ChapterEffect {
         if (!"dark ages".equalsIgnoreCase(ctx.getSeasonName()))
             return;
 
-        tickCounter++;
-        if (tickCounter >= intervalTicks) {
+        stateTime+=dt;
+        if (stateTime >= interval) {
             growRandomGrave(ctx);
-            tickCounter = 0;
+            stateTime = 0;
         }
     }
 
@@ -33346,7 +34833,7 @@ public class DarkAgesEffect implements ChapterEffect {
                         && tile.getTags().contains(TileTags.GRAVE)) {
                     int difficulty = AppContext.getInstance().getCurrentUser().getSetting().getDifficulty();
                     ZombieType type = ZombieType.BASIC;
-                    Zombie z = new ZombieFactory().create(type.getAlias(), c, l, ctx, wave.getWaveNumber(), difficulty);
+                    Zombie z = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(c), l, ctx, wave.getWaveNumber(), difficulty);
                     if (z != null) {
                         ctx.spawnZombie(z);
                         ctx.log("A zombie dug up and emerged from the necromancy grave at (" + c + "," + l + ")!");
@@ -34567,6 +36054,37 @@ public interface TickAware {
 
 
 ======================================================
+FILE: MatchSession.java
+======================================================
+
+package com.pvz.models;
+
+import com.pvz.network.PlayerRole;
+
+/**
+ * Info about the I,Zombie online match the current user just got matched into,
+ * set by OpponentSelectMenu right before launching GameScreen. Phase 3 reads
+ * this (via {@link AppContext#getMatchSession()}) to wire up two-player sync —
+ * it's not consumed by anything yet.
+ */
+public class MatchSession {
+    private final String matchId;
+    private final String opponentUsername;
+    private final PlayerRole myRole;
+
+    public MatchSession(String matchId, String opponentUsername, PlayerRole myRole) {
+        this.matchId = matchId;
+        this.opponentUsername = opponentUsername;
+        this.myRole = myRole;
+    }
+
+    public String getMatchId() { return matchId; }
+    public String getOpponentUsername() { return opponentUsername; }
+    public PlayerRole getMyRole() { return myRole; }
+}
+
+
+======================================================
 FILE: GreenHousePot.java
 ======================================================
 
@@ -34939,6 +36457,7 @@ public class AppContext {
     private User currentUser;
     private GameContext gameContext;
     private GreenHouse greenHouse;
+    private MatchSession matchSession;
 
     private AppContext() { }
 
@@ -34957,6 +36476,11 @@ public class AppContext {
 
     public GameContext getGameContext() {return gameContext;}
     public void setGameContext(GameContext gameContext) {this.gameContext = gameContext;}
+
+    /** Set by OpponentSelectMenu right before launching an online I,Zombie match.
+     *  Null outside of that flow — always check for null before reading it. */
+    public MatchSession getMatchSession() { return matchSession; }
+    public void setMatchSession(MatchSession matchSession) { this.matchSession = matchSession; }
 }
 
 
@@ -35361,6 +36885,11 @@ import com.pvz.models.user.User;
  *
  * Call {@link #connect(String, int)} once at app startup (e.g. in
  * PvZ2#create() or your FirstScreen) before using any other method.
+ *
+ * Phase 2 addition: besides request/response, the server can also *push*
+ * a message with no matching requestId (e.g. someone invited you to a
+ * match). Register a handler for those with {@link #setPushListener}
+ * or one of the typed on___ methods below.
  */
 public class NetworkClient {
 
@@ -35381,6 +36910,7 @@ public class NetworkClient {
     private volatile boolean connected = false;
 
     private final Map<String, Consumer<NetworkMessage>> pending = new ConcurrentHashMap<>();
+    private final Map<MessageType, Consumer<NetworkMessage>> pushListeners = new ConcurrentHashMap<>();
 
     private NetworkClient() { }
 
@@ -35413,13 +36943,19 @@ public class NetworkClient {
             String line;
             while (connected && (line = in.readLine()) != null) {
                 NetworkMessage msg = gson.fromJson(line, NetworkMessage.class);
-                if (msg == null || msg.requestId == null) continue;
+                if (msg == null) continue;
 
-                Consumer<NetworkMessage> callback = pending.remove(msg.requestId);
+                // Request/response: someone is waiting on this exact requestId.
+                Consumer<NetworkMessage> callback = msg.requestId != null ? pending.remove(msg.requestId) : null;
                 if (callback != null) {
-                    // Bounce back to the GL thread — the callback will usually touch
-                    // Stage/Label/AppContext, which is only safe there.
                     Gdx.app.postRunnable(() -> callback.accept(msg));
+                    continue;
+                }
+
+                // Otherwise it's an unprompted server push (invite, match found, ...).
+                Consumer<NetworkMessage> pushListener = pushListeners.get(msg.type);
+                if (pushListener != null) {
+                    Gdx.app.postRunnable(() -> pushListener.accept(msg));
                 }
             }
         } catch (IOException e) {
@@ -35440,7 +36976,9 @@ public class NetworkClient {
             fake.type = type;
             fake.success = false;
             fake.errorMessage = "Not connected to server.";
-            Gdx.app.postRunnable(() -> callback.accept(fake));
+            if (callback != null) {
+                Gdx.app.postRunnable(() -> callback.accept(fake));
+            }
             return;
         }
 
@@ -35460,7 +36998,22 @@ public class NetworkClient {
         return gson.fromJson(response.payload, clazz);
     }
 
-    // ---- Typed convenience wrappers -------------------------------------------------
+    /**
+     * Registers a handler for messages the server sends without being asked
+     * (no matching requestId) — e.g. an incoming invite. Only one handler per
+     * type at a time; the newest call replaces the previous one. Call
+     * {@link #clearPushListener} when leaving a screen that registered one,
+     * so a stale screen doesn't react to pushes meant for whatever's shown now.
+     */
+    public void setPushListener(MessageType type, Consumer<NetworkMessage> listener) {
+        pushListeners.put(type, listener);
+    }
+
+    public void clearPushListener(MessageType type) {
+        pushListeners.remove(type);
+    }
+
+    // ---- Typed convenience wrappers: accounts (Phase 1) --------------------------
 
     /** {@code newUser} should be fully built client-side (starter progress, security Q&A...)
      *  but with a null id — the server assigns the id and checks username uniqueness. */
@@ -35504,6 +37057,142 @@ public class NetworkClient {
             this.password = password;
         }
     }
+
+    // ---- Typed convenience wrappers: I,Zombie matchmaking (Phase 2) --------------
+
+    /** Invites a specific online user. {@code callback} reports whether the invite
+     *  was delivered (target found & online) — not whether they accepted; that
+     *  comes later via {@link #onMatchFound} or {@link #onInviteRejected}. */
+    public void sendInvite(String targetUsername, PlayerRole requestedRole, Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.INVITE_SEND, new MatchDTOs.InviteSendRequest(targetUsername, requestedRole), callback);
+    }
+
+    public void respondToInvite(String matchId, boolean accepted, Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.INVITE_RESPONSE, new MatchDTOs.InviteResponseRequest(matchId, accepted), callback);
+    }
+
+    /** Joins the random-opponent queue. If someone's already waiting, both sides
+     *  get a {@link #onMatchFound} push almost immediately; otherwise you wait
+     *  for it. {@code callback} just confirms the join request was received. */
+    public void joinRandomQueue(Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.QUEUE_JOIN, null, callback);
+    }
+
+    public void cancelRandomQueue(Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.QUEUE_CANCEL, null, callback);
+    }
+
+    /** Someone sent you an invite. Payload includes the matchId you must echo back
+     *  in {@link #respondToInvite}. */
+    public void onInviteIncoming(Consumer<MatchDTOs.InviteIncomingPayload> handler) {
+        setPushListener(MessageType.INVITE_INCOMING,
+            msg -> handler.accept(parsePayload(msg, MatchDTOs.InviteIncomingPayload.class)));
+    }
+
+    /** The person you invited declined. */
+    public void onInviteRejected(Consumer<MatchDTOs.InviteRejectedPayload> handler) {
+        setPushListener(MessageType.INVITE_REJECTED,
+            msg -> handler.accept(parsePayload(msg, MatchDTOs.InviteRejectedPayload.class)));
+    }
+
+    /** A match is ready — via accepted invite or random pairing. Fires for both participants. */
+    public void onMatchFound(Consumer<MatchDTOs.MatchFoundPayload> handler) {
+        setPushListener(MessageType.MATCH_FOUND,
+            msg -> handler.accept(parsePayload(msg, MatchDTOs.MatchFoundPayload.class)));
+    }
+
+    /** Phase 3 hook: send something to your current match opponent (game state, a reaction...).
+     *  The server relays it blind based on matchId — it doesn't interpret innerPayloadJson. */
+    public void sendMatchMessage(String matchId, String innerPayloadJson) {
+        sendRequest(MessageType.MATCH_MESSAGE, new MatchDTOs.MatchMessageEnvelope(matchId, innerPayloadJson), null);
+    }
+
+    /** Phase 3 hook: receive whatever your opponent sends during an active match. */
+    public void onMatchMessage(Consumer<MatchDTOs.MatchMessageEnvelope> handler) {
+        setPushListener(MessageType.MATCH_MESSAGE,
+            msg -> handler.accept(parsePayload(msg, MatchDTOs.MatchMessageEnvelope.class)));
+    }
+}
+
+
+======================================================
+FILE: MatchDTOs.java
+======================================================
+
+package com.pvz.network;
+
+/**
+ * Small message-body classes for the matchmaking protocol (Phase 2).
+ * These are the objects that get JSON-encoded into {@link NetworkMessage#payload}.
+ * Kept in one file since each is tiny and they're always used together.
+ */
+public class MatchDTOs {
+
+    private MatchDTOs() { }
+
+    /** Client -> Server, sent as the payload of an INVITE_SEND request. */
+    public static class InviteSendRequest {
+        public String targetUsername;
+        /** The role the *inviter* wants to play. The invitee gets the opposite. */
+        public PlayerRole requestedRole;
+
+        public InviteSendRequest(String targetUsername, PlayerRole requestedRole) {
+            this.targetUsername = targetUsername;
+            this.requestedRole = requestedRole;
+        }
+    }
+
+    /** Server -> invitee, pushed as an INVITE_INCOMING message (no requestId match). */
+    public static class InviteIncomingPayload {
+        public String matchId;
+        public String fromUsername;
+        /** The role the invitee would play if they accept. */
+        public PlayerRole yourRole;
+    }
+
+    /** Client -> Server, sent as the payload of an INVITE_RESPONSE request (by the invitee). */
+    public static class InviteResponseRequest {
+        public String matchId;
+        public boolean accepted;
+
+        public InviteResponseRequest(String matchId, boolean accepted) {
+            this.matchId = matchId;
+            this.accepted = accepted;
+        }
+    }
+
+    /** Server -> original inviter, pushed as INVITE_REJECTED if the invitee declines. */
+    public static class InviteRejectedPayload {
+        public String matchId;
+        public String byUsername;
+    }
+
+    /**
+     * Server -> both participants, pushed as MATCH_FOUND once a match is established —
+     * either by invite acceptance or by random-queue pairing. This is the single event
+     * both the "play with a friend" and "play random" flows converge on.
+     */
+    public static class MatchFoundPayload {
+        public String matchId;
+        public String opponentUsername;
+        public PlayerRole yourRole;
+    }
+
+    /**
+     * Generic envelope for anything exchanged *during* an established match
+     * (game-state sync, reactions, game-over notice — Phase 3 material). The server
+     * relays this blind: it only looks at matchId to know where to forward it, never
+     * at the inner payload.
+     */
+    public static class MatchMessageEnvelope {
+        public String matchId;
+        public String payload;
+
+        public MatchMessageEnvelope(String matchId, String payload) {
+            this.matchId = matchId;
+            this.payload = payload;
+        }
+    }
 }
 
 
@@ -35514,17 +37203,50 @@ FILE: MessageType.java
 package com.pvz.network;
 
 /**
- * All message kinds understood by the Phase-1 server (accounts + leaderboard).
- * Extend this enum in later phases (matchmaking, I-Zombie sync, reactions...)
- * instead of creating a second protocol — everything rides the same
- * {@link NetworkMessage} envelope.
+ * All message kinds understood by the server.
+ *
+ * Phase 1 (accounts + leaderboard): REGISTER, LOGIN, SAVE_USER, GET_USER, GET_LEADERBOARD.
+ *
+ * Phase 2 (I,Zombie matchmaking) adds:
+ *   - INVITE_SEND / INVITE_RESPONSE: client -> server requests
+ *   - INVITE_INCOMING / INVITE_REJECTED / MATCH_FOUND: server -> client pushes
+ *     (these never appear as a *request* type — only ever pushed)
+ *   - QUEUE_JOIN / QUEUE_CANCEL: client -> server requests for random matchmaking
+ *   - MATCH_MESSAGE: bidirectional, blind relay between two matched clients.
+ *     Reserved for Phase 3 (in-match state sync, reactions, game-over).
  */
 public enum MessageType {
     REGISTER,
     LOGIN,
     SAVE_USER,
     GET_USER,
-    GET_LEADERBOARD
+    GET_LEADERBOARD,
+
+    INVITE_SEND,
+    INVITE_INCOMING,
+    INVITE_RESPONSE,
+    INVITE_REJECTED,
+    QUEUE_JOIN,
+    QUEUE_CANCEL,
+    MATCH_FOUND,
+    MATCH_MESSAGE
+}
+
+
+======================================================
+FILE: PlayerRole.java
+======================================================
+
+package com.pvz.network;
+
+/** Which side of the I,Zombie minigame a matched player controls. */
+public enum PlayerRole {
+    PLANT,
+    ZOMBIE;
+
+    public PlayerRole opposite() {
+        return this == PLANT ? ZOMBIE : PLANT;
+    }
 }
 
 

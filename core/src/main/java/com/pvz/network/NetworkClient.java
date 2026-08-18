@@ -31,6 +31,11 @@ import com.pvz.models.user.User;
  *
  * Call {@link #connect(String, int)} once at app startup (e.g. in
  * PvZ2#create() or your FirstScreen) before using any other method.
+ *
+ * Phase 2 addition: besides request/response, the server can also *push*
+ * a message with no matching requestId (e.g. someone invited you to a
+ * match). Register a handler for those with {@link #setPushListener}
+ * or one of the typed on___ methods below.
  */
 public class NetworkClient {
 
@@ -51,6 +56,7 @@ public class NetworkClient {
     private volatile boolean connected = false;
 
     private final Map<String, Consumer<NetworkMessage>> pending = new ConcurrentHashMap<>();
+    private final Map<MessageType, Consumer<NetworkMessage>> pushListeners = new ConcurrentHashMap<>();
 
     private NetworkClient() { }
 
@@ -83,13 +89,19 @@ public class NetworkClient {
             String line;
             while (connected && (line = in.readLine()) != null) {
                 NetworkMessage msg = gson.fromJson(line, NetworkMessage.class);
-                if (msg == null || msg.requestId == null) continue;
+                if (msg == null) continue;
 
-                Consumer<NetworkMessage> callback = pending.remove(msg.requestId);
+                // Request/response: someone is waiting on this exact requestId.
+                Consumer<NetworkMessage> callback = msg.requestId != null ? pending.remove(msg.requestId) : null;
                 if (callback != null) {
-                    // Bounce back to the GL thread — the callback will usually touch
-                    // Stage/Label/AppContext, which is only safe there.
                     Gdx.app.postRunnable(() -> callback.accept(msg));
+                    continue;
+                }
+
+                // Otherwise it's an unprompted server push (invite, match found, ...).
+                Consumer<NetworkMessage> pushListener = pushListeners.get(msg.type);
+                if (pushListener != null) {
+                    Gdx.app.postRunnable(() -> pushListener.accept(msg));
                 }
             }
         } catch (IOException e) {
@@ -110,7 +122,9 @@ public class NetworkClient {
             fake.type = type;
             fake.success = false;
             fake.errorMessage = "Not connected to server.";
-            Gdx.app.postRunnable(() -> callback.accept(fake));
+            if (callback != null) {
+                Gdx.app.postRunnable(() -> callback.accept(fake));
+            }
             return;
         }
 
@@ -130,7 +144,22 @@ public class NetworkClient {
         return gson.fromJson(response.payload, clazz);
     }
 
-    // ---- Typed convenience wrappers -------------------------------------------------
+    /**
+     * Registers a handler for messages the server sends without being asked
+     * (no matching requestId) — e.g. an incoming invite. Only one handler per
+     * type at a time; the newest call replaces the previous one. Call
+     * {@link #clearPushListener} when leaving a screen that registered one,
+     * so a stale screen doesn't react to pushes meant for whatever's shown now.
+     */
+    public void setPushListener(MessageType type, Consumer<NetworkMessage> listener) {
+        pushListeners.put(type, listener);
+    }
+
+    public void clearPushListener(MessageType type) {
+        pushListeners.remove(type);
+    }
+
+    // ---- Typed convenience wrappers: accounts (Phase 1) --------------------------
 
     /** {@code newUser} should be fully built client-side (starter progress, security Q&A...)
      *  but with a null id — the server assigns the id and checks username uniqueness. */
@@ -173,5 +202,60 @@ public class NetworkClient {
             this.username = username;
             this.password = password;
         }
+    }
+
+    // ---- Typed convenience wrappers: I,Zombie matchmaking (Phase 2) --------------
+
+    /** Invites a specific online user. {@code callback} reports whether the invite
+     *  was delivered (target found & online) — not whether they accepted; that
+     *  comes later via {@link #onMatchFound} or {@link #onInviteRejected}. */
+    public void sendInvite(String targetUsername, PlayerRole requestedRole, Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.INVITE_SEND, new MatchDTOs.InviteSendRequest(targetUsername, requestedRole), callback);
+    }
+
+    public void respondToInvite(String matchId, boolean accepted, Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.INVITE_RESPONSE, new MatchDTOs.InviteResponseRequest(matchId, accepted), callback);
+    }
+
+    /** Joins the random-opponent queue. If someone's already waiting, both sides
+     *  get a {@link #onMatchFound} push almost immediately; otherwise you wait
+     *  for it. {@code callback} just confirms the join request was received. */
+    public void joinRandomQueue(Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.QUEUE_JOIN, null, callback);
+    }
+
+    public void cancelRandomQueue(Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.QUEUE_CANCEL, null, callback);
+    }
+
+    /** Someone sent you an invite. Payload includes the matchId you must echo back
+     *  in {@link #respondToInvite}. */
+    public void onInviteIncoming(Consumer<MatchDTOs.InviteIncomingPayload> handler) {
+        setPushListener(MessageType.INVITE_INCOMING,
+            msg -> handler.accept(parsePayload(msg, MatchDTOs.InviteIncomingPayload.class)));
+    }
+
+    /** The person you invited declined. */
+    public void onInviteRejected(Consumer<MatchDTOs.InviteRejectedPayload> handler) {
+        setPushListener(MessageType.INVITE_REJECTED,
+            msg -> handler.accept(parsePayload(msg, MatchDTOs.InviteRejectedPayload.class)));
+    }
+
+    /** A match is ready — via accepted invite or random pairing. Fires for both participants. */
+    public void onMatchFound(Consumer<MatchDTOs.MatchFoundPayload> handler) {
+        setPushListener(MessageType.MATCH_FOUND,
+            msg -> handler.accept(parsePayload(msg, MatchDTOs.MatchFoundPayload.class)));
+    }
+
+    /** Phase 3 hook: send something to your current match opponent (game state, a reaction...).
+     *  The server relays it blind based on matchId — it doesn't interpret innerPayloadJson. */
+    public void sendMatchMessage(String matchId, String innerPayloadJson) {
+        sendRequest(MessageType.MATCH_MESSAGE, new MatchDTOs.MatchMessageEnvelope(matchId, innerPayloadJson), null);
+    }
+
+    /** Phase 3 hook: receive whatever your opponent sends during an active match. */
+    public void onMatchMessage(Consumer<MatchDTOs.MatchMessageEnvelope> handler) {
+        setPushListener(MessageType.MATCH_MESSAGE,
+            msg -> handler.accept(parsePayload(msg, MatchDTOs.MatchMessageEnvelope.class)));
     }
 }

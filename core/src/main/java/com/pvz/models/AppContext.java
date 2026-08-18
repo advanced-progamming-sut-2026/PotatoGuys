@@ -10,6 +10,7 @@ public class AppContext {
     private User currentUser;
     private GameContext gameContext;
     private GreenHouse greenHouse;
+    private MatchSession matchSession;
 
     private AppContext() { }
 
@@ -28,4 +29,9 @@ public class AppContext {
 
     public GameContext getGameContext() {return gameContext;}
     public void setGameContext(GameContext gameContext) {this.gameContext = gameContext;}
+
+    /** Set by OpponentSelectMenu right before launching an online I,Zombie match.
+     *  Null outside of that flow — always check for null before reading it. */
+    public MatchSession getMatchSession() { return matchSession; }
+    public void setMatchSession(MatchSession matchSession) { this.matchSession = matchSession; }
 }

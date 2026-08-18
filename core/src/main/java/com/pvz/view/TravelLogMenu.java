@@ -339,7 +339,11 @@ public class TravelLogMenu extends ScreenAdapter {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
-                    game.setScreen(new GameScreen(seasonFolder, chosenLevel));
+                    if (seasonFolder.equals("IZombie")) {
+                        game.setScreen(new OpponentSelectMenu(game, seasonFolder, chosenLevel));
+                    } else {
+                        game.setScreen(new GameScreen(seasonFolder, chosenLevel));
+                    }
                 }
             });
             levels.add(levelBtn).size(140, 55).padLeft(6);
