@@ -34,6 +34,7 @@ import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
+import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.sun.Sun;
@@ -1091,8 +1092,6 @@ public class GameController {
                         owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(pt);
                     } catch (Exception ignored) {}
                     PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(pt);
-                    int sunCost = (sheet != null) ? sheet.getSunCost() : 50;
-                    float recharge = (sheet != null) ? sheet.getRechargeSeconds() : 5f;
 
                     MyPlant myPlant = owned;
                     if (myPlant == null) {
@@ -1100,6 +1099,17 @@ public class GameController {
                         myPlant.setType(pt);
                         myPlant.setLevel(1);
                     }
+
+                    // Resolve sun cost / recharge at the player's plant level so the card
+                    // shows the same values the mode actually charges (level-up SUN_COST
+                    // / RECHARGE_SECONDS modifiers are applied here, not on the sheet).
+                    PlantStatResolver.ResolvedStats stats =
+                            (sheet != null) ? PlantStatResolver.resolve(sheet, myPlant.getLevel()) : null;
+                    int sunCost = (stats != null) ? stats.getSunCost() : ((sheet != null) ? sheet.getSunCost() : 50);
+                    float recharge = (stats != null && stats.getRechargeSeconds() != null)
+                            ? stats.getRechargeSeconds()
+                            : ((sheet != null) ? sheet.getRechargeSeconds() : 5f);
+
                     newContext.addCard(new PlantCard(myPlant, sunCost, recharge));
                 }
                 AppContext.getInstance().setGameContext(newContext);

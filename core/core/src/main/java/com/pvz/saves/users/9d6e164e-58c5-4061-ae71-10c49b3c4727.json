@@ -10,8 +10,8 @@
   "profilePicture": "textures/avatars/avatar_jinbe.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 3250,
-    "diamonds": 126,
+    "coins": 550,
+    "diamonds": 241,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -23,31 +23,31 @@
         },
         {
           "Type": "Sunflower",
-          "level": 1,
+          "level": 4,
           "seed": 0,
           "isBoosted": false
         },
         {
           "Type": "Cabbagepult",
-          "level": 1,
+          "level": 2,
           "seed": 0,
           "isBoosted": false
         },
         {
           "Type": "BonkChoy",
-          "level": 1,
+          "level": 2,
           "seed": 0,
           "isBoosted": false
         },
         {
           "Type": "Repeater",
-          "level": 1,
+          "level": 2,
           "seed": 0,
           "isBoosted": false
         },
         {
           "Type": "TwinSunflower",
-          "level": 1,
+          "level": 4,
           "seed": 0,
           "isBoosted": false
         },
@@ -102,7 +102,12 @@
         "OCTOPUS"
       ],
       "seedPackets": {
-        "Peashooter": 55
+        "Peashooter": 60,
+        "Sunflower": 35,
+        "BonkChoy": 5,
+        "Repeater": 15,
+        "TwinSunflower": 10,
+        "Cabbagepult": 5
       }
     },
     "news": {
@@ -237,7 +242,7 @@
     "difficulty": 1,
     "gameSpeed": 1,
     "showGrid": true,
-    "debugMode": false,
+    "debugMode": true,
     "brightness": 1.0,
     "musicVolume": 0.17999999,
     "sfxVolume": 0.31,
@@ -286,7 +291,12 @@
         "x": 4,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "Jalapeno",
+          "plantedTime": "2026-08-18T19:01:51.593942100",
+          "growthHours": 8
+        }
       },
       {
         "x": 1,
@@ -310,7 +320,12 @@
         "x": 4,
         "y": 2,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-18T19:01:54.919855600",
+          "growthHours": 2
+        }
       },
       {
         "x": 1,
@@ -1256,7 +1271,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1787063817622
+    "lastDailyReset": 1787066965483
   },
   "questLogRefreshed": true
 }

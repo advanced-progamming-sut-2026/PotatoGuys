@@ -33,6 +33,15 @@ public class CollectionController {
         }
     }
 
+    /**
+     * Coins required to advance an owned plant from {@code currentLevel} to the next one.
+     * Level 1→2 costs 1000, 2→3 costs 2000, 3→4 costs 4000, doubling after that.
+     */
+    public static int requiredCoinsForLevel(int currentLevel) {
+        int targetLevel = currentLevel + 1;
+        return 1000 * (int) Math.pow(2, Math.max(0, targetLevel - 2));
+    }
+
     private User user() {
         return AppContext.getInstance().getCurrentUser();
     }
@@ -124,14 +133,22 @@ public class CollectionController {
         }
         if (plant.getLevel() >= maxLevel) return type + " is already at max level.";
 
-        int cost = requiredPacketsForLevel(plant.getLevel());
+        int packetCost = requiredPacketsForLevel(plant.getLevel());
         int packets = collection.getSeedPackets(type);
-        if (packets < cost) {
-            return "Not enough packets! You need " + cost + " to reach level "
+        if (packets < packetCost) {
+            return "Not enough packets! You need " + packetCost + " to reach level "
                     + (plant.getLevel() + 1) + ", but you only have " + packets + ".";
         }
 
-        collection.consumeSeedPackets(type, cost);
+        int coinCost = requiredCoinsForLevel(plant.getLevel());
+        int coins = profile.getCoins();
+        if (coins < coinCost) {
+            return "Not enough coins! Upgrading to level " + (plant.getLevel() + 1)
+                    + " costs " + coinCost + " coins, but you only have " + coins + ".";
+        }
+
+        collection.consumeSeedPackets(type, packetCost);
+        profile.setCoins(coins - coinCost);
         plant.setLevel(plant.getLevel() + 1);
         user.saveUser();
         return null;

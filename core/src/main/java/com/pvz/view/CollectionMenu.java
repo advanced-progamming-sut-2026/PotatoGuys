@@ -666,31 +666,36 @@ public class CollectionMenu extends ScreenAdapter {
     private void tryPurchase(PlantData data) {
         String error = controller.purchasePlant(data.type);
         if (error != null) {
-            showToast(error);
+            showToast(error, false);
             return;
         }
         refreshWallet();
         for (PlantCard card : cards) card.update();
-        showToast("Unlocked " + data.getName() + "!");
+        // Toast after reopening details so the new overlay doesn't cover it.
         closeDetails();
         openDetails(data);
+        showToast("Unlocked " + data.getName() + "!", true);
     }
 
-    /** Spends seed packets to level an owned plant up; refreshes the grid and reopens on success. */
+    /** Spends seed packets + coins to level an owned plant up; refreshes the grid and reopens on success. */
     private void tryUpgrade(PlantData data) {
         String error = controller.upgradePlant(data.type);
         if (error != null) {
-            showToast(error);
+            showToast(error, false);
             return;
         }
         for (PlantCard card : cards) card.update();
-        showToast(data.getName() + " is now Level " + data.getLevel() + "!");
+        refreshWallet();
+        // Toast must be shown AFTER reopening the details: openDetails adds a new
+        // full-screen overlay on top of any earlier actors, which would hide it.
         closeDetails();
         openDetails(data);
+        showToast(data.getName() + " is now Level " + data.getLevel() + "!", true);
     }
 
-    /** Centered, auto-dismissing message used for purchase feedback and errors. */
-    private void showToast(String message) {
+    /** Centered, auto-dismissing message used for purchase/upgrade feedback; {@code success}
+     *  toggles the label color between a green success and a red error. */
+    private void showToast(String message, boolean success) {
         if (toastOverlay != null) {
             toastOverlay.remove();
             toastOverlay = null;
@@ -699,7 +704,7 @@ public class CollectionMenu extends ScreenAdapter {
         Table toast = new Table();
         toast.setBackground(skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.88f)));
         Label label = new Label(message, skin, "medium");
-        label.setColor(Color.WHITE);
+        label.setColor(success ? new Color(0.4f, 0.9f, 0.4f, 1f) : new Color(1f, 0.45f, 0.4f, 1f));
         label.setWrap(true);
         label.setAlignment(Align.center);
         toast.add(label).width(720f).pad(18f);

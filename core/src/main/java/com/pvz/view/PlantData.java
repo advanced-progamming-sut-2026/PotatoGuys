@@ -266,6 +266,11 @@ public final class PlantData {
         return CollectionController.requiredPacketsForLevel(getLevel());
     }
 
+    public int requiredCoins() {
+        if (!isUnlocked() || isMaxLevel()) return 1;
+        return CollectionController.requiredCoinsForLevel(getLevel());
+    }
+
     public float xpFraction() {
         if (!isUnlocked()) return 0f;
         if (isMaxLevel()) return 1f;

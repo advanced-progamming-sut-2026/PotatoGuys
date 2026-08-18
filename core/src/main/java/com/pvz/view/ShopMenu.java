@@ -461,23 +461,27 @@ public class ShopMenu extends Table {
         Table modalContent = new Table();
         Label header = new Label("Confirm Purchase", PvzSkin.get(), "big");
         header.setColor(Color.BLACK);
-        modalContent.add(header).padBottom(10f).row();
+        header.setFontScale(1.7f);
+        modalContent.add(header).padBottom(14f).row();
 
         String itemLabel = item.getName() + (plantType != null ? " (" + plantType.name() + ")" : "");
         Label message = new Label("Buy " + itemLabel + " for " + priceLabel(item.getPrice()) + "?", PvzSkin.get());
         message.setColor(Color.BLACK);
         message.setWrap(true);
-        modalContent.add(message).width(300f).padBottom(15f).row();
+        message.setFontScale(1.5f);
+        modalContent.add(message).width(520f).padBottom(20f).row();
 
         Table buttons = new Table();
-        TextButton cancelBtn = new TextButton("Cancel", PvzSkin.get(), "purple");
+        TextButton cancelBtn = new TextButton("Cancel", normalFontStyle("purple"));
+        cancelBtn.getLabel().setFontScale(1.35f);
         cancelBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 closeModal();
             }
         });
-        TextButton confirmBtn = new TextButton("Confirm", PvzSkin.get(), "green");
+        TextButton confirmBtn = new TextButton("Confirm", normalFontStyle("green"));
+        confirmBtn.getLabel().setFontScale(1.35f);
         confirmBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -485,11 +489,21 @@ public class ShopMenu extends Table {
                 executePurchase(item, plantType);
             }
         });
-        buttons.add(cancelBtn).width(140f).height(45f).padRight(10f);
-        buttons.add(confirmBtn).width(140f).height(45f);
+        buttons.add(cancelBtn).width(200f).height(65f).padRight(14f);
+        buttons.add(confirmBtn).width(200f).height(65f);
         modalContent.add(buttons);
 
-        showModal(modalContent);
+        showModal(modalContent, 700f, 420f);
+    }
+
+    /** "green"/"purple" TextButton styles copied with the normal UI font instead of
+     *  the decorative HOUSE_OF_TERROR face. */
+    private TextButton.TextButtonStyle normalFontStyle(String styleName) {
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(
+            PvzSkin.get().get(styleName, TextButton.TextButtonStyle.class));
+        style.font = PvzSkin.get().getFont("FBUSV8C5EI_2");
+        style.fontColor = Color.WHITE;
+        return style;
     }
 
     private void executePurchase(ShopItem item, PlantType plantType) {
@@ -497,7 +511,7 @@ public class ShopMenu extends Table {
         if (error != null) {
             showError(error);
         } else {
-            clearError();
+            showSuccess(item, plantType);
         }
         refresh(); // always refresh — capacities/wallet may have changed either way
     }
@@ -565,6 +579,48 @@ public class ShopMenu extends Table {
         modalContent.add(okBtn).width(160f).height(55f);
 
         showModal(modalContent, 600f, 320f);
+    }
+
+    private void showSuccess(ShopItem item, PlantType plantType) {
+        Table modalContent = new Table();
+        modalContent.top();
+
+        Label header = new Label("Purchase Successful", PvzSkin.get(), "big");
+        header.setColor(Color.BLACK);
+        header.setFontScale(1.6f);
+        modalContent.add(header).padBottom(18f).row();
+
+        String itemLabel = item.getName() + (plantType != null ? " (" + plantType.name() + ")" : "");
+        String message = "You bought " + itemLabel + "!";
+        if (item instanceof RandomSeedPacketItem randomSeed) {
+            String details = randomSeed.getLastPurchaseDetails();
+            if (details != null) {
+                // details format: "PLANTNAME +N"
+                int plusIdx = details.lastIndexOf('+');
+                String plantName = plusIdx > 0 ? details.substring(0, plusIdx).trim() : details;
+                String amount = plusIdx > 0 ? details.substring(plusIdx + 1) : "";
+                plantName = plantName.replace('_', ' ');
+                plantName = plantName.substring(0, 1) + plantName.substring(1).toLowerCase();
+                message += "\n" + plantName + " received " + amount + " seed packets!";
+            }
+        }
+        Label messageLabel = new Label(message, PvzSkin.get());
+        messageLabel.setColor(Color.BLACK);
+        messageLabel.setWrap(true);
+        messageLabel.setAlignment(Align.center);
+        messageLabel.setFontScale(1.3f);
+        modalContent.add(messageLabel).width(480f).padBottom(20f).row();
+
+        TextButton okBtn = new TextButton("OK", PvzSkin.get(), "green");
+        okBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                closeModal();
+            }
+        });
+        modalContent.add(okBtn).width(160f).height(55f);
+
+        showModal(modalContent, 640f, 400f);
     }
 
     private void clearError() {

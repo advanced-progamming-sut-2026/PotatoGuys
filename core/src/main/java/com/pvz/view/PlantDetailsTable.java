@@ -44,7 +44,12 @@ public class PlantDetailsTable extends Table {
         setBackground(skin.newDrawable("white_pixel", DETAILS_BG));
         Drawable fallback = skin.newDrawable("white_pixel", FALLBACK_TINT);
 
-        backButton = new ImageButton(skin, "almanac");
+        // Copy the shared "almanac" style before overriding its drawables: mutating
+        // getStyle() in place would corrupt the skin style for every other button
+        // using it (e.g. the almanac button in the game-mode selection menu).
+        ImageButton.ImageButtonStyle style =
+            new ImageButton.ImageButtonStyle(skin.get("almanac", ImageButton.ImageButtonStyle.class));
+        backButton = new ImageButton(style);
         Drawable backNormal = PlantData.regionDrawable("IMAGE_UI_ALMANAC_BUTTONS_HUD_BACK_NORMAL");
         Drawable backSelected = PlantData.regionDrawable("IMAGE_UI_ALMANAC_BUTTONS_HUD_BACK_SELECTED");
         if (backNormal != null) {
@@ -221,7 +226,8 @@ public class PlantDetailsTable extends Table {
             actionArea.add(max).size(200f, 50f).left();
         } else {
             TextButton levelUp = new TextButton(
-                    "LEVEL UP · " + data.requiredSeedPackets() + " PACKETS", PvzSkin.get(), "green");
+                    "LEVEL UP · " + data.requiredSeedPackets() + " PACKETS · "
+                            + data.requiredCoins() + " COINS", PvzSkin.get(), "green");
             levelUp.setColor(Color.WHITE);
             if (onUpgrade != null) {
                 levelUp.addListener(new InputListener() {

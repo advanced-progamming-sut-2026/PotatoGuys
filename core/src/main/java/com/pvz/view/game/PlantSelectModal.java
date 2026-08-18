@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 
+import com.pvz.controller.CollectionController;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.user.MyPlant;
@@ -69,6 +70,7 @@ public class PlantSelectModal extends Table {
     private final Table selectedSlotsTable;
     private final Table previewContent;
     private final TextButton startButton;
+    private Label previewMessageLabel;
 
     public PlantSelectModal(Level level, Runnable onStartCallback) {
         this.level = level;
@@ -208,8 +210,29 @@ public class PlantSelectModal extends Table {
         info.add(nameLabel).left().row();
 
         Table buttonsRow = new Table();
-        TextButton upgradeButton = new TextButton("UPGRADE", PvzSkin.get(), "brown");
-        // Inert, matching Rey's own Upgrade button — not wired to anything on her side either.
+        // Level-up works exactly like the Collection screen: spends the required
+        // seed packets via CollectionController.upgradePlant and refreshes the
+        // card / slots / preview so the new cost & level show up immediately.
+        TextButton upgradeButton = new TextButton(upgradeButtonText(data), PvzSkin.get(), "brown");
+        upgradeButton.setDisabled(!data.isUnlocked() || data.isMaxLevel());
+        upgradeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                String error = new CollectionController().upgradePlant(data.type);
+                if (error != null) {
+                    showPreviewMessage(error, false);
+                    return;
+                }
+                PlantCard card = gridCardsByType.get(data.type);
+                if (card != null) {
+                    card.update();
+                }
+                refreshSlotsBar();
+                upgradeButton.setText(upgradeButtonText(data));
+                upgradeButton.setDisabled(data.isMaxLevel());
+                showPreviewMessage(data.getName() + " is now Level " + data.getLevel() + "!", true);
+            }
+        });
         TextButton boostButton = new TextButton(data.isBoosted() ? "BOOSTED" : "BOOST", PvzSkin.get(), "green");
         boostButton.setDisabled(data.isBoosted());
         boostButton.addListener(new ChangeListener() {
@@ -227,12 +250,32 @@ public class PlantSelectModal extends Table {
                 }
             }
         });
-        buttonsRow.add(upgradeButton).width(120f).height(45f).padRight(10f);
+        buttonsRow.add(upgradeButton).width(260f).height(45f).padRight(10f);
         buttonsRow.add(boostButton).width(120f).height(45f);
         info.add(buttonsRow).left().padTop(8f);
+        info.row();
+        previewMessageLabel = new Label("", PvzSkin.get(), "medium");
+        previewMessageLabel.setColor(new Color(0.8f, 0.2f, 0.15f, 1f));
+        previewMessageLabel.setWrap(true);
+        info.add(previewMessageLabel).width(320f).left().padTop(4f);
 
         previewContent.add(plantImage).size(96f, 96f).padRight(15f);
         previewContent.add(info).top();
+    }
+
+    /** Mirrors the Collection's PlantDetailsTable label: LEVEL UP · N PACKETS / MAX LEVEL. */
+    private String upgradeButtonText(PlantData data) {
+        if (!data.isUnlocked()) return "UPGRADE";
+        if (data.isMaxLevel()) return "MAX LEVEL";
+        return "LEVEL UP · " + data.requiredSeedPackets() + " PACKETS · "
+                + data.requiredCoins() + " COINS";
+    }
+
+    private void showPreviewMessage(String message, boolean success) {
+        if (previewMessageLabel != null) {
+            previewMessageLabel.setText(message);
+            previewMessageLabel.setColor(success ? new Color(0.15f, 0.7f, 0.15f, 1f) : new Color(0.8f, 0.2f, 0.15f, 1f));
+        }
     }
 
     private void selectPlantIntoSlot(PlantData data) {

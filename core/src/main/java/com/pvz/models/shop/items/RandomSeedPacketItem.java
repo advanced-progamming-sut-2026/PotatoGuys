@@ -18,7 +18,7 @@ public class RandomSeedPacketItem extends ShopItem {
         this.name = "Random Seed Packet";
         this.description = "Grants   seed   packets   for   a   random plant.";
         this.price = new Price(Currency.COIN, 1000);
-        this.unitAmount = 10;
+        this.unitAmount = 5;
         this.maxPurchasePerUser = 0;
     }
 
