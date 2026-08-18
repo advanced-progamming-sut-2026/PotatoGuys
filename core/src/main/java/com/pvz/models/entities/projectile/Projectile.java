@@ -135,8 +135,13 @@ public class Projectile extends Entity {
         int col = GameController.worldXtoCol(position.x);
         int lane = GameController.worldYtoLane(position.y);
 
-        if (col < -0.5f || col >= ctx.getMap().getColumns() + 0.5f
-                || lane < -0.5f || lane >= ctx.getMap().getLanes() + 0.5f) {
+        int cols = ctx.getMap().getColumns();
+        int lanes = ctx.getMap().getLanes();
+
+        boolean inLane = lane >= 0 && lane < lanes;
+        boolean inColRange = col >= -2 && col < cols + 3;
+
+        if (!inColRange || lane < -1 || lane > lanes) {
             destroy();
             return;
         }
@@ -145,7 +150,7 @@ public class Projectile extends Entity {
             lastCol = col;
             lastLane = lane;
 
-            if (!lobbed || lane == launchLane) {
+            if (inLane && col >= 0 && col < cols && (!lobbed || lane == launchLane)) {
                 try {
                     Tile tile = ctx.getTileAt(lastCol, lastLane);
                     tile.processHit(this);

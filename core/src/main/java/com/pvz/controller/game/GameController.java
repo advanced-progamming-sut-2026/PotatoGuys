@@ -505,6 +505,7 @@ public class GameController {
                 drawEffects(lane);
                 drawActiveLawnMowers(lane);
             }
+            drawProjectilesOutsideGrid();
             drawSuns();
             drawLootDrops();
             drawPlacementPreview();
@@ -595,7 +596,18 @@ public class GameController {
 
     private void drawProjectiles(int row) {
         for (Projectile p : ctx.getProjectiles()) {
-            if (GameController.worldYtoLane(p.getY()) == row) {
+            int pLane = GameController.worldYtoLane(p.getY());
+            if (pLane == row) {
+                p.draw();
+            }
+        }
+    }
+
+    private void drawProjectilesOutsideGrid() {
+        int totalLanes = ctx.getMap().getLanes();
+        for (Projectile p : ctx.getProjectiles()) {
+            int pLane = GameController.worldYtoLane(p.getY());
+            if (pLane < 0 || pLane >= totalLanes) {
                 p.draw();
             }
         }
