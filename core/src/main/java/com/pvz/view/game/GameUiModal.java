@@ -308,7 +308,7 @@ public class GameUiModal extends Table {
 
         for (Card card : context.getCards()) {
             if (card instanceof PlantCard pc) {
-                cardsBarTable.add(buildSlot(pc)).row();
+                cardsBarTable.add(buildSlot(pc, false)).row();
             } else if (card instanceof ZombieCard zc) {
                 cardsBarTable.add(buildZombieSlot(zc)).row();
             }
@@ -316,7 +316,23 @@ public class GameUiModal extends Table {
         updateCardStyles();
     }
 
-    private Table buildSlot(PlantCard pc) {
+    public void syncCards() {
+        GameContext context = AppContext.getInstance().getGameContext();
+        if (context == null) return;
+
+        boolean changed = false;
+        for (Card card : context.getCards()) {
+            if (card instanceof PlantCard pc && !slotByCard.containsKey(pc)) {
+                cardsBarTable.add(buildSlot(pc, true)).row();
+                changed = true;
+            }
+        }
+        if (changed) {
+            updateCardStyles();
+        }
+    }
+
+    private Table buildSlot(PlantCard pc, boolean isConveyor) {
         PlantType type = pc.getPlant().getType();
         PlantData data = dataByType.get(type);
 
@@ -353,7 +369,7 @@ public class GameUiModal extends Table {
         stack.add(cooldownOverlay);
         cooldownOverlayByCard.put(pc, cooldownOverlay);
 
-        Label costLabel = new Label(String.valueOf(pc.getCost()), skin, "medium");
+        Label costLabel = new Label(isConveyor ? "FREE" : String.valueOf(pc.getCost()), skin, "medium");
         costLabel.setFontScale(0.9f);
         costLabel.setColor(Color.WHITE);
         Table costRow = new Table();
@@ -456,6 +472,8 @@ public class GameUiModal extends Table {
     public void updateHud() {
         GameContext context = AppContext.getInstance().getGameContext();
         if (context == null) return;
+
+        syncCards();
 
         // The + buttons only work while Debug Mode is enabled in settings.
         boolean debug = isDebugModeEnabled();

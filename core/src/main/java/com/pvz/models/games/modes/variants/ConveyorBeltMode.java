@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import com.pvz.controller.game.GameController;
-import com.pvz.enums.AnsiColors;
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
@@ -22,12 +21,7 @@ import com.pvz.models.games.modes.GameMode;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.user.Collection;
 import com.pvz.models.user.MyPlant;
-import com.pvz.models.user.User;
 
-/**
- * Standard game mode implementation for Conveyor Belt level.
- * Automatically spawns random unlocked plants every 12 seconds.
- */
 public class ConveyorBeltMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
@@ -35,27 +29,36 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
     private int tickCounter = 0;
     private static final int TICKS_PER_SECOND = 10;
     private static final int SPAWN_INTERVAL_TICKS = 12 * TICKS_PER_SECOND;
+    private static final int MAX_HAND_SIZE = 7;
 
     public ConveyorBeltMode(Level level) {
-        if (level instanceof ConveyorBeltLevel normalLevel) {
-            waves = normalLevel.getWaves();
+        if (level instanceof ConveyorBeltLevel beltLevel) {
+            waves = beltLevel.getWaves();
         } else {
-            return;
+            throw new IllegalArgumentException("ConveyorBeltMode requires a ConveyorBeltLevel");
         }
         currentWave = waves.get(0);
     }
 
     @Override
     public void initMode(GameContext context) {
-        addRandomCard(context);
         tickCounter = 0;
+        addRandomCard(context);
+        if (currentWave != null) {
+            currentWave.startWave(context);
+            for (com.pvz.models.games.effects.ChapterEffect effect : context.getActiveEffects()) {
+                effect.onWaveStart(currentWave, context);
+            }
+        }
     }
 
     @Override
     public void updateMode(GameContext context, float dt) {
         tickCounter++;
         if (tickCounter >= SPAWN_INTERVAL_TICKS) {
-            addRandomCard(context);
+            if (context.getCards().size() < MAX_HAND_SIZE) {
+                addRandomCard(context);
+            }
             tickCounter = 0;
         }
 
@@ -64,6 +67,9 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
             if (nextWaveIndex < waves.size()) {
                 currentWave = waves.get(nextWaveIndex);
                 currentWave.startWave(context);
+                for (com.pvz.models.games.effects.ChapterEffect effect : context.getActiveEffects()) {
+                    effect.onWaveStart(currentWave, context);
+                }
                 context.log("Wave " + currentWave.getWaveNumber() + " started.");
             } else {
                 context.setGameOver(true);
@@ -73,18 +79,16 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         }
 
         if (!currentWave.isDone()) {
-            currentWave.updateWave(context, 0);
+            currentWave.updateWave(context, dt);
         }
 
-        for (int i = 0; i < context.getZombies().size(); i++) {
+        for (int i = context.getZombies().size() - 1; i >= 0; i--) {
             Zombie z = context.getZombies().get(i);
-
-            if (z.getX() <= 0f) {
+            if (z.getX() <= GameController.colToWorldX(-1)) {
                 context.setGameOver(true);
                 context.log("Brain has eaten");
                 context.removeZombie(z);
             }
-
         }
 
         for (Sun sun : new ArrayList<>(context.getSuns())) {
@@ -92,6 +96,11 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
                 context.removeSun(sun);
             }
         }
+    }
+
+    @Override
+    public boolean supportsFallingSuns() {
+        return false;
     }
 
     @Override
@@ -117,8 +126,6 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
             return false;
         }
 
-        // ConveyorBeltMode: Plants are free (delivered by conveyor belt), no sun cost check needed.
-        // Cards are also not subject to cooldown; they arrive on a timer.
         return true;
     }
 
@@ -133,9 +140,22 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
                 plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
+        context.getGameStats().onPlantPlaced(col, lane, plantCard.getPlant().getType());
 
         context.removeCard(card);
         context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
+    }
+
+    @Override
+    public PlantCard findCard(GameContext context, String plantType) {
+        for (Card card : context.getCards()) {
+            if (card instanceof PlantCard plantCard) {
+                if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
+                    return plantCard;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -156,18 +176,6 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         return sb.toString().trim();
     }
 
-    @Override
-    public PlantCard findCard(GameContext context, String plantType) {
-        for (Card card : context.getCards()) {
-            if (card instanceof PlantCard plantCard) {
-                if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
-                    return plantCard;
-                }
-            }
-        }
-        return null;
-    }
-
     private void addRandomCard(GameContext context) {
         var currentUser = AppContext.getInstance().getCurrentUser();
         if (currentUser == null || currentUser.getProfile() == null
@@ -176,12 +184,13 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
             return;
         }
 
-        Collection collection=currentUser.getProfile().getCollection();
+        Collection collection = currentUser.getProfile().getCollection();
         List<MyPlant> unlockedPlants = new ArrayList<>(collection.getUnlockedPlants());
         unlockedPlants.remove(collection.getPlant(PlantType.Sunflower));
         unlockedPlants.remove(collection.getPlant(PlantType.TwinSunflower));
+        unlockedPlants.remove(null);
 
-        if (unlockedPlants == null || unlockedPlants.isEmpty()) {
+        if (unlockedPlants.isEmpty()) {
             context.log("Conveyor Belt warning: Player has no unlocked plants!");
             return;
         }
@@ -190,7 +199,6 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         MyPlant randomPlant = unlockedPlants.get(random.nextInt(unlockedPlants.size()));
 
         PlantCard conveyorCard = new PlantCard(randomPlant, 0, 0);
-
         context.addCard(conveyorCard);
         context.log("Conveyor delivered a new card: " + randomPlant.getType().toString());
     }
