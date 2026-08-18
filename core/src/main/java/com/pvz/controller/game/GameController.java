@@ -495,14 +495,18 @@ public class GameController {
         batch.begin();
         drawBackground();
         if (ctx != null) {
-            drawPlants();
-            drawTileBehaviors();
-            drawZombies();
-            drawLawnMowers();
+            int totalLanes = ctx.getMap().getLanes();
+            for (int lane = 0; lane < totalLanes; lane++) {
+                drawInactiveLawnMowers(lane);
+                drawPlants(lane);
+                drawTileBehaviors(lane);
+                drawZombies(lane);
+                drawProjectiles(lane);
+                drawEffects(lane);
+                drawActiveLawnMowers(lane);
+            }
             drawSuns();
             drawLootDrops();
-            drawProjectiles();
-            drawEffects();
             drawPlacementPreview();
             drawIZombieOverlay();
         }
@@ -536,49 +540,108 @@ public class GameController {
         batch.draw(backgroundTextures[2], backgroundTextures[1].getRegionWidth(), 0);
     }
 
-    private void drawTileBehaviors(){
-        if (ctx==null) return;
-        for (int lane = 0; lane < ctx.getMap().getLanes(); lane++) {
-            for (int col = 0; col < ctx.getMap().getColumns(); col++) {
-                List<FrameConfig> frameConfigs = ctx.getMap().getTileAt(col,lane).drawBehaviors();
-                if (frameConfigs!=null && !frameConfigs.isEmpty()){
-                    for (FrameConfig frameConfig: frameConfigs) {
-                        if (frameConfig!=null) {
-                            batch.setColor(frameConfig.r,frameConfig.g,frameConfig.b,frameConfig.a);
-                            PvZ2.pamPlayer.draw(batch, frameConfig.pamPath, frameConfig.label,
-                                frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
-                                frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
-                            batch.setColor(Color.WHITE);
-                        }
+    private void drawInactiveLawnMowers(int row) {
+        LawnMower lm = ctx.getLawnMowers()[row];
+        if (lm != null && !lm.isTriggered()) {
+            FrameConfig fc = lm.draw();
+            PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                fc.stateTime, fc.position.x, fc.position.y,
+                fc.scale.x, fc.scale.y, fc.looping);
+        }
+    }
+
+    private void drawPlants(int row) {
+        for (Plant p : ctx.getPlants()) {
+            if (p.getLane() == row) {
+                FrameConfig fc = p.draw();
+                if (fc != null) {
+                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                        fc.stateTime, fc.position.x, fc.position.y,
+                        fc.scale.x, fc.scale.y, fc.looping);
+                }
+            }
+        }
+    }
+
+    private void drawTileBehaviors(int row) {
+        for (int col = 0; col < ctx.getMap().getColumns(); col++) {
+            List<FrameConfig> frames = ctx.getMap().getTileAt(col, row).drawBehaviors();
+            if (frames != null) {
+                for (FrameConfig fc : frames) {
+                    if (fc != null) {
+                        batch.setColor(fc.r, fc.g, fc.b, fc.a);
+                        PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                            fc.stateTime, fc.position.x, fc.position.y,
+                            fc.scale.x, fc.scale.y, fc.looping);
+                        batch.setColor(Color.WHITE);
                     }
                 }
             }
         }
     }
 
-    private void drawPlants(){
-        if (ctx==null) return;
-        for (Plant p: ctx.getPlants()){
-            FrameConfig frameConfig = p.draw();
-            if (frameConfig!=null){
-                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+    private void drawZombies(int row) {
+        for (Zombie z : ctx.getZombies()) {
+            if (GameController.worldYtoLane(z.getY()) == row) {
+                FrameConfig fc = z.draw();
+                if (fc != null) {
+                    batch.setColor(fc.r, fc.g, fc.b, fc.a);
+                    drawFrame(fc);
+                    batch.setColor(1f, 1f, 1f, 1f);
+                }
             }
         }
     }
 
-    private void drawZombies(){
-        if (ctx==null) return;
-        for (Zombie z: ctx.getZombies()){
-            FrameConfig frameConfig = z.draw();
-            if (frameConfig!=null){
-                batch.setColor(frameConfig.r,frameConfig.g,frameConfig.b,frameConfig.a);
-                drawFrame(frameConfig);
-                batch.setColor(1f,1f,1f,1f);
+    private void drawProjectiles(int row) {
+        for (Projectile p : ctx.getProjectiles()) {
+            if (GameController.worldYtoLane(p.getY()) == row) {
+                p.draw();
             }
         }
     }
+
+    private void drawEffects(int row) {
+        for (Effect e : ctx.getEffects()) {
+            if (GameController.worldYtoLane(e.getPos().y) == row) {
+                FrameConfig fc = e.draw();
+                if (fc != null) {
+                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                        fc.stateTime, fc.position.x, fc.position.y,
+                        fc.scale.x, fc.scale.y, fc.looping);
+                }
+            }
+        }
+    }
+
+    private void drawSuns() {
+        for (Sun s : ctx.getSuns()) {
+            FrameConfig fc = s.draw();
+            if (fc != null) {
+                PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                    fc.stateTime, fc.position.x, fc.position.y,
+                    fc.scale.x, fc.scale.y, fc.looping);
+            }
+        }
+    }
+
+    private void drawLootDrops() {
+        for (LootDrop ld : ctx.getLootDrops()) {
+            ld.draw();
+        }
+    }
+
+    private void drawActiveLawnMowers(int row) {
+        LawnMower lm = ctx.getLawnMowers()[row];
+        if (lm != null && lm.isTriggered()) {
+            FrameConfig fc = lm.draw();
+            PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                fc.stateTime, fc.position.x, fc.position.y,
+                fc.scale.x, fc.scale.y, fc.looping);
+        }
+    }
+
+
 
     /**
      * Draws one animation frame, honouring the optional {@code partsVisibility}
@@ -598,65 +661,7 @@ public class GameController {
         }
     }
 
-    private void drawLawnMowers(){
-        LawnMower[] lawnMowers = ctx.getLawnMowers();
-        for (LawnMower lawnMower : lawnMowers) {
-            if (lawnMower != null) {
-                FrameConfig frameConfig = lawnMower.draw();
-                PvZ2.pamPlayer.draw(batch, frameConfig.pamPath, frameConfig.label,
-                    frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
-            }
-        }
-    }
 
-    private void drawProjectiles(){
-        if (ctx==null) return;
-        for (Projectile p: ctx.getProjectiles()){
-            FrameConfig frameConfig = p.draw();
-            if (frameConfig!=null){
-                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
-            }
-        }
-    }
-
-    private void drawSuns(){
-        if (ctx==null) return;
-        for (Sun s: ctx.getSuns()){
-            FrameConfig frameConfig = s.draw();
-            if (frameConfig!=null){
-                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
-            }
-        }
-    }
-
-    private void drawEffects(){
-        if (ctx==null) return;
-        for (Effect e: ctx.getEffects()){
-            FrameConfig frameConfig = e.draw();
-            if (frameConfig!=null){
-                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
-            }
-        }
-    }
-
-    private void drawLootDrops(){
-        if (ctx==null) return;
-        for (LootDrop c: ctx.getLootDrops()){
-            FrameConfig frameConfig = c.draw();
-            if (frameConfig!=null){
-                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
-            }
-        }
-    }
 
     /**
      * Draws the "ghost" of the currently selected seed packet following the mouse:

@@ -68,4 +68,12 @@ public class LawnMower extends Entity {
         ctx.removeHitbox(getHitbox());
         ctx.getLawnMowers()[GameController.worldYtoLane(position.y)]=null;
     }
+
+    public boolean isTriggered() {
+        return triggered;
+    }
+
+    public int getLane() {
+        return GameController.worldYtoLane(position.y);
+    }
 }

@@ -29,4 +29,8 @@ public abstract class Effect implements TickAware {
     public void dispose() {
         ctx.removeEffect(this);
     }
+
+    public Vector2 getPos() {
+        return pos;
+    }
 }
