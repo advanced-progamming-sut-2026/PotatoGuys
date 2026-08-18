@@ -14,6 +14,7 @@ import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.plants.fsm.PlantDeadState;
+import com.pvz.models.entities.plants.fsm.PlantFlashState;
 import com.pvz.models.entities.plants.fsm.PlantIdleState;
 import com.pvz.models.entities.plants.fsm.PlantState;
 import com.pvz.models.games.GameContext;
@@ -178,6 +179,9 @@ public class Plant extends Entity {
         }
 
         hp = Math.max(0f, hp - amount);
+        if (currentState != null && !(currentState instanceof PlantDeadState) && !(currentState instanceof PlantFlashState)) {
+            currentState = new PlantFlashState(currentState);
+        }
         if (hp <= 0f)
             kill();
     }
@@ -371,6 +375,10 @@ public class Plant extends Entity {
 
     public PlantState getCurrentState() {
         return currentState;
+    }
+
+    public void setCurrentState(PlantState state) {
+        this.currentState = state;
     }
 
     public boolean isPlantableOnTile(Tile tile){

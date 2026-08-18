@@ -13,9 +13,11 @@ import com.pvz.models.games.map.tile.TileTags;
 public class IceBlockBehavior implements TileBehavior {
     private static final String PAM_PATH="768/FULL/EFFECTS/FROSTBITE_ICE_BLOCK_PLANT/FROSTBITE_ICE_BLOCK_PLANT.PAM";
     private static final String IDLE_CLIP="freeze_idle";
+    private static final float FLASH_DURATION = 0.28f;
     private float iceHp = 600f;
     private Object entityInside; // Can be Plant or Zombie
     float stateTime;
+    private float flashTimer;
 
     public IceBlockBehavior(Object entity) {
         this.entityInside = entity;
@@ -31,6 +33,7 @@ public class IceBlockBehavior implements TileBehavior {
     public void onProjectileHit(Projectile p, Tile tile) {
         boolean isFire = p.getType() == ProjectileType.FIRE_PEA;
         float damage = p.getDamage();
+        flashTimer = FLASH_DURATION;
 
         if (isFire) {
             iceHp = 0f;
@@ -53,9 +56,11 @@ public class IceBlockBehavior implements TileBehavior {
     public void update(GameContext ctx, Tile tile, float dt) {
         TileBehavior.super.update(ctx, tile, dt);
         stateTime+=dt;
+        if (flashTimer > 0f) flashTimer = Math.max(0f, flashTimer - dt);
     }
 
     public void takeDamage(float amount, boolean isFire) {
+        flashTimer = FLASH_DURATION;
         if (isFire) {
             iceHp = 0f;
         } else {
@@ -75,7 +80,11 @@ public class IceBlockBehavior implements TileBehavior {
         Vector2 scale=new Vector2(0.65f,0.65f);
         Vector2 pos = new Vector2(GameController.colToWorldX(tile.getCol()),GameController.laneToWorldY(tile.getLane()));
         FrameConfig frameConfig = new FrameConfig(PAM_PATH,IDLE_CLIP,stateTime,pos,scale,null,false);
-        frameConfig.setColor(1,1,1,0.7f);
+        if (flashTimer > 0f) {
+            frameConfig.setColor(5f, 5f, 5f, 0.6f);
+        } else {
+            frameConfig.setColor(1,1,1,0.7f);
+        }
         return frameConfig;
     }
 }

@@ -37,12 +37,14 @@ public class OctopusOverlayBehavior implements TileBehavior {
     private static final String LAND_CLIP = "animation2";
     private static final String LOOP_CLIP = "animation3";
     private static final float LAND_DURATION = 1.0f;
+    private static final float FLASH_DURATION = 0.28f;
 
     private final GameContext ctx;
     private final Tile tile;
     private final float maxHp;
     private float hp;
     private float stateTime = 0f;
+    private float flashTimer;
 
     private Plant boundPlant;
     private final int col;
@@ -76,6 +78,7 @@ public class OctopusOverlayBehavior implements TileBehavior {
     @Override
     public void onProjectileHit(Projectile p, Tile tile) {
         hp -= p.getDamage();
+        flashTimer = FLASH_DURATION;
         p.destroy();
         if (hp <= 0f) {
             destroy();
@@ -88,6 +91,7 @@ public class OctopusOverlayBehavior implements TileBehavior {
     @Override
     public void processHit(float damage) {
         hp -= damage;
+        flashTimer = FLASH_DURATION;
         if (hp <= 0f) {
             destroy();
         }
@@ -102,6 +106,7 @@ public class OctopusOverlayBehavior implements TileBehavior {
     @Override
     public void update(GameContext ctx, Tile tile, float dt) {
         stateTime += dt;
+        if (flashTimer > 0f) flashTimer = Math.max(0f, flashTimer - dt);
     }
 
     @Override
@@ -130,8 +135,12 @@ public class OctopusOverlayBehavior implements TileBehavior {
             animTime = stateTime - LAND_DURATION;
         }
         String clip = (stateTime < LAND_DURATION) ? LAND_CLIP : LOOP_CLIP;
-        return new FrameConfig(PAM_PATH, clip, animTime,
+        FrameConfig fc = new FrameConfig(PAM_PATH, clip, animTime,
             pos, scale, null, looping);
+        if (flashTimer > 0f) {
+            fc.setColor(5f, 5f, 5f, 0.6f);
+        }
+        return fc;
     }
 
     // ── Destruction ─────────────────────────────────────────────────────────

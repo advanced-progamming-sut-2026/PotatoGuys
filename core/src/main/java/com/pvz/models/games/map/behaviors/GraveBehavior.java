@@ -19,8 +19,10 @@ public class GraveBehavior implements TileBehavior {
 
     private static final String[] EGYPT_DAMAGE_CLIPS = {"undamaged","damage1","damage2","damage3","damage4"};
     private static final String[] DARK_DAMAGE_CLIPS = {"undamaged","damage1","damage2","damage3","damage4"};
+    private static final float FLASH_DURATION = 0.28f;
 
     float stateTime;
+    private float flashTimer;
 
     public enum GraveReward {
         NONE, SUN_50, PLANT_FOOD
@@ -52,6 +54,7 @@ public class GraveBehavior implements TileBehavior {
     @Override
     public void onProjectileHit(Projectile p, Tile tile) {
         this.hp -= p.getDamage();
+        flashTimer = FLASH_DURATION;
         p.destroy(); // Projectile is consumed by grave/ice
         if (this.hp <= 0) {
             destroyGrave(tile, AppContext.getInstance().getGameContext());
@@ -82,6 +85,7 @@ public class GraveBehavior implements TileBehavior {
     public void processHit(float damage) {
         TileBehavior.super.processHit(damage);
         hp-=damage;
+        flashTimer = FLASH_DURATION;
         if (this.hp <= 0) {
             destroyGrave(tile, AppContext.getInstance().getGameContext());
         }
@@ -104,6 +108,7 @@ public class GraveBehavior implements TileBehavior {
     public void update(GameContext ctx, Tile tile, float dt) {
         TileBehavior.super.update(ctx, tile, dt);
         stateTime+=dt;
+        if (flashTimer > 0f) flashTimer = Math.max(0f, flashTimer - dt);
     }
 
     @Override
@@ -135,6 +140,10 @@ public class GraveBehavior implements TileBehavior {
             clips = EGYPT_DAMAGE_CLIPS;
         }
 
-        return new FrameConfig(pamId, clips[idx], stateTime, pos, scale, null, false);
+        FrameConfig fc = new FrameConfig(pamId, clips[idx], stateTime, pos, scale, null, false);
+        if (flashTimer > 0f) {
+            fc.setColor(5f, 5f, 5f, 0.6f);
+        }
+        return fc;
     }
 }

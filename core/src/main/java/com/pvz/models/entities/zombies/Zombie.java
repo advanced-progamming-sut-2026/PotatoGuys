@@ -374,6 +374,9 @@ public class Zombie extends Entity {
         if (dead || amount <= 0f) return;
         float remaining = poisonous ? amount : processArmorChain(amount);
         hp = Math.max(0f, hp - remaining);
+        if (currentState != null && !(currentState instanceof DeadState) && !(currentState instanceof ZombieFlashState)) {
+            currentState = new ZombieFlashState(currentState);
+        }
         if (hp <= 0f && !dead) triggerDeath();
     }
 

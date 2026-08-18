@@ -557,9 +557,11 @@ public class GameController {
             if (p.getLane() == row && !p.isBound()) {
                 FrameConfig fc = p.draw();
                 if (fc != null) {
+                    batch.setColor(fc.r, fc.g, fc.b, fc.a);
                     PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
                         fc.stateTime, fc.position.x, fc.position.y,
                         fc.scale.x, fc.scale.y, fc.looping);
+                    batch.setColor(1f, 1f, 1f, 1f);
                 }
             }
         }
