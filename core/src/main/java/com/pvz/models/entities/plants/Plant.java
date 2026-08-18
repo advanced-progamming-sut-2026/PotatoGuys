@@ -48,6 +48,9 @@ public class Plant extends Entity {
     private final PlantAction feedAction;
     private boolean dead;
 
+    /** When true the plant is bound by an octopus overlay and cannot act. */
+    private boolean bound;
+
     private int freezeLevel = 0; // 0, 1, 2, 3
     private boolean isFrozen = false;
     private float iceHp = 0f;
@@ -83,7 +86,7 @@ public class Plant extends Entity {
 
     @Override
     public void update(float dt) {
-        if (dead || isFrozen)
+        if (dead || isFrozen || bound)
             return;
         syncHitbox();
         tickGrowth();
@@ -356,6 +359,14 @@ public class Plant extends Entity {
 
     public boolean isDead() {
         return dead;
+    }
+
+    public boolean isBound() {
+        return bound;
+    }
+
+    public void setBound(boolean bound) {
+        this.bound = bound;
     }
 
     public PlantState getCurrentState() {

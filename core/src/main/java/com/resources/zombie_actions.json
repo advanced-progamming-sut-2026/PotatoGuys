@@ -1488,6 +1488,14 @@
       "dieConfig": {
         "class": "ZombieDieConfig",
         "label": "die"
+      },
+      "skillConfig": {
+        "class": "OctopusSkillConfig",
+        "label": "toss",
+        "cooldownSeconds": 12,
+        "octopusHp": 100,
+        "throwDuration": 1.0,
+        "arcHeight": 120
       }
     },
     {

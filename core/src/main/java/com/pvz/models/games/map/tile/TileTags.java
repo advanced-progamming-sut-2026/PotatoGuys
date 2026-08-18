@@ -8,7 +8,8 @@ public enum TileTags {
     SLIP_DOWN("Slip down"),
     WATER("Water"),
     LOW_TIDE("Low tide"),
-    NECROMANCY("Necromancy");
+    NECROMANCY("Necromancy"),
+    OCTOPUS("Octopus");
 
     public final String typeName;
 

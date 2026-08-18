@@ -502,6 +502,7 @@ public class GameController {
                 drawTileBehaviors(lane);
                 drawZombies(lane);
                 drawProjectiles(lane);
+                drawOctopusProjectiles(lane);
                 drawEffects(lane);
                 drawActiveLawnMowers(lane);
             }
@@ -553,7 +554,7 @@ public class GameController {
 
     private void drawPlants(int row) {
         for (Plant p : ctx.getPlants()) {
-            if (p.getLane() == row) {
+            if (p.getLane() == row && !p.isBound()) {
                 FrameConfig fc = p.draw();
                 if (fc != null) {
                     PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
@@ -609,6 +610,31 @@ public class GameController {
             int pLane = GameController.worldYtoLane(p.getY());
             if (pLane < 0 || pLane >= totalLanes) {
                 p.draw();
+            }
+        }
+        for (var op : ctx.getOctopusProjectiles()) {
+            int opLane = GameController.worldYtoLane(op.getPosition().y);
+            if (opLane < 0 || opLane >= totalLanes) {
+                FrameConfig fc = op.draw();
+                if (fc != null) {
+                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                        fc.stateTime, fc.position.x, fc.position.y,
+                        fc.scale.x, fc.scale.y, fc.looping);
+                }
+            }
+        }
+    }
+
+    private void drawOctopusProjectiles(int row) {
+        for (var op : ctx.getOctopusProjectiles()) {
+            int opLane = GameController.worldYtoLane(op.getPosition().y);
+            if (opLane == row) {
+                FrameConfig fc = op.draw();
+                if (fc != null) {
+                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                        fc.stateTime, fc.position.x, fc.position.y,
+                        fc.scale.x, fc.scale.y, fc.looping);
+                }
             }
         }
     }

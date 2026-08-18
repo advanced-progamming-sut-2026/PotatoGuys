@@ -19,10 +19,10 @@
       "lanes": 5,
       "difficulty": 1,
       "phases": [
-        { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["GARGANTUAR"], "isBurst": false },
+        { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["OCTOPUS"], "isBurst": false },
     
         
-        { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["NEWSPAPER"], "isBurst": false },
+        { "zombieCount": 1, "intervalSeconds": 15.0, "allowedTypes": ["NEWSPAPER"], "isBurst": false },
         { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["MUMMY"], "isBurst": false },
         { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["MUMMY_CONE"], "isBurst": false },
         { "zombieCount": 1, "intervalSeconds": 5.0, "allowedTypes": ["MUMMY_BUCKET"], "isBurst": false },

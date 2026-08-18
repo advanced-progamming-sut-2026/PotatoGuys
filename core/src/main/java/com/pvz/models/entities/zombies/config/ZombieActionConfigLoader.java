@@ -35,6 +35,7 @@ public final class ZombieActionConfigLoader {
         json.addClassTag("TombRaiserSkillConfig", TombRaiserSkillConfig.class);
         json.addClassTag("WizardZapSkillConfig", WizardZapSkillConfig.class);
         json.addClassTag("HunterSnowballSkillConfig", HunterSnowballSkillConfig.class);
+        json.addClassTag("OctopusSkillConfig", OctopusSkillConfig.class);
         // scalingPresets holds ObjectMap<String, ScaledPropConfig[]>
         json.setElementType(ZombieRootConfig.class, "scalingPresets", ScaledPropConfig[].class);
         return json;

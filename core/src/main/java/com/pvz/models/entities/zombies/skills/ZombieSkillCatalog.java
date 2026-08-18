@@ -3,6 +3,7 @@ package com.pvz.models.entities.zombies.skills;
 import com.pvz.models.entities.zombies.config.ExplorerTorchSkillConfig;
 import com.pvz.models.entities.zombies.config.GargantuarSkillConfig;
 import com.pvz.models.entities.zombies.config.HunterSnowballSkillConfig;
+import com.pvz.models.entities.zombies.config.OctopusSkillConfig;
 import com.pvz.models.entities.zombies.config.RaStealSunSkillConfig;
 import com.pvz.models.entities.zombies.config.TombRaiserSkillConfig;
 import com.pvz.models.entities.zombies.config.WizardZapSkillConfig;
@@ -43,6 +44,9 @@ public final class ZombieSkillCatalog {
         }
         if (config instanceof HunterSnowballSkillConfig hunterConfig) {
             return new HunterSnowballSkill(hunterConfig);
+        }
+        if (config instanceof OctopusSkillConfig octopusConfig) {
+            return new OctopusBindingSkill(octopusConfig);
         }
         return null;
     }

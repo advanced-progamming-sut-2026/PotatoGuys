@@ -15,6 +15,7 @@ import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.projectile.Projectile;
+import com.pvz.models.entities.projectile.OctopusProjectile;
 import com.pvz.models.entities.sun.Sun;
 import com.pvz.models.entities.sun.SunManager;
 import com.pvz.models.entities.zombies.Zombie;
@@ -43,6 +44,7 @@ public class GameContext implements TickAware {
 
     private final GameEngine engine;
     private List<Projectile> projectiles;
+    private List<OctopusProjectile> octopusProjectiles = new ArrayList<>();
     private List<Zombie> zombies;
     private List<Plant> plants;
     private List<Card> cards;
@@ -75,6 +77,8 @@ public class GameContext implements TickAware {
     private final List<Sun> pendingSunsToRemove = new ArrayList<>();
     private final List<LootDrop> pendingLootDropsToAdd = new ArrayList<>();
     private final List<LootDrop> pendingLootDropsToRemove = new ArrayList<>();
+    private final List<OctopusProjectile> pendingOctopusToAdd = new ArrayList<>();
+    private final List<OctopusProjectile> pendingOctopusToRemove = new ArrayList<>();
 
     public GameContext(Level currentLevel) {
         this.engine         = GameEngine.getInstance();
@@ -311,6 +315,20 @@ public class GameContext implements TickAware {
         return true;
     }
 
+    public List<OctopusProjectile> getOctopusProjectiles() {
+        return octopusProjectiles;
+    }
+
+    public void spawnOctopusProjectile(OctopusProjectile p) {
+        pendingOctopusToAdd.add(p);
+        engine.register(p);
+    }
+
+    public void removeOctopusProjectile(OctopusProjectile p) {
+        engine.unRegister(p);
+        pendingOctopusToRemove.add(p);
+    }
+
     // ── Hitbox registry ─────────────────────────────────────────────────────────
     // Every spawned entity registers its hitbox here so the CollisionSystem can
     // sweep all hitboxes in one pass without caring about entity types.
@@ -366,6 +384,11 @@ public class GameContext implements TickAware {
         effects.removeAll(pendingEffectsToRemove);
         pendingEffectsToAdd.clear();
         pendingEffectsToRemove.clear();
+
+        octopusProjectiles.addAll(pendingOctopusToAdd);
+        octopusProjectiles.removeAll(pendingOctopusToRemove);
+        pendingOctopusToAdd.clear();
+        pendingOctopusToRemove.clear();
     }
 
     public int getCurrentTick() {
