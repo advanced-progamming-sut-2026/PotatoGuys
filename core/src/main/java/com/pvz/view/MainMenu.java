@@ -101,6 +101,21 @@ public class MainMenu extends ScreenAdapter {
             }
         });
 
+        //username label (top-left corner)
+        Table userInfoWrapper = new Table();
+        userInfoWrapper.top().left();
+        userInfoWrapper.pad(20);
+        stack.add(userInfoWrapper);
+
+        User currentUser = AppContext.getInstance().getCurrentUser();
+        if (currentUser != null && currentUser.getUsername() != null) {
+            Label userNameLabel = new Label(currentUser.getUsername(),
+                    skin.get("big_outline", Label.LabelStyle.class));
+            userNameLabel.setColor(Color.valueOf("FFD700"));
+            userNameLabel.setFontScale(1.8f);
+            userInfoWrapper.add(userNameLabel).left();
+        }
+
         //profile & settings buttons wrapper (bottom-right corner)
         Table bottomRightWrapper = new Table();
         bottomRightWrapper.right().bottom();
@@ -109,7 +124,6 @@ public class MainMenu extends ScreenAdapter {
 
         //profile button: shows the user's chosen avatar (fallback to zombie head)
         ImageButton profileFace;
-        User currentUser = AppContext.getInstance().getCurrentUser();
         if (currentUser != null && currentUser.getProfilePicture() != null) {
             Texture avatar = AvatarImages.featheredCircle(AvatarImages.getTexture(currentUser.getProfilePicture()));
             profileFace = new ImageButton(new TextureRegionDrawable(avatar));

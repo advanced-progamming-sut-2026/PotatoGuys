@@ -885,15 +885,35 @@ public class GameController {
                 }
             }*/
             // رسم خطوط گرید دیباگ
-            shapeRenderer.setColor(Color.RED);
-            // for (int i = 0; i < ctx.getMap().getLanes(); i++) {
-            //     float gridY = GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT;
-            //     shapeRenderer.rect(0, gridY - 0.5f, GameScreen.SCREEN_WIDTH, 1);
-            // }
-            // for (int i = 0; i < ctx.getMap().getColumns(); i++) {
-            //     float gridX = GameMap.START_X + i * GameMap.TILE_WIDTH;
-            //     shapeRenderer.rect(gridX - 0.5f, 0, 1, GameScreen.SCREEN_HEIGHT);
-            // }
+            boolean showGrid = false;
+            try {
+                var user = com.pvz.models.AppContext.getInstance().getCurrentUser();
+                if (user != null) showGrid = user.getSetting().isShowGrid();
+            } catch (Exception ignored) {}
+            if (showGrid) {
+                shapeRenderer.end();
+                Gdx.gl.glEnable(GL20.GL_BLEND);
+                Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+                shapeRenderer.setProjectionMatrix(camera.combined);
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                shapeRenderer.setColor(1f, 0f, 0f, 0.4f);
+                int lanes = ctx.getMap().getLanes();
+                int cols = ctx.getMap().getColumns();
+                float boardWidth = cols * GameMap.TILE_WIDTH;
+                float gridBottom = GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT;
+                float gridHeight = lanes * GameMap.TILE_HEIGHT;
+                for (int i = 0; i <= lanes; i++) {
+                    float y = GameMap.TOP_LANE_Y + GameMap.TILE_HEIGHT - i * GameMap.TILE_HEIGHT;
+                    shapeRenderer.rect(GameMap.START_X, y - 1f, boardWidth, 2f);
+                }
+                for (int i = 0; i <= cols; i++) {
+                    float x = GameMap.START_X + i * GameMap.TILE_WIDTH;
+                    shapeRenderer.rect(x - 1f, gridBottom, 2f, gridHeight);
+                }
+                shapeRenderer.end();
+                Gdx.gl.glDisable(GL20.GL_BLEND);
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            }
 
             // for(Plant a : ctx.getPlants()){
             //     shapeRenderer.circle(GameController.xToWorldX(a.getCol()), GameController.yToWorldY(a.getLane()), 10);

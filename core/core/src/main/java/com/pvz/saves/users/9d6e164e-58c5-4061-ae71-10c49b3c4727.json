@@ -162,35 +162,35 @@
         },
         {
           "message": "New Zombie Encountered: TROGLOBITE!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: DODO!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: ICE_AGE_IMP!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: BEACH!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: BEACH_CONE!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: BEACH_BUCKET!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: SNORKEL!",
-          "unread": true
+          "unread": false
         },
         {
           "message": "New Zombie Encountered: FISHERMAN!",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -229,10 +229,10 @@
   "setting": {
     "difficulty": 1,
     "gameSpeed": 1,
-    "showGrid": false,
+    "showGrid": true,
     "debugMode": false,
     "brightness": 1.0,
-    "musicVolume": 0.28,
+    "musicVolume": 0.17999999,
     "sfxVolume": 0.31,
     "musicMuted": true,
     "sfxMuted": true
@@ -1249,7 +1249,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1787007689619
+    "lastDailyReset": 1787061269269
   },
   "questLogRefreshed": true
 }
