@@ -55,9 +55,7 @@ public class ChapterMenu extends ScreenAdapter {
         stage.addActor(stack);
 
         //background image
-        Texture bgTexture = GameAsset.MAIN_MENU_BG.get(game.getGlobalAssetManager());
-        Image bgImage = new Image(bgTexture);
-        stack.add(bgImage);
+        MenuUiKit.installRotatingBackground(stack, game.getGlobalAssetManager());
 
         //root table
         rootTable=new Table();

@@ -89,8 +89,7 @@ public class OpponentSelectMenu extends ScreenAdapter {
         rootStack.setFillParent(true);
         stage.addActor(rootStack);
 
-        Texture bgTexture = GameAsset.MAIN_MENU_BG.get(game.getGlobalAssetManager());
-        rootStack.add(new Image(bgTexture));
+        MenuUiKit.installRotatingBackground(rootStack, game.getGlobalAssetManager());
 
         mainPanel = new BorderedTable();
         mainPanel.setSize(PANEL_WIDTH, PANEL_HEIGHT);

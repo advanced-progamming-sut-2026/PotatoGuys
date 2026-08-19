@@ -59,10 +59,7 @@ public class SettingsMenu extends ScreenAdapter {
         normalizeSetting();
         persistSetting();
 
-        Texture bgTexture = game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
-        Image bgImage = new Image(bgTexture);
-        bgImage.setFillParent(true);
-        stage.addActor(bgImage);
+        MenuUiKit.installRotatingBackground(stage.getRoot(), game.getGlobalAssetManager());
 
         BorderedTable mainPanel = new BorderedTable();
         mainPanel.setSize(700, 950);

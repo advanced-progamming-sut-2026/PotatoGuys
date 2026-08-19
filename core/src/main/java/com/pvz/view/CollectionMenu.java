@@ -126,8 +126,7 @@ public class CollectionMenu extends ScreenAdapter {
         Stack rootStack = new Stack();
         rootStack.setFillParent(true);
         stage.addActor(rootStack);
-        Texture bgTexture = GameAsset.MAIN_MENU_BG.get(game.getGlobalAssetManager());
-        rootStack.add(new Image(bgTexture));
+        MenuUiKit.installRotatingBackground(rootStack, game.getGlobalAssetManager());
 
         Table root = new Table();
         root.setFillParent(true);

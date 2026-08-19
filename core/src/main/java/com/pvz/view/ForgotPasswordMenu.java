@@ -41,10 +41,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
         skin = PvzSkin.get();
 
-        Texture bgTexture = game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
-        Image bgImage = new Image(bgTexture);
-        bgImage.setFillParent(true);
-        stage.addActor(bgImage);
+        MenuUiKit.installRotatingBackground(stage.getRoot(), game.getGlobalAssetManager());
 
         mainTable = new Table();
         mainTable.setFillParent(true);

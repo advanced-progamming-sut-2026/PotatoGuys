@@ -45,10 +45,7 @@ public class MainMenu extends ScreenAdapter {
         skin = PvzSkin.get();
 
         //background
-        Texture bgTexture = game.getGlobalAssetManager().get("textures/backgrounds/MainMenu.png");
-        Image bgImage = new Image(bgTexture);
-        bgImage.setFillParent(true);
-        stage.addActor(bgImage);
+        MenuUiKit.installRotatingBackground(stage.getRoot(), game.getGlobalAssetManager());
 
         //stack
         stack = new Stack();

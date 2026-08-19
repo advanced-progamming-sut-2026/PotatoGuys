@@ -97,10 +97,7 @@ public class TravelLogMenu extends ScreenAdapter {
         barBgTexture = solidTexture(new Color(0f, 0f, 0f, 0.45f));
         barFillTexture = solidTexture(new Color(0.30f, 0.75f, 0.30f, 1f));
 
-        Texture bgTexture = GameAsset.MAIN_MENU_BG.get(game.getGlobalAssetManager());
-        Image bgImage = new Image(bgTexture);
-        bgImage.setFillParent(true);
-        stage.addActor(bgImage);
+        MenuUiKit.installRotatingBackground(stage.getRoot(), game.getGlobalAssetManager());
 
         BorderedTable mainPanel = new BorderedTable();
         mainPanel.setSize(1200, 1000);

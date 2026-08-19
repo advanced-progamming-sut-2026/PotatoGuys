@@ -72,6 +72,11 @@ public final class MenuUiKit {
         return new TextureRegionDrawable(solidTexture(color));
     }
 
+    /** Installs a rotating background that crossfades between bg1–bg4 into the given parent group. */
+    public static void installRotatingBackground(Group parent, com.badlogic.gdx.assets.AssetManager assets) {
+        RotatingBackground.install(parent, assets);
+    }
+
     /** How far (at the 130px reference size) the value number sits from the left edge of the
      *  coin/diamond pill. Lower = number sits further left, right after the icon. */
     private static final float RESOURCE_LABEL_PAD_FACTOR = 50f;

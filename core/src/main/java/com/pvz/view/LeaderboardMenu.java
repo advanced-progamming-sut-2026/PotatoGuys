@@ -95,8 +95,7 @@ public class LeaderboardMenu extends ScreenAdapter {
         stack.setFillParent(true);
         stage.addActor(stack);
 
-        Texture bgTexture = GameAsset.MAIN_MENU_BG.get(game.getGlobalAssetManager());
-        stack.add(new Image(bgTexture));
+        MenuUiKit.installRotatingBackground(stack, game.getGlobalAssetManager());
 
         mainPanel = new BorderedTable();
         mainPanel.setSize(PANEL_WIDTH, PANEL_HEIGHT);

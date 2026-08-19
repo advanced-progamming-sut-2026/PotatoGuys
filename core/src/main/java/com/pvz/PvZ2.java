@@ -52,6 +52,10 @@ public class PvZ2 extends Game {
     public PvZ2(){
         globalAssetManager=new AssetManager();
         globalAssetManager.load("textures/backgrounds/MainMenu.png", Texture.class);
+        globalAssetManager.load("textures/backgrounds/bg1.png", Texture.class);
+        globalAssetManager.load("textures/backgrounds/bg2.png", Texture.class);
+        globalAssetManager.load("textures/backgrounds/bg3.png", Texture.class);
+        globalAssetManager.load("textures/backgrounds/bg4.png", Texture.class);
         globalAssetManager.load("textures/pvz2_logo_horizontal.png", Texture.class);
         globalAssetManager.load("textures/ui/news_button.png", Texture.class);
         globalAssetManager.load("news_preview/news_selected2.png", Texture.class);
