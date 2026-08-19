@@ -5,6 +5,7 @@ import java.util.List;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
+import com.pvz.models.entities.effects.PlantFoodFxEffect;
 import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.plants.data.GrowthProfile;
@@ -229,6 +230,7 @@ public class Plant extends Entity {
             return;
         }
         changeState(feedAction);
+        ctx.addEffect(new PlantFoodFxEffect(ctx, position));
         ctx.log("[PlantFood] " + sheet.getName() + " used its Plant Food!");
     }
 

@@ -119,6 +119,10 @@ public class GameController {
     private com.badlogic.gdx.scenes.scene2d.ui.Image shovelCursorPreview;
     private final com.badlogic.gdx.math.Vector2 shovelCursorPosition = new com.badlogic.gdx.math.Vector2();
 
+    /** Plant food tool: translucent plant-food icon that follows the mouse while armed. */
+    private com.badlogic.gdx.scenes.scene2d.ui.Image plantFoodCursorPreview;
+    private final com.badlogic.gdx.math.Vector2 plantFoodCursorPosition = new com.badlogic.gdx.math.Vector2();
+
     public GameController(String seasonName, int levelNumber) {
         this.seasonName = seasonName;
         this.levelNumber = levelNumber;
@@ -145,6 +149,15 @@ public class GameController {
 
                         // If a zombie card is selected, prioritize zombie placement
                         boolean zombieCardSelected = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
+
+                        // Plant food: clicking a planted tile feeds the plant
+                        if (gameUiModal != null && gameUiModal.isPlantFoodSelected()) {
+                            if (checkPlantFoodClick(touchPos.x, touchPos.y)) {
+                                gameUiModal.setPlantFoodSelected(false);
+                                hidePlantFoodCursor();
+                            }
+                            return true;
+                        }
 
                         // Shovel: clicking a planted tile digs the plant up (no sun refund)
                         if (gameUiModal != null && gameUiModal.isShovelSelected()) {
@@ -270,6 +283,7 @@ public class GameController {
 
         gameUiModal = new GameUiModal(this::pauseGame);
         gameUiModal.setOnShovelRequested(this::toggleShovelMode);
+        gameUiModal.setOnPlantFoodRequested(this::togglePlantFoodMode);
         stage.addActor(gameUiModal);
 
         backgroundTextures = new TextureRegion[3];
@@ -359,6 +373,7 @@ public class GameController {
         camera.update();
         previewStateTime += dt;
         updateShovelCursorPreview();
+        updatePlantFoodCursorPreview();
 
         if (errorMessageLabel != null && errorMessageLabel.isVisible()) {
             errorMessageTimer += dt;
@@ -537,7 +552,8 @@ public class GameController {
             boolean hasSelectedCard = gameUiModal.getSelectedCard() != null
                     || gameUiModal.getSelectedZombieCard() != null;
             boolean shovelArmed = gameUiModal.isShovelSelected();
-            if (hasSelectedCard || shovelArmed) {
+            boolean plantFoodArmed = gameUiModal.isPlantFoodSelected();
+            if (hasSelectedCard || shovelArmed || plantFoodArmed) {
                 touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                 viewport.unproject(touchPos);
 
@@ -966,6 +982,68 @@ public class GameController {
         shovelCursorPreview.toFront();
     }
 
+    /**
+     * Toggles the plant food tool. Clicking the plant food HUD display arms
+     * the tool (shows a translucent plant-food icon following the mouse);
+     * clicking a planted tile then feeds that plant. Clicking the HUD display
+     * again disarms it. Mirrors the phase-0 reference behaviour.
+     */
+    private void togglePlantFoodMode() {
+        if (gameUiModal == null || ctx == null)
+            return;
+        boolean willSelect = !gameUiModal.isPlantFoodSelected();
+        if (willSelect && ctx.getPlantFoodCount() <= 0) {
+            showErrorMessage("You do not have any Plant Food.");
+            return;
+        }
+        gameUiModal.setPlantFoodSelected(willSelect);
+        if (willSelect) {
+            gameUiModal.setSelectedCard(null);
+            showPlantFoodCursor();
+        } else {
+            hidePlantFoodCursor();
+        }
+    }
+
+    private void showPlantFoodCursor() {
+        com.badlogic.gdx.graphics.g2d.TextureRegion region =
+                PvZ2.textureBank.region("IMAGE_EFFECTS_PLANTFOOD_PICKUP_PLANTFOOD_PICKUP_79X79");
+        if (region == null) {
+            region = PvZ2.textureBank.region("IMAGE_UI_ALMANAC_PLANT_FOOD_STAT_ICON");
+        }
+        if (region == null) {
+            Gdx.app.error("GameController", "Plant food cursor region not found.");
+            return;
+        }
+        if (plantFoodCursorPreview == null) {
+            plantFoodCursorPreview = new com.badlogic.gdx.scenes.scene2d.ui.Image();
+            plantFoodCursorPreview.setTouchable(Touchable.disabled);
+            stage.addActor(plantFoodCursorPreview);
+        }
+        plantFoodCursorPreview.setDrawable(new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(region));
+        plantFoodCursorPreview.setSize(region.getRegionWidth() * 1.2f, region.getRegionHeight() * 1.2f);
+        plantFoodCursorPreview.setColor(1f, 1f, 1f, 0.58f);
+        plantFoodCursorPreview.setVisible(true);
+        plantFoodCursorPreview.toFront();
+    }
+
+    private void hidePlantFoodCursor() {
+        if (plantFoodCursorPreview != null) {
+            plantFoodCursorPreview.setVisible(false);
+        }
+    }
+
+    private void updatePlantFoodCursorPreview() {
+        if (plantFoodCursorPreview == null || !plantFoodCursorPreview.isVisible())
+            return;
+        plantFoodCursorPosition.set(Gdx.input.getX(), Gdx.input.getY());
+        stage.screenToStageCoordinates(plantFoodCursorPosition);
+        plantFoodCursorPreview.setPosition(
+                plantFoodCursorPosition.x - plantFoodCursorPreview.getWidth() / 2f,
+                plantFoodCursorPosition.y - plantFoodCursorPreview.getHeight() / 2f);
+        plantFoodCursorPreview.toFront();
+    }
+
     private void drawDebugShapes() {
         shapeRenderer.setProjectionMatrix(camera.combined);
         // ۶. رسم خورشیدها و خطوط دیباگ گرید
@@ -1180,8 +1258,9 @@ public class GameController {
     }
 
     /**
-     * If the click lands inside a planted plant's hitbox, triggers the plant's
-     * Plant Food effect. Works unconditionally (no plant food is consumed).
+     * If the click lands inside a planted plant's hitbox and the player has
+     * plant food available, triggers the plant's Plant Food effect and
+     * consumes one plant food.
      *
      * @return {@code true} if the click was consumed by a plant food
      */
@@ -1195,6 +1274,10 @@ public class GameController {
             }
             if (plant.getHitbox() != null
                     && plant.getHitbox().getRectangle().contains(worldX, worldY)) {
+                if (!ctx.spendPlantFood()) {
+                    ctx.log("[PlantFood] No plant food available!");
+                    return false;
+                }
                 plant.triggerPlantFood(ctx);
                 ctx.log("[PlantFood] " + plant.getSheet().getName()
                         + " at (" + plant.getCol() + "," + plant.getLane() + ") used Plant Food!");

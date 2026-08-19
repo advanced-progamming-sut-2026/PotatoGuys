@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="completed waves progress bar" />
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="...">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/Plant.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/Plant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/GameUiModal.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/GameUiModal.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -565,7 +571,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787162964154</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="...">
+      <option name="closed" value="true" />
+      <created>1787163031682</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1787163031682</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -592,12 +606,12 @@
     <MESSAGE value="leaderboard delay fixed" />
     <MESSAGE value="added zombies description in collectin" />
     <MESSAGE value="updated login,register menu appearance and some bug fixings" />
-    <MESSAGE value="..." />
     <MESSAGE value="wired show grid to setting and added user username in main menu" />
     <MESSAGE value="added shovel" />
     <MESSAGE value="some bugs fixing" />
     <MESSAGE value="completed waves progress bar" />
-    <option name="LAST_COMMIT_MESSAGE" value="completed waves progress bar" />
+    <MESSAGE value="..." />
+    <option name="LAST_COMMIT_MESSAGE" value="..." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -615,7 +629,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/grave_buster/GraveBuster.java</url>
           <line>19</line>
-          <properties class="com.pvz.models.entities.plants.grave_buster.GraveBuster" method="isPlantableOnTile">
+          <properties class="com.pvz.models.entities.plants.grave_buster.GraveBuster">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>

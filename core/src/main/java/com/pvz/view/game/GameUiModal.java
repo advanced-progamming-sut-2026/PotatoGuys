@@ -90,6 +90,8 @@ public class GameUiModal extends Table {
     private boolean shovelSelected = false;
     private Runnable onShovelRequested = null;
     private ImageButton shovelButton = null;
+    private boolean plantFoodSelected = false;
+    private Runnable onPlantFoodRequested = null;
 
     private final Map<PlantCard, Table> slotByCard = new HashMap<>();
     private final Map<PlantCard, Image> cooldownOverlayByCard = new HashMap<>();
@@ -184,6 +186,16 @@ public class GameUiModal extends Table {
         iconLayer.left();
         iconLayer.add(foodIcon).size(72f);
         foodDisplay.add(iconLayer);
+
+        foodDisplay.setTouchable(Touchable.enabled);
+        foodDisplay.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (onPlantFoodRequested != null) {
+                    onPlantFoodRequested.run();
+                }
+            }
+        });
 
         foodRow.add(addFoodButton).size(50f).padRight(3f);
         foodRow.add(foodDisplay).width(150f).height(46f);
@@ -469,12 +481,32 @@ public class GameUiModal extends Table {
         if (card != null) {
             this.shovelSelected = false;
             if (shovelButton != null) shovelButton.setChecked(false);
+            this.plantFoodSelected = false;
         }
         updateCardStyles();
     }
 
     public void setOnShovelRequested(Runnable onShovelRequested) {
         this.onShovelRequested = onShovelRequested;
+    }
+
+    public boolean isPlantFoodSelected() {
+        return plantFoodSelected;
+    }
+
+    public void setPlantFoodSelected(boolean selected) {
+        this.plantFoodSelected = selected;
+        if (selected) {
+            this.selectedCard = null;
+            this.selectedZombieCard = null;
+            this.shovelSelected = false;
+            if (shovelButton != null) shovelButton.setChecked(false);
+            updateCardStyles();
+        }
+    }
+
+    public void setOnPlantFoodRequested(Runnable onPlantFoodRequested) {
+        this.onPlantFoodRequested = onPlantFoodRequested;
     }
 
     public boolean isShovelSelected() {
