@@ -17,12 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
+import com.pvz.controller.AudioManager;
+import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.GameEngine;
@@ -108,7 +108,10 @@ public class GameController {
     /** Debug: draws every entity's hitbox rectangle (toggle with F1). */
     private boolean showHitboxes = true;
 
-    /** Placement-preview ghost: plays the selected plant's idle PAM under the cursor. */
+    /**
+     * Placement-preview ghost: plays the selected plant's idle PAM under the
+     * cursor.
+     */
     private float previewStateTime;
     private PlantCard previewPlantCard;
     private ZombieCard previewZombieCard;
@@ -117,13 +120,13 @@ public class GameController {
     private com.badlogic.gdx.scenes.scene2d.ui.Image shovelCursorPreview;
     private final com.badlogic.gdx.math.Vector2 shovelCursorPosition = new com.badlogic.gdx.math.Vector2();
 
-    public GameController(String seasonName, int levelNumber){
-        this.seasonName=seasonName;
-        this.levelNumber=levelNumber;
+    public GameController(String seasonName, int levelNumber) {
+        this.seasonName = seasonName;
+        this.levelNumber = levelNumber;
 
-        this.batch= PvZ2.batch;
+        this.batch = PvZ2.batch;
         shapeRenderer = new ShapeRenderer();
-        stateTime=0;
+        stateTime = 0;
 
         camera = new OrthographicCamera();
         viewport = new FitViewport(1280, 720, camera);
@@ -148,7 +151,8 @@ public class GameController {
                         if (gameUiModal != null && gameUiModal.isShovelSelected()) {
                             Tile shovelTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
                             if (shovelTile != null) {
-                                List<Plant> plantsAtTile = new java.util.ArrayList<>(ctx.getPlantsAt(shovelTile.getCol(), shovelTile.getLane()));
+                                List<Plant> plantsAtTile = new java.util.ArrayList<>(
+                                        ctx.getPlantsAt(shovelTile.getCol(), shovelTile.getLane()));
                                 if (!plantsAtTile.isEmpty()) {
                                     Plant target = plantsAtTile.get(0);
                                     if (target != null && !target.isDead()) {
@@ -184,7 +188,7 @@ public class GameController {
                             }
 
                             // ۱.۱. اگر کارتی انتخاب نشده باشد، کلیک روی گیاهِ کاشته‌شده
-                            //      پلنت‌فود آن را اجرا می‌کند
+                            // پلنت‌فود آن را اجرا می‌کند
                             if (gameUiModal == null || gameUiModal.getSelectedCard() == null) {
                                 if (checkPlantFoodClick(touchPos.x, touchPos.y)) {
                                     return true;
@@ -269,38 +273,41 @@ public class GameController {
         gameUiModal.setOnShovelRequested(this::toggleShovelMode);
         stage.addActor(gameUiModal);
 
-        backgroundTextures=new TextureRegion[3];
-        switch (seasonName.toLowerCase()){
-            case "ancient egypt"->{
+        backgroundTextures = new TextureRegion[3];
+        switch (seasonName.toLowerCase()) {
+            case "ancient egypt" -> {
                 backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE_LEFT");
                 backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE");
                 backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE_RIGHT");
             }
-            case "frostbite caves"->{
+            case "frostbite caves" -> {
                 backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_ICEAGE_TEXTURE_LEFT");
                 backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_ICEAGE_TEXTURE");
                 backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_ICEAGE_TEXTURE_RIGHT");
             }
-            case "dark ages"->{
+            case "dark ages" -> {
                 backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_DARK_TEXTURE_LEFT");
                 backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_DARK_TEXTURE");
                 backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_DARK_TEXTURE_RIGHT");
             }
-            case "big wave beach"->{
+            case "big wave beach" -> {
                 backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE_LEFT");
                 backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE");
                 backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE_RIGHT");
             }
-            case "izombie"->{
+            case "izombie" -> {
                 isIZombie = true;
-                com.badlogic.gdx.graphics.Texture left = new com.badlogic.gdx.graphics.Texture(Gdx.files.internal("textures/backgrounds/IZOMBIE/texture_left.png"));
-                com.badlogic.gdx.graphics.Texture mid = new com.badlogic.gdx.graphics.Texture(Gdx.files.internal("textures/backgrounds/IZOMBIE/texture.png"));
-                com.badlogic.gdx.graphics.Texture right = new com.badlogic.gdx.graphics.Texture(Gdx.files.internal("textures/backgrounds/IZOMBIE/texture_right.png"));
+                com.badlogic.gdx.graphics.Texture left = new com.badlogic.gdx.graphics.Texture(
+                        Gdx.files.internal("textures/backgrounds/IZOMBIE/texture_left.png"));
+                com.badlogic.gdx.graphics.Texture mid = new com.badlogic.gdx.graphics.Texture(
+                        Gdx.files.internal("textures/backgrounds/IZOMBIE/texture.png"));
+                com.badlogic.gdx.graphics.Texture right = new com.badlogic.gdx.graphics.Texture(
+                        Gdx.files.internal("textures/backgrounds/IZOMBIE/texture_right.png"));
                 backgroundTextures[0] = new TextureRegion(left);
                 backgroundTextures[1] = new TextureRegion(mid);
                 backgroundTextures[2] = new TextureRegion(right);
             }
-            default->{
+            default -> {
                 backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE_LEFT");
                 backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE");
                 backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_EGYPT_TEXTURE_RIGHT");
@@ -343,7 +350,7 @@ public class GameController {
         stage.addActor(errorTable);
     }
 
-    public void update(float dt){
+    public void update(float dt) {
         camera.update();
         previewStateTime += dt;
         updateShovelCursorPreview();
@@ -411,6 +418,12 @@ public class GameController {
                     readyPlantLabel.setVisible(false);
                     currentState = State.PLAYING;
                     gameStarted = true;
+                    AudioManager audioManager = AudioManager.getInstance();
+                    if (level.getMusicPath() != null) {
+                        audioManager.playMusic(level.getMusicPath(), true, audioManager.getUserMusicVolume());
+                    } else {
+                        audioManager.playMusic(AudioPaths.GRASS_WALK, true, audioManager.getUserMusicVolume());
+                    }
                 }
                 break;
 
@@ -423,8 +436,10 @@ public class GameController {
                 break;
         }
 
-        // Check sun & coin-drop clicks in PLAYING state on left click (only when no card selected)
-        if (currentState == State.PLAYING && !paused && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
+        // Check sun & coin-drop clicks in PLAYING state on left click (only when no
+        // card selected)
+        if (currentState == State.PLAYING && !paused
+                && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
             boolean zombieCardActive = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
             if (!zombieCardActive) {
                 touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -499,7 +514,10 @@ public class GameController {
             boolean[] brains = izMode.getBrainsEaten();
             won = true;
             for (boolean b : brains) {
-                if (!b) { won = false; break; }
+                if (!b) {
+                    won = false;
+                    break;
+                }
             }
         } else {
             won = ctx.getZombies().isEmpty();
@@ -521,13 +539,13 @@ public class GameController {
                 title = "I, ZOMBIE COMPLETE!";
                 msg = "All five brains were eaten!";
             }
-            Runnable nextAction = () -> Gdx.app.postRunnable(() ->
-                    PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber + 1)));
+            Runnable nextAction = () -> Gdx.app
+                    .postRunnable(() -> PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber + 1)));
             popup = new GameWinPopup(title, msg, "EXIT TO MAP", exitAction, "NEXT LEVEL", nextAction);
         } else {
             String title = "THE ZOMBIES\nATE YOUR\nBRAINS!";
-            Runnable retryAction = () -> Gdx.app.postRunnable(() ->
-                    PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber)));
+            Runnable retryAction = () -> Gdx.app
+                    .postRunnable(() -> PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber)));
             popup = new GameOverPopup(title, "EXIT TO MAP", exitAction, "RETRY", retryAction);
         }
 
@@ -546,7 +564,7 @@ public class GameController {
         });
     }
 
-    public void draw(){
+    public void draw() {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         drawBackground();
@@ -571,7 +589,8 @@ public class GameController {
         batch.end();
 
         if (currentState == State.PLAYING && gameUiModal != null && ctx != null) {
-            boolean hasSelectedCard = gameUiModal.getSelectedCard() != null || gameUiModal.getSelectedZombieCard() != null;
+            boolean hasSelectedCard = gameUiModal.getSelectedCard() != null
+                    || gameUiModal.getSelectedZombieCard() != null;
             boolean shovelArmed = gameUiModal.isShovelSelected();
             if (hasSelectedCard || shovelArmed) {
                 touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -587,12 +606,12 @@ public class GameController {
         drawDebugShapes();
     }
 
-    public void resize(int width , int hight){
-        viewport.update(width , hight);
+    public void resize(int width, int hight) {
+        viewport.update(width, hight);
         stage.getViewport().update(width, hight);
     }
 
-    private void drawBackground(){
+    private void drawBackground() {
         float x = -backgroundTextures[0].getRegionWidth();
         batch.draw(backgroundTextures[0], x, 0);
         batch.draw(backgroundTextures[1], 0, 0);
@@ -604,8 +623,8 @@ public class GameController {
         if (lm != null && !lm.isTriggered()) {
             FrameConfig fc = lm.draw();
             PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                fc.stateTime, fc.position.x, fc.position.y,
-                fc.scale.x, fc.scale.y, fc.looping);
+                    fc.stateTime, fc.position.x, fc.position.y,
+                    fc.scale.x, fc.scale.y, fc.looping);
         }
     }
 
@@ -616,8 +635,8 @@ public class GameController {
                 if (fc != null) {
                     batch.setColor(fc.r, fc.g, fc.b, fc.a);
                     PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                        fc.stateTime, fc.position.x, fc.position.y,
-                        fc.scale.x, fc.scale.y, fc.looping);
+                            fc.stateTime, fc.position.x, fc.position.y,
+                            fc.scale.x, fc.scale.y, fc.looping);
                     batch.setColor(1f, 1f, 1f, 1f);
                 }
             }
@@ -632,8 +651,8 @@ public class GameController {
                     if (fc != null) {
                         batch.setColor(fc.r, fc.g, fc.b, fc.a);
                         PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                            fc.stateTime, fc.position.x, fc.position.y,
-                            fc.scale.x, fc.scale.y, fc.looping);
+                                fc.stateTime, fc.position.x, fc.position.y,
+                                fc.scale.x, fc.scale.y, fc.looping);
                         batch.setColor(Color.WHITE);
                     }
                 }
@@ -677,8 +696,8 @@ public class GameController {
                 FrameConfig fc = op.draw();
                 if (fc != null) {
                     PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                        fc.stateTime, fc.position.x, fc.position.y,
-                        fc.scale.x, fc.scale.y, fc.looping);
+                            fc.stateTime, fc.position.x, fc.position.y,
+                            fc.scale.x, fc.scale.y, fc.looping);
                 }
             }
         }
@@ -691,8 +710,8 @@ public class GameController {
                 FrameConfig fc = op.draw();
                 if (fc != null) {
                     PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                        fc.stateTime, fc.position.x, fc.position.y,
-                        fc.scale.x, fc.scale.y, fc.looping);
+                            fc.stateTime, fc.position.x, fc.position.y,
+                            fc.scale.x, fc.scale.y, fc.looping);
                 }
             }
         }
@@ -704,8 +723,8 @@ public class GameController {
                 FrameConfig fc = e.draw();
                 if (fc != null) {
                     PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                        fc.stateTime, fc.position.x, fc.position.y,
-                        fc.scale.x, fc.scale.y, fc.looping);
+                            fc.stateTime, fc.position.x, fc.position.y,
+                            fc.scale.x, fc.scale.y, fc.looping);
                 }
             }
         }
@@ -716,8 +735,8 @@ public class GameController {
             FrameConfig fc = s.draw();
             if (fc != null) {
                 PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                    fc.stateTime, fc.position.x, fc.position.y,
-                    fc.scale.x, fc.scale.y, fc.looping);
+                        fc.stateTime, fc.position.x, fc.position.y,
+                        fc.scale.x, fc.scale.y, fc.looping);
             }
         }
     }
@@ -733,12 +752,10 @@ public class GameController {
         if (lm != null && lm.isTriggered()) {
             FrameConfig fc = lm.draw();
             PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                fc.stateTime, fc.position.x, fc.position.y,
-                fc.scale.x, fc.scale.y, fc.looping);
+                    fc.stateTime, fc.position.x, fc.position.y,
+                    fc.scale.x, fc.scale.y, fc.looping);
         }
     }
-
-
 
     /**
      * Draws one animation frame, honouring the optional {@code partsVisibility}
@@ -746,27 +763,28 @@ public class GameController {
      * draw has no visibility overload, so this falls back to the reflective
      * visibility-aware draw (which keeps the requested scale).
      */
-    private void drawFrame(FrameConfig frameConfig){
-        if (frameConfig.partsVisibility == null){
-            PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+    private void drawFrame(FrameConfig frameConfig) {
+        if (frameConfig.partsVisibility == null) {
+            PvZ2.pamPlayer.draw(batch, frameConfig.pamPath, frameConfig.label,
+                    frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
+                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
         } else {
-            PamActor.drawWithVisibility(batch,frameConfig.pamPath,frameConfig.label,
-                frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                frameConfig.scale.x,frameConfig.looping,frameConfig.partsVisibility);
+            PamActor.drawWithVisibility(batch, frameConfig.pamPath, frameConfig.label,
+                    frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
+                    frameConfig.scale.x, frameConfig.looping, frameConfig.partsVisibility);
         }
     }
 
-
-
     /**
      * Draws the "ghost" of the currently selected seed packet following the mouse:
-     * while a plant card is armed, the plant's idle PAM animation is played under the
-     * cursor, semi-transparent, until the plant is placed on a tile (or deselected).
+     * while a plant card is armed, the plant's idle PAM animation is played under
+     * the
+     * cursor, semi-transparent, until the plant is placed on a tile (or
+     * deselected).
      */
     private void drawPlacementPreview() {
-        if (currentState != State.PLAYING || paused) return;
+        if (currentState != State.PLAYING || paused)
+            return;
 
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         viewport.unproject(touchPos);
@@ -799,9 +817,9 @@ public class GameController {
                 previewZombieCard = zCard;
                 previewStateTime = 0f;
             }
-            com.pvz.models.entities.zombies.data.ZombiePropertySheet sheet =
-                com.pvz.models.entities.zombies.data.ZombieRegistry.getInstance().getSheet(
-                    zCard.getZombieType().getAlias());
+            com.pvz.models.entities.zombies.data.ZombiePropertySheet sheet = com.pvz.models.entities.zombies.data.ZombieRegistry
+                    .getInstance().getSheet(
+                            zCard.getZombieType().getAlias());
             if (sheet != null && sheet.getAnimationConfig() != null) {
                 String pamPath = sheet.getAnimationConfig().pamFilePath;
                 String idleLabel = sheet.getAnimationConfig().idleLabel;
@@ -827,31 +845,40 @@ public class GameController {
         java.util.Map<String, Boolean> visibility = null;
         for (String armorAlias : sheet.getArmorAliases()) {
             String cleanAlias = armorAlias.contains(":")
-                ? armorAlias.substring(armorAlias.indexOf(':') + 1) : armorAlias;
-            com.pvz.models.entities.zombies.data.ArmorPropertySheet aSheet =
-                com.pvz.models.entities.zombies.data.ZombieRegistry.getInstance().getArmorSheet(cleanAlias);
-            if (aSheet == null) continue;
-            com.pvz.models.entities.zombies.armor.ArmorType type =
-                com.pvz.models.entities.zombies.armor.ArmorType.fromString(aSheet.getArmorType());
+                    ? armorAlias.substring(armorAlias.indexOf(':') + 1)
+                    : armorAlias;
+            com.pvz.models.entities.zombies.data.ArmorPropertySheet aSheet = com.pvz.models.entities.zombies.data.ZombieRegistry
+                    .getInstance().getArmorSheet(cleanAlias);
+            if (aSheet == null)
+                continue;
+            com.pvz.models.entities.zombies.armor.ArmorType type = com.pvz.models.entities.zombies.armor.ArmorType
+                    .fromString(aSheet.getArmorType());
             String[] layers = type.pamLayers();
-            if (layers == null) continue;
-            if (visibility == null) visibility = new java.util.HashMap<>();
+            if (layers == null)
+                continue;
+            if (visibility == null)
+                visibility = new java.util.HashMap<>();
             for (int i = 0; i < layers.length; i++) {
                 visibility.put(layers[i], i == 0);
             }
             String container = type.pamContainerName();
-            if (container != null) visibility.put(container, true);
-            for (String alive : type.pamAliveParts()) visibility.put(alive, true);
-            for (String crit : type.pamCriticalParts()) visibility.put(crit, false);
+            if (container != null)
+                visibility.put(container, true);
+            for (String alive : type.pamAliveParts())
+                visibility.put(alive, true);
+            for (String crit : type.pamCriticalParts())
+                visibility.put(crit, false);
         }
         return visibility;
     }
 
-
     /**
-     * Highlights the whole row (lane) and whole column under the hovered tile in white,
-     * matching the reference implementation's placement preview: while a plant card is
-     * armed, hovering a tile paints its entire lane and column so the player sees exactly
+     * Highlights the whole row (lane) and whole column under the hovered tile in
+     * white,
+     * matching the reference implementation's placement preview: while a plant card
+     * is
+     * armed, hovering a tile paints its entire lane and column so the player sees
+     * exactly
      * which row/column the plant will land in.
      */
     private void drawPlacementHighlights(Tile tile) {
@@ -876,7 +903,8 @@ public class GameController {
     }
 
     private void drawIZombieOverlay() {
-        if (!(ctx.getMode() instanceof IZombieMode izMode)) return;
+        if (!(ctx.getMode() instanceof IZombieMode izMode))
+            return;
 
         int lanes = ctx.getMap().getLanes();
 
@@ -888,14 +916,16 @@ public class GameController {
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(redLineX, GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT, 4f, lanes * GameMap.TILE_HEIGHT);
+        shapeRenderer.rect(redLineX, GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT, 4f,
+                lanes * GameMap.TILE_HEIGHT);
         shapeRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
         // Brain indicators at column 0 for each lane
-        com.badlogic.gdx.graphics.g2d.TextureRegion brainRegion = PvZ2.textureBank.region("IMAGE_UI_CURRENCY_VALENBRAINZ_STACK_0");
+        com.badlogic.gdx.graphics.g2d.TextureRegion brainRegion = PvZ2.textureBank
+                .region("IMAGE_UI_CURRENCY_VALENBRAINZ_STACK_0");
         boolean[] brainsEaten = izMode.getBrainsEaten();
         float brainX = colToWorldX(0);
         float brainSize = 65f;
@@ -922,14 +952,16 @@ public class GameController {
         float bob = 4f * (float) Math.sin(stateTime * 2.0f);
         float sunScale = 0.45f;
         for (Zombie z : sunProducers) {
-            if (z.isDead()) continue;
+            if (z.isDead())
+                continue;
             PvZ2.pamPlayer.draw(batch, "768/INITIAL/EFFECTS/SUN/SUN.PAM", "animation",
                     stateTime, z.getX(), z.getY() + 55f + bob, sunScale, sunScale, true);
         }
     }
 
     private void showErrorMessage(String message) {
-        if (errorMessageLabel == null) return;
+        if (errorMessageLabel == null)
+            return;
         errorMessageLabel.setText(message);
         errorMessageLabel.setVisible(true);
         errorMessageTimer = 0f;
@@ -943,7 +975,8 @@ public class GameController {
      * the shovel again disarms it. Mirrors the phase-0 reference behaviour.
      */
     private void toggleShovelMode() {
-        if (gameUiModal == null) return;
+        if (gameUiModal == null)
+            return;
         boolean willSelect = !gameUiModal.isShovelSelected();
         gameUiModal.setShovelSelected(willSelect);
         if (willSelect) {
@@ -954,8 +987,7 @@ public class GameController {
     }
 
     private void showShovelCursor() {
-        com.badlogic.gdx.graphics.g2d.TextureRegion region =
-                PvZ2.textureBank.region("IMAGE_UI_HUD_INGAME_SHOVEL_ICON");
+        com.badlogic.gdx.graphics.g2d.TextureRegion region = PvZ2.textureBank.region("IMAGE_UI_HUD_INGAME_SHOVEL_ICON");
         if (region == null) {
             Gdx.app.error("GameController", "Shovel cursor region not found.");
             return;
@@ -979,7 +1011,8 @@ public class GameController {
     }
 
     private void updateShovelCursorPreview() {
-        if (shovelCursorPreview == null || !shovelCursorPreview.isVisible()) return;
+        if (shovelCursorPreview == null || !shovelCursorPreview.isVisible())
+            return;
         shovelCursorPosition.set(Gdx.input.getX(), Gdx.input.getY());
         stage.screenToStageCoordinates(shovelCursorPosition);
         shovelCursorPreview.setPosition(
@@ -988,7 +1021,7 @@ public class GameController {
         shovelCursorPreview.toFront();
     }
 
-    private void drawDebugShapes(){
+    private void drawDebugShapes() {
         shapeRenderer.setProjectionMatrix(camera.combined);
         // ۶. رسم خورشیدها و خطوط دیباگ گرید
         if (ctx != null) {
@@ -996,17 +1029,21 @@ public class GameController {
 
             // رسم خورشیدها
             shapeRenderer.setColor(Color.YELLOW);
-            /*for (Sun sun : new ArrayList<>(context.getSuns())) {
-                if (!sun.isDone()) {
-                    shapeRenderer.circle(sun.getX(), sun.getY(), 50);
-                }
-            }*/
+            /*
+             * for (Sun sun : new ArrayList<>(context.getSuns())) {
+             * if (!sun.isDone()) {
+             * shapeRenderer.circle(sun.getX(), sun.getY(), 50);
+             * }
+             * }
+             */
             // رسم خطوط گرید دیباگ
             boolean showGrid = false;
             try {
                 var user = com.pvz.models.AppContext.getInstance().getCurrentUser();
-                if (user != null) showGrid = user.getSetting().isShowGrid();
-            } catch (Exception ignored) {}
+                if (user != null)
+                    showGrid = user.getSetting().isShowGrid();
+            } catch (Exception ignored) {
+            }
             if (showGrid) {
                 shapeRenderer.end();
                 Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -1033,15 +1070,16 @@ public class GameController {
             }
 
             // for(Plant a : ctx.getPlants()){
-            //     shapeRenderer.circle(GameController.xToWorldX(a.getCol()), GameController.yToWorldY(a.getLane()), 10);
+            // shapeRenderer.circle(GameController.xToWorldX(a.getCol()),
+            // GameController.yToWorldY(a.getLane()), 10);
             // }
 
             // for(Projectile a : ctx.getProjectiles()){
-            //     shapeRenderer.circle(a.getX(), a.getY(), 10);
+            // shapeRenderer.circle(a.getX(), a.getY(), 10);
             // }
 
             // for(Zombie a : ctx.getZombies()){
-            //     shapeRenderer.circle(a.getX(),a.getY(), 10);
+            // shapeRenderer.circle(a.getX(),a.getY(), 10);
             // }
 
             shapeRenderer.end();
@@ -1056,14 +1094,16 @@ public class GameController {
     // ── Hitbox debug ─────────────────────────────────────────────────────────
 
     private void drawHitboxes() {
-        if (!showHitboxes) return;
+        if (!showHitboxes)
+            return;
 
         drawEntityHitboxes(Color.GREEN, ctx.getPlants());
         drawEntityHitboxes(Color.RED, ctx.getZombies());
         drawEntityHitboxes(Color.CYAN, ctx.getProjectiles());
         drawEntityHitboxes(Color.YELLOW, ctx.getSuns());
         for (LawnMower m : ctx.getLawnMowers()) {
-            if (m != null) drawEntityHitbox(Color.ORANGE, m);
+            if (m != null)
+                drawEntityHitbox(Color.ORANGE, m);
         }
     }
 
@@ -1075,7 +1115,8 @@ public class GameController {
 
     private void drawEntityHitbox(Color color, Entity e) {
         Hitbox hitbox = e.getHitbox();
-        if (hitbox == null) return;
+        if (hitbox == null)
+            return;
         Rectangle r = hitbox.getRectangle();
         shapeRenderer.setColor(color);
         shapeRenderer.rect(r.x, r.y, r.width, r.height);
@@ -1090,7 +1131,8 @@ public class GameController {
                     MyPlant owned = null;
                     try {
                         owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(pt);
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
                     PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(pt);
 
                     MyPlant myPlant = owned;
@@ -1103,8 +1145,9 @@ public class GameController {
                     // Resolve sun cost / recharge at the player's plant level so the card
                     // shows the same values the mode actually charges (level-up SUN_COST
                     // / RECHARGE_SECONDS modifiers are applied here, not on the sheet).
-                    PlantStatResolver.ResolvedStats stats =
-                            (sheet != null) ? PlantStatResolver.resolve(sheet, myPlant.getLevel()) : null;
+                    PlantStatResolver.ResolvedStats stats = (sheet != null)
+                            ? PlantStatResolver.resolve(sheet, myPlant.getLevel())
+                            : null;
                     int sunCost = (stats != null) ? stats.getSunCost() : ((sheet != null) ? sheet.getSunCost() : 50);
                     float recharge = (stats != null && stats.getRechargeSeconds() != null)
                             ? stats.getRechargeSeconds()
@@ -1132,7 +1175,8 @@ public class GameController {
     private boolean checkSunClick(float worldX, float worldY) {
         if (ctx != null) {
             for (Sun sun : new ArrayList<>(ctx.getSuns())) {
-                if (sun.isDone()) continue;
+                if (sun.isDone())
+                    continue;
                 float sunX = sun.getX();
                 float sunY = sun.getY();
                 float dist = (float) Math.hypot(worldX - sunX, worldY - sunY);
@@ -1156,7 +1200,8 @@ public class GameController {
             return false;
         }
         for (LootDrop drop : new ArrayList<>(ctx.getLootDrops())) {
-            if (drop.isDone() || !drop.isCollectable()) continue;
+            if (drop.isDone() || !drop.isCollectable())
+                continue;
             float dist = (float) Math.hypot(worldX - drop.getX(), worldY - drop.getY());
             if (dist < 55f) {
                 if (drop.getType() == LootDrop.LootType.POT) {
@@ -1166,7 +1211,7 @@ public class GameController {
                     Vector2 target = lootWalletWorld(drop.getType());
                     drop.flyTo(target.x, target.y);
                     Gdx.app.log("GameScreen", "Loot drop clicked, flying to wallet: +" + drop.getAmount() + " "
-                        + drop.getType().name().toLowerCase() + "s.");
+                            + drop.getType().name().toLowerCase() + "s.");
                 }
                 return true;
             }
@@ -1182,12 +1227,12 @@ public class GameController {
     private Vector2 lootWalletWorld(LootDrop.LootType type) {
         if (gameUiModal == null) {
             return type == LootDrop.LootType.DIAMOND
-                ? new Vector2(980f, 680f)
-                : new Vector2(1150f, 680f);
+                    ? new Vector2(980f, 680f)
+                    : new Vector2(1150f, 680f);
         }
         Vector2 stagePos = type == LootDrop.LootType.DIAMOND
-            ? gameUiModal.getGemWalletStagePosition()
-            : gameUiModal.getCoinWalletStagePosition();
+                ? gameUiModal.getGemWalletStagePosition()
+                : gameUiModal.getCoinWalletStagePosition();
         return new Vector2(stagePos.x, stagePos.y);
     }
 
@@ -1216,40 +1261,40 @@ public class GameController {
         return false;
     }
 
-    public GameContext getCtx(){
+    public GameContext getCtx() {
         return ctx;
     }
 
-    public PlantSelectModal getPlantSelectModal(){
+    public PlantSelectModal getPlantSelectModal() {
         return plantSelectModal;
     }
 
-    public GameUiModal getGameUiModal(){
+    public GameUiModal getGameUiModal() {
         return gameUiModal;
     }
 
-    public State getCurrentState(){
+    public State getCurrentState() {
         return currentState;
     }
 
-    public OrthographicCamera getCamera(){
+    public OrthographicCamera getCamera() {
         return camera;
     }
 
-    public Stage getStage(){
+    public Stage getStage() {
         return stage;
     }
 
-    public ShapeRenderer getShapeRenderer(){
+    public ShapeRenderer getShapeRenderer() {
         return shapeRenderer;
     }
 
     // This method returns the world coordinates of the middle of column
-    public static float colToWorldX(int col){
+    public static float colToWorldX(int col) {
         return GameMap.START_X + (col * GameMap.TILE_WIDTH) + (GameMap.TILE_WIDTH / 2f);
     }
 
-    public static float laneToWorldY(int lane){
+    public static float laneToWorldY(int lane) {
         return GameMap.TOP_LANE_Y - (lane * GameMap.TILE_HEIGHT) + (GameMap.TILE_HEIGHT / 2f);
     }
 
@@ -1261,437 +1306,461 @@ public class GameController {
         return (int) Math.ceil((GameMap.TOP_LANE_Y - y) / GameMap.TILE_HEIGHT);
     }
 
-    public static float xToWorldX(float x){
+    public static float xToWorldX(float x) {
         return GameMap.START_X + (x * GameMap.TILE_WIDTH);
     }
-    public static float yToWorldY(float y){
+
+    public static float yToWorldY(float y) {
         return GameMap.TOP_LANE_Y - (y * GameMap.TILE_HEIGHT);
     }
-/*
-
-    private final GameContext context;
-
-    public GameController(GameContext context) {
-        this.context = context;
-    }
-
-    public Result advanceTime(Matcher matcher) {
-        int ticks = Integer.parseInt(matcher.group("ticks"));
-        context.getEngine().advanceTime(ticks);
-        context.addCurrentTick(ticks);
-
-        String map = context.getMode().renderMap(context);
-        if (context.isGameOver()) {
-            handleGameOverState();
-            return new Result("Game Over", new pvz.view.OldMainMenu());
-        }
-        return new Result("Time advanced by " + ticks + " ticks.\n" + map);
-    }
-
-    private void handleGameOverState() {
-        User user = AppContext.getInstance().getCurrentUser();
-        if (user == null) {
-            return;
-        }
-
-        boolean won = context.getZombies().isEmpty();
-        evaluateQuestsAndScore(user, won);
-        user.saveUser();
-    }
-
-    private void evaluateQuestsAndScore(User user, boolean won) {
-        QuestEvaluator.evaluateAll(
-                user.getQuestLog(),
-                context.getGameStats(),
-                won,
-                context.getCurrentSun(),
-                user.getSetting().getDifficulty(),
-                user,
-                context);
-
-        int gameScore = context.getGameStats().calculateScore(won);
-        if (gameScore > user.getScore().getHighestScore()) {
-            user.getScore().setHighestScore(gameScore);
-        }
-
-        handleLevelOrMiniGameWin(user, won);
-    }
-
-    private void handleLevelOrMiniGameWin(User user, boolean won) {
-        if (!won) return;
-
-        boolean isMiniGame = (context.getMode() instanceof pvz.models.games.modes.variants.VaseBreakerMode
-                || context.getMode() instanceof pvz.models.games.modes.variants.IZombieMode
-                || context.getMode() instanceof pvz.models.games.modes.variants.BeghouledMode);
-
-        if (isMiniGame) {
-            user.getScore().setMiniGamesPassed(user.getScore().getMiniGamesPassed() + 1);
-            user.getProfile().getNews().getMessages().add(
-                    new pvz.models.user.Message("New Mini-Game Completed: " + context.getSeasonName()
-                            + " Level " + context.getLevelNumber() + "!"));
-        } else {
-            user.getScore().setLastLevel(context.getLevelNumber());
-            user.getScore().setLastSeason(resolveChapterNumber(context.getSeasonName()));
-
-            pvz.models.games.seasons.SeasonManager manager = new pvz.models.games.seasons.SeasonManager();
-            manager.unlockNextLevel(user, context.getSeasonName(), context.getLevelNumber());
-
-            int nextLevelNumber = context.getLevelNumber() + 1;
-            user.getProfile().getNews().getMessages().add(
-                    new pvz.models.user.Message("New Level Unlocked: Level " + nextLevelNumber + " in "
-                            + context.getSeasonName() + "!"));
-        }
-    }
-
-    private int resolveChapterNumber(String season) {
-        if (season == null) {
-            return 1;
-        }
-        if (season.equalsIgnoreCase("Ancient Egypt")) {
-            return 1;
-        }
-        if (season.equalsIgnoreCase("Frostbite Caves")) {
-            return 2;
-        }
-        if (season.equalsIgnoreCase("Dark Ages")) {
-            return 3;
-        }
-        if (season.equalsIgnoreCase("Big Wave Beach")) {
-            return 4;
-        }
-        return 1;
-    }
-
-    public Result plantPlant(Matcher matcher) {
-        String plantType = matcher.group("plantType");
-        int col = Integer.parseInt(matcher.group("plantX"));
-        int lane = Integer.parseInt(matcher.group("plantY"));
-
-        GameMode mode = context.getMode();
-        if (mode instanceof PlantPlacer placer) {
-            PlantCard card = placer.findCard(context, plantType);
-            if (card == null) {
-                return new Result("No such plant card '" + plantType + "'.");
-            }
-            if (!placer.isValidPlacement(context, col, lane, card)) {
-                return new Result("Cannot place " + plantType + " at (" + col + ", " + lane + ").");
-            }
-            placer.handlePlacement(context, col, lane, card);
-        } else {
-            return new Result("You cannot plant in this game mode!");
-        }
-        return new Result(plantType + " placed at (" + col + ", " + lane + ").");
-    }
-
-    public Result plantZombie(Matcher matcher) {
-        String zombieType = matcher.group("zombieType");
-        int col = Integer.parseInt(matcher.group("zombieX"));
-        int lane = Integer.parseInt(matcher.group("zombieY"));
-
-        GameMode mode = context.getMode();
-        if (mode instanceof ZombiePlacer placer) {
-            ZombieCard card = placer.findCard(context, zombieType);
-            if (card == null) {
-                return new Result("No such zombie card '" + zombieType + "'.");
-            }
-            if (!placer.isValidPlacement(context, col, lane, card)) {
-                return new Result("Cannot place " + zombieType + " at (" + col + ", " + lane + ").");
-            }
-            placer.handlePlacement(context, col, lane, card);
-        } else {
-            return new Result("You cannot place zombies in this game mode!");
-        }
-        return new Result(zombieType + " placed at (" + col + ", " + lane + ").");
-    }
-
-    public Result breakVase(Matcher matcher) {
-        GameMode mode = context.getMode();
-        int col = Integer.parseInt(matcher.group("vaseX"));
-        int lane = Integer.parseInt(matcher.group("vaseY"));
-
-        if (mode instanceof VaseBreakerMode vasemode) {
-            vasemode.breakVase(context, col, lane);
-            return new Result("");
-        }
-
-        return new Result("You cannot break vase in this game mode!");
-    }
-
-    public Result pluckPlant(Matcher matcher) {
-        int x = Integer.parseInt(matcher.group("pluckX"));
-        int y = Integer.parseInt(matcher.group("pluckY"));
-
-        if (x < 0 || x >= context.getMap().getColumns() || y < 0 || y >= context.getMap().getRows()) {
-            return new Result("Invalid coordinates.");
-        }
-
-        Tile tile = context.getMap().getTile(x, y);
-        if (tile.getPlants().isEmpty()) {
-            return new Result("No plant to pluck at (" + x + ", " + y + ").");
-        }
-
-        for (int i = 0; i < tile.getPlants().size(); i++) {
-            context.removePlant(tile.getPlants().get(i));
-            i--;
-        }
-        tile.getPlants().clear();
-
-        return new Result("Plant plucked from (" + x + ", " + y + ").");
-    }
-
-    public Result collectSun(Matcher matcher) {
-        int x = Integer.parseInt(matcher.group("sunX"));
-        int y = Integer.parseInt(matcher.group("sunY"));
-
-        for (Sun sun : new ArrayList<>(context.getSuns())) {
-            if (sun.getCol() == x && sun.getLane() == y && !sun.isDone()) {
-                sun.collect(context);
-                return new Result("Sun collected!");
-            }
-        }
-        return new Result("No sun found at these coordinates.");
-    }
-
-    public Result feedPlant(Matcher matcher) {
-        int x = Integer.parseInt(matcher.group("feedX"));
-        int y = Integer.parseInt(matcher.group("feedY"));
-
-        if (context.getPlantFoodCount() <= 0) {
-            return new Result("No plant food available.");
-        }
-        if (x < 0 || x >= context.getMap().getColumns() || y < 0 || y >= context.getMap().getRows()) {
-            return new Result("Invalid coordinates.");
-        }
-
-        List<Plant> plantsAt = context.getPlantsAt(x, y);
-        if (plantsAt.isEmpty()) {
-            return new Result("No plant at (" + x + ", " + y + ").");
-        }
-
-        Plant target = plantsAt.getLast();
-        if (!context.spendPlantFood()) {
-            return new Result("Failed to consume plant food.");
-        }
-
-        target.triggerPlantFood(context);
-        return new Result("Plant food used on " + target.getSheet().getName() + " at (" + x + ", " + y + ")!");
-    }
-
-    public Result startZombieWavesCommand(Matcher matcher) {
-        GameContext context = AppContext.getInstance().getGameContext();
-
-        if (context.getMode() instanceof StartWaves mode) {
-            if (!mode.isPreparationPhase()) {
-                return new Result("Zombie waves have already started!");
-            }
-            mode.startZombieWaves(context);
-            return new Result("Zombie waves started successfully!");
-        } else {
-            return new Result("This command is only available in modes that support starting zombie waves.");
-        }
-    }
-
-    public Result releaseNuke(Matcher matcher) {
-        int killed = 0;
-        List<TickAware> entities = context.getEngine().getEntities();
-        for (TickAware entity : entities) {
-            if (entity instanceof Zombie) {
-                ((Zombie) entity).takeDamage(999999f, true);
-                killed++;
-            }
-        }
-        return new Result("Nuke released! Killed " + killed + " zombies.");
-    }
-
-    public Result cheatCooldown(Matcher matcher) {
-        List<Card> cards = context.getCards();
-        int reset = 0;
-        for (Card card : cards) {
-            if (card.getCooldown() > 0) {
-                card.setCooldown(0);
-                reset++;
-            }
-        }
-        return new Result("Reset cooldown for " + reset + " card(s).");
-    }
-
-    public Result cheatPlantFood(Matcher matcher) {
-        if (context.getPlantFoodCount() > 3) {
-            return new Result("Plant food slots are full.");
-        }
-        context.addPlantFood(1);
-        return new Result("Added 1 plant food.");
-    }
-
-    public Result cheatSun(Matcher matcher) {
-        int amount = Integer.parseInt(matcher.group("sunCount"));
-        context.addSun(amount);
-        return new Result("Added " + amount + " sun.");
-    }
-
-    public Result cheatSpawnZombie(Matcher matcher) {
-        String zombieType = matcher.group("zombieType");
-        int col = Integer.parseInt(matcher.group("zombieX"));
-        int lane = Integer.parseInt(matcher.group("zombieY"));
-
-        ZombieType type = ZombieType.fromTypeString(zombieType);
-        if (type == null) {
-            return new Result("No such zombie type '" + zombieType + "'.");
-        }
-
-        if (col < 0 || col >= context.getColumns() || lane < 0 || lane >= context.getLanes()) {
-            return new Result("The position is uncorrent!");
-        }
-
-        Zombie zombie = new ZombieFactory().create(type.getAlias(), col, lane, context, 0, 2);
-        context.spawnZombie(zombie);
-        return new Result("Zombie spawned!");
-    }
-
-    public Result showMap(Matcher matcher) {
-        return new Result(context.getMode().renderMap(context));
-    }
-
-    public Result showCards(Matcher matcher) {
-        return new Result(context.getMode().getCardsStatus(context));
-    }
-
-    public Result showSun(Matcher matcher) {
-        return new Result("Current Sun: " + context.getCurrentSun());
-    }
-
-    public Result showTileStatus(Matcher matcher) {
-        int x = Integer.parseInt(matcher.group("tileX"));
-        int y = Integer.parseInt(matcher.group("tileY"));
-
-        if (x < 0 || x >= context.getMap().getColumns() || y < 0 || y >= context.getMap().getRows()) {
-            return new Result("Invalid coordinates.");
-        }
-
-        Tile tile = context.getMap().getMap()[y][x];
-        StringBuilder status = new StringBuilder("Tile Status at (").append(x).append(",").append(y).append("):");
-
-        if (tile.getTags().isEmpty())
-            status.append("\n  Tags: Normal");
-        else {
-            status.append("\n  Tags:");
-            for (TileTags tag : tile.getTags()) {
-                status.append("\n    ").append(tag.toString());
-            }
-        }
-
-        if (!tile.getBehaviors().isEmpty()) {
-            status.append("\n  Status:");
-            for (TileBehavior tb : tile.getBehaviors()) {
-                status.append(tb.getStatus());
-            }
-        }
-
-        if (tile.getPlants() != null && !tile.getPlants().isEmpty()) {
-            status.append("\n").append("  Plant: ").append(tile.getPlants().getLast().getType());
-        } else {
-            status.append("\n").append("  Plant: None");
-        }
-
-        if (!context.getZombiesAt(x, y).isEmpty()) {
-            status.append("\n").append("  Zombies: ");
-            for (Zombie z : context.getZombiesAt(x, y)) {
-                status.append("\n  ").append(z.getSheet().getAlias());
-            }
-        } else {
-            status.append("\n").append("  Zombies: None");
-        }
-
-        return new Result(status.toString());
-    }
-
-    public Result showPlants(Matcher matcher) {
-        StringBuilder sb = new StringBuilder("Plants List:\n");
-        int count = 0;
-        int rows = context.getMap().getRows();
-        int cols = context.getMap().getColumns();
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                Tile tile = context.getMap().getMap()[i][j];
-                if (tile.getPlants() != null && !tile.getPlants().isEmpty()) {
-                    Plant plant = tile.getPlants().get(tile.getPlants().size() - 1);
-                    if (plant != null && !plant.isDead()) {
-                        String stateLabel = plant.getCurrentState() != null ? plant.getCurrentState().getLabel()
-                                : "Unknown";
-
-                        sb.append(String.format("- %s | Position: (%d, %d) | HP: %.0f/%.0f | State: %s\n",
-                                plant.getSheet().getName(),
-                                plant.getCol(),
-                                plant.getLane(),
-                                plant.getHp(),
-                                plant.getMaxHp(),
-                                stateLabel));
-                        count++;
-                    }
-                }
-            }
-        }
-        if (count == 0) {
-            return new Result("No plants on the map.");
-        }
-        return new Result(sb.toString().trim());
-    }
-
-    public Result showZombies(Matcher matcher) {
-        StringBuilder sb = new StringBuilder("Zombies List:\n");
-        int count = 0;
-        for (TickAware entity : context.getEngine().getEntities()) {
-            if (entity instanceof Zombie zombie) {
-                sb.append("\n" + zombie.toInfoString());
-                count++;
-            }
-        }
-        if (count == 0) {
-            return new Result("No zombies on the map.");
-        }
-        return new Result(sb.toString().trim());
-    }
-
-    public Result showProjectiles(Matcher matcher) {
-        StringBuilder sb = new StringBuilder("Projectiles List:\n");
-        int count = 0;
-        for (TickAware entity : context.getEngine().getEntities()) {
-            if (entity instanceof Projectile projectile) {
-                sb.append(String.format("- %s | Position: (%.1f, %.1f) | Damage: %.1f | State: Active\n",
-                        projectile.getType(),
-                        projectile.getX(),
-                        projectile.getY(),
-                        projectile.getDamage()));
-                count++;
-            }
-        }
-        if (count == 0) {
-            return new Result("No projectiles on the map.");
-        }
-        return new Result(sb.toString().trim());
-    }
-
-    public Result showSuns(Matcher matcher) {
-        StringBuilder sb = new StringBuilder("Dropped Suns List:\n");
-        int count = 0;
-        for (TickAware entity : context.getEngine().getEntities()) {
-            if (entity instanceof Sun sun) {
-                if (!sun.isDone()) {
-                    sb.append(String.format("- %s | Position: (%d, %d) | Sun Amount: %d | Expiry: %.1fs\n",
-                            sun.getType(),
-                            sun.getCol(),
-                            sun.getLane(),
-                            sun.getAmount(),
-                            sun.getSecondsRemaining()));
-                    count++;
-                }
-            }
-        }
-        if (count == 0) {
-            return new Result("No suns on the map.");
-        }
-        return new Result(sb.toString().trim());
-    }
-*/
+    /*
+     * 
+     * private final GameContext context;
+     * 
+     * public GameController(GameContext context) {
+     * this.context = context;
+     * }
+     * 
+     * public Result advanceTime(Matcher matcher) {
+     * int ticks = Integer.parseInt(matcher.group("ticks"));
+     * context.getEngine().advanceTime(ticks);
+     * context.addCurrentTick(ticks);
+     * 
+     * String map = context.getMode().renderMap(context);
+     * if (context.isGameOver()) {
+     * handleGameOverState();
+     * return new Result("Game Over", new pvz.view.OldMainMenu());
+     * }
+     * return new Result("Time advanced by " + ticks + " ticks.\n" + map);
+     * }
+     * 
+     * private void handleGameOverState() {
+     * User user = AppContext.getInstance().getCurrentUser();
+     * if (user == null) {
+     * return;
+     * }
+     * 
+     * boolean won = context.getZombies().isEmpty();
+     * evaluateQuestsAndScore(user, won);
+     * user.saveUser();
+     * }
+     * 
+     * private void evaluateQuestsAndScore(User user, boolean won) {
+     * QuestEvaluator.evaluateAll(
+     * user.getQuestLog(),
+     * context.getGameStats(),
+     * won,
+     * context.getCurrentSun(),
+     * user.getSetting().getDifficulty(),
+     * user,
+     * context);
+     * 
+     * int gameScore = context.getGameStats().calculateScore(won);
+     * if (gameScore > user.getScore().getHighestScore()) {
+     * user.getScore().setHighestScore(gameScore);
+     * }
+     * 
+     * handleLevelOrMiniGameWin(user, won);
+     * }
+     * 
+     * private void handleLevelOrMiniGameWin(User user, boolean won) {
+     * if (!won) return;
+     * 
+     * boolean isMiniGame = (context.getMode() instanceof
+     * pvz.models.games.modes.variants.VaseBreakerMode
+     * || context.getMode() instanceof pvz.models.games.modes.variants.IZombieMode
+     * || context.getMode() instanceof
+     * pvz.models.games.modes.variants.BeghouledMode);
+     * 
+     * if (isMiniGame) {
+     * user.getScore().setMiniGamesPassed(user.getScore().getMiniGamesPassed() + 1);
+     * user.getProfile().getNews().getMessages().add(
+     * new pvz.models.user.Message("New Mini-Game Completed: " +
+     * context.getSeasonName()
+     * + " Level " + context.getLevelNumber() + "!"));
+     * } else {
+     * user.getScore().setLastLevel(context.getLevelNumber());
+     * user.getScore().setLastSeason(resolveChapterNumber(context.getSeasonName()));
+     * 
+     * pvz.models.games.seasons.SeasonManager manager = new
+     * pvz.models.games.seasons.SeasonManager();
+     * manager.unlockNextLevel(user, context.getSeasonName(),
+     * context.getLevelNumber());
+     * 
+     * int nextLevelNumber = context.getLevelNumber() + 1;
+     * user.getProfile().getNews().getMessages().add(
+     * new pvz.models.user.Message("New Level Unlocked: Level " + nextLevelNumber +
+     * " in "
+     * + context.getSeasonName() + "!"));
+     * }
+     * }
+     * 
+     * private int resolveChapterNumber(String season) {
+     * if (season == null) {
+     * return 1;
+     * }
+     * if (season.equalsIgnoreCase("Ancient Egypt")) {
+     * return 1;
+     * }
+     * if (season.equalsIgnoreCase("Frostbite Caves")) {
+     * return 2;
+     * }
+     * if (season.equalsIgnoreCase("Dark Ages")) {
+     * return 3;
+     * }
+     * if (season.equalsIgnoreCase("Big Wave Beach")) {
+     * return 4;
+     * }
+     * return 1;
+     * }
+     * 
+     * public Result plantPlant(Matcher matcher) {
+     * String plantType = matcher.group("plantType");
+     * int col = Integer.parseInt(matcher.group("plantX"));
+     * int lane = Integer.parseInt(matcher.group("plantY"));
+     * 
+     * GameMode mode = context.getMode();
+     * if (mode instanceof PlantPlacer placer) {
+     * PlantCard card = placer.findCard(context, plantType);
+     * if (card == null) {
+     * return new Result("No such plant card '" + plantType + "'.");
+     * }
+     * if (!placer.isValidPlacement(context, col, lane, card)) {
+     * return new Result("Cannot place " + plantType + " at (" + col + ", " + lane +
+     * ").");
+     * }
+     * placer.handlePlacement(context, col, lane, card);
+     * } else {
+     * return new Result("You cannot plant in this game mode!");
+     * }
+     * return new Result(plantType + " placed at (" + col + ", " + lane + ").");
+     * }
+     * 
+     * public Result plantZombie(Matcher matcher) {
+     * String zombieType = matcher.group("zombieType");
+     * int col = Integer.parseInt(matcher.group("zombieX"));
+     * int lane = Integer.parseInt(matcher.group("zombieY"));
+     * 
+     * GameMode mode = context.getMode();
+     * if (mode instanceof ZombiePlacer placer) {
+     * ZombieCard card = placer.findCard(context, zombieType);
+     * if (card == null) {
+     * return new Result("No such zombie card '" + zombieType + "'.");
+     * }
+     * if (!placer.isValidPlacement(context, col, lane, card)) {
+     * return new Result("Cannot place " + zombieType + " at (" + col + ", " + lane
+     * + ").");
+     * }
+     * placer.handlePlacement(context, col, lane, card);
+     * } else {
+     * return new Result("You cannot place zombies in this game mode!");
+     * }
+     * return new Result(zombieType + " placed at (" + col + ", " + lane + ").");
+     * }
+     * 
+     * public Result breakVase(Matcher matcher) {
+     * GameMode mode = context.getMode();
+     * int col = Integer.parseInt(matcher.group("vaseX"));
+     * int lane = Integer.parseInt(matcher.group("vaseY"));
+     * 
+     * if (mode instanceof VaseBreakerMode vasemode) {
+     * vasemode.breakVase(context, col, lane);
+     * return new Result("");
+     * }
+     * 
+     * return new Result("You cannot break vase in this game mode!");
+     * }
+     * 
+     * public Result pluckPlant(Matcher matcher) {
+     * int x = Integer.parseInt(matcher.group("pluckX"));
+     * int y = Integer.parseInt(matcher.group("pluckY"));
+     * 
+     * if (x < 0 || x >= context.getMap().getColumns() || y < 0 || y >=
+     * context.getMap().getRows()) {
+     * return new Result("Invalid coordinates.");
+     * }
+     * 
+     * Tile tile = context.getMap().getTile(x, y);
+     * if (tile.getPlants().isEmpty()) {
+     * return new Result("No plant to pluck at (" + x + ", " + y + ").");
+     * }
+     * 
+     * for (int i = 0; i < tile.getPlants().size(); i++) {
+     * context.removePlant(tile.getPlants().get(i));
+     * i--;
+     * }
+     * tile.getPlants().clear();
+     * 
+     * return new Result("Plant plucked from (" + x + ", " + y + ").");
+     * }
+     * 
+     * public Result collectSun(Matcher matcher) {
+     * int x = Integer.parseInt(matcher.group("sunX"));
+     * int y = Integer.parseInt(matcher.group("sunY"));
+     * 
+     * for (Sun sun : new ArrayList<>(context.getSuns())) {
+     * if (sun.getCol() == x && sun.getLane() == y && !sun.isDone()) {
+     * sun.collect(context);
+     * return new Result("Sun collected!");
+     * }
+     * }
+     * return new Result("No sun found at these coordinates.");
+     * }
+     * 
+     * public Result feedPlant(Matcher matcher) {
+     * int x = Integer.parseInt(matcher.group("feedX"));
+     * int y = Integer.parseInt(matcher.group("feedY"));
+     * 
+     * if (context.getPlantFoodCount() <= 0) {
+     * return new Result("No plant food available.");
+     * }
+     * if (x < 0 || x >= context.getMap().getColumns() || y < 0 || y >=
+     * context.getMap().getRows()) {
+     * return new Result("Invalid coordinates.");
+     * }
+     * 
+     * List<Plant> plantsAt = context.getPlantsAt(x, y);
+     * if (plantsAt.isEmpty()) {
+     * return new Result("No plant at (" + x + ", " + y + ").");
+     * }
+     * 
+     * Plant target = plantsAt.getLast();
+     * if (!context.spendPlantFood()) {
+     * return new Result("Failed to consume plant food.");
+     * }
+     * 
+     * target.triggerPlantFood(context);
+     * return new Result("Plant food used on " + target.getSheet().getName() +
+     * " at (" + x + ", " + y + ")!");
+     * }
+     * 
+     * public Result startZombieWavesCommand(Matcher matcher) {
+     * GameContext context = AppContext.getInstance().getGameContext();
+     * 
+     * if (context.getMode() instanceof StartWaves mode) {
+     * if (!mode.isPreparationPhase()) {
+     * return new Result("Zombie waves have already started!");
+     * }
+     * mode.startZombieWaves(context);
+     * return new Result("Zombie waves started successfully!");
+     * } else {
+     * return new
+     * Result("This command is only available in modes that support starting zombie waves."
+     * );
+     * }
+     * }
+     * 
+     * public Result releaseNuke(Matcher matcher) {
+     * int killed = 0;
+     * List<TickAware> entities = context.getEngine().getEntities();
+     * for (TickAware entity : entities) {
+     * if (entity instanceof Zombie) {
+     * ((Zombie) entity).takeDamage(999999f, true);
+     * killed++;
+     * }
+     * }
+     * return new Result("Nuke released! Killed " + killed + " zombies.");
+     * }
+     * 
+     * public Result cheatCooldown(Matcher matcher) {
+     * List<Card> cards = context.getCards();
+     * int reset = 0;
+     * for (Card card : cards) {
+     * if (card.getCooldown() > 0) {
+     * card.setCooldown(0);
+     * reset++;
+     * }
+     * }
+     * return new Result("Reset cooldown for " + reset + " card(s).");
+     * }
+     * 
+     * public Result cheatPlantFood(Matcher matcher) {
+     * if (context.getPlantFoodCount() > 3) {
+     * return new Result("Plant food slots are full.");
+     * }
+     * context.addPlantFood(1);
+     * return new Result("Added 1 plant food.");
+     * }
+     * 
+     * public Result cheatSun(Matcher matcher) {
+     * int amount = Integer.parseInt(matcher.group("sunCount"));
+     * context.addSun(amount);
+     * return new Result("Added " + amount + " sun.");
+     * }
+     * 
+     * public Result cheatSpawnZombie(Matcher matcher) {
+     * String zombieType = matcher.group("zombieType");
+     * int col = Integer.parseInt(matcher.group("zombieX"));
+     * int lane = Integer.parseInt(matcher.group("zombieY"));
+     * 
+     * ZombieType type = ZombieType.fromTypeString(zombieType);
+     * if (type == null) {
+     * return new Result("No such zombie type '" + zombieType + "'.");
+     * }
+     * 
+     * if (col < 0 || col >= context.getColumns() || lane < 0 || lane >=
+     * context.getLanes()) {
+     * return new Result("The position is uncorrent!");
+     * }
+     * 
+     * Zombie zombie = new ZombieFactory().create(type.getAlias(), col, lane,
+     * context, 0, 2);
+     * context.spawnZombie(zombie);
+     * return new Result("Zombie spawned!");
+     * }
+     * 
+     * public Result showMap(Matcher matcher) {
+     * return new Result(context.getMode().renderMap(context));
+     * }
+     * 
+     * public Result showCards(Matcher matcher) {
+     * return new Result(context.getMode().getCardsStatus(context));
+     * }
+     * 
+     * public Result showSun(Matcher matcher) {
+     * return new Result("Current Sun: " + context.getCurrentSun());
+     * }
+     * 
+     * public Result showTileStatus(Matcher matcher) {
+     * int x = Integer.parseInt(matcher.group("tileX"));
+     * int y = Integer.parseInt(matcher.group("tileY"));
+     * 
+     * if (x < 0 || x >= context.getMap().getColumns() || y < 0 || y >=
+     * context.getMap().getRows()) {
+     * return new Result("Invalid coordinates.");
+     * }
+     * 
+     * Tile tile = context.getMap().getMap()[y][x];
+     * StringBuilder status = new
+     * StringBuilder("Tile Status at (").append(x).append(",").append(y).append("):"
+     * );
+     * 
+     * if (tile.getTags().isEmpty())
+     * status.append("\n  Tags: Normal");
+     * else {
+     * status.append("\n  Tags:");
+     * for (TileTags tag : tile.getTags()) {
+     * status.append("\n    ").append(tag.toString());
+     * }
+     * }
+     * 
+     * if (!tile.getBehaviors().isEmpty()) {
+     * status.append("\n  Status:");
+     * for (TileBehavior tb : tile.getBehaviors()) {
+     * status.append(tb.getStatus());
+     * }
+     * }
+     * 
+     * if (tile.getPlants() != null && !tile.getPlants().isEmpty()) {
+     * status.append("\n").append("  Plant: ").append(tile.getPlants().getLast().
+     * getType());
+     * } else {
+     * status.append("\n").append("  Plant: None");
+     * }
+     * 
+     * if (!context.getZombiesAt(x, y).isEmpty()) {
+     * status.append("\n").append("  Zombies: ");
+     * for (Zombie z : context.getZombiesAt(x, y)) {
+     * status.append("\n  ").append(z.getSheet().getAlias());
+     * }
+     * } else {
+     * status.append("\n").append("  Zombies: None");
+     * }
+     * 
+     * return new Result(status.toString());
+     * }
+     * 
+     * public Result showPlants(Matcher matcher) {
+     * StringBuilder sb = new StringBuilder("Plants List:\n");
+     * int count = 0;
+     * int rows = context.getMap().getRows();
+     * int cols = context.getMap().getColumns();
+     * 
+     * for (int i = 0; i < rows; i++) {
+     * for (int j = 0; j < cols; j++) {
+     * Tile tile = context.getMap().getMap()[i][j];
+     * if (tile.getPlants() != null && !tile.getPlants().isEmpty()) {
+     * Plant plant = tile.getPlants().get(tile.getPlants().size() - 1);
+     * if (plant != null && !plant.isDead()) {
+     * String stateLabel = plant.getCurrentState() != null ?
+     * plant.getCurrentState().getLabel()
+     * : "Unknown";
+     * 
+     * sb.append(String.
+     * format("- %s | Position: (%d, %d) | HP: %.0f/%.0f | State: %s\n",
+     * plant.getSheet().getName(),
+     * plant.getCol(),
+     * plant.getLane(),
+     * plant.getHp(),
+     * plant.getMaxHp(),
+     * stateLabel));
+     * count++;
+     * }
+     * }
+     * }
+     * }
+     * if (count == 0) {
+     * return new Result("No plants on the map.");
+     * }
+     * return new Result(sb.toString().trim());
+     * }
+     * 
+     * public Result showZombies(Matcher matcher) {
+     * StringBuilder sb = new StringBuilder("Zombies List:\n");
+     * int count = 0;
+     * for (TickAware entity : context.getEngine().getEntities()) {
+     * if (entity instanceof Zombie zombie) {
+     * sb.append("\n" + zombie.toInfoString());
+     * count++;
+     * }
+     * }
+     * if (count == 0) {
+     * return new Result("No zombies on the map.");
+     * }
+     * return new Result(sb.toString().trim());
+     * }
+     * 
+     * public Result showProjectiles(Matcher matcher) {
+     * StringBuilder sb = new StringBuilder("Projectiles List:\n");
+     * int count = 0;
+     * for (TickAware entity : context.getEngine().getEntities()) {
+     * if (entity instanceof Projectile projectile) {
+     * sb.append(String.
+     * format("- %s | Position: (%.1f, %.1f) | Damage: %.1f | State: Active\n",
+     * projectile.getType(),
+     * projectile.getX(),
+     * projectile.getY(),
+     * projectile.getDamage()));
+     * count++;
+     * }
+     * }
+     * if (count == 0) {
+     * return new Result("No projectiles on the map.");
+     * }
+     * return new Result(sb.toString().trim());
+     * }
+     * 
+     * public Result showSuns(Matcher matcher) {
+     * StringBuilder sb = new StringBuilder("Dropped Suns List:\n");
+     * int count = 0;
+     * for (TickAware entity : context.getEngine().getEntities()) {
+     * if (entity instanceof Sun sun) {
+     * if (!sun.isDone()) {
+     * sb.append(String.
+     * format("- %s | Position: (%d, %d) | Sun Amount: %d | Expiry: %.1fs\n",
+     * sun.getType(),
+     * sun.getCol(),
+     * sun.getLane(),
+     * sun.getAmount(),
+     * sun.getSecondsRemaining()));
+     * count++;
+     * }
+     * }
+     * }
+     * if (count == 0) {
+     * return new Result("No suns on the map.");
+     * }
+     * return new Result(sb.toString().trim());
+     * }
+     */
 }

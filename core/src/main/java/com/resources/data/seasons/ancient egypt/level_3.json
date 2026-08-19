@@ -1,5 +1,6 @@
 {
   "gameType": "TIMEDWAR",
+  "musicPath": "assets/audio/music/ancient_egypt/Ancient Egypt Demo Game.mp3",
   "levelNumber": 3,
   "levelType": "SPECIAL",
   "initialSun": 150,
@@ -22,13 +23,18 @@
         {
           "zombieCount": 4,
           "intervalTicks": 60,
-          "allowedTypes": ["BASIC"],
+          "allowedTypes": [
+            "BASIC"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 3,
           "intervalTicks": 40,
-          "allowedTypes": ["BASIC", "CONEHEAD"],
+          "allowedTypes": [
+            "BASIC",
+            "CONEHEAD"
+          ],
           "isBurst": true
         }
       ]
@@ -43,13 +49,20 @@
         {
           "zombieCount": 5,
           "intervalTicks": 45,
-          "allowedTypes": ["BASIC", "CONEHEAD", "FLAG"],
+          "allowedTypes": [
+            "BASIC",
+            "CONEHEAD",
+            "FLAG"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 6,
           "intervalTicks": 30,
-          "allowedTypes": ["CONEHEAD", "BUCKETHEAD"],
+          "allowedTypes": [
+            "CONEHEAD",
+            "BUCKETHEAD"
+          ],
           "isBurst": true
         }
       ]
@@ -64,13 +77,21 @@
         {
           "zombieCount": 6,
           "intervalTicks": 35,
-          "allowedTypes": ["CONEHEAD", "BUCKETHEAD", "NEWSPAPER"],
+          "allowedTypes": [
+            "CONEHEAD",
+            "BUCKETHEAD",
+            "NEWSPAPER"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 10,
           "intervalTicks": 20,
-          "allowedTypes": ["BUCKETHEAD", "IMP", "GARGANTUAR"],
+          "allowedTypes": [
+            "BUCKETHEAD",
+            "IMP",
+            "GARGANTUAR"
+          ],
           "isBurst": true
         }
       ]

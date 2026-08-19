@@ -6,7 +6,9 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.pvz.PvZ2;
+import com.pvz.controller.AudioManager;
 import com.pvz.controller.game.GameController;
+import com.pvz.enums.AudioPaths;
 
 public class GameScreen extends ScreenAdapter {
     public static final int SCREEN_HEIGHT = 720;
@@ -17,8 +19,6 @@ public class GameScreen extends ScreenAdapter {
     private final AssetManager assetManager;
     private final SpriteBatch batch;
 
-
-
     public GameScreen(String seasonName, int levelNumber) {
         controller = new GameController(seasonName, levelNumber);
 
@@ -26,6 +26,13 @@ public class GameScreen extends ScreenAdapter {
 
         assetManager = new AssetManager();
         assetManager.finishLoading();
+    }
+
+    @Override
+    public void show() {
+        super.show();
+        AudioManager.getInstance().playMusic(AudioPaths.CHOOSE_YOUR_SEEDS, true,
+                AudioManager.getInstance().getUserMusicVolume());
     }
 
     @Override

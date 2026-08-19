@@ -1,27 +1,47 @@
 {
   "gameType": "DEADLINE",
+  "musicPath": "assets/audio/music/dark_ages/Laura Shigihara - Brainiac Maniac (In-Game).mp3",
   "levelNumber": 3,
   "levelType": "SPECIAL",
   "initialSun": 300,
   "deadlineColumn": 3,
-  "effects": [{"type": "DARK_AGES", "intervalTime": 30}],
+  "effects": [
+    {
+      "type": "DARK_AGES",
+      "intervalTime": 30
+    }
+  ],
   "gameMap": {
     "rows": 5,
     "columns": 9,
     "specialTiles": [
       {
-        "x": 2, "y": 1,
+        "x": 2,
+        "y": 1,
         "behaviors": [
-          { "type": "DESTRUCTIBLE", "hp": 600, "name": "Grave" }
+          {
+            "type": "DESTRUCTIBLE",
+            "hp": 600,
+            "name": "Grave"
+          }
         ],
-        "tags": ["GRAVE"]
+        "tags": [
+          "GRAVE"
+        ]
       },
       {
-        "x": 2, "y": 3,
+        "x": 2,
+        "y": 3,
         "behaviors": [
-          { "type": "DESTRUCTIBLE", "hp": 600, "name": "Grave" }
+          {
+            "type": "DESTRUCTIBLE",
+            "hp": 600,
+            "name": "Grave"
+          }
         ],
-        "tags": ["GRAVE"]
+        "tags": [
+          "GRAVE"
+        ]
       }
     ]
   },
@@ -36,13 +56,17 @@
         {
           "zombieCount": 3,
           "intervalTicks": 90,
-          "allowedTypes": ["BASIC"],
+          "allowedTypes": [
+            "BASIC"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 2,
           "intervalTicks": 60,
-          "allowedTypes": ["CONEHEAD"],
+          "allowedTypes": [
+            "CONEHEAD"
+          ],
           "isBurst": false
         }
       ]
@@ -57,13 +81,17 @@
         {
           "zombieCount": 3,
           "intervalTicks": 50,
-          "allowedTypes": ["NEWSPAPER"],
+          "allowedTypes": [
+            "NEWSPAPER"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 5,
           "intervalTicks": 20,
-          "allowedTypes": ["IMP"],
+          "allowedTypes": [
+            "IMP"
+          ],
           "isBurst": true
         }
       ]
@@ -78,13 +106,19 @@
         {
           "zombieCount": 4,
           "intervalTicks": 70,
-          "allowedTypes": ["BUCKETHEAD"],
+          "allowedTypes": [
+            "BUCKETHEAD"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 6,
           "intervalTicks": 30,
-          "allowedTypes": ["IMP", "CONEHEAD", "FLAG"],
+          "allowedTypes": [
+            "IMP",
+            "CONEHEAD",
+            "FLAG"
+          ],
           "isBurst": true
         }
       ]
@@ -99,19 +133,28 @@
         {
           "zombieCount": 1,
           "intervalTicks": 100,
-          "allowedTypes": ["GARGANTUAR"],
+          "allowedTypes": [
+            "GARGANTUAR"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 4,
           "intervalTicks": 40,
-          "allowedTypes": ["BRICKHEAD", "BUCKETHEAD"],
+          "allowedTypes": [
+            "BRICKHEAD",
+            "BUCKETHEAD"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 10,
           "intervalTicks": 15,
-          "allowedTypes": ["IMP", "NEWSPAPER", "FLAG"],
+          "allowedTypes": [
+            "IMP",
+            "NEWSPAPER",
+            "FLAG"
+          ],
           "isBurst": true
         }
       ]

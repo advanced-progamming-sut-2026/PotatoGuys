@@ -16,17 +16,20 @@ public abstract class Level {
     protected int levelNumber;
     protected String seasonName;
     protected List<EffectDefinition> effects;
+    protected List<String> objectives;
+    protected String musicPath;
 
     protected Level() {
         this.effects = new ArrayList<>();
+        this.objectives = new ArrayList<>();
     }
 
-    public Level(GameModeType gameMode, GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun){
-        this.gameType=gameMode;
-        this.gameMap=gameMap;
-        this.levelNumber=levelNumber;
-        this.levelType=type;
-        this.initialSun=initialSun;
+    public Level(GameModeType gameMode, GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun) {
+        this.gameType = gameMode;
+        this.gameMap = gameMap;
+        this.levelNumber = levelNumber;
+        this.levelType = type;
+        this.initialSun = initialSun;
         this.seasonName = "";
         this.effects = new java.util.ArrayList<>();
     }
@@ -85,5 +88,9 @@ public abstract class Level {
 
     public void setGameMode(GameModeType gameMode) {
         this.gameType = gameMode;
+    }
+
+    public String getMusicPath() {
+        return musicPath;
     }
 }
