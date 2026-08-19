@@ -68,6 +68,15 @@ public class Wave {
         return done;
     }
 
+    public int getTotalZombieCount() {
+        if (phases == null) return 0;
+        int total = 0;
+        for (WavePhase phase : phases) {
+            total += phase.getZombieCount();
+        }
+        return total;
+    }
+
     public void startWave(GameContext context) {
         ensureInitialized();
         context.log("Wave " + waveNumber + " started" + (isFinalWave ? " — FINAL WAVE!" : ""));

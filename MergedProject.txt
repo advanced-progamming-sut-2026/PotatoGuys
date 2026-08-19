@@ -721,6 +721,9 @@ public class GameUiModal extends Table {
     private final Table cardsBarTable;
     private PlantCard selectedCard = null;
     private ZombieCard selectedZombieCard = null;
+    private boolean shovelSelected = false;
+    private Runnable onShovelRequested = null;
+    private ImageButton shovelButton = null;
 
     private final Map<PlantCard, Table> slotByCard = new HashMap<>();
     private final Map<PlantCard, Image> cooldownOverlayByCard = new HashMap<>();
@@ -849,6 +852,21 @@ public class GameUiModal extends Table {
             }
         });
 
+        // Shovel button: uses the same art and checked-state behaviour as the
+        // phase-0 reference HUD. The imageChecked drawable keeps the "down"
+        // texture visible while the shovel is armed. It lives in its own
+        // bottom-right overlay so it stays pinned to the corner.
+        shovelButton = createShovelButton();
+        shovelButton.setTouchable(Touchable.enabled);
+        shovelButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (onShovelRequested != null) {
+                    onShovelRequested.run();
+                }
+            }
+        });
+
         Table rightControls = new Table();
         rightControls.top().right();
         rightControls.add(walletTable).right().padRight(10);
@@ -883,6 +901,14 @@ public class GameUiModal extends Table {
         foodOverlay.bottom().left();
         foodOverlay.add(foodRow).padLeft(218.5f).padBottom(15f);
         addActor(foodOverlay);
+
+        // Shovel pinned to the bottom-right corner (58x58, matching the top-bar
+        // buttons), in its own overlay so it never affects the table layout.
+        Table shovelOverlay = new Table();
+        shovelOverlay.setFillParent(true);
+        shovelOverlay.bottom().right();
+        shovelOverlay.add(shovelButton).size(58f).padRight(20f).padBottom(15f);
+        addActor(shovelOverlay);
     }
 
     public PlantCard getSelectedCard() {
@@ -895,6 +921,10 @@ public class GameUiModal extends Table {
 
     public void setSelectedZombieCard(ZombieCard card) {
         this.selectedZombieCard = card;
+        if (card != null) {
+            this.shovelSelected = false;
+            if (shovelButton != null) shovelButton.setChecked(false);
+        }
         updateCardStyles();
     }
 
@@ -935,6 +965,21 @@ public class GameUiModal extends Table {
         return new ImageButton(style);
     }
 
+    /**
+     * Shovel tool button mirroring the phase-0 reference HUD: the up/down art is
+     * taken from the shared PvZ skin, and {@code imageChecked} is wired to the
+     * "down" drawable so {@code setChecked(true)} keeps the pressed look while
+     * the shovel is armed.
+     */
+    private ImageButton createShovelButton() {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        style.imageUp = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button");
+        style.imageDown = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button_down");
+        style.imageOver = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button_down");
+        style.imageChecked = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button_down");
+        return new ImageButton(style);
+    }
+
     private boolean isDebugModeEnabled() {
         User user = AppContext.getInstance().getCurrentUser();
         return user != null && user.getSetting() != null && user.getSetting().isDebugMode();
@@ -942,7 +987,31 @@ public class GameUiModal extends Table {
 
     public void setSelectedCard(PlantCard card) {
         this.selectedCard = card;
+        if (card != null) {
+            this.shovelSelected = false;
+            if (shovelButton != null) shovelButton.setChecked(false);
+        }
         updateCardStyles();
+    }
+
+    public void setOnShovelRequested(Runnable onShovelRequested) {
+        this.onShovelRequested = onShovelRequested;
+    }
+
+    public boolean isShovelSelected() {
+        return shovelSelected;
+    }
+
+    public void setShovelSelected(boolean selected) {
+        this.shovelSelected = selected;
+        if (shovelButton != null) {
+            shovelButton.setChecked(selected);
+        }
+        if (selected) {
+            this.selectedCard = null;
+            this.selectedZombieCard = null;
+            updateCardStyles();
+        }
     }
 
     public void initCards() {
@@ -965,7 +1034,7 @@ public class GameUiModal extends Table {
 
         for (Card card : context.getCards()) {
             if (card instanceof PlantCard pc) {
-                cardsBarTable.add(buildSlot(pc)).row();
+                cardsBarTable.add(buildSlot(pc, false)).row();
             } else if (card instanceof ZombieCard zc) {
                 cardsBarTable.add(buildZombieSlot(zc)).row();
             }
@@ -973,7 +1042,23 @@ public class GameUiModal extends Table {
         updateCardStyles();
     }
 
-    private Table buildSlot(PlantCard pc) {
+    public void syncCards() {
+        GameContext context = AppContext.getInstance().getGameContext();
+        if (context == null) return;
+
+        boolean changed = false;
+        for (Card card : context.getCards()) {
+            if (card instanceof PlantCard pc && !slotByCard.containsKey(pc)) {
+                cardsBarTable.add(buildSlot(pc, true)).row();
+                changed = true;
+            }
+        }
+        if (changed) {
+            updateCardStyles();
+        }
+    }
+
+    private Table buildSlot(PlantCard pc, boolean isConveyor) {
         PlantType type = pc.getPlant().getType();
         PlantData data = dataByType.get(type);
 
@@ -1010,7 +1095,7 @@ public class GameUiModal extends Table {
         stack.add(cooldownOverlay);
         cooldownOverlayByCard.put(pc, cooldownOverlay);
 
-        Label costLabel = new Label(String.valueOf(pc.getCost()), skin, "medium");
+        Label costLabel = new Label(isConveyor ? "FREE" : String.valueOf(pc.getCost()), skin, "medium");
         costLabel.setFontScale(0.9f);
         costLabel.setColor(Color.WHITE);
         Table costRow = new Table();
@@ -1113,6 +1198,8 @@ public class GameUiModal extends Table {
     public void updateHud() {
         GameContext context = AppContext.getInstance().getGameContext();
         if (context == null) return;
+
+        syncCards();
 
         // The + buttons only work while Debug Mode is enabled in settings.
         boolean debug = isDebugModeEnabled();
@@ -1373,6 +1460,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 
+import com.pvz.controller.CollectionController;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.user.MyPlant;
@@ -1421,6 +1509,7 @@ public class PlantSelectModal extends Table {
     private final Table selectedSlotsTable;
     private final Table previewContent;
     private final TextButton startButton;
+    private Label previewMessageLabel;
 
     public PlantSelectModal(Level level, Runnable onStartCallback) {
         this.level = level;
@@ -1560,8 +1649,29 @@ public class PlantSelectModal extends Table {
         info.add(nameLabel).left().row();
 
         Table buttonsRow = new Table();
-        TextButton upgradeButton = new TextButton("UPGRADE", PvzSkin.get(), "brown");
-        // Inert, matching Rey's own Upgrade button — not wired to anything on her side either.
+        // Level-up works exactly like the Collection screen: spends the required
+        // seed packets via CollectionController.upgradePlant and refreshes the
+        // card / slots / preview so the new cost & level show up immediately.
+        TextButton upgradeButton = new TextButton(upgradeButtonText(data), PvzSkin.get(), "brown");
+        upgradeButton.setDisabled(!data.isUnlocked() || data.isMaxLevel());
+        upgradeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                String error = new CollectionController().upgradePlant(data.type);
+                if (error != null) {
+                    showPreviewMessage(error, false);
+                    return;
+                }
+                PlantCard card = gridCardsByType.get(data.type);
+                if (card != null) {
+                    card.update();
+                }
+                refreshSlotsBar();
+                upgradeButton.setText(upgradeButtonText(data));
+                upgradeButton.setDisabled(data.isMaxLevel());
+                showPreviewMessage(data.getName() + " is now Level " + data.getLevel() + "!", true);
+            }
+        });
         TextButton boostButton = new TextButton(data.isBoosted() ? "BOOSTED" : "BOOST", PvzSkin.get(), "green");
         boostButton.setDisabled(data.isBoosted());
         boostButton.addListener(new ChangeListener() {
@@ -1579,12 +1689,32 @@ public class PlantSelectModal extends Table {
                 }
             }
         });
-        buttonsRow.add(upgradeButton).width(120f).height(45f).padRight(10f);
+        buttonsRow.add(upgradeButton).width(260f).height(45f).padRight(10f);
         buttonsRow.add(boostButton).width(120f).height(45f);
         info.add(buttonsRow).left().padTop(8f);
+        info.row();
+        previewMessageLabel = new Label("", PvzSkin.get(), "medium");
+        previewMessageLabel.setColor(new Color(0.8f, 0.2f, 0.15f, 1f));
+        previewMessageLabel.setWrap(true);
+        info.add(previewMessageLabel).width(320f).left().padTop(4f);
 
         previewContent.add(plantImage).size(96f, 96f).padRight(15f);
         previewContent.add(info).top();
+    }
+
+    /** Mirrors the Collection's PlantDetailsTable label: LEVEL UP · N PACKETS / MAX LEVEL. */
+    private String upgradeButtonText(PlantData data) {
+        if (!data.isUnlocked()) return "UPGRADE";
+        if (data.isMaxLevel()) return "MAX LEVEL";
+        return "LEVEL UP · " + data.requiredSeedPackets() + " PACKETS · "
+                + data.requiredCoins() + " COINS";
+    }
+
+    private void showPreviewMessage(String message, boolean success) {
+        if (previewMessageLabel != null) {
+            previewMessageLabel.setText(message);
+            previewMessageLabel.setColor(success ? new Color(0.15f, 0.7f, 0.15f, 1f) : new Color(0.8f, 0.2f, 0.15f, 1f));
+        }
     }
 
     private void selectPlantIntoSlot(PlantData data) {
@@ -2353,6 +2483,11 @@ public final class PlantData {
         return CollectionController.requiredPacketsForLevel(getLevel());
     }
 
+    public int requiredCoins() {
+        if (!isUnlocked() || isMaxLevel()) return 1;
+        return CollectionController.requiredCoinsForLevel(getLevel());
+    }
+
     public float xpFraction() {
         if (!isUnlocked()) return 0f;
         if (isMaxLevel()) return 1f;
@@ -2443,7 +2578,12 @@ public class PlantDetailsTable extends Table {
         setBackground(skin.newDrawable("white_pixel", DETAILS_BG));
         Drawable fallback = skin.newDrawable("white_pixel", FALLBACK_TINT);
 
-        backButton = new ImageButton(skin, "almanac");
+        // Copy the shared "almanac" style before overriding its drawables: mutating
+        // getStyle() in place would corrupt the skin style for every other button
+        // using it (e.g. the almanac button in the game-mode selection menu).
+        ImageButton.ImageButtonStyle style =
+            new ImageButton.ImageButtonStyle(skin.get("almanac", ImageButton.ImageButtonStyle.class));
+        backButton = new ImageButton(style);
         Drawable backNormal = PlantData.regionDrawable("IMAGE_UI_ALMANAC_BUTTONS_HUD_BACK_NORMAL");
         Drawable backSelected = PlantData.regionDrawable("IMAGE_UI_ALMANAC_BUTTONS_HUD_BACK_SELECTED");
         if (backNormal != null) {
@@ -2620,7 +2760,8 @@ public class PlantDetailsTable extends Table {
             actionArea.add(max).size(200f, 50f).left();
         } else {
             TextButton levelUp = new TextButton(
-                    "LEVEL UP · " + data.requiredSeedPackets() + " PACKETS", PvzSkin.get(), "green");
+                    "LEVEL UP · " + data.requiredSeedPackets() + " PACKETS · "
+                            + data.requiredCoins() + " COINS", PvzSkin.get(), "green");
             levelUp.setColor(Color.WHITE);
             if (onUpgrade != null) {
                 levelUp.addListener(new InputListener() {
@@ -3626,6 +3767,21 @@ public class MainMenu extends ScreenAdapter {
             }
         });
 
+        //username label (top-left corner)
+        Table userInfoWrapper = new Table();
+        userInfoWrapper.top().left();
+        userInfoWrapper.pad(20);
+        stack.add(userInfoWrapper);
+
+        User currentUser = AppContext.getInstance().getCurrentUser();
+        if (currentUser != null && currentUser.getUsername() != null) {
+            Label userNameLabel = new Label(currentUser.getUsername(),
+                    skin.get("big_outline", Label.LabelStyle.class));
+            userNameLabel.setColor(Color.valueOf("FFD700"));
+            userNameLabel.setFontScale(1.8f);
+            userInfoWrapper.add(userNameLabel).left();
+        }
+
         //profile & settings buttons wrapper (bottom-right corner)
         Table bottomRightWrapper = new Table();
         bottomRightWrapper.right().bottom();
@@ -3634,7 +3790,6 @@ public class MainMenu extends ScreenAdapter {
 
         //profile button: shows the user's chosen avatar (fallback to zombie head)
         ImageButton profileFace;
-        User currentUser = AppContext.getInstance().getCurrentUser();
         if (currentUser != null && currentUser.getProfilePicture() != null) {
             Texture avatar = AvatarImages.featheredCircle(AvatarImages.getTexture(currentUser.getProfilePicture()));
             profileFace = new ImageButton(new TextureRegionDrawable(avatar));
@@ -7920,7 +8075,9 @@ FILE: TravelLogMenu.java
 
 package com.pvz.view;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -7928,6 +8085,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -7940,6 +8099,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
@@ -7967,6 +8128,11 @@ public class TravelLogMenu extends ScreenAdapter {
 
     private static final String[] MINI_GAME_SEASON_FOLDERS = { "VaseBreaker", "Wallnut Bowling", "IZombie" };
     private static final String[] MINI_GAME_LABELS = { "Vasebreaker", "Wallnut Bowling", "I, Zombie" };
+    private static final String[] MINI_GAME_WALLPAPERS = {
+        "textures/backgrounds/VASEBREAKER/wallpaper.png",
+        "textures/backgrounds/WALLNUTBOWLING/wallpaper.png",
+        "textures/backgrounds/IZOMBIE/wallpaper.png"
+    };
     private static final float BAR_WIDTH = 420f;
     private static final float BAR_HEIGHT = 20f;
     private static final float CARD_WIDTH = 1000f;
@@ -7983,6 +8149,10 @@ public class TravelLogMenu extends ScreenAdapter {
 
     private Texture barBgTexture;
     private Texture barFillTexture;
+    private Texture darkBgTexture;
+    private Texture cardBgTexture;
+
+    private final Map<String, Texture> wallpaperCache = new HashMap<>();
 
     private Tab currentTab = Tab.DAILY;
 
@@ -8002,18 +8172,22 @@ public class TravelLogMenu extends ScreenAdapter {
         barBgTexture = solidTexture(new Color(0f, 0f, 0f, 0.45f));
         barFillTexture = solidTexture(new Color(0.30f, 0.75f, 0.30f, 1f));
 
-        Stack stack = new Stack();
-        stack.setFillParent(true);
-        stage.addActor(stack);
-
         Texture bgTexture = GameAsset.MAIN_MENU_BG.get(game.getGlobalAssetManager());
         Image bgImage = new Image(bgTexture);
-        stack.add(bgImage);
+        bgImage.setFillParent(true);
+        stage.addActor(bgImage);
 
         BorderedTable mainPanel = new BorderedTable();
-        mainPanel.setSize(1100, 940);
-        mainPanel.setPosition((1920 - 1100) / 2f, (1080 - 940) / 2f);
-        stack.add(mainPanel);
+        mainPanel.setSize(1200, 1000);
+        mainPanel.setPosition((1920 - 1200) / 2f, (1080 - 1000) / 2f);
+        stage.addActor(mainPanel);
+
+        darkBgTexture = roundedRectTexture(1166, 968, 20, new Color(0.24f, 0.14f, 0.06f, 1f));
+        Image darkBg = new Image(darkBgTexture);
+        darkBg.setBounds(17, 16, 1166, 968);
+        mainPanel.addActor(darkBg);
+
+        cardBgTexture = roundedRectTexture(966, 168, 20, new Color(0.36f, 0.24f, 0.12f, 1f));
 
         mainPanel.add(buildTopBar()).fillX().padTop(15).padLeft(25).padRight(25).row();
 
@@ -8024,7 +8198,7 @@ public class TravelLogMenu extends ScreenAdapter {
         listTable.top();
         ScrollPane scrollPane = new ScrollPane(listTable, skin);
         scrollPane.setFadeScrollBars(false);
-        mainPanel.add(scrollPane).width(CARD_WIDTH + 40).height(680).padTop(10).padBottom(15).row();
+        mainPanel.add(scrollPane).width(CARD_WIDTH + 40).height(720).padTop(10).padBottom(15).row();
 
         buildTabs();
         refreshWallet();
@@ -8047,7 +8221,7 @@ public class TravelLogMenu extends ScreenAdapter {
 
         Label titleLabel = new Label("TRAVEL LOG", skin, "big");
         titleLabel.setFontScale(1.4f);
-        titleLabel.setColor(Color.BLACK);
+        titleLabel.setColor(Color.valueOf("F1E4C0"));
 
         top.add(backBtn).size(75, 70).left();
         top.add(titleLabel).expandX().center();
@@ -8057,7 +8231,7 @@ public class TravelLogMenu extends ScreenAdapter {
 
     private Table buildWallet() {
         Table table = new Table();
-        Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"));
 
         Image coinIcon = new Image(skin.getDrawable("image_ui_generic_coin_icon_small"));
         coinsLabel = new Label("0", descStyle);
@@ -8126,45 +8300,49 @@ public class TravelLogMenu extends ScreenAdapter {
 
         if (quests.isEmpty()) {
             Label empty = new Label("No quests here right now.", skin);
-            empty.setColor(Color.DARK_GRAY);
+            empty.setColor(Color.valueOf("D8C9A8"));
             listTable.add(empty).pad(20).row();
             return;
         }
 
         for (Quest quest : quests) {
-            listTable.add(buildQuestCard(quest)).width(CARD_WIDTH).height(180).padBottom(14).row();
+            listTable.add(buildQuestCard(quest)).width(CARD_WIDTH).height(200).padBottom(14).row();
         }
     }
 
     private Table buildQuestCard(Quest quest) {
         BorderedTable card = new BorderedTable();
         card.pad(10).padLeft(40).padRight(40);
-        Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Image cardBg = new Image(cardBgTexture);
+        cardBg.setBounds(17, 16, 966, 168);
+        card.addActor(cardBg);
+        Label.LabelStyle titleStyle = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_1"), Color.valueOf("F1E4C0"));
+        Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_2"), Color.valueOf("F1E4C0"));
 
         Table header = new Table();
-        Label titleLabel = new Label(quest.getTitle(), descStyle);
-        titleLabel.setFontScale(1.5f);
+        Label titleLabel = new Label(quest.getTitle(), titleStyle);
+        titleLabel.setFontScale(1.0f);
         header.add(titleLabel).left().expandX();
         header.add(priorityBadge(quest.getPriority())).right();
         card.add(header).fillX().row();
 
         Label descLabel = new Label(quest.getDescription(), descStyle);
-        descLabel.setFontScale(1.15f);
-        descLabel.setColor(Color.valueOf("444444"));
+        descLabel.setFontScale(1.1f);
+        descLabel.setColor(Color.valueOf("D8C9A8"));
         descLabel.setWrap(true);
         card.add(descLabel).width(CARD_WIDTH - 100).left().padTop(6).row();
 
         Table progressRow = new Table();
         progressRow.add(buildProgressBar(quest)).size(BAR_WIDTH, BAR_HEIGHT).left();
         Label progressLabel = new Label(quest.getProgress().toString(), descStyle);
-        progressLabel.setFontScale(1.1f);
+        progressLabel.setFontScale(1.0f);
         progressRow.add(progressLabel).padLeft(10);
         card.add(progressRow).left().padTop(10).row();
 
         Table footer = new Table();
         Label rewardLabel = new Label("Reward: " + quest.getRewardDescription(), descStyle);
-        rewardLabel.setFontScale(1.05f);
-        rewardLabel.setColor(Color.valueOf("1b5e20"));
+        rewardLabel.setFontScale(1.0f);
+        rewardLabel.setColor(Color.valueOf("8FCE7E"));
         footer.add(rewardLabel).left().expandX();
         footer.add(statusWidget(quest)).right();
         card.add(footer).fillX().padTop(10).row();
@@ -8174,12 +8352,12 @@ public class TravelLogMenu extends ScreenAdapter {
 
     private Label priorityBadge(QuestPriority priority) {
         Color color = switch (priority) {
-            case CRITICAL -> Color.SCARLET;
-            case HIGH -> Color.ORANGE;
-            case MEDIUM -> Color.GOLD;
-            case LOW -> Color.LIGHT_GRAY;
+            case CRITICAL -> Color.valueOf("FF5252");
+            case HIGH -> Color.valueOf("FFA726");
+            case MEDIUM -> Color.valueOf("FFD54F");
+            case LOW -> Color.valueOf("BDBDBD");
         };
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), color);
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_2"), color);
         Label badge = new Label(priority.name(), style);
         badge.setFontScale(1.0f);
         return badge;
@@ -8201,11 +8379,11 @@ public class TravelLogMenu extends ScreenAdapter {
     }
 
     private Actor statusWidget(Quest quest) {
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.DARK_GRAY);
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_2"), Color.valueOf("D8C9A8"));
 
         if (!quest.isCompleted()) {
             Label label = new Label("In Progress", style);
-            label.setFontScale(1.05f);
+            label.setFontScale(1.0f);
             return label;
         }
         if (!quest.isClaimed()) {
@@ -8223,32 +8401,102 @@ public class TravelLogMenu extends ScreenAdapter {
             return claimBtn;
         }
         Label claimed = new Label("Claimed", style);
-        claimed.setFontScale(1.05f);
-        claimed.setColor(Color.valueOf("1b5e20"));
+        claimed.setFontScale(1.0f);
+        claimed.setColor(Color.valueOf("8FCE7E"));
         return claimed;
     }
 
     private void buildMinigamesList() {
         for (int i = 0; i < MINI_GAME_SEASON_FOLDERS.length; i++) {
-            listTable.add(buildMinigameCard(MINI_GAME_SEASON_FOLDERS[i], MINI_GAME_LABELS[i]))
-                .width(CARD_WIDTH).height(150).padBottom(14).row();
+            listTable.add(buildMinigameCard(MINI_GAME_SEASON_FOLDERS[i], MINI_GAME_LABELS[i], MINI_GAME_WALLPAPERS[i]))
+                .width(CARD_WIDTH).height(300).padBottom(14).row();
         }
     }
 
-    private Table buildMinigameCard(String seasonFolder, String displayName) {
-        BorderedTable card = new BorderedTable();
-        card.pad(10).padLeft(40).padRight(40);
+    /**
+     * Loads a wallpaper, scales it to width x height, cuts the corners into
+     * rounded arcs and draws a narrow frame around the card. The result is
+     * cached per path so tab switches do not re-process the image.
+     */
+    private Image buildWallpaperImage(String path, int width, int height, int radius, int frameWidth) {
+        Texture cached = wallpaperCache.get(path);
+        if (cached != null) {
+            return new Image(cached);
+        }
+
+        Texture source = MenuUiKit.loadTextureSafe(path);
+        TextureData data = source.getTextureData();
+        if (!data.isPrepared()) {
+            data.prepare();
+        }
+        Pixmap sourcePixmap = data.consumePixmap();
+        data.disposePixmap();
+        source.dispose();
+
+        Pixmap scaled = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        scaled.setFilter(Pixmap.Filter.BiLinear);
+        scaled.drawPixmap(sourcePixmap, 0, 0, sourcePixmap.getWidth(), sourcePixmap.getHeight(), 0, 0, width, height);
+        sourcePixmap.dispose();
+
+        Color frameColor = new Color(0xC9A227FF);
+        int frameBits = frameColor.toIntBits();
+        int innerRadius = radius - frameWidth;
+        int innerRadius2 = innerRadius * innerRadius;
+        int outerRadius2 = radius * radius;
+
+        Pixmap out = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                boolean corner = (x < radius && y < radius)
+                    || (x >= width - radius && y < radius)
+                    || (x < radius && y >= height - radius)
+                    || (x >= width - radius && y >= height - radius);
+                if (corner) {
+                    float dx;
+                    float dy;
+                    if (x < radius && y < radius) {
+                        dx = x - radius;
+                        dy = y - radius;
+                    } else if (x >= width - radius && y < radius) {
+                        dx = x - (width - radius);
+                        dy = y - radius;
+                    } else if (x < radius && y >= height - radius) {
+                        dx = x - radius;
+                        dy = y - (height - radius);
+                    } else {
+                        dx = x - (width - radius);
+                        dy = y - (height - radius);
+                    }
+                    float distance2 = dx * dx + dy * dy;
+                    if (distance2 > outerRadius2) {
+                        out.drawPixel(x, y, 0);
+                    } else if (distance2 > innerRadius2) {
+                        out.drawPixel(x, y, frameBits);
+                    } else {
+                        out.drawPixel(x, y, scaled.getPixel(x, y));
+                    }
+                } else if (x < frameWidth || y < frameWidth
+                    || x >= width - frameWidth || y >= height - frameWidth) {
+                    out.drawPixel(x, y, frameBits);
+                } else {
+                    out.drawPixel(x, y, scaled.getPixel(x, y));
+                }
+            }
+        }
+        scaled.dispose();
+
+        Texture texture = new Texture(out);
+        out.dispose();
+        wallpaperCache.put(path, texture);
+        return new Image(texture);
+    }
+
+    private Table buildMinigameCard(String seasonFolder, String displayName, String wallpaperPath) {
         Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_1"), Color.BLACK);
 
-        Table info = new Table();
-        Label nameLabel = new Label(displayName, descStyle);
-        nameLabel.setFontScale(1.5f);
-        info.add(nameLabel).left().row();
         Label subLabel = new Label("Choose a level to play.", descStyle);
         subLabel.setFontScale(1.05f);
-        subLabel.setColor(Color.valueOf("555555"));
-        info.add(subLabel).left().padTop(6).row();
-        card.add(info).expandX().left();
+        subLabel.setColor(Color.valueOf("D8C9A8"));
 
         Table levels = new Table();
         for (int level = 1; level <= 3; level++) {
@@ -8268,7 +8516,37 @@ public class TravelLogMenu extends ScreenAdapter {
             });
             levels.add(levelBtn).size(140, 55).padLeft(6);
         }
-        card.add(levels).right();
+
+        Table rightPanel = new Table();
+        rightPanel.add(subLabel).padBottom(8).row();
+        rightPanel.add(levels).row();
+
+        // Wallpaper-backed card: the texture fills the card (rounded corners
+        // and a narrow frame baked into it), with the "Choose a level to
+        // play." label and the level buttons stacked on top, bottom-right.
+        // Falls back to the plain bordered card when no wallpaper is
+        // configured or the file is missing.
+        if (wallpaperPath != null && Gdx.files.internal(wallpaperPath).exists()) {
+            Image wallpaper = buildWallpaperImage(wallpaperPath, (int) CARD_WIDTH, 300, 28, 5);
+
+            Table content = new Table();
+            content.pad(14).padLeft(40).padRight(40);
+            content.bottom().right();
+            content.add(rightPanel).right();
+
+            Stack stack = new Stack();
+            stack.add(wallpaper);
+            stack.add(content);
+
+            Table wrapper = new Table();
+            wrapper.add(stack).grow();
+            return wrapper;
+        }
+
+        BorderedTable card = new BorderedTable();
+        card.pad(14).padLeft(40).padRight(40);
+        card.bottom().right();
+        card.add(rightPanel).right();
         return card;
     }
 
@@ -8276,6 +8554,21 @@ public class TravelLogMenu extends ScreenAdapter {
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(color);
         pixmap.fill();
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return texture;
+    }
+
+    private Texture roundedRectTexture(int width, int height, int radius, Color color) {
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        pixmap.setBlending(Pixmap.Blending.None);
+        pixmap.setColor(color);
+        pixmap.fillCircle(radius, radius, radius);
+        pixmap.fillCircle(width - radius - 1, radius, radius);
+        pixmap.fillCircle(radius, height - radius - 1, radius);
+        pixmap.fillCircle(width - radius - 1, height - radius - 1, radius);
+        pixmap.fillRectangle(radius, 0, width - 2 * radius, height);
+        pixmap.fillRectangle(0, radius, width, height - 2 * radius);
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
         return texture;
@@ -8300,6 +8593,12 @@ public class TravelLogMenu extends ScreenAdapter {
         skin.dispose();
         barBgTexture.dispose();
         barFillTexture.dispose();
+        darkBgTexture.dispose();
+        cardBgTexture.dispose();
+        for (Texture texture : wallpaperCache.values()) {
+            texture.dispose();
+        }
+        wallpaperCache.clear();
     }
 }
 
@@ -8976,31 +9275,36 @@ public class CollectionMenu extends ScreenAdapter {
     private void tryPurchase(PlantData data) {
         String error = controller.purchasePlant(data.type);
         if (error != null) {
-            showToast(error);
+            showToast(error, false);
             return;
         }
         refreshWallet();
         for (PlantCard card : cards) card.update();
-        showToast("Unlocked " + data.getName() + "!");
+        // Toast after reopening details so the new overlay doesn't cover it.
         closeDetails();
         openDetails(data);
+        showToast("Unlocked " + data.getName() + "!", true);
     }
 
-    /** Spends seed packets to level an owned plant up; refreshes the grid and reopens on success. */
+    /** Spends seed packets + coins to level an owned plant up; refreshes the grid and reopens on success. */
     private void tryUpgrade(PlantData data) {
         String error = controller.upgradePlant(data.type);
         if (error != null) {
-            showToast(error);
+            showToast(error, false);
             return;
         }
         for (PlantCard card : cards) card.update();
-        showToast(data.getName() + " is now Level " + data.getLevel() + "!");
+        refreshWallet();
+        // Toast must be shown AFTER reopening the details: openDetails adds a new
+        // full-screen overlay on top of any earlier actors, which would hide it.
         closeDetails();
         openDetails(data);
+        showToast(data.getName() + " is now Level " + data.getLevel() + "!", true);
     }
 
-    /** Centered, auto-dismissing message used for purchase feedback and errors. */
-    private void showToast(String message) {
+    /** Centered, auto-dismissing message used for purchase/upgrade feedback; {@code success}
+     *  toggles the label color between a green success and a red error. */
+    private void showToast(String message, boolean success) {
         if (toastOverlay != null) {
             toastOverlay.remove();
             toastOverlay = null;
@@ -9009,7 +9313,7 @@ public class CollectionMenu extends ScreenAdapter {
         Table toast = new Table();
         toast.setBackground(skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.88f)));
         Label label = new Label(message, skin, "medium");
-        label.setColor(Color.WHITE);
+        label.setColor(success ? new Color(0.4f, 0.9f, 0.4f, 1f) : new Color(1f, 0.45f, 0.4f, 1f));
         label.setWrap(true);
         label.setAlignment(Align.center);
         toast.add(label).width(720f).pad(18f);
@@ -10397,23 +10701,27 @@ public class ShopMenu extends Table {
         Table modalContent = new Table();
         Label header = new Label("Confirm Purchase", PvzSkin.get(), "big");
         header.setColor(Color.BLACK);
-        modalContent.add(header).padBottom(10f).row();
+        header.setFontScale(1.7f);
+        modalContent.add(header).padBottom(14f).row();
 
         String itemLabel = item.getName() + (plantType != null ? " (" + plantType.name() + ")" : "");
         Label message = new Label("Buy " + itemLabel + " for " + priceLabel(item.getPrice()) + "?", PvzSkin.get());
         message.setColor(Color.BLACK);
         message.setWrap(true);
-        modalContent.add(message).width(300f).padBottom(15f).row();
+        message.setFontScale(1.5f);
+        modalContent.add(message).width(520f).padBottom(20f).row();
 
         Table buttons = new Table();
-        TextButton cancelBtn = new TextButton("Cancel", PvzSkin.get(), "purple");
+        TextButton cancelBtn = new TextButton("Cancel", normalFontStyle("purple"));
+        cancelBtn.getLabel().setFontScale(1.35f);
         cancelBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 closeModal();
             }
         });
-        TextButton confirmBtn = new TextButton("Confirm", PvzSkin.get(), "green");
+        TextButton confirmBtn = new TextButton("Confirm", normalFontStyle("green"));
+        confirmBtn.getLabel().setFontScale(1.35f);
         confirmBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -10421,11 +10729,21 @@ public class ShopMenu extends Table {
                 executePurchase(item, plantType);
             }
         });
-        buttons.add(cancelBtn).width(140f).height(45f).padRight(10f);
-        buttons.add(confirmBtn).width(140f).height(45f);
+        buttons.add(cancelBtn).width(200f).height(65f).padRight(14f);
+        buttons.add(confirmBtn).width(200f).height(65f);
         modalContent.add(buttons);
 
-        showModal(modalContent);
+        showModal(modalContent, 700f, 420f);
+    }
+
+    /** "green"/"purple" TextButton styles copied with the normal UI font instead of
+     *  the decorative HOUSE_OF_TERROR face. */
+    private TextButton.TextButtonStyle normalFontStyle(String styleName) {
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(
+            PvzSkin.get().get(styleName, TextButton.TextButtonStyle.class));
+        style.font = PvzSkin.get().getFont("FBUSV8C5EI_2");
+        style.fontColor = Color.WHITE;
+        return style;
     }
 
     private void executePurchase(ShopItem item, PlantType plantType) {
@@ -10433,7 +10751,7 @@ public class ShopMenu extends Table {
         if (error != null) {
             showError(error);
         } else {
-            clearError();
+            showSuccess(item, plantType);
         }
         refresh(); // always refresh — capacities/wallet may have changed either way
     }
@@ -10501,6 +10819,48 @@ public class ShopMenu extends Table {
         modalContent.add(okBtn).width(160f).height(55f);
 
         showModal(modalContent, 600f, 320f);
+    }
+
+    private void showSuccess(ShopItem item, PlantType plantType) {
+        Table modalContent = new Table();
+        modalContent.top();
+
+        Label header = new Label("Purchase Successful", PvzSkin.get(), "big");
+        header.setColor(Color.BLACK);
+        header.setFontScale(1.6f);
+        modalContent.add(header).padBottom(18f).row();
+
+        String itemLabel = item.getName() + (plantType != null ? " (" + plantType.name() + ")" : "");
+        String message = "You bought " + itemLabel + "!";
+        if (item instanceof RandomSeedPacketItem randomSeed) {
+            String details = randomSeed.getLastPurchaseDetails();
+            if (details != null) {
+                // details format: "PLANTNAME +N"
+                int plusIdx = details.lastIndexOf('+');
+                String plantName = plusIdx > 0 ? details.substring(0, plusIdx).trim() : details;
+                String amount = plusIdx > 0 ? details.substring(plusIdx + 1) : "";
+                plantName = plantName.replace('_', ' ');
+                plantName = plantName.substring(0, 1) + plantName.substring(1).toLowerCase();
+                message += "\n" + plantName + " received " + amount + " seed packets!";
+            }
+        }
+        Label messageLabel = new Label(message, PvzSkin.get());
+        messageLabel.setColor(Color.BLACK);
+        messageLabel.setWrap(true);
+        messageLabel.setAlignment(Align.center);
+        messageLabel.setFontScale(1.3f);
+        modalContent.add(messageLabel).width(480f).padBottom(20f).row();
+
+        TextButton okBtn = new TextButton("OK", PvzSkin.get(), "green");
+        okBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                closeModal();
+            }
+        });
+        modalContent.add(okBtn).width(160f).height(55f);
+
+        showModal(modalContent, 640f, 400f);
     }
 
     private void clearError() {
@@ -14775,6 +15135,7 @@ import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
+import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.sun.Sun;
@@ -14788,6 +15149,7 @@ import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.games.modes.capabilities.ZombiePlacer;
 import com.pvz.models.games.modes.variants.IZombieMode;
+import com.pvz.models.games.modes.variants.VaseBreakerMode;
 import com.pvz.models.games.card.ZombieCard;
 import com.pvz.models.user.MyPlant;
 import com.pvz.view.GameModesMenu;
@@ -14836,6 +15198,9 @@ public class GameController {
     private Label readyPlantLabel;
     private float readyPlantTimer = 0f;
     private final float readyPlantDuration = 2.0f;
+    private Label errorMessageLabel;
+    private float errorMessageTimer = 0f;
+    private final float errorMessageDuration = 2.5f;
 
     private boolean paused = false;
     private Table pauseOverlay;
@@ -14848,6 +15213,10 @@ public class GameController {
     private float previewStateTime;
     private PlantCard previewPlantCard;
     private ZombieCard previewZombieCard;
+
+    /** Shovel tool: translucent shovel icon that follows the mouse while armed. */
+    private com.badlogic.gdx.scenes.scene2d.ui.Image shovelCursorPreview;
+    private final com.badlogic.gdx.math.Vector2 shovelCursorPosition = new com.badlogic.gdx.math.Vector2();
 
     public GameController(String seasonName, int levelNumber){
         this.seasonName=seasonName;
@@ -14876,6 +15245,28 @@ public class GameController {
                         // If a zombie card is selected, prioritize zombie placement
                         boolean zombieCardSelected = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
 
+                        // Shovel: clicking a planted tile digs the plant up (no sun refund)
+                        if (gameUiModal != null && gameUiModal.isShovelSelected()) {
+                            Tile shovelTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
+                            if (shovelTile != null) {
+                                List<Plant> plantsAtTile = new java.util.ArrayList<>(ctx.getPlantsAt(shovelTile.getCol(), shovelTile.getLane()));
+                                if (!plantsAtTile.isEmpty()) {
+                                    Plant target = plantsAtTile.get(0);
+                                    if (target != null && !target.isDead()) {
+                                        ctx.removePlant(target);
+                                        gameUiModal.setShovelSelected(false);
+                                        hideShovelCursor();
+                                        Gdx.app.log("Shovel", "Dug up " + target.getType() + " (no sun refund).");
+                                        return true;
+                                    }
+                                } else {
+                                    // Clicked empty tile with shovel armed: keep it armed, but no error
+                                    return true;
+                                }
+                            }
+                            return true;
+                        }
+
                         if (!zombieCardSelected) {
                             // ۱. ابتدا کلیک روی خورشید بررسی می‌شود
                             if (checkSunClick(touchPos.x, touchPos.y)) {
@@ -14900,6 +15291,28 @@ public class GameController {
                                     return true;
                                 }
                             }
+
+                            // Vase breaking: click on a vase tile to break it (no card selected)
+                            if (gameUiModal == null || gameUiModal.getSelectedCard() == null) {
+                                if (ctx.getMode() instanceof VaseBreakerMode vbMode) {
+                                    Tile clickedTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
+                                    if (clickedTile != null) {
+                                        int col = clickedTile.getCol();
+                                        int lane = clickedTile.getLane();
+                                        com.pvz.models.games.map.behaviors.VaseBehavior vase = null;
+                                        for (var b : clickedTile.getBehaviors()) {
+                                            if (b instanceof com.pvz.models.games.map.behaviors.VaseBehavior vb) {
+                                                vase = vb;
+                                                break;
+                                            }
+                                        }
+                                        if (vase != null && !vase.isBroken()) {
+                                            vbMode.breakVase(ctx, col, lane);
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
                         }
 
                         // ۲. کاشت گیاه در صورت انتخاب کارت
@@ -14915,6 +15328,9 @@ public class GameController {
                                         placer.handlePlacement(ctx, col, lane, card);
                                         gameUiModal.setSelectedCard(null);
                                         return true;
+                                    } else if (card.getCost() > ctx.getCurrentSun()) {
+                                        showErrorMessage("Not enough sun! You need "
+                                                + card.getCost() + " sun (you have " + ctx.getCurrentSun() + ").");
                                     }
                                 }
                             }
@@ -14951,6 +15367,7 @@ public class GameController {
         stage.addActor(plantSelectModal);
 
         gameUiModal = new GameUiModal(this::pauseGame);
+        gameUiModal.setOnShovelRequested(this::toggleShovelMode);
         stage.addActor(gameUiModal);
 
         backgroundTextures=new TextureRegion[3];
@@ -15009,13 +15426,35 @@ public class GameController {
         Table labelTable = new Table();
         labelTable.setFillParent(true);
         labelTable.center();
-        labelTable.add(readyPlantLabel);
+        labelTable.add(readyPlantLabel).padTop(-80).row();
         stage.addActor(labelTable);
+
+        errorMessageLabel = new Label("", PvzSkin.get(), "medium");
+        errorMessageLabel.setColor(Color.RED);
+        errorMessageLabel.setFontScale(1.2f);
+        errorMessageLabel.setAlignment(Align.center);
+        errorMessageLabel.setVisible(false);
+        errorMessageLabel.setWrap(true);
+        errorMessageLabel.setWidth(600f);
+
+        Table errorTable = new Table();
+        errorTable.setFillParent(true);
+        errorTable.top();
+        errorTable.add(errorMessageLabel).padTop(80).width(600f);
+        stage.addActor(errorTable);
     }
 
     public void update(float dt){
         camera.update();
         previewStateTime += dt;
+        updateShovelCursorPreview();
+
+        if (errorMessageLabel != null && errorMessageLabel.isVisible()) {
+            errorMessageTimer += dt;
+            if (errorMessageTimer >= errorMessageDuration) {
+                errorMessageLabel.setVisible(false);
+            }
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             showHitboxes = !showHitboxes;
@@ -15213,14 +15652,20 @@ public class GameController {
         batch.begin();
         drawBackground();
         if (ctx != null) {
-            drawPlants();
-            drawTileBehaviors();
-            drawZombies();
-            drawLawnMowers();
+            int totalLanes = ctx.getMap().getLanes();
+            for (int lane = 0; lane < totalLanes; lane++) {
+                drawInactiveLawnMowers(lane);
+                drawPlants(lane);
+                drawTileBehaviors(lane);
+                drawZombies(lane);
+                drawProjectiles(lane);
+                drawOctopusProjectiles(lane);
+                drawEffects(lane);
+                drawActiveLawnMowers(lane);
+            }
+            drawProjectilesOutsideGrid();
             drawSuns();
             drawLootDrops();
-            drawProjectiles();
-            drawEffects();
             drawPlacementPreview();
             drawIZombieOverlay();
         }
@@ -15228,7 +15673,8 @@ public class GameController {
 
         if (currentState == State.PLAYING && gameUiModal != null && ctx != null) {
             boolean hasSelectedCard = gameUiModal.getSelectedCard() != null || gameUiModal.getSelectedZombieCard() != null;
-            if (hasSelectedCard) {
+            boolean shovelArmed = gameUiModal.isShovelSelected();
+            if (hasSelectedCard || shovelArmed) {
                 touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                 viewport.unproject(touchPos);
 
@@ -15254,49 +15700,146 @@ public class GameController {
         batch.draw(backgroundTextures[2], backgroundTextures[1].getRegionWidth(), 0);
     }
 
-    private void drawTileBehaviors(){
-        if (ctx==null) return;
-        for (int lane = 0; lane < ctx.getMap().getLanes(); lane++) {
-            for (int col = 0; col < ctx.getMap().getColumns(); col++) {
-                List<FrameConfig> frameConfigs = ctx.getMap().getTileAt(col,lane).drawBehaviors();
-                if (frameConfigs!=null && !frameConfigs.isEmpty()){
-                    for (FrameConfig frameConfig: frameConfigs) {
-                        if (frameConfig!=null) {
-                            batch.setColor(frameConfig.r,frameConfig.g,frameConfig.b,frameConfig.a);
-                            PvZ2.pamPlayer.draw(batch, frameConfig.pamPath, frameConfig.label,
-                                frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
-                                frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
-                            batch.setColor(Color.WHITE);
-                        }
+    private void drawInactiveLawnMowers(int row) {
+        LawnMower lm = ctx.getLawnMowers()[row];
+        if (lm != null && !lm.isTriggered()) {
+            FrameConfig fc = lm.draw();
+            PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                fc.stateTime, fc.position.x, fc.position.y,
+                fc.scale.x, fc.scale.y, fc.looping);
+        }
+    }
+
+    private void drawPlants(int row) {
+        for (Plant p : ctx.getPlants()) {
+            if (p.getLane() == row && !p.isBound()) {
+                FrameConfig fc = p.draw();
+                if (fc != null) {
+                    batch.setColor(fc.r, fc.g, fc.b, fc.a);
+                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                        fc.stateTime, fc.position.x, fc.position.y,
+                        fc.scale.x, fc.scale.y, fc.looping);
+                    batch.setColor(1f, 1f, 1f, 1f);
+                }
+            }
+        }
+    }
+
+    private void drawTileBehaviors(int row) {
+        for (int col = 0; col < ctx.getMap().getColumns(); col++) {
+            List<FrameConfig> frames = ctx.getMap().getTileAt(col, row).drawBehaviors();
+            if (frames != null) {
+                for (FrameConfig fc : frames) {
+                    if (fc != null) {
+                        batch.setColor(fc.r, fc.g, fc.b, fc.a);
+                        PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                            fc.stateTime, fc.position.x, fc.position.y,
+                            fc.scale.x, fc.scale.y, fc.looping);
+                        batch.setColor(Color.WHITE);
                     }
                 }
             }
         }
     }
 
-    private void drawPlants(){
-        if (ctx==null) return;
-        for (Plant p: ctx.getPlants()){
-            FrameConfig frameConfig = p.draw();
-            if (frameConfig!=null){
-                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+    private void drawZombies(int row) {
+        for (Zombie z : ctx.getZombies()) {
+            if (GameController.worldYtoLane(z.getY()) == row) {
+                FrameConfig fc = z.draw();
+                if (fc != null) {
+                    batch.setColor(fc.r, fc.g, fc.b, fc.a);
+                    drawFrame(fc);
+                    batch.setColor(1f, 1f, 1f, 1f);
+                }
             }
         }
     }
 
-    private void drawZombies(){
-        if (ctx==null) return;
-        for (Zombie z: ctx.getZombies()){
-            FrameConfig frameConfig = z.draw();
-            if (frameConfig!=null){
-                batch.setColor(frameConfig.r,frameConfig.g,frameConfig.b,frameConfig.a);
-                drawFrame(frameConfig);
-                batch.setColor(1f,1f,1f,1f);
+    private void drawProjectiles(int row) {
+        for (Projectile p : ctx.getProjectiles()) {
+            int pLane = GameController.worldYtoLane(p.getY());
+            if (pLane == row) {
+                p.draw();
             }
         }
     }
+
+    private void drawProjectilesOutsideGrid() {
+        int totalLanes = ctx.getMap().getLanes();
+        for (Projectile p : ctx.getProjectiles()) {
+            int pLane = GameController.worldYtoLane(p.getY());
+            if (pLane < 0 || pLane >= totalLanes) {
+                p.draw();
+            }
+        }
+        for (var op : ctx.getOctopusProjectiles()) {
+            int opLane = GameController.worldYtoLane(op.getPosition().y);
+            if (opLane < 0 || opLane >= totalLanes) {
+                FrameConfig fc = op.draw();
+                if (fc != null) {
+                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                        fc.stateTime, fc.position.x, fc.position.y,
+                        fc.scale.x, fc.scale.y, fc.looping);
+                }
+            }
+        }
+    }
+
+    private void drawOctopusProjectiles(int row) {
+        for (var op : ctx.getOctopusProjectiles()) {
+            int opLane = GameController.worldYtoLane(op.getPosition().y);
+            if (opLane == row) {
+                FrameConfig fc = op.draw();
+                if (fc != null) {
+                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                        fc.stateTime, fc.position.x, fc.position.y,
+                        fc.scale.x, fc.scale.y, fc.looping);
+                }
+            }
+        }
+    }
+
+    private void drawEffects(int row) {
+        for (Effect e : ctx.getEffects()) {
+            if (GameController.worldYtoLane(e.getPos().y) == row) {
+                FrameConfig fc = e.draw();
+                if (fc != null) {
+                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                        fc.stateTime, fc.position.x, fc.position.y,
+                        fc.scale.x, fc.scale.y, fc.looping);
+                }
+            }
+        }
+    }
+
+    private void drawSuns() {
+        for (Sun s : ctx.getSuns()) {
+            FrameConfig fc = s.draw();
+            if (fc != null) {
+                PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                    fc.stateTime, fc.position.x, fc.position.y,
+                    fc.scale.x, fc.scale.y, fc.looping);
+            }
+        }
+    }
+
+    private void drawLootDrops() {
+        for (LootDrop ld : ctx.getLootDrops()) {
+            ld.draw();
+        }
+    }
+
+    private void drawActiveLawnMowers(int row) {
+        LawnMower lm = ctx.getLawnMowers()[row];
+        if (lm != null && lm.isTriggered()) {
+            FrameConfig fc = lm.draw();
+            PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                fc.stateTime, fc.position.x, fc.position.y,
+                fc.scale.x, fc.scale.y, fc.looping);
+        }
+    }
+
+
 
     /**
      * Draws one animation frame, honouring the optional {@code partsVisibility}
@@ -15316,65 +15859,7 @@ public class GameController {
         }
     }
 
-    private void drawLawnMowers(){
-        LawnMower[] lawnMowers = ctx.getLawnMowers();
-        for (LawnMower lawnMower : lawnMowers) {
-            if (lawnMower != null) {
-                FrameConfig frameConfig = lawnMower.draw();
-                PvZ2.pamPlayer.draw(batch, frameConfig.pamPath, frameConfig.label,
-                    frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
-            }
-        }
-    }
 
-    private void drawProjectiles(){
-        if (ctx==null) return;
-        for (Projectile p: ctx.getProjectiles()){
-            FrameConfig frameConfig = p.draw();
-            if (frameConfig!=null){
-                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
-            }
-        }
-    }
-
-    private void drawSuns(){
-        if (ctx==null) return;
-        for (Sun s: ctx.getSuns()){
-            FrameConfig frameConfig = s.draw();
-            if (frameConfig!=null){
-                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
-            }
-        }
-    }
-
-    private void drawEffects(){
-        if (ctx==null) return;
-        for (Effect e: ctx.getEffects()){
-            FrameConfig frameConfig = e.draw();
-            if (frameConfig!=null){
-                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
-            }
-        }
-    }
-
-    private void drawLootDrops(){
-        if (ctx==null) return;
-        for (LootDrop c: ctx.getLootDrops()){
-            FrameConfig frameConfig = c.draw();
-            if (frameConfig!=null){
-                PvZ2.pamPlayer.draw(batch,frameConfig.pamPath,frameConfig.label,
-                    frameConfig.stateTime,frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
-            }
-        }
-    }
 
     /**
      * Draws the "ghost" of the currently selected seed packet following the mouse:
@@ -15544,6 +16029,66 @@ public class GameController {
         }
     }
 
+    private void showErrorMessage(String message) {
+        if (errorMessageLabel == null) return;
+        errorMessageLabel.setText(message);
+        errorMessageLabel.setVisible(true);
+        errorMessageTimer = 0f;
+        errorMessageLabel.toFront();
+    }
+
+    /**
+     * Toggles the shovel tool. Selecting it clears any armed plant/zombie card
+     * and shows a translucent shovel cursor following the mouse; clicking a
+     * planted tile then digs the plant up (refunding its sun cost). Clicking
+     * the shovel again disarms it. Mirrors the phase-0 reference behaviour.
+     */
+    private void toggleShovelMode() {
+        if (gameUiModal == null) return;
+        boolean willSelect = !gameUiModal.isShovelSelected();
+        gameUiModal.setShovelSelected(willSelect);
+        if (willSelect) {
+            showShovelCursor();
+        } else {
+            hideShovelCursor();
+        }
+    }
+
+    private void showShovelCursor() {
+        com.badlogic.gdx.graphics.g2d.TextureRegion region =
+                PvZ2.textureBank.region("IMAGE_UI_HUD_INGAME_SHOVEL_ICON");
+        if (region == null) {
+            Gdx.app.error("GameController", "Shovel cursor region not found.");
+            return;
+        }
+        if (shovelCursorPreview == null) {
+            shovelCursorPreview = new com.badlogic.gdx.scenes.scene2d.ui.Image();
+            shovelCursorPreview.setTouchable(Touchable.disabled);
+            stage.addActor(shovelCursorPreview);
+        }
+        shovelCursorPreview.setDrawable(new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(region));
+        shovelCursorPreview.setSize(region.getRegionWidth() * 0.65f, region.getRegionHeight() * 0.65f);
+        shovelCursorPreview.setColor(1f, 1f, 1f, 0.58f);
+        shovelCursorPreview.setVisible(true);
+        shovelCursorPreview.toFront();
+    }
+
+    private void hideShovelCursor() {
+        if (shovelCursorPreview != null) {
+            shovelCursorPreview.setVisible(false);
+        }
+    }
+
+    private void updateShovelCursorPreview() {
+        if (shovelCursorPreview == null || !shovelCursorPreview.isVisible()) return;
+        shovelCursorPosition.set(Gdx.input.getX(), Gdx.input.getY());
+        stage.screenToStageCoordinates(shovelCursorPosition);
+        shovelCursorPreview.setPosition(
+                shovelCursorPosition.x - shovelCursorPreview.getWidth() / 2f,
+                shovelCursorPosition.y - shovelCursorPreview.getHeight() / 2f);
+        shovelCursorPreview.toFront();
+    }
+
     private void drawDebugShapes(){
         shapeRenderer.setProjectionMatrix(camera.combined);
         // ۶. رسم خورشیدها و خطوط دیباگ گرید
@@ -15558,15 +16103,35 @@ public class GameController {
                 }
             }*/
             // رسم خطوط گرید دیباگ
-            shapeRenderer.setColor(Color.RED);
-            // for (int i = 0; i < ctx.getMap().getLanes(); i++) {
-            //     float gridY = GameMap.TOP_LANE_Y - i * GameMap.TILE_HEIGHT;
-            //     shapeRenderer.rect(0, gridY - 0.5f, GameScreen.SCREEN_WIDTH, 1);
-            // }
-            // for (int i = 0; i < ctx.getMap().getColumns(); i++) {
-            //     float gridX = GameMap.START_X + i * GameMap.TILE_WIDTH;
-            //     shapeRenderer.rect(gridX - 0.5f, 0, 1, GameScreen.SCREEN_HEIGHT);
-            // }
+            boolean showGrid = false;
+            try {
+                var user = com.pvz.models.AppContext.getInstance().getCurrentUser();
+                if (user != null) showGrid = user.getSetting().isShowGrid();
+            } catch (Exception ignored) {}
+            if (showGrid) {
+                shapeRenderer.end();
+                Gdx.gl.glEnable(GL20.GL_BLEND);
+                Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+                shapeRenderer.setProjectionMatrix(camera.combined);
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                shapeRenderer.setColor(1f, 0f, 0f, 0.4f);
+                int lanes = ctx.getMap().getLanes();
+                int cols = ctx.getMap().getColumns();
+                float boardWidth = cols * GameMap.TILE_WIDTH;
+                float gridBottom = GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT;
+                float gridHeight = lanes * GameMap.TILE_HEIGHT;
+                for (int i = 0; i <= lanes; i++) {
+                    float y = GameMap.TOP_LANE_Y + GameMap.TILE_HEIGHT - i * GameMap.TILE_HEIGHT;
+                    shapeRenderer.rect(GameMap.START_X, y - 1f, boardWidth, 2f);
+                }
+                for (int i = 0; i <= cols; i++) {
+                    float x = GameMap.START_X + i * GameMap.TILE_WIDTH;
+                    shapeRenderer.rect(x - 1f, gridBottom, 2f, gridHeight);
+                }
+                shapeRenderer.end();
+                Gdx.gl.glDisable(GL20.GL_BLEND);
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            }
 
             // for(Plant a : ctx.getPlants()){
             //     shapeRenderer.circle(GameController.xToWorldX(a.getCol()), GameController.yToWorldY(a.getLane()), 10);
@@ -15628,8 +16193,6 @@ public class GameController {
                         owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(pt);
                     } catch (Exception ignored) {}
                     PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(pt);
-                    int sunCost = (sheet != null) ? sheet.getSunCost() : 50;
-                    float recharge = (sheet != null) ? sheet.getRechargeSeconds() : 5f;
 
                     MyPlant myPlant = owned;
                     if (myPlant == null) {
@@ -15637,6 +16200,17 @@ public class GameController {
                         myPlant.setType(pt);
                         myPlant.setLevel(1);
                     }
+
+                    // Resolve sun cost / recharge at the player's plant level so the card
+                    // shows the same values the mode actually charges (level-up SUN_COST
+                    // / RECHARGE_SECONDS modifiers are applied here, not on the sheet).
+                    PlantStatResolver.ResolvedStats stats =
+                            (sheet != null) ? PlantStatResolver.resolve(sheet, myPlant.getLevel()) : null;
+                    int sunCost = (stats != null) ? stats.getSunCost() : ((sheet != null) ? sheet.getSunCost() : 50);
+                    float recharge = (stats != null && stats.getRechargeSeconds() != null)
+                            ? stats.getRechargeSeconds()
+                            : ((sheet != null) ? sheet.getRechargeSeconds() : 5f);
+
                     newContext.addCard(new PlantCard(myPlant, sunCost, recharge));
                 }
                 AppContext.getInstance().setGameContext(newContext);
@@ -17649,6 +18223,15 @@ public class CollectionController {
         }
     }
 
+    /**
+     * Coins required to advance an owned plant from {@code currentLevel} to the next one.
+     * Level 1→2 costs 1000, 2→3 costs 2000, 3→4 costs 4000, doubling after that.
+     */
+    public static int requiredCoinsForLevel(int currentLevel) {
+        int targetLevel = currentLevel + 1;
+        return 1000 * (int) Math.pow(2, Math.max(0, targetLevel - 2));
+    }
+
     private User user() {
         return AppContext.getInstance().getCurrentUser();
     }
@@ -17740,14 +18323,22 @@ public class CollectionController {
         }
         if (plant.getLevel() >= maxLevel) return type + " is already at max level.";
 
-        int cost = requiredPacketsForLevel(plant.getLevel());
+        int packetCost = requiredPacketsForLevel(plant.getLevel());
         int packets = collection.getSeedPackets(type);
-        if (packets < cost) {
-            return "Not enough packets! You need " + cost + " to reach level "
+        if (packets < packetCost) {
+            return "Not enough packets! You need " + packetCost + " to reach level "
                     + (plant.getLevel() + 1) + ", but you only have " + packets + ".";
         }
 
-        collection.consumeSeedPackets(type, cost);
+        int coinCost = requiredCoinsForLevel(plant.getLevel());
+        int coins = profile.getCoins();
+        if (coins < coinCost) {
+            return "Not enough coins! Upgrading to level " + (plant.getLevel() + 1)
+                    + " costs " + coinCost + " coins, but you only have " + coins + ".";
+        }
+
+        collection.consumeSeedPackets(type, packetCost);
+        profile.setCoins(coins - coinCost);
         plant.setLevel(plant.getLevel() + 1);
         user.saveUser();
         return null;
@@ -18077,7 +18668,7 @@ public class RandomSeedPacketItem extends ShopItem {
         this.name = "Random Seed Packet";
         this.description = "Grants   seed   packets   for   a   random plant.";
         this.price = new Price(Currency.COIN, 1000);
-        this.unitAmount = 10;
+        this.unitAmount = 5;
         this.maxPurchasePerUser = 0;
     }
 
@@ -19701,6 +20292,14 @@ public class LawnMower extends Entity {
         ctx.removeHitbox(getHitbox());
         ctx.getLawnMowers()[GameController.worldYtoLane(position.y)]=null;
     }
+
+    public boolean isTriggered() {
+        return triggered;
+    }
+
+    public int getLane() {
+        return GameController.worldYtoLane(position.y);
+    }
 }
 
 
@@ -19941,8 +20540,13 @@ public class Projectile extends Entity {
         int col = GameController.worldXtoCol(position.x);
         int lane = GameController.worldYtoLane(position.y);
 
-        if (col < -0.5f || col >= ctx.getMap().getColumns() + 0.5f
-                || lane < -0.5f || lane >= ctx.getMap().getLanes() + 0.5f) {
+        int cols = ctx.getMap().getColumns();
+        int lanes = ctx.getMap().getLanes();
+
+        boolean inLane = lane >= 0 && lane < lanes;
+        boolean inColRange = col >= -2 && col < cols + 3;
+
+        if (!inColRange || lane < -1 || lane > lanes) {
             destroy();
             return;
         }
@@ -19951,7 +20555,7 @@ public class Projectile extends Entity {
             lastCol = col;
             lastLane = lane;
 
-            if (!lobbed || lane == launchLane) {
+            if (inLane && col >= 0 && col < cols && (!lobbed || lane == launchLane)) {
                 try {
                     Tile tile = ctx.getTileAt(lastCol, lastLane);
                     tile.processHit(this);
@@ -20289,6 +20893,142 @@ public enum ProjectileType {
 
     public boolean hasSplat() {
         return splatPamPath != null;
+    }
+}
+
+
+======================================================
+FILE: OctopusProjectile.java
+======================================================
+
+package com.pvz.models.entities.projectile;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.PvZ2;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.Entity;
+import com.pvz.models.games.GameContext;
+import com.pvz.models.games.map.behaviors.OctopusOverlayBehavior;
+import com.pvz.models.games.map.tile.Tile;
+import com.pvz.models.games.map.tile.TileTags;
+
+/**
+ * A parabolic octopus projectile thrown by the Octopus Zombie toward a
+ * target plant. Flies in an arc from the zombie's position to the
+ * target tile. On landing:
+ * <ul>
+ *   <li>If a plant exists on the tile: the plant is bound (disabled)
+ *       and an {@link OctopusOverlayBehavior} is added to the tile.</li>
+ *   <li>If no plant exists: the overlay still lands and blocks the tile.</li>
+ * </ul>
+ *
+ * <p>Follows the same parabolic math as {@link LobbedMotionState} but is
+ * a standalone entity (not a regular {@link Projectile}) since it targets
+ * plants rather than zombies.
+ */
+public class OctopusProjectile extends Entity {
+
+    private static final String PAM_PATH = "768/FULL/EFFECTS/ZOMBIE_OCTOPUS_PROJECTILE/ZOMBIE_OCTOPUS_PROJECTILE.PAM";
+    private static final String CLIP = "animation";
+
+    private final GameContext ctx;
+    private final Vector2 startPos = new Vector2();
+    private final Vector2 targetPos = new Vector2();
+    private final int targetCol;
+    private final int targetLane;
+    private final float octopusHp;
+    private final float flightSeconds;
+    private final float arcHeight;
+
+    private float stateTime = 0f;
+    private boolean landed = false;
+
+    public OctopusProjectile(GameContext ctx,
+                             float startX, float startY,
+                             float targetX, float targetY,
+                             int targetCol, int targetLane,
+                             float octopusHp,
+                             float flightSeconds, float arcHeight) {
+        this.ctx = ctx;
+        this.startPos.set(startX, startY);
+        this.targetPos.set(targetX, targetY);
+        this.targetCol = targetCol;
+        this.targetLane = targetLane;
+        this.octopusHp = octopusHp;
+        this.flightSeconds = Math.max(0.1f, flightSeconds);
+        this.arcHeight = arcHeight;
+        position.set(startX, startY);
+    }
+
+    @Override
+    public void enter() {
+        stateTime = 0f;
+        landed = false;
+    }
+
+    @Override
+    public void update(float dt) {
+        if (landed) return;
+        stateTime += dt;
+        float t = Math.min(1f, stateTime / flightSeconds);
+
+        float x = startPos.x + (targetPos.x - startPos.x) * t;
+        float baseY = startPos.y + (targetPos.y - startPos.y) * t;
+        float arcOffset = arcHeight * (float) Math.sin(t * Math.PI);
+        position.set(x, baseY + arcOffset);
+
+        if (t >= 1f) {
+            landed = true;
+            onLand();
+            dispose();
+        }
+    }
+
+    @Override
+    public FrameConfig draw() {
+        return new FrameConfig(PAM_PATH, CLIP, stateTime,
+            new Vector2(position.x, position.y),
+            new Vector2(0.75f, 0.75f), null, true);
+    }
+
+    @Override
+    public void dispose() {
+        ctx.removeOctopusProjectile(this);
+    }
+
+    /**
+     * Called when the projectile reaches its target tile. Spawns an
+     * {@link OctopusOverlayBehavior} on the tile. If a plant is present,
+     * it is bound (disabled). If the plant was destroyed mid-flight, the
+     * octopus still lands and blocks the tile.
+     */
+    private void onLand() {
+        Tile tile = ctx.getTileAt(targetCol, targetLane);
+        if (tile == null) return;
+
+        // If the tile already has an octopus overlay, don't stack another one
+        for (var b : tile.getBehaviors()) {
+            if (b instanceof OctopusOverlayBehavior) return;
+        }
+
+        OctopusOverlayBehavior overlay = new OctopusOverlayBehavior(
+            ctx, tile, octopusHp, targetCol, targetLane
+        );
+        tile.addBehavior(overlay);
+        tile.getTags().add(TileTags.OCTOPUS);
+
+        // Bind the plant if one exists on this tile
+        if (!tile.getPlants().isEmpty()) {
+            for (var plant : tile.getPlants()) {
+                if (!plant.isDead()) {
+                    plant.setBound(true);
+                    overlay.setBoundPlant(plant);
+                    break;
+                }
+            }
+        }
+
+        ctx.log("[Octopus] Octopus landed on tile (" + targetCol + "," + targetLane + ")");
     }
 }
 
@@ -21101,6 +21841,75 @@ public class PlantFeedState extends PlantState {
     @Override
     public FrameConfig draw(Plant plant, GameContext ctx) {
         return feedAction.draw(plant, ctx);
+    }
+}
+
+
+======================================================
+FILE: PlantFlashState.java
+======================================================
+
+package com.pvz.models.entities.plants.fsm;
+
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.games.GameContext;
+
+/**
+ * Temporary damage-flash wrapper around any {@link PlantState}.
+ * Delegates all logic to the wrapped state while applying a white
+ * semi-transparent tint to the draw output for {@code FLASH_DURATION} seconds.
+ */
+public class PlantFlashState extends PlantState {
+
+    private static final float FLASH_DURATION = 0.28f;
+    private static final float FLASH_R = 5f;
+    private static final float FLASH_G = 5f;
+    private static final float FLASH_B = 5f;
+    private static final float FLASH_A = 0.6f;
+
+    private PlantState underlying;
+
+    public PlantFlashState(PlantState underlying) {
+        this.underlying = underlying;
+        this.stateTime = 0f;
+    }
+
+    @Override
+    public void onEnter(Plant plant, GameContext ctx) {
+        stateTime = 0f;
+    }
+
+    @Override
+    public void update(Plant plant, GameContext ctx, float dt) {
+        stateTime += dt;
+        if (stateTime >= FLASH_DURATION) {
+            return;
+        }
+        PlantState prev = underlying;
+        underlying.update(plant, ctx, dt);
+        if (underlying != prev) {
+            plant.setCurrentState(underlying);
+        }
+    }
+
+    @Override
+    public void onExit(Plant plant, GameContext ctx) {
+        // underlying state is still alive — do NOT call its onExit
+    }
+
+    @Override
+    public FrameConfig draw(Plant plant, GameContext ctx) {
+        FrameConfig fc = underlying.draw(plant, ctx);
+        if (fc != null) {
+            fc.setColor(FLASH_R, FLASH_G, FLASH_B, FLASH_A);
+        }
+        return fc;
+    }
+
+    @Override
+    public String getLabel() {
+        return "Flash(" + underlying.getLabel() + ")";
     }
 }
 
@@ -24787,6 +25596,7 @@ import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.plants.fsm.PlantDeadState;
+import com.pvz.models.entities.plants.fsm.PlantFlashState;
 import com.pvz.models.entities.plants.fsm.PlantIdleState;
 import com.pvz.models.entities.plants.fsm.PlantState;
 import com.pvz.models.games.GameContext;
@@ -24820,6 +25630,9 @@ public class Plant extends Entity {
     private final PlantAction attackAction;
     private final PlantAction feedAction;
     private boolean dead;
+
+    /** When true the plant is bound by an octopus overlay and cannot act. */
+    private boolean bound;
 
     private int freezeLevel = 0; // 0, 1, 2, 3
     private boolean isFrozen = false;
@@ -24856,7 +25669,7 @@ public class Plant extends Entity {
 
     @Override
     public void update(float dt) {
-        if (dead || isFrozen)
+        if (dead || isFrozen || bound)
             return;
         syncHitbox();
         tickGrowth();
@@ -24948,6 +25761,9 @@ public class Plant extends Entity {
         }
 
         hp = Math.max(0f, hp - amount);
+        if (currentState != null && !(currentState instanceof PlantDeadState) && !(currentState instanceof PlantFlashState)) {
+            currentState = new PlantFlashState(currentState);
+        }
         if (hp <= 0f)
             kill();
     }
@@ -25131,8 +25947,20 @@ public class Plant extends Entity {
         return dead;
     }
 
+    public boolean isBound() {
+        return bound;
+    }
+
+    public void setBound(boolean bound) {
+        this.bound = bound;
+    }
+
     public PlantState getCurrentState() {
         return currentState;
+    }
+
+    public void setCurrentState(PlantState state) {
+        this.currentState = state;
     }
 
     public boolean isPlantableOnTile(Tile tile){
@@ -25576,6 +26404,86 @@ public class ButterStunState extends ZombieState {
 
     public float getRemainingDuration() {
         return Math.max(0, duration - stateTime);
+    }
+}
+
+
+======================================================
+FILE: ZombieFlashState.java
+======================================================
+
+package com.pvz.models.entities.zombies.fsm;
+
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.games.GameContext;
+
+/**
+ * Temporary damage-flash wrapper around any {@link ZombieState}.
+ * Delegates all logic to the wrapped state while applying a white
+ * semi-transparent tint to the draw output for {@code FLASH_DURATION} seconds.
+ */
+public class ZombieFlashState extends ZombieState {
+
+    private static final float FLASH_DURATION = 0.28f;
+    private static final float FLASH_R = 5f;
+    private static final float FLASH_G = 5f;
+    private static final float FLASH_B = 5f;
+    private static final float FLASH_A = 0.6f;
+
+    private ZombieState underlying;
+
+    public ZombieFlashState(ZombieState underlying) {
+        super(null);
+        this.underlying = underlying;
+        this.stateTime = 0f;
+    }
+
+    @Override
+    public void onEnter(Zombie zombie, GameContext ctx) {
+        stateTime = 0f;
+    }
+
+    @Override
+    public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
+        stateTime += dt;
+        if (stateTime >= FLASH_DURATION) {
+            return underlying;
+        }
+        ZombieState prev = underlying;
+        ZombieState next = underlying.update(zombie, ctx, dt);
+        if (next != prev) {
+            underlying = next;
+        }
+        return this;
+    }
+
+    @Override
+    public void onExit(Zombie zombie, GameContext ctx) {
+        // underlying state is still alive — do NOT call its onExit
+    }
+
+    @Override
+    public FrameConfig draw(Zombie zombie, GameContext ctx) {
+        FrameConfig fc = underlying.draw(zombie, ctx);
+        if (fc != null) {
+            fc.setColor(FLASH_R, FLASH_G, FLASH_B, FLASH_A);
+        }
+        return fc;
+    }
+
+    @Override
+    public boolean shouldTrigger(Zombie zombie, GameContext ctx, float dt) {
+        return false;
+    }
+
+    @Override
+    protected void doExecute(Zombie zombie, GameContext ctx) {
+    }
+
+    @Override
+    public String getName() {
+        return "Flash";
     }
 }
 
@@ -26233,6 +27141,126 @@ public class RaStealSunSkill extends CooldownSkill {
 
 
 ======================================================
+FILE: OctopusBindingSkill.java
+======================================================
+
+package com.pvz.models.entities.zombies.skills;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.pvz.controller.game.GameController;
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.projectile.OctopusProjectile;
+import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.config.OctopusSkillConfig;
+import com.pvz.models.entities.zombies.fsm.ZombieState;
+import com.pvz.models.games.GameContext;
+
+/**
+ * Octopus Zombie — periodically throws an octopus projectile at the nearest
+ * active (non-bound) plant. On landing, the octopus covers the plant,
+ * disabling it and blocking the tile.
+ *
+ * <p>The skill fires on a repeating cooldown ({@code cooldownSeconds}). If
+ * no active plants exist when the cooldown expires, the skill stays idle
+ * until a valid target appears.
+ */
+public class OctopusBindingSkill extends CooldownSkill {
+
+    private static final float THROW_DELAY = 1.4f;
+
+    private final float octopusHp;
+    private final float throwDuration;
+    private final float arcHeight;
+
+    private int pendingCol = -1;
+    private int pendingLane = -1;
+    private boolean thrown = false;
+
+    public OctopusBindingSkill(OctopusSkillConfig config) {
+        super(config, config.cooldownSeconds);
+        this.octopusHp = config.octopusHp;
+        this.throwDuration = config.throwDuration;
+        this.arcHeight = config.arcHeight;
+    }
+
+    @Override
+    protected boolean canUse(Zombie zombie, GameContext ctx) {
+        return findTarget(zombie, ctx) != null;
+    }
+
+    @Override
+    protected void doExecute(Zombie zombie, GameContext ctx) {
+        Plant target = findTarget(zombie, ctx);
+        if (target == null) return;
+
+        pendingCol = target.getCol();
+        pendingLane = target.getLane();
+        thrown = false;
+
+        ctx.log("[Octopus] Zombie preparing to throw octopus at plant ("
+            + pendingCol + "," + pendingLane + ")");
+    }
+
+    @Override
+    public ZombieState update(Zombie zombie, GameContext ctx, float dt) {
+        if (!thrown && stateTime >= THROW_DELAY) {
+            thrown = true;
+            Plant target = findTarget(zombie, ctx);
+            if (target == null || target.getCol() != pendingCol || target.getLane() != pendingLane) {
+                target = findTarget(zombie, ctx);
+            }
+            if (target != null) {
+                float startX = zombie.getX();
+                float startY = zombie.getY() + 40f;
+                float targetX = GameController.colToWorldX(target.getCol());
+                float targetY = GameController.laneToWorldY(target.getLane());
+
+                OctopusProjectile projectile = new OctopusProjectile(
+                    ctx, startX, startY, targetX, targetY,
+                    target.getCol(), target.getLane(),
+                    octopusHp, throwDuration, arcHeight
+                );
+                ctx.spawnOctopusProjectile(projectile);
+
+                ctx.log("[Octopus] Zombie threw octopus at plant ("
+                    + target.getCol() + "," + target.getLane() + ")");
+            }
+        }
+        return super.update(zombie, ctx, dt);
+    }
+
+    @Override
+    public String getName() {
+        return "OctopusBinding";
+    }
+
+    /**
+     * Finds the nearest active plant in the zombie's lane. Active means
+     * not dead, not frozen, and not already bound by an octopus.
+     */
+    private Plant findTarget(Zombie zombie, GameContext ctx) {
+        int lane = GameController.worldYtoLane(zombie.getY());
+        int zombieCol = GameController.worldXtoCol(zombie.getX());
+        Plant nearest = null;
+        int bestDist = Integer.MAX_VALUE;
+
+        for (Plant p : ctx.getPlants()) {
+            if (p.getLane() != lane) continue;
+            if (p.isDead() || p.isFrozen() || p.isBound()) continue;
+            int dist = zombieCol - p.getCol();
+            if (dist > 0 && dist < bestDist) {
+                bestDist = dist;
+                nearest = p;
+            }
+        }
+        return nearest;
+    }
+}
+
+
+======================================================
 FILE: CooldownSkill.java
 ======================================================
 
@@ -26293,6 +27321,7 @@ package com.pvz.models.entities.zombies.skills;
 import com.pvz.models.entities.zombies.config.ExplorerTorchSkillConfig;
 import com.pvz.models.entities.zombies.config.GargantuarSkillConfig;
 import com.pvz.models.entities.zombies.config.HunterSnowballSkillConfig;
+import com.pvz.models.entities.zombies.config.OctopusSkillConfig;
 import com.pvz.models.entities.zombies.config.RaStealSunSkillConfig;
 import com.pvz.models.entities.zombies.config.TombRaiserSkillConfig;
 import com.pvz.models.entities.zombies.config.WizardZapSkillConfig;
@@ -26333,6 +27362,9 @@ public final class ZombieSkillCatalog {
         }
         if (config instanceof HunterSnowballSkillConfig hunterConfig) {
             return new HunterSnowballSkill(hunterConfig);
+        }
+        if (config instanceof OctopusSkillConfig octopusConfig) {
+            return new OctopusBindingSkill(octopusConfig);
         }
         return null;
     }
@@ -26611,6 +27643,35 @@ public class TombRaiserSkill extends CooldownSkill {
 
 
 ======================================================
+FILE: OctopusSkillConfig.java
+======================================================
+
+package com.pvz.models.entities.zombies.config;
+
+/**
+ * Configuration for the Octopus Zombie's binding skill.
+ *
+ * <p>The octopus zombie periodically throws an octopus projectile at the
+ * nearest active plant. On impact the octopus covers the plant, disabling
+ * it and blocking the tile until the overlay is destroyed.
+ */
+public class OctopusSkillConfig extends ZombieSkillConfig {
+
+    /** Seconds between octopus throws (default 12). */
+    public float cooldownSeconds = 12f;
+
+    /** HP of the octopus overlay placed on the target plant (default 100). */
+    public float octopusHp = 100f;
+
+    /** Duration of the throw animation in seconds (default 1.0). */
+    public float throwDuration = 1.0f;
+
+    /** Arc height of the parabolic octopus projectile (default 120). */
+    public float arcHeight = 120f;
+}
+
+
+======================================================
 FILE: ZombieArmorConfig.java
 ======================================================
 
@@ -26808,6 +27869,7 @@ public final class ZombieActionConfigLoader {
         json.addClassTag("TombRaiserSkillConfig", TombRaiserSkillConfig.class);
         json.addClassTag("WizardZapSkillConfig", WizardZapSkillConfig.class);
         json.addClassTag("HunterSnowballSkillConfig", HunterSnowballSkillConfig.class);
+        json.addClassTag("OctopusSkillConfig", OctopusSkillConfig.class);
         // scalingPresets holds ObjectMap<String, ScaledPropConfig[]>
         json.setElementType(ZombieRootConfig.class, "scalingPresets", ScaledPropConfig[].class);
         return json;
@@ -27919,7 +28981,7 @@ public class Zombie extends Entity {
 
     private float stateTime = 0f;
     // ── Grid position ─────────────────────────────────────────────────────────
-    private int lastX;
+    private int lastCol;
     private int lastLane;
 
     // ── Runtime stats (scaled at spawn) ───────────────────────────────────────
@@ -27968,7 +29030,7 @@ public class Zombie extends Entity {
                   GameContext ctx, int waveIndex, int difficulty) {
         this.sheet = sheet;
         this.position.set(startX, GameController.laneToWorldY(lane));
-        lastX = (int) startX;
+        lastCol = GameController.worldXtoCol(startX);
         this.armors = new ArrayList<>(armors);
         this.skills = new ArrayList<>(skills);
         this.activeEffects = new EnumMap<>(EffectType.class);
@@ -28045,14 +29107,15 @@ public class Zombie extends Entity {
             currentState = next;
         }
 
-        if (Math.floor(position.x) != lastX || GameController.worldYtoLane(position.y) != lastLane) {
-            lastX = (int) Math.floor(position.x);
-            lastLane = GameController.worldYtoLane(position.y);
-            Tile tile = context.getTileAt(lastX, GameController.worldYtoLane(position.y));
+        int currentCol = GameController.worldXtoCol(position.x);
+        int currentLane = GameController.worldYtoLane(position.y);
+
+        if (currentCol != lastCol || currentLane != lastLane) {
+            lastCol = currentCol;
+            lastLane = currentLane;
+            Tile tile = context.getTileAt(currentCol, currentLane);
             if (tile != null) {
-                for (TileBehavior b : tile.getBehaviors()) {
-                    b.onZombieEnter(this, tile);
-                }
+                tile.onZombieEnter(this);
             }
         }
 
@@ -28247,6 +29310,9 @@ public class Zombie extends Entity {
         if (dead || amount <= 0f) return;
         float remaining = poisonous ? amount : processArmorChain(amount);
         hp = Math.max(0f, hp - remaining);
+        if (currentState != null && !(currentState instanceof DeadState) && !(currentState instanceof ZombieFlashState)) {
+            currentState = new ZombieFlashState(currentState);
+        }
         if (hp <= 0f && !dead) triggerDeath();
     }
 
@@ -29230,6 +30296,10 @@ public abstract class Effect implements TickAware {
     @Override
     public void dispose() {
         ctx.removeEffect(this);
+    }
+
+    public Vector2 getPos() {
+        return pos;
     }
 }
 
@@ -31108,8 +32178,10 @@ public class GraveBehavior implements TileBehavior {
 
     private static final String[] EGYPT_DAMAGE_CLIPS = {"undamaged","damage1","damage2","damage3","damage4"};
     private static final String[] DARK_DAMAGE_CLIPS = {"undamaged","damage1","damage2","damage3","damage4"};
+    private static final float FLASH_DURATION = 0.28f;
 
     float stateTime;
+    private float flashTimer;
 
     public enum GraveReward {
         NONE, SUN_50, PLANT_FOOD
@@ -31141,6 +32213,7 @@ public class GraveBehavior implements TileBehavior {
     @Override
     public void onProjectileHit(Projectile p, Tile tile) {
         this.hp -= p.getDamage();
+        flashTimer = FLASH_DURATION;
         p.destroy(); // Projectile is consumed by grave/ice
         if (this.hp <= 0) {
             destroyGrave(tile, AppContext.getInstance().getGameContext());
@@ -31171,6 +32244,7 @@ public class GraveBehavior implements TileBehavior {
     public void processHit(float damage) {
         TileBehavior.super.processHit(damage);
         hp-=damage;
+        flashTimer = FLASH_DURATION;
         if (this.hp <= 0) {
             destroyGrave(tile, AppContext.getInstance().getGameContext());
         }
@@ -31193,6 +32267,7 @@ public class GraveBehavior implements TileBehavior {
     public void update(GameContext ctx, Tile tile, float dt) {
         TileBehavior.super.update(ctx, tile, dt);
         stateTime+=dt;
+        if (flashTimer > 0f) flashTimer = Math.max(0f, flashTimer - dt);
     }
 
     @Override
@@ -31224,7 +32299,11 @@ public class GraveBehavior implements TileBehavior {
             clips = EGYPT_DAMAGE_CLIPS;
         }
 
-        return new FrameConfig(pamId, clips[idx], stateTime, pos, scale, null, false);
+        FrameConfig fc = new FrameConfig(pamId, clips[idx], stateTime, pos, scale, null, false);
+        if (flashTimer > 0f) {
+            fc.setColor(5f, 5f, 5f, 0.6f);
+        }
+        return fc;
     }
 }
 
@@ -31235,24 +32314,36 @@ FILE: SlipperyBehavior.java
 
 package com.pvz.models.games.map.behaviors;
 
+import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.map.tile.Tile;
 
 public class SlipperyBehavior implements TileBehavior {
+    private static final String UP_PAM_PATH="768/FULL/EFFECTS/TILESLIDER_ICEAGE_UP/TILESLIDER_ICEAGE_UP.PAM";
+    private static final String DOWN_PAM_PATH="768/FULL/EFFECTS/TILESLIDER_ICEAGE_UP/TILESLIDER_ICEAGE_UP.PAM";
+    private static final String IDLE_CLIP="idle";
+
+    private static final float SLIP_DURATION=1.5f;
+
     private final int laneDelta;
+    private final String pamPath;
+    private String currentClip=IDLE_CLIP;
+    float stateTime=0;
 
     public SlipperyBehavior(int laneDelta) {
         this.laneDelta = laneDelta;
+
+        if (laneDelta>0) pamPath=UP_PAM_PATH;
+        else pamPath=DOWN_PAM_PATH;
     }
 
     @Override
     public boolean canPlant(PlantCard p, Tile tile) {
-        if (p != null && p.getPlant().getType() == PlantType.HotPotato) {
-            return true;
-        }
         return false;
     }
 
@@ -31266,7 +32357,281 @@ public class SlipperyBehavior implements TileBehavior {
     }
 
     @Override
+    public void update(GameContext ctx, Tile tile, float dt) {
+        TileBehavior.super.update(ctx, tile, dt);
+        stateTime+=dt;
+    }
+
+    @Override
+    public FrameConfig draw(Tile tile) {
+        Vector2 pos = new Vector2(tile.getX()+Tile.WIDTH/2,tile.getY()+Tile.HEIGHT/2);
+        return new FrameConfig(pamPath,currentClip,stateTime,pos,
+            new Vector2(0.65f,0.65f),null,true);
+    }
+
+    @Override
     public String getName() { return "Slippery"; }
+}
+
+
+======================================================
+FILE: VaseBehavior.java
+======================================================
+
+package com.pvz.models.games.map.behaviors;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.games.GameContext;
+import com.pvz.models.games.card.PlantCard;
+import com.pvz.models.games.levels.data.VaseType;
+import com.pvz.models.games.map.tile.Tile;
+
+public class VaseBehavior implements TileBehavior {
+    private static final String BROWN_PAM = "768/FULL/VASEBREAKER/VASE_BROWN/VASE_BROWN.PAM";
+    private static final String GARGANTUAR_PAM = "768/FULL/VASEBREAKER/VASE_GARGANTUAR/VASE_GARGANTUAR.PAM";
+
+    private static final String IDLE_CLIP = "idle";
+    private static final String BREAK_CLIP = "break";
+
+    float stateTime;
+    private final VaseType vaseType;
+    private boolean broken;
+    private boolean breakAnimDone;
+
+    public VaseBehavior(VaseType vaseType) {
+        this.vaseType = vaseType;
+        this.broken = false;
+        this.breakAnimDone = false;
+        this.stateTime = 0;
+    }
+
+    public VaseType getVaseType() { return vaseType; }
+    public boolean isBroken() { return broken; }
+    public boolean isBreakAnimDone() { return breakAnimDone; }
+
+    public void breakVase() {
+        if (!broken) {
+            broken = true;
+            stateTime = 0;
+        }
+    }
+
+    @Override
+    public void update(GameContext ctx, Tile tile, float dt) {
+        TileBehavior.super.update(ctx, tile, dt);
+        stateTime += dt;
+        if (broken && !breakAnimDone) {
+            String pamPath = (vaseType == VaseType.GARGANTUAR) ? GARGANTUAR_PAM : BROWN_PAM;
+            float breakDuration = 1.8f;
+            if (stateTime >= breakDuration) {
+                breakAnimDone = true;
+            }
+        }
+    }
+
+    @Override
+    public boolean canPlant(PlantCard p, Tile tile) {
+        return !broken || breakAnimDone;
+    }
+
+    @Override
+    public FrameConfig draw(Tile tile) {
+        TileBehavior.super.draw(tile);
+        if (broken && breakAnimDone) return null;
+
+        String pamPath = (vaseType == VaseType.GARGANTUAR) ? GARGANTUAR_PAM : BROWN_PAM;
+        String clip = broken ? BREAK_CLIP : IDLE_CLIP;
+
+        Vector2 pos = new Vector2(
+            GameController.colToWorldX(tile.getCol()),
+            GameController.laneToWorldY(tile.getLane()));
+        Vector2 scale = new Vector2(0.65f, 0.65f);
+
+        return new FrameConfig(pamPath, clip, stateTime, pos, scale, null, false);
+    }
+
+    @Override
+    public String getName() { return "Vase"; }
+}
+
+
+======================================================
+FILE: OctopusOverlayBehavior.java
+======================================================
+
+package com.pvz.models.games.map.behaviors;
+
+import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.projectile.Projectile;
+import com.pvz.models.games.GameContext;
+import com.pvz.models.games.card.PlantCard;
+import com.pvz.models.games.map.tile.Tile;
+import com.pvz.models.games.map.tile.TileTags;
+
+/**
+ * TileBehavior representing an octopus overlay placed on a plant by the
+ * Octopus Zombie. While active:
+ * <ul>
+ *   <li>The covered plant is disabled ({@code bound} = true) — it cannot
+ *       update, attack, produce sun, or respond to Plant Food.</li>
+ *   <li>New plants cannot be planted on this tile.</li>
+ *   <li>Projectiles hitting this tile are absorbed by the octopus (not
+ *       the plant underneath).</li>
+ *   <li>The octopus has independent HP and can be destroyed.</li>
+ * </ul>
+ *
+ * <p>When the octopus HP reaches zero, it removes itself, frees the tile,
+ * and re-enables the covered plant.</p>
+ *
+ * <p><b>Shovel interaction:</b> if the shovel system checks behaviors, the
+ * octopus should be removed before the plant. This is handled by the
+ * tile's {@code isPlantable} and behavior lifecycle: removing the
+ * behavior frees the tile.</p>
+ */
+public class OctopusOverlayBehavior implements TileBehavior {
+
+    private static final String PAM_PATH =
+        "768/FULL/EFFECTS/ZOMBIE_OCTOPUS_PROJECTILE/ZOMBIE_OCTOPUS_PROJECTILE.PAM";
+    private static final String LAND_CLIP = "animation2";
+    private static final String LOOP_CLIP = "animation3";
+    private static final float LAND_DURATION = 1.0f;
+    private static final float FLASH_DURATION = 0.28f;
+
+    private final GameContext ctx;
+    private final Tile tile;
+    private final float maxHp;
+    private float hp;
+    private float stateTime = 0f;
+    private float flashTimer;
+
+    private Plant boundPlant;
+    private final int col;
+    private final int lane;
+
+    public OctopusOverlayBehavior(GameContext ctx, Tile tile, float hp,
+                                  int col, int lane) {
+        this.ctx = ctx;
+        this.tile = tile;
+        this.hp = hp;
+        this.maxHp = hp;
+        this.col = col;
+        this.lane = lane;
+    }
+
+    /** The plant this overlay is covering (may be null if plant died mid-flight). */
+    public void setBoundPlant(Plant plant) {
+        this.boundPlant = plant;
+    }
+
+    public Plant getBoundPlant() {
+        return boundPlant;
+    }
+
+    // ── TileBehavior overrides ──────────────────────────────────────────────
+
+    /**
+     * Projectiles hitting this tile are absorbed by the octopus overlay
+     * instead of passing through to the plant underneath.
+     */
+    @Override
+    public void onProjectileHit(Projectile p, Tile tile) {
+        hp -= p.getDamage();
+        flashTimer = FLASH_DURATION;
+        p.destroy();
+        if (hp <= 0f) {
+            destroy();
+        }
+    }
+
+    /**
+     * Raw damage (e.g. from Jalapeno, Cherry Bomb) also damages the overlay.
+     */
+    @Override
+    public void processHit(float damage) {
+        hp -= damage;
+        flashTimer = FLASH_DURATION;
+        if (hp <= 0f) {
+            destroy();
+        }
+    }
+
+    /** No plants can be planted on a tile occupied by an octopus overlay. */
+    @Override
+    public boolean canPlant(PlantCard p, Tile tile) {
+        return false;
+    }
+
+    @Override
+    public void update(GameContext ctx, Tile tile, float dt) {
+        stateTime += dt;
+        if (flashTimer > 0f) flashTimer = Math.max(0f, flashTimer - dt);
+    }
+
+    @Override
+    public String getName() {
+        return "OctopusOverlay";
+    }
+
+    @Override
+    public String getStatus() {
+        return "\n    Octopus HP: " + String.format("%.0f", hp);
+    }
+
+    @Override
+    public FrameConfig draw(Tile tile) {
+        Vector2 pos = new Vector2(
+            GameController.colToWorldX(tile.getCol()),
+            GameController.laneToWorldY(tile.getLane()));
+        Vector2 scale = new Vector2(0.7f, 0.7f);
+        boolean looping;
+        float animTime;
+        if (stateTime < LAND_DURATION) {
+            looping = false;
+            animTime = stateTime;
+        } else {
+            looping = true;
+            animTime = stateTime - LAND_DURATION;
+        }
+        String clip = (stateTime < LAND_DURATION) ? LAND_CLIP : LOOP_CLIP;
+        FrameConfig fc = new FrameConfig(PAM_PATH, clip, animTime,
+            pos, scale, null, looping);
+        if (flashTimer > 0f) {
+            fc.setColor(5f, 5f, 5f, 0.6f);
+        }
+        return fc;
+    }
+
+    // ── Destruction ─────────────────────────────────────────────────────────
+
+    /**
+     * Destroys the octopus overlay: removes the behavior and tag from the
+     * tile, and re-enables the bound plant if it still exists.
+     */
+    public void destroy() {
+        tile.removeBehavior(this);
+        tile.getTags().remove(TileTags.OCTOPUS);
+
+        if (boundPlant != null && !boundPlant.isDead()) {
+            boundPlant.setBound(false);
+            ctx.log("[Octopus] Plant at (" + col + "," + lane + ") is free!");
+        }
+
+        ctx.log("[Octopus] Overlay destroyed on tile (" + col + "," + lane + ")");
+    }
+
+    /**
+     * Instant-kill the overlay (e.g. from an instant-kill projectile
+     * or a plant food effect).
+     */
+    public void instantKill() {
+        hp = 0f;
+        destroy();
+    }
 }
 
 
@@ -31330,9 +32695,11 @@ import com.pvz.models.games.map.tile.TileTags;
 public class IceBlockBehavior implements TileBehavior {
     private static final String PAM_PATH="768/FULL/EFFECTS/FROSTBITE_ICE_BLOCK_PLANT/FROSTBITE_ICE_BLOCK_PLANT.PAM";
     private static final String IDLE_CLIP="freeze_idle";
+    private static final float FLASH_DURATION = 0.28f;
     private float iceHp = 600f;
     private Object entityInside; // Can be Plant or Zombie
     float stateTime;
+    private float flashTimer;
 
     public IceBlockBehavior(Object entity) {
         this.entityInside = entity;
@@ -31348,6 +32715,7 @@ public class IceBlockBehavior implements TileBehavior {
     public void onProjectileHit(Projectile p, Tile tile) {
         boolean isFire = p.getType() == ProjectileType.FIRE_PEA;
         float damage = p.getDamage();
+        flashTimer = FLASH_DURATION;
 
         if (isFire) {
             iceHp = 0f;
@@ -31370,9 +32738,11 @@ public class IceBlockBehavior implements TileBehavior {
     public void update(GameContext ctx, Tile tile, float dt) {
         TileBehavior.super.update(ctx, tile, dt);
         stateTime+=dt;
+        if (flashTimer > 0f) flashTimer = Math.max(0f, flashTimer - dt);
     }
 
     public void takeDamage(float amount, boolean isFire) {
+        flashTimer = FLASH_DURATION;
         if (isFire) {
             iceHp = 0f;
         } else {
@@ -31392,7 +32762,11 @@ public class IceBlockBehavior implements TileBehavior {
         Vector2 scale=new Vector2(0.65f,0.65f);
         Vector2 pos = new Vector2(GameController.colToWorldX(tile.getCol()),GameController.laneToWorldY(tile.getLane()));
         FrameConfig frameConfig = new FrameConfig(PAM_PATH,IDLE_CLIP,stateTime,pos,scale,null,false);
-        frameConfig.setColor(1,1,1,0.7f);
+        if (flashTimer > 0f) {
+            frameConfig.setColor(5f, 5f, 5f, 0.6f);
+        } else {
+            frameConfig.setColor(1,1,1,0.7f);
+        }
         return frameConfig;
     }
 }
@@ -31676,7 +33050,8 @@ public enum TileTags {
     SLIP_DOWN("Slip down"),
     WATER("Water"),
     LOW_TIDE("Low tide"),
-    NECROMANCY("Necromancy");
+    NECROMANCY("Necromancy"),
+    OCTOPUS("Octopus");
 
     public final String typeName;
 
@@ -31769,6 +33144,7 @@ import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.projectile.Projectile;
+import com.pvz.models.entities.projectile.OctopusProjectile;
 import com.pvz.models.entities.sun.Sun;
 import com.pvz.models.entities.sun.SunManager;
 import com.pvz.models.entities.zombies.Zombie;
@@ -31797,6 +33173,7 @@ public class GameContext implements TickAware {
 
     private final GameEngine engine;
     private List<Projectile> projectiles;
+    private List<OctopusProjectile> octopusProjectiles = new ArrayList<>();
     private List<Zombie> zombies;
     private List<Plant> plants;
     private List<Card> cards;
@@ -31829,6 +33206,8 @@ public class GameContext implements TickAware {
     private final List<Sun> pendingSunsToRemove = new ArrayList<>();
     private final List<LootDrop> pendingLootDropsToAdd = new ArrayList<>();
     private final List<LootDrop> pendingLootDropsToRemove = new ArrayList<>();
+    private final List<OctopusProjectile> pendingOctopusToAdd = new ArrayList<>();
+    private final List<OctopusProjectile> pendingOctopusToRemove = new ArrayList<>();
 
     public GameContext(Level currentLevel) {
         this.engine         = GameEngine.getInstance();
@@ -32065,6 +33444,20 @@ public class GameContext implements TickAware {
         return true;
     }
 
+    public List<OctopusProjectile> getOctopusProjectiles() {
+        return octopusProjectiles;
+    }
+
+    public void spawnOctopusProjectile(OctopusProjectile p) {
+        pendingOctopusToAdd.add(p);
+        engine.register(p);
+    }
+
+    public void removeOctopusProjectile(OctopusProjectile p) {
+        engine.unRegister(p);
+        pendingOctopusToRemove.add(p);
+    }
+
     // ── Hitbox registry ─────────────────────────────────────────────────────────
     // Every spawned entity registers its hitbox here so the CollisionSystem can
     // sweep all hitboxes in one pass without caring about entity types.
@@ -32120,6 +33513,11 @@ public class GameContext implements TickAware {
         effects.removeAll(pendingEffectsToRemove);
         pendingEffectsToAdd.clear();
         pendingEffectsToRemove.clear();
+
+        octopusProjectiles.addAll(pendingOctopusToAdd);
+        octopusProjectiles.removeAll(pendingOctopusToRemove);
+        pendingOctopusToAdd.clear();
+        pendingOctopusToRemove.clear();
     }
 
     public int getCurrentTick() {
@@ -32347,50 +33745,40 @@ FILE: VaseBreakerMode.java
 
 package com.pvz.models.games.modes.variants;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import com.pvz.controller.game.GameController;
-import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.ZombieType;
 import com.pvz.models.games.GameContext;
+import com.pvz.models.games.card.Card;
+import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.data.VaseDefinition;
 import com.pvz.models.games.levels.data.VaseType;
 import com.pvz.models.games.levels.variants.VaseBreakerLevel;
+import com.pvz.models.games.map.behaviors.VaseBehavior;
+import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.GameMode;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.games.modes.capabilities.VaseBreaker;
-import com.pvz.models.games.card.Card;
-import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.user.MyPlant;
 
 public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
-    private static class VaseTile {
-        VaseType type;
-        boolean isBroken;
-
-        VaseTile(VaseType type) {
-            this.type = type;
-            this.isBroken = false;
-        }
-    }
-
-    private final VaseTile[][] vaseGrid;
     private final List<MyPlant> plantPool;
     private final List<ZombieType> zombiePool;
     private final Boolean[] lawnMower;
     private final Random random = new Random();
+    private GameContext cachedContext;
 
     public VaseBreakerMode(Level level) {
         int rows = level.getGameMapDefinition().rows;
-        int cols = level.getGameMapDefinition().columns;
-        this.vaseGrid = new VaseTile[rows][cols];
 
         if (level instanceof VaseBreakerLevel vaseLevel) {
             this.plantPool = vaseLevel.getBasedPlants();
@@ -32398,9 +33786,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
             if (vaseLevel.getVases() != null) {
                 for (VaseDefinition def : vaseLevel.getVases()) {
-                    if (def.getLane() >= 0 && def.getLane() < rows && def.getCol() >= 0 && def.getCol() < cols) {
-                        this.vaseGrid[def.getLane()][def.getCol()] = new VaseTile(def.getVaseType());
-                    }
+                    vasesToPlace.add(def);
                 }
             }
         } else {
@@ -32414,63 +33800,72 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         }
     }
 
+    private final List<VaseDefinition> vasesToPlace = new ArrayList<>();
+
     @Override
     public void initMode(GameContext context) {
-        context.log("Vasebreaker level started! Break vases to find plants or zombies.");
+        this.cachedContext = context;
+        for (VaseDefinition def : vasesToPlace) {
+            Tile tile = context.getTileAt(def.getCol(), def.getLane());
+            if (tile != null) {
+                tile.addBehavior(new VaseBehavior(def.getVaseType()));
+            }
+        }
+        context.log("Vasebreaker level started! Click vases to break them.");
     }
 
     @Override
     public void updateMode(GameContext context, float dt) {
-        // شرط پایان بازی و پیروزی
         if (!anyVasesRemain() && context.getZombies().isEmpty()) {
             context.setGameOver(true);
             context.log("VICTORY! All vases cleared and all zombies defeated!");
             return;
         }
 
-        // بررسی ورود زامبی‌ها به انتهای خانه و چمن‌زن
-        for (int i = 0; i < context.getZombies().size(); i++) {
+        for (int i = context.getZombies().size() - 1; i >= 0; i--) {
             Zombie z = context.getZombies().get(i);
-            if (z.getX() <= 0f) {
-                if (!lawnMower[GameController.worldYtoLane(z.getY())]) {
-                    runLawnMowers(context, GameController.worldYtoLane(z.getY()));
-                    i--;
+            if (z.getX() <= GameController.colToWorldX(-1)) {
+                int lane = GameController.worldYtoLane(z.getY());
+                if (!lawnMower[lane]) {
+                    runLawnMowers(context, lane);
                     continue;
                 }
-                if (lawnMower[GameController.worldYtoLane(z.getY())]) {
-                    context.setGameOver(true);
-                    context.log("The zombie ate your brain; LOOSER!!!");
-                    context.removeZombie(z);
-                }
+                context.setGameOver(true);
+                context.log("The zombie ate your brain; LOOSER!!!");
+                context.removeZombie(z);
             }
         }
 
-        for (int i = 0; i < context.getCards().size(); i++) {
+        for (int i = context.getCards().size() - 1; i >= 0; i--) {
             Card card = context.getCards().get(i);
             if (card.getCooldown() <= 0.01f) {
                 context.removeCard(card);
-                i--;
             }
         }
     }
 
     @Override
     public void breakVase(GameContext context, int col, int lane) {
-        if (lane < 0 || lane >= vaseGrid.length || col < 0 || col >= vaseGrid[0].length) {
-            context.log("Error: Target tile (" + col + ", " + lane + ") is out of bounds.");
-            return;
-        }
+        Tile tile = context.getTileAt(col, lane);
+        if (tile == null) return;
 
-        VaseTile vase = vaseGrid[lane][col];
-        if (vase == null || vase.isBroken) {
+        VaseBehavior vase = findVaseBehavior(tile);
+        if (vase == null || vase.isBroken()) {
             context.log("There is no intact vase at (" + col + ", " + lane + ").");
             return;
         }
 
-        vase.isBroken = true;
+        vase.breakVase();
         context.log("Vase at (" + col + ", " + lane + ") shattered!");
 
-        spawnRandomContent(context, vase.type, col, lane);
+        spawnRandomContent(context, vase.getVaseType(), col, lane);
+    }
+
+    private VaseBehavior findVaseBehavior(Tile tile) {
+        for (var b : tile.getBehaviors()) {
+            if (b instanceof VaseBehavior vb) return vb;
+        }
+        return null;
     }
 
     private void spawnRandomContent(GameContext context, VaseType vaseType, int col, int lane) {
@@ -32484,19 +33879,18 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             return;
         }
 
-        // کوزه معمولی (NORMAL): تعیین محتوا بر اساس درصد شانس
         double roll = random.nextDouble();
-        if (roll < 0.45) { // ۴۵٪ شانس زامبی
+        if (roll < 0.45) {
             if (!zombiePool.isEmpty()) {
                 ZombieType randomZombie = zombiePool.get(random.nextInt(zombiePool.size()));
                 spawnZombie(context, randomZombie, col, lane);
             }
-        } else if (roll < 0.85) { // ۴۰٪ شانس کارت گیاه
+        } else if (roll < 0.85) {
             spawnRandomPlantCard(context);
-        } else if (roll < 0.95) { // ۱۰٪ شانس خورشید
+        } else if (roll < 0.95) {
             context.addSun(50);
             context.log("Collected 50 Sun from the vase!");
-        } else { // ۵٪ پوچ
+        } else {
             context.log("The vase was empty!");
         }
     }
@@ -32521,28 +33915,31 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     @Override
     public void showVases(GameContext context) {
         context.log("=== VASES ON BOARD ===");
-        for (int r = 0; r < vaseGrid.length; r++) {
-            for (int c = 0; c < vaseGrid[0].length; c++) {
-                if (vaseGrid[r][c] != null && !vaseGrid[r][c].isBroken) {
-                    context.log(String.format("Vase at (%d, %d) -> Type: %s", c, r, vaseGrid[r][c].type));
+        for (int lane = 0; lane < context.getMap().getLanes(); lane++) {
+            for (int col = 0; col < context.getMap().getColumns(); col++) {
+                Tile tile = context.getTileAt(col, lane);
+                VaseBehavior vase = findVaseBehavior(tile);
+                if (vase != null && !vase.isBroken()) {
+                    context.log(String.format("Vase at (%d, %d) -> Type: %s", col, lane, vase.getVaseType()));
                 }
             }
         }
     }
 
     private boolean anyVasesRemain() {
-        for (VaseTile[] row : vaseGrid) {
-            for (VaseTile tile : row) {
-                if (tile != null && !tile.isBroken)
-                    return true;
+        if (cachedContext == null) return false;
+        for (int lane = 0; lane < cachedContext.getMap().getLanes(); lane++) {
+            for (int col = 0; col < cachedContext.getMap().getColumns(); col++) {
+                Tile tile = cachedContext.getTileAt(col, lane);
+                VaseBehavior vase = findVaseBehavior(tile);
+                if (vase != null && !vase.isBroken()) return true;
             }
         }
         return false;
     }
 
     private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane])
-            return;
+        if (lawnMower[lane]) return;
         context.getZombiesInLane(lane).forEach(z -> {
             z.takeDamage(Float.MAX_VALUE);
             context.removeZombie(z);
@@ -32551,7 +33948,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         lawnMower[lane] = true;
     }
 
-    // ── قابلیت PlantPlacer ───────────────────────────────────────────────────
+    // -- PlantPlacer capability --
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
@@ -32559,23 +33956,21 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             context.log("[Placement Failed] Selected card is null.");
             return false;
         }
-
         if (col < 0 || col >= context.getMap().getColumns() || lane < 0 || lane >= context.getMap().getLanes()) {
             context.log("[Placement Failed] Out of bounds: (" + col + ", " + lane + ")");
             return false;
         }
-
         if (!context.getPlantsAt(col, lane).isEmpty()) {
             context.log("[Placement Failed] Tile (" + col + ", " + lane + ") is already occupied by another plant.");
             return false;
         }
-
-        if (vaseGrid[lane][col] != null && !vaseGrid[lane][col].isBroken) {
+        Tile tile = context.getTileAt(col, lane);
+        VaseBehavior vase = findVaseBehavior(tile);
+        if (vase != null && !vase.isBroken()) {
             context.log("[Placement Failed] Tile (" + col + ", " + lane + ") has an intact vase. Break it first!");
             return false;
         }
-
-        if (!context.getTileAt(col, lane).isPlantable(card)) {
+        if (!tile.isPlantable(card)) {
             context.log("[Placement Failed] Tile (" + col + ", " + lane + ") does not support planting "
                         + card.getPlant().getType());
             return false;
@@ -32588,7 +33983,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         Plant plant = new PlantFactory().create(card.getPlant().getType(), col, lane,
                 card.getPlant().getLevel(), card.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
-        card.use();
+        context.getGameStats().onPlantPlaced(col, lane, card.getPlant().getType());
         context.removeCard(card);
         context.log(card.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
     }
@@ -32613,13 +34008,14 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             result.append("=== HELD SEED PACKETS ===");
             for (Card card : cards) {
                 if (card instanceof PlantCard ps) {
-                    result.append(String.format("\n- %s | Lvl:%d | Expires in:%.1fs", ps.getPlant().getType(),
-                            ps.getPlant().getLevel(), (float) ps.getCooldown() / (float) Constants.TICK_PER_SECOND));
+                    result.append(String.format("\n- %s | Lvl:%d", ps.getPlant().getType(),
+                            ps.getPlant().getLevel()));
                 }
             }
         }
         return result.toString();
     }
+
     @Override
     public boolean supportsFallingSuns() {
         return false;
@@ -32839,7 +34235,6 @@ import java.util.List;
 import java.util.Random;
 
 import com.pvz.controller.game.GameController;
-import com.pvz.enums.AnsiColors;
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
@@ -32856,12 +34251,7 @@ import com.pvz.models.games.modes.GameMode;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.user.Collection;
 import com.pvz.models.user.MyPlant;
-import com.pvz.models.user.User;
 
-/**
- * Standard game mode implementation for Conveyor Belt level.
- * Automatically spawns random unlocked plants every 12 seconds.
- */
 public class ConveyorBeltMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
@@ -32869,27 +34259,36 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
     private int tickCounter = 0;
     private static final int TICKS_PER_SECOND = 10;
     private static final int SPAWN_INTERVAL_TICKS = 12 * TICKS_PER_SECOND;
+    private static final int MAX_HAND_SIZE = 7;
 
     public ConveyorBeltMode(Level level) {
-        if (level instanceof ConveyorBeltLevel normalLevel) {
-            waves = normalLevel.getWaves();
+        if (level instanceof ConveyorBeltLevel beltLevel) {
+            waves = beltLevel.getWaves();
         } else {
-            return;
+            throw new IllegalArgumentException("ConveyorBeltMode requires a ConveyorBeltLevel");
         }
         currentWave = waves.get(0);
     }
 
     @Override
     public void initMode(GameContext context) {
-        addRandomCard(context);
         tickCounter = 0;
+        addRandomCard(context);
+        if (currentWave != null) {
+            currentWave.startWave(context);
+            for (com.pvz.models.games.effects.ChapterEffect effect : context.getActiveEffects()) {
+                effect.onWaveStart(currentWave, context);
+            }
+        }
     }
 
     @Override
     public void updateMode(GameContext context, float dt) {
         tickCounter++;
         if (tickCounter >= SPAWN_INTERVAL_TICKS) {
-            addRandomCard(context);
+            if (context.getCards().size() < MAX_HAND_SIZE) {
+                addRandomCard(context);
+            }
             tickCounter = 0;
         }
 
@@ -32898,6 +34297,9 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
             if (nextWaveIndex < waves.size()) {
                 currentWave = waves.get(nextWaveIndex);
                 currentWave.startWave(context);
+                for (com.pvz.models.games.effects.ChapterEffect effect : context.getActiveEffects()) {
+                    effect.onWaveStart(currentWave, context);
+                }
                 context.log("Wave " + currentWave.getWaveNumber() + " started.");
             } else {
                 context.setGameOver(true);
@@ -32907,18 +34309,16 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         }
 
         if (!currentWave.isDone()) {
-            currentWave.updateWave(context, 0);
+            currentWave.updateWave(context, dt);
         }
 
-        for (int i = 0; i < context.getZombies().size(); i++) {
+        for (int i = context.getZombies().size() - 1; i >= 0; i--) {
             Zombie z = context.getZombies().get(i);
-
-            if (z.getX() <= 0f) {
+            if (z.getX() <= GameController.colToWorldX(-1)) {
                 context.setGameOver(true);
                 context.log("Brain has eaten");
                 context.removeZombie(z);
             }
-
         }
 
         for (Sun sun : new ArrayList<>(context.getSuns())) {
@@ -32926,6 +34326,11 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
                 context.removeSun(sun);
             }
         }
+    }
+
+    @Override
+    public boolean supportsFallingSuns() {
+        return false;
     }
 
     @Override
@@ -32951,8 +34356,6 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
             return false;
         }
 
-        // ConveyorBeltMode: Plants are free (delivered by conveyor belt), no sun cost check needed.
-        // Cards are also not subject to cooldown; they arrive on a timer.
         return true;
     }
 
@@ -32967,9 +34370,22 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
                 plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
+        context.getGameStats().onPlantPlaced(col, lane, plantCard.getPlant().getType());
 
         context.removeCard(card);
         context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
+    }
+
+    @Override
+    public PlantCard findCard(GameContext context, String plantType) {
+        for (Card card : context.getCards()) {
+            if (card instanceof PlantCard plantCard) {
+                if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
+                    return plantCard;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -32990,18 +34406,6 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         return sb.toString().trim();
     }
 
-    @Override
-    public PlantCard findCard(GameContext context, String plantType) {
-        for (Card card : context.getCards()) {
-            if (card instanceof PlantCard plantCard) {
-                if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
-                    return plantCard;
-                }
-            }
-        }
-        return null;
-    }
-
     private void addRandomCard(GameContext context) {
         var currentUser = AppContext.getInstance().getCurrentUser();
         if (currentUser == null || currentUser.getProfile() == null
@@ -33010,12 +34414,13 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
             return;
         }
 
-        Collection collection=currentUser.getProfile().getCollection();
+        Collection collection = currentUser.getProfile().getCollection();
         List<MyPlant> unlockedPlants = new ArrayList<>(collection.getUnlockedPlants());
         unlockedPlants.remove(collection.getPlant(PlantType.Sunflower));
         unlockedPlants.remove(collection.getPlant(PlantType.TwinSunflower));
+        unlockedPlants.remove(null);
 
-        if (unlockedPlants == null || unlockedPlants.isEmpty()) {
+        if (unlockedPlants.isEmpty()) {
             context.log("Conveyor Belt warning: Player has no unlocked plants!");
             return;
         }
@@ -33024,7 +34429,6 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
         MyPlant randomPlant = unlockedPlants.get(random.nextInt(unlockedPlants.size()));
 
         PlantCard conveyorCard = new PlantCard(randomPlant, 0, 0);
-
         context.addCard(conveyorCard);
         context.log("Conveyor delivered a new card: " + randomPlant.getType().toString());
     }
