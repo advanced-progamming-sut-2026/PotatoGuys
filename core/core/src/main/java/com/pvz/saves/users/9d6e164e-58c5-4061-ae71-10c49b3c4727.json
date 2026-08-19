@@ -1,17 +1,17 @@
 {
   "id": "9d6e164e-58c5-4061-ae71-10c49b3c4727",
-  "username": "Mahdi68",
+  "username": "Mahdi6",
   "passwordHash": "c3ef54ab870f466f6cd24c7044721f94acebf0586743fe043c7fa4b17086e84a",
   "nickName": "mahdirrz",
   "email": "mahdi@gmail.com",
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "teh",
-  "profilePicture": "textures/avatars/avatar_jinbe.png",
+  "profilePicture": "textures/avatars/avatar_nami.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 550,
-    "diamonds": 241,
+    "coins": 6750,
+    "diamonds": 588,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -37,11 +37,11 @@
           "Type": "BonkChoy",
           "level": 2,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "Repeater",
-          "level": 2,
+          "level": 3,
           "seed": 0,
           "isBoosted": false
         },
@@ -55,13 +55,13 @@
           "Type": "Jalapeno",
           "level": 1,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "SnowPea",
           "level": 1,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "CherryBomb",
@@ -99,13 +99,30 @@
         "BEACH_BUCKET",
         "SNORKEL",
         "FISHERMAN",
-        "OCTOPUS"
+        "OCTOPUS",
+        "BASIC",
+        "KNIGHT",
+        "CONEHEAD",
+        "DARK_IMP",
+        "BEACH_IMP",
+        "DARK",
+        "DARK_CONE",
+        "DARK_BUCKET",
+        "DARK_BRICK",
+        "WIZARD",
+        "JUGGLER",
+        "KING",
+        "ZOMBOSS_EGYPT",
+        "ZOMBOSS_PIRATE",
+        "ZOMBOSS_COWBOY",
+        "ZOMBOSS_DARK",
+        "BUCKETHEAD"
       ],
       "seedPackets": {
         "Peashooter": 60,
         "Sunflower": 35,
         "BonkChoy": 5,
-        "Repeater": 15,
+        "Repeater": 5,
         "TwinSunflower": 10,
         "Cabbagepult": 5
       }
@@ -203,6 +220,74 @@
         {
           "message": "New Zombie Encountered: OCTOPUS!",
           "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: BASIC!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: KNIGHT!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: CONEHEAD!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: DARK_IMP!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: BEACH_IMP!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: DARK!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: DARK_CONE!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: DARK_BUCKET!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: DARK_BRICK!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: WIZARD!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: JUGGLER!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: KING!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: ZOMBOSS_EGYPT!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: ZOMBOSS_PIRATE!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: ZOMBOSS_COWBOY!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: ZOMBOSS_DARK!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: BUCKETHEAD!",
+          "unread": false
         }
       ]
     },
@@ -214,28 +299,42 @@
         "name": "Ancient Egypt",
         "locked": false,
         "levelUnlocked": {
-          "1": true
+          "1": true,
+          "2": true,
+          "3": true
         }
       },
       {
         "name": "Frostbite Caves",
-        "locked": true,
-        "levelUnlocked": {}
+        "locked": false,
+        "levelUnlocked": {
+          "1": true,
+          "2": true,
+          "3": true
+        }
       },
       {
         "name": "Dark Ages",
-        "locked": true,
-        "levelUnlocked": {}
+        "locked": false,
+        "levelUnlocked": {
+          "1": true,
+          "2": true,
+          "3": true
+        }
       },
       {
         "name": "Big Wave Beach",
-        "locked": true,
-        "levelUnlocked": {}
+        "locked": false,
+        "levelUnlocked": {
+          "1": true,
+          "2": true,
+          "3": true
+        }
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": "BowlingBulb",
-    "dailyOfferDate": "2026-08-18",
+    "dailyOfferPlantType": "TwinSunflower",
+    "dailyOfferDate": "2026-08-19",
     "dailyOfferPurchased": false
   },
   "setting": {
@@ -263,92 +362,102 @@
         "x": 1,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
-      },
-      {
-        "x": 2,
-        "y": 1,
-        "locked": false,
         "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "SnowPea",
-          "plantedTime": "2026-08-17T21:33:48.147810700",
-          "growthHours": 8
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-19T18:07:36.733025700",
+          "growthHours": 2
         }
       },
       {
-        "x": 3,
+        "x": 2,
         "y": 1,
         "locked": false,
         "greenHousePlant": {
           "kind": "mariGold",
           "plantType": null,
-          "plantedTime": "2026-08-17T21:33:50.500839600",
+          "plantedTime": "2026-08-19T16:07:58.300399600",
           "growthHours": 2
         }
+      },
+      {
+        "x": 3,
+        "y": 1,
+        "locked": false,
+        "greenHousePlant": null
       },
       {
         "x": 4,
         "y": 1,
         "locked": false,
         "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "Jalapeno",
-          "plantedTime": "2026-08-18T19:01:51.593942100",
-          "growthHours": 8
-        }
-      },
-      {
-        "x": 1,
-        "y": 2,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 2,
-        "y": 2,
-        "locked": false,
-        "greenHousePlant": null
-      },
-      {
-        "x": 3,
-        "y": 2,
-        "locked": true,
-        "greenHousePlant": null
-      },
-      {
-        "x": 4,
-        "y": 2,
-        "locked": false,
-        "greenHousePlant": {
           "kind": "mariGold",
           "plantType": null,
-          "plantedTime": "2026-08-18T19:01:54.919855600",
+          "plantedTime": "2026-08-19T18:06:29.357375900",
           "growthHours": 2
         }
       },
       {
         "x": 1,
-        "y": 3,
+        "y": 2,
         "locked": false,
         "greenHousePlant": null
       },
       {
         "x": 2,
+        "y": 2,
+        "locked": false,
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-19T18:06:26.817746700",
+          "growthHours": 2
+        }
+      },
+      {
+        "x": 3,
+        "y": 2,
+        "locked": false,
+        "greenHousePlant": null
+      },
+      {
+        "x": 4,
+        "y": 2,
+        "locked": false,
+        "greenHousePlant": null
+      },
+      {
+        "x": 1,
         "y": 3,
-        "locked": true,
+        "locked": false,
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-19T18:06:05.517718500",
+          "growthHours": 2
+        }
+      },
+      {
+        "x": 2,
+        "y": 3,
+        "locked": false,
         "greenHousePlant": null
       },
       {
         "x": 3,
         "y": 3,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "BonkChoy",
+          "plantedTime": "2026-08-19T18:20:38.760917800",
+          "growthHours": 8
+        }
       },
       {
         "x": 4,
         "y": 3,
-        "locked": true,
+        "locked": false,
         "greenHousePlant": null
       }
     ]
@@ -1271,7 +1380,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1787088472448
+    "lastDailyReset": 1787162691346
   },
   "questLogRefreshed": true
 }

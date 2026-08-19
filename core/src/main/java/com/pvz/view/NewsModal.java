@@ -131,7 +131,7 @@ public class NewsModal extends Table {
         newsContent.add(scrollPane).expand().fill().padTop(20).row();
 
         // --- Close button overlay -------------------------------------------
-        ImageButton exitBtn = new ImageButton(skin, "generic_close");
+        ImageButton exitBtn = new ImageButton(skin, "generic_close_circle");
         exitBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

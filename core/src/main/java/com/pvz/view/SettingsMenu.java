@@ -72,7 +72,7 @@ public class SettingsMenu extends ScreenAdapter {
         stage.addActor(mainPanel);
 
         // --- Close button (top-right corner of the panel, like Profile/News) ----
-        ImageButton closeBtn = new ImageButton(skin, "generic_close");
+        ImageButton closeBtn = new ImageButton(skin, "generic_close_circle");
         closeBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

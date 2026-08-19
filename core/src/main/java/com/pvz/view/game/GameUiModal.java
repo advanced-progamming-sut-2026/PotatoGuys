@@ -4,9 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -53,10 +57,28 @@ public class GameUiModal extends Table {
     private static final int CHEAT_SUN_AMOUNT = 25;
     private static final int MAX_PLANT_FOOD = 3;
 
+    private static final float WAVE_BAR_WIDTH = 260f;
+    private static final float WAVE_BAR_HEIGHT = 36f;
+    private static final float TRACK_LEFT = 8f;
+    private static final float TRACK_RIGHT = 248f;
+    private static final float WAVE_FILL_Y = 9f;
+    private static final float WAVE_FILL_HEIGHT = 20f;
+    private static final float FLAG_WIDTH = 27f;
+    private static final float FLAG_HEIGHT = 21f;
+    private static final float FLAG_POLE_WIDTH = 8f;
+    private static final float FLAG_POLE_HEIGHT = 46f;
+    private static final float FLAG_DOWN_Y = 28f;
+    private static final float FLAG_UP_Y = 55f;
+    private static final float FLAG_X_OFFSET = 22f;
+
     private final Label sunLabel;
     private final Label coinLabel;
     private final Label gemLabel;
-    private final Label progressLabel;
+    private Group waveGroup;
+    private Image waveFill;
+    private Image waveZombieHead;
+    private Image[] waveFlagImages;
+    private int lastCompletedWaves = -1;
     private final Image coinIcon;
     private final Image gemIcon;
     private final Image[] plantFoodDots = new Image[MAX_PLANT_FOOD];
@@ -118,11 +140,8 @@ public class GameUiModal extends Table {
         sunRow.add(sunBank).width(150f).height(54f);
         topBar.add(sunRow).left();
 
-        progressLabel = new Label("", PvzSkin.get(), "medium_outline");
-        progressLabel.setColor(Color.WHITE);
-        progressLabel.setFontScale(1.0f);
-        progressLabel.setAlignment(Align.left);
-        topBar.add(progressLabel).left().padLeft(15f);
+        buildWaveProgress();
+        topBar.add(waveGroup).left().padLeft(15f).size(WAVE_BAR_WIDTH + 50f, 50f);
         topBar.row();
 
         // Plant food bank with a +1 cheat button, matching the reference HUD (phase-0-group-51).
@@ -329,6 +348,115 @@ public class GameUiModal extends Table {
         style.imageOver = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button_down");
         style.imageChecked = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button_down");
         return new ImageButton(style);
+    }
+
+    private void buildWaveProgress() {
+        waveGroup = new Group();
+        waveGroup.setSize(WAVE_BAR_WIDTH + 70f, 85f);
+
+        Drawable fillDrawable = safeSkinDrawable("image_ui_hud_ingame_progress_meter_fill",
+            PvzSkin.get().newDrawable("white_pixel", Color.valueOf("65B83B")));
+        waveFill = new Image(fillDrawable);
+        waveFill.setBounds(WAVE_BAR_WIDTH, WAVE_FILL_Y, 0f, WAVE_FILL_HEIGHT);
+        waveGroup.addActor(waveFill);
+
+        Drawable frameDrawable = safeSkinDrawable("image_ui_hud_ingame_progress_meter",
+            PvzSkin.get().newDrawable("white_pixel", new Color(0.15f, 0.15f, 0.15f, 0.85f)));
+        Image progressFrame = new Image(frameDrawable);
+        progressFrame.setScaling(Scaling.stretch);
+        progressFrame.setBounds(0f, 0f, WAVE_BAR_WIDTH, WAVE_BAR_HEIGHT);
+        waveGroup.addActor(progressFrame);
+
+        Drawable zombieDrawable = null;
+        com.badlogic.gdx.graphics.g2d.TextureRegion zombieRegion = PvZ2.textureBank.region("IMAGE_UI_HUD_INGAME_PROGRESS_METER_ZOMBIEHEAD");
+        if (zombieRegion != null) {
+            zombieDrawable = new TextureRegionDrawable(zombieRegion);
+        } else if (Gdx.files.internal("assets/textures/ui/zombie.png").exists()) {
+            Texture zombieTex = new Texture(Gdx.files.internal("assets/textures/ui/zombie.png"));
+            zombieTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            zombieDrawable = new TextureRegionDrawable(zombieTex);
+        }
+        waveZombieHead = zombieDrawable != null
+            ? new Image(zombieDrawable)
+            : new Image(PvzSkin.get().newDrawable("white_pixel", new Color(0.8f, 0.2f, 0.2f, 1f)));
+        waveZombieHead.setScaling(Scaling.fit);
+        waveZombieHead.setBounds(TRACK_RIGHT - 12f, -7f, 52f, 52f);
+        waveGroup.addActor(waveZombieHead);
+
+        waveGroup.setVisible(false);
+    }
+
+    private Drawable safeSkinDrawable(String name, Drawable fallback) {
+        try {
+            return PvzSkin.get().getDrawable(name);
+        } catch (Exception e) {
+            return fallback;
+        }
+    }
+
+    private void rebuildWaveFlags(int totalWaves) {
+        if (waveFlagImages != null) {
+            for (Image flag : waveFlagImages) {
+                if (flag != null) flag.remove();
+            }
+        }
+        waveFlagImages = new Image[totalWaves];
+        float trackWidth = TRACK_RIGHT - TRACK_LEFT;
+        for (int i = 0; i < totalWaves; i++) {
+            float fraction = (i + 1f) / totalWaves;
+            float poleX = TRACK_RIGHT - trackWidth * fraction;
+
+            Drawable poleDrawable = PvzSkin.get().getDrawable("image_ui_hud_ingame_progress_meter_flag_pole");
+            if (poleDrawable == null) {
+                poleDrawable = PvzSkin.get().newDrawable("white_pixel", new Color(0.55f, 0.4f, 0.2f, 1f));
+            }
+            Image pole = new Image(poleDrawable);
+            pole.setScaling(Scaling.stretch);
+            pole.setBounds(poleX - FLAG_POLE_WIDTH / 2f, 0f, FLAG_POLE_WIDTH, FLAG_POLE_HEIGHT);
+            waveGroup.addActor(pole);
+
+            Drawable flagDrawable = PvzSkin.get().getDrawable("image_ui_hud_ingame_progress_meter_flag_default");
+            if (flagDrawable == null) {
+                flagDrawable = PvzSkin.get().newDrawable("white_pixel", Color.RED);
+            }
+            Image flag = new Image(flagDrawable);
+            flag.setScaling(Scaling.fit);
+            flag.setBounds(poleX - FLAG_WIDTH + FLAG_X_OFFSET, FLAG_DOWN_Y, FLAG_WIDTH, FLAG_HEIGHT);
+            waveGroup.addActor(flag);
+            waveFlagImages[i] = flag;
+        }
+        lastCompletedWaves = -1;
+    }
+
+    private void updateWaveFlags(int completedWaves, int totalWaves) {
+        if (waveFlagImages == null || waveFlagImages.length != totalWaves) {
+            rebuildWaveFlags(totalWaves);
+        }
+        completedWaves = MathUtils.clamp(completedWaves, 0, totalWaves);
+        if (completedWaves == lastCompletedWaves) return;
+        for (int i = 0; i < waveFlagImages.length; i++) {
+            waveFlagImages[i].setVisible(i >= completedWaves);
+        }
+        lastCompletedWaves = completedWaves;
+    }
+
+    private void updateWaveFill(float progress, int completedWaves, int totalWaves) {
+        progress = MathUtils.clamp(progress, 0f, 1f);
+        float trackWidth = TRACK_RIGHT - TRACK_LEFT;
+        float fillWidth = trackWidth * progress;
+        float progressX = TRACK_RIGHT - fillWidth;
+
+        if (completedWaves > 0 && totalWaves > 0) {
+            float flagX = TRACK_RIGHT - trackWidth * (completedWaves / (float) totalWaves);
+            float minX = flagX - 12f;
+            float headX = progressX - 12f;
+            if (headX > minX) {
+                progressX = minX + 12f;
+            }
+        }
+
+        waveFill.setBounds(progressX, WAVE_FILL_Y, fillWidth, WAVE_FILL_HEIGHT);
+        waveZombieHead.setPosition(progressX - 12f, waveZombieHead.getY());
     }
 
     private boolean isDebugModeEnabled() {
@@ -596,15 +724,29 @@ public class GameUiModal extends Table {
 
         com.pvz.models.games.modes.GameMode mode = context.getMode();
         if (mode != null && mode.hasProgressBar()) {
-            int current = mode.getCurrentWaveIndex();
-            int total = mode.getTotalWaves();
+            waveGroup.setVisible(true);
+            int totalWaves = mode.getTotalWaves();
             int totalZombies = mode.getTotalZombieCount();
             int killed = context.getGameStats().getZombiesKilled();
-            int percent = totalZombies > 0 ? Math.min(100, killed * 100 / totalZombies) : 0;
-            progressLabel.setText("Wave " + (current + 1) + "/" + total + "  " + percent + "%");
-            progressLabel.setVisible(true);
+
+            int completed;
+            if (context.isGameOver()) {
+                completed = totalWaves;
+            } else {
+                completed = MathUtils.clamp(mode.getCurrentWaveIndex(), 0, totalWaves);
+            }
+            updateWaveFlags(completed, totalWaves);
+
+            float killProgress = totalZombies > 0
+                ? MathUtils.clamp(killed / (float) totalZombies, 0f, 1f)
+                : 0f;
+            float waveProgress = totalWaves > 0
+                ? completed / (float) totalWaves
+                : 0f;
+            float progress = Math.max(killProgress, waveProgress);
+            updateWaveFill(progress, completed, totalWaves);
         } else {
-            progressLabel.setVisible(false);
+            waveGroup.setVisible(false);
         }
     }
 

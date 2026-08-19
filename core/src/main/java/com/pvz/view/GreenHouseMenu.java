@@ -70,7 +70,7 @@ public class GreenHouseMenu extends ScreenAdapter {
 
     private static final float CELL_SIZE = 155f;
     private static final float CELL_PAD = 40f;
-    private static final float GRID_VIEWPORT_HEIGHT = 950f;
+    private static final float GRID_VIEWPORT_HEIGHT = 980f;
     /** Whole pot grid offset from the top of its area. Increase to push the grid DOWN, decrease to move it UP. */
     private static final float GRID_UP_OFFSET = -63f;
     /** Row 2 is lifted this many px (via a smaller top pad) so it sits a bit higher on the background. */

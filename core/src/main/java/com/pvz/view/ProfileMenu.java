@@ -91,7 +91,7 @@ public class ProfileMenu extends ScreenAdapter {
         frameStack.add(mainPanel);
 
         // --- Close button overlay (top-right corner of the panel, like News) ----
-        ImageButton closeBtn = new ImageButton(skin, "generic_close");
+        ImageButton closeBtn = new ImageButton(skin, "generic_close_circle");
         closeBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
