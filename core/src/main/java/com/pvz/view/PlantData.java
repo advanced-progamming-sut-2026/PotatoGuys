@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -150,6 +151,18 @@ public final class PlantData {
     }
 
     public Drawable cardDrawable() {
+        if (type == PlantType.Cattail) {
+            Texture tex = new Texture(Gdx.files.internal("textures/greenhouse/plants/cattail.png"));
+            return new TextureRegionDrawable(new TextureRegion(tex));
+        }
+        if (type == PlantType.Piercemint) {
+            Texture tex = new Texture(Gdx.files.internal("textures/greenhouse/plants/piercemint.png"));
+            return new TextureRegionDrawable(new TextureRegion(tex));
+        }
+        if (type == PlantType.catTailmint) {
+            Texture tex = new Texture(Gdx.files.internal("textures/greenhouse/plants/img.png"));
+            return new TextureRegionDrawable(new TextureRegion(tex));
+        }
         return regionDrawable(cardImageId());
     }
 

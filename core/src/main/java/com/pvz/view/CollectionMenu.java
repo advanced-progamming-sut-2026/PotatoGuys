@@ -52,10 +52,10 @@ public class CollectionMenu extends ScreenAdapter {
     private static final float PANEL_WIDTH = 1520f;
     private static final float PANEL_HEIGHT = 780f;
     private static final float PANEL_X = (1920f - PANEL_WIDTH) / 2f;
-    private static final float TAB_W = 128f;
-    private static final float TAB_H = 96f;
-    private static final float FACE_W = 68f;
-    private static final float FACE_H = 68f;
+    private static final float TAB_W = 170f;
+    private static final float TAB_H = 125f;
+    private static final float FACE_W = 80f;
+    private static final float FACE_H = 80f;
     private static final Color PAGE_BG = new Color(0x1A0E06A0);
     private static final Color PANEL_BG = new Color(0x6B4226FF);
     private static final Color FILTER_DIALOG_BG = new Color(0x6B4226FF);
@@ -220,14 +220,14 @@ public class CollectionMenu extends ScreenAdapter {
         currentTab = Tab.PLANTS;
 
         float panelTop = (1080f + PANEL_HEIGHT) / 2f;
-        float tabY = panelTop - 4f - TAB_H;
+        float tabY = panelTop - 45f;
 
         Group plants = wrapTab(plantsTab, "IMAGE_UI_STORE_TABICONS_PLANTS");
-        plants.setPosition(PANEL_X + 30f, tabY);
+        plants.setPosition(PANEL_X, tabY);
 
         Group zombies = wrapTab(tabButton(Tab.ZOMBIES, group, () -> showTab(Tab.ZOMBIES)),
             "IMAGE_UI_STORE_TABICONS_ZOMBIES");
-        zombies.setPosition(PANEL_X + 30f + TAB_W + 10f, tabY);
+        zombies.setPosition(PANEL_X + TAB_W - 70f, tabY);
 
         root.addActor(plants);
         root.addActor(zombies);

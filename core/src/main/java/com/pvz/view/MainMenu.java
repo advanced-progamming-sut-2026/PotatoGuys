@@ -107,7 +107,7 @@ public class MainMenu extends ScreenAdapter {
         User currentUser = AppContext.getInstance().getCurrentUser();
         if (currentUser != null && currentUser.getUsername() != null) {
             Label userNameLabel = new Label(currentUser.getUsername(),
-                    skin.get("big_outline", Label.LabelStyle.class));
+                skin.get("big_outline", Label.LabelStyle.class));
             userNameLabel.setColor(Color.valueOf("FFD700"));
             userNameLabel.setFontScale(1.8f);
             userInfoWrapper.add(userNameLabel).left();

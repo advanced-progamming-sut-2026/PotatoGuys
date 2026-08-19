@@ -42,7 +42,9 @@ public class PlantCard extends Button {
         Skin skin = PvzSkin.get();
         Drawable fallback = skin.newDrawable("white_pixel", new Color(0.25f, 0.25f, 0.25f, 1f));
 
-        Image packet = new Image(PlantData.regionDrawableOr(data.cardImageId(), fallback));
+        Drawable packetDrawable = data.cardDrawable();
+        if (packetDrawable == null) packetDrawable = PlantData.regionDrawableOr(data.cardImageId(), fallback);
+        Image packet = new Image(packetDrawable);
         packet.setScaling(Scaling.fit);
 
         Image badge = new Image(PlantData.regionDrawableOr(data.familyImageId(), fallback));
