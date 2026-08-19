@@ -2,7 +2,7 @@ package com.pvz.controller;
 
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
-import com.pvz.models.entities.plants.data.PlantRegistry;
+import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.user.Collection;
 import com.pvz.models.user.MyPlant;
@@ -84,7 +84,7 @@ public class CollectionController {
         if (collection.getPlant(type) != null) {
             return type + " is already unlocked.";
         }
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(type);
         if (sheet == null) {
             return type + " is not available to unlock.";
         }
@@ -104,7 +104,7 @@ public class CollectionController {
     /** True when the plant exists, is not a mint and is not owned yet (so it can be bought). */
     public boolean canPurchase(PlantType type) {
         Collection collection = collection();
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(type);
         if (sheet == null || sheet.isMint()) return false;
         if (collection == null) return true;
         return collection.getPlant(type) == null;
@@ -126,7 +126,7 @@ public class CollectionController {
         MyPlant plant = collection.getPlant(type);
         if (plant == null) return type + " is not unlocked yet.";
 
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(type);
         int maxLevel = 1;
         if (sheet != null && sheet.getLevelUpgrades() != null) {
             maxLevel = sheet.getLevelUpgrades().size() + 1;

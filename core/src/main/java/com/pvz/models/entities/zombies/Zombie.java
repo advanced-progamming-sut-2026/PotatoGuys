@@ -51,7 +51,7 @@ public class Zombie extends Entity {
     // ── Runtime stats (scaled at spawn) ───────────────────────────────────────
     private final float maxHp;
     private float hp;
-    private final float eatDpsPerTick;
+    private final float eatDps;
     private final float speedPerTick;
 
     // ── Components ────────────────────────────────────────────────────────────
@@ -105,7 +105,7 @@ public class Zombie extends Entity {
         float[] scaled = computeScaledStats(waveIndex);
         this.maxHp         = scaled[0] * diffFactor;
         this.hp            = this.maxHp;
-        this.eatDpsPerTick = scaled[1] * diffFactor / TICKS_PER_SECOND;
+        this.eatDps = scaled[1] * diffFactor;
         this.speedPerTick  = sheet.getSpeed() / TICKS_PER_SECOND;
 
         setHitbox(new Hitbox(this, position.x, position.y, 48f, 80f) {
@@ -447,7 +447,7 @@ public class Zombie extends Entity {
     public void setY(float y)                   { position.y = y; syncHitbox(); }
     public float getHp()                        { return hp; }
     public float getMaxHp()                     { return maxHp; }
-    public float getEatDpsPerTick()             { return eatDpsPerTick; }
+    public float getEatDps()                    { return eatDps; }
     public float getSpeedPerTick()              { return speedPerTick; }
     public boolean isDead()                     { return dead; }
     public boolean isGlowing()                  { return glowing; }
@@ -549,5 +549,4 @@ public class Zombie extends Entity {
                 .append(": ").append(String.format("%.1f", eff.getRemainingDuration())).append("s"));
     }
 }
-
 

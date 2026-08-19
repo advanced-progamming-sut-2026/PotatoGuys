@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
-import com.pvz.models.entities.plants.data.PlantRegistry;
+import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.levels.Level;
@@ -28,7 +28,7 @@ public class PlantWhatYouGetLevel extends Level {
 
     @Override
     public boolean isPlantAllowed(PlantType type) {
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(type);
         if (sheet.getCategory() == PlantCategory.SUN_PRODUCER) {
             return false;
         }

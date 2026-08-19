@@ -70,6 +70,9 @@ public class PlantFactory {
         if (config instanceof NutConfig nutConfig){
             return nutConfig.explodesOnDestroy ? new ExplodeONutAction(nutConfig) : new WallNutState(nutConfig);
         }
+        if (config instanceof MintActionConfig mintConfig){
+            return new MintAction(mintConfig);
+        }
         return null;
     }
 

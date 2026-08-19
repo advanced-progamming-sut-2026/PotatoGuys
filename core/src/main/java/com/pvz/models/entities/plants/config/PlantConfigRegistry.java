@@ -29,6 +29,19 @@ public final class PlantConfigRegistry {
         return configs.get(type);
     }
 
+    /**
+     * Resolves a {@link PlantPropertySheet} for the given type, first trying
+     * the profile registry and falling back to the config registry (for mints
+     * and other plants that only exist in plant_actions.json).
+     */
+    public PlantPropertySheet resolveSheet(PlantType type) {
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
+        if (sheet != null) return sheet;
+        PlantJsonConfig cfg = configs.get(type);
+        if (cfg != null) return toSheet(cfg);
+        return null;
+    }
+
     private void load() {
         for (PlantJsonConfig cfg : PlantActionConfigLoader.loadFromFile(Constants.PLANT_ACTIONS_PATH)) {
             try {

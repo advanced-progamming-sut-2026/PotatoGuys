@@ -25,6 +25,7 @@ public final class PlantActionConfigLoader {
         json.addClassTag("SquashConfig", SquashConfig.class);
         json.addClassTag("NutConfig", NutConfig.class);
         json.addClassTag("WallNutFeedConfig", WallNutFeedConfig.class);
+        json.addClassTag("MintActionConfig", MintActionConfig.class);
         return json;
     }
 

@@ -15,6 +15,7 @@ public class EatState extends ZombieState {
     private Plant target;
     private boolean isGargantuar;
     private boolean smashPhase;
+    private float damageAccumulator;
 
     public EatState(Plant target) {
         super(null);
@@ -65,7 +66,7 @@ public class EatState extends ZombieState {
                     if (!target.isDead() && ctx.getPlants().contains(target)) {
                         Plant shield = PumpkinShield.shieldFor(target, ctx);
                         if (shield != null) target = shield;
-                        float totalDmg = zombie.getEatDpsPerTick() * Zombie.TICKS_PER_SECOND * (eatDur + smashDur);
+                        float totalDmg = zombie.getEatDps() * (eatDur + smashDur);
                         target.takeDamage(totalDmg, DamageKind.FIXED);
                     }
                     return new WalkState();
@@ -82,8 +83,11 @@ public class EatState extends ZombieState {
         if (shield != null) {
             target = shield;
         }
-        float dps = zombie.getEatDpsPerTick() * Zombie.TICKS_PER_SECOND;
-        target.takeDamage(dps * dt, DamageKind.FIXED);
+        damageAccumulator += dt;
+        while (damageAccumulator >= 1f) {
+            damageAccumulator -= 1f;
+            target.takeDamage(zombie.getEatDps(), DamageKind.FIXED);
+        }
         return this;
     }
 

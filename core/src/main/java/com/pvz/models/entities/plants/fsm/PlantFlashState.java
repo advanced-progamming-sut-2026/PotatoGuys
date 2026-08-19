@@ -11,7 +11,7 @@ import com.pvz.models.games.GameContext;
  */
 public class PlantFlashState extends PlantState {
 
-    private static final float FLASH_DURATION = 0.28f;
+    private static final float FLASH_DURATION = 0.2f;
     private static final float FLASH_R = 5f;
     private static final float FLASH_G = 5f;
     private static final float FLASH_B = 5f;
@@ -32,13 +32,10 @@ public class PlantFlashState extends PlantState {
     @Override
     public void update(Plant plant, GameContext ctx, float dt) {
         stateTime += dt;
-        if (stateTime >= FLASH_DURATION) {
-            return;
-        }
-        PlantState prev = underlying;
         underlying.update(plant, ctx, dt);
-        if (underlying != prev) {
+        if (stateTime >= FLASH_DURATION) {
             plant.setCurrentState(underlying);
+            return;
         }
     }
 

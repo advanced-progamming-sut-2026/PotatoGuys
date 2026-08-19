@@ -8,7 +8,7 @@ import com.pvz.models.AppContext;
 import com.pvz.models.engine.GameEngine;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
-import com.pvz.models.entities.plants.data.PlantRegistry;
+import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -31,7 +31,7 @@ public class PreGameController {
     public Result showAllPlants(Matcher matcher) {
         StringBuilder output = new StringBuilder();
         for (PlantType type : PlantType.values()) {
-            var sheet = PlantRegistry.getInstance().getSheet(type);
+            var sheet = PlantConfigRegistry.getInstance().resolveSheet(type);
             if (sheet == null)
                 continue;
             output.append("\n type: ").append(type.toString());
@@ -49,7 +49,7 @@ public class PreGameController {
                 continue;
             output.append("\n- ").append(p.getType());
             output.append(" | Level: ").append(p.getLevel());
-            output.append(" | Sun Cost: ").append(PlantRegistry.getInstance().getSheet(p.getType()).getSunCost());
+            output.append(" | Sun Cost: ").append(PlantConfigRegistry.getInstance().resolveSheet(p.getType()).getSunCost());
             if (p.isBoosted())
                 output.append(" [BOOSTED]");
         }
@@ -89,7 +89,7 @@ public class PreGameController {
             }
         }
 
-        PlantPropertySheet propertySheet = PlantRegistry.getInstance().getSheet(plantType);
+        PlantPropertySheet propertySheet = PlantConfigRegistry.getInstance().resolveSheet(plantType);
         ResolvedStats stats = PlantStatResolver.resolve(propertySheet, owned.getLevel());
         selectedPlants.add(new PlantCard(owned, stats.getSunCost(), stats.getRechargeSeconds()));
 

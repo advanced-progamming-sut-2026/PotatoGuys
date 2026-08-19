@@ -9,6 +9,7 @@ import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
+import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
@@ -120,7 +121,7 @@ public class NormalMode implements GameMode, PlantPlacer {
             return false;
         }
 
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(card.getPlant().getType());
         ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
 
         if (context.getCurrentSun() < stats.getSunCost()) {
@@ -138,7 +139,7 @@ public class NormalMode implements GameMode, PlantPlacer {
             context.log("Error: card is not a plant card.");
             return;
         }
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(card.getPlant().getType());
         ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
         if (!context.spendSun(stats.getSunCost())) {
             context.log("Not enough sun.");

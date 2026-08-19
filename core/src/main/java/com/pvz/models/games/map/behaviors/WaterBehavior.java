@@ -5,7 +5,7 @@ import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
-import com.pvz.models.entities.plants.data.PlantRegistry;
+import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.GameContext;
@@ -21,7 +21,7 @@ public class WaterBehavior implements TileBehavior {
     @Override
     public boolean canPlant(PlantCard card, Tile tile) {
         if (card == null) return false;
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(card.getPlant().getType());
         if (sheet == null) return false;
 
         // If tile is empty, can plant directly if plant has WATER tag (e.g. LilyPad, Seashroom, TangleKelp)

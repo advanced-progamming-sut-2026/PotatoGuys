@@ -64,8 +64,12 @@ public final class PlantData {
         PlantConfigRegistry configs = PlantConfigRegistry.getInstance();
         for (PlantType type : PlantType.values()) {
             PlantPropertySheet sheet = registry.getSheet(type);
-            if (sheet == null || sheet.isMint()) continue;
-            result.add(new PlantData(type, sheet, configs.getConfig(type)));
+            PlantJsonConfig cfg = configs.getConfig(type);
+            if (sheet == null && cfg != null) {
+                sheet = configs.toSheet(cfg);
+            }
+            if (sheet == null) continue;
+            result.add(new PlantData(type, sheet, cfg));
         }
         result.sort((a, b) -> Integer.compare(a.sheet.getId(), b.sheet.getId()));
         return result;
@@ -78,8 +82,12 @@ public final class PlantData {
         PlantRegistry registry = PlantRegistry.getInstance();
         PlantConfigRegistry configs = PlantConfigRegistry.getInstance();
         PlantPropertySheet sheet = registry.getSheet(type);
-        if (sheet == null || sheet.isMint()) return null;
-        return new PlantData(type, sheet, configs.getConfig(type));
+        PlantJsonConfig cfg = configs.getConfig(type);
+        if (sheet == null && cfg != null) {
+            sheet = configs.toSheet(cfg);
+        }
+        if (sheet == null) return null;
+        return new PlantData(type, sheet, cfg);
     }
 
     private static Profile currentProfile() {

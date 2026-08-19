@@ -9,7 +9,7 @@ import com.pvz.models.engine.GameEngine;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
-import com.pvz.models.entities.plants.data.PlantRegistry;
+import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.projectile.Projectile;
@@ -58,7 +58,7 @@ public class Tile implements TickAware {
                 return false;
         }
 
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(newPlant.getPlant().getType());
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(newPlant.getPlant().getType());
         if (!plants.isEmpty() && !sheet.getTags().contains(PlantTag.STACK)) {
             boolean hasLilyPad = plants.stream().anyMatch(p -> p.getType() == PlantType.LilyPad);
             if (!hasLilyPad) {

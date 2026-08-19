@@ -33,7 +33,7 @@ import com.pvz.models.entities.effects.LootDrop;
 import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
-import com.pvz.models.entities.plants.data.PlantRegistry;
+import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.projectile.Projectile;
@@ -1091,7 +1091,7 @@ public class GameController {
                     try {
                         owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(pt);
                     } catch (Exception ignored) {}
-                    PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(pt);
+                    PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(pt);
 
                     MyPlant myPlant = owned;
                     if (myPlant == null) {
