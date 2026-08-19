@@ -4,17 +4,16 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="added shovel">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/CollectionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/CollectionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/RandomSeedPacketItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/shop/items/RandomSeedPacketItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/CollectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/CollectionMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PlantData.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PlantData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PlantDetailsTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PlantDetailsTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ShopMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ShopMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/PlantSelectModal.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/PlantSelectModal.java" afterDir="false" />
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="some bugs fixing">
+      <change beforePath="$PROJECT_DIR$/MergedProject.txt" beforeDir="false" afterPath="$PROJECT_DIR$/MergedProject.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/levels/Wave.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/levels/Wave.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/GameMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/GameMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/ConveyorBeltMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/ConveyorBeltMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/DeadLineMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/DeadLineMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/NormalMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/NormalMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/PlantWhatYouGetMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/PlantWhatYouGetMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/TimedWarMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/modes/variants/TimedWarMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/GameUiModal.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/GameUiModal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,11 +158,12 @@
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\images\chapters" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.plantsvszombies2 [:lwjgl3:run]">
+  <component name="RunManager" selected="Application.Lwjgl3Launcher">
     <configuration name="Lwjgl3Launcher" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="com.pvz.lwjgl3.Lwjgl3Launcher" />
+      <module name="pvz2.lwjgl3.main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.pvz.lwjgl3.*" />
@@ -257,8 +257,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.plantsvszombies2 [:lwjgl3:run]" />
         <item itemvalue="Application.Lwjgl3Launcher" />
+        <item itemvalue="Gradle.plantsvszombies2 [:lwjgl3:run]" />
         <item itemvalue="Application.PvzServer" />
         <item itemvalue="Application.ProjectMerger" />
         <item itemvalue="Gradle.plantsvszombies2" />
@@ -560,14 +560,21 @@
       <option name="project" value="LOCAL" />
       <updated>1787064185981</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="some bugs fixing">
+      <option name="closed" value="true" />
+      <created>1787067204833</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1787067204833</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added travel log menu" />
     <MESSAGE value="setting and news and profile menu updated" />
     <MESSAGE value="updated chapter selection menu and game mode menu appearance" />
     <MESSAGE value="added Greenhouse (need some fixes)" />
@@ -592,7 +599,8 @@
     <MESSAGE value="..." />
     <MESSAGE value="wired show grid to setting and added user username in main menu" />
     <MESSAGE value="added shovel" />
-    <option name="LAST_COMMIT_MESSAGE" value="added shovel" />
+    <MESSAGE value="some bugs fixing" />
+    <option name="LAST_COMMIT_MESSAGE" value="some bugs fixing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -610,7 +618,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/grave_buster/GraveBuster.java</url>
           <line>19</line>
-          <properties class="com.pvz.models.entities.plants.grave_buster.GraveBuster">
+          <properties class="com.pvz.models.entities.plants.grave_buster.GraveBuster" method="isPlantableOnTile">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>

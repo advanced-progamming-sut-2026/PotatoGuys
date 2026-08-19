@@ -1,14 +1,40 @@
 {
   "gameType": "PLANTWHATYOUGET",
+  "musicPath": "assets/audio/music/big_wave_beach/Laura Shigihara - Ultimate Battle (In-Game).mp3",
   "levelNumber": 1,
   "levelType": "SPECIAL",
   "initialSun": 1000,
-  "effects": [{"type": "BIG_WAVE_BEACH", "minWaterColumn": 5, "maxWaterColumn": 3}],
+  "effects": [
+    {
+      "type": "BIG_WAVE_BEACH",
+      "minWaterColumn": 5,
+      "maxWaterColumn": 3
+    }
+  ],
   "gameMap": {
     "rows": 5,
     "columns": 9,
     "specialTiles": [
-      { "x": 4, "y": 2, "behaviors": [{ "type": "WATER", "hp": 0, "name": "Water" }, { "type": "LOW_TIDE", "hp": 0, "name": "LowTide" }], "tags": ["WATER", "LOW_TIDE"] }
+      {
+        "x": 4,
+        "y": 2,
+        "behaviors": [
+          {
+            "type": "WATER",
+            "hp": 0,
+            "name": "Water"
+          },
+          {
+            "type": "LOW_TIDE",
+            "hp": 0,
+            "name": "LowTide"
+          }
+        ],
+        "tags": [
+          "WATER",
+          "LOW_TIDE"
+        ]
+      }
     ]
   },
   "waves": [
@@ -22,13 +48,18 @@
         {
           "zombieCount": 3,
           "intervalTicks": 100,
-          "allowedTypes": ["BASIC", "SNORKEL"],
+          "allowedTypes": [
+            "BASIC",
+            "SNORKEL"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 2,
           "intervalTicks": 70,
-          "allowedTypes": ["CONEHEAD"],
+          "allowedTypes": [
+            "CONEHEAD"
+          ],
           "isBurst": false
         }
       ]
@@ -43,13 +74,19 @@
         {
           "zombieCount": 4,
           "intervalTicks": 60,
-          "allowedTypes": ["CONEHEAD", "NEWSPAPER", "OCTOPUS"],
+          "allowedTypes": [
+            "CONEHEAD",
+            "NEWSPAPER",
+            "OCTOPUS"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 3,
           "intervalTicks": 40,
-          "allowedTypes": ["BUCKETHEAD"],
+          "allowedTypes": [
+            "BUCKETHEAD"
+          ],
           "isBurst": true
         }
       ]
@@ -64,19 +101,28 @@
         {
           "zombieCount": 4,
           "intervalTicks": 50,
-          "allowedTypes": ["BUCKETHEAD", "BRICKHEAD", "SNORKEL"],
+          "allowedTypes": [
+            "BUCKETHEAD",
+            "BRICKHEAD",
+            "SNORKEL"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalTicks": 120,
-          "allowedTypes": ["GARGANTUAR"],
+          "allowedTypes": [
+            "GARGANTUAR"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 6,
           "intervalTicks": 20,
-          "allowedTypes": ["IMP", "FLAG"],
+          "allowedTypes": [
+            "IMP",
+            "FLAG"
+          ],
           "isBurst": true
         }
       ]

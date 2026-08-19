@@ -45,6 +45,18 @@ public class DeadLineMode implements GameMode, PlantPlacer {
     }
 
     @Override
+    public boolean hasProgressBar() { return true; }
+
+    @Override
+    public int getCurrentWaveIndex() { return waves.indexOf(currentWave); }
+
+    @Override
+    public int getTotalWaves() { return waves.size(); }
+
+    @Override
+    public int getTotalZombieCount() { return waves.stream().mapToInt(Wave::getTotalZombieCount).sum(); }
+
+    @Override
     public void initMode(GameContext context) {
         context.log("⚠️ DEADLINE MODE! Don't let zombies cross Column " + deadlineColumn + " ⚠️");
     }

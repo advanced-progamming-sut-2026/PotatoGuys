@@ -1,5 +1,6 @@
 {
   "gameType": "CONVEYORBELT",
+  "musicPath": "assets/audio/music/frostbite_caves/Laura Shigihara - Loonboon (In-Game).mp3",
   "levelNumber": 3,
   "levelType": "SPECIAL",
   "initialSun": 0,
@@ -19,13 +20,18 @@
         {
           "zombieCount": 2,
           "intervalTicks": 100,
-          "allowedTypes": ["BASIC"],
+          "allowedTypes": [
+            "BASIC"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 2,
           "intervalTicks": 80,
-          "allowedTypes": ["BASIC", "CONEHEAD"],
+          "allowedTypes": [
+            "BASIC",
+            "CONEHEAD"
+          ],
           "isBurst": false
         }
       ]
@@ -40,13 +46,20 @@
         {
           "zombieCount": 3,
           "intervalTicks": 70,
-          "allowedTypes": ["BASIC", "CONEHEAD", "FLAG"],
+          "allowedTypes": [
+            "BASIC",
+            "CONEHEAD",
+            "FLAG"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 4,
           "intervalTicks": 50,
-          "allowedTypes": ["CONEHEAD", "BUCKETHEAD"],
+          "allowedTypes": [
+            "CONEHEAD",
+            "BUCKETHEAD"
+          ],
           "isBurst": true
         }
       ]
@@ -61,13 +74,20 @@
         {
           "zombieCount": 4,
           "intervalTicks": 55,
-          "allowedTypes": ["CONEHEAD", "BUCKETHEAD", "NEWSPAPER"],
+          "allowedTypes": [
+            "CONEHEAD",
+            "BUCKETHEAD",
+            "NEWSPAPER"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 5,
           "intervalTicks": 40,
-          "allowedTypes": ["BUCKETHEAD", "IMP"],
+          "allowedTypes": [
+            "BUCKETHEAD",
+            "IMP"
+          ],
           "isBurst": true
         }
       ]
@@ -82,13 +102,23 @@
         {
           "zombieCount": 5,
           "intervalTicks": 40,
-          "allowedTypes": ["CONEHEAD", "BUCKETHEAD", "BRICKHEAD", "FLAG"],
+          "allowedTypes": [
+            "CONEHEAD",
+            "BUCKETHEAD",
+            "BRICKHEAD",
+            "FLAG"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 8,
           "intervalTicks": 25,
-          "allowedTypes": ["BUCKETHEAD", "BRICKHEAD", "IMP", "GARGANTUAR"],
+          "allowedTypes": [
+            "BUCKETHEAD",
+            "BRICKHEAD",
+            "IMP",
+            "GARGANTUAR"
+          ],
           "isBurst": true
         }
       ]

@@ -56,6 +56,7 @@ public class GameUiModal extends Table {
     private final Label sunLabel;
     private final Label coinLabel;
     private final Label gemLabel;
+    private final Label progressLabel;
     private final Image coinIcon;
     private final Image gemIcon;
     private final Image[] plantFoodDots = new Image[MAX_PLANT_FOOD];
@@ -115,7 +116,14 @@ public class GameUiModal extends Table {
         sunBank.add(sunContent);
         sunRow.add(addSunButton).size(50f).padRight(3f);
         sunRow.add(sunBank).width(150f).height(54f);
-        topBar.add(sunRow).left().row();
+        topBar.add(sunRow).left();
+
+        progressLabel = new Label("", PvzSkin.get(), "medium_outline");
+        progressLabel.setColor(Color.WHITE);
+        progressLabel.setFontScale(1.0f);
+        progressLabel.setAlignment(Align.left);
+        topBar.add(progressLabel).left().padLeft(15f);
+        topBar.row();
 
         // Plant food bank with a +1 cheat button, matching the reference HUD (phase-0-group-51).
         Table foodRow = new Table();
@@ -584,6 +592,19 @@ public class GameUiModal extends Table {
             float fraction = base > 0 ? zc.getCooldown() / base : 0f;
             overlay.setVisible(fraction > 0f);
             overlay.setHeight(SLOT_HEIGHT * fraction);
+        }
+
+        com.pvz.models.games.modes.GameMode mode = context.getMode();
+        if (mode != null && mode.hasProgressBar()) {
+            int current = mode.getCurrentWaveIndex();
+            int total = mode.getTotalWaves();
+            int totalZombies = mode.getTotalZombieCount();
+            int killed = context.getGameStats().getZombiesKilled();
+            int percent = totalZombies > 0 ? Math.min(100, killed * 100 / totalZombies) : 0;
+            progressLabel.setText("Wave " + (current + 1) + "/" + total + "  " + percent + "%");
+            progressLabel.setVisible(true);
+        } else {
+            progressLabel.setVisible(false);
         }
     }
 

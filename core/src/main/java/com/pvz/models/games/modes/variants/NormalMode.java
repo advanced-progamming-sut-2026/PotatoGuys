@@ -50,6 +50,18 @@ public class NormalMode implements GameMode, PlantPlacer {
     }
 
     @Override
+    public boolean hasProgressBar() { return true; }
+
+    @Override
+    public int getCurrentWaveIndex() { return waves.indexOf(currentWave); }
+
+    @Override
+    public int getTotalWaves() { return waves.size(); }
+
+    @Override
+    public int getTotalZombieCount() { return waves.stream().mapToInt(Wave::getTotalZombieCount).sum(); }
+
+    @Override
     public void initMode(GameContext context) {
         if (currentWave != null) {
             currentWave.startWave(context);
