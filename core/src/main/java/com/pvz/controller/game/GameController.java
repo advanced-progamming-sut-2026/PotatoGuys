@@ -22,6 +22,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
 import com.pvz.controller.AudioManager;
+import com.pvz.controller.game.State.PanningBack;
+import com.pvz.controller.game.State.PanningForward;
+import com.pvz.controller.game.State.Playing;
+import com.pvz.controller.game.State.State;
 import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
 import com.pvz.models.engine.FrameConfig;
@@ -81,22 +85,17 @@ public class GameController {
     private Level level;
     private PlantSelectModal plantSelectModal;
     private GameUiModal gameUiModal;
-    private State currentState = State.PANNING_FORWARD;
+    private State state = new PanningForward(this);
 
     private TextureRegion[] backgroundTextures;
     private boolean isIZombie = false;
 
     private final Vector3 touchPos = new Vector3();
 
-    private float panBackTime = 0f;
-    private final float transitionDuration = 3.0f;
     private float startX;
     private float endX;
     private boolean gameStarted = false;
-    private final float panBackDuration = 2.5f;
     private Label readyPlantLabel;
-    private float readyPlantTimer = 0f;
-    private final float readyPlantDuration = 2.0f;
     private Label errorMessageLabel;
     private float errorMessageTimer = 0f;
     private final float errorMessageDuration = 2.5f;
@@ -138,7 +137,7 @@ public class GameController {
         stage.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (currentState == State.PLAYING && !paused) {
+                if (state instanceof Playing && !paused) {
                     if (ctx != null) {
                         // تبدیل ورودی ماوس/لمس به مختصات دقیق World
                         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -350,6 +349,12 @@ public class GameController {
         stage.addActor(errorTable);
     }
 
+    public void changeState(State state) {
+        this.state.exit();
+        this.state = state;
+        state.enter();
+    }
+
     public void update(float dt) {
         camera.update();
         previewStateTime += dt;
@@ -369,76 +374,16 @@ public class GameController {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (paused) {
                 resumeGame();
-            } else if (currentState == State.PLAYING) {
+            } else if (state instanceof Playing) {
                 pauseGame();
             }
         }
 
-        switch (currentState) {
-            case PANNING_FORWARD:
-                stateTime += dt;
-                float progressFwd = Math.min(1f, stateTime / transitionDuration);
-                float smoothFwd = com.badlogic.gdx.math.Interpolation.fade.apply(progressFwd);
-                float currentXFwd = com.badlogic.gdx.math.MathUtils.lerp(startX, endX, smoothFwd);
-                camera.position.set(currentXFwd, 720f / 2f, 0);
-
-                if (progressFwd >= 1f) {
-                    if (level != null && !level.hasPreGame()) {
-                        startGameSession();
-                    } else {
-                        currentState = State.PLANT_SELECT;
-                        plantSelectModal.setVisible(true);
-                        Gdx.input.setInputProcessor(stage);
-                    }
-                }
-                break;
-
-            case PLANT_SELECT:
-                camera.position.set(endX, 720f / 2f, 0);
-                break;
-
-            case PANNING_BACK:
-                panBackTime += dt;
-                float progressBack = Math.min(1f, panBackTime / panBackDuration);
-                float smoothBack = com.badlogic.gdx.math.Interpolation.fade.apply(progressBack);
-                float currentXBack = com.badlogic.gdx.math.MathUtils.lerp(endX, startX, smoothBack);
-                camera.position.set(currentXBack, 720f / 2f, 0);
-
-                if (progressBack >= 1f) {
-                    currentState = State.READY_PLANT;
-                    readyPlantLabel.setVisible(true);
-                    readyPlantTimer = 0f;
-                }
-                break;
-
-            case READY_PLANT:
-                camera.position.set(startX, 720f / 2f, 0);
-                readyPlantTimer += dt;
-                if (readyPlantTimer >= readyPlantDuration) {
-                    readyPlantLabel.setVisible(false);
-                    currentState = State.PLAYING;
-                    gameStarted = true;
-                    AudioManager audioManager = AudioManager.getInstance();
-                    if (level.getMusicPath() != null) {
-                        audioManager.playMusic(level.getMusicPath(), true, audioManager.getUserMusicVolume());
-                    } else {
-                        audioManager.playMusic(AudioPaths.GRASS_WALK, true, audioManager.getUserMusicVolume());
-                    }
-                }
-                break;
-
-            case PLAYING:
-                camera.position.set(startX, 720f / 2f, 0);
-                gameUiModal.updateHud();
-                if (ctx.isGameOver() && !paused) {
-                    showGameEndPopup();
-                }
-                break;
-        }
+        state.update(dt);
 
         // Check sun & coin-drop clicks in PLAYING state on left click (only when no
         // card selected)
-        if (currentState == State.PLAYING && !paused
+        if (state instanceof Playing && !paused
                 && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
             boolean zombieCardActive = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
             if (!zombieCardActive) {
@@ -453,7 +398,7 @@ public class GameController {
         }
 
         // ۴. آپدیت Engine
-        if (currentState == State.PLAYING && !paused) {
+        if (state instanceof Playing && !paused) {
             GameEngine.getInstance().update(dt);
             if (!cardsInitialized) {
                 cardsInitialized = true;
@@ -464,7 +409,7 @@ public class GameController {
     }
 
     private void pauseGame() {
-        if (currentState != State.PLAYING || paused) {
+        if (!(state instanceof Playing) || paused) {
             return;
         }
 
@@ -506,7 +451,7 @@ public class GameController {
         Gdx.app.postRunnable(() -> PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber)));
     }
 
-    private void showGameEndPopup() {
+    public void showGameEndPopup() {
         paused = true;
 
         boolean won = false;
@@ -588,7 +533,7 @@ public class GameController {
         }
         batch.end();
 
-        if (currentState == State.PLAYING && gameUiModal != null && ctx != null) {
+        if (state instanceof Playing && gameUiModal != null && ctx != null) {
             boolean hasSelectedCard = gameUiModal.getSelectedCard() != null
                     || gameUiModal.getSelectedZombieCard() != null;
             boolean shovelArmed = gameUiModal.isShovelSelected();
@@ -783,7 +728,7 @@ public class GameController {
      * deselected).
      */
     private void drawPlacementPreview() {
-        if (currentState != State.PLAYING || paused)
+        if (!(state instanceof Playing) || paused)
             return;
 
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -1159,8 +1104,7 @@ public class GameController {
                 ctx = newContext;
 
                 plantSelectModal.setVisible(false);
-                currentState = State.PANNING_BACK;
-                panBackTime = 0f;
+                changeState(new PanningBack(this));
                 Gdx.input.setInputProcessor(stage);
 
                 Gdx.app.log("GameScreen", "Starting camera pan back for " + seasonName + " Level " + levelNumber);
@@ -1273,8 +1217,8 @@ public class GameController {
         return gameUiModal;
     }
 
-    public State getCurrentState() {
-        return currentState;
+    public State getState() {
+        return state;
     }
 
     public OrthographicCamera getCamera() {
@@ -1287,6 +1231,30 @@ public class GameController {
 
     public ShapeRenderer getShapeRenderer() {
         return shapeRenderer;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public float getStartX() {
+        return startX;
+    }
+
+    public float getEndX() {
+        return endX;
+    }
+
+    public Label getReadyPlantLabel() {
+        return readyPlantLabel;
+    }
+
+    public void setGameStarted(boolean gameStarted) {
+        this.gameStarted = gameStarted;
+    }
+
+    public boolean isPaused() {
+        return paused;
     }
 
     // This method returns the world coordinates of the middle of column
