@@ -109,12 +109,18 @@ public class RegisterMenu extends ScreenAdapter {
         form.add(nicknameField).width(FIELD_WIDTH).left().row();
 
         passwordField = createPasswordField("Password");
+        Table passwordWrapper = new Table();
+        passwordWrapper.add(passwordField).width(FIELD_WIDTH).left().row();
+        passwordWrapper.add(PasswordToggleHelper.createToggle(passwordField, skin)).left().padLeft(4f).padTop(12f);
         form.add(label("Password")).right().padRight(8f);
-        form.add(passwordField).width(FIELD_WIDTH).left().padRight(PAIR_GAP);
+        form.add(passwordWrapper).width(FIELD_WIDTH).left().padRight(PAIR_GAP);
 
         confirmPasswordField = createPasswordField("Confirm Password");
+        Table confirmWrapper = new Table();
+        confirmWrapper.add(confirmPasswordField).width(FIELD_WIDTH).left().row();
+        confirmWrapper.add(PasswordToggleHelper.createToggle(confirmPasswordField, skin)).left().padLeft(4f).padTop(12f);
         form.add(label("Confirm")).right().padRight(8f);
-        form.add(confirmPasswordField).width(FIELD_WIDTH).left().row();
+        form.add(confirmWrapper).width(FIELD_WIDTH).left().row();
 
         // ── Profile section ───────────────────────────────────────────────
         Label sectionProfile = new Label("Profile", skin, "big");

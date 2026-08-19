@@ -11,7 +11,7 @@
   "profile": {
     "gamePlayed": 0,
     "coins": 6750,
-    "diamonds": 588,
+    "diamonds": 585,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -447,12 +447,7 @@
         "x": 3,
         "y": 3,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "BonkChoy",
-          "plantedTime": "2026-08-19T18:20:38.760917800",
-          "growthHours": 8
-        }
+        "greenHousePlant": null
       },
       {
         "x": 4,
@@ -1380,7 +1375,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1787166672097
+    "lastDailyReset": 1787171538666
   },
   "questLogRefreshed": true
 }

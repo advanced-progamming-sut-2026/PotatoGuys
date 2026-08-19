@@ -93,8 +93,11 @@ public class LoginMenu extends ScreenAdapter {
         form.add(usernameField).width(FIELD_WIDTH).left().row();
 
         passwordField = createPasswordField("Password");
-        form.add(label("Password")).right().padRight(12f).padTop(15);
-        form.add(passwordField).width(FIELD_WIDTH).left().row();
+        Table pwWrapper = new Table();
+        pwWrapper.add(passwordField).width(FIELD_WIDTH).left().row();
+        pwWrapper.add(PasswordToggleHelper.createToggle(passwordField, skin)).left().padLeft(4f).padTop(12f);
+        form.add(label("Password")).right().padRight(12f).padTop(12);
+        form.add(pwWrapper).row();
 
         // ── Status ────────────────────────────────────────────────────────
         statusLabel = new Label("", skin, "big");

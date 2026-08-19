@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -67,13 +68,22 @@ public class PasswordChangeMenu extends ScreenAdapter {
         mainPanel.add(titleLabel).padBottom(30).row();
 
         oldPasswordField = createPasswordField("Current Password");
-        mainPanel.add(oldPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
+        Table oldWrapper = new Table();
+        oldWrapper.add(oldPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
+        oldWrapper.add(PasswordToggleHelper.createToggle(oldPasswordField, skin)).left().padLeft(4f).padTop(12f);
+        mainPanel.add(oldWrapper).row();
 
         newPasswordField = createPasswordField("New Password");
-        mainPanel.add(newPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
+        Table newWrapper = new Table();
+        newWrapper.add(newPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
+        newWrapper.add(PasswordToggleHelper.createToggle(newPasswordField, skin)).left().padLeft(4f).padTop(12f);
+        mainPanel.add(newWrapper).row();
 
         confirmPasswordField = createPasswordField("Confirm New Password");
-        mainPanel.add(confirmPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
+        Table confirmWrapper = new Table();
+        confirmWrapper.add(confirmPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
+        confirmWrapper.add(PasswordToggleHelper.createToggle(confirmPasswordField, skin)).left().padLeft(4f).padTop(12f);
+        mainPanel.add(confirmWrapper).row();
 
         statusLabel = new Label("", skin);
         statusLabel.setFontScale(1.2f);

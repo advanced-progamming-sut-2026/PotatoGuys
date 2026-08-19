@@ -84,6 +84,13 @@ public class Plant extends Entity {
         currentState.onEnter(this, context);
         context.log("[Plant] " + sheet.getName() + " planted at (" + col + "," + lane + ")"
                 + (level > 1 ? " [Lvl " + level + "]" : ""));
+        if (boosted && feedAction != null) {
+            boosted = false;
+            boostedTicksRemaining = 0;
+            changeState(feedAction);
+            context.addEffect(new PlantFoodFxEffect(context, position));
+            context.log("[PlantFood] " + sheet.getName() + " auto-triggered Plant Food (boosted)!");
+        }
     }
 
     @Override

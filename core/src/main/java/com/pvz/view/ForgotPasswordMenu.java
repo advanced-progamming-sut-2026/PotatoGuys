@@ -173,13 +173,19 @@ public class ForgotPasswordMenu extends ScreenAdapter {
         newPasswordField.setMessageText("New Password");
         newPasswordField.setPasswordMode(true);
         newPasswordField.setPasswordCharacter('*');
-        mainTable.add(newPasswordField).width(300).height(50).row();
+        Table newPassWrapper = new Table();
+        newPassWrapper.add(newPasswordField).width(300).height(50).row();
+        newPassWrapper.add(PasswordToggleHelper.createToggle(newPasswordField, skin)).left().padLeft(4f).padTop(12f);
+        mainTable.add(newPassWrapper).row();
 
         TextField confirmPasswordField = new TextField("", skin);
         confirmPasswordField.setMessageText("Confirm New Password");
         confirmPasswordField.setPasswordMode(true);
         confirmPasswordField.setPasswordCharacter('*');
-        mainTable.add(confirmPasswordField).width(300).height(50).row();
+        Table confirmPassWrapper = new Table();
+        confirmPassWrapper.add(confirmPasswordField).width(300).height(50).row();
+        confirmPassWrapper.add(PasswordToggleHelper.createToggle(confirmPasswordField, skin)).left().padLeft(4f).padTop(12f);
+        mainTable.add(confirmPassWrapper).row();
 
         Label resetStatus = new Label("", skin);
         mainTable.add(resetStatus).padTop(10).row();
