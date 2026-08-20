@@ -756,9 +756,15 @@ public class GameController {
             if (GameController.worldYtoLane(e.getPos().y) == row) {
                 FrameConfig fc = e.draw();
                 if (fc != null) {
-                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                            fc.stateTime, fc.position.x, fc.position.y,
-                            fc.scale.x, fc.scale.y, fc.looping);
+                    if (fc.partsVisibility != null) {
+                        batch.setColor(fc.r, fc.g, fc.b, fc.a);
+                        drawFrame(fc);
+                        batch.setColor(1f, 1f, 1f, 1f);
+                    } else {
+                        PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                                fc.stateTime, fc.position.x, fc.position.y,
+                                fc.scale.x, fc.scale.y, fc.looping);
+                    }
                 }
             }
         }

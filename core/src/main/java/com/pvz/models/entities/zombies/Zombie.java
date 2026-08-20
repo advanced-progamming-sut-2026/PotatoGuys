@@ -19,6 +19,7 @@ import com.pvz.models.entities.plants.PumpkinShield;
 import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
 import com.pvz.models.entities.zombies.armor.ArmorType;
+import com.pvz.models.entities.effects.DetachedArmEffect;
 import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
 import com.pvz.models.entities.zombies.data.ScaledProp;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
@@ -78,6 +79,7 @@ public class Zombie extends Entity {
     private boolean throwImpSpawned = false;
     private int stolenSun;
     private boolean killedByExplosive = false;
+    private boolean armDetached = false;
 
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -311,9 +313,11 @@ public class Zombie extends Entity {
      */
     private Map<String, Boolean> buildPartsVisibility() {
         boolean buttered = currentState instanceof ButterStunState;
-        if (armors.isEmpty() && !throwImpSpawned && !buttered)
+        List<String> detachedParts = armDetached ? getArmPartsToShow() : null;
+        boolean hideArm = detachedParts != null && !detachedParts.isEmpty();
+        if (armors.isEmpty() && !throwImpSpawned && !buttered && !hideArm)
             return null;
-        Map<String, Boolean> visibility = (armors.isEmpty() && !buttered) ? null : new HashMap<>();
+        Map<String, Boolean> visibility = (armors.isEmpty() && !buttered && !hideArm) ? null : new HashMap<>();
         if (buttered) {
             visibility.put("butter", true);
         }
@@ -341,6 +345,13 @@ public class Zombie extends Entity {
             if (visibility == null)
                 visibility = new HashMap<>();
             hideImpParts(visibility);
+        }
+        if (hideArm) {
+            if (visibility == null)
+                visibility = new HashMap<>();
+            for (String part : detachedParts) {
+                visibility.put(part, false);
+            }
         }
         return visibility;
     }
@@ -433,7 +444,22 @@ public class Zombie extends Entity {
         if (explosive)
             killedByExplosive = true;
         float remaining = poisonous ? amount : processArmorChain(amount);
+        float prevHp = hp;
         hp = Math.max(0f, hp - remaining);
+        if (!armDetached && hp > 0f && prevHp > maxHp * 0.5f && hp <= maxHp * 0.5f) {
+            armDetached = true;
+            List<String> armParts = getArmPartsToShow();
+            if (!armParts.isEmpty()) {
+                ZombieAnimationConfig anim = sheet.getAnimationConfig();
+                float sc = (anim != null && anim.scale != null) ? anim.scale : 0.65f;
+                String pam = (anim != null && anim.pamFilePath != null)
+                        ? anim.pamFilePath
+                        : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
+                context.addEffect(new DetachedArmEffect(context,
+                        new Vector2(position.x, position.y), pam, sc,
+                        armParts, getArmPartsToHide()));
+            }
+        }
         if (currentState != null && !(currentState instanceof DeadState)
                 && !(currentState instanceof ZombieFlashState)) {
             currentState = new ZombieFlashState(currentState);
@@ -702,6 +728,24 @@ public class Zombie extends Entity {
     private void updateStatusEffects(float dt) {
         activeEffects.entrySet().removeIf(entry -> !entry.getValue().update(dt));
     }
+
+    private List<String> getArmPartsToShow() {
+        ZombieAnimationConfig anim = sheet.getAnimationConfig();
+        if (anim != null && anim.detachedArmParts != null && !anim.detachedArmParts.isEmpty()) {
+            return anim.detachedArmParts;
+        }
+        return Collections.emptyList();
+    }
+
+    private List<String> getArmPartsToHide() {
+        ZombieAnimationConfig anim = sheet.getAnimationConfig();
+        if (anim != null && anim.detachedArmHideParts != null && !anim.detachedArmHideParts.isEmpty()) {
+            return anim.detachedArmHideParts;
+        }
+        return Collections.emptyList();
+    }
+
+
 
     private boolean isParalysed() {
         return hasEffect(EffectType.FROZEN)
