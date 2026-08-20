@@ -683,6 +683,9 @@ public class GameController {
         }
     }
 
+    private static final String ICE_BLOCK_PAM = "768/FULL/EFFECTS/FROSTBITE_ICE_BLOCK_PLANT/FROSTBITE_ICE_BLOCK_PLANT.PAM";
+    private static final String ICE_BLOCK_CLIP = "freeze_idle";
+
     private void drawZombies(int row) {
         for (Zombie z : ctx.getZombies()) {
             if (GameController.worldYtoLane(z.getY()) == row) {
@@ -690,6 +693,14 @@ public class GameController {
                 if (fc != null) {
                     batch.setColor(fc.r, fc.g, fc.b, fc.a);
                     drawFrame(fc);
+                    batch.setColor(1f, 1f, 1f, 1f);
+                }
+                if (z.isFrozenInIceBlock()) {
+                    z.addIceBlockTime(1f / 60f);
+                    batch.setColor(1f, 1f, 1f, 0.7f);
+                    PvZ2.pamPlayer.draw(batch, ICE_BLOCK_PAM, ICE_BLOCK_CLIP,
+                            z.getIceBlockStateTime(), z.getX(), z.getY(),
+                            0.65f, 0.65f, false);
                     batch.setColor(1f, 1f, 1f, 1f);
                 }
             }

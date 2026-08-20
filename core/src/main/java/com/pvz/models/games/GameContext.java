@@ -19,6 +19,7 @@ import com.pvz.models.entities.projectile.OctopusProjectile;
 import com.pvz.models.entities.sun.Sun;
 import com.pvz.models.entities.sun.SunManager;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.games.card.Card;
 import com.pvz.models.games.effects.ChapterEffect;
 import com.pvz.models.games.effects.EffectFactory;
@@ -29,6 +30,7 @@ import com.pvz.models.games.map.GameMapFactory;
 import com.pvz.models.games.map.behaviors.IceBlockBehavior;
 import com.pvz.models.games.map.behaviors.TileBehavior;
 import com.pvz.models.games.map.data.PrePlantedPlant;
+import com.pvz.models.games.map.data.PreFrozenZombie;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
 import com.pvz.models.games.modes.GameMode;
@@ -116,6 +118,17 @@ public class GameContext implements TickAware {
                     p.incrementFreezeLevel();
                 }
                 this.spawnPlant(p);
+            }
+        }
+
+        // Spawn pre-frozen zombies
+        if (currentLevel.getGameMapDefinition().preFrozenZombies != null) {
+            for (PreFrozenZombie zDef : currentLevel.getGameMapDefinition().preFrozenZombies) {
+                float spawnX = GameController.colToWorldX(zDef.col);
+                Zombie z = new ZombieFactory().create(
+                        zDef.type.getAlias(), spawnX, zDef.lane, this, 0, 3);
+                z.setPendingInitialState(com.pvz.models.entities.zombies.fsm.IceBlockFrozenState.fromZombie(z));
+                this.spawnZombie(z);
             }
         }
 

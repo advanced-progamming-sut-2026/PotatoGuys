@@ -70,6 +70,8 @@ public class Zombie extends Entity {
     private final boolean glowing;
     private boolean frozen;
     private float frozenDuration;
+    private boolean frozenInIceBlock;
+    private float iceBlockStateTime;
     private boolean impAlreadyThrown = false;
     private boolean throwInProgress = false;
     private float throwProgress = 0f;
@@ -413,6 +415,21 @@ public class Zombie extends Entity {
     public void takeDamage(float amount, boolean poisonous, boolean explosive) {
         if (dead || amount <= 0f)
             return;
+        if (currentState instanceof IceBlockFrozenState iceBlock) {
+            boolean destroyed = iceBlock.takeIceDamage(amount, false);
+            if (destroyed) {
+                setState(new WalkState());
+            }
+            return;
+        }
+        if (currentState instanceof ZombieFlashState flash
+                && flash.getUnderlying() instanceof IceBlockFrozenState iceBlock) {
+            boolean destroyed = iceBlock.takeIceDamage(amount, false);
+            if (destroyed) {
+                setState(new WalkState());
+            }
+            return;
+        }
         if (explosive)
             killedByExplosive = true;
         float remaining = poisonous ? amount : processArmorChain(amount);
@@ -440,6 +457,22 @@ public class Zombie extends Entity {
         currentState.onEnter(this, context);
     }
 
+    public boolean isFrozenInIceBlock() {
+        return frozenInIceBlock;
+    }
+
+    public void setFrozenInIceBlock(boolean frozenInIceBlock) {
+        this.frozenInIceBlock = frozenInIceBlock;
+    }
+
+    public float getIceBlockStateTime() {
+        return iceBlockStateTime;
+    }
+
+    public void addIceBlockTime(float dt) {
+        this.iceBlockStateTime += dt;
+    }
+
     public void setButterStunned(float duration) {
         FrameConfig frameConfig = currentState.draw(this, context);
         currentState = new ButterStunState(currentState, currentState.getStateTime(),
@@ -457,6 +490,17 @@ public class Zombie extends Entity {
     /** Applies or refreshes an effect. BURNING clears CHILL and FROZEN. */
     public void applyEffect(StatusEffect effect) {
         if (effect.getType() == EffectType.BURNING) {
+            if (currentState instanceof IceBlockFrozenState iceBlock) {
+                iceBlock.takeIceDamage(0f, true);
+                setState(new WalkState());
+                return;
+            }
+            if (currentState instanceof ZombieFlashState flash
+                    && flash.getUnderlying() instanceof IceBlockFrozenState iceBlock) {
+                iceBlock.takeIceDamage(0f, true);
+                setState(new WalkState());
+                return;
+            }
             activeEffects.remove(EffectType.CHILL);
             activeEffects.remove(EffectType.FROZEN);
         }
