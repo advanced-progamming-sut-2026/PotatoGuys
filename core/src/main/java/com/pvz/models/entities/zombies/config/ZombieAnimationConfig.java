@@ -32,4 +32,9 @@ public class ZombieAnimationConfig {
      * server-friendly.
      */
     public List<String> availableClips;
+
+    /** PAM file path for the ash (powder/disintegrate) death VFX, played when
+     *  the zombie is killed by an explosive plant. {@code null} means no ash
+     *  animation is available and the normal {@code die} clip is used instead. */
+    public String ashPamFilePath;
 }

@@ -74,6 +74,7 @@ public class Zombie extends Entity {
     private float throwProgress = 0f;
     private boolean throwImpSpawned = false;
     private int stolenSun;
+    private boolean killedByExplosive = false;
 
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -371,7 +372,19 @@ public class Zombie extends Entity {
      * @param poisonous true → bypasses all armour (Poison Pea, etc.)
      */
     public void takeDamage(float amount, boolean poisonous) {
+        takeDamage(amount, poisonous, false);
+    }
+
+    /**
+     * Routes damage through the armor chain then into {@link #hp}.
+     *
+     * @param amount     positive damage value
+     * @param poisonous  true → bypasses all armour (Poison Pea, etc.)
+     * @param explosive  true → zombie was hit by an explosive plant (ash death VFX)
+     */
+    public void takeDamage(float amount, boolean poisonous, boolean explosive) {
         if (dead || amount <= 0f) return;
+        if (explosive) killedByExplosive = true;
         float remaining = poisonous ? amount : processArmorChain(amount);
         hp = Math.max(0f, hp - remaining);
         if (currentState != null && !(currentState instanceof DeadState) && !(currentState instanceof ZombieFlashState)) {
@@ -461,6 +474,7 @@ public class Zombie extends Entity {
     public void setThrowProgress(float v)       { throwProgress = v; }
     public boolean isThrowImpSpawned()          { return throwImpSpawned; }
     public void setThrowImpSpawned(boolean v)   { throwImpSpawned = v; }
+    public boolean isKilledByExplosive()        { return killedByExplosive; }
     public ZombieState getCurrentState()        { return currentState; }
     public List<ZombieState> getSkills()        { return Collections.unmodifiableList(skills); }
     public List<ArmorPiece> getArmors()         { return Collections.unmodifiableList(armors); }
@@ -501,7 +515,7 @@ public class Zombie extends Entity {
 
     private void triggerDeath() {
         dead = true;
-        currentState = new DeadState();
+        currentState = new DeadState(killedByExplosive);
         currentState.onEnter(this, context);
         if (glowing) {
             context.addPlantFood(1);
