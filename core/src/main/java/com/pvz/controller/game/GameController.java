@@ -30,12 +30,10 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
-import com.pvz.controller.AudioManager;
+import com.pvz.controller.game.State.ObjectiveScreen;
 import com.pvz.controller.game.State.PanningBack;
-import com.pvz.controller.game.State.PanningForward;
 import com.pvz.controller.game.State.Playing;
 import com.pvz.controller.game.State.State;
-import com.pvz.enums.AudioPaths;
 import com.pvz.models.AppContext;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.GameEngine;
@@ -94,7 +92,7 @@ public class GameController {
     private Level level;
     private PlantSelectModal plantSelectModal;
     private GameUiModal gameUiModal;
-    private State state = new PanningForward(this);
+    private State state = new ObjectiveScreen(this);
 
     private TextureRegion[] backgroundTextures;
     private boolean isIZombie = false;
@@ -391,6 +389,8 @@ public class GameController {
         errorTable.top();
         errorTable.add(errorMessageLabel).padTop(80).width(600f);
         stage.addActor(errorTable);
+
+        state.enter();
 
     }
 

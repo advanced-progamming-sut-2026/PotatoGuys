@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.pvz.controller.game.GameController;
-import com.pvz.enums.AnsiColors;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -20,7 +18,6 @@ import com.pvz.models.games.levels.variants.WallnutBowlingLevel;
 import com.pvz.models.games.modes.GameMode;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.user.MyPlant;
-import com.pvz.models.AppContext;
 
 /**
  * Wallnut Bowling mini-game mode.
@@ -38,8 +35,7 @@ public class WallnutBowlingMode implements GameMode, PlantPlacer {
 
     private static final List<PlantType> BOWLING_PLANTS = List.of(
             PlantType.Wallnut,
-            PlantType.Explodeonut
-    );
+            PlantType.Explodeonut);
 
     public WallnutBowlingMode(Level level) {
         if (level instanceof WallnutBowlingLevel wbLevel) {
@@ -133,7 +129,7 @@ public class WallnutBowlingMode implements GameMode, PlantPlacer {
 
         if (!context.getTileAt(col, lane).isPlantable(card)) {
             context.log("[Placement Failed] Tile (" + col + ", " + lane + ") does not support planting "
-                        + card.getPlant().getType());
+                    + card.getPlant().getType());
             return false;
         }
 

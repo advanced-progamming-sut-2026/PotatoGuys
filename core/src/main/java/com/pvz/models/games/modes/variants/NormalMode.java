@@ -4,18 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.pvz.controller.game.GameController;
-import com.pvz.enums.AnsiColors;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.config.PlantConfigRegistry;
-import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
-import com.pvz.models.entities.plants.enums.PlantType;
-import com.pvz.models.entities.plants.grave_buster.GraveBuster;
-import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.sun.Sun;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
@@ -25,14 +20,8 @@ import com.pvz.models.games.effects.ChapterEffect;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.Wave;
 import com.pvz.models.games.levels.variants.NormalLevel;
-import com.pvz.models.games.map.GameMap;
-import com.pvz.models.games.map.behaviors.GraveBehavior;
-import com.pvz.models.games.map.behaviors.TileBehavior;
-import com.pvz.models.games.map.tile.Tile;
-import com.pvz.models.games.map.tile.TileTags;
 import com.pvz.models.games.modes.GameMode;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
-import com.pvz.view.game.GameScreen;
 
 /**
  * Standard game mode implementation.
@@ -50,16 +39,24 @@ public class NormalMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public boolean hasProgressBar() { return true; }
+    public boolean hasProgressBar() {
+        return true;
+    }
 
     @Override
-    public int getCurrentWaveIndex() { return waves.indexOf(currentWave); }
+    public int getCurrentWaveIndex() {
+        return waves.indexOf(currentWave);
+    }
 
     @Override
-    public int getTotalWaves() { return waves.size(); }
+    public int getTotalWaves() {
+        return waves.size();
+    }
 
     @Override
-    public int getTotalZombieCount() { return waves.stream().mapToInt(Wave::getTotalZombieCount).sum(); }
+    public int getTotalZombieCount() {
+        return waves.stream().mapToInt(Wave::getTotalZombieCount).sum();
+    }
 
     @Override
     public void initMode(GameContext context) {
@@ -124,7 +121,7 @@ public class NormalMode implements GameMode, PlantPlacer {
 
         if (!context.getTileAt(col, lane).isPlantable(card)) {
             context.log("[Placement Failed] Tile (" + col + ", " + lane + ") does not support planting "
-                        + card.getPlant().getType());
+                    + card.getPlant().getType());
             return false;
         }
 
@@ -138,7 +135,7 @@ public class NormalMode implements GameMode, PlantPlacer {
 
         if (context.getCurrentSun() < stats.getSunCost()) {
             context.log("[Placement Failed] Not enough sun for " + sheet.getName()
-                        + "! Required: " + stats.getSunCost() + ", Current: " + context.getCurrentSun());
+                    + "! Required: " + stats.getSunCost() + ", Current: " + context.getCurrentSun());
             return false;
         }
 
@@ -159,7 +156,8 @@ public class NormalMode implements GameMode, PlantPlacer {
         }
         Plant plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
-        if (!plant.getAttackAction().isPlantableOnTile(context.getTileAt(col,lane))) return;
+        if (!plant.getAttackAction().isPlantableOnTile(context.getTileAt(col, lane)))
+            return;
         context.spawnPlant(plant);
         context.getGameStats().onPlantPlaced(col, lane, plantCard.getPlant().getType());
         plantCard.use();
@@ -193,11 +191,11 @@ public class NormalMode implements GameMode, PlantPlacer {
                 PlantCard ps = (PlantCard) cards.get(i);
 
                 String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | Cooldown:%.1f%s",
-                    ps.getPlant().getType(),
-                    ps.getCost(),
-                    ps.getPlant().getLevel(),
-                    (float) ps.getCooldown() / (float) Constants.TICK_PER_SECOND,
-                    ps.getPlant().isBoosted() ? " | ⚡B" : "");
+                        ps.getPlant().getType(),
+                        ps.getCost(),
+                        ps.getPlant().getLevel(),
+                        (float) ps.getCooldown() / (float) Constants.TICK_PER_SECOND,
+                        ps.getPlant().isBoosted() ? " | ⚡B" : "");
 
                 result.append("\n");
                 result.append(String.format("%-" + cardWidth + "s", cardInfo));

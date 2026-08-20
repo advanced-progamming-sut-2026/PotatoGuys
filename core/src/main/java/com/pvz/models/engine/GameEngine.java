@@ -3,34 +3,34 @@ package com.pvz.models.engine;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
 import com.pvz.models.games.GameContext;
 
 public class GameEngine {
     public static GameEngine instance;
 
-    public static GameEngine getInstance(){
-        if (instance == null){
+    public static GameEngine getInstance() {
+        if (instance == null) {
             instance = new GameEngine();
         }
         return instance;
     }
+
     private List<TickAware> entities = new ArrayList<>();
     private List<TickAware> toAdd = new ArrayList<>();
     private List<TickAware> toRemove = new ArrayList<>();
     private boolean firstTickDone = false;
 
-    public void register(TickAware entity){
+    public void register(TickAware entity) {
         getToAdd().add(entity);
     }
 
-    public void unRegister(TickAware entity){
+    public void unRegister(TickAware entity) {
         getToRemove().add(entity);
     }
 
     public void update(float dt) {
-        if(AppContext.getInstance().getGameContext().isGameOver()){
+        if (AppContext.getInstance().getGameContext().isGameOver()) {
             return;
         }
         GameContext gameCtx = AppContext.getInstance().getGameContext();
