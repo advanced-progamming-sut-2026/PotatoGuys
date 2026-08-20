@@ -9,9 +9,9 @@ public class PlantFoodFxEffect extends Effect {
     private static final String PAM_PATH =
             "768/INITIAL/EFFECTS/PLANTFOOD_FX/PLANTFOOD_FX.PAM";
     private static final String CLIP = "plantfood";
-    private static final float SCALE = 1.35f;
+    private static final float SCALE = 1.0f;
     private static final float OFFSET_X = 20f;
-    private static final float OFFSET_Y = 120f;
+    private static final float OFFSET_Y = 100f;
     private static final float DURATION = 2.5f;
 
     public PlantFoodFxEffect(GameContext ctx, Vector2 plantPos) {

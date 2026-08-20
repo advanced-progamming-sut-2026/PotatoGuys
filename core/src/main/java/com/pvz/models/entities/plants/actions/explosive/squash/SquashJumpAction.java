@@ -80,7 +80,7 @@ public class SquashJumpAction extends PlantAction {
             plant.getPosition().x+=downVelocity.x*dt;
             plant.getPosition().y+=downVelocity.y*dt;
         } else if (stateTime >= config.jumpDownDuration && jumpUpOver){
-            target.takeDamage(config.baseDamage);
+            target.takeDamage(config.baseDamage, false, true);
             plant.dispose();
         }
     }

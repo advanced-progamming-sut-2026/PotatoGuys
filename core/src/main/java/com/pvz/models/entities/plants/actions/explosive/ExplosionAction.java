@@ -59,7 +59,7 @@ public class ExplosionAction extends PlantAction {
         if (!dealDamageDone && stateTime>=config.damageDealTime){
             dealDamageDone=true;
             if (target!=null) {
-                target.takeDamage(config.baseDamage);
+                target.takeDamage(config.baseDamage, false, true);
                 if (plant.getType()==PlantType.IcebergLettuce){
                     target.setFrozen(config.effectDuration);
                 }
@@ -67,7 +67,7 @@ public class ExplosionAction extends PlantAction {
             if (targetTiles!=null && !targetTiles.isEmpty()){
                 for (Tile t: targetTiles){
                     for (Zombie z: ctx.getZombiesAt(t.getCol(),t.getLane())){
-                        z.takeDamage(config.baseDamage);
+                        z.takeDamage(config.baseDamage, false, true);
                     }
                     t.processHit(config.baseDamage);
                 }

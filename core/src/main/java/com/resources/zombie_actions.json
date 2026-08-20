@@ -157,6 +157,7 @@
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0,
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM",
         "availableClips": [
           "idle",
           "walk",
@@ -199,6 +200,7 @@
         "pamFilePath": "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM",
         "idleLabel": "idle",
         "animSpeed": 1.0,
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM",
         "availableClips": [
           "idle",
           "walk",
@@ -247,7 +249,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -289,7 +292,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -328,7 +332,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -370,7 +375,8 @@
           "particles",
           "land",
           "fly"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_IMP_ASH/ZOMBIE_IMP_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -416,7 +422,8 @@
           "cannon_fire",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_GARGANTUAR_ASH/ZOMBIE_GARGANTUAR_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -468,7 +475,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -507,7 +515,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -549,7 +558,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -591,7 +601,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -633,7 +644,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -676,7 +688,8 @@
           "power_down",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -723,7 +736,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -771,7 +785,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -824,7 +839,8 @@
           "cannon_fire",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_GARGANTUAR_ASH/ZOMBIE_GARGANTUAR_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -873,7 +889,8 @@
           "particles",
           "land",
           "fly"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_IMP_ASH/ZOMBIE_IMP_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -912,7 +929,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -954,7 +972,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -996,7 +1015,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1039,7 +1059,8 @@
           "die",
           "throw",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1088,7 +1109,8 @@
           "push",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1131,7 +1153,8 @@
           "fly_loop",
           "fly_end",
           "die"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1177,7 +1200,8 @@
           "cannon_fire",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_GARGANTUAR_ASH/ZOMBIE_GARGANTUAR_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1226,7 +1250,8 @@
           "particles",
           "land",
           "fly"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_IMP_ASH/ZOMBIE_IMP_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1265,7 +1290,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1307,7 +1333,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1349,7 +1376,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1388,7 +1416,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1431,7 +1460,8 @@
           "die",
           "die2",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1475,7 +1505,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_BIG_ASH/ZOMBIE_BIG_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1529,7 +1560,8 @@
           "cannon_fire",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_GARGANTUAR_ASH/ZOMBIE_GARGANTUAR_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1578,7 +1610,8 @@
           "particles",
           "land",
           "fly"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_IMP_ASH/ZOMBIE_IMP_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1617,7 +1650,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1659,7 +1693,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1701,7 +1736,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1744,7 +1780,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1786,7 +1823,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1826,7 +1864,8 @@
           "sheep",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1874,7 +1913,8 @@
           "eat",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1914,7 +1954,8 @@
           "special",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -1960,7 +2001,8 @@
           "cannon_fire",
           "die",
           "particles"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_GARGANTUAR_ASH/ZOMBIE_GARGANTUAR_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",
@@ -2010,7 +2052,8 @@
           "land",
           "fly",
           "transition"
-        ]
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_IMP_ASH/ZOMBIE_IMP_ASH.PAM"
       },
       "walkConfig": {
         "class": "ZombieWalkConfig",

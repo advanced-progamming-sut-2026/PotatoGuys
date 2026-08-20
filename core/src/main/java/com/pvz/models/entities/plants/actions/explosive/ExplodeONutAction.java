@@ -58,7 +58,7 @@ public class ExplodeONutAction extends PlantAction {
             }
         }
         for (Zombie z : targets) {
-            z.takeDamage(effectiveDamage(plant));
+            z.takeDamage(effectiveDamage(plant), false, true);
         }
     }
 

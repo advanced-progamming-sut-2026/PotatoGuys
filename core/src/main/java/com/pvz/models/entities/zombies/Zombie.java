@@ -75,6 +75,7 @@ public class Zombie extends Entity {
     private float throwProgress = 0f;
     private boolean throwImpSpawned = false;
     private int stolenSun;
+    private boolean killedByExplosive = false;
 
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -399,6 +400,21 @@ public class Zombie extends Entity {
     public void takeDamage(float amount, boolean poisonous) {
         if (dead || amount <= 0f)
             return;
+        takeDamage(amount, poisonous, false);
+    }
+
+    /**
+     * Routes damage through the armor chain then into {@link #hp}.
+     *
+     * @param amount    positive damage value
+     * @param poisonous true → bypasses all armour (Poison Pea, etc.)
+     * @param explosive true → zombie was hit by an explosive plant (ash death VFX)
+     */
+    public void takeDamage(float amount, boolean poisonous, boolean explosive) {
+        if (dead || amount <= 0f)
+            return;
+        if (explosive)
+            killedByExplosive = true;
         float remaining = poisonous ? amount : processArmorChain(amount);
         hp = Math.max(0f, hp - remaining);
         if (currentState != null && !(currentState instanceof DeadState)
@@ -620,7 +636,7 @@ public class Zombie extends Entity {
 
     private void triggerDeath() {
         dead = true;
-        currentState = new DeadState();
+        currentState = new DeadState(killedByExplosive);
         currentState.onEnter(this, context);
         if (glowing) {
             context.addPlantFood(1);
