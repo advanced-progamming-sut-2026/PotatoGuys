@@ -2,6 +2,7 @@ package com.pvz.models.entities.zombies.fsm;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.effects.HeadDeathEffect;
 import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.config.ZombieActionConfig;
@@ -34,6 +35,14 @@ public class DeadState extends ZombieState {
         }
 
         dieDuration = resolveDieDuration(zombie);
+
+        ZombieAnimationConfig anim = zombie.getSheet().getAnimationConfig();
+        if (anim != null && anim.pamFilePath != null) {
+            float sc = (anim.scale != null) ? anim.scale : 0.65f;
+            ctx.addEffect(new HeadDeathEffect(ctx,
+                    new Vector2(zombie.getX(), zombie.getY()),
+                    anim.pamFilePath, sc));
+        }
     }
 
     @Override
