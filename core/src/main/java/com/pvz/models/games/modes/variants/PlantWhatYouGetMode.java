@@ -3,7 +3,6 @@ package com.pvz.models.games.modes.variants;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pvz.controller.game.GameController;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
@@ -40,16 +39,24 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
     }
 
     @Override
-    public boolean hasProgressBar() { return true; }
+    public boolean hasProgressBar() {
+        return true;
+    }
 
     @Override
-    public int getCurrentWaveIndex() { return waves.indexOf(currentWave); }
+    public int getCurrentWaveIndex() {
+        return waves.indexOf(currentWave);
+    }
 
     @Override
-    public int getTotalWaves() { return waves.size(); }
+    public int getTotalWaves() {
+        return waves.size();
+    }
 
     @Override
-    public int getTotalZombieCount() { return waves.stream().mapToInt(Wave::getTotalZombieCount).sum(); }
+    public int getTotalZombieCount() {
+        return waves.stream().mapToInt(Wave::getTotalZombieCount).sum();
+    }
 
     @Override
     public void initMode(GameContext context) {
@@ -147,7 +154,7 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
 
         if (!context.getTileAt(col, lane).isPlantable(card)) {
             context.log("[Placement Failed] Tile (" + col + ", " + lane + ") does not support planting "
-                        + card.getPlant().getType());
+                    + card.getPlant().getType());
             return false;
         }
 
@@ -156,11 +163,12 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
 
         if (context.getCurrentSun() < stats.getSunCost()) {
             context.log("[Placement Failed] Not enough sun for " + sheet.getName()
-                        + "! Required: " + stats.getSunCost() + ", Current: " + context.getCurrentSun());
+                    + "! Required: " + stats.getSunCost() + ", Current: " + context.getCurrentSun());
             return false;
         }
 
-        // During preparation phase, cooldowns are bypassed so the player can plant freely.
+        // During preparation phase, cooldowns are bypassed so the player can plant
+        // freely.
         if (!preparationPhase && !card.canUse()) {
             context.log("[Placement Failed] Card " + card.getPlant().getType() + " is on cooldown.");
             return false;

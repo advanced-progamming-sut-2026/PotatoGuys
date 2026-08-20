@@ -58,13 +58,17 @@ public class NetworkClient {
     private final Map<String, Consumer<NetworkMessage>> pending = new ConcurrentHashMap<>();
     private final Map<MessageType, Consumer<NetworkMessage>> pushListeners = new ConcurrentHashMap<>();
 
-    private NetworkClient() { }
+    private NetworkClient() {
+    }
 
     public boolean isConnected() {
         return connected;
     }
 
-    /** Blocking connect — call this off the render thread (e.g. in a loading screen) if you can. */
+    /**
+     * Blocking connect — call this off the render thread (e.g. in a loading screen)
+     * if you can.
+     */
     public synchronized void connect(String host, int port) throws IOException {
         socket = new Socket(host, port);
         OutputStream rawOut = socket.getOutputStream();
@@ -80,8 +84,10 @@ public class NetworkClient {
     public synchronized void disconnect() {
         connected = false;
         try {
-            if (socket != null) socket.close();
-        } catch (IOException ignored) { }
+            if (socket != null)
+                socket.close();
+        } catch (IOException ignored) {
+        }
     }
 
     private void readLoop() {
@@ -89,7 +95,8 @@ public class NetworkClient {
             String line;
             while (connected && (line = in.readLine()) != null) {
                 NetworkMessage msg = gson.fromJson(line, NetworkMessage.class);
-                if (msg == null) continue;
+                if (msg == null)
+                    continue;
 
                 // Request/response: someone is waiting on this exact requestId.
                 Consumer<NetworkMessage> callback = msg.requestId != null ? pending.remove(msg.requestId) : null;
@@ -138,9 +145,13 @@ public class NetworkClient {
         out.println(gson.toJson(request));
     }
 
-    /** Deserializes {@code response.payload} into {@code clazz}. Null if payload is null. */
+    /**
+     * Deserializes {@code response.payload} into {@code clazz}. Null if payload is
+     * null.
+     */
     public <T> T parsePayload(NetworkMessage response, Class<T> clazz) {
-        if (response.payload == null) return null;
+        if (response.payload == null)
+            return null;
         return gson.fromJson(response.payload, clazz);
     }
 
@@ -159,10 +170,15 @@ public class NetworkClient {
         pushListeners.remove(type);
     }
 
-    // ---- Typed convenience wrappers: accounts (Phase 1) --------------------------
+    // ---- Typed convenience wrappers: accounts (Phase 1)
+    // --------------------------
 
-    /** {@code newUser} should be fully built client-side (starter progress, security Q&A...)
-     *  but with a null id — the server assigns the id and checks username uniqueness. */
+    /**
+     * {@code newUser} should be fully built client-side (starter progress, security
+     * Q&A...)
+     * but with a null id — the server assigns the id and checks username
+     * uniqueness.
+     */
     public void register(User newUser, Consumer<NetworkMessage> callback) {
         sendRequest(MessageType.REGISTER, newUser, callback);
     }
@@ -172,7 +188,10 @@ public class NetworkClient {
         sendRequest(MessageType.LOGIN, req, callback);
     }
 
-    /** Fire-and-forget is fine: pass null as callback if you don't need confirmation. */
+    /**
+     * Fire-and-forget is fine: pass null as callback if you don't need
+     * confirmation.
+     */
     public void saveUser(User user, Consumer<NetworkMessage> callback) {
         sendRequest(MessageType.SAVE_USER, user, callback);
     }
@@ -189,7 +208,8 @@ public class NetworkClient {
                 return;
             }
             List<LeaderBoardEntry> entries = gson.fromJson(response.payload,
-                    new TypeToken<List<LeaderBoardEntry>>() { }.getType());
+                    new TypeToken<List<LeaderBoardEntry>>() {
+                    }.getType());
             onLoaded.accept(entries);
         });
     }
@@ -204,11 +224,14 @@ public class NetworkClient {
         }
     }
 
-    // ---- Typed convenience wrappers: I,Zombie matchmaking (Phase 2) --------------
+    // ---- Typed convenience wrappers: I,Zombie matchmaking (Phase 2)
+    // --------------
 
-    /** Invites a specific online user. {@code callback} reports whether the invite
-     *  was delivered (target found & online) — not whether they accepted; that
-     *  comes later via {@link #onMatchFound} or {@link #onInviteRejected}. */
+    /**
+     * Invites a specific online user. {@code callback} reports whether the invite
+     * was delivered (target found & online) — not whether they accepted; that
+     * comes later via {@link #onMatchFound} or {@link #onInviteRejected}.
+     */
     public void sendInvite(String targetUsername, PlayerRole requestedRole, Consumer<NetworkMessage> callback) {
         sendRequest(MessageType.INVITE_SEND, new MatchDTOs.InviteSendRequest(targetUsername, requestedRole), callback);
     }
@@ -217,9 +240,11 @@ public class NetworkClient {
         sendRequest(MessageType.INVITE_RESPONSE, new MatchDTOs.InviteResponseRequest(matchId, accepted), callback);
     }
 
-    /** Joins the random-opponent queue. If someone's already waiting, both sides
-     *  get a {@link #onMatchFound} push almost immediately; otherwise you wait
-     *  for it. {@code callback} just confirms the join request was received. */
+    /**
+     * Joins the random-opponent queue. If someone's already waiting, both sides
+     * get a {@link #onMatchFound} push almost immediately; otherwise you wait
+     * for it. {@code callback} just confirms the join request was received.
+     */
     public void joinRandomQueue(Consumer<NetworkMessage> callback) {
         sendRequest(MessageType.QUEUE_JOIN, null, callback);
     }
@@ -228,34 +253,49 @@ public class NetworkClient {
         sendRequest(MessageType.QUEUE_CANCEL, null, callback);
     }
 
-    /** Someone sent you an invite. Payload includes the matchId you must echo back
-     *  in {@link #respondToInvite}. */
+    /**
+     * Someone sent you an invite. Payload includes the matchId you must echo back
+     * in {@link #respondToInvite}.
+     */
     public void onInviteIncoming(Consumer<MatchDTOs.InviteIncomingPayload> handler) {
         setPushListener(MessageType.INVITE_INCOMING,
-            msg -> handler.accept(parsePayload(msg, MatchDTOs.InviteIncomingPayload.class)));
+                msg -> handler.accept(parsePayload(msg, MatchDTOs.InviteIncomingPayload.class)));
     }
 
     /** The person you invited declined. */
     public void onInviteRejected(Consumer<MatchDTOs.InviteRejectedPayload> handler) {
         setPushListener(MessageType.INVITE_REJECTED,
-            msg -> handler.accept(parsePayload(msg, MatchDTOs.InviteRejectedPayload.class)));
+                msg -> handler.accept(parsePayload(msg, MatchDTOs.InviteRejectedPayload.class)));
     }
 
-    /** A match is ready — via accepted invite or random pairing. Fires for both participants. */
+    /**
+     * A match is ready — via accepted invite or random pairing. Fires for both
+     * participants.
+     */
     public void onMatchFound(Consumer<MatchDTOs.MatchFoundPayload> handler) {
         setPushListener(MessageType.MATCH_FOUND,
-            msg -> handler.accept(parsePayload(msg, MatchDTOs.MatchFoundPayload.class)));
+                msg -> handler.accept(parsePayload(msg, MatchDTOs.MatchFoundPayload.class)));
     }
 
-    /** Phase 3 hook: send something to your current match opponent (game state, a reaction...).
-     *  The server relays it blind based on matchId — it doesn't interpret innerPayloadJson. */
+    /**
+     * Phase 3 hook: send something to your current match opponent (game state, a
+     * reaction...).
+     * The server relays it blind based on matchId — it doesn't interpret
+     * innerPayloadJson.
+     */
     public void sendMatchMessage(String matchId, String innerPayloadJson) {
-        sendRequest(MessageType.MATCH_MESSAGE, new MatchDTOs.MatchMessageEnvelope(matchId, innerPayloadJson), null);
+        sendRequest(MessageType.MATCH_MESSAGE, new MatchDTOs.MatchMessageEnvelope(matchId, innerPayloadJson),
+                response -> {
+                    // no-op — فقط برای این‌که ack سرور از طریق pending مصرف بشه
+                    // و به‌اشتباه به onMatchMessage push listener نرسه.
+                });
     }
 
-    /** Phase 3 hook: receive whatever your opponent sends during an active match. */
+    /**
+     * Phase 3 hook: receive whatever your opponent sends during an active match.
+     */
     public void onMatchMessage(Consumer<MatchDTOs.MatchMessageEnvelope> handler) {
         setPushListener(MessageType.MATCH_MESSAGE,
-            msg -> handler.accept(parsePayload(msg, MatchDTOs.MatchMessageEnvelope.class)));
+                msg -> handler.accept(parsePayload(msg, MatchDTOs.MatchMessageEnvelope.class)));
     }
 }

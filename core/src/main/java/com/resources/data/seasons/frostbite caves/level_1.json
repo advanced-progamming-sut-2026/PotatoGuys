@@ -81,6 +81,18 @@
         "col": 1,
         "lane": 4
       }
+    ],
+    "preFrozenZombies": [
+      {
+        "type": "BASIC",
+        "col": 6,
+        "lane": 0
+      },
+      {
+        "type": "BASIC",
+        "col": 5,
+        "lane": 4
+      }
     ]
   },
   "waves": [

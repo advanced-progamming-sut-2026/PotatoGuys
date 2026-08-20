@@ -95,6 +95,23 @@
         "col": 2,
         "lane": 3
       }
+    ],
+    "preFrozenZombies": [
+      {
+        "type": "BASIC",
+        "col": 6,
+        "lane": 0
+      },
+      {
+        "type": "ICE_AGE_CONE",
+        "col": 7,
+        "lane": 2
+      },
+      {
+        "type": "HUNTER",
+        "col": 5,
+        "lane": 4
+      }
     ]
   },
   "waves": [

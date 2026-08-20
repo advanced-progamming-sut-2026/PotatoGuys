@@ -58,5 +58,6 @@ public class GameScreen extends ScreenAdapter {
         controller.getShapeRenderer().dispose();
         assetManager.dispose();
         controller.getStage().dispose();
+        controller.dispose();
     }
 }

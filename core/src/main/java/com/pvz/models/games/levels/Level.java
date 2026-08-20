@@ -93,4 +93,8 @@ public abstract class Level {
     public String getMusicPath() {
         return musicPath;
     }
+
+    public List<String> getObjectives() {
+        return objectives != null ? objectives : new ArrayList<>();
+    }
 }

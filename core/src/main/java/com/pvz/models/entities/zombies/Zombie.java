@@ -30,9 +30,7 @@ import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.behaviors.TileBehavior;
 import com.pvz.models.games.map.tile.Tile;
 
-
 public class Zombie extends Entity {
-
 
     public static final int TICKS_PER_SECOND = 10;
 
@@ -61,7 +59,10 @@ public class Zombie extends Entity {
 
     // ── FSM ───────────────────────────────────────────────────────────────────
     private ZombieState currentState;
-    /** Optional override for the state {@link #enter()} starts in; see {@link #setPendingInitialState}. */
+    /**
+     * Optional override for the state {@link #enter()} starts in; see
+     * {@link #setPendingInitialState}.
+     */
     private ZombieState pendingInitialState;
 
     // ── Flags ─────────────────────────────────────────────────────────────────
@@ -69,6 +70,8 @@ public class Zombie extends Entity {
     private final boolean glowing;
     private boolean frozen;
     private float frozenDuration;
+    private boolean frozenInIceBlock;
+    private float iceBlockStateTime;
     private boolean impAlreadyThrown = false;
     private boolean throwInProgress = false;
     private float throwProgress = 0f;
@@ -91,8 +94,8 @@ public class Zombie extends Entity {
      * @param difficulty [1..5]; 3 = no modifier
      */
     public Zombie(ZombiePropertySheet sheet, float startX, int lane,
-                  List<ArmorPiece> armors, List<ZombieState> skills,
-                  GameContext ctx, int waveIndex, int difficulty) {
+            List<ArmorPiece> armors, List<ZombieState> skills,
+            GameContext ctx, int waveIndex, int difficulty) {
         this.sheet = sheet;
         this.position.set(startX, GameController.laneToWorldY(lane));
         lastCol = GameController.worldXtoCol(startX);
@@ -104,10 +107,10 @@ public class Zombie extends Entity {
 
         float diffFactor = difficulty / 3.0f;
         float[] scaled = computeScaledStats(waveIndex);
-        this.maxHp         = scaled[0] * diffFactor;
-        this.hp            = this.maxHp;
+        this.maxHp = scaled[0] * diffFactor;
+        this.hp = this.maxHp;
         this.eatDps = scaled[1] * diffFactor;
-        this.speedPerTick  = sheet.getSpeed() / TICKS_PER_SECOND;
+        this.speedPerTick = sheet.getSpeed() / TICKS_PER_SECOND;
 
         setHitbox(new Hitbox(this, position.x, position.y, 48f, 80f) {
             @Override
@@ -123,8 +126,8 @@ public class Zombie extends Entity {
         });
         velocity.set(-getEffectiveSpeedPerTick() * 1000f, 0f);
 
-        frozen=false;
-        frozenDuration=0;
+        frozen = false;
+        frozenDuration = 0;
     }
 
     // ── TickAware ─────────────────────────────────────────────────────────────
@@ -134,8 +137,9 @@ public class Zombie extends Entity {
         currentState = pendingInitialState != null ? pendingInitialState : new WalkState();
         currentState.onEnter(this, context);
         context.log("[Spawn] " + sheet.getAlias()
-            + " entered lane " + GameController.worldYtoLane(position.y) + " at x=" + String.format("%.1f", position.x)
-            + (glowing ? " [GLOWING]" : ""));
+                + " entered lane " + GameController.worldYtoLane(position.y) + " at x="
+                + String.format("%.1f", position.x)
+                + (glowing ? " [GLOWING]" : ""));
     }
 
     /**
@@ -145,7 +149,8 @@ public class Zombie extends Entity {
      * {@link GameContext#spawnZombie(Zombie)} — since {@code enter()} runs on
      * the next engine tick, not synchronously in the constructor.
      *
-     * <p>Used by sandstorm-driven spawns ({@code Wave#spawnZombie}) to start a
+     * <p>
+     * Used by sandstorm-driven spawns ({@code Wave#spawnZombie}) to start a
      * zombie inside {@link com.pvz.models.entities.zombies.fsm.SandstormCarryState}
      * so it's carried in from off-map instead of appearing mid-lawn.
      */
@@ -164,8 +169,8 @@ public class Zombie extends Entity {
         }
 
         updateStatusEffects(dt);
-        //if (isParalysed()) return;
-        ZombieState next = currentState.update(this, context,dt);
+        // if (isParalysed()) return;
+        ZombieState next = currentState.update(this, context, dt);
         if (next != currentState) {
             currentState.onExit(this, context);
             next.onEnter(this, context);
@@ -184,7 +189,6 @@ public class Zombie extends Entity {
             }
         }
 
-
         syncHitbox();
     }
 
@@ -196,17 +200,20 @@ public class Zombie extends Entity {
         return currentState.draw(this, context);
     }
 
-    public void changeState(ZombieState state){
-        if (currentState!=null) currentState.onExit(this,context);
-        this.currentState=state;
-        currentState.onExit(this,context);
+    public void changeState(ZombieState state) {
+        if (currentState != null)
+            currentState.onExit(this, context);
+        this.currentState = state;
+        currentState.onExit(this, context);
     }
 
     /** Replaces the current FSM state cleanly (onExit → onEnter). */
-    public void setState(ZombieState state){
-        if (currentState != null) currentState.onExit(this, context);
+    public void setState(ZombieState state) {
+        if (currentState != null)
+            currentState.onExit(this, context);
         currentState = state;
-        if (currentState != null) currentState.onEnter(this, context);
+        if (currentState != null)
+            currentState.onEnter(this, context);
     }
 
     /**
@@ -221,12 +228,12 @@ public class Zombie extends Entity {
     public FrameConfig drawClip(String clipLabel, float time, boolean looping) {
         ZombieAnimationConfig anim = sheet.getAnimationConfig();
         String pamPath = (anim != null && anim.pamFilePath != null)
-            ? anim.pamFilePath
-            : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
+                ? anim.pamFilePath
+                : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
         float scale = (anim != null && anim.scale != null) ? anim.scale : 0.65f;
         return new FrameConfig(pamPath, resolveClipLabel(anim, newspaperClipLabel(clipLabel)), time,
-            new Vector2(position.x, position.y), new Vector2(scale, scale),
-            buildPartsVisibility(), looping);
+                new Vector2(position.x, position.y), new Vector2(scale, scale),
+                buildPartsVisibility(), looping);
     }
 
     /**
@@ -237,14 +244,17 @@ public class Zombie extends Entity {
      * renderer throw. When the label is absent we fall back to {@code idle} and
      * finally to the first clip the sheet provides.
      *
-     * <p>Purely data-driven: the clip list comes from the config, never from a
+     * <p>
+     * Purely data-driven: the clip list comes from the config, never from a
      * graphics call, so this runs unchanged on a headless server.
      */
     private String resolveClipLabel(ZombieAnimationConfig anim, String requested) {
         List<String> clips = anim != null ? anim.availableClips : null;
-        if (clips == null || clips.isEmpty() || clips.contains(requested)) return requested;
+        if (clips == null || clips.isEmpty() || clips.contains(requested))
+            return requested;
         for (String candidate : new String[] { "idle", "idle2", "default", "" }) {
-            if (candidate != null && clips.contains(candidate)) return candidate;
+            if (candidate != null && clips.contains(candidate))
+                return candidate;
         }
         return clips.get(0);
     }
@@ -256,18 +266,24 @@ public class Zombie extends Entity {
      * it without the paper.
      */
     private String newspaperClipLabel(String clipLabel) {
-        if (!hasAliveArmor(ArmorType.NEWSPAPER)) return clipLabel;
+        if (!hasAliveArmor(ArmorType.NEWSPAPER))
+            return clipLabel;
         switch (clipLabel) {
-            case "walk": return "walk_newspaper";
-            case "eat":  return "eat_newspaper";
-            case "idle": return "idle_newspaper";
-            default:     return clipLabel;
+            case "walk":
+                return "walk_newspaper";
+            case "eat":
+                return "eat_newspaper";
+            case "idle":
+                return "idle_newspaper";
+            default:
+                return clipLabel;
         }
     }
 
     private boolean hasAliveArmor(ArmorType type) {
         for (ArmorPiece armor : armors) {
-            if (!armor.isDestroyed() && armor.getType() == type) return true;
+            if (!armor.isDestroyed() && armor.getType() == type)
+                return true;
         }
         return false;
     }
@@ -275,14 +291,16 @@ public class Zombie extends Entity {
     /**
      * Builds the PAM part-visibility map for this zombie's current armour state.
      *
-     * <p>Every living armour piece contributes its three damage-layer part names
+     * <p>
+     * Every living armour piece contributes its three damage-layer part names
      * (from the armour's {@code ArmorLayers} data): the layer matching the
      * piece's current {@link ArmorPiece#getLayerIndex()} is forced visible
      * ({@code true}) while the other layers are forced hidden ({@code false}),
      * so the armour visually cracks as its health drops. Destroyed pieces
      * contribute nothing, making them fall off the zombie entirely.
      *
-     * <p>On top of the layer swap, {@link ArmorType#pamContainerName()} may add
+     * <p>
+     * On top of the layer swap, {@link ArmorType#pamContainerName()} may add
      * a nested container part to force visible (its name carries the ARMOR flag,
      * so libPVZ would otherwise cull it together with its children), and the
      * {@code pamAliveParts()}/{@code pamCriticalParts()} extras pin parts such
@@ -293,27 +311,35 @@ public class Zombie extends Entity {
      */
     private Map<String, Boolean> buildPartsVisibility() {
         boolean buttered = currentState instanceof ButterStunState;
-        if (armors.isEmpty() && !throwImpSpawned && !buttered) return null;
+        if (armors.isEmpty() && !throwImpSpawned && !buttered)
+            return null;
         Map<String, Boolean> visibility = (armors.isEmpty() && !buttered) ? null : new HashMap<>();
         if (buttered) {
             visibility.put("butter", true);
         }
         for (ArmorPiece armor : armors) {
-            if (armor.isDestroyed()) continue;
+            if (armor.isDestroyed())
+                continue;
             String[] layers = armor.getType().pamLayers();
-            if (layers == null) continue;
-            if (visibility == null) visibility = new HashMap<>();
+            if (layers == null)
+                continue;
+            if (visibility == null)
+                visibility = new HashMap<>();
             int layer = Math.min(armor.getLayerIndex(), layers.length - 1);
             for (int i = 0; i < layers.length; i++) {
                 visibility.put(layers[i], i == layer);
             }
             String container = armor.getType().pamContainerName();
-            if (container != null) visibility.put(container, true);
-            for (String alive : armor.getType().pamAliveParts()) visibility.put(alive, true);
-            for (String crit : armor.getType().pamCriticalParts()) visibility.put(crit, layer == layers.length - 1);
+            if (container != null)
+                visibility.put(container, true);
+            for (String alive : armor.getType().pamAliveParts())
+                visibility.put(alive, true);
+            for (String crit : armor.getType().pamCriticalParts())
+                visibility.put(crit, layer == layers.length - 1);
         }
         if (throwImpSpawned) {
-            if (visibility == null) visibility = new HashMap<>();
+            if (visibility == null)
+                visibility = new HashMap<>();
             hideImpParts(visibility);
         }
         return visibility;
@@ -351,7 +377,9 @@ public class Zombie extends Entity {
 
     // ── Collision ─────────────────────────────────────────────────────────────
 
-    /** Switches to {@link EatState} targeting {@code plant} if not already eating. */
+    /**
+     * Switches to {@link EatState} targeting {@code plant} if not already eating.
+     */
     public void startEating(Plant plant) {
         if (dead || currentState instanceof EatState || currentState instanceof FrozenState) {
             return;
@@ -372,47 +400,84 @@ public class Zombie extends Entity {
      * @param poisonous true → bypasses all armour (Poison Pea, etc.)
      */
     public void takeDamage(float amount, boolean poisonous) {
+        if (dead || amount <= 0f)
+            return;
         takeDamage(amount, poisonous, false);
     }
 
     /**
      * Routes damage through the armor chain then into {@link #hp}.
      *
-     * @param amount     positive damage value
-     * @param poisonous  true → bypasses all armour (Poison Pea, etc.)
-     * @param explosive  true → zombie was hit by an explosive plant (ash death VFX)
+     * @param amount    positive damage value
+     * @param poisonous true → bypasses all armour (Poison Pea, etc.)
+     * @param explosive true → zombie was hit by an explosive plant (ash death VFX)
      */
     public void takeDamage(float amount, boolean poisonous, boolean explosive) {
-        if (dead || amount <= 0f) return;
-        if (explosive) killedByExplosive = true;
+        if (dead || amount <= 0f)
+            return;
+        if (currentState instanceof IceBlockFrozenState iceBlock) {
+            boolean destroyed = iceBlock.takeIceDamage(amount, false);
+            if (destroyed) {
+                setState(new WalkState());
+            }
+            return;
+        }
+        if (currentState instanceof ZombieFlashState flash
+                && flash.getUnderlying() instanceof IceBlockFrozenState iceBlock) {
+            boolean destroyed = iceBlock.takeIceDamage(amount, false);
+            if (destroyed) {
+                setState(new WalkState());
+            }
+            return;
+        }
+        if (explosive)
+            killedByExplosive = true;
         float remaining = poisonous ? amount : processArmorChain(amount);
         hp = Math.max(0f, hp - remaining);
-        if (currentState != null && !(currentState instanceof DeadState) && !(currentState instanceof ZombieFlashState)) {
+        if (currentState != null && !(currentState instanceof DeadState)
+                && !(currentState instanceof ZombieFlashState)) {
             currentState = new ZombieFlashState(currentState);
         }
-        if (hp <= 0f && !dead) triggerDeath();
+        if (hp <= 0f && !dead)
+            triggerDeath();
     }
 
-    public void fire(){
-        for(ZombieState s : skills){
-            if(s instanceof ExplorerTorchSkill sk){
+    public void fire() {
+        for (ZombieState s : skills) {
+            if (s instanceof ExplorerTorchSkill sk) {
                 sk.relight();
             }
         }
     }
 
-    public void setFrozen(float duration){
-        FrameConfig frameConfig = currentState.draw(this,context);
-        currentState=new FrozenState(currentState,currentState.getStateTime(),
-            duration,frameConfig.pamPath,frameConfig.label,frameConfig.partsVisibility);
-        currentState.onEnter(this,context);
+    public void setFrozen(float duration) {
+        FrameConfig frameConfig = currentState.draw(this, context);
+        currentState = new FrozenState(currentState, currentState.getStateTime(),
+                duration, frameConfig.pamPath, frameConfig.label, frameConfig.partsVisibility);
+        currentState.onEnter(this, context);
     }
 
-    public void setButterStunned(float duration){
-        FrameConfig frameConfig = currentState.draw(this,context);
-        currentState=new ButterStunState(currentState,currentState.getStateTime(),
-            duration,frameConfig.pamPath,frameConfig.label);
-        currentState.onEnter(this,context);
+    public boolean isFrozenInIceBlock() {
+        return frozenInIceBlock;
+    }
+
+    public void setFrozenInIceBlock(boolean frozenInIceBlock) {
+        this.frozenInIceBlock = frozenInIceBlock;
+    }
+
+    public float getIceBlockStateTime() {
+        return iceBlockStateTime;
+    }
+
+    public void addIceBlockTime(float dt) {
+        this.iceBlockStateTime += dt;
+    }
+
+    public void setButterStunned(float duration) {
+        FrameConfig frameConfig = currentState.draw(this, context);
+        currentState = new ButterStunState(currentState, currentState.getStateTime(),
+                duration, frameConfig.pamPath, frameConfig.label);
+        currentState.onEnter(this, context);
     }
 
     /** Convenience: non-poisonous damage. */
@@ -425,6 +490,17 @@ public class Zombie extends Entity {
     /** Applies or refreshes an effect. BURNING clears CHILL and FROZEN. */
     public void applyEffect(StatusEffect effect) {
         if (effect.getType() == EffectType.BURNING) {
+            if (currentState instanceof IceBlockFrozenState iceBlock) {
+                iceBlock.takeIceDamage(0f, true);
+                setState(new WalkState());
+                return;
+            }
+            if (currentState instanceof ZombieFlashState flash
+                    && flash.getUnderlying() instanceof IceBlockFrozenState iceBlock) {
+                iceBlock.takeIceDamage(0f, true);
+                setState(new WalkState());
+                return;
+            }
             activeEffects.remove(EffectType.CHILL);
             activeEffects.remove(EffectType.FROZEN);
         }
@@ -440,70 +516,159 @@ public class Zombie extends Entity {
         return currentState instanceof ButterStunState;
     }
 
-
     // ── Speed helper ──────────────────────────────────────────────────────────
 
     /** Effective speed per tick: halved under CHILL, unchanged otherwise. */
     public float getEffectiveSpeedPerTick() {
-        if (hasEffect(EffectType.CHILL)) return speedPerTick * 0.5f;
+        if (hasEffect(EffectType.CHILL))
+            return speedPerTick * 0.5f;
         return speedPerTick;
     }
 
     // ── Accessors ─────────────────────────────────────────────────────────────
 
-    public ZombiePropertySheet getSheet()       { return sheet; }
-    public GameContext getContext()             { return context; }
-    public float getStateTime()                 { return stateTime; }
-    public float getX()                         { return position.x; }
-    public void setX(float newX)                { position.x = newX; syncHitbox(); }
-    public float getY()                         { return position.y; }
-    public void setY(float y)                   { position.y = y; syncHitbox(); }
-    public float getHp()                        { return hp; }
-    public float getMaxHp()                     { return maxHp; }
-    public float getEatDps()                    { return eatDps; }
-    public float getSpeedPerTick()              { return speedPerTick; }
-    public boolean isDead()                     { return dead; }
-    public boolean isGlowing()                  { return glowing; }
-    public int getStolenSun()                   { return stolenSun; }
-    public void addStolenSun(int amount)        { stolenSun += amount; }
-    public boolean isImpAlreadyThrown()         { return impAlreadyThrown; }
-    public void markImpThrown()                 { impAlreadyThrown = true; }
-    public boolean isThrowInProgress()          { return throwInProgress; }
-    public void setThrowInProgress(boolean v)   { throwInProgress = v; }
-    public float getThrowProgress()             { return throwProgress; }
-    public void setThrowProgress(float v)       { throwProgress = v; }
-    public boolean isThrowImpSpawned()          { return throwImpSpawned; }
-    public void setThrowImpSpawned(boolean v)   { throwImpSpawned = v; }
-    public boolean isKilledByExplosive()        { return killedByExplosive; }
-    public ZombieState getCurrentState()        { return currentState; }
-    public List<ZombieState> getSkills()        { return Collections.unmodifiableList(skills); }
-    public List<ArmorPiece> getArmors()         { return Collections.unmodifiableList(armors); }
+    public ZombiePropertySheet getSheet() {
+        return sheet;
+    }
+
+    public GameContext getContext() {
+        return context;
+    }
+
+    public float getStateTime() {
+        return stateTime;
+    }
+
+    public float getX() {
+        return position.x;
+    }
+
+    public void setX(float newX) {
+        position.x = newX;
+        syncHitbox();
+    }
+
+    public float getY() {
+        return position.y;
+    }
+
+    public void setY(float y) {
+        position.y = y;
+        syncHitbox();
+    }
+
+    public float getHp() {
+        return hp;
+    }
+
+    public float getMaxHp() {
+        return maxHp;
+    }
+
+    public float getEatDps() {
+        return eatDps;
+    }
+
+    public float getSpeedPerTick() {
+        return speedPerTick;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public boolean isGlowing() {
+        return glowing;
+    }
+
+    public int getStolenSun() {
+        return stolenSun;
+    }
+
+    public void addStolenSun(int amount) {
+        stolenSun += amount;
+    }
+
+    public boolean isImpAlreadyThrown() {
+        return impAlreadyThrown;
+    }
+
+    public void markImpThrown() {
+        impAlreadyThrown = true;
+    }
+
+    public boolean isThrowInProgress() {
+        return throwInProgress;
+    }
+
+    public void setThrowInProgress(boolean v) {
+        throwInProgress = v;
+    }
+
+    public float getThrowProgress() {
+        return throwProgress;
+    }
+
+    public void setThrowProgress(float v) {
+        throwProgress = v;
+    }
+
+    public boolean isThrowImpSpawned() {
+        return throwImpSpawned;
+    }
+
+    public void setThrowImpSpawned(boolean v) {
+        throwImpSpawned = v;
+    }
+
+    public ZombieState getCurrentState() {
+        return currentState;
+    }
+
+    public List<ZombieState> getSkills() {
+        return Collections.unmodifiableList(skills);
+    }
+
+    public List<ArmorPiece> getArmors() {
+        return Collections.unmodifiableList(armors);
+    }
+
     public Map<EffectType, StatusEffect> getActiveEffects() {
         return Collections.unmodifiableMap(activeEffects);
+    }
+
+    public void setHp(float hp) {
+        this.hp = hp;
     }
 
     // ── Private helpers ────────────────────────────────────────────────────────
 
     private float[] computeScaledStats(int waveIndex) {
-        float hpBase  = sheet.getHitPoints();
+        float hpBase = sheet.getHitPoints();
         float dpsBase = sheet.getEatDps();
         for (ScaledProp prop : sheet.getScaledProps()) {
             switch (prop.getKey()) {
-                case "Hitpoints": hpBase  = prop.scale(hpBase,  waveIndex); break;
-                case "EatDPS":    dpsBase = prop.scale(dpsBase, waveIndex); break;
-                default: break;
+                case "Hitpoints":
+                    hpBase = prop.scale(hpBase, waveIndex);
+                    break;
+                case "EatDPS":
+                    dpsBase = prop.scale(dpsBase, waveIndex);
+                    break;
+                default:
+                    break;
             }
         }
-        return new float[]{hpBase, dpsBase};
+        return new float[] { hpBase, dpsBase };
     }
 
     private float processArmorChain(float amount) {
         for (ArmorPiece armor : armors) {
-            if (armor.isDestroyed()) continue;
+            if (armor.isDestroyed())
+                continue;
             float overflow = armor.absorbDamage(amount);
             if (armor.isDestroyed()) {
                 context.log(sheet.getAlias() + "'s "
-                    + armor.getType().name() + " armour was destroyed!");
+                        + armor.getType().name() + " armour was destroyed!");
             }
             if (!armor.hasFlag(ArmorFlag.PASSDAMAGE)) {
                 return overflow;
@@ -530,7 +695,8 @@ public class Zombie extends Entity {
         context.getGameStats().onZombieKilled();
         context.getGameStats().onZombieKilledInSeason(context.getSeasonName());
         context.log("Zombie of type " + sheet.getAlias()
-            + " is dead at (" + String.format("%.1f", position.x) + "," + GameController.worldYtoLane(position.y) + ")");
+                + " is dead at (" + String.format("%.1f", position.x) + "," + GameController.worldYtoLane(position.y)
+                + ")");
     }
 
     private void updateStatusEffects(float dt) {
@@ -539,28 +705,32 @@ public class Zombie extends Entity {
 
     private boolean isParalysed() {
         return hasEffect(EffectType.FROZEN)
-            || hasEffect(EffectType.TRANSFORMED)
-            || hasEffect(EffectType.STUN);
+                || hasEffect(EffectType.TRANSFORMED)
+                || hasEffect(EffectType.STUN);
     }
 
     private void appendArmorDetails(StringBuilder sb) {
         sb.append("\n  armor:");
         boolean any = armors.stream().anyMatch(a -> !a.isDestroyed());
-        if (!any) { sb.append(" (none)"); return; }
+        if (!any) {
+            sb.append(" (none)");
+            return;
+        }
         for (ArmorPiece a : armors) {
             if (!a.isDestroyed()) {
                 sb.append("\n    ").append(a.getType().name().toLowerCase())
-                    .append(": ").append(String.format("%.0f", a.getCurrentHealth()));
+                        .append(": ").append(String.format("%.0f", a.getCurrentHealth()));
             }
         }
     }
 
     private void appendEffectDetails(StringBuilder sb) {
         sb.append("\n  effects:");
-        if (activeEffects.isEmpty()) { sb.append(" (none)"); return; }
-        activeEffects.forEach((type, eff) ->
-            sb.append("\n    ").append(type.name().toLowerCase())
+        if (activeEffects.isEmpty()) {
+            sb.append(" (none)");
+            return;
+        }
+        activeEffects.forEach((type, eff) -> sb.append("\n    ").append(type.name().toLowerCase())
                 .append(": ").append(String.format("%.1f", eff.getRemainingDuration())).append("s"));
     }
 }
-

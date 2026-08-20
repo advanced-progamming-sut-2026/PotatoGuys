@@ -71,4 +71,8 @@ public class ZombieFlashState extends ZombieState {
     public String getName() {
         return "Flash";
     }
+
+    public ZombieState getUnderlying() {
+        return underlying;
+    }
 }

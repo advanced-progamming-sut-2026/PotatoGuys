@@ -7,4 +7,5 @@ public class GameMapDefinition {
     public int columns = 9;
     public List<TileDefinition> specialTiles;
     public List<PrePlantedPlant> prePlantedPlants;
+    public List<PreFrozenZombie> preFrozenZombies;
 }

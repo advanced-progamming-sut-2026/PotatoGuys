@@ -58,7 +58,6 @@ public class Plant extends Entity {
     private float iceHp = 0f;
     private static final float MAX_ICE_HP = 600f;
 
-
     public Plant(PlantPropertySheet sheet, PlantAction attackAction, PlantAction feedAction, int col, int lane,
             int level, boolean boosted, GameContext context) {
         this.sheet = sheet;
@@ -80,7 +79,8 @@ public class Plant extends Entity {
 
     @Override
     public void enter() {
-        if (currentState == null) currentState = new PlantIdleState();
+        if (currentState == null)
+            currentState = new PlantIdleState();
         currentState.onEnter(this, context);
         context.log("[Plant] " + sheet.getName() + " planted at (" + col + "," + lane + ")"
                 + (level > 1 ? " [Lvl " + level + "]" : ""));
@@ -101,8 +101,8 @@ public class Plant extends Entity {
         tickGrowth();
         tickBoost();
         if (this.currentState != null) {
-            currentState.update(this, context , dt);
-        }else{
+            currentState.update(this, context, dt);
+        } else {
             changeState(new PlantIdleState());
         }
     }
@@ -113,15 +113,15 @@ public class Plant extends Entity {
     }
 
     @Override
-    public FrameConfig draw(){
-        if(currentState != null){
+    public FrameConfig draw() {
+        if (currentState != null) {
             return currentState.draw(this, context);
         }
         return null;
     }
 
-    public void changeState(PlantState nextState){
-        if(currentState != null){
+    public void changeState(PlantState nextState) {
+        if (currentState != null) {
             currentState.onExit(this, context);
         }
         currentState = nextState;
@@ -187,7 +187,8 @@ public class Plant extends Entity {
         }
 
         hp = Math.max(0f, hp - amount);
-        if (currentState != null && !(currentState instanceof PlantDeadState) && !(currentState instanceof PlantFlashState)) {
+        if (currentState != null && !(currentState instanceof PlantDeadState)
+                && !(currentState instanceof PlantFlashState)) {
             currentState = new PlantFlashState(currentState);
         }
         if (hp <= 0f)
@@ -209,7 +210,8 @@ public class Plant extends Entity {
         if (dead)
             return;
         dead = true;
-        if (currentState!=null) currentState.onExit(this,context);
+        if (currentState != null)
+            currentState.onExit(this, context);
         currentState = new PlantDeadState();
         context.removePlant(this);
         context.log("[Plant] " + sheet.getName() + " at (" + col + "," + lane + ") was destroyed.");
@@ -219,7 +221,9 @@ public class Plant extends Entity {
         hp = Math.min(getMaxHp(), hp + Math.max(0, amount));
     }
 
-    /** Permanently raises the plant's reflect-damage bonus (Endurian Plant Food). */
+    /**
+     * Permanently raises the plant's reflect-damage bonus (Endurian Plant Food).
+     */
     public void addReflectDamageBonus(float amount) {
         if (amount <= 0f)
             return;
@@ -260,7 +264,6 @@ public class Plant extends Entity {
         }
     }
 
-
     public float getEffectiveDamage() {
         float base = sheet.getDamage().getKind() == DamageKind.STAGED && growth != null
                 ? sheet.getDamage().valueAtStage(growthStageIndex)
@@ -268,7 +271,6 @@ public class Plant extends Entity {
         float levelDelta = stats.getDamage() - sheet.getDamage().getValue();
         return base + levelDelta;
     }
-
 
     // ── Accessors ─────────────────────────────────────────────────────────────
 
@@ -318,6 +320,10 @@ public class Plant extends Entity {
 
     public void setBoosted(boolean boosted) {
         this.boosted = boosted;
+    }
+
+    public void setHp(float hp) {
+        this.hp = hp;
     }
 
     /**
@@ -390,7 +396,7 @@ public class Plant extends Entity {
         this.currentState = state;
     }
 
-    public boolean isPlantableOnTile(Tile tile){
+    public boolean isPlantableOnTile(Tile tile) {
         return true;
     }
 
