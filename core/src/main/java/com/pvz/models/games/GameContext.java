@@ -34,7 +34,6 @@ import com.pvz.models.games.map.tile.TileTags;
 import com.pvz.models.games.modes.GameMode;
 import com.pvz.models.games.modes.GameModeFactory;
 
-
 public class GameContext implements TickAware {
     private int currentSun;
     private int currentTick;
@@ -81,20 +80,20 @@ public class GameContext implements TickAware {
     private final List<OctopusProjectile> pendingOctopusToRemove = new ArrayList<>();
 
     public GameContext(Level currentLevel) {
-        this.engine         = GameEngine.getInstance();
+        this.engine = GameEngine.getInstance();
         this.engine.register(this);
-        this.currentSun     = currentLevel.getInitialSun();
-        this.zombies        = new ArrayList<>();
-        this.plants         = new ArrayList<>();
-        this.projectiles    = new ArrayList<>();
-        this.suns           = new ArrayList<>();
-        this.effects        = new ArrayList<>();
-        this.cards          = new ArrayList<>();
+        this.currentSun = currentLevel.getInitialSun();
+        this.zombies = new ArrayList<>();
+        this.plants = new ArrayList<>();
+        this.projectiles = new ArrayList<>();
+        this.suns = new ArrayList<>();
+        this.effects = new ArrayList<>();
+        this.cards = new ArrayList<>();
         this.map = GameMapFactory.createGameMap(currentLevel.getGameMapDefinition());
         if (currentLevel.getGameMode() != com.pvz.models.games.modes.GameModeType.IZOMBIE) {
-            this.lawnMowers=new LawnMower[map.getLanes()];
+            this.lawnMowers = new LawnMower[map.getLanes()];
             for (int i = 0; i < lawnMowers.length; i++) {
-                lawnMowers[i]=new LawnMower(this,i);
+                lawnMowers[i] = new LawnMower(this, i);
                 hitboxes.add(lawnMowers[i].getHitbox());
                 GameEngine.getInstance().getToAdd().add(lawnMowers[i]);
             }
@@ -103,16 +102,15 @@ public class GameContext implements TickAware {
         }
         this.mode = GameModeFactory.createGameMode(currentLevel);
         this.setLevelNumber(currentLevel.getLevelNumber());
-        this.seasonName     = currentLevel.getSeasonName();
+        this.seasonName = currentLevel.getSeasonName();
 
         // Spawn pre-planted plants
         if (currentLevel.getGameMapDefinition().prePlantedPlants != null) {
             for (PrePlantedPlant pDef : currentLevel.getGameMapDefinition().prePlantedPlants) {
                 Plant p = new PlantFactory().create(
-                    pDef.type, pDef.col, pDef.lane, 1, false, this
-                );
-                if (currentLevel.getGameMapDefinition().specialTiles.stream().anyMatch(t->(
-                        t.tags.contains(TileTags.ICE_BLOCK) && t.x==p.getCol() && t.y==p.getLane()))){
+                        pDef.type, pDef.col, pDef.lane, 1, false, this);
+                if (currentLevel.getGameMapDefinition().specialTiles.stream().anyMatch(
+                        t -> (t.tags.contains(TileTags.ICE_BLOCK) && t.x == p.getCol() && t.y == p.getLane()))) {
                     p.incrementFreezeLevel();
                     p.incrementFreezeLevel();
                     p.incrementFreezeLevel();
@@ -122,8 +120,8 @@ public class GameContext implements TickAware {
         }
 
         this.log("DEBUG: GameContext initialized with season: '" + this.seasonName + "'");
-        this.plantFoodCount=0;
-        this.gameStats=new GameStats();
+        this.plantFoodCount = 0;
+        this.gameStats = new GameStats();
         engine.register(new SunManager(this));
 
         this.activeEffects = new ArrayList<>();
@@ -136,7 +134,6 @@ public class GameContext implements TickAware {
             }
         }
     }
-
 
     public GameEngine getEngine() {
         return engine;
@@ -155,12 +152,13 @@ public class GameContext implements TickAware {
         gameStats.onSunCollected(amount);
     }
 
-    public void decreaseSun(int amount){
+    public void decreaseSun(int amount) {
         currentSun -= amount;
     }
 
     public boolean spendSun(int amount) {
-        if (currentSun < amount) return false;
+        if (currentSun < amount)
+            return false;
         currentSun -= amount;
         return true;
     }
@@ -171,7 +169,8 @@ public class GameContext implements TickAware {
 
     public List<Zombie> getZombiesAt(int col, int lane) {
         return getZombies().stream()
-                .filter(z -> GameController.worldYtoLane(z.getY()) == lane && GameController.worldXtoCol(z.getX()) == col && !z.isDead())
+                .filter(z -> GameController.worldYtoLane(z.getY()) == lane
+                        && GameController.worldXtoCol(z.getX()) == col && !z.isDead())
                 .toList();
     }
 
@@ -210,7 +209,8 @@ public class GameContext implements TickAware {
 
     public List<Plant> getPlantsAt(int col, int lane) {
         Tile tile = map.getTileAt(col, lane);
-        if (tile == null) return List.of();
+        if (tile == null)
+            return List.of();
         return tile.getPlants().stream()
                 .filter(p -> !p.isDead())
                 .toList();
@@ -251,18 +251,18 @@ public class GameContext implements TickAware {
         return cards;
     }
 
-    public void addCard(Card card){
+    public void addCard(Card card) {
         this.cards.add(card);
         engine.register(card);
     }
 
-    public void removeCard(Card card){
+    public void removeCard(Card card) {
         this.cards.remove(card);
         engine.unRegister(card);
     }
 
     public void setCards(List<Card> cards) {
-        for(Card card : cards){
+        for (Card card : cards) {
             addCard(card);
         }
     }
@@ -293,6 +293,16 @@ public class GameContext implements TickAware {
         engine.register(s);
         addHitbox(s.getHitbox());
     }
+
+    /**
+     * برخلاف addSun/spendSun که دلتا اعمال می‌کنن، این مقدار currentSun رو مستقیم
+     * ست می‌کنه — فقط سمت مهمان استفاده می‌شه، برای اعمال دقیق مقدار خورشیدِ
+     * اعلام‌شده توسط میزبان در هر snapshot.
+     */
+    public void setCurrentSunDirect(int amount) {
+        this.currentSun = amount;
+    }
+
     public boolean removeSun(Sun s) {
         engine.unRegister(s);
         pendingSunsToRemove.add(s);
@@ -399,15 +409,13 @@ public class GameContext implements TickAware {
         this.currentTick = currentTick;
     }
 
-    public void addCurrentTick(int amount){
+    public void addCurrentTick(int amount) {
         this.currentTick += amount;
     }
-
 
     public boolean isGameOver() {
         return gameOver;
     }
-
 
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
@@ -421,27 +429,30 @@ public class GameContext implements TickAware {
         this.map = map;
     }
 
-    public Tile getTileAt(float col , int lane){
-        return map.getTileAt((int)col, lane);
+    public Tile getTileAt(float col, int lane) {
+        return map.getTileAt((int) col, lane);
     }
 
-    public void log(String message) { System.out.println("  " + message); }
+    public void log(String message) {
+        System.out.println("  " + message);
+    }
 
-    public GameStats getGameStats() { return gameStats; }
+    public GameStats getGameStats() {
+        return gameStats;
+    }
 
     @Override
     public void enter() {
         mode.initMode(this);
     }
 
-
     @Override
     public void update(float dt) {
         applyFireAuras();
         for (ChapterEffect effect : activeEffects) {
-            effect.update(this,dt);
+            effect.update(this, dt);
         }
-        mode.updateMode(this , dt);
+        mode.updateMode(this, dt);
     }
 
     private void applyFireAuras() {
@@ -450,11 +461,12 @@ public class GameContext implements TickAware {
                 // Find neighbors
                 for (int dx = -1; dx <= 1; dx++) {
                     for (int dy = -1; dy <= 1; dy++) {
-                        if (dx == 0 && dy == 0) continue;
+                        if (dx == 0 && dy == 0)
+                            continue;
                         int neighborCol = p.getCol() + dx;
                         int neighborLane = p.getLane() + dy;
                         if (neighborCol >= 0 && neighborCol < map.getColumns() &&
-                            neighborLane >= 0 && neighborLane < map.getLanes()) {
+                                neighborLane >= 0 && neighborLane < map.getLanes()) {
 
                             Tile tile = getTileAt(neighborCol, neighborLane);
 
@@ -479,9 +491,9 @@ public class GameContext implements TickAware {
         }
     }
 
-
     @Override
-    public void dispose() {}
+    public void dispose() {
+    }
 
     public int getLevelNumber() {
         return levelNumber;
@@ -499,37 +511,38 @@ public class GameContext implements TickAware {
         return activeEffects;
     }
 
-    public int getPlantFoodCount(){
+    public int getPlantFoodCount() {
         return plantFoodCount;
     }
 
-    public void addPlantFood(int amount){
-        plantFoodCount+=amount;
-        if (plantFoodCount>3){
-            plantFoodCount=3;
+    public void addPlantFood(int amount) {
+        plantFoodCount += amount;
+        if (plantFoodCount > 3) {
+            plantFoodCount = 3;
         }
     }
 
-    public boolean spendPlantFood(){
-        if (plantFoodCount<=0) return false;
+    public boolean spendPlantFood() {
+        if (plantFoodCount <= 0)
+            return false;
         plantFoodCount--;
         return true;
     }
 
-    public LawnMower[] getLawnMowers(){
+    public LawnMower[] getLawnMowers() {
         return lawnMowers;
     }
 
-    public List<Effect> getEffects(){
+    public List<Effect> getEffects() {
         return effects;
     }
 
-    public void addEffect(Effect effect){
+    public void addEffect(Effect effect) {
         pendingEffectsToAdd.add(effect);
         engine.getToAdd().add(effect);
     }
 
-    public void removeEffect(Effect effect){
+    public void removeEffect(Effect effect) {
         pendingEffectsToRemove.add(effect);
         engine.getToRemove().add(effect);
     }

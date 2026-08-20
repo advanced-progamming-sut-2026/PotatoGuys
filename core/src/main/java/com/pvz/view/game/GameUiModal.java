@@ -43,11 +43,13 @@ import pvz.skin.PvzSkin;
  * (packet background, family badge, sun cost) — same look as the pregame
  * slot bar and Rey's in-match tray — with a cooldown overlay on top.
  *
- * <p>Slot size is tuned to the 1280x720 gameplay viewport (see
+ * <p>
+ * Slot size is tuned to the 1280x720 gameplay viewport (see
  * GameController's FitViewport) rather than the 1920x1080 menus use, so all
  * 7 cards fit under the top bar without running off the bottom of the screen.
  *
- * <p>The plant-food bank (dots + "+" cheat button) sits at normalized (0.25, 0.1).
+ * <p>
+ * The plant-food bank (dots + "+" cheat button) sits at normalized (0.25, 0.1).
  */
 public class GameUiModal extends Table {
 
@@ -109,15 +111,18 @@ public class GameUiModal extends Table {
         topBar.top().left();
         topBar.pad(10);
 
-        // Sun bank with a +25 cheat button, matching the reference HUD (phase-0-group-51).
+        // Sun bank with a +25 cheat button, matching the reference HUD
+        // (phase-0-group-51).
         Table sunRow = new Table();
         addSunButton = createCheatButton();
         addSunButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!isDebugModeEnabled()) return;
+                if (!isDebugModeEnabled())
+                    return;
                 GameContext context = AppContext.getInstance().getGameContext();
-                if (context == null) return;
+                if (context == null)
+                    return;
                 context.addSun(CHEAT_SUN_AMOUNT);
                 updateHud();
             }
@@ -146,15 +151,18 @@ public class GameUiModal extends Table {
         topBar.add(waveGroup).left().padLeft(15f).size(WAVE_BAR_WIDTH + 50f, 50f);
         topBar.row();
 
-        // Plant food bank with a +1 cheat button, matching the reference HUD (phase-0-group-51).
+        // Plant food bank with a +1 cheat button, matching the reference HUD
+        // (phase-0-group-51).
         Table foodRow = new Table();
         addFoodButton = createCheatButton();
         addFoodButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!isDebugModeEnabled()) return;
+                if (!isDebugModeEnabled())
+                    return;
                 GameContext context = AppContext.getInstance().getGameContext();
-                if (context == null) return;
+                if (context == null)
+                    return;
                 context.addPlantFood(1);
                 updateHud();
             }
@@ -272,7 +280,8 @@ public class GameUiModal extends Table {
         // amount display (the food row moved to the bottom overlay).
         add(leftColumnWrapper).left().top().colspan(2).padLeft(15).padTop(-17);
 
-        // Plant food pinned at normalized (0.25, 0.1): centered on x = 0.25 * 1280 = 320
+        // Plant food pinned at normalized (0.25, 0.1): centered on x = 0.25 * 1280 =
+        // 320
         // and its bottom at y = 0.1 * 720 = 72. 0.25*1280 - (50 + 3 + 150)/2 = 218.5
         // pushes its center onto x = 320; padBottom(72) lifts it off the bottom edge.
         //
@@ -305,7 +314,8 @@ public class GameUiModal extends Table {
         this.selectedZombieCard = card;
         if (card != null) {
             this.shovelSelected = false;
-            if (shovelButton != null) shovelButton.setChecked(false);
+            if (shovelButton != null)
+                shovelButton.setChecked(false);
         }
         updateCardStyles();
     }
@@ -319,23 +329,25 @@ public class GameUiModal extends Table {
             return new com.badlogic.gdx.math.Vector2(1120f, 695f);
         }
         return coinIcon.localToStageCoordinates(
-            new com.badlogic.gdx.math.Vector2(coinIcon.getWidth() / 2f, coinIcon.getHeight() / 2f));
+                new com.badlogic.gdx.math.Vector2(coinIcon.getWidth() / 2f, coinIcon.getHeight() / 2f));
     }
 
     /**
      * Where the gem (diamond) wallet icon sits in stage (1280x720, bottom-left
-     * origin) coordinates — the target the flying diamond-drop animation arcs toward.
+     * origin) coordinates — the target the flying diamond-drop animation arcs
+     * toward.
      */
     public com.badlogic.gdx.math.Vector2 getGemWalletStagePosition() {
         if (gemIcon == null) {
             return new com.badlogic.gdx.math.Vector2(980f, 695f);
         }
         return gemIcon.localToStageCoordinates(
-            new com.badlogic.gdx.math.Vector2(gemIcon.getWidth() / 2f, gemIcon.getHeight() / 2f));
+                new com.badlogic.gdx.math.Vector2(gemIcon.getWidth() / 2f, gemIcon.getHeight() / 2f));
     }
 
     /**
-     * The "+" cheat button used next to the sun and plant food banks, using the same
+     * The "+" cheat button used next to the sun and plant food banks, using the
+     * same
      * coin-buy asset the reference HUD (phase-0-group-51) uses for both buttons.
      */
     private ImageButton createCheatButton() {
@@ -367,20 +379,21 @@ public class GameUiModal extends Table {
         waveGroup.setSize(WAVE_BAR_WIDTH + 70f, 85f);
 
         Drawable fillDrawable = safeSkinDrawable("image_ui_hud_ingame_progress_meter_fill",
-            PvzSkin.get().newDrawable("white_pixel", Color.valueOf("65B83B")));
+                PvzSkin.get().newDrawable("white_pixel", Color.valueOf("65B83B")));
         waveFill = new Image(fillDrawable);
         waveFill.setBounds(WAVE_BAR_WIDTH, WAVE_FILL_Y, 0f, WAVE_FILL_HEIGHT);
         waveGroup.addActor(waveFill);
 
         Drawable frameDrawable = safeSkinDrawable("image_ui_hud_ingame_progress_meter",
-            PvzSkin.get().newDrawable("white_pixel", new Color(0.15f, 0.15f, 0.15f, 0.85f)));
+                PvzSkin.get().newDrawable("white_pixel", new Color(0.15f, 0.15f, 0.15f, 0.85f)));
         Image progressFrame = new Image(frameDrawable);
         progressFrame.setScaling(Scaling.stretch);
         progressFrame.setBounds(0f, 0f, WAVE_BAR_WIDTH, WAVE_BAR_HEIGHT);
         waveGroup.addActor(progressFrame);
 
         Drawable zombieDrawable = null;
-        com.badlogic.gdx.graphics.g2d.TextureRegion zombieRegion = PvZ2.textureBank.region("IMAGE_UI_HUD_INGAME_PROGRESS_METER_ZOMBIEHEAD");
+        com.badlogic.gdx.graphics.g2d.TextureRegion zombieRegion = PvZ2.textureBank
+                .region("IMAGE_UI_HUD_INGAME_PROGRESS_METER_ZOMBIEHEAD");
         if (zombieRegion != null) {
             zombieDrawable = new TextureRegionDrawable(zombieRegion);
         } else if (Gdx.files.internal("assets/textures/ui/zombie.png").exists()) {
@@ -389,8 +402,8 @@ public class GameUiModal extends Table {
             zombieDrawable = new TextureRegionDrawable(zombieTex);
         }
         waveZombieHead = zombieDrawable != null
-            ? new Image(zombieDrawable)
-            : new Image(PvzSkin.get().newDrawable("white_pixel", new Color(0.8f, 0.2f, 0.2f, 1f)));
+                ? new Image(zombieDrawable)
+                : new Image(PvzSkin.get().newDrawable("white_pixel", new Color(0.8f, 0.2f, 0.2f, 1f)));
         waveZombieHead.setScaling(Scaling.fit);
         waveZombieHead.setBounds(TRACK_RIGHT - 12f, -7f, 52f, 52f);
         waveGroup.addActor(waveZombieHead);
@@ -409,7 +422,8 @@ public class GameUiModal extends Table {
     private void rebuildWaveFlags(int totalWaves) {
         if (waveFlagImages != null) {
             for (Image flag : waveFlagImages) {
-                if (flag != null) flag.remove();
+                if (flag != null)
+                    flag.remove();
             }
         }
         waveFlagImages = new Image[totalWaves];
@@ -445,7 +459,8 @@ public class GameUiModal extends Table {
             rebuildWaveFlags(totalWaves);
         }
         completedWaves = MathUtils.clamp(completedWaves, 0, totalWaves);
-        if (completedWaves == lastCompletedWaves) return;
+        if (completedWaves == lastCompletedWaves)
+            return;
         for (int i = 0; i < waveFlagImages.length; i++) {
             waveFlagImages[i].setVisible(i >= completedWaves);
         }
@@ -480,7 +495,8 @@ public class GameUiModal extends Table {
         this.selectedCard = card;
         if (card != null) {
             this.shovelSelected = false;
-            if (shovelButton != null) shovelButton.setChecked(false);
+            if (shovelButton != null)
+                shovelButton.setChecked(false);
             this.plantFoodSelected = false;
         }
         updateCardStyles();
@@ -500,7 +516,8 @@ public class GameUiModal extends Table {
             this.selectedCard = null;
             this.selectedZombieCard = null;
             this.shovelSelected = false;
-            if (shovelButton != null) shovelButton.setChecked(false);
+            if (shovelButton != null)
+                shovelButton.setChecked(false);
             updateCardStyles();
         }
     }
@@ -535,7 +552,8 @@ public class GameUiModal extends Table {
         selectedZombieCard = null;
 
         GameContext context = AppContext.getInstance().getGameContext();
-        if (context == null) return;
+        if (context == null)
+            return;
 
         List<PlantData> allData = PlantData.loadAll();
         dataByType = new HashMap<>();
@@ -544,6 +562,16 @@ public class GameUiModal extends Table {
         }
 
         for (Card card : context.getCards()) {
+            com.pvz.models.MatchSession matchSession = com.pvz.models.AppContext.getInstance().getMatchSession();
+            if (matchSession != null) {
+                boolean isPlantCard = card instanceof com.pvz.models.games.card.PlantCard;
+                boolean isZombieCard = card instanceof com.pvz.models.games.card.ZombieCard;
+                com.pvz.network.PlayerRole myRole = matchSession.getMyRole();
+                if (isPlantCard && myRole != com.pvz.network.PlayerRole.PLANT)
+                    continue;
+                if (isZombieCard && myRole != com.pvz.network.PlayerRole.ZOMBIE)
+                    continue;
+            }
             if (card instanceof PlantCard pc) {
                 cardsBarTable.add(buildSlot(pc, false)).row();
             } else if (card instanceof ZombieCard zc) {
@@ -555,7 +583,8 @@ public class GameUiModal extends Table {
 
     public void syncCards() {
         GameContext context = AppContext.getInstance().getGameContext();
-        if (context == null) return;
+        if (context == null)
+            return;
 
         boolean changed = false;
         for (Card card : context.getCards()) {
@@ -579,7 +608,7 @@ public class GameUiModal extends Table {
         Table slot = new Table();
         if (data != null) {
             slot.setBackground(PlantData.regionDrawableOr(
-                data.isBoosted() ? "IMAGE_UI_PACKETS_BOOST" : "IMAGE_UI_PACKETS_READY", fallback));
+                    data.isBoosted() ? "IMAGE_UI_PACKETS_BOOST" : "IMAGE_UI_PACKETS_READY", fallback));
         } else {
             slot.setBackground(new TextureRegionDrawable(MenuUiKit.solidTexture(new Color(0f, 0f, 0f, 0.45f))));
         }
@@ -601,7 +630,8 @@ public class GameUiModal extends Table {
             stack.add(badgeLayer);
         }
 
-        Image cooldownOverlay = new Image(new TextureRegionDrawable(MenuUiKit.solidTexture(new Color(0f, 0f, 0f, 0.6f))));
+        Image cooldownOverlay = new Image(
+                new TextureRegionDrawable(MenuUiKit.solidTexture(new Color(0f, 0f, 0f, 0.6f))));
         cooldownOverlay.setTouchable(Touchable.disabled);
         stack.add(cooldownOverlay);
         cooldownOverlayByCard.put(pc, cooldownOverlay);
@@ -640,7 +670,8 @@ public class GameUiModal extends Table {
         Drawable fallback = skin.newDrawable("white_pixel", new Color(0.35f, 0.15f, 0.15f, 1f));
 
         Table slot = new Table();
-        com.badlogic.gdx.graphics.g2d.TextureRegion bgRegion = PvZ2.textureBank.region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_READY");
+        com.badlogic.gdx.graphics.g2d.TextureRegion bgRegion = PvZ2.textureBank
+                .region("IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_READY");
         if (bgRegion != null) {
             slot.setBackground(new TextureRegionDrawable(bgRegion));
         } else {
@@ -651,8 +682,10 @@ public class GameUiModal extends Table {
 
         String artPath = "textures/zombies/" + zc.getZombieType().name() + ".png";
         if (com.badlogic.gdx.Gdx.files.internal(artPath).exists()) {
-            com.badlogic.gdx.graphics.Texture tex = new com.badlogic.gdx.graphics.Texture(com.badlogic.gdx.Gdx.files.internal(artPath));
-            tex.setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear, com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
+            com.badlogic.gdx.graphics.Texture tex = new com.badlogic.gdx.graphics.Texture(
+                    com.badlogic.gdx.Gdx.files.internal(artPath));
+            tex.setFilter(com.badlogic.gdx.graphics.Texture.TextureFilter.Linear,
+                    com.badlogic.gdx.graphics.Texture.TextureFilter.Linear);
             Image zombieImg = new Image(new TextureRegionDrawable(tex));
             zombieImg.setScaling(Scaling.fit);
             Table imgLayer = new Table();
@@ -672,7 +705,8 @@ public class GameUiModal extends Table {
             stack.add(nameLayer);
         }
 
-        Image cooldownOverlay = new Image(new TextureRegionDrawable(MenuUiKit.solidTexture(new Color(0f, 0f, 0f, 0.6f))));
+        Image cooldownOverlay = new Image(
+                new TextureRegionDrawable(MenuUiKit.solidTexture(new Color(0f, 0f, 0f, 0.6f))));
         cooldownOverlay.setTouchable(Touchable.disabled);
         stack.add(cooldownOverlay);
         zombieCooldownOverlayByCard.put(zc, cooldownOverlay);
@@ -708,7 +742,8 @@ public class GameUiModal extends Table {
 
     public void updateHud() {
         GameContext context = AppContext.getInstance().getGameContext();
-        if (context == null) return;
+        if (context == null)
+            return;
 
         syncCards();
 
@@ -770,11 +805,11 @@ public class GameUiModal extends Table {
             updateWaveFlags(completed, totalWaves);
 
             float killProgress = totalZombies > 0
-                ? MathUtils.clamp(killed / (float) totalZombies, 0f, 1f)
-                : 0f;
+                    ? MathUtils.clamp(killed / (float) totalZombies, 0f, 1f)
+                    : 0f;
             float waveProgress = totalWaves > 0
-                ? completed / (float) totalWaves
-                : 0f;
+                    ? completed / (float) totalWaves
+                    : 0f;
             float progress = Math.max(killProgress, waveProgress);
             updateWaveFill(progress, completed, totalWaves);
         } else {
