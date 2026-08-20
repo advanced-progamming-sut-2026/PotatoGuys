@@ -53,6 +53,78 @@
           "zombieCount": 1,
           "intervalSeconds": 5.0,
           "allowedTypes": [
+            "ALLSTAR"
+          ],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 1,
+          "intervalSeconds": 5.0,
+          "allowedTypes": [
+            "ARCADE"
+          ],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 1,
+          "intervalSeconds": 5.0,
+          "allowedTypes": [
+            "UMBRELLA"
+          ],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 1,
+          "intervalSeconds": 5.0,
+          "allowedTypes": [
+            "CRYSTAL_SKULL"
+          ],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 1,
+          "intervalSeconds": 5.0,
+          "allowedTypes": [
+            "PROSPECTOR"
+          ],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 1,
+          "intervalSeconds": 5.0,
+          "allowedTypes": [
+            "PIANO"
+          ],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 1,
+          "intervalSeconds": 5.0,
+          "allowedTypes": [
+            "FOOTBALL"
+          ],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 1,
+          "intervalSeconds": 5.0,
+          "allowedTypes": [
+            "POLE_VAULTING"
+          ],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 1,
+          "intervalSeconds": 5.0,
+          "allowedTypes": [
+            "DANCING"
+          ],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 1,
+          "intervalSeconds": 5.0,
+          "allowedTypes": [
             "OCTOPUS"
           ],
           "isBurst": false

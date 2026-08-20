@@ -182,5 +182,41 @@
   "ZombieZombossMechDark": {
     "overallDisc": "The ultimate zombie overlord in his mechanized suit.",
     "funDisc": "Dr. Zomboss has been planning this invasion for years. He even had matching curtains made for the Zombot."
+  },
+  "ZombieModernAllStarDefault": {
+    "overallDisc": "All-Star Zombie charges past defenses at high speed.",
+    "funDisc": "All-Star Zombie was cut from the football team for being too aggressive. Now he channels that energy into eating brains. His coach still sends him encouraging letters, but he just eats those too."
+  },
+  "ZombieArcadeDefault": {
+    "overallDisc": "Arcade Zombie brings old-school gaming to the lawn.",
+    "funDisc": "Arcade Zombie spent so many quarters in the arcade that he eventually just moved in. He's convinced the high score board is a portal to another dimension filled with brains."
+  },
+  "ZombieLostCityJaneDefault": {
+    "overallDisc": "Umbrella Zombie uses her parasol to block attacks from above.",
+    "funDisc": "Jane always believed in being prepared. Sun? Umbrella. Rain? Umbrella. Zombie apocalypse? You guessed it — umbrella. She's never without it, and frankly, neither should you."
+  },
+  "ZombieCrystalSkullDefault": {
+    "overallDisc": "Turquoise Zombie wears an ancient crystal skull helmet.",
+    "funDisc": "Nobody knows where the crystal skull came from. Some say it was cursed by ancient priests. Others say it's just a really expensive hat. Either way, it makes him very hard to take down."
+  },
+  "ZombieProspectorDefault": {
+    "overallDisc": "Prospector Zombie uses dynamite to leap past your defenses.",
+    "funDisc": "Prospector Zombie struck it rich — in brains, that is. He's been mining the brain fields for years and still hasn't hit bedrock. His pickaxe? Just for show. The dynamite? Very real."
+  },
+  "ZombiePianoDefault": {
+    "overallDisc": "Piano Zombie crushes plants under his massive instrument.",
+    "funDisc": "Piano Zombie always dreamed of performing at Carnegie Hall. Instead, he's rolling a grand piano across your lawn, crushing everything in his path. At least the music is nice."
+  },
+  "ZombieFootballDefault": {
+    "overallDisc": "Football Zombie charges at high speed with heavy armor.",
+    "funDisc": "Football Zombie was the star quarterback of the Zombie High Sharks. His signature move? The reverse-Loss-of-Brians play. He's still undefeated."
+  },
+  "ZombiePoleVaultingDefault": {
+    "overallDisc": "Pole Vaulting Zombie vaults over the first plant he encounters.",
+    "funDisc": "Pole Vaulting Zombie took up the sport after watching the Olympics. He's not great at it — he usually vaults into the nearest plant face-first — but he's enthusiastic."
+  },
+  "ZombieDancingDefault": {
+    "overallDisc": "Dancing Zombie summons Backup Dancers to join the attack.",
+    "funDisc": "Dancing Zombie learned all his moves from watching old music videos. His signature dance, 'The Thriller Shuffle,' is said to be legendary among the undead. His backup dancers are huge fans."
   }
 }

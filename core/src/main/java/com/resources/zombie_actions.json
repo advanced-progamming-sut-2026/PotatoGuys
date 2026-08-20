@@ -2069,6 +2069,370 @@
       }
     },
     {
+      "alias": "ZombieModernAllStarDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 1100,
+      "eatDps": 100,
+      "speed": 0.16,
+      "wavePointCost": 1000,
+      "weight": 4000,
+      "canSpawnPlantFood": true,
+      "id": 48,
+      "name": "All-Star Zombie",
+      "category": "MODERN",
+      "description": "زامبی فوتبالیست سریع و قوی.",
+      "animationConfig": {
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_MODERN_ALLSTAR/ZOMBIE_MODERN_ALLSTAR.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "kick",
+          "particles",
+          "use_action"
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "kick"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieArcadeDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 490,
+      "eatDps": 100,
+      "speed": 0.19,
+      "wavePointCost": 600,
+      "weight": 3500,
+      "canSpawnPlantFood": true,
+      "id": 49,
+      "name": "Arcade Zombie",
+      "category": "ARCADE",
+      "description": "زامبی آرکید؛ با ماشین آرکید حمله می‌کند.",
+      "animationConfig": {
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_80S_ARCADE/ZOMBIE_80S_ARCADE.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "push",
+          "particles"
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "push"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "die"
+      }
+    },
+    {
+      "alias": "ZombieLostCityJaneDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 350,
+      "eatDps": 100,
+      "speed": 0.25,
+      "wavePointCost": 200,
+      "weight": 3000,
+      "canSpawnPlantFood": true,
+      "id": 50,
+      "name": "Umbrella Zombie",
+      "category": "LOSTCITY",
+      "description": "زامبی چتر؛ با چتر از حملات محافظت می‌کند.",
+      "animationConfig": {
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_JANE/ZOMBIE_LOSTCITY_JANE.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "particles"
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "walk"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "idle"
+      }
+    },
+    {
+      "alias": "ZombieCrystalSkullDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 250,
+      "eatDps": 100,
+      "speed": 0.185,
+      "wavePointCost": 500,
+      "weight": 3000,
+      "canSpawnPlantFood": true,
+      "id": 51,
+      "name": "Turquoise Zombie",
+      "category": "LOSTCITY",
+      "description": "زامبی جمجمهٔ بلورین.",
+      "animationConfig": {
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_LOSTCITY_CRYSTALSKULL/ZOMBIE_LOSTCITY_CRYSTALSKULL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "power",
+          "laser_off",
+          "laser_on",
+          "particles"
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "power"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "idle"
+      }
+    },
+    {
+      "alias": "ZombieProspectorDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 190,
+      "eatDps": 100,
+      "speed": 0.16,
+      "wavePointCost": 200,
+      "weight": 2000,
+      "canSpawnPlantFood": true,
+      "id": 52,
+      "name": "Prospector Zombie",
+      "category": "WILDEWEST",
+      "description": "زامبی معدنچی؛ با دینامیت جلو می‌رود.",
+      "animationConfig": {
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_PROSPECTOR/ZOMBIE_PROSPECTOR.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "blastoff",
+          "land",
+          "explode",
+          "particles"
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "walk"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "idle"
+      }
+    },
+    {
+      "alias": "ZombiePianoDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 840,
+      "eatDps": 4000,
+      "speed": 0.12,
+      "wavePointCost": 450,
+      "weight": 3500,
+      "canSpawnPlantFood": true,
+      "id": 53,
+      "name": "Piano Zombie",
+      "category": "WILDEWEST",
+      "description": "زامبی پیانیست؛ با پیانو حرکت می‌کند.",
+      "animationConfig": {
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_PIANO/ZOMBIE_PIANO.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "particles"
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "idle"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "idle"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "idle"
+      }
+    },
+    {
+      "alias": "ZombieFootballDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 500,
+      "eatDps": 100,
+      "speed": 0.26,
+      "wavePointCost": 500,
+      "weight": 4000,
+      "canSpawnPlantFood": true,
+      "id": 54,
+      "name": "Football Zombie",
+      "category": "ALL",
+      "description": "زامبی فوتبالیست با سرعت بالا.",
+      "animationConfig": {
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_MECH_FOOTBALL/ZOMBIE_MECH_FOOTBALL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "push",
+          "stun_start",
+          "stun_idle",
+          "stun_end",
+          "particles"
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "idle"
+      }
+    },
+    {
+      "alias": "ZombiePoleVaultingDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 500,
+      "eatDps": 100,
+      "speed": 0.3,
+      "wavePointCost": 300,
+      "weight": 3000,
+      "canSpawnPlantFood": true,
+      "id": 55,
+      "name": "Pole Vaulting Zombie",
+      "category": "ALL",
+      "description": "زامبی با نیزه که از موانع رد می‌شود.",
+      "animationConfig": {
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_MECH_FOOTBALL/ZOMBIE_MECH_FOOTBALL.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "push",
+          "stun_start",
+          "stun_idle",
+          "stun_end",
+          "particles"
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "eat"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "idle"
+      }
+    },
+    {
+      "alias": "ZombieDancingDefault",
+      "objClass": "ZombiePropertySheet",
+      "scaling": "standard",
+      "hitPoints": 500,
+      "eatDps": 100,
+      "speed": 0.185,
+      "wavePointCost": 500,
+      "weight": 3500,
+      "canSpawnPlantFood": true,
+      "id": 56,
+      "name": "Dancing Zombie",
+      "category": "ALL",
+      "description": "زامبی رقاص؛ رفقایش را فرا می‌خواند.",
+      "animationConfig": {
+        "pamFilePath": "768/FULL/ZOMBIE/ZOMBIE_MECH_DISCO/ZOMBIE_MECH_DISCO.PAM",
+        "idleLabel": "idle",
+        "animSpeed": 1.0,
+        "availableClips": [
+          "idle",
+          "walk",
+          "dance_start",
+          "dance_idle",
+          "dance_end",
+          "stun_start",
+          "stun_idle",
+          "stun_end",
+          "particles"
+        ],
+        "ashPamFilePath": "768/INITIAL/EFFECTS/ZOMBIE_ASH/ZOMBIE_ASH.PAM"
+      },
+      "walkConfig": {
+        "class": "ZombieWalkConfig",
+        "label": "walk"
+      },
+      "eatConfig": {
+        "class": "ZombieEatConfig",
+        "label": "dance_idle"
+      },
+      "dieConfig": {
+        "class": "ZombieDieConfig",
+        "label": "idle"
+      }
+    },
+    {
       "alias": "ZombieZombossMechEgypt",
       "objClass": "ZombieZombossMechEgyptProps",
       "scaling": "constant",
