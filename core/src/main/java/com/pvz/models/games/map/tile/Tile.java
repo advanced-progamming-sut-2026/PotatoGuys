@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.engine.FrameConfig;
-import com.pvz.models.engine.GameEngine;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
@@ -14,7 +13,6 @@ import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.zombies.Zombie;
-import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.map.behaviors.GraveBehavior;
 import com.pvz.models.games.map.behaviors.TileBehavior;
@@ -63,8 +61,7 @@ public class Tile implements TickAware {
             boolean hasLilyPad = plants.stream().anyMatch(p -> p.getType() == PlantType.LilyPad);
             if (!hasLilyPad) {
                 return false;
-            }
-            else if (plants.size()<2){
+            } else if (plants.size() < 2) {
                 return true;
             }
         }
@@ -74,7 +71,8 @@ public class Tile implements TickAware {
             return true;
         }
 
-        if (!plants.isEmpty()) return false;
+        if (!plants.isEmpty())
+            return false;
 
         return true;
     }
@@ -108,7 +106,7 @@ public class Tile implements TickAware {
             b.onProjectileHit(p, this);
     }
 
-    public void processHit(float damage){
+    public void processHit(float damage) {
         for (TileBehavior b : new ArrayList<>(behaviors))
             b.processHit(damage);
     }
@@ -146,8 +144,8 @@ public class Tile implements TickAware {
         return height;
     }
 
-    public Vector2 getPosition(){
-        return new Vector2(x,y);
+    public Vector2 getPosition() {
+        return new Vector2(x, y);
     }
 
     @Override
@@ -158,7 +156,7 @@ public class Tile implements TickAware {
     @Override
     public void update(float dt) {
         for (TileBehavior b : new ArrayList<>(behaviors))
-            b.update(null, this,dt);
+            b.update(null, this, dt);
     }
 
     @Override
@@ -169,7 +167,7 @@ public class Tile implements TickAware {
 
     public List<FrameConfig> drawBehaviors() {
         List<FrameConfig> frameConfigs = new ArrayList<>();
-        for (TileBehavior b: new ArrayList<>(behaviors)){
+        for (TileBehavior b : new ArrayList<>(behaviors)) {
             frameConfigs.add(b.draw(this));
         }
         return frameConfigs;
