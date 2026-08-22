@@ -11,8 +11,8 @@ import com.pvz.models.entities.projectile.ProjectileType;
 import com.pvz.models.games.map.tile.TileTags;
 
 public class IceBlockBehavior implements TileBehavior {
-    private static final String PAM_PATH="768/FULL/EFFECTS/FROSTBITE_ICE_BLOCK_PLANT/FROSTBITE_ICE_BLOCK_PLANT.PAM";
-    private static final String IDLE_CLIP="freeze_idle";
+    private static final String PAM_PATH = "768/FULL/EFFECTS/FROSTBITE_ICE_BLOCK_PLANT/FROSTBITE_ICE_BLOCK_PLANT.PAM";
+    private static final String IDLE_CLIP = "freeze_idle";
     private static final float FLASH_DURATION = 0.28f;
     private float iceHp = 600f;
     private Object entityInside; // Can be Plant or Zombie
@@ -26,7 +26,7 @@ public class IceBlockBehavior implements TileBehavior {
         }
         // Zombies are already frozen via StatusEffect or this behavior
 
-        this.stateTime=0;
+        this.stateTime = 0;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class IceBlockBehavior implements TileBehavior {
 
         if (iceHp <= 0f) {
             tile.removeBehavior(this);
-            tile.getTags().removeAll(tile.getTags().stream().filter(t->t.equals(TileTags.ICE_BLOCK)).toList());
+            tile.getTags().removeAll(tile.getTags().stream().filter(t -> t.equals(TileTags.ICE_BLOCK)).toList());
             // Release entity
             if (entityInside instanceof Plant plant) {
                 plant.takeIceDamage(0f, true); // Melts it
@@ -55,8 +55,9 @@ public class IceBlockBehavior implements TileBehavior {
     @Override
     public void update(GameContext ctx, Tile tile, float dt) {
         TileBehavior.super.update(ctx, tile, dt);
-        stateTime+=dt;
-        if (flashTimer > 0f) flashTimer = Math.max(0f, flashTimer - dt);
+        stateTime += dt;
+        if (flashTimer > 0f)
+            flashTimer = Math.max(0f, flashTimer - dt);
     }
 
     public void takeDamage(float amount, boolean isFire) {
@@ -68,22 +69,30 @@ public class IceBlockBehavior implements TileBehavior {
         }
     }
 
-    public float getIceHp() { return iceHp; }
-    public Object getEntityInside() { return entityInside; }
+    public float getIceHp() {
+        return iceHp;
+    }
+
+    public Object getEntityInside() {
+        return entityInside;
+    }
 
     @Override
-    public String getName() { return "IceBlock"; }
+    public String getName() {
+        return "IceBlock";
+    }
 
     @Override
     public FrameConfig draw(Tile tile) {
         TileBehavior.super.draw(tile);
-        Vector2 scale=new Vector2(0.65f,0.65f);
-        Vector2 pos = new Vector2(GameController.colToWorldX(tile.getCol()),GameController.laneToWorldY(tile.getLane()));
-        FrameConfig frameConfig = new FrameConfig(PAM_PATH,IDLE_CLIP,stateTime,pos,scale,null,false);
+        Vector2 scale = new Vector2(0.65f, 0.65f);
+        Vector2 pos = new Vector2(GameController.colToWorldX(tile.getCol()),
+                GameController.laneToWorldY(tile.getLane()));
+        FrameConfig frameConfig = new FrameConfig(PAM_PATH, IDLE_CLIP, stateTime, pos, scale, null, false);
         if (flashTimer > 0f) {
-            frameConfig.setColor(5f, 5f, 5f, 0.6f);
+            frameConfig.setColor(5f, 5f, 5f, 0.4f);
         } else {
-            frameConfig.setColor(1,1,1,0.7f);
+            frameConfig.setColor(1, 1, 1, 0.55f);
         }
         return frameConfig;
     }

@@ -123,5 +123,11 @@
         }
       ]
     }
+  ],
+  "allowedPlantTypes": [
+    "Rotobaga",
+    "FirePeashooter",
+    "Pepperpult",
+    "Tallnut"
   ]
 }

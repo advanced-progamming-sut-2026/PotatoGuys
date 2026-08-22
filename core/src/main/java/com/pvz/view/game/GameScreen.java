@@ -41,7 +41,7 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         controller.update(delta);
-        controller.draw();
+        controller.getRenderer().draw();
 
         controller.getStage().act(delta);
         controller.getStage().draw();

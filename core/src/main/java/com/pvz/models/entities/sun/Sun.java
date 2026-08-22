@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
-import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
@@ -17,7 +16,7 @@ import com.pvz.view.game.GameScreen;
 public class Sun extends Entity {
     private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
     private static final String SUN_CLIP = "animation";
-    private static final String RADIOACTIVE_SUN_PAM="768/FULL/EFFECTS/SUN_BOMB/SUN_BOMB.PAM";
+    private static final String RADIOACTIVE_SUN_PAM = "768/FULL/EFFECTS/SUN_BOMB/SUN_BOMB.PAM";
 
     private static final float DEFAULT_LIFESPAN_SECONDS = 50f;
     private static final float DEFAULT_FALL_SPEED = 70f;
@@ -49,42 +48,45 @@ public class Sun extends Entity {
         this.context = context;
         this.fallen = !startFalling;
         this.stateTime = 0;
-        this.fallSpeed=DEFAULT_FALL_SPEED;
-        if (startFalling){
+        this.fallSpeed = DEFAULT_FALL_SPEED;
+        if (startFalling) {
             position.set(GameController.colToWorldX(col), GameScreen.SCREEN_HEIGHT);
-            targetPos=new Vector2(GameController.colToWorldX(col),GameController.laneToWorldY(lane));
+            targetPos = new Vector2(GameController.colToWorldX(col), GameController.laneToWorldY(lane));
         } else {
-            position.set(GameController.colToWorldX(col),GameController.laneToWorldY(lane));
-            targetPos=new Vector2(position);
+            position.set(GameController.colToWorldX(col), GameController.laneToWorldY(lane));
+            targetPos = new Vector2(position);
         }
         velocity.set(0f, -fallSpeed);
         setHitbox(52f, 52f);
     }
 
     @Override
-    public FrameConfig draw(){
-        if (type==SunType.NORMAL){
-            return new FrameConfig(SUN_PAM,SUN_CLIP,stateTime, position, new Vector2(0.65f, 0.65f), null, true);
-        } else if (type==SunType.SPECIAL){
-            return new FrameConfig(SUN_PAM,SUN_CLIP,stateTime, position, new Vector2(0.75f, 0.75f), null, true);
+    public FrameConfig draw() {
+        if (type == SunType.NORMAL) {
+            return new FrameConfig(SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.65f, 0.65f), null, true);
+        } else if (type == SunType.SPECIAL) {
+            return new FrameConfig(SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.75f, 0.75f), null, true);
         } else {
-            return new FrameConfig(RADIOACTIVE_SUN_PAM,SUN_CLIP,stateTime, position, new Vector2(0.75f, 0.75f), null, true);
+            return new FrameConfig(RADIOACTIVE_SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.75f, 0.75f), null,
+                    true);
         }
     }
 
     @Override
-    public void enter() { }
+    public void enter() {
+    }
 
     @Override
     public void update(float dt) {
         stateTime += dt;
-        if (collected) return;
+        if (collected)
+            return;
 
         if (!fallen) {
-            position.add(0,-fallSpeed*dt);
+            position.add(0, -fallSpeed * dt);
             syncHitbox();
-            if (position.y<targetPos.y){
-                fallen=true;
+            if (position.y < targetPos.y) {
+                fallen = true;
                 if (context != null) {
                     context.log("Sun reached the ground at position (" + position.x + ", " + position.y + ")");
                 }
@@ -96,10 +98,12 @@ public class Sun extends Entity {
     }
 
     @Override
-    public void dispose() { }
+    public void dispose() {
+    }
 
     public void collect(GameContext ctx) {
-        if (isDone()) return;
+        if (isDone())
+            return;
         collected = true;
 
         if (type == SunType.RADIOACTIVE && !fallen) {
@@ -118,26 +122,32 @@ public class Sun extends Entity {
 
         for (int c = col - 2; c <= col + 2; c++) {
             for (int l = lane - 2; l <= lane + 2; l++) {
-                if (c < 0 || c >= ctx.getMap().getColumns() || l < 0 || l >= ctx.getMap().getLanes()) continue;
+                if (c < 0 || c >= ctx.getMap().getColumns() || l < 0 || l >= ctx.getMap().getLanes())
+                    continue;
                 zombiesHit.addAll(ctx.getZombiesAt(c, l));
                 plantsHit.addAll(ctx.getPlantsAt(c, l));
             }
         }
-        for (Zombie z : zombiesHit) z.takeDamage(150);
-        for (Plant p : plantsHit) p.takeDamage(150, DamageKind.FIXED);
+        for (Zombie z : zombiesHit)
+            z.takeDamage(150);
+        for (Plant p : plantsHit)
+            p.takeDamage(150, DamageKind.FIXED);
 
         List<Zombie> zombiesCenter = new ArrayList<>();
         List<Plant> plantsCenter = new ArrayList<>();
 
         for (int c = col - 1; c <= col + 1; c++) {
             for (int l = lane - 1; l <= lane + 1; l++) {
-                if (c < 0 || c >= ctx.getMap().getColumns() || l < 0 || l >= ctx.getMap().getLanes()) continue;
+                if (c < 0 || c >= ctx.getMap().getColumns() || l < 0 || l >= ctx.getMap().getLanes())
+                    continue;
                 zombiesCenter.addAll(ctx.getZombiesAt(c, l));
                 plantsCenter.addAll(ctx.getPlantsAt(c, l));
             }
         }
-        for (Zombie z : zombiesCenter) z.takeDamage(80);
-        for (Plant p : plantsCenter) p.takeDamage(80, DamageKind.FIXED);
+        for (Zombie z : zombiesCenter)
+            z.takeDamage(80);
+        for (Plant p : plantsCenter)
+            p.takeDamage(80, DamageKind.FIXED);
     }
 
     private void convertToNormal() {
@@ -146,16 +156,47 @@ public class Sun extends Entity {
         }
     }
 
-    public boolean isFalling()    { return !fallen; }
-    public boolean isExpired()    { return !collected && fallen && stateTime>DEFAULT_LIFESPAN_SECONDS; }
-    public boolean isCollected()  { return collected; }
-    public boolean isDone()       { return collected || isExpired(); }
+    public boolean isFalling() {
+        return !fallen;
+    }
 
-    public SunType getType() { return type; }
-    public int getCol()      { return col; }
-    public int getLane()     { return lane; }
-    public int getAmount()   { return amount > 0 ? amount : type.getAmountSun(); }
-    public Vector2 getCurrentPos() { return position; }
-    public float getX()      { return position.x; }
-    public float getY()      { return position.y; }
+    public boolean isExpired() {
+        return !collected && fallen && stateTime > DEFAULT_LIFESPAN_SECONDS;
+    }
+
+    public boolean isCollected() {
+        return collected;
+    }
+
+    public boolean isDone() {
+        return collected || isExpired();
+    }
+
+    public SunType getType() {
+        return type;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public int getLane() {
+        return lane;
+    }
+
+    public int getAmount() {
+        return amount > 0 ? amount : type.getAmountSun();
+    }
+
+    public Vector2 getCurrentPos() {
+        return position;
+    }
+
+    public float getX() {
+        return position.x;
+    }
+
+    public float getY() {
+        return position.y;
+    }
 }

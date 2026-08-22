@@ -38,7 +38,6 @@ import com.pvz.models.games.modes.GameModeFactory;
 
 public class GameContext implements TickAware {
     private int currentSun;
-    private int currentTick;
     private int levelNumber;
     private boolean gameOver;
     private int plantFoodCount;
@@ -412,18 +411,6 @@ public class GameContext implements TickAware {
         octopusProjectiles.removeAll(pendingOctopusToRemove);
         pendingOctopusToAdd.clear();
         pendingOctopusToRemove.clear();
-    }
-
-    public int getCurrentTick() {
-        return currentTick;
-    }
-
-    public void setCurrentTick(int currentTick) {
-        this.currentTick = currentTick;
-    }
-
-    public void addCurrentTick(int amount) {
-        this.currentTick += amount;
     }
 
     public boolean isGameOver() {

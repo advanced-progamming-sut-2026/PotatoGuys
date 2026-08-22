@@ -25,15 +25,22 @@ import com.pvz.models.user.MyPlant;
 public class ConveyorBeltMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
+    private List<MyPlant> availablePlants;
 
-    private int tickCounter = 0;
-    private static final int TICKS_PER_SECOND = 10;
-    private static final int SPAWN_INTERVAL_TICKS = 12 * TICKS_PER_SECOND;
+    private float stateTime = 0;
+    private static final float SPAWN_INTERVAL = 5f;
     private static final int MAX_HAND_SIZE = 7;
 
     public ConveyorBeltMode(Level level) {
         if (level instanceof ConveyorBeltLevel beltLevel) {
             waves = beltLevel.getWaves();
+            availablePlants = new ArrayList<>();
+
+            Collection collection = AppContext.getInstance().getCurrentUser().getProfile().getCollection();
+            for (PlantType pt : beltLevel.getAllowedPlantTypes()) {
+                availablePlants.add(collection.getPlant(pt));
+            }
+
         } else {
             throw new IllegalArgumentException("ConveyorBeltMode requires a ConveyorBeltLevel");
         }
@@ -41,20 +48,28 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
     }
 
     @Override
-    public boolean hasProgressBar() { return true; }
+    public boolean hasProgressBar() {
+        return true;
+    }
 
     @Override
-    public int getCurrentWaveIndex() { return waves.indexOf(currentWave); }
+    public int getCurrentWaveIndex() {
+        return waves.indexOf(currentWave);
+    }
 
     @Override
-    public int getTotalWaves() { return waves.size(); }
+    public int getTotalWaves() {
+        return waves.size();
+    }
 
     @Override
-    public int getTotalZombieCount() { return waves.stream().mapToInt(Wave::getTotalZombieCount).sum(); }
+    public int getTotalZombieCount() {
+        return waves.stream().mapToInt(Wave::getTotalZombieCount).sum();
+    }
 
     @Override
     public void initMode(GameContext context) {
-        tickCounter = 0;
+        stateTime = 0;
         addRandomCard(context);
         if (currentWave != null) {
             currentWave.startWave(context);
@@ -66,12 +81,12 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
 
     @Override
     public void updateMode(GameContext context, float dt) {
-        tickCounter++;
-        if (tickCounter >= SPAWN_INTERVAL_TICKS) {
+        stateTime += dt;
+        if (stateTime >= SPAWN_INTERVAL) {
             if (context.getCards().size() < MAX_HAND_SIZE) {
                 addRandomCard(context);
             }
-            tickCounter = 0;
+            stateTime = 0;
         }
 
         if (currentWave.isDone() && context.getZombies().isEmpty()) {
@@ -102,12 +117,6 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
                 context.removeZombie(z);
             }
         }
-
-        for (Sun sun : new ArrayList<>(context.getSuns())) {
-            if (sun.isDone()) {
-                context.removeSun(sun);
-            }
-        }
     }
 
     @Override
@@ -134,7 +143,7 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
 
         if (!context.getTileAt(col, lane).isPlantable(card)) {
             context.log("[Placement Failed] Tile (" + col + ", " + lane + ") does not support planting "
-                        + card.getPlant().getType());
+                    + card.getPlant().getType());
             return false;
         }
 
@@ -196,19 +205,13 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
             return;
         }
 
-        Collection collection = currentUser.getProfile().getCollection();
-        List<MyPlant> unlockedPlants = new ArrayList<>(collection.getUnlockedPlants());
-        unlockedPlants.remove(collection.getPlant(PlantType.Sunflower));
-        unlockedPlants.remove(collection.getPlant(PlantType.TwinSunflower));
-        unlockedPlants.remove(null);
-
-        if (unlockedPlants.isEmpty()) {
-            context.log("Conveyor Belt warning: Player has no unlocked plants!");
+        if (availablePlants.isEmpty()) {
+            context.log("Conveyor Belt warning: available plants list is empty!");
             return;
         }
 
         Random random = new Random();
-        MyPlant randomPlant = unlockedPlants.get(random.nextInt(unlockedPlants.size()));
+        MyPlant randomPlant = availablePlants.get(random.nextInt(availablePlants.size()));
 
         PlantCard conveyorCard = new PlantCard(randomPlant, 0, 0);
         context.addCard(conveyorCard);
