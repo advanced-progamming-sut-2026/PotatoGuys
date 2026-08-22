@@ -20,6 +20,7 @@ import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
 import com.pvz.models.entities.zombies.armor.ArmorType;
 import com.pvz.models.entities.effects.DetachedArmEffect;
+import com.pvz.models.entities.effects.LootDrop;
 import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
 import com.pvz.models.entities.zombies.data.ScaledProp;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
@@ -709,7 +710,7 @@ public class Zombie extends Entity {
         currentState = new DeadState(killedByExplosive);
         currentState.onEnter(this, context);
         if (glowing) {
-            context.addPlantFood(1);
+            context.spawnLootDrop(LootDrop.plantFood(context, position.x, position.y + 70f));
             context.log("The glowing zombie dropped a plant food! [" + sheet.getAlias() + "]");
         }
         if (stolenSun > 0) {

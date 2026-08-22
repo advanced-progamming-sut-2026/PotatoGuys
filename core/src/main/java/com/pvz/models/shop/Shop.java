@@ -105,13 +105,21 @@ public class Shop {
     }
 
     private void createNewDailyOffer() {
-        PlantType[] plantTypes = PlantType.values();
-        if (plantTypes.length == 0) {
+        List<PlantType> unlocked = new ArrayList<>();
+        if (currentUser != null && currentUser.getProfile() != null
+                && currentUser.getProfile().getCollection() != null) {
+            for (PlantType pt : PlantType.values()) {
+                if (currentUser.getProfile().getCollection().getPlant(pt) != null) {
+                    unlocked.add(pt);
+                }
+            }
+        }
+        if (unlocked.isEmpty()) {
             dailyOffer = null;
             return;
         }
 
-        PlantType randomPlantType = plantTypes[random.nextInt(plantTypes.length)];
+        PlantType randomPlantType = unlocked.get(random.nextInt(unlocked.size()));
         dailyOffer = new DailyOffer(randomPlantType, LocalDate.now());
     }
 

@@ -38,7 +38,8 @@ public class LootDrop extends Entity {
     public enum LootType {
         COIN("768/INITIAL/EFFECTS/COIN_GOLD/COIN_GOLD.PAM", "animation", 0.6f, 0.4f),
         DIAMOND("768/INITIAL/EFFECTS/COIN_DIAMOND/COIN_DIAMOND.PAM", "idle", 0.4f, 0.3f),
-        POT("768/INITIAL/ZEN_GARDEN/SPROUTDOOBER/SPROUTDOOBER.PAM", "animation", 0.7f, 0.5f);
+        POT("768/INITIAL/ZEN_GARDEN/SPROUTDOOBER/SPROUTDOOBER.PAM", "animation", 0.7f, 0.5f),
+        PLANT_FOOD("768/INITIAL/EFFECTS/PLANTFOOD_PICKUP/PLANTFOOD_PICKUP.PAM", "idle", 0.6f, 0.4f);
 
         final String pamPath;
         final String clip;
@@ -105,6 +106,10 @@ public class LootDrop extends Entity {
 
     public static LootDrop pot(GameContext context, float spawnX, float spawnY) {
         return new LootDrop(context, LootType.POT, spawnX, spawnY, 0);
+    }
+
+    public static LootDrop plantFood(GameContext context, float spawnX, float spawnY) {
+        return new LootDrop(context, LootType.PLANT_FOOD, spawnX, spawnY, 1);
     }
 
     @Override
@@ -249,6 +254,10 @@ public class LootDrop extends Entity {
                 context.log("A zombie diamond drop was collected: +" + amount + " diamonds!");
             }
             case POT -> collectPot(user);
+            case PLANT_FOOD -> {
+                context.addPlantFood(1);
+                context.log("A plant food drop was collected! +1 plant food.");
+            }
         }
         user.saveUser();
     }

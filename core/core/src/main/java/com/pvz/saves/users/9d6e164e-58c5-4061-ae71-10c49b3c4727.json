@@ -10,8 +10,8 @@
   "profilePicture": "textures/avatars/avatar_nami.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 6750,
-    "diamonds": 585,
+    "coins": 2250,
+    "diamonds": 561,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -37,7 +37,7 @@
           "Type": "BonkChoy",
           "level": 2,
           "seed": 0,
-          "isBoosted": true
+          "isBoosted": false
         },
         {
           "Type": "Repeater",
@@ -59,9 +59,9 @@
         },
         {
           "Type": "SnowPea",
-          "level": 1,
+          "level": 2,
           "seed": 0,
-          "isBoosted": true
+          "isBoosted": false
         },
         {
           "Type": "CherryBomb",
@@ -71,6 +71,12 @@
         },
         {
           "Type": "Wallnut",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "Enlightenmint",
           "level": 1,
           "seed": 0,
           "isBoosted": false
@@ -116,7 +122,10 @@
         "ZOMBOSS_PIRATE",
         "ZOMBOSS_COWBOY",
         "ZOMBOSS_DARK",
-        "BUCKETHEAD"
+        "BUCKETHEAD",
+        "EGYPT_GARG",
+        "BRICKHEAD",
+        "FLAG"
       ],
       "seedPackets": {
         "Peashooter": 60,
@@ -124,7 +133,9 @@
         "BonkChoy": 5,
         "Repeater": 5,
         "TwinSunflower": 10,
-        "Cabbagepult": 5
+        "Cabbagepult": 5,
+        "Enlightenmint": 10,
+        "SnowPea": 5
       }
     },
     "news": {
@@ -288,6 +299,22 @@
         {
           "message": "New Zombie Encountered: BUCKETHEAD!",
           "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: EGYPT_GARG!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: BRICKHEAD!",
+          "unread": false
+        },
+        {
+          "message": "New Zombie Encountered: FLAG!",
+          "unread": false
+        },
+        {
+          "message": "New Plant Unlocked: Enlightenmint!",
+          "unread": false
         }
       ]
     },
@@ -333,9 +360,9 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": "TwinSunflower",
-    "dailyOfferDate": "2026-08-19",
-    "dailyOfferPurchased": false
+    "dailyOfferPlantType": "SnowPea",
+    "dailyOfferDate": "2026-08-22",
+    "dailyOfferPurchased": true
   },
   "setting": {
     "difficulty": 1,
@@ -376,7 +403,7 @@
         "greenHousePlant": {
           "kind": "mariGold",
           "plantType": null,
-          "plantedTime": "2026-08-19T16:07:58.300399600",
+          "plantedTime": "2026-08-22T16:57:14.766880200",
           "growthHours": 2
         }
       },
@@ -384,7 +411,12 @@
         "x": 3,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "Peashooter",
+          "plantedTime": "2026-08-22T16:52:05.496951300",
+          "growthHours": 8
+        }
       },
       {
         "x": 4,
@@ -401,7 +433,12 @@
         "x": 1,
         "y": 2,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "Cabbagepult",
+          "plantedTime": "2026-08-22T16:52:08.703915500",
+          "growthHours": 8
+        }
       },
       {
         "x": 2,
@@ -418,13 +455,23 @@
         "x": 3,
         "y": 2,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-08-22T16:51:56.550802900",
+          "growthHours": 2
+        }
       },
       {
         "x": 4,
         "y": 2,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "SnowPea",
+          "plantedTime": "2026-08-22T16:51:59.563625200",
+          "growthHours": 8
+        }
       },
       {
         "x": 1,
@@ -447,13 +494,23 @@
         "x": 3,
         "y": 3,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "CherryBomb",
+          "plantedTime": "2026-08-22T08:55:00.465029700",
+          "growthHours": 8
+        }
       },
       {
         "x": 4,
         "y": 3,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "BonkChoy",
+          "plantedTime": "2026-08-22T16:52:16.911226800",
+          "growthHours": 8
+        }
       }
     ]
   },
@@ -1375,7 +1432,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1787179879038
+    "lastDailyReset": 1787409551503
   },
   "questLogRefreshed": true
 }

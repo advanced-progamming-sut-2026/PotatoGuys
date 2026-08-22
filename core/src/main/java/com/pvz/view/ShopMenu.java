@@ -603,6 +603,9 @@ public class ShopMenu extends Table {
                 plantName = plantName.substring(0, 1) + plantName.substring(1).toLowerCase();
                 message += "\n" + plantName + " received " + amount + " seed packets!";
             }
+        } else if (item instanceof DailyOffer dailyOffer) {
+            String plantName = dailyOffer.getPlantType().name();
+            message += "\n" + plantName + " received 10 seed packets!";
         }
         Label messageLabel = new Label(message, PvzSkin.get());
         messageLabel.setColor(Color.BLACK);

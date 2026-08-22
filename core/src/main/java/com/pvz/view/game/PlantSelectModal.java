@@ -86,12 +86,29 @@ public class PlantSelectModal extends Table {
 
         Label titleLabel = new Label("Choose Your Plants", PvzSkin.get(), "big");
         titleLabel.setColor(Color.BLACK);
-        content.add(titleLabel).padBottom(10f).row();
+
+        com.pvz.models.user.Profile profile = com.pvz.models.AppContext.getInstance().getCurrentUser() != null
+                ? com.pvz.models.AppContext.getInstance().getCurrentUser().getProfile() : null;
+        int coins = profile != null ? profile.getCoins() : 0;
+        int diamonds = profile != null ? profile.getDiamonds() : 0;
+
+        Table wallet = new Table();
+        wallet.add(MenuUiKit.resourceWidget(PvzSkin.get(), "textures/ui/coin_icon.png",
+                new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(coins), 150, 50)).padRight(4);
+        wallet.add(MenuUiKit.resourceWidget(PvzSkin.get(), "textures/ui/diamond_icon.png",
+                new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(diamonds), 150, 50));
+
+        content.add(titleLabel).padBottom(10f).left().row();
 
         previewContent = new Table();
         previewContent.top().left();
         content.add(previewContent).growX().height(PREVIEW_HEIGHT).padBottom(10f).row();
         buildPreviewPlaceholder();
+
+        previewMessageLabel = new Label("", PvzSkin.get(), "medium");
+        previewMessageLabel.setColor(new Color(0.8f, 0.2f, 0.15f, 1f));
+        previewMessageLabel.setWrap(true);
+        content.add(previewMessageLabel).width(PANEL_WIDTH - 40f).left().padBottom(10f).row();
 
         Table cardsGrid = new Table();
         cardsGrid.top();
@@ -180,9 +197,15 @@ public class PlantSelectModal extends Table {
         rockLayer.setTouchable(Touchable.childrenOnly);
         rockLayer.add(startButton).right().bottom().width(220f).height(60f).padRight(20f).padBottom(20f);
 
+        Table walletLayer = new Table();
+        walletLayer.top().right();
+        walletLayer.setTouchable(Touchable.childrenOnly);
+        walletLayer.add(wallet).right().padTop(4f).padRight(10f);
+
         Stack rootStack = new Stack();
         rootStack.setTouchable(Touchable.childrenOnly);
         rootStack.add(mainLayout);
+        rootStack.add(walletLayer);
         rootStack.add(rockLayer);
 
         top().left();
@@ -250,14 +273,9 @@ public class PlantSelectModal extends Table {
                 }
             }
         });
-        buttonsRow.add(upgradeButton).width(260f).height(45f).padRight(10f);
+        buttonsRow.add(upgradeButton).width(400f).height(45f).padRight(10f);
         buttonsRow.add(boostButton).width(120f).height(45f);
         info.add(buttonsRow).left().padTop(8f);
-        info.row();
-        previewMessageLabel = new Label("", PvzSkin.get(), "medium");
-        previewMessageLabel.setColor(new Color(0.8f, 0.2f, 0.15f, 1f));
-        previewMessageLabel.setWrap(true);
-        info.add(previewMessageLabel).width(320f).left().padTop(4f);
 
         previewContent.add(plantImage).size(96f, 96f).padRight(15f);
         previewContent.add(info).top();

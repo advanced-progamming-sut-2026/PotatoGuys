@@ -217,7 +217,7 @@ public class GreenHouseMenu extends ScreenAdapter {
         });
         topLeft.add(almanacBtn).size(75, 70);
 
-        ImageButton shopBtn = new ImageButton(MenuUiKit.textureDrawable(MenuUiKit.loadTextureSafe("textures/shop/buttons_hud_store_normal.png")));
+        ImageButton shopBtn = new ImageButton(MenuUiKit.textureDrawable(MenuUiKit.loadTextureSafe("textures/shop/buttons_hud_store_normal1.png")));
         shopBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -225,7 +225,7 @@ public class GreenHouseMenu extends ScreenAdapter {
                 shopMenu.showShop();
             }
         });
-        topLeft.add(shopBtn).size(75, 70).padLeft(12);
+        topLeft.add(shopBtn).size(99, 92).padLeft(12);
 
         Table topRight = new Table();
         Profile profile = currentProfile();

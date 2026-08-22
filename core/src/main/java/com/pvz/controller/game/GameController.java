@@ -96,6 +96,7 @@ public class GameController {
 
     private TextureRegion[] backgroundTextures;
     private boolean isIZombie = false;
+    private float backgroundYOffset = 0f;
 
     // --- Phase 3: I,Zombie online sync -------------------------------------------
     private final Gson gson = new Gson();
@@ -325,6 +326,7 @@ public class GameController {
                 backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_ICEAGE_TEXTURE_LEFT");
                 backgroundTextures[1] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_ICEAGE_TEXTURE");
                 backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_ICEAGE_TEXTURE_RIGHT");
+                backgroundYOffset = -17f;
             }
             case "dark ages" -> {
                 backgroundTextures[0] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_DARK_TEXTURE_LEFT");
@@ -514,6 +516,9 @@ public class GameController {
     public void showGameEndPopup() {
         paused = true;
 
+        var user = com.pvz.models.AppContext.getInstance().getCurrentUser();
+        if (user != null) user.saveUser();
+
         boolean won;
         if (ctx.getMode() instanceof IZombieMode izMode) {
             IZombieMode.Outcome outcome = izMode.getOutcome();
@@ -574,6 +579,8 @@ public class GameController {
 
     private void saveAndExit() {
         resumeGame();
+        var user = com.pvz.models.AppContext.getInstance().getCurrentUser();
+        if (user != null) user.saveUser();
         Gdx.app.postRunnable(() -> {
             if (ctx != null && ctx.getMode() instanceof IZombieMode) {
                 PvZ2.instance.setScreen(new TravelLogMenu(PvZ2.instance));
@@ -634,7 +641,7 @@ public class GameController {
     private void drawBackground() {
         float x = -backgroundTextures[0].getRegionWidth();
         batch.draw(backgroundTextures[0], x, 0);
-        batch.draw(backgroundTextures[1], 0, 0);
+        batch.draw(backgroundTextures[1], 0, backgroundYOffset);
         batch.draw(backgroundTextures[2], backgroundTextures[1].getRegionWidth(), 0);
     }
 
@@ -753,7 +760,9 @@ public class GameController {
 
     private void drawEffects(int row) {
         for (Effect e : ctx.getEffects()) {
-            if (GameController.worldYtoLane(e.getPos().y) == row) {
+            int lane = Math.max(0, Math.min(GameController.worldYtoLane(e.getPos().y),
+                    ctx.getMap().getLanes() - 1));
+            if (lane == row) {
                 FrameConfig fc = e.draw();
                 if (fc != null) {
                     if (fc.partsVisibility != null) {
@@ -1324,9 +1333,9 @@ public class GameController {
                 continue;
             float dist = (float) Math.hypot(worldX - drop.getX(), worldY - drop.getY());
             if (dist < 55f) {
-                if (drop.getType() == LootDrop.LootType.POT) {
+                if (drop.getType() == LootDrop.LootType.POT || drop.getType() == LootDrop.LootType.PLANT_FOOD) {
                     drop.collect();
-                    Gdx.app.log("GameScreen", "Pot drop clicked, a greenhouse pot was unlocked.");
+                    Gdx.app.log("GameScreen", drop.getType().name() + " drop clicked, collected.");
                 } else {
                     Vector2 target = lootWalletWorld(drop.getType());
                     drop.flyTo(target.x, target.y);
