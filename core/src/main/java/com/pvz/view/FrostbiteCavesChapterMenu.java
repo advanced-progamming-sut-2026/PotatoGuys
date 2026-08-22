@@ -132,8 +132,6 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
         SMALL_ISLAND_4("images/chapters/frostbite_cave/island6.png", false),
         SMALL_ISLAND_5("images/chapters/frostbite_cave/island7.png", false),
         SMALL_ISLAND_6("images/chapters/frostbite_cave/anim28_271x337.png", false),
-        SMALL_ISLAND_7("images/chapters/frostbite_cave/island11.png", false),
-
         BIG_BOSS_DECOR_ISLAND("images/chapters/frostbite_cave/island8.png", false),
         LEVEL_NODE("768/INITIAL/WORLDMAP/LEVEL_NODE/LEVEL_NODE.PAM", true),
 
@@ -511,11 +509,7 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
                 new MapObjectPlacement(MapObjectType.SMALL_ISLAND_6, 270, 160, 55, 42),
                 new MapObjectPlacement(MapObjectType.SMALL_ISLAND_6, 700, 180, 60, 45),
                 new MapObjectPlacement(MapObjectType.SMALL_ISLAND_6, 950, 110, 50, 38),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_7, 460, 300, 60, 120),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_7, 770, 20, 90, 180),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_7, 75, 105, 90, 180),
                 new MapObjectPlacement(MapObjectType.SMALL_ISLAND_6, 600, 80, 52, 40),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_7, 350, 70, 100, 200)
             };
             for (MapObjectPlacement p : placements) {
                 MapDecorationActor actor = new MapDecorationActor(p.type, p.width, p.height, "idle");

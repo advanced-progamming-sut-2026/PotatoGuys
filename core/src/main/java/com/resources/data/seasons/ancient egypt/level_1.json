@@ -52,297 +52,133 @@
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "OCTOPUS"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 15.0,
-          "allowedTypes": [
-            "NEWSPAPER"
-          ],
+          "allowedTypes": ["DODO"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "MUMMY"
-          ],
+          "allowedTypes": ["CONEHEAD"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "MUMMY_CONE"
-          ],
+          "allowedTypes": ["BUCKETHEAD"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "MUMMY_BUCKET"
-          ],
+          "allowedTypes": ["BRICKHEAD"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "MUMMY_BRICK"
-          ],
+          "allowedTypes": ["FLAG"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "RA"
-          ],
+          "allowedTypes": ["MUMMY"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "EXPLORER"
-          ],
+          "allowedTypes": ["MUMMY_CONE"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "TOMB_RAISER"
-          ],
+          "allowedTypes": ["MUMMY_BUCKET"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "EGYPT_IMP"
-          ],
+          "allowedTypes": ["MUMMY_BRICK"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "ICE_AGE"
-          ],
+          "allowedTypes": ["RA"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "ICE_AGE_CONE"
-          ],
+          "allowedTypes": ["EXPLORER"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "ICE_AGE_BUCKET"
-          ],
+          "allowedTypes": ["DARK"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "HUNTER"
-          ],
+          "allowedTypes": ["DARK_CONE"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "TROGLOBITE"
-          ],
+          "allowedTypes": ["DARK_BUCKET"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "DODO"
-          ],
+          "allowedTypes": ["KNIGHT"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "ICE_AGE_IMP"
-          ],
+          "allowedTypes": ["BEACH"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "BEACH"
-          ],
+          "allowedTypes": ["BEACH_CONE"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "BEACH_CONE"
-          ],
+          "allowedTypes": ["BEACH_BUCKET"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "BEACH_BUCKET"
-          ],
+          "allowedTypes": ["ICE_AGE"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "SNORKEL"
-          ],
+          "allowedTypes": ["ICE_AGE_CONE"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "FISHERMAN"
-          ],
+          "allowedTypes": ["ICE_AGE_BUCKET"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "OCTOPUS"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "BEACH_IMP"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "DARK"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "DARK_CONE"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "DARK_BUCKET"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "KNIGHT"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "DARK_BRICK"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "WIZARD"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "JUGGLER"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "KING"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "DARK_IMP"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "ZOMBOSS_EGYPT"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "ZOMBOSS_PIRATE"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "ZOMBOSS_COWBOY"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "ZOMBOSS_DARK"
-          ],
+          "allowedTypes": ["OCTOPUS"],
           "isBurst": false
         }
       ]

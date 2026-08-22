@@ -66,6 +66,22 @@ public enum ZombieType {
     DARK_GARG       ("ZombieDarkGargantuar"),
     DARK_IMP        ("ZombieDarkImpDefault"),
 
+    // ── Modern Day ───────────────────────────────────────────────────────────
+    ALLSTAR         ("ZombieModernAllStarDefault"),
+
+    // ── Arcade ───────────────────────────────────────────────────────────────
+    ARCADE          ("ZombieArcadeDefault"),
+
+    // ── Lost City ────────────────────────────────────────────────────────────
+    UMBRELLA        ("ZombieLostCityJaneDefault"),
+
+    // ── Crystal Skull ────────────────────────────────────────────────────────
+    CRYSTAL_SKULL   ("ZombieCrystalSkullDefault"),
+
+    // ── Wild West ────────────────────────────────────────────────────────────
+    PROSPECTOR      ("ZombieProspectorDefault"),
+    PIANO           ("ZombiePianoDefault"),
+
     // ── Zombosses ─────────────────────────────────────────────────────────────
     ZOMBOSS_EGYPT   ("ZombieZombossMechEgypt"),
     ZOMBOSS_PIRATE  ("ZombieZombossMechPirate"),

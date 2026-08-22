@@ -37,4 +37,22 @@ public class ZombieAnimationConfig {
      *  the zombie is killed by an explosive plant. {@code null} means no ash
      *  animation is available and the normal {@code die} clip is used instead. */
     public String ashPamFilePath;
+
+    /**
+     * PAM part names that form the detachable arm/hand for this zombie type.
+     * When non-null and non-empty, the zombie's arm will visually detach and
+     * fall to the ground when HP drops below 50%. Each entry is a PAM part
+     * name string (e.g. {@code "zombie_arm_outer_upper"}).
+     *
+     * <p>Set to {@code null} or empty to disable the arm-detach feature for
+     * this zombie type.
+     */
+    public List<String> detachedArmParts;
+
+    /**
+     * PAM part names to hide in the particles clip so only the detached arm
+     * is shown. Each entry is a PAM part name (e.g. {@code "zombie_skull"}).
+     * The effect sets all entries here to {@code false} in the visibility map.
+     */
+    public List<String> detachedArmHideParts;
 }
