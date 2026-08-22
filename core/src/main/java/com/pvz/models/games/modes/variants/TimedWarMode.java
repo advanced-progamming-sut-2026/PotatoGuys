@@ -25,12 +25,13 @@ public class TimedWarMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
 
-    private static final int TICKS_PER_SECOND = 10;
     private static final int WINDOW_SECONDS = 8;
     private static final int TARGET_KILLS = 5;
     private static final int TOTAL_TIME_LIMIT_SECONDS = 60;
 
-    private final List<Integer> killedZombieTicks = new ArrayList<>();
+    float stateTime;
+
+    private final List<Float> killedZombieSeconds = new ArrayList<>();
     private List<Zombie> lastTickZombies = new ArrayList<>();
 
     public TimedWarMode(Level level) {
@@ -69,41 +70,39 @@ public class TimedWarMode implements GameMode, PlantPlacer {
 
     @Override
     public void updateMode(GameContext context, float dt) {
-        int currentTick = context.getCurrentTick();
+        stateTime += dt;
         trackZombieKills(context);
-        cleanupExpiredKills(currentTick);
+        cleanupExpiredKills(stateTime);
 
         if (checkVictoryCondition(context)) {
             return;
         }
 
-        if (checkGameOverCondition(context, currentTick)) {
+        if (checkGameOverCondition(context, stateTime)) {
             return;
         }
 
-        updateWaveAndEntities(context, currentTick);
+        updateWaveAndEntities(context, stateTime);
     }
 
     private void trackZombieKills(GameContext context) {
-        int currentTick = context.getCurrentTick();
         List<Zombie> currentZombies = context.getZombies();
         for (Zombie oldZombie : lastTickZombies) {
             if (!currentZombies.contains(oldZombie)) {
                 if (oldZombie.getX() > 0f) {
-                    killedZombieTicks.add(currentTick);
+                    killedZombieSeconds.add(stateTime);
                 }
             }
         }
         lastTickZombies = new ArrayList<>(currentZombies);
     }
 
-    private void cleanupExpiredKills(int currentTick) {
-        int windowTicks = WINDOW_SECONDS * TICKS_PER_SECOND;
-        killedZombieTicks.removeIf(deathTick -> (currentTick - deathTick) > windowTicks);
+    private void cleanupExpiredKills(float stateTime) {
+        killedZombieSeconds.removeIf(deathTime -> (stateTime - deathTime) > WINDOW_SECONDS);
     }
 
     private boolean checkVictoryCondition(GameContext context) {
-        if (killedZombieTicks.size() >= TARGET_KILLS) {
+        if (killedZombieSeconds.size() >= TARGET_KILLS) {
             context.setGameOver(true);
             context.log(" VICTORY! You successfully killed " + TARGET_KILLS + " zombies in a " + WINDOW_SECONDS
                     + " second window!");
@@ -112,8 +111,8 @@ public class TimedWarMode implements GameMode, PlantPlacer {
         return false;
     }
 
-    private boolean checkGameOverCondition(GameContext context, int currentTick) {
-        if (currentTick >= TOTAL_TIME_LIMIT_SECONDS * TICKS_PER_SECOND) {
+    private boolean checkGameOverCondition(GameContext context, float stateTime) {
+        if (stateTime >= TOTAL_TIME_LIMIT_SECONDS) {
             context.setGameOver(true);
             context.log(" GAME OVER! Time ran out. You failed to reach the target kill streak.");
             return true;
@@ -121,7 +120,7 @@ public class TimedWarMode implements GameMode, PlantPlacer {
         return false;
     }
 
-    private void updateWaveAndEntities(GameContext context, int currentTick) {
+    private void updateWaveAndEntities(GameContext context, float stateTime) {
         if (currentWave.isDone() && context.getZombies().isEmpty()) {
             int nextWaveIndex = waves.indexOf(currentWave) + 1;
             if (nextWaveIndex < waves.size()) {

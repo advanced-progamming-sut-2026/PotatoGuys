@@ -8,10 +8,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.State.Playing;
 import com.pvz.models.engine.FrameConfig;
+import com.pvz.models.entities.Entity;
+import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.LawnMower;
 import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.effects.LootDrop;
@@ -33,12 +36,22 @@ public class GameRenderer {
     private SpriteBatch batch;
     private TextureRegion[] backgroundTextures;
     private GameController controller;
+    private float previewStateTime;
+    private float stateTime;
+
+    /** Debug: draws every entity's hitbox rectangle (toggle with F1). */
+    private boolean showHitboxes = true;
 
     public GameRenderer(GameContext ctx, GameController controller, SpriteBatch batch,
             TextureRegion[] backgroundTextures) {
         this.ctx = ctx;
         this.batch = batch;
         this.backgroundTextures = backgroundTextures;
+        this.controller = controller;
+    }
+
+    public void setContext(GameContext ctx) {
+        this.ctx = ctx;
     }
 
     public void draw() {
@@ -64,12 +77,30 @@ public class GameRenderer {
             drawIZombieOverlay();
         }
         batch.end();
+
+        if (controller.getState() instanceof Playing && controller.getGameUiModal() != null && ctx != null) {
+            boolean hasSelectedCard = controller.getGameUiModal().getSelectedCard() != null
+                    || controller.getGameUiModal().getSelectedZombieCard() != null;
+            boolean shovelArmed = controller.getGameUiModal().isShovelSelected();
+            boolean plantFoodArmed = controller.getGameUiModal().isPlantFoodSelected();
+            if (hasSelectedCard || shovelArmed || plantFoodArmed) {
+                controller.getTouchPos().set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                controller.getViewport().unproject(controller.getTouchPos());
+
+                Tile hoveredTile = ctx.getMap().getTileAt(controller.getTouchPos().x, controller.getTouchPos().y);
+
+                if (hoveredTile != null) {
+                    drawPlacementHighlights(hoveredTile);
+                }
+            }
+        }
+        drawDebugShapes();
     }
 
     private void drawBackground() {
         float x = -backgroundTextures[0].getRegionWidth();
         batch.draw(backgroundTextures[0], x, 0);
-        batch.draw(backgroundTextures[1], 0, 0);
+        batch.draw(backgroundTextures[1], 0, controller.getBackgroundYOffset());
         batch.draw(backgroundTextures[2], backgroundTextures[1].getRegionWidth(), 0);
     }
 
@@ -188,12 +219,20 @@ public class GameRenderer {
 
     private void drawEffects(int row) {
         for (Effect e : ctx.getEffects()) {
-            if (GameController.worldYtoLane(e.getPos().y) == row) {
+            int lane = Math.max(0, Math.min(GameController.worldYtoLane(e.getPos().y),
+                    ctx.getMap().getLanes() - 1));
+            if (lane == row) {
                 FrameConfig fc = e.draw();
                 if (fc != null) {
-                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                            fc.stateTime, fc.position.x, fc.position.y,
-                            fc.scale.x, fc.scale.y, fc.looping);
+                    if (fc.partsVisibility != null) {
+                        batch.setColor(fc.r, fc.g, fc.b, fc.a);
+                        drawFrame(fc);
+                        batch.setColor(1f, 1f, 1f, 1f);
+                    } else {
+                        PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
+                                fc.stateTime, fc.position.x, fc.position.y,
+                                fc.scale.x, fc.scale.y, fc.looping);
+                    }
                 }
             }
         }
@@ -246,8 +285,8 @@ public class GameRenderer {
         // Plant preview
         if (controller.getGameUiModal() != null && controller.getGameUiModal().getSelectedCard() != null) {
             PlantCard card = controller.getGameUiModal().getSelectedCard();
-            if (card != previewPlantCard) {
-                previewPlantCard = card;
+            if (card != controller.getPreviewPlantCard()) {
+                controller.setPreviewPlantCard(card);
                 previewStateTime = 0f;
             }
             PlantData data = PlantData.forType(card.getPlant().getType());
@@ -267,8 +306,8 @@ public class GameRenderer {
         // Zombie preview
         if (controller.getGameUiModal() != null && controller.getGameUiModal().getSelectedZombieCard() != null) {
             ZombieCard zCard = controller.getGameUiModal().getSelectedZombieCard();
-            if (zCard != previewZombieCard) {
-                previewZombieCard = zCard;
+            if (zCard != controller.getPreviewZombieCard()) {
+                controller.setPreviewZombieCard(zCard);
                 previewStateTime = 0f;
             }
             com.pvz.models.entities.zombies.data.ZombiePropertySheet sheet = com.pvz.models.entities.zombies.data.ZombieRegistry
@@ -348,11 +387,11 @@ public class GameRenderer {
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(1f, 1f, 1f, 0.40f);
-        shapeRenderer.rect(GameMap.START_X, rowY, boardWidth, GameMap.TILE_HEIGHT);
-        shapeRenderer.rect(colX, gridBottom, GameMap.TILE_WIDTH, lanes * GameMap.TILE_HEIGHT);
-        shapeRenderer.end();
+        controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+        controller.getShapeRenderer().setColor(1f, 1f, 1f, 0.40f);
+        controller.getShapeRenderer().rect(GameMap.START_X, rowY, boardWidth, GameMap.TILE_HEIGHT);
+        controller.getShapeRenderer().rect(colX, gridBottom, GameMap.TILE_WIDTH, lanes * GameMap.TILE_HEIGHT);
+        controller.getShapeRenderer().end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
@@ -364,38 +403,38 @@ public class GameRenderer {
 
         // Red line at the placement boundary (shapeRenderer)
         batch.end();
-        float redLineX = colToWorldX(izMode.getRedLineColumn()) - GameMap.TILE_WIDTH / 2f;
+        float redLineX = GameController.colToWorldX(izMode.getRedLineColumn()) - GameMap.TILE_WIDTH / 2f;
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.RED);
-        shapeRenderer.rect(redLineX, GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT, 4f,
+        controller.getShapeRenderer().setProjectionMatrix(controller.getCamera().combined);
+        controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+        controller.getShapeRenderer().setColor(Color.RED);
+        controller.getShapeRenderer().rect(redLineX, GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT, 4f,
                 lanes * GameMap.TILE_HEIGHT);
-        shapeRenderer.end();
+        controller.getShapeRenderer().end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
-        batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(controller.getCamera().combined);
         batch.begin();
 
         // Brain indicators at column 0 for each lane
         com.badlogic.gdx.graphics.g2d.TextureRegion brainRegion = PvZ2.textureBank
                 .region("IMAGE_UI_CURRENCY_VALENBRAINZ_STACK_0");
         boolean[] brainsEaten = izMode.getBrainsEaten();
-        float brainX = colToWorldX(0);
+        float brainX = GameController.colToWorldX(0);
         float brainSize = 65f;
         for (int lane = 0; lane < lanes; lane++) {
             if (lane < brainsEaten.length && !brainsEaten[lane]) {
-                float brainY = laneToWorldY(lane);
+                float brainY = GameController.laneToWorldY(lane);
                 if (brainRegion != null) {
                     batch.draw(brainRegion, brainX - brainSize / 2f, brainY - brainSize / 2f, brainSize, brainSize);
                 } else {
                     batch.end();
-                    shapeRenderer.setProjectionMatrix(camera.combined);
-                    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-                    shapeRenderer.setColor(Color.MAGENTA);
-                    shapeRenderer.circle(brainX, brainY, 18f);
-                    shapeRenderer.end();
-                    batch.setProjectionMatrix(camera.combined);
+                    controller.getShapeRenderer().setProjectionMatrix(controller.getCamera().combined);
+                    controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+                    controller.getShapeRenderer().setColor(Color.MAGENTA);
+                    controller.getShapeRenderer().circle(brainX, brainY, 18f);
+                    controller.getShapeRenderer().end();
+                    batch.setProjectionMatrix(controller.getCamera().combined);
                     batch.begin();
                 }
             }
@@ -411,6 +450,107 @@ public class GameRenderer {
             PvZ2.pamPlayer.draw(batch, "768/INITIAL/EFFECTS/SUN/SUN.PAM", "animation",
                     stateTime, z.getX(), z.getY() + 55f + bob, sunScale, sunScale, true);
         }
+    }
+
+    private void drawDebugShapes() {
+        controller.getShapeRenderer().setProjectionMatrix(controller.getCamera().combined);
+        // ۶. رسم خورشیدها و خطوط دیباگ گرید
+        if (ctx != null) {
+            controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+
+            // رسم خورشیدها
+            controller.getShapeRenderer().setColor(Color.YELLOW);
+            /*
+             * for (Sun sun : new ArrayList<>(context.getSuns())) {
+             * if (!sun.isDone()) {
+             * shapeRenderer.circle(sun.getX(), sun.getY(), 50);
+             * }
+             * }
+             */
+            // رسم خطوط گرید دیباگ
+            boolean showGrid = false;
+            try {
+                var user = com.pvz.models.AppContext.getInstance().getCurrentUser();
+                if (user != null)
+                    showGrid = user.getSetting().isShowGrid();
+            } catch (Exception ignored) {
+            }
+            if (showGrid) {
+                controller.getShapeRenderer().end();
+                Gdx.gl.glEnable(GL20.GL_BLEND);
+                Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+                controller.getShapeRenderer().setProjectionMatrix(controller.getCamera().combined);
+                controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+                controller.getShapeRenderer().setColor(1f, 0f, 0f, 0.4f);
+                int lanes = ctx.getMap().getLanes();
+                int cols = ctx.getMap().getColumns();
+                float boardWidth = cols * GameMap.TILE_WIDTH;
+                float gridBottom = GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT;
+                float gridHeight = lanes * GameMap.TILE_HEIGHT;
+                for (int i = 0; i <= lanes; i++) {
+                    float y = GameMap.TOP_LANE_Y + GameMap.TILE_HEIGHT - i * GameMap.TILE_HEIGHT;
+                    controller.getShapeRenderer().rect(GameMap.START_X, y - 1f, boardWidth, 2f);
+                }
+                for (int i = 0; i <= cols; i++) {
+                    float x = GameMap.START_X + i * GameMap.TILE_WIDTH;
+                    controller.getShapeRenderer().rect(x - 1f, gridBottom, 2f, gridHeight);
+                }
+                controller.getShapeRenderer().end();
+                Gdx.gl.glDisable(GL20.GL_BLEND);
+                controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+            }
+
+            // for(Plant a : ctx.getPlants()){
+            // shapeRenderer.circle(GameController.xToWorldX(a.getCol()),
+            // GameController.yToWorldY(a.getLane()), 10);
+            // }
+
+            // for(Projectile a : ctx.getProjectiles()){
+            // shapeRenderer.circle(a.getX(), a.getY(), 10);
+            // }
+
+            // for(Zombie a : ctx.getZombies()){
+            // shapeRenderer.circle(a.getX(),a.getY(), 10);
+            // }
+
+            controller.getShapeRenderer().end();
+
+            // Hitbox debug (outline)
+            controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Line);
+            drawHitboxes();
+            controller.getShapeRenderer().end();
+        }
+    }
+
+    // ── Hitbox debug ─────────────────────────────────────────────────────────
+
+    private void drawHitboxes() {
+        if (!showHitboxes)
+            return;
+
+        drawEntityHitboxes(Color.GREEN, ctx.getPlants());
+        drawEntityHitboxes(Color.RED, ctx.getZombies());
+        drawEntityHitboxes(Color.CYAN, ctx.getProjectiles());
+        drawEntityHitboxes(Color.YELLOW, ctx.getSuns());
+        for (LawnMower m : ctx.getLawnMowers()) {
+            if (m != null)
+                drawEntityHitbox(Color.ORANGE, m);
+        }
+    }
+
+    private void drawEntityHitboxes(Color color, List<? extends Entity> entities) {
+        for (Entity e : entities) {
+            drawEntityHitbox(color, e);
+        }
+    }
+
+    private void drawEntityHitbox(Color color, Entity e) {
+        Hitbox hitbox = e.getHitbox();
+        if (hitbox == null)
+            return;
+        Rectangle r = hitbox.getRectangle();
+        controller.getShapeRenderer().setColor(color);
+        controller.getShapeRenderer().rect(r.x, r.y, r.width, r.height);
     }
 
     /**
@@ -429,5 +569,14 @@ public class GameRenderer {
                     frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
                     frameConfig.scale.x, frameConfig.looping, frameConfig.partsVisibility);
         }
+    }
+
+    public void update(float dt) {
+        previewStateTime += dt;
+        stateTime += dt;
+    }
+
+    public void toggleShowHitBoxes() {
+        showHitboxes = !showHitboxes;
     }
 }
