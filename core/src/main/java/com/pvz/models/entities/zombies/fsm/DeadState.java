@@ -37,7 +37,8 @@ public class DeadState extends ZombieState {
         dieDuration = resolveDieDuration(zombie);
 
         ZombieAnimationConfig anim = zombie.getSheet().getAnimationConfig();
-        if (anim != null && anim.pamFilePath != null) {
+        if (anim != null && anim.pamFilePath != null
+                && anim.availableClips != null && anim.availableClips.contains("particles")) {
             float sc = (anim.scale != null) ? anim.scale : 0.65f;
             ctx.addEffect(new HeadDeathEffect(ctx,
                     new Vector2(zombie.getX(), zombie.getY()),
