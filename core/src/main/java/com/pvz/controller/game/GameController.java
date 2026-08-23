@@ -445,6 +445,8 @@ public class GameController {
         if (state instanceof Playing && !paused) {
             if (!isNetworkedMatch || isHost) {
                 GameEngine.getInstance().update(dt);
+            } else if (ctx != null) {
+                GameStateSync.tickVisualsOnly(guestMirror, dt);
             }
 
             if (isNetworkedMatch && isHost) {
