@@ -252,4 +252,17 @@ public class GameStateSync {
                 s.update(dt);
         }
     }
+
+    /**
+     * Guest-only: cards are TickAware too (cooldown decrements via Card#update),
+     * but never get ticked since the guest doesn't run GameEngine. Without this,
+     * every card's cosmetic cooldown overlay stays stuck at 100% forever — the
+     * card is still fully usable (cooldownEnable is false for zombie cards
+     * regardless), it just looks permanently blacked out.
+     */
+    public static void tickCardsOnly(GameContext ctx, float dt) {
+        for (com.pvz.models.games.card.Card card : ctx.getCards()) {
+            card.update(dt);
+        }
+    }
 }

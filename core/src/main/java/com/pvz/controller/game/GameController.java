@@ -447,6 +447,7 @@ public class GameController {
                 GameEngine.getInstance().update(dt);
             } else if (ctx != null) {
                 GameStateSync.tickVisualsOnly(guestMirror, dt);
+                GameStateSync.tickCardsOnly(ctx, dt);
             }
 
             if (isNetworkedMatch && isHost) {
@@ -756,6 +757,13 @@ public class GameController {
                 }
                 AppContext.getInstance().setGameContext(newContext);
                 ctx = newContext;
+                if (isNetworkedMatch && !isHost) {
+                    // Guest never runs GameEngine#update, so GameContext#enter() (which is
+                    // what actually calls mode.initMode()) never fires the way it does for
+                    // the host via the engine's newly-registered-entity processing.
+                    // Call it once, by hand, here.
+                    ctx.enter();
+                }
                 renderer.setContext(newContext);
 
                 plantSelectModal.setVisible(false);

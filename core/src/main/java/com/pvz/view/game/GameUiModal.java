@@ -555,6 +555,11 @@ public class GameUiModal extends Table {
         if (context == null)
             return;
 
+        com.pvz.models.MatchSession __ms = com.pvz.models.AppContext.getInstance().getMatchSession();
+        com.badlogic.gdx.Gdx.app.log("CardsDebug", "cards=" + context.getCards().size()
+                + " matchSession=" + (__ms == null ? "null" : __ms.getMyRole())
+                + " isNetworked=" + (__ms != null));
+
         List<PlantData> allData = PlantData.loadAll();
         dataByType = new HashMap<>();
         for (PlantData data : allData) {
