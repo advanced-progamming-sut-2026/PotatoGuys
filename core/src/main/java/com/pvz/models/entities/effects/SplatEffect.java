@@ -1,5 +1,8 @@
 package com.pvz.models.entities.effects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.config.AnimationCatalog;
@@ -28,7 +31,9 @@ public class SplatEffect extends Effect {
     }
 
     @Override
-    public FrameConfig draw() {
-        return new FrameConfig(pamPath, clip, stateTime, pos, new Vector2(scale, scale), null, false);
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        frameConfigs.add(new FrameConfig(pamPath, clip, stateTime, pos, new Vector2(scale, scale), null, false));
+        return frameConfigs;
     }
 }

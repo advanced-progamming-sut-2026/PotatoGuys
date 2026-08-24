@@ -160,9 +160,12 @@ public class Tile implements TickAware {
     }
 
     @Override
-    public FrameConfig draw() {
-        TickAware.super.draw();
-        return null;
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        for (TileBehavior tb : behaviors) {
+            frameConfigs.add(tb.draw(this));
+        }
+        return frameConfigs;
     }
 
     public List<FrameConfig> drawBehaviors() {

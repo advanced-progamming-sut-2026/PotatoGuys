@@ -61,15 +61,20 @@ public class Sun extends Entity {
     }
 
     @Override
-    public FrameConfig draw() {
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
         if (type == SunType.NORMAL) {
-            return new FrameConfig(SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.65f, 0.65f), null, true);
+            frameConfigs.add(
+                    new FrameConfig(SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.65f, 0.65f), null, true));
         } else if (type == SunType.SPECIAL) {
-            return new FrameConfig(SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.75f, 0.75f), null, true);
+            frameConfigs.add(
+                    new FrameConfig(SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.75f, 0.75f), null, true));
         } else {
-            return new FrameConfig(RADIOACTIVE_SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.75f, 0.75f), null,
-                    true);
+            frameConfigs.add(
+                    new FrameConfig(RADIOACTIVE_SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.75f, 0.75f), null,
+                            true));
         }
+        return frameConfigs;
     }
 
     @Override

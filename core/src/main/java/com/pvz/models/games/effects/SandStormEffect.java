@@ -3,10 +3,8 @@ package com.pvz.models.games.effects;
 import com.pvz.models.games.GameContext;
 
 public class SandStormEffect implements ChapterEffect {
-    private final int intervalTicks;
 
     public SandStormEffect(int intervalTicks) {
-        this.intervalTicks = intervalTicks;
     }
 
     @Override

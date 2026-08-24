@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.State.Playing;
 import com.pvz.models.engine.FrameConfig;
@@ -110,24 +109,14 @@ public class GameRenderer {
         }
         LawnMower lm = ctx.getLawnMowers()[row];
         if (lm != null && !lm.isTriggered()) {
-            FrameConfig fc = lm.draw();
-            PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                    fc.stateTime, fc.position.x, fc.position.y,
-                    fc.scale.x, fc.scale.y, fc.looping);
+            drawFrames(lm.draw());
         }
     }
 
     private void drawPlants(int row) {
         for (Plant p : ctx.getPlants()) {
             if (p.getLane() == row && !p.isBound()) {
-                FrameConfig fc = p.draw();
-                if (fc != null) {
-                    batch.setColor(fc.r, fc.g, fc.b, fc.a);
-                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                            fc.stateTime, fc.position.x, fc.position.y,
-                            fc.scale.x, fc.scale.y, fc.looping);
-                    batch.setColor(1f, 1f, 1f, 1f);
-                }
+                drawFrames(p.draw());
             }
         }
     }
@@ -135,17 +124,7 @@ public class GameRenderer {
     private void drawTileBehaviors(int row) {
         for (int col = 0; col < ctx.getMap().getColumns(); col++) {
             List<FrameConfig> frames = ctx.getMap().getTileAt(col, row).drawBehaviors();
-            if (frames != null) {
-                for (FrameConfig fc : frames) {
-                    if (fc != null) {
-                        batch.setColor(fc.r, fc.g, fc.b, fc.a);
-                        PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                                fc.stateTime, fc.position.x, fc.position.y,
-                                fc.scale.x, fc.scale.y, fc.looping);
-                        batch.setColor(Color.WHITE);
-                    }
-                }
-            }
+            drawFrames(frames);
         }
     }
 
@@ -155,19 +134,20 @@ public class GameRenderer {
     private void drawZombies(int row) {
         for (Zombie z : ctx.getZombies()) {
             if (GameController.worldYtoLane(z.getY()) == row) {
-                FrameConfig fc = z.draw();
-                if (fc != null) {
-                    batch.setColor(fc.r, fc.g, fc.b, fc.a);
-                    drawFrame(fc);
-                    batch.setColor(1f, 1f, 1f, 1f);
-                }
-                if (z.isFrozenInIceBlock()) {
-                    z.addIceBlockTime(1f / 60f);
-                    batch.setColor(1f, 1f, 1f, 0.7f);
-                    PvZ2.pamPlayer.draw(batch, ICE_BLOCK_PAM, ICE_BLOCK_CLIP,
-                            z.getIceBlockStateTime(), z.getX(), z.getY(),
-                            0.65f, 0.65f, false);
-                    batch.setColor(1f, 1f, 1f, 1f);
+                for (FrameConfig fc : z.draw()) {
+                    if (fc != null) {
+                        batch.setColor(fc.r, fc.g, fc.b, fc.a);
+                        drawFrame(fc);
+                        batch.setColor(1f, 1f, 1f, 1f);
+                    }
+                    if (z.isFrozenInIceBlock()) {
+                        z.addIceBlockTime(1f / 60f);
+                        batch.setColor(1f, 1f, 1f, 0.7f);
+                        PvZ2.pamPlayer.draw(batch, ICE_BLOCK_PAM, ICE_BLOCK_CLIP,
+                                z.getIceBlockStateTime(), z.getX(), z.getY(),
+                                0.65f, 0.65f, false);
+                        batch.setColor(1f, 1f, 1f, 1f);
+                    }
                 }
             }
         }
@@ -177,7 +157,7 @@ public class GameRenderer {
         for (Projectile p : ctx.getProjectiles()) {
             int pLane = GameController.worldYtoLane(p.getY());
             if (pLane == row) {
-                p.draw();
+                drawFrames(p.draw());
             }
         }
     }
@@ -187,18 +167,13 @@ public class GameRenderer {
         for (Projectile p : ctx.getProjectiles()) {
             int pLane = GameController.worldYtoLane(p.getY());
             if (pLane < 0 || pLane >= totalLanes) {
-                p.draw();
+                drawFrames(p.draw());
             }
         }
         for (var op : ctx.getOctopusProjectiles()) {
             int opLane = GameController.worldYtoLane(op.getPosition().y);
             if (opLane < 0 || opLane >= totalLanes) {
-                FrameConfig fc = op.draw();
-                if (fc != null) {
-                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                            fc.stateTime, fc.position.x, fc.position.y,
-                            fc.scale.x, fc.scale.y, fc.looping);
-                }
+                drawFrames(op.draw());
             }
         }
     }
@@ -207,12 +182,7 @@ public class GameRenderer {
         for (var op : ctx.getOctopusProjectiles()) {
             int opLane = GameController.worldYtoLane(op.getPosition().y);
             if (opLane == row) {
-                FrameConfig fc = op.draw();
-                if (fc != null) {
-                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                            fc.stateTime, fc.position.x, fc.position.y,
-                            fc.scale.x, fc.scale.y, fc.looping);
-                }
+                drawFrames(op.draw());
             }
         }
     }
@@ -222,36 +192,20 @@ public class GameRenderer {
             int lane = Math.max(0, Math.min(GameController.worldYtoLane(e.getPos().y),
                     ctx.getMap().getLanes() - 1));
             if (lane == row) {
-                FrameConfig fc = e.draw();
-                if (fc != null) {
-                    if (fc.partsVisibility != null) {
-                        batch.setColor(fc.r, fc.g, fc.b, fc.a);
-                        drawFrame(fc);
-                        batch.setColor(1f, 1f, 1f, 1f);
-                    } else {
-                        PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                                fc.stateTime, fc.position.x, fc.position.y,
-                                fc.scale.x, fc.scale.y, fc.looping);
-                    }
-                }
+                drawFrames(e.draw());
             }
         }
     }
 
     private void drawSuns() {
         for (Sun s : ctx.getSuns()) {
-            FrameConfig fc = s.draw();
-            if (fc != null) {
-                PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                        fc.stateTime, fc.position.x, fc.position.y,
-                        fc.scale.x, fc.scale.y, fc.looping);
-            }
+            drawFrames(s.draw());
         }
     }
 
     private void drawLootDrops() {
         for (LootDrop ld : ctx.getLootDrops()) {
-            ld.draw();
+            drawFrames(ld.draw());
         }
     }
 
@@ -261,10 +215,7 @@ public class GameRenderer {
         }
         LawnMower lm = ctx.getLawnMowers()[row];
         if (lm != null && lm.isTriggered()) {
-            FrameConfig fc = lm.draw();
-            PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                    fc.stateTime, fc.position.x, fc.position.y,
-                    fc.scale.x, fc.scale.y, fc.looping);
+            drawFrames(lm.draw());
         }
     }
 
@@ -553,13 +504,21 @@ public class GameRenderer {
         controller.getShapeRenderer().rect(r.x, r.y, r.width, r.height);
     }
 
-    /**
-     * Draws one animation frame, honouring the optional {@code partsVisibility}
-     * map (e.g. a zombie's armour damage layers). The normal {@code PamPlayer}
-     * draw has no visibility overload, so this falls back to the reflective
-     * visibility-aware draw (which keeps the requested scale).
-     */
+    private void drawFrames(List<FrameConfig> frameConfigs) {
+        if (frameConfigs == null) {
+            return;
+        }
+
+        for (FrameConfig fc : frameConfigs) {
+            drawFrame(fc);
+        }
+    }
+
     private void drawFrame(FrameConfig frameConfig) {
+        if (frameConfig == null) {
+            return;
+        }
+        batch.setColor(frameConfig.r, frameConfig.g, frameConfig.b, frameConfig.a);
         if (frameConfig.partsVisibility == null) {
             PvZ2.pamPlayer.draw(batch, frameConfig.pamPath, frameConfig.label,
                     frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
@@ -569,6 +528,7 @@ public class GameRenderer {
                     frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
                     frameConfig.scale.x, frameConfig.looping, frameConfig.partsVisibility);
         }
+        batch.setColor(Color.WHITE);
     }
 
     public void update(float dt) {

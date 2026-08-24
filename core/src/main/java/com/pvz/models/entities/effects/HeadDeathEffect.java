@@ -1,6 +1,8 @@
 package com.pvz.models.entities.effects;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.math.MathUtils;
@@ -49,7 +51,8 @@ public class HeadDeathEffect extends Effect {
     }
 
     @Override
-    public FrameConfig draw() {
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
         float height = vy * stateTime - 0.5f * GRAVITY * stateTime * stateTime;
         Vector2 drawPos = new Vector2(pos.x, pos.y + height);
         float alpha = 1f;
@@ -60,6 +63,7 @@ public class HeadDeathEffect extends Effect {
         FrameConfig fc = new FrameConfig(pamPath, "particles", stateTime,
                 drawPos, new Vector2(scale, scale), partsVisibility, true);
         fc.setColor(1f, 1f, 1f, alpha);
-        return fc;
+        frameConfigs.add(fc);
+        return frameConfigs;
     }
 }

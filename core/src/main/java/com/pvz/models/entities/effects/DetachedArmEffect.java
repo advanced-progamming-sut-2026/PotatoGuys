@@ -1,5 +1,6 @@
 package com.pvz.models.entities.effects;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,8 @@ public class DetachedArmEffect extends Effect {
     private float dropOffset;
 
     public DetachedArmEffect(GameContext ctx, Vector2 pos, String pamPath,
-                             float scale, List<String> armPartNames,
-                             List<String> hidePartNames) {
+            float scale, List<String> armPartNames,
+            List<String> hidePartNames) {
         super(ctx, pos);
         this.pamPath = pamPath;
         this.scale = scale;
@@ -49,7 +50,8 @@ public class DetachedArmEffect extends Effect {
     }
 
     @Override
-    public FrameConfig draw() {
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
         float alpha = 1f;
         if (stateTime > FADE_START) {
             float fadeProgress = (stateTime - FADE_START) / (DURATION - FADE_START);
@@ -59,6 +61,7 @@ public class DetachedArmEffect extends Effect {
         FrameConfig fc = new FrameConfig(pamPath, "idle", stateTime,
                 drawPos, new Vector2(scale, scale), partsVisibility, true);
         fc.setColor(1f, 1f, 1f, alpha);
-        return fc;
+        frameConfigs.add(fc);
+        return frameConfigs;
     }
 }

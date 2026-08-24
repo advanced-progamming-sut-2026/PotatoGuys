@@ -1,6 +1,8 @@
 package com.pvz.models.entities.projectile;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
@@ -20,17 +22,20 @@ import com.pvz.models.games.map.tile.Tile;
 
 /**
  * A single in-flight projectile. Movement and on-impact behavior are no longer
- * hard-coded booleans (poison/ice/fire/bouncing) — they're delegated to a pair of
- * composable states, mirroring how {@code Plant} delegates to {@code PlantState}:
+ * hard-coded booleans (poison/ice/fire/bouncing) — they're delegated to a pair
+ * of
+ * composable states, mirroring how {@code Plant} delegates to
+ * {@code PlantState}:
  *
  * <ul>
- *   <li>{@link ProjectileMotionState} — HOW it moves each tick (straight line vs.
- *       the parabolic arc used by lobbers).</li>
- *   <li>{@link ProjectileEffectState} — WHAT happens the moment it connects
- *       (plain damage, fire, area fire, chill, area+chill, pass-through, ...).</li>
+ * <li>{@link ProjectileMotionState} — HOW it moves each tick (straight line vs.
+ * the parabolic arc used by lobbers).</li>
+ * <li>{@link ProjectileEffectState} — WHAT happens the moment it connects
+ * (plain damage, fire, area fire, chill, area+chill, pass-through, ...).</li>
  * </ul>
  *
- * <p>{@link ProjectileFactory} is the single place that decides which pair of
+ * <p>
+ * {@link ProjectileFactory} is the single place that decides which pair of
  * states a given {@link ProjectileType} gets, so adding a new projectile flavor
  * never requires touching this class.
  */
@@ -56,7 +61,7 @@ public class Projectile extends Entity {
     private ProjectileEffectState effectState;
 
     public Projectile(GameContext ctx, ProjectileType type, float startX, float startY,
-                       float velX, float velY, float damage) {
+            float velX, float velY, float damage) {
         this.ctx = ctx;
         this.type = type;
         this.position.set(startX, startY);
@@ -167,10 +172,11 @@ public class Projectile extends Entity {
     }
 
     @Override
-    public FrameConfig draw() {
-        PvZ2.pamPlayer.draw(PvZ2.batch, type.path,
-                type.lable, stateTime, position.x, position.y, type.scale, type.scale, true);
-        return null;
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        frameConfigs.add(
+                new FrameConfig(type.path, type.lable, stateTime, position, new Vector2(0.65f, 0.65f), null, true));
+        return frameConfigs;
     }
 
     @Override
@@ -196,7 +202,8 @@ public class Projectile extends Entity {
      * one) once its flight completes. Resolves the impact at the current position
      * without requiring a live collision — area-effect states (Pepper-pult,
      * Melon-pult family) look up their own targets from {@link GameContext}, while
-     * single-target effect states fall back to the nearest zombie at the landing tile.
+     * single-target effect states fall back to the nearest zombie at the landing
+     * tile.
      */
     public void land() {
         if (isDead) {

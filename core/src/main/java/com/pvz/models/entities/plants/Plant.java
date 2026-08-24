@@ -1,7 +1,9 @@
 package com.pvz.models.entities.plants;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
@@ -9,7 +11,6 @@ import com.pvz.models.entities.effects.PlantFoodFxEffect;
 import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.plants.data.GrowthProfile;
-import com.pvz.models.entities.plants.data.PlantFoodProfile;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
@@ -24,6 +25,9 @@ import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
 
 public class Plant extends Entity {
+    private static final String CHILL_PAM_PATH = "768/FULL/EFFECTS/FROSTBITE_CHILL_PLANT/FROSTBITE_CHILL_PLANT.PAM";
+    private static final String CHILL_CLIP_1 = "chill_stage1";
+    private static final String CHILL_CLIP_2 = "chill_stage2";
 
     public static final int TICKS_PER_SECOND = 10;
 
@@ -44,6 +48,8 @@ public class Plant extends Entity {
     private float reflectDamageBonus;
     private float ageTicks;
     private int growthStageIndex;
+
+    private float stateTime;
 
     private PlantState currentState;
     private final PlantAction attackAction;
@@ -95,6 +101,7 @@ public class Plant extends Entity {
 
     @Override
     public void update(float dt) {
+        stateTime += dt;
         if (dead || isFrozen || bound)
             return;
         syncHitbox();
@@ -113,11 +120,19 @@ public class Plant extends Entity {
     }
 
     @Override
-    public FrameConfig draw() {
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
         if (currentState != null) {
-            return currentState.draw(this, context);
+            frameConfigs.add(currentState.draw(this, context));
         }
-        return null;
+        if (freezeLevel == 1) {
+            frameConfigs.add(new FrameConfig(CHILL_PAM_PATH, CHILL_CLIP_1, stateTime, position,
+                    new Vector2(0.65f, 0.65f), null, false));
+        } else if (freezeLevel == 2) {
+            frameConfigs.add(new FrameConfig(CHILL_PAM_PATH, CHILL_CLIP_2, stateTime, position,
+                    new Vector2(0.65f, 0.65f), null, false));
+        }
+        return frameConfigs;
     }
 
     public void changeState(PlantState nextState) {

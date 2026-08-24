@@ -196,11 +196,12 @@ public class Zombie extends Entity {
     }
 
     @Override
-    public FrameConfig draw() {
-        if (currentState == null) {
-            return null;
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        if (currentState != null) {
+            frameConfigs.add(currentState.draw(this, context));
         }
-        return currentState.draw(this, context);
+        return frameConfigs;
     }
 
     public void changeState(ZombieState state) {
@@ -745,8 +746,6 @@ public class Zombie extends Entity {
         }
         return Collections.emptyList();
     }
-
-
 
     private boolean isParalysed() {
         return hasEffect(EffectType.FROZEN)

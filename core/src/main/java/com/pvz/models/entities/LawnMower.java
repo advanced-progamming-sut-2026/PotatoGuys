@@ -1,5 +1,8 @@
 package com.pvz.models.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
@@ -8,16 +11,16 @@ import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
 
 public class LawnMower extends Entity {
-    private static final String PAM_PATH="768/INITIAL/MOWERS/MOWER_EGYPT/MOWER_EGYPT.PAM";
-    private static final String PAM_LABEL_IDLE="idle";
-    private static final String PAM_LABEL_ATTACK="attack";
-    private static final float VELOCITY=300f;
+    private static final String PAM_PATH = "768/INITIAL/MOWERS/MOWER_EGYPT/MOWER_EGYPT.PAM";
+    private static final String PAM_LABEL_IDLE = "idle";
+    private static final String PAM_LABEL_ATTACK = "attack";
+    private static final float VELOCITY = 300f;
 
     GameContext ctx;
     boolean triggered;
     float stateTime;
 
-    public LawnMower(GameContext ctx, int lane){
+    public LawnMower(GameContext ctx, int lane) {
         position.set(GameController.colToWorldX(-1), GameController.laneToWorldY(lane));
         velocity.set(VELOCITY, 0f);
         setHitbox(new Hitbox(this, position.x, position.y, 60f, 80f) {
@@ -32,9 +35,9 @@ public class LawnMower extends Entity {
                 }
             }
         });
-        this.ctx=ctx;
-        triggered=false;
-        stateTime=0;
+        this.ctx = ctx;
+        triggered = false;
+        stateTime = 0;
     }
 
     @Override
@@ -44,29 +47,33 @@ public class LawnMower extends Entity {
 
     @Override
     public void update(float dt) {
-        stateTime+=dt;
+        stateTime += dt;
         if (triggered) {
-            position.x+=VELOCITY*dt;
+            position.x += VELOCITY * dt;
             syncHitbox();
         }
-        if (position.x>GameController.colToWorldX(ctx.getMap().getColumns()+1)){
+        if (position.x > GameController.colToWorldX(ctx.getMap().getColumns() + 1)) {
             dispose();
         }
     }
 
     @Override
-    public FrameConfig draw() {
-        if (!triggered) return new FrameConfig(PAM_PATH,PAM_LABEL_IDLE,stateTime,position,
-            new Vector2(0.75f,0.75f),null,true);
-        else return new FrameConfig(PAM_PATH,PAM_LABEL_ATTACK,stateTime,position,
-            new Vector2(0.75f,0.75f),null,true);
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        if (!triggered)
+            frameConfigs.add(new FrameConfig(PAM_PATH, PAM_LABEL_IDLE, stateTime, position,
+                    new Vector2(0.75f, 0.75f), null, true));
+        else
+            frameConfigs.add(new FrameConfig(PAM_PATH, PAM_LABEL_ATTACK, stateTime, position,
+                    new Vector2(0.75f, 0.75f), null, true));
+        return frameConfigs;
     }
 
     @Override
     public void dispose() {
         GameEngine.getInstance().getToRemove().add(this);
         ctx.removeHitbox(getHitbox());
-        ctx.getLawnMowers()[GameController.worldYtoLane(position.y)]=null;
+        ctx.getLawnMowers()[GameController.worldYtoLane(position.y)] = null;
     }
 
     public boolean isTriggered() {

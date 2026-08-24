@@ -1,9 +1,11 @@
 package com.pvz.models.entities.effects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
@@ -18,18 +20,23 @@ import com.pvz.models.user.User;
  * {@code ZombieLootService} when the 10% loot roll picks the coin, diamond or
  * greenhouse-pot outcome).
  *
- * <p>Life cycle:
+ * <p>
+ * Life cycle:
  * <ol>
- *   <li>{@code POP} — pops straight up out of the zombie's head and falls back
- *       down to its exact start point (one smooth arc);</li>
- *   <li>{@code READY} — sits there until the player clicks it (expires after a while);</li>
- *   <li>{@code FLY} / {@code COLLECT} — the click response: coins and diamonds arc
- *       into their on-screen wallet and are banked on arrival; the pot unlocks a
- *       random locked greenhouse pot the moment it is clicked.</li>
+ * <li>{@code POP} — pops straight up out of the zombie's head and falls back
+ * down to its exact start point (one smooth arc);</li>
+ * <li>{@code READY} — sits there until the player clicks it (expires after a
+ * while);</li>
+ * <li>{@code FLY} / {@code COLLECT} — the click response: coins and diamonds
+ * arc
+ * into their on-screen wallet and are banked on arrival; the pot unlocks a
+ * random locked greenhouse pot the moment it is clicked.</li>
  * </ol>
  *
- * <p>Rendered with the matching PAM (gold coin / diamond / sprout). Clicking is
- * handled by {@code GameController}, which passes the wallet's world position to
+ * <p>
+ * Rendered with the matching PAM (gold coin / diamond / sprout). Clicking is
+ * handled by {@code GameController}, which passes the wallet's world position
+ * to
  * {@link #flyTo(float, float)} or calls {@link #collect()} for the pot.
  */
 public class LootDrop extends Entity {
@@ -66,7 +73,9 @@ public class LootDrop extends Entity {
     private static final float COLLECT_DURATION = 0.30f;
     private static final float COLLECT_SCALE_UP = 1.4f;
 
-    private enum Phase { POP, READY, FLY, COLLECT, DONE }
+    private enum Phase {
+        POP, READY, FLY, COLLECT, DONE
+    }
 
     private final GameContext context;
     private final LootType type;
@@ -148,8 +157,8 @@ public class LootDrop extends Entity {
                 float eased = Interpolation.pow2In.apply(t);
                 float inv = 1f - eased;
                 position.set(
-                    inv * inv * flyStart.x + 2f * inv * eased * flyControl.x + eased * eased * flyTarget.x,
-                    inv * inv * flyStart.y + 2f * inv * eased * flyControl.y + eased * eased * flyTarget.y);
+                        inv * inv * flyStart.x + 2f * inv * eased * flyControl.x + eased * eased * flyTarget.x,
+                        inv * inv * flyStart.y + 2f * inv * eased * flyControl.y + eased * eased * flyTarget.y);
                 scale = MathUtils.lerp(flyStartScale, 0.25f, eased);
                 if (t >= 1f) {
                     position.set(flyTarget);
@@ -174,9 +183,11 @@ public class LootDrop extends Entity {
     }
 
     @Override
-    public FrameConfig draw() {
-        PvZ2.pamPlayer.draw(PvZ2.batch, type.pamPath, type.clip, stateTime, position.x, position.y, scale, scale, true);
-        return null;
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        frameConfigs.add(
+                new FrameConfig(type.pamPath, type.clip, stateTime, position, new Vector2(scale, scale), null, true));
+        return frameConfigs;
     }
 
     @Override
@@ -262,7 +273,10 @@ public class LootDrop extends Entity {
         user.saveUser();
     }
 
-    /** Mirrors ZombieLootService's own resolution so the drop always touches the live instance. */
+    /**
+     * Mirrors ZombieLootService's own resolution so the drop always touches the
+     * live instance.
+     */
     private void collectPot(User user) {
         GreenHouse greenHouse = AppContext.getInstance().getGreenHouse();
         if (greenHouse == null) {
