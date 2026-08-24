@@ -15702,7 +15702,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.State.Playing;
 import com.pvz.models.engine.FrameConfig;
@@ -15803,24 +15802,14 @@ public class GameRenderer {
         }
         LawnMower lm = ctx.getLawnMowers()[row];
         if (lm != null && !lm.isTriggered()) {
-            FrameConfig fc = lm.draw();
-            PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                    fc.stateTime, fc.position.x, fc.position.y,
-                    fc.scale.x, fc.scale.y, fc.looping);
+            drawFrames(lm.draw());
         }
     }
 
     private void drawPlants(int row) {
         for (Plant p : ctx.getPlants()) {
             if (p.getLane() == row && !p.isBound()) {
-                FrameConfig fc = p.draw();
-                if (fc != null) {
-                    batch.setColor(fc.r, fc.g, fc.b, fc.a);
-                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                            fc.stateTime, fc.position.x, fc.position.y,
-                            fc.scale.x, fc.scale.y, fc.looping);
-                    batch.setColor(1f, 1f, 1f, 1f);
-                }
+                drawFrames(p.draw());
             }
         }
     }
@@ -15828,17 +15817,7 @@ public class GameRenderer {
     private void drawTileBehaviors(int row) {
         for (int col = 0; col < ctx.getMap().getColumns(); col++) {
             List<FrameConfig> frames = ctx.getMap().getTileAt(col, row).drawBehaviors();
-            if (frames != null) {
-                for (FrameConfig fc : frames) {
-                    if (fc != null) {
-                        batch.setColor(fc.r, fc.g, fc.b, fc.a);
-                        PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                                fc.stateTime, fc.position.x, fc.position.y,
-                                fc.scale.x, fc.scale.y, fc.looping);
-                        batch.setColor(Color.WHITE);
-                    }
-                }
-            }
+            drawFrames(frames);
         }
     }
 
@@ -15848,19 +15827,20 @@ public class GameRenderer {
     private void drawZombies(int row) {
         for (Zombie z : ctx.getZombies()) {
             if (GameController.worldYtoLane(z.getY()) == row) {
-                FrameConfig fc = z.draw();
-                if (fc != null) {
-                    batch.setColor(fc.r, fc.g, fc.b, fc.a);
-                    drawFrame(fc);
-                    batch.setColor(1f, 1f, 1f, 1f);
-                }
-                if (z.isFrozenInIceBlock()) {
-                    z.addIceBlockTime(1f / 60f);
-                    batch.setColor(1f, 1f, 1f, 0.7f);
-                    PvZ2.pamPlayer.draw(batch, ICE_BLOCK_PAM, ICE_BLOCK_CLIP,
-                            z.getIceBlockStateTime(), z.getX(), z.getY(),
-                            0.65f, 0.65f, false);
-                    batch.setColor(1f, 1f, 1f, 1f);
+                for (FrameConfig fc : z.draw()) {
+                    if (fc != null) {
+                        batch.setColor(fc.r, fc.g, fc.b, fc.a);
+                        drawFrame(fc);
+                        batch.setColor(1f, 1f, 1f, 1f);
+                    }
+                    if (z.isFrozenInIceBlock()) {
+                        z.addIceBlockTime(1f / 60f);
+                        batch.setColor(1f, 1f, 1f, 0.7f);
+                        PvZ2.pamPlayer.draw(batch, ICE_BLOCK_PAM, ICE_BLOCK_CLIP,
+                                z.getIceBlockStateTime(), z.getX(), z.getY(),
+                                0.65f, 0.65f, false);
+                        batch.setColor(1f, 1f, 1f, 1f);
+                    }
                 }
             }
         }
@@ -15870,7 +15850,7 @@ public class GameRenderer {
         for (Projectile p : ctx.getProjectiles()) {
             int pLane = GameController.worldYtoLane(p.getY());
             if (pLane == row) {
-                p.draw();
+                drawFrames(p.draw());
             }
         }
     }
@@ -15880,18 +15860,13 @@ public class GameRenderer {
         for (Projectile p : ctx.getProjectiles()) {
             int pLane = GameController.worldYtoLane(p.getY());
             if (pLane < 0 || pLane >= totalLanes) {
-                p.draw();
+                drawFrames(p.draw());
             }
         }
         for (var op : ctx.getOctopusProjectiles()) {
             int opLane = GameController.worldYtoLane(op.getPosition().y);
             if (opLane < 0 || opLane >= totalLanes) {
-                FrameConfig fc = op.draw();
-                if (fc != null) {
-                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                            fc.stateTime, fc.position.x, fc.position.y,
-                            fc.scale.x, fc.scale.y, fc.looping);
-                }
+                drawFrames(op.draw());
             }
         }
     }
@@ -15900,12 +15875,7 @@ public class GameRenderer {
         for (var op : ctx.getOctopusProjectiles()) {
             int opLane = GameController.worldYtoLane(op.getPosition().y);
             if (opLane == row) {
-                FrameConfig fc = op.draw();
-                if (fc != null) {
-                    PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                            fc.stateTime, fc.position.x, fc.position.y,
-                            fc.scale.x, fc.scale.y, fc.looping);
-                }
+                drawFrames(op.draw());
             }
         }
     }
@@ -15915,36 +15885,20 @@ public class GameRenderer {
             int lane = Math.max(0, Math.min(GameController.worldYtoLane(e.getPos().y),
                     ctx.getMap().getLanes() - 1));
             if (lane == row) {
-                FrameConfig fc = e.draw();
-                if (fc != null) {
-                    if (fc.partsVisibility != null) {
-                        batch.setColor(fc.r, fc.g, fc.b, fc.a);
-                        drawFrame(fc);
-                        batch.setColor(1f, 1f, 1f, 1f);
-                    } else {
-                        PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                                fc.stateTime, fc.position.x, fc.position.y,
-                                fc.scale.x, fc.scale.y, fc.looping);
-                    }
-                }
+                drawFrames(e.draw());
             }
         }
     }
 
     private void drawSuns() {
         for (Sun s : ctx.getSuns()) {
-            FrameConfig fc = s.draw();
-            if (fc != null) {
-                PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                        fc.stateTime, fc.position.x, fc.position.y,
-                        fc.scale.x, fc.scale.y, fc.looping);
-            }
+            drawFrames(s.draw());
         }
     }
 
     private void drawLootDrops() {
         for (LootDrop ld : ctx.getLootDrops()) {
-            ld.draw();
+            drawFrames(ld.draw());
         }
     }
 
@@ -15954,10 +15908,7 @@ public class GameRenderer {
         }
         LawnMower lm = ctx.getLawnMowers()[row];
         if (lm != null && lm.isTriggered()) {
-            FrameConfig fc = lm.draw();
-            PvZ2.pamPlayer.draw(batch, fc.pamPath, fc.label,
-                    fc.stateTime, fc.position.x, fc.position.y,
-                    fc.scale.x, fc.scale.y, fc.looping);
+            drawFrames(lm.draw());
         }
     }
 
@@ -16246,13 +16197,21 @@ public class GameRenderer {
         controller.getShapeRenderer().rect(r.x, r.y, r.width, r.height);
     }
 
-    /**
-     * Draws one animation frame, honouring the optional {@code partsVisibility}
-     * map (e.g. a zombie's armour damage layers). The normal {@code PamPlayer}
-     * draw has no visibility overload, so this falls back to the reflective
-     * visibility-aware draw (which keeps the requested scale).
-     */
+    private void drawFrames(List<FrameConfig> frameConfigs) {
+        if (frameConfigs == null) {
+            return;
+        }
+
+        for (FrameConfig fc : frameConfigs) {
+            drawFrame(fc);
+        }
+    }
+
     private void drawFrame(FrameConfig frameConfig) {
+        if (frameConfig == null) {
+            return;
+        }
+        batch.setColor(frameConfig.r, frameConfig.g, frameConfig.b, frameConfig.a);
         if (frameConfig.partsVisibility == null) {
             PvZ2.pamPlayer.draw(batch, frameConfig.pamPath, frameConfig.label,
                     frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
@@ -16262,6 +16221,7 @@ public class GameRenderer {
                     frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
                     frameConfig.scale.x, frameConfig.looping, frameConfig.partsVisibility);
         }
+        batch.setColor(Color.WHITE);
     }
 
     public void update(float dt) {
@@ -20452,15 +20412,20 @@ public class Sun extends Entity {
     }
 
     @Override
-    public FrameConfig draw() {
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
         if (type == SunType.NORMAL) {
-            return new FrameConfig(SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.65f, 0.65f), null, true);
+            frameConfigs.add(
+                    new FrameConfig(SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.65f, 0.65f), null, true));
         } else if (type == SunType.SPECIAL) {
-            return new FrameConfig(SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.75f, 0.75f), null, true);
+            frameConfigs.add(
+                    new FrameConfig(SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.75f, 0.75f), null, true));
         } else {
-            return new FrameConfig(RADIOACTIVE_SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.75f, 0.75f), null,
-                    true);
+            frameConfigs.add(
+                    new FrameConfig(RADIOACTIVE_SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.75f, 0.75f), null,
+                            true));
         }
+        return frameConfigs;
     }
 
     @Override
@@ -20678,6 +20643,9 @@ FILE: LawnMower.java
 
 package com.pvz.models.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
@@ -20686,16 +20654,16 @@ import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
 
 public class LawnMower extends Entity {
-    private static final String PAM_PATH="768/INITIAL/MOWERS/MOWER_EGYPT/MOWER_EGYPT.PAM";
-    private static final String PAM_LABEL_IDLE="idle";
-    private static final String PAM_LABEL_ATTACK="attack";
-    private static final float VELOCITY=300f;
+    private static final String PAM_PATH = "768/INITIAL/MOWERS/MOWER_EGYPT/MOWER_EGYPT.PAM";
+    private static final String PAM_LABEL_IDLE = "idle";
+    private static final String PAM_LABEL_ATTACK = "attack";
+    private static final float VELOCITY = 300f;
 
     GameContext ctx;
     boolean triggered;
     float stateTime;
 
-    public LawnMower(GameContext ctx, int lane){
+    public LawnMower(GameContext ctx, int lane) {
         position.set(GameController.colToWorldX(-1), GameController.laneToWorldY(lane));
         velocity.set(VELOCITY, 0f);
         setHitbox(new Hitbox(this, position.x, position.y, 60f, 80f) {
@@ -20710,9 +20678,9 @@ public class LawnMower extends Entity {
                 }
             }
         });
-        this.ctx=ctx;
-        triggered=false;
-        stateTime=0;
+        this.ctx = ctx;
+        triggered = false;
+        stateTime = 0;
     }
 
     @Override
@@ -20722,29 +20690,33 @@ public class LawnMower extends Entity {
 
     @Override
     public void update(float dt) {
-        stateTime+=dt;
+        stateTime += dt;
         if (triggered) {
-            position.x+=VELOCITY*dt;
+            position.x += VELOCITY * dt;
             syncHitbox();
         }
-        if (position.x>GameController.colToWorldX(ctx.getMap().getColumns()+1)){
+        if (position.x > GameController.colToWorldX(ctx.getMap().getColumns() + 1)) {
             dispose();
         }
     }
 
     @Override
-    public FrameConfig draw() {
-        if (!triggered) return new FrameConfig(PAM_PATH,PAM_LABEL_IDLE,stateTime,position,
-            new Vector2(0.75f,0.75f),null,true);
-        else return new FrameConfig(PAM_PATH,PAM_LABEL_ATTACK,stateTime,position,
-            new Vector2(0.75f,0.75f),null,true);
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        if (!triggered)
+            frameConfigs.add(new FrameConfig(PAM_PATH, PAM_LABEL_IDLE, stateTime, position,
+                    new Vector2(0.75f, 0.75f), null, true));
+        else
+            frameConfigs.add(new FrameConfig(PAM_PATH, PAM_LABEL_ATTACK, stateTime, position,
+                    new Vector2(0.75f, 0.75f), null, true));
+        return frameConfigs;
     }
 
     @Override
     public void dispose() {
         GameEngine.getInstance().getToRemove().add(this);
         ctx.removeHitbox(getHitbox());
-        ctx.getLawnMowers()[GameController.worldYtoLane(position.y)]=null;
+        ctx.getLawnMowers()[GameController.worldYtoLane(position.y)] = null;
     }
 
     public boolean isTriggered() {
@@ -20859,7 +20831,9 @@ FILE: Projectile.java
 
 package com.pvz.models.entities.projectile;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
@@ -20879,17 +20853,20 @@ import com.pvz.models.games.map.tile.Tile;
 
 /**
  * A single in-flight projectile. Movement and on-impact behavior are no longer
- * hard-coded booleans (poison/ice/fire/bouncing) — they're delegated to a pair of
- * composable states, mirroring how {@code Plant} delegates to {@code PlantState}:
+ * hard-coded booleans (poison/ice/fire/bouncing) — they're delegated to a pair
+ * of
+ * composable states, mirroring how {@code Plant} delegates to
+ * {@code PlantState}:
  *
  * <ul>
- *   <li>{@link ProjectileMotionState} — HOW it moves each tick (straight line vs.
- *       the parabolic arc used by lobbers).</li>
- *   <li>{@link ProjectileEffectState} — WHAT happens the moment it connects
- *       (plain damage, fire, area fire, chill, area+chill, pass-through, ...).</li>
+ * <li>{@link ProjectileMotionState} — HOW it moves each tick (straight line vs.
+ * the parabolic arc used by lobbers).</li>
+ * <li>{@link ProjectileEffectState} — WHAT happens the moment it connects
+ * (plain damage, fire, area fire, chill, area+chill, pass-through, ...).</li>
  * </ul>
  *
- * <p>{@link ProjectileFactory} is the single place that decides which pair of
+ * <p>
+ * {@link ProjectileFactory} is the single place that decides which pair of
  * states a given {@link ProjectileType} gets, so adding a new projectile flavor
  * never requires touching this class.
  */
@@ -20915,7 +20892,7 @@ public class Projectile extends Entity {
     private ProjectileEffectState effectState;
 
     public Projectile(GameContext ctx, ProjectileType type, float startX, float startY,
-                       float velX, float velY, float damage) {
+            float velX, float velY, float damage) {
         this.ctx = ctx;
         this.type = type;
         this.position.set(startX, startY);
@@ -21026,10 +21003,11 @@ public class Projectile extends Entity {
     }
 
     @Override
-    public FrameConfig draw() {
-        PvZ2.pamPlayer.draw(PvZ2.batch, type.path,
-                type.lable, stateTime, position.x, position.y, type.scale, type.scale, true);
-        return null;
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        frameConfigs.add(
+                new FrameConfig(type.path, type.lable, stateTime, position, new Vector2(0.65f, 0.65f), null, true));
+        return frameConfigs;
     }
 
     @Override
@@ -21055,7 +21033,8 @@ public class Projectile extends Entity {
      * one) once its flight completes. Resolves the impact at the current position
      * without requiring a live collision — area-effect states (Pepper-pult,
      * Melon-pult family) look up their own targets from {@link GameContext}, while
-     * single-target effect states fall back to the nearest zombie at the landing tile.
+     * single-target effect states fall back to the nearest zombie at the landing
+     * tile.
      */
     public void land() {
         if (isDead) {
@@ -21357,10 +21336,13 @@ FILE: OctopusProjectile.java
 
 package com.pvz.models.entities.projectile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Vector2;
-import com.pvz.PvZ2;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
+import com.pvz.models.entities.projectile.fsm.LobbedMotionState;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.behaviors.OctopusOverlayBehavior;
 import com.pvz.models.games.map.tile.Tile;
@@ -21371,12 +21353,13 @@ import com.pvz.models.games.map.tile.TileTags;
  * target plant. Flies in an arc from the zombie's position to the
  * target tile. On landing:
  * <ul>
- *   <li>If a plant exists on the tile: the plant is bound (disabled)
- *       and an {@link OctopusOverlayBehavior} is added to the tile.</li>
- *   <li>If no plant exists: the overlay still lands and blocks the tile.</li>
+ * <li>If a plant exists on the tile: the plant is bound (disabled)
+ * and an {@link OctopusOverlayBehavior} is added to the tile.</li>
+ * <li>If no plant exists: the overlay still lands and blocks the tile.</li>
  * </ul>
  *
- * <p>Follows the same parabolic math as {@link LobbedMotionState} but is
+ * <p>
+ * Follows the same parabolic math as {@link LobbedMotionState} but is
  * a standalone entity (not a regular {@link Projectile}) since it targets
  * plants rather than zombies.
  */
@@ -21398,11 +21381,11 @@ public class OctopusProjectile extends Entity {
     private boolean landed = false;
 
     public OctopusProjectile(GameContext ctx,
-                             float startX, float startY,
-                             float targetX, float targetY,
-                             int targetCol, int targetLane,
-                             float octopusHp,
-                             float flightSeconds, float arcHeight) {
+            float startX, float startY,
+            float targetX, float targetY,
+            int targetCol, int targetLane,
+            float octopusHp,
+            float flightSeconds, float arcHeight) {
         this.ctx = ctx;
         this.startPos.set(startX, startY);
         this.targetPos.set(targetX, targetY);
@@ -21422,7 +21405,8 @@ public class OctopusProjectile extends Entity {
 
     @Override
     public void update(float dt) {
-        if (landed) return;
+        if (landed)
+            return;
         stateTime += dt;
         float t = Math.min(1f, stateTime / flightSeconds);
 
@@ -21439,10 +21423,12 @@ public class OctopusProjectile extends Entity {
     }
 
     @Override
-    public FrameConfig draw() {
-        return new FrameConfig(PAM_PATH, CLIP, stateTime,
-            new Vector2(position.x, position.y),
-            new Vector2(0.75f, 0.75f), null, true);
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        frameConfigs.add(new FrameConfig(PAM_PATH, CLIP, stateTime,
+                new Vector2(position.x, position.y),
+                new Vector2(0.75f, 0.75f), null, true));
+        return frameConfigs;
     }
 
     @Override
@@ -21458,16 +21444,17 @@ public class OctopusProjectile extends Entity {
      */
     private void onLand() {
         Tile tile = ctx.getTileAt(targetCol, targetLane);
-        if (tile == null) return;
+        if (tile == null)
+            return;
 
         // If the tile already has an octopus overlay, don't stack another one
         for (var b : tile.getBehaviors()) {
-            if (b instanceof OctopusOverlayBehavior) return;
+            if (b instanceof OctopusOverlayBehavior)
+                return;
         }
 
         OctopusOverlayBehavior overlay = new OctopusOverlayBehavior(
-            ctx, tile, octopusHp, targetCol, targetLane
-        );
+                ctx, tile, octopusHp, targetCol, targetLane);
         tile.addBehavior(overlay);
         tile.getTags().add(TileTags.OCTOPUS);
 
@@ -26202,8 +26189,10 @@ FILE: Plant.java
 
 package com.pvz.models.entities.plants;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
@@ -26211,7 +26200,6 @@ import com.pvz.models.entities.effects.PlantFoodFxEffect;
 import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.plants.data.GrowthProfile;
-import com.pvz.models.entities.plants.data.PlantFoodProfile;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
@@ -26226,6 +26214,9 @@ import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.map.tile.TileTags;
 
 public class Plant extends Entity {
+    private static final String CHILL_PAM_PATH = "768/FULL/EFFECTS/FROSTBITE_CHILL_PLANT/FROSTBITE_CHILL_PLANT.PAM";
+    private static final String CHILL_CLIP_1 = "chill_stage1";
+    private static final String CHILL_CLIP_2 = "chill_stage2";
 
     public static final int TICKS_PER_SECOND = 10;
 
@@ -26246,6 +26237,8 @@ public class Plant extends Entity {
     private float reflectDamageBonus;
     private float ageTicks;
     private int growthStageIndex;
+
+    private float stateTime;
 
     private PlantState currentState;
     private final PlantAction attackAction;
@@ -26297,6 +26290,7 @@ public class Plant extends Entity {
 
     @Override
     public void update(float dt) {
+        stateTime += dt;
         if (dead || isFrozen || bound)
             return;
         syncHitbox();
@@ -26315,11 +26309,19 @@ public class Plant extends Entity {
     }
 
     @Override
-    public FrameConfig draw() {
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
         if (currentState != null) {
-            return currentState.draw(this, context);
+            frameConfigs.add(currentState.draw(this, context));
         }
-        return null;
+        if (freezeLevel == 1) {
+            frameConfigs.add(new FrameConfig(CHILL_PAM_PATH, CHILL_CLIP_1, stateTime, position,
+                    new Vector2(0.65f, 0.65f), null, false));
+        } else if (freezeLevel == 2) {
+            frameConfigs.add(new FrameConfig(CHILL_PAM_PATH, CHILL_CLIP_2, stateTime, position,
+                    new Vector2(0.65f, 0.65f), null, false));
+        }
+        return frameConfigs;
     }
 
     public void changeState(PlantState nextState) {
@@ -29981,11 +29983,12 @@ public class Zombie extends Entity {
     }
 
     @Override
-    public FrameConfig draw() {
-        if (currentState == null) {
-            return null;
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        if (currentState != null) {
+            frameConfigs.add(currentState.draw(this, context));
         }
-        return currentState.draw(this, context);
+        return frameConfigs;
     }
 
     public void changeState(ZombieState state) {
@@ -30530,8 +30533,6 @@ public class Zombie extends Entity {
         }
         return Collections.emptyList();
     }
-
-
 
     private boolean isParalysed() {
         return hasEffect(EffectType.FROZEN)
@@ -31279,6 +31280,9 @@ FILE: Explosion.java
 
 package com.pvz.models.entities.effects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.actions.explosive.ExplosionIntensity;
@@ -31286,32 +31290,33 @@ import com.pvz.models.entities.plants.actions.explosive.ExplosionType;
 import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.games.GameContext;
 
-public class Explosion extends Effect{
-    private static final String POTATO_MINE_EXPLOSION_PAM_PATH="768/INITIAL/EFFECTS/POTATOMINE_EXPLOSION/POTATOMINE_EXPLOSION.PAM";
-    private static final String PRIMAL_POTATO_MINE_EXPLOSION_PAM_PATH="768/INITIAL/EFFECTS/ESCAPEROOT_EXPLOSION_PRIMALPOTATOMINE/ESCAPEROOT_EXPLOSION_PRIMALPOTATOMINE.PAM";
-    private static final String LOW_INTENSITY_CLIP="animation";
-    private static final String HIGH_INTENSITY_CLIP="animation2";
-    private static final String INSANE_INTENSITY_CLIP="animation3";
+public class Explosion extends Effect {
+    private static final String POTATO_MINE_EXPLOSION_PAM_PATH = "768/INITIAL/EFFECTS/POTATOMINE_EXPLOSION/POTATOMINE_EXPLOSION.PAM";
+    private static final String PRIMAL_POTATO_MINE_EXPLOSION_PAM_PATH = "768/INITIAL/EFFECTS/ESCAPEROOT_EXPLOSION_PRIMALPOTATOMINE/ESCAPEROOT_EXPLOSION_PRIMALPOTATOMINE.PAM";
+    private static final String LOW_INTENSITY_CLIP = "animation";
+    private static final String HIGH_INTENSITY_CLIP = "animation2";
+    private static final String INSANE_INTENSITY_CLIP = "animation3";
 
     ExplosionType type;
     ExplosionIntensity intensity;
     String pamPath;
     String clip;
     float clipDuration;
-    public Explosion(GameContext ctx,Vector2 pos, ExplosionType type, ExplosionIntensity intensity){
-        super(ctx,pos);
-        this.type=type;
-        this.intensity=intensity;
-        switch (type){
-            case POTATO_MINE -> pamPath=POTATO_MINE_EXPLOSION_PAM_PATH;
-            case PRIMAL_POTATO_MINE -> pamPath=PRIMAL_POTATO_MINE_EXPLOSION_PAM_PATH;
+
+    public Explosion(GameContext ctx, Vector2 pos, ExplosionType type, ExplosionIntensity intensity) {
+        super(ctx, pos);
+        this.type = type;
+        this.intensity = intensity;
+        switch (type) {
+            case POTATO_MINE -> pamPath = POTATO_MINE_EXPLOSION_PAM_PATH;
+            case PRIMAL_POTATO_MINE -> pamPath = PRIMAL_POTATO_MINE_EXPLOSION_PAM_PATH;
         }
-        switch (intensity){
-            case LOW -> clip=LOW_INTENSITY_CLIP;
-            case HIGH -> clip=HIGH_INTENSITY_CLIP;
-            case INSANE -> clip=INSANE_INTENSITY_CLIP;
+        switch (intensity) {
+            case LOW -> clip = LOW_INTENSITY_CLIP;
+            case HIGH -> clip = HIGH_INTENSITY_CLIP;
+            case INSANE -> clip = INSANE_INTENSITY_CLIP;
         }
-        clipDuration=AnimationCatalog.getInstance().getClipDuration(pamPath,clip);
+        clipDuration = AnimationCatalog.getInstance().getClipDuration(pamPath, clip);
     }
 
     @Override
@@ -31322,14 +31327,16 @@ public class Explosion extends Effect{
     @Override
     public void update(float dt) {
         super.update(dt);
-        if (stateTime>=clipDuration){
+        if (stateTime >= clipDuration) {
             dispose();
         }
     }
 
     @Override
-    public FrameConfig draw() {
-        return new FrameConfig(pamPath,clip,stateTime,pos,new Vector2(0.65f,0.65f),null,false);
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        frameConfigs.add(new FrameConfig(pamPath, clip, stateTime, pos, new Vector2(0.65f, 0.65f), null, false));
+        return frameConfigs;
     }
 
     @Override
@@ -31346,7 +31353,6 @@ FILE: Effect.java
 package com.pvz.models.entities.effects;
 
 import com.badlogic.gdx.math.Vector2;
-import com.pvz.models.engine.GameEngine;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.games.GameContext;
 
@@ -31355,10 +31361,10 @@ public abstract class Effect implements TickAware {
     protected Vector2 pos;
     protected GameContext ctx;
 
-    public Effect(GameContext ctx, Vector2 pos){
-        this.ctx=ctx;
-        this.pos=new Vector2(pos);
-        stateTime=0;
+    public Effect(GameContext ctx, Vector2 pos) {
+        this.ctx = ctx;
+        this.pos = new Vector2(pos);
+        stateTime = 0;
     }
 
     @Override
@@ -31367,7 +31373,7 @@ public abstract class Effect implements TickAware {
 
     @Override
     public void update(float dt) {
-        stateTime+=dt;
+        stateTime += dt;
     }
 
     @Override
@@ -31386,6 +31392,9 @@ FILE: SplatEffect.java
 ======================================================
 
 package com.pvz.models.entities.effects;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.engine.FrameConfig;
@@ -31415,8 +31424,10 @@ public class SplatEffect extends Effect {
     }
 
     @Override
-    public FrameConfig draw() {
-        return new FrameConfig(pamPath, clip, stateTime, pos, new Vector2(scale, scale), null, false);
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        frameConfigs.add(new FrameConfig(pamPath, clip, stateTime, pos, new Vector2(scale, scale), null, false));
+        return frameConfigs;
     }
 }
 
@@ -31427,58 +31438,64 @@ FILE: JalapenoFire.java
 
 package com.pvz.models.entities.effects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.games.GameContext;
 
-public class JalapenoFire extends Effect{
-    private static final String PAM_PATH="768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM";
+public class JalapenoFire extends Effect {
+    private static final String PAM_PATH = "768/INITIAL/EFFECTS/JALAPENO_FIRE/JALAPENO_FIRE.PAM";
 
-    private static final String CLIP_0="idle";
+    private static final String CLIP_0 = "idle";
     private final float clip0Duration;
     boolean clip0Played;
 
-    private static final String CLIP_1="idle2";
+    private static final String CLIP_1 = "idle2";
     private final float clip1Duration;
     boolean clip1Played;
 
-    private static final String CLIP_2="idle3";
+    private static final String CLIP_2 = "idle3";
     private final float clip2Duration;
 
     private String currentClip;
 
     public JalapenoFire(GameContext ctx, Vector2 pos) {
         super(ctx, pos);
-        clip0Duration=AnimationCatalog.getInstance().getClipDuration(PAM_PATH,CLIP_0);
-        clip1Duration=AnimationCatalog.getInstance().getClipDuration(PAM_PATH,CLIP_1);
-        clip2Duration=AnimationCatalog.getInstance().getClipDuration(PAM_PATH,CLIP_2);
+        clip0Duration = AnimationCatalog.getInstance().getClipDuration(PAM_PATH, CLIP_0);
+        clip1Duration = AnimationCatalog.getInstance().getClipDuration(PAM_PATH, CLIP_1);
+        clip2Duration = AnimationCatalog.getInstance().getClipDuration(PAM_PATH, CLIP_2);
 
-        clip0Played=false;
-        clip1Played=false;
+        clip0Played = false;
+        clip1Played = false;
 
-        currentClip=CLIP_0;
+        currentClip = CLIP_0;
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
-        if (!clip0Played && stateTime>=clip0Duration){
-            currentClip=CLIP_1;
-            clip0Played=true;
-            stateTime=0;
-        } else if(!clip1Played && stateTime>=clip1Duration){
-            currentClip=CLIP_2;
-            clip1Played=true;
-            stateTime=0;
-        } else if(currentClip.equals(CLIP_2) && stateTime>=clip2Duration){
+        if (!clip0Played && stateTime >= clip0Duration) {
+            currentClip = CLIP_1;
+            clip0Played = true;
+            stateTime = 0;
+        } else if (!clip1Played && stateTime >= clip1Duration) {
+            currentClip = CLIP_2;
+            clip1Played = true;
+            stateTime = 0;
+        } else if (currentClip.equals(CLIP_2) && stateTime >= clip2Duration) {
             dispose();
         }
     }
 
     @Override
-    public FrameConfig draw() {
-        return new FrameConfig(PAM_PATH,currentClip,stateTime,pos,new Vector2(0.65f,0.65f),null,false);
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        frameConfigs.add(
+                new FrameConfig(PAM_PATH, currentClip, stateTime, pos, new Vector2(0.65f, 0.65f), null, false));
+        return frameConfigs;
     }
 }
 
@@ -31489,7 +31506,9 @@ FILE: HeadDeathEffect.java
 
 package com.pvz.models.entities.effects;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.math.MathUtils;
@@ -31538,7 +31557,8 @@ public class HeadDeathEffect extends Effect {
     }
 
     @Override
-    public FrameConfig draw() {
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
         float height = vy * stateTime - 0.5f * GRAVITY * stateTime * stateTime;
         Vector2 drawPos = new Vector2(pos.x, pos.y + height);
         float alpha = 1f;
@@ -31549,7 +31569,8 @@ public class HeadDeathEffect extends Effect {
         FrameConfig fc = new FrameConfig(pamPath, "particles", stateTime,
                 drawPos, new Vector2(scale, scale), partsVisibility, true);
         fc.setColor(1f, 1f, 1f, alpha);
-        return fc;
+        frameConfigs.add(fc);
+        return frameConfigs;
     }
 }
 
@@ -31560,6 +31581,7 @@ FILE: DetachedArmEffect.java
 
 package com.pvz.models.entities.effects;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31581,8 +31603,8 @@ public class DetachedArmEffect extends Effect {
     private float dropOffset;
 
     public DetachedArmEffect(GameContext ctx, Vector2 pos, String pamPath,
-                             float scale, List<String> armPartNames,
-                             List<String> hidePartNames) {
+            float scale, List<String> armPartNames,
+            List<String> hidePartNames) {
         super(ctx, pos);
         this.pamPath = pamPath;
         this.scale = scale;
@@ -31609,7 +31631,8 @@ public class DetachedArmEffect extends Effect {
     }
 
     @Override
-    public FrameConfig draw() {
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
         float alpha = 1f;
         if (stateTime > FADE_START) {
             float fadeProgress = (stateTime - FADE_START) / (DURATION - FADE_START);
@@ -31619,7 +31642,8 @@ public class DetachedArmEffect extends Effect {
         FrameConfig fc = new FrameConfig(pamPath, "idle", stateTime,
                 drawPos, new Vector2(scale, scale), partsVisibility, true);
         fc.setColor(1f, 1f, 1f, alpha);
-        return fc;
+        frameConfigs.add(fc);
+        return frameConfigs;
     }
 }
 
@@ -31630,14 +31654,16 @@ FILE: PlantFoodFxEffect.java
 
 package com.pvz.models.entities.effects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.games.GameContext;
 
 public class PlantFoodFxEffect extends Effect {
 
-    private static final String PAM_PATH =
-            "768/INITIAL/EFFECTS/PLANTFOOD_FX/PLANTFOOD_FX.PAM";
+    private static final String PAM_PATH = "768/INITIAL/EFFECTS/PLANTFOOD_FX/PLANTFOOD_FX.PAM";
     private static final String CLIP = "plantfood";
     private static final float SCALE = 1.0f;
     private static final float OFFSET_X = 20f;
@@ -31659,9 +31685,11 @@ public class PlantFoodFxEffect extends Effect {
     }
 
     @Override
-    public FrameConfig draw() {
-        return new FrameConfig(PAM_PATH, CLIP, stateTime, pos,
-                new Vector2(SCALE, SCALE), null, false);
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        frameConfigs.add(new FrameConfig(PAM_PATH, CLIP, stateTime, pos,
+                new Vector2(SCALE, SCALE), null, false));
+        return frameConfigs;
     }
 }
 
@@ -31672,10 +31700,12 @@ FILE: LootDrop.java
 
 package com.pvz.models.entities.effects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
@@ -31690,18 +31720,23 @@ import com.pvz.models.user.User;
  * {@code ZombieLootService} when the 10% loot roll picks the coin, diamond or
  * greenhouse-pot outcome).
  *
- * <p>Life cycle:
+ * <p>
+ * Life cycle:
  * <ol>
- *   <li>{@code POP} — pops straight up out of the zombie's head and falls back
- *       down to its exact start point (one smooth arc);</li>
- *   <li>{@code READY} — sits there until the player clicks it (expires after a while);</li>
- *   <li>{@code FLY} / {@code COLLECT} — the click response: coins and diamonds arc
- *       into their on-screen wallet and are banked on arrival; the pot unlocks a
- *       random locked greenhouse pot the moment it is clicked.</li>
+ * <li>{@code POP} — pops straight up out of the zombie's head and falls back
+ * down to its exact start point (one smooth arc);</li>
+ * <li>{@code READY} — sits there until the player clicks it (expires after a
+ * while);</li>
+ * <li>{@code FLY} / {@code COLLECT} — the click response: coins and diamonds
+ * arc
+ * into their on-screen wallet and are banked on arrival; the pot unlocks a
+ * random locked greenhouse pot the moment it is clicked.</li>
  * </ol>
  *
- * <p>Rendered with the matching PAM (gold coin / diamond / sprout). Clicking is
- * handled by {@code GameController}, which passes the wallet's world position to
+ * <p>
+ * Rendered with the matching PAM (gold coin / diamond / sprout). Clicking is
+ * handled by {@code GameController}, which passes the wallet's world position
+ * to
  * {@link #flyTo(float, float)} or calls {@link #collect()} for the pot.
  */
 public class LootDrop extends Entity {
@@ -31738,7 +31773,9 @@ public class LootDrop extends Entity {
     private static final float COLLECT_DURATION = 0.30f;
     private static final float COLLECT_SCALE_UP = 1.4f;
 
-    private enum Phase { POP, READY, FLY, COLLECT, DONE }
+    private enum Phase {
+        POP, READY, FLY, COLLECT, DONE
+    }
 
     private final GameContext context;
     private final LootType type;
@@ -31820,8 +31857,8 @@ public class LootDrop extends Entity {
                 float eased = Interpolation.pow2In.apply(t);
                 float inv = 1f - eased;
                 position.set(
-                    inv * inv * flyStart.x + 2f * inv * eased * flyControl.x + eased * eased * flyTarget.x,
-                    inv * inv * flyStart.y + 2f * inv * eased * flyControl.y + eased * eased * flyTarget.y);
+                        inv * inv * flyStart.x + 2f * inv * eased * flyControl.x + eased * eased * flyTarget.x,
+                        inv * inv * flyStart.y + 2f * inv * eased * flyControl.y + eased * eased * flyTarget.y);
                 scale = MathUtils.lerp(flyStartScale, 0.25f, eased);
                 if (t >= 1f) {
                     position.set(flyTarget);
@@ -31846,9 +31883,11 @@ public class LootDrop extends Entity {
     }
 
     @Override
-    public FrameConfig draw() {
-        PvZ2.pamPlayer.draw(PvZ2.batch, type.pamPath, type.clip, stateTime, position.x, position.y, scale, scale, true);
-        return null;
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        frameConfigs.add(
+                new FrameConfig(type.pamPath, type.clip, stateTime, position, new Vector2(scale, scale), null, true));
+        return frameConfigs;
     }
 
     @Override
@@ -31934,7 +31973,10 @@ public class LootDrop extends Entity {
         user.saveUser();
     }
 
-    /** Mirrors ZombieLootService's own resolution so the drop always touches the live instance. */
+    /**
+     * Mirrors ZombieLootService's own resolution so the drop always touches the
+     * live instance.
+     */
     private void collectPot(User user) {
         GreenHouse greenHouse = AppContext.getInstance().getGreenHouse();
         if (greenHouse == null) {
@@ -31964,6 +32006,9 @@ FILE: SandstormCloudEffect.java
 
 package com.pvz.models.entities.effects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
@@ -31978,15 +32023,16 @@ import com.pvz.models.games.GameContext;
  * creates one of these per carried zombie and drives it via
  * {@link #isReadyToMove()} / {@link #beginOutro()}.
  *
- * <p>Plays three clips back-to-back, exactly like the in-game sandstorm:
+ * <p>
+ * Plays three clips back-to-back, exactly like the in-game sandstorm:
  * <ol>
- *   <li><b>INTRO</b> — the storm forms at the zombie's spawn point. The
- *       zombie does not move yet.</li>
- *   <li><b>LOOP</b>  — the storm travels with the zombie, looping
- *       indefinitely until {@link #beginOutro()} is called.</li>
- *   <li><b>OUTRO</b> — the storm dissipates in place (it stops following the
- *       rider once this starts). The effect disposes itself once this clip
- *       finishes, exactly like {@code Explosion}/{@code JalapenoFire} do.</li>
+ * <li><b>INTRO</b> — the storm forms at the zombie's spawn point. The
+ * zombie does not move yet.</li>
+ * <li><b>LOOP</b> — the storm travels with the zombie, looping
+ * indefinitely until {@link #beginOutro()} is called.</li>
+ * <li><b>OUTRO</b> — the storm dissipates in place (it stops following the
+ * rider once this starts). The effect disposes itself once this clip
+ * finishes, exactly like {@code Explosion}/{@code JalapenoFire} do.</li>
  * </ol>
  */
 public class SandstormCloudEffect extends Effect {
@@ -32006,7 +32052,9 @@ public class SandstormCloudEffect extends Effect {
     private static final float FALLBACK_INTRO_DURATION = 0.5f;
     private static final float FALLBACK_OUTRO_DURATION = 0.5f;
 
-    private enum Phase { INTRO, LOOP, OUTRO }
+    private enum Phase {
+        INTRO, LOOP, OUTRO
+    }
 
     /** The entity this cloud stays glued to while traveling (the zombie). */
     private final Entity rider;
@@ -32031,7 +32079,10 @@ public class SandstormCloudEffect extends Effect {
         return duration > 0f ? duration : fallback;
     }
 
-    /** True once the intro has finished forming, i.e. it's safe to start moving the rider. */
+    /**
+     * True once the intro has finished forming, i.e. it's safe to start moving the
+     * rider.
+     */
     public boolean isReadyToMove() {
         return phase != Phase.INTRO;
     }
@@ -32041,7 +32092,8 @@ public class SandstormCloudEffect extends Effect {
      * Idempotent — safe to call more than once.
      */
     public void beginOutro() {
-        if (phase == Phase.OUTRO) return;
+        if (phase == Phase.OUTRO)
+            return;
         phase = Phase.OUTRO;
         clipTime = 0f;
     }
@@ -32067,7 +32119,8 @@ public class SandstormCloudEffect extends Effect {
     }
 
     @Override
-    public FrameConfig draw() {
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
         String clip = switch (phase) {
             case INTRO -> INTRO_CLIP;
             case LOOP -> LOOP_CLIP;
@@ -32075,7 +32128,8 @@ public class SandstormCloudEffect extends Effect {
         };
         // Only the LOOP clip should actually loop; intro/outro play once.
         boolean looping = phase == Phase.LOOP;
-        return new FrameConfig(SAND_STORM_PAM_PATH, clip, clipTime, pos, SCALE, null, looping);
+        frameConfigs.add(new FrameConfig(SAND_STORM_PAM_PATH, clip, clipTime, pos, SCALE, null, looping));
+        return frameConfigs;
     }
 }
 
@@ -32086,34 +32140,39 @@ FILE: ChillWind.java
 
 package com.pvz.models.entities.effects;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.games.GameContext;
 
-public class ChillWind extends Effect{
-    private static final String PAM_PATH="768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM";
-    private static final String CLIP="animation";
+public class ChillWind extends Effect {
+    private static final String PAM_PATH = "768/FULL/EFFECTS/FROSTBITE_CHILL_WIND/FROSTBITE_CHILL_WIND.PAM";
+    private static final String CLIP = "animation";
 
     private float duration;
 
     public ChillWind(GameContext ctx, Vector2 pos) {
         super(ctx, pos);
-        duration=AnimationCatalog.instance.getClipDuration(PAM_PATH,CLIP);
+        duration = AnimationCatalog.instance.getClipDuration(PAM_PATH, CLIP);
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
-        if (stateTime>= duration){
+        if (stateTime >= duration) {
             dispose();
         }
     }
 
     @Override
-    public FrameConfig draw() {
-        Vector2 scale=new Vector2(0.65f,0.65f);
-        return new FrameConfig(PAM_PATH,CLIP,stateTime,pos,scale,null,false);
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        Vector2 scale = new Vector2(0.65f, 0.65f);
+        frameConfigs.add(new FrameConfig(PAM_PATH, CLIP, stateTime, pos, scale, null, false));
+        return frameConfigs;
     }
 }
 
@@ -34338,9 +34397,12 @@ public class Tile implements TickAware {
     }
 
     @Override
-    public FrameConfig draw() {
-        TickAware.super.draw();
-        return null;
+    public List<FrameConfig> draw() {
+        List<FrameConfig> frameConfigs = new ArrayList<>();
+        for (TileBehavior tb : behaviors) {
+            frameConfigs.add(tb.draw(this));
+        }
+        return frameConfigs;
     }
 
     public List<FrameConfig> drawBehaviors() {
@@ -35120,7 +35182,6 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
     private final List<MyPlant> plantPool;
     private final List<ZombieType> zombiePool;
-    private final Boolean[] lawnMower;
     private final Random random = new Random();
     private GameContext cachedContext;
 
@@ -35140,11 +35201,6 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             this.plantPool = List.of();
             this.zombiePool = List.of();
         }
-
-        this.lawnMower = new Boolean[rows];
-        for (int i = 0; i < rows; i++) {
-            this.lawnMower[i] = false;
-        }
     }
 
     private final List<VaseDefinition> vasesToPlace = new ArrayList<>();
@@ -35163,7 +35219,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
     @Override
     public void updateMode(GameContext context, float dt) {
-        if (!anyVasesRemain() && context.getZombies().isEmpty()) {
+        if (!anyVasesRemain()) {
             context.setGameOver(true);
             context.log("VICTORY! All vases cleared and all zombies defeated!");
             return;
@@ -35173,10 +35229,6 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             Zombie z = context.getZombies().get(i);
             if (z.getX() <= GameController.colToWorldX(-1)) {
                 int lane = GameController.worldYtoLane(z.getY());
-                if (!lawnMower[lane]) {
-                    runLawnMowers(context, lane);
-                    continue;
-                }
                 context.setGameOver(true);
                 context.log("The zombie ate your brain; LOOSER!!!");
                 context.removeZombie(z);
@@ -35194,7 +35246,8 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     @Override
     public void breakVase(GameContext context, int col, int lane) {
         Tile tile = context.getTileAt(col, lane);
-        if (tile == null) return;
+        if (tile == null)
+            return;
 
         VaseBehavior vase = findVaseBehavior(tile);
         if (vase == null || vase.isBroken()) {
@@ -35210,7 +35263,8 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
     private VaseBehavior findVaseBehavior(Tile tile) {
         for (var b : tile.getBehaviors()) {
-            if (b instanceof VaseBehavior vb) return vb;
+            if (b instanceof VaseBehavior vb)
+                return vb;
         }
         return null;
     }
@@ -35274,25 +35328,17 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     }
 
     private boolean anyVasesRemain() {
-        if (cachedContext == null) return false;
+        if (cachedContext == null)
+            return false;
         for (int lane = 0; lane < cachedContext.getMap().getLanes(); lane++) {
             for (int col = 0; col < cachedContext.getMap().getColumns(); col++) {
                 Tile tile = cachedContext.getTileAt(col, lane);
                 VaseBehavior vase = findVaseBehavior(tile);
-                if (vase != null && !vase.isBroken()) return true;
+                if (vase != null && !vase.isBroken())
+                    return true;
             }
         }
         return false;
-    }
-
-    private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane]) return;
-        context.getZombiesInLane(lane).forEach(z -> {
-            z.takeDamage(Float.MAX_VALUE);
-            context.removeZombie(z);
-            context.log("Lawn mower in lane " + lane + " ran over a zombie!");
-        });
-        lawnMower[lane] = true;
     }
 
     // -- PlantPlacer capability --
@@ -35319,7 +35365,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         }
         if (!tile.isPlantable(card)) {
             context.log("[Placement Failed] Tile (" + col + ", " + lane + ") does not support planting "
-                        + card.getPlant().getType());
+                    + card.getPlant().getType());
             return false;
         }
         return true;
@@ -37908,10 +37954,8 @@ package com.pvz.models.games.effects;
 import com.pvz.models.games.GameContext;
 
 public class SandStormEffect implements ChapterEffect {
-    private final int intervalTicks;
 
     public SandStormEffect(int intervalTicks) {
-        this.intervalTicks = intervalTicks;
     }
 
     @Override
@@ -39056,10 +39100,17 @@ FILE: TickAware.java
 
 package com.pvz.models.engine;
 
+import java.util.List;
+
 public interface TickAware {
     void enter();
+
     void update(float dt);
-    default FrameConfig draw() { return null; };
+
+    default List<FrameConfig> draw() {
+        return null;
+    };
+
     void dispose();
 }
 

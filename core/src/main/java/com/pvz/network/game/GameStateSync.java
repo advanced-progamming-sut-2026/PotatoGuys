@@ -193,6 +193,9 @@ public class GameStateSync {
                 } catch (Exception e) {
                     continue; // unknown alias, skip — shouldn't happen but don't crash the guest over it
                 }
+                if (zs.sunProducer) {
+                    local.setPendingInitialState(new com.pvz.models.entities.zombies.fsm.IdleState());
+                }
                 ctx.spawnZombie(local);
                 local.enter();
                 mirror.zombiesById.put(zs.id, local);

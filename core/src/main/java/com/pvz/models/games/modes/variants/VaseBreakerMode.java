@@ -28,12 +28,10 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
     private final List<MyPlant> plantPool;
     private final List<ZombieType> zombiePool;
-    private final Boolean[] lawnMower;
     private final Random random = new Random();
     private GameContext cachedContext;
 
     public VaseBreakerMode(Level level) {
-        int rows = level.getGameMapDefinition().rows;
 
         if (level instanceof VaseBreakerLevel vaseLevel) {
             this.plantPool = vaseLevel.getBasedPlants();
@@ -47,11 +45,6 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         } else {
             this.plantPool = List.of();
             this.zombiePool = List.of();
-        }
-
-        this.lawnMower = new Boolean[rows];
-        for (int i = 0; i < rows; i++) {
-            this.lawnMower[i] = false;
         }
     }
 
@@ -71,7 +64,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
     @Override
     public void updateMode(GameContext context, float dt) {
-        if (!anyVasesRemain() && context.getZombies().isEmpty()) {
+        if (!anyVasesRemain()) {
             context.setGameOver(true);
             context.log("VICTORY! All vases cleared and all zombies defeated!");
             return;
@@ -80,11 +73,6 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         for (int i = context.getZombies().size() - 1; i >= 0; i--) {
             Zombie z = context.getZombies().get(i);
             if (z.getX() <= GameController.colToWorldX(-1)) {
-                int lane = GameController.worldYtoLane(z.getY());
-                if (!lawnMower[lane]) {
-                    runLawnMowers(context, lane);
-                    continue;
-                }
                 context.setGameOver(true);
                 context.log("The zombie ate your brain; LOOSER!!!");
                 context.removeZombie(z);
@@ -102,7 +90,8 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     @Override
     public void breakVase(GameContext context, int col, int lane) {
         Tile tile = context.getTileAt(col, lane);
-        if (tile == null) return;
+        if (tile == null)
+            return;
 
         VaseBehavior vase = findVaseBehavior(tile);
         if (vase == null || vase.isBroken()) {
@@ -118,7 +107,8 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
     private VaseBehavior findVaseBehavior(Tile tile) {
         for (var b : tile.getBehaviors()) {
-            if (b instanceof VaseBehavior vb) return vb;
+            if (b instanceof VaseBehavior vb)
+                return vb;
         }
         return null;
     }
@@ -182,25 +172,17 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     }
 
     private boolean anyVasesRemain() {
-        if (cachedContext == null) return false;
+        if (cachedContext == null)
+            return false;
         for (int lane = 0; lane < cachedContext.getMap().getLanes(); lane++) {
             for (int col = 0; col < cachedContext.getMap().getColumns(); col++) {
                 Tile tile = cachedContext.getTileAt(col, lane);
                 VaseBehavior vase = findVaseBehavior(tile);
-                if (vase != null && !vase.isBroken()) return true;
+                if (vase != null && !vase.isBroken())
+                    return true;
             }
         }
         return false;
-    }
-
-    private void runLawnMowers(GameContext context, int lane) {
-        if (lawnMower[lane]) return;
-        context.getZombiesInLane(lane).forEach(z -> {
-            z.takeDamage(Float.MAX_VALUE);
-            context.removeZombie(z);
-            context.log("Lawn mower in lane " + lane + " ran over a zombie!");
-        });
-        lawnMower[lane] = true;
     }
 
     // -- PlantPlacer capability --
@@ -227,7 +209,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         }
         if (!tile.isPlantable(card)) {
             context.log("[Placement Failed] Tile (" + col + ", " + lane + ") does not support planting "
-                        + card.getPlant().getType());
+                    + card.getPlant().getType());
             return false;
         }
         return true;

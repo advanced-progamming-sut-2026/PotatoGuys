@@ -251,6 +251,8 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             for (int lane = 0; lane < lanes; lane++) {
                 try {
                     Zombie producer = new ZombieFactory().create(SUN_PRODUCER_ALIAS, spawnX, lane, context, 1, 1);
+                    producer.setPendingInitialState(new com.pvz.models.entities.zombies.fsm.IdleState());
+                    producer.setHp(SUN_PRODUCER_HP);
                     context.spawnZombie(producer);
                     sunProducers.add(producer);
                 } catch (Exception e) {
