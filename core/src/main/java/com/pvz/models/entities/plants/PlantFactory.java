@@ -67,6 +67,15 @@ public class PlantFactory {
         if (config instanceof LobberActionConfig lobberConfig) {
             return new LobberAction(lobberConfig);
         }
+        if (config instanceof PhatBeetConfig phatBeetConfig){
+            return new PhatBeetAction(phatBeetConfig, false);
+        }
+        if (config instanceof ChomperConfig chomperConfig){
+            return new ChomperAction(chomperConfig);
+        }
+        if (config instanceof WasabiWhipConfig wasabiWhipConfig){
+            return new WasabiWhipAction(wasabiWhipConfig, false);
+        }
         if (config instanceof BonkChoyConfig bonkChoyConfig){
             return new BonkChoyAttack(bonkChoyConfig);
         }
@@ -111,6 +120,15 @@ public class PlantFactory {
         }
         if (config instanceof MultiStageShooterConfig msConfig) {
             return new MultiStageFeedAction(msConfig);
+        }
+        if (config instanceof PhatBeetConfig phatBeetConfig) {
+            return new PhatBeetAction(phatBeetConfig, true);
+        }
+        if (config instanceof ChomperConfig chomperConfig) {
+            return new ChomperFeedAction(chomperConfig);
+        }
+        if (config instanceof WasabiWhipConfig wasabiWhipConfig) {
+            return new WasabiWhipAction(wasabiWhipConfig, true);
         }
         return buildConfigAction(config);
     }

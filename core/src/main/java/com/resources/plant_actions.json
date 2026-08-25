@@ -1613,19 +1613,36 @@
     "actionIntervalSeconds": 2.0,
     "rechargeSeconds": 5.0,
     "attackConfig": {
-      "class": "BonkChoyConfig",
+      "class": "PhatBeetConfig",
       "intervalSeconds": 2.0,
       "baseDamage": 15.0,
       "attackRangeFactor": 1.6,
-      "label": "attack"
+      "attackRadius": 1,
+      "label": "attack",
+      "effectPamPath": "768/FULL/EFFECTS/PHATBEETS_ATTACK_PULSE/PHATBEETS_ATTACK_PULSE.PAM",
+      "effectClip": "animation",
+      "effectScale": 0.65,
+      "pfDamage": 30.0,
+      "pfIntervalSeconds": 2.0,
+      "pfRadius": 2,
+      "pfEffectPamPath": "768/FULL/EFFECTS/PHATBEETS_PF_PULSE/PHATBEETS_PF_PULSE.PAM",
+      "pfEffectClip": "animation"
     },
     "feedConfig": {
-      "class": "ShooterActionConfig",
+      "class": "PhatBeetConfig",
+      "intervalSeconds": 2.0,
+      "baseDamage": 15.0,
+      "attackRangeFactor": 1.6,
+      "attackRadius": 1,
       "label": "plantfood",
-      "patterns": [
-          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
-          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2}
-        ]
+      "effectPamPath": "768/FULL/EFFECTS/PHATBEETS_ATTACK_PULSE/PHATBEETS_ATTACK_PULSE.PAM",
+      "effectClip": "animation",
+      "effectScale": 0.65,
+      "pfDamage": 30.0,
+      "pfIntervalSeconds": 2.0,
+      "pfRadius": 2,
+      "pfEffectPamPath": "768/FULL/EFFECTS/PHATBEETS_PF_PULSE/PHATBEETS_PF_PULSE.PAM",
+      "pfEffectClip": "animation"
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/PHATBEETS/PHATBEETS.PAM",
@@ -1646,20 +1663,38 @@
     "actionIntervalSeconds": 40.0,
     "rechargeSeconds": 5.0,
     "attackConfig": {
-      "class": "BonkChoyConfig",
-      "intervalSeconds": 40.0,
-      "baseDamage": 1800.0,
-      "attackRangeFactor": 1.6,
+      "class": "ChomperConfig",
+      "digestionSeconds": 40.0,
+      "biteRangeFactor": 1.6,
+      "biteClip": "bite",
+      "specialClip": "special",
+      "digestClip": "special_idle",
+      "digestEndClip": "special_end",
+      "pfOnClip": "plantfood_on",
+      "pfClip": "plantfood",
+      "pfOffClip": "plantfood_off",
+      "pfBurpClip": "plantfood_burp",
+      "pfBurpEndClip": "plantfood_burp_end",
+      "pfMaxTargets": 3,
+      "pfPullSpeed": 300.0,
       "label": "bite"
     },
     "feedConfig": {
-      "class": "ShooterActionConfig",
-      "label": "plantfood",
-      "patterns": [
-          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
-          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
-          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
-        ]
+      "class": "ChomperConfig",
+      "digestionSeconds": 40.0,
+      "biteRangeFactor": 1.6,
+      "biteClip": "bite",
+      "specialClip": "special",
+      "digestClip": "special_idle",
+      "digestEndClip": "special_end",
+      "pfOnClip": "plantfood_on",
+      "pfClip": "plantfood",
+      "pfOffClip": "plantfood_off",
+      "pfBurpClip": "plantfood_burp",
+      "pfBurpEndClip": "plantfood_burp_end",
+      "pfMaxTargets": 3,
+      "pfPullSpeed": 300.0,
+      "label": "plantfood"
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/CHOMPER/CHOMPER.PAM",
@@ -1680,19 +1715,34 @@
     "actionIntervalSeconds": 2.0,
     "rechargeSeconds": 5.0,
     "attackConfig": {
-      "class": "BonkChoyConfig",
+      "class": "WasabiWhipConfig",
       "intervalSeconds": 2.0,
       "baseDamage": 40.0,
       "attackRangeFactor": 1.6,
+      "attackFrontClip": "attack",
+      "attackBackClip": "attack2",
+      "attackBothClip": "attack3",
+      "pfOnClip": "plantfood_on",
+      "pfClip": "plantfood",
+      "pfOffClip": "plantfood_off",
+      "pfRadius": 2,
+      "pfDuration": 1.0,
       "label": "attack"
     },
     "feedConfig": {
-      "class": "ShooterActionConfig",
-      "label": "plantfood",
-      "patterns": [
-          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
-          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2}
-        ]
+      "class": "WasabiWhipConfig",
+      "intervalSeconds": 2.0,
+      "baseDamage": 40.0,
+      "attackRangeFactor": 1.6,
+      "attackFrontClip": "attack",
+      "attackBackClip": "attack2",
+      "attackBothClip": "attack3",
+      "pfOnClip": "plantfood_on",
+      "pfClip": "plantfood",
+      "pfOffClip": "plantfood_off",
+      "pfRadius": 2,
+      "pfDuration": 1.0,
+      "label": "plantfood"
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/WASABIWHIP/WASABIWHIP.PAM",
