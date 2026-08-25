@@ -30,10 +30,10 @@ import com.pvz.models.games.GameContext;
  */
 public class SunProducerAction extends PlantAction {
 
-    private final SunProducerActionConfig config;
+    protected final SunProducerActionConfig config;
     private final boolean killOnOneShot;
-    private float animTime = 0f;
-    private boolean produced = false;
+    protected float animTime = 0f;
+    protected boolean produced = false;
 
     public SunProducerAction(SunProducerActionConfig config) {
         this(config, true);

@@ -241,6 +241,22 @@ public class GameContext implements TickAware {
     }
 
     public void spawnPlant(Plant p) {
+        // PeaPod stacking: if a PeaPod is planted on a tile that already has a
+        // PeaPod, increment the existing one's stack count instead of spawning
+        // a duplicate.
+        if (p.getType() == com.pvz.models.entities.plants.enums.PlantType.PeaPod) {
+            for (Plant existing : getPlantsAt(p.getCol(), p.getLane())) {
+                if (existing.getType() == com.pvz.models.entities.plants.enums.PlantType.PeaPod
+                        && !existing.isDead()
+                        && existing.getAttackAction() instanceof com.pvz.models.entities.plants.actions.StackedShooterAction action) {
+                    action.incrementStack();
+                    log("[Stack] " + p.getType() + " stacked → " + action.getStackCount() + " pods at ("
+                            + p.getCol() + "," + p.getLane() + ")");
+                    return;
+                }
+            }
+        }
+
         getTileAt(p.getCol(), p.getLane()).addPlant(p);
         pendingPlantsToAdd.add(p);
         engine.register(p);

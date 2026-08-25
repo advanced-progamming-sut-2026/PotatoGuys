@@ -24,9 +24,9 @@ import com.pvz.models.games.map.tile.TileTags;
 
 public class ShooterAction extends PlantAction {
 
-    private final ShooterActionConfig config;
+    protected final ShooterActionConfig config;
     public ArrayList<ProjectilePattern> patterns = new ArrayList<>();
-    private float animTime = 0f;
+    protected float animTime = 0f;
 
     public ShooterAction(ShooterActionConfig config) {
         this.config = config;

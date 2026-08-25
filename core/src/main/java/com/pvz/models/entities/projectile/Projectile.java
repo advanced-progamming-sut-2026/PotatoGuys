@@ -175,7 +175,7 @@ public class Projectile extends Entity {
     public List<FrameConfig> draw() {
         List<FrameConfig> frameConfigs = new ArrayList<>();
         frameConfigs.add(
-                new FrameConfig(type.path, type.lable, stateTime, position, new Vector2(0.65f, 0.65f), null, true));
+                new FrameConfig(type.path, type.lable, stateTime, position, new Vector2(type.scale, type.scale), null, true));
         return frameConfigs;
     }
 

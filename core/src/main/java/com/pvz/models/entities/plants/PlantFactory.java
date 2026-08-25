@@ -46,6 +46,21 @@ public class PlantFactory {
     }
 
     private PlantAction buildConfigAction(PlantActionConfig config) {
+        if (config instanceof ChargingShooterConfig chargingConfig) {
+            return new ChargingShooterAction(chargingConfig);
+        }
+        if (config instanceof ClipProgressionShooterConfig cpConfig) {
+            return new ClipProgressionShooterAction(cpConfig);
+        }
+        if (config instanceof MultiStageShooterConfig msConfig) {
+            return new MultiStageShooterAction(msConfig);
+        }
+        if (config instanceof GrowthMeleeConfig growthMeleeConfig) {
+            return new GrowthMeleeAction(growthMeleeConfig);
+        }
+        if (config instanceof StackedShooterConfig stackedConfig) {
+            return new StackedShooterAction(stackedConfig);
+        }
         if (config instanceof ShooterActionConfig shooterConfig) {
             return new ShooterAction(shooterConfig);
         }
@@ -57,6 +72,9 @@ public class PlantFactory {
         }
         if(config instanceof GraveBusterConfig graveBusterConfig){
             return new GraveBusterAction(graveBusterConfig);
+        }
+        if (config instanceof GrowthSunProducerConfig growthSunConfig) {
+            return new GrowthSunProducerAction(growthSunConfig);
         }
         if (config instanceof SunProducerActionConfig sunConfig) {
             return new SunProducerAction(sunConfig);
@@ -73,17 +91,26 @@ public class PlantFactory {
         if (config instanceof MintActionConfig mintConfig){
             return new MintAction(mintConfig);
         }
+        if (config instanceof PassiveConfig passiveConfig){
+            return new PassiveAction(passiveConfig);
+        }
         return null;
     }
 
     /** Plant Food reuses the same config-driven actions, but a one-shot sun producer must
      *  produce without dying (dying is the Gold-Bloom attack behaviour, not a feed behaviour). */
     private PlantAction buildFeedAction(PlantActionConfig config) {
+        if (config instanceof GrowthSunProducerConfig growthSunConfig) {
+            return new GrowthSunProducerAction(growthSunConfig, false);
+        }
         if (config instanceof SunProducerActionConfig sunConfig) {
             return new SunProducerAction(sunConfig, false);
         }
         if (config instanceof WallNutFeedConfig wallNutFeedConfig) {
             return new WallNutFeedAction(wallNutFeedConfig);
+        }
+        if (config instanceof MultiStageShooterConfig msConfig) {
+            return new MultiStageFeedAction(msConfig);
         }
         return buildConfigAction(config);
     }

@@ -7,6 +7,7 @@ public class PlantJsonConfig {
     public String name;
     public String type;
     public String category;
+    public String tags;
     public int sunCost;
     public float baseHp;
     public Float actionIntervalSeconds;
