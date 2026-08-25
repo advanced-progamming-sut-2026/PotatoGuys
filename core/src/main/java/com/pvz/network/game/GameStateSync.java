@@ -87,8 +87,11 @@ public class GameStateSync {
         snap.zombies = zombies;
 
         List<GameSnapshot.SunSnap> suns = new ArrayList<>();
+        boolean isIZombie = ctx.getMode() instanceof IZombieMode;
         for (Sun s : ctx.getSuns()) {
             if (s.isDone())
+                continue;
+            if (isIZombie || s.getOwner() == Sun.SunOwner.ZOMBIE)
                 continue;
             GameSnapshot.SunSnap ss = new GameSnapshot.SunSnap();
             ss.id = System.identityHashCode(s);

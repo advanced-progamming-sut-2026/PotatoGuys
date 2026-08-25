@@ -448,6 +448,15 @@ public class GameController {
             } else if (ctx != null) {
                 GameStateSync.tickVisualsOnly(guestMirror, dt);
                 GameStateSync.tickCardsOnly(ctx, dt);
+                if (ctx.getMode() instanceof IZombieMode izMode) {
+                    izMode.updateSunProducers(ctx, dt);
+                }
+                for (Sun s : new ArrayList<>(ctx.getSuns())) {
+                    if (s.isDone()) {
+                        ctx.removeSun(s);
+                    }
+                }
+                ctx.flushPending();
             }
 
             if (isNetworkedMatch && isHost) {
@@ -765,6 +774,9 @@ public class GameController {
                     ctx.enter();
                 }
                 renderer.setContext(newContext);
+                if (isNetworkedMatch && isHost) {
+                    renderer.setHideZombieSuns(true);
+                }
 
                 plantSelectModal.setVisible(false);
                 changeState(new PanningBack(this));
@@ -793,12 +805,19 @@ public class GameController {
                 float dist = (float) Math.hypot(worldX - sunX, worldY - sunY);
                 if (dist < 50f) {
                     if (isNetworkedMatch && !isHost) {
-                        Integer hostSunId = guestMirror.idForSun(sun);
-                        if (hostSunId != null) {
-                            GameAction action = GameAction.collectSun(hostSunId);
-                            String inner = gson.toJson(new GameSyncEnvelope(
-                                    GameSyncEnvelope.Kind.ACTION, gson.toJson(action)));
-                            NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
+                        if (sun.getOwner() == Sun.SunOwner.ZOMBIE) {
+                            if (ctx.getMode() instanceof IZombieMode izMode) {
+                                izMode.addZombieSun(sun.getAmount());
+                            }
+                            sun.collect(ctx);
+                        } else {
+                            Integer hostSunId = guestMirror.idForSun(sun);
+                            if (hostSunId != null) {
+                                GameAction action = GameAction.collectSun(hostSunId);
+                                String inner = gson.toJson(new GameSyncEnvelope(
+                                        GameSyncEnvelope.Kind.ACTION, gson.toJson(action)));
+                                NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
+                            }
                         }
                     } else {
                         sun.collect(ctx);

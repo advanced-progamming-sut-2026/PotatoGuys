@@ -14,6 +14,8 @@ import com.pvz.models.games.GameContext;
 import com.pvz.view.game.GameScreen;
 
 public class Sun extends Entity {
+    public enum SunOwner { PLANT, ZOMBIE }
+
     private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
     private static final String SUN_CLIP = "animation";
     private static final String RADIOACTIVE_SUN_PAM = "768/FULL/EFFECTS/SUN_BOMB/SUN_BOMB.PAM";
@@ -26,6 +28,7 @@ public class Sun extends Entity {
     private final int lane;
     private final int amount;
     private final GameContext context;
+    private SunOwner owner = SunOwner.PLANT;
 
     private float fallSpeed;
 
@@ -195,6 +198,14 @@ public class Sun extends Entity {
 
     public Vector2 getCurrentPos() {
         return position;
+    }
+
+    public SunOwner getOwner() {
+        return owner;
+    }
+
+    public void setOwner(SunOwner owner) {
+        this.owner = owner;
     }
 
     public float getX() {

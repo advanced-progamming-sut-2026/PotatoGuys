@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.pvz.controller.game.GameController;
@@ -60,9 +59,10 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
     private static final String SUN_PRODUCER_ALIAS = "ZombieTutorialArmor2Default";
     private static final int SUN_PRODUCER_HP = 1290;
     private static final int SUN_AMOUNT = 25;
-    private int sunProducerIntervalTicks = 300;
-    private int sunProducerCountdown = 300;
+    private static final float SUN_PRODUCTION_INTERVAL_SECONDS = 10f;
     private final List<Zombie> sunProducers = new ArrayList<>();
+    private final java.util.IdentityHashMap<Zombie, Float> sunProducerTimers = new java.util.IdentityHashMap<>();
+    private int zombieSun = 0;
 
     /**
      * Counts down from PLANT_SURVIVAL_SECONDS in real time (dt-based, not ticks).
@@ -167,7 +167,24 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
     public void registerRemoteSunProducer(Zombie z) {
         if (!sunProducers.contains(z)) {
             sunProducers.add(z);
+            sunProducerTimers.put(z, SUN_PRODUCTION_INTERVAL_SECONDS);
         }
+    }
+
+    public int getZombieSun() {
+        return zombieSun;
+    }
+
+    public void addZombieSun(int amount) {
+        zombieSun += amount;
+    }
+
+    public boolean spendZombieSun(int amount) {
+        if (zombieSun >= amount) {
+            zombieSun -= amount;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -255,6 +272,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
                     producer.setHp(SUN_PRODUCER_HP);
                     context.spawnZombie(producer);
                     sunProducers.add(producer);
+                    sunProducerTimers.put(producer, SUN_PRODUCTION_INTERVAL_SECONDS);
                 } catch (Exception e) {
                     Gdx.app.error("IZombieMode", "Failed to spawn sun producer: " + e.getMessage());
                 }
@@ -308,13 +326,27 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             return;
         }
 
-        sunProducerCountdown--;
-        if (sunProducerCountdown <= 0) {
-            spawnSunDrop(context);
-            sunProducerCountdown = sunProducerIntervalTicks;
-            if (sunProducerIntervalTicks > 120) {
-                sunProducerIntervalTicks = Math.max(120, sunProducerIntervalTicks - 10);
+        // Per-zombie sun production (host side — needed for single-player IZombie;
+        // filtered out of snapshots by GameStateSync so the guest never sees them)
+        java.util.Iterator<java.util.Map.Entry<Zombie, Float>> timerIt = sunProducerTimers.entrySet().iterator();
+        while (timerIt.hasNext()) {
+            java.util.Map.Entry<Zombie, Float> entry = timerIt.next();
+            Zombie z = entry.getKey();
+            if (z.isDead()) {
+                timerIt.remove();
+                continue;
             }
+            float remaining = entry.getValue() - dt;
+            if (remaining <= 0) {
+                int col = GameController.worldXtoCol(z.getX());
+                int lane = GameController.worldYtoLane(z.getY());
+                Sun sun = new Sun(SunType.NORMAL, col, lane, SUN_AMOUNT, false, context);
+                sun.setOwner(Sun.SunOwner.ZOMBIE);
+                sun.getCurrentPos().add(0, 30f);
+                context.spawnSun(sun);
+                remaining = SUN_PRODUCTION_INTERVAL_SECONDS;
+            }
+            entry.setValue(remaining);
         }
 
         boolean hasLivingPlayerZombies = false;
@@ -340,14 +372,6 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
                 context.setGameOver(true);
             }
         }
-    }
-
-    private void spawnSunDrop(GameContext context) {
-        Random rng = new Random();
-        int lane = rng.nextInt(context.getMap().getLanes());
-        int col = 1 + rng.nextInt(Math.max(1, redLineColumn - 1));
-        Sun sun = new Sun(SunType.NORMAL, col, lane, SUN_AMOUNT, true, context);
-        context.spawnSun(sun);
     }
 
     // ---- ZombiePlacer
@@ -479,5 +503,33 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * Guest-side per-tick update for sun producer zombies.
+     * Called from GameController on the guest (zombie) side since the guest
+     * never runs GameEngine.update() → updateMode().
+     */
+    public void updateSunProducers(GameContext context, float dt) {
+        java.util.Iterator<java.util.Map.Entry<Zombie, Float>> timerIt = sunProducerTimers.entrySet().iterator();
+        while (timerIt.hasNext()) {
+            java.util.Map.Entry<Zombie, Float> entry = timerIt.next();
+            Zombie z = entry.getKey();
+            if (z.isDead()) {
+                timerIt.remove();
+                continue;
+            }
+            float remaining = entry.getValue() - dt;
+            if (remaining <= 0) {
+                int col = GameController.worldXtoCol(z.getX());
+                int lane = GameController.worldYtoLane(z.getY());
+                Sun sun = new Sun(SunType.NORMAL, col, lane, SUN_AMOUNT, false, context);
+                sun.setOwner(Sun.SunOwner.ZOMBIE);
+                sun.getCurrentPos().add(0, 30f);
+                context.spawnSun(sun);
+                remaining = SUN_PRODUCTION_INTERVAL_SECONDS;
+            }
+            entry.setValue(remaining);
+        }
     }
 }

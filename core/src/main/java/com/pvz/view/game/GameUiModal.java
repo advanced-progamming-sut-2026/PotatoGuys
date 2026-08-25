@@ -759,7 +759,17 @@ public class GameUiModal extends Table {
         addSunButton.setColor(debug ? Color.WHITE : new Color(0.5f, 0.5f, 0.5f, 0.6f));
         addFoodButton.setColor(debug ? Color.WHITE : new Color(0.5f, 0.5f, 0.5f, 0.6f));
 
-        sunLabel.setText(String.valueOf(context.getCurrentSun()));
+        if (context.getMode() instanceof com.pvz.models.games.modes.variants.IZombieMode izMode) {
+            com.pvz.models.MatchSession ms = com.pvz.models.AppContext.getInstance().getMatchSession();
+            boolean isZombieSide = ms != null && ms.getMyRole() == com.pvz.network.PlayerRole.ZOMBIE;
+            if (isZombieSide) {
+                sunLabel.setText(String.valueOf(izMode.getZombieSun()));
+            } else {
+                sunLabel.setText(String.valueOf(context.getCurrentSun()));
+            }
+        } else {
+            sunLabel.setText(String.valueOf(context.getCurrentSun()));
+        }
 
         int foodCount = MathUtils.clamp(context.getPlantFoodCount(), 0, MAX_PLANT_FOOD);
         for (int i = 0; i < plantFoodDots.length; i++) {

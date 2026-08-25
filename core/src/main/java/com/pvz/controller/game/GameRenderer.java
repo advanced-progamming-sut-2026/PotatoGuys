@@ -41,6 +41,9 @@ public class GameRenderer {
     /** Debug: draws every entity's hitbox rectangle (toggle with F1). */
     private boolean showHitboxes = true;
 
+    /** When true, ZOMBIE-owned suns are not drawn (host side of networked IZombie). */
+    private boolean hideZombieSuns;
+
     public GameRenderer(GameContext ctx, GameController controller, SpriteBatch batch,
             TextureRegion[] backgroundTextures) {
         this.ctx = ctx;
@@ -51,6 +54,10 @@ public class GameRenderer {
 
     public void setContext(GameContext ctx) {
         this.ctx = ctx;
+    }
+
+    public void setHideZombieSuns(boolean hide) {
+        this.hideZombieSuns = hide;
     }
 
     public void draw() {
@@ -199,6 +206,8 @@ public class GameRenderer {
 
     private void drawSuns() {
         for (Sun s : ctx.getSuns()) {
+            if (hideZombieSuns && s.getOwner() == Sun.SunOwner.ZOMBIE)
+                continue;
             drawFrames(s.draw());
         }
     }

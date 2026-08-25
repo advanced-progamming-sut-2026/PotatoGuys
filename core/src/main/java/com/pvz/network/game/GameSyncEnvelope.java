@@ -6,13 +6,19 @@ package com.pvz.network.game;
  * this — a state snapshot (host -> guest) or a player action (guest -> host)?
  */
 public class GameSyncEnvelope {
-    public enum Kind { SNAPSHOT, ACTION }
+    public enum Kind {
+        SNAPSHOT, ACTION
+    }
 
     public Kind kind;
-    /** JSON-encoded GameSnapshot (if kind == SNAPSHOT) or GameAction (if kind == ACTION). */
+    /**
+     * JSON-encoded GameSnapshot (if kind == SNAPSHOT) or GameAction (if kind ==
+     * ACTION).
+     */
     public String data;
 
-    public GameSyncEnvelope() { }
+    public GameSyncEnvelope() {
+    }
 
     public GameSyncEnvelope(Kind kind, String data) {
         this.kind = kind;
