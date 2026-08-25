@@ -376,11 +376,11 @@ public class GameRenderer {
         batch.setProjectionMatrix(controller.getCamera().combined);
         batch.begin();
 
-        // Brain indicators at column 0 for each lane
+        // Brain indicators at column -1 for each lane (off-screen, like lawn mowers)
         com.badlogic.gdx.graphics.g2d.TextureRegion brainRegion = PvZ2.textureBank
                 .region("IMAGE_UI_CURRENCY_VALENBRAINZ_STACK_0");
         boolean[] brainsEaten = izMode.getBrainsEaten();
-        float brainX = GameController.colToWorldX(0);
+        float brainX = GameController.colToWorldX(-1);
         float brainSize = 65f;
         for (int lane = 0; lane < lanes; lane++) {
             if (lane < brainsEaten.length && !brainsEaten[lane]) {

@@ -49,6 +49,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
     private final List<MyPlant> basedPlants;
     private final List<ZombieType> basedZombies;
     private final boolean[] brainsEaten;
+    private int laneCount = 5;
     private int redLineColumn = 6;
 
     private int ticksElapsed = 0;
@@ -136,7 +137,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         } else {
             throw new IllegalArgumentException("Level must be an instance of IZombieLevel.");
         }
-        this.brainsEaten = new boolean[5];
+        this.brainsEaten = new boolean[10];
     }
 
     public boolean[] getBrainsEaten() {
@@ -193,8 +194,8 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
      */
     public Outcome getOutcome() {
         boolean allBrainsEaten = true;
-        for (boolean eaten : brainsEaten) {
-            if (!eaten) {
+        for (int i = 0; i < laneCount; i++) {
+            if (!brainsEaten[i]) {
                 allBrainsEaten = false;
                 break;
             }
@@ -215,6 +216,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
 
     @Override
     public void initMode(GameContext context) {
+        laneCount = context.getMap().getLanes();
         setupZombieCards(context);
         setupPlantCards(context);
         context.log("I, Zombie ready! " + basedZombies.size() + " zombie types available, "
@@ -279,24 +281,36 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             }
         }
 
+        // Brain eating: brains sit at column -1 (off-screen, like lawn mowers).
+        float brainX = GameController.colToWorldX(-1);
+        int lanes = context.getMap().getLanes();
         List<Zombie> toRemove = new ArrayList<>();
         for (Zombie z : context.getZombies()) {
             if (z.isDead() || sunProducers.contains(z))
                 continue;
-            float brainX = GameController.colToWorldX(0);
             if (z.getX() <= brainX + 10f) {
                 int lane = GameController.worldYtoLane(z.getY());
-                if (lane >= 0 && lane < brainsEaten.length && !brainsEaten[lane]) {
-                    if (!brainEatTimers.containsKey(z)) {
-                        brainEatTimers.put(z, BRAIN_EAT_DURATION);
-                        z.setVelocity(0, 0);
-                    }
-                    float remaining = brainEatTimers.get(z) - dt;
-                    brainEatTimers.put(z, remaining);
-                    if (remaining <= 0) {
-                        brainsEaten[lane] = true;
+                if (lane >= 0 && lane < lanes && lane < brainsEaten.length) {
+                    if (!brainsEaten[lane]) {
+                        // Brain not yet eaten — start (or continue) eating.
+                        if (!brainEatTimers.containsKey(z)) {
+                            brainEatTimers.put(z, BRAIN_EAT_DURATION);
+                        }
+                        // Pin zombie in place at the brain while it eats.
+                        z.setX(brainX);
+                        float remaining = brainEatTimers.get(z) - dt;
+                        brainEatTimers.put(z, remaining);
+                        if (remaining <= 0) {
+                            brainsEaten[lane] = true;
+                            toRemove.add(z);
+                        }
+                    } else {
+                        // Brain already eaten in this lane — zombie walks past, remove it.
                         toRemove.add(z);
                     }
+                } else {
+                    // Out-of-range lane — just remove the zombie.
+                    toRemove.add(z);
                 }
             }
         }
@@ -306,8 +320,8 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         }
 
         boolean allBrainsEaten = true;
-        for (boolean eaten : brainsEaten) {
-            if (!eaten) {
+        for (int i = 0; i < lanes; i++) {
+            if (!brainsEaten[i]) {
                 allBrainsEaten = false;
                 break;
             }
