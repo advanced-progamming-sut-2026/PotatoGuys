@@ -30,6 +30,7 @@ public final class PlantActionConfigLoader {
         json.addClassTag("PhatBeetConfig", PhatBeetConfig.class);
         json.addClassTag("ChomperConfig", ChomperConfig.class);
         json.addClassTag("WasabiWhipConfig", WasabiWhipConfig.class);
+        json.addClassTag("KiwiBeastConfig", KiwiBeastConfig.class);
         json.addClassTag("GraveBusterConfig", GraveBusterConfig.class);
         json.addClassTag("ExplosiveConfig", ExplosiveConfig.class);
         json.addClassTag("SquashConfig", SquashConfig.class);

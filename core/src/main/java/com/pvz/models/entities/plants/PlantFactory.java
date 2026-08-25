@@ -76,6 +76,9 @@ public class PlantFactory {
         if (config instanceof WasabiWhipConfig wasabiWhipConfig){
             return new WasabiWhipAction(wasabiWhipConfig, false);
         }
+        if (config instanceof KiwiBeastConfig kiwiBeastConfig){
+            return new KiwiBeastAction(kiwiBeastConfig, false);
+        }
         if (config instanceof BonkChoyConfig bonkChoyConfig){
             return new BonkChoyAttack(bonkChoyConfig);
         }
@@ -129,6 +132,9 @@ public class PlantFactory {
         }
         if (config instanceof WasabiWhipConfig wasabiWhipConfig) {
             return new WasabiWhipAction(wasabiWhipConfig, true);
+        }
+        if (config instanceof KiwiBeastConfig kiwiBeastConfig) {
+            return new KiwiBeastAction(kiwiBeastConfig, true);
         }
         return buildConfigAction(config);
     }

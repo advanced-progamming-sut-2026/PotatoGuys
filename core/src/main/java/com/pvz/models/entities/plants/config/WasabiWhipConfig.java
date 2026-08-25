@@ -12,6 +12,6 @@ public class WasabiWhipConfig extends PlantActionConfig {
     public String pfOnClip = "plantfood_on";
     public String pfClip = "plantfood";
     public String pfOffClip = "plantfood_off";
-    public int pfRadius = 2;
+    public int pfRadius = 1;
     public float pfDuration = 1.0f;
 }

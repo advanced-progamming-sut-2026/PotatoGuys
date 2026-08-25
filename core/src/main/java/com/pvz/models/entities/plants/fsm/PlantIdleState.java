@@ -9,6 +9,7 @@ import com.pvz.models.entities.plants.actions.ChargingShooterAction;
 import com.pvz.models.entities.plants.actions.ClipProgressionShooterAction;
 import com.pvz.models.entities.plants.actions.GrowthMeleeAction;
 import com.pvz.models.entities.plants.actions.GrowthSunProducerAction;
+import com.pvz.models.entities.plants.actions.KiwiBeastAction;
 import com.pvz.models.entities.plants.actions.MultiStageFeedAction;
 import com.pvz.models.entities.plants.actions.MultiStageShooterAction;
 import com.pvz.models.entities.plants.actions.StackedShooterAction;
@@ -56,6 +57,8 @@ public class PlantIdleState extends PlantState {
             idleLabel = growthAction.getIdleLabel(plant);
         } else if (plant.getAttackAction() instanceof GrowthMeleeAction growthMeleeAction) {
             idleLabel = growthMeleeAction.getCurrentIdleLabel();
+        } else if (plant.getAttackAction() instanceof KiwiBeastAction kiwiAction) {
+            idleLabel = kiwiAction.getCurrentIdleLabel();
         } else if (plant.getAttackAction() instanceof StackedShooterAction stackedAction) {
             idleLabel = stackedAction.getIdleLabel();
         } else if (plant.getAttackAction() instanceof ChargingShooterAction chargingAction) {
