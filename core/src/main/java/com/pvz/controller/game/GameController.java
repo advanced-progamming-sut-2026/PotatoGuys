@@ -110,6 +110,7 @@ public class GameController {
     private final boolean isHost = isNetworkedMatch && matchSession.getMyRole() == PlayerRole.PLANT;
     private final GameStateSync.GuestMirrorState guestMirror = new GameStateSync.GuestMirrorState();
     private float snapshotAccumulator = 0f;
+    private boolean lastGameOver = false;
     private static final float SNAPSHOT_INTERVAL_SECONDS = 0.15f;
 
     private final Vector3 touchPos = new Vector3();
@@ -283,6 +284,9 @@ public class GameController {
 
                                     if (placer.isValidPlacement(ctx, col, lane, zCard)) {
                                         if (isNetworkedMatch && !isHost) {
+                                            if (ctx.getMode() instanceof IZombieMode izMode) {
+                                                izMode.spendZombieSun(zCard.getCost());
+                                            }
                                             sendPlacementAction(GameAction.Type.PLACE_ZOMBIE,
                                                     zCard.getZombieType().name(), col, lane);
                                         } else {
@@ -460,8 +464,11 @@ public class GameController {
             }
 
             if (isNetworkedMatch && isHost) {
+                boolean gameOverNow = ctx.isGameOver();
                 snapshotAccumulator += dt;
-                if (snapshotAccumulator >= SNAPSHOT_INTERVAL_SECONDS) {
+                boolean forceSend = gameOverNow && !lastGameOver;
+                lastGameOver = gameOverNow;
+                if (forceSend || snapshotAccumulator >= SNAPSHOT_INTERVAL_SECONDS) {
                     snapshotAccumulator = 0f;
                     GameSnapshot snapshot = GameStateSync.buildSnapshot(ctx);
                     String inner = gson.toJson(new GameSyncEnvelope(
@@ -556,9 +563,14 @@ public class GameController {
         if (won) {
             String title = "Level Complete!";
             String msg = "You defeated the zombies!";
-            if (ctx.getMode() instanceof IZombieMode) {
-                title = "I, ZOMBIE COMPLETE!";
-                msg = "All five brains were eaten!";
+            if (ctx.getMode() instanceof IZombieMode izMode) {
+                if (isNetworkedMatch && matchSession.getMyRole() == PlayerRole.PLANT) {
+                    title = "Level Complete!";
+                    msg = "You survived the zombie onslaught!";
+                } else {
+                    title = "I, ZOMBIE COMPLETE!";
+                    msg = "All five brains were eaten!";
+                }
             }
             Runnable nextAction = () -> Gdx.app.postRunnable(() -> {
                 if (isNetworkedMatch) {
@@ -572,6 +584,11 @@ public class GameController {
             popup = new GameWinPopup(title, msg, "EXIT TO MAP", exitAction, "NEXT LEVEL", nextAction);
         } else {
             String title = "THE ZOMBIES\nATE YOUR\nBRAINS!";
+            if (ctx.getMode() instanceof IZombieMode) {
+                if (isNetworkedMatch && matchSession.getMyRole() == PlayerRole.ZOMBIE) {
+                    title = "THE ZOMBIES\nCOULD NOT EAT\nTHE BRAINS!";
+                }
+            }
             Runnable retryAction = () -> Gdx.app.postRunnable(() -> {
                 if (isNetworkedMatch) {
                     AppContext.getInstance().setMatchSession(null);
@@ -593,6 +610,14 @@ public class GameController {
         var user = com.pvz.models.AppContext.getInstance().getCurrentUser();
         if (user != null)
             user.saveUser();
+        if (isNetworkedMatch) {
+            NetworkClient.getInstance().setDisconnectListener(null);
+            NetworkClient.getInstance().clearPushListener(MessageType.OPPONENT_DISCONNECTED);
+            NetworkClient.getInstance().clearPushListener(MessageType.MATCH_MESSAGE);
+            NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(),
+                    gson.toJson(new GameSyncEnvelope(GameSyncEnvelope.Kind.QUIT, null)));
+        }
+        AppContext.getInstance().setMatchSession(null);
         Gdx.app.postRunnable(() -> {
             if (ctx != null && ctx.getMode() instanceof IZombieMode) {
                 PvZ2.instance.setScreen(new TravelLogMenu(PvZ2.instance));
@@ -736,7 +761,11 @@ public class GameController {
             if (level != null) {
                 GameEngine.getInstance().reset();
                 GameContext newContext = new GameContext(level);
+                boolean guestIZombie = isNetworkedMatch && !isHost
+                        && level.getGameMode() == com.pvz.models.games.modes.GameModeType.IZOMBIE;
                 for (PlantType pt : plantSelectModal.getSelectedPlants()) {
+                    if (guestIZombie)
+                        break;
                     MyPlant owned = null;
                     try {
                         owned = AppContext.getInstance().getCurrentUser().getProfile().getCollection().getPlant(pt);
@@ -772,6 +801,12 @@ public class GameController {
                     // the host via the engine's newly-registered-entity processing.
                     // Call it once, by hand, here.
                     ctx.enter();
+                    if (ctx.getMode() instanceof IZombieMode izMode) {
+                        izMode.setNetworkGuest(true);
+                    }
+                }
+                if (isNetworkedMatch && isHost && ctx.getMode() instanceof IZombieMode izMode) {
+                    izMode.setNetworkHost(true);
                 }
                 renderer.setContext(newContext);
                 if (isNetworkedMatch && isHost) {
@@ -784,6 +819,9 @@ public class GameController {
 
                 if (isNetworkedMatch) {
                     NetworkClient.getInstance().onMatchMessage(this::handleMatchMessage);
+                    NetworkClient.getInstance().setPushListener(MessageType.OPPONENT_DISCONNECTED,
+                            msg -> handleDisconnect());
+                    NetworkClient.getInstance().setDisconnectListener(() -> handleDisconnect());
                 }
 
                 Gdx.app.log("GameScreen", "Starting camera pan back for " + seasonName + " Level " + levelNumber);
@@ -968,7 +1006,9 @@ public class GameController {
         if (envelope == null)
             return;
 
-        if (envelope.kind == GameSyncEnvelope.Kind.SNAPSHOT && !isHost) {
+        if (envelope.kind == GameSyncEnvelope.Kind.QUIT) {
+            handleDisconnect();
+        } else if (envelope.kind == GameSyncEnvelope.Kind.SNAPSHOT && !isHost) {
             GameSnapshot snapshot = gson.fromJson(envelope.data, GameSnapshot.class);
             if (ctx != null) {
                 GameStateSync.applySnapshot(ctx, snapshot, guestMirror);
@@ -1055,6 +1095,23 @@ public class GameController {
 
     public void dispose() {
         NetworkClient.getInstance().clearPushListener(MessageType.MATCH_MESSAGE);
+        NetworkClient.getInstance().clearPushListener(MessageType.OPPONENT_DISCONNECTED);
+        NetworkClient.getInstance().clearDisconnectListener();
+    }
+
+    private void handleDisconnect() {
+        if (ctx == null || ctx.isGameOver())
+            return;
+        ctx.setGameOver(true);
+        paused = true;
+        AppContext.getInstance().setMatchSession(null);
+        Gdx.app.postRunnable(() -> {
+            if (ctx.getMode() instanceof IZombieMode) {
+                PvZ2.instance.setScreen(new com.pvz.view.OpponentSelectMenu(PvZ2.instance, seasonName, levelNumber));
+            } else {
+                PvZ2.instance.setScreen(new GameModesMenu(PvZ2.instance));
+            }
+        });
     }
 
     // This method returns the world coordinates of the middle of column

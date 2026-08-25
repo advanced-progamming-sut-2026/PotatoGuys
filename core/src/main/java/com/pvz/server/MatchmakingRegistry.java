@@ -44,6 +44,22 @@ public class MatchmakingRegistry {
         synchronized (QUEUE_LOCK) {
             RANDOM_QUEUE.remove(handler);
         }
+
+        // Notify opponents in active matches and clean up.
+        var ended = new java.util.ArrayList<String>();
+        for (var entry : ACTIVE_MATCHES.entrySet()) {
+            ClientHandler[] pair = entry.getValue();
+            if (pair[0] == handler || pair[1] == handler) {
+                ClientHandler other = pair[0] == handler ? pair[1] : pair[0];
+                if (other != null) {
+                    other.push(com.pvz.network.MessageType.OPPONENT_DISCONNECTED, null);
+                }
+                ended.add(entry.getKey());
+            }
+        }
+        for (String matchId : ended) {
+            ACTIVE_MATCHES.remove(matchId);
+        }
     }
 
     public static ClientHandler findOnline(String username) {

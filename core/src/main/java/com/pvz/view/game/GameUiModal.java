@@ -101,6 +101,9 @@ public class GameUiModal extends Table {
     private final Map<ZombieCard, Image> zombieCooldownOverlayByCard = new HashMap<>();
     private Map<PlantType, PlantData> dataByType = new HashMap<>();
 
+    private Label timerLabel;
+    private Stack timerBank;
+
     public GameUiModal(Runnable onPauseRequested) {
         super();
         setFillParent(true);
@@ -149,6 +152,21 @@ public class GameUiModal extends Table {
 
         buildWaveProgress();
         topBar.add(waveGroup).left().padLeft(15f).size(WAVE_BAR_WIDTH + 50f, 50f);
+
+        timerBank = new Stack();
+        Image timerBg = new Image(PvzSkin.get().getDrawable("image_ui_hud_ingame_background_3slice"));
+        timerBg.setScaling(Scaling.stretch);
+        Table timerContent = new Table();
+        timerLabel = new Label("2:00", PvzSkin.get(), "big_outline");
+        timerLabel.setColor(Color.RED);
+        timerLabel.setFontScale(1.25f);
+        timerLabel.setAlignment(Align.center);
+        timerContent.add(timerLabel).expandX().center().padRight(8f).padLeft(8f);
+        timerBank.add(timerBg);
+        timerBank.add(timerContent);
+        timerBank.setVisible(false);
+        topBar.add(timerBank).left().padLeft(10f).width(110f).height(54f);
+
         topBar.row();
 
         // Plant food bank with a +1 cheat button, matching the reference HUD
@@ -591,8 +609,17 @@ public class GameUiModal extends Table {
         if (context == null)
             return;
 
+        com.pvz.models.MatchSession matchSession = com.pvz.models.AppContext.getInstance().getMatchSession();
+        com.pvz.network.PlayerRole myRole = matchSession != null ? matchSession.getMyRole() : null;
+
         boolean changed = false;
         for (Card card : context.getCards()) {
+            if (matchSession != null) {
+                if (card instanceof PlantCard && myRole != com.pvz.network.PlayerRole.PLANT)
+                    continue;
+                if (card instanceof ZombieCard && myRole != com.pvz.network.PlayerRole.ZOMBIE)
+                    continue;
+            }
             if (card instanceof PlantCard pc && !slotByCard.containsKey(pc)) {
                 cardsBarTable.add(buildSlot(pc, true)).row();
                 changed = true;
@@ -829,6 +856,21 @@ public class GameUiModal extends Table {
             updateWaveFill(progress, completed, totalWaves);
         } else {
             waveGroup.setVisible(false);
+        }
+
+        if (context.getMode() instanceof com.pvz.models.games.modes.variants.IZombieMode izMode) {
+            timerBank.setVisible(true);
+            float seconds = Math.max(0f, izMode.getPlantSurvivalSecondsRemaining());
+            int mins = (int) (seconds / 60);
+            int secs = (int) (seconds % 60);
+            timerLabel.setText(String.format("%d:%02d", mins, secs));
+            if (seconds <= 15f) {
+                timerLabel.setColor(Color.RED);
+            } else {
+                timerLabel.setColor(Color.WHITE);
+            }
+        } else {
+            timerBank.setVisible(false);
         }
     }
 

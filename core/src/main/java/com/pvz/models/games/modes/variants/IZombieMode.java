@@ -78,6 +78,19 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
      */
     private boolean zombieSideStuck = false;
 
+    /**
+     * Set by the guest in a networked match so that sun checks use
+     * {@link #zombieSun}.
+     */
+    private boolean networkGuest = false;
+
+    /**
+     * Set by the host in a networked match so that zombie placement skips sun
+     * spending
+     * (the guest already spent zombie sun locally).
+     */
+    private boolean networkHost = false;
+
     public enum Outcome {
         IN_PROGRESS, ZOMBIES_WIN, PLANTS_WIN
     }
@@ -170,6 +183,18 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             sunProducers.add(z);
             sunProducerTimers.put(z, SUN_PRODUCTION_INTERVAL_SECONDS);
         }
+    }
+
+    public void setNetworkGuest(boolean networkGuest) {
+        this.networkGuest = networkGuest;
+    }
+
+    public void setNetworkHost(boolean networkHost) {
+        this.networkHost = networkHost;
+    }
+
+    public boolean isNetworkGuest() {
+        return networkGuest;
     }
 
     public int getZombieSun() {
@@ -401,7 +426,12 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             return false;
         if (!zombieCard.canUse())
             return false;
-        if (context.getCurrentSun() < zombieCard.getCost())
+        // Guest validates against its own zombie sun; host skips sun check
+        // (the guest already validated before sending the action).
+        if (networkHost)
+            return true;
+        int availableSun = networkGuest ? zombieSun : context.getCurrentSun();
+        if (availableSun < zombieCard.getCost())
             return false;
         return true;
     }
@@ -410,10 +440,18 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
     public void handlePlacement(GameContext context, int col, int lane, Card card) {
         if (!(card instanceof ZombieCard zombieCard))
             return;
-        if (!context.spendSun(zombieCard.getCost())) {
-            Gdx.app.log("IZombieMode", "Not enough sun for " + zombieCard.getZombieType());
-            return;
+        if (networkGuest) {
+            if (!spendZombieSun(zombieCard.getCost())) {
+                Gdx.app.log("IZombieMode", "Not enough zombie sun for " + zombieCard.getZombieType());
+                return;
+            }
+        } else if (!networkHost) {
+            if (!context.spendSun(zombieCard.getCost())) {
+                Gdx.app.log("IZombieMode", "Not enough sun for " + zombieCard.getZombieType());
+                return;
+            }
         }
+        // else networkHost: guest already spent zombie sun, no local deduction needed
         try {
             float spawnX = GameController.colToWorldX(col);
             Zombie zombie = new ZombieFactory().create(zombieCard.getZombieType().getAlias(), spawnX, lane, context, 1,
@@ -422,7 +460,11 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             zombieCard.use();
         } catch (Exception e) {
             Gdx.app.error("IZombieMode", "Failed to place " + zombieCard.getZombieType() + ": " + e.getMessage());
-            context.addSun(zombieCard.getCost());
+            if (networkGuest) {
+                addZombieSun(zombieCard.getCost());
+            } else {
+                context.addSun(zombieCard.getCost());
+            }
         }
     }
 

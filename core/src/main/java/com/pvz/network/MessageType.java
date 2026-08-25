@@ -27,5 +27,6 @@ public enum MessageType {
     QUEUE_JOIN,
     QUEUE_CANCEL,
     MATCH_FOUND,
-    MATCH_MESSAGE
+    MATCH_MESSAGE,
+    OPPONENT_DISCONNECTED
 }

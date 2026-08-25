@@ -57,6 +57,7 @@ public class NetworkClient {
 
     private final Map<String, Consumer<NetworkMessage>> pending = new ConcurrentHashMap<>();
     private final Map<MessageType, Consumer<NetworkMessage>> pushListeners = new ConcurrentHashMap<>();
+    private volatile Runnable disconnectListener;
 
     private NetworkClient() {
     }
@@ -115,6 +116,10 @@ public class NetworkClient {
             System.err.println("[NetworkClient] Connection lost: " + e.getMessage());
         } finally {
             connected = false;
+            Runnable listener = disconnectListener;
+            if (listener != null) {
+                Gdx.app.postRunnable(listener);
+            }
         }
     }
 
@@ -168,6 +173,14 @@ public class NetworkClient {
 
     public void clearPushListener(MessageType type) {
         pushListeners.remove(type);
+    }
+
+    public void setDisconnectListener(Runnable listener) {
+        this.disconnectListener = listener;
+    }
+
+    public void clearDisconnectListener() {
+        this.disconnectListener = null;
     }
 
     // ---- Typed convenience wrappers: accounts (Phase 1)
