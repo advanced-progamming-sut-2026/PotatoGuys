@@ -526,13 +526,18 @@
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "attackConfig": {
-      "class": "ShooterActionConfig",
-      "label": "attack2",
-      "patterns": [
-          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6},
-          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.7},
-          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.8}
-        ]
+      "class": "SplitPeaConfig",
+      "intervalSeconds": 1.5,
+      "damage": 20.0,
+      "attackFrontClip": "attack",
+      "attackBothClip": "attack2",
+      "attackBackClip": "attack3",
+      "projectileSpeed": 180.0,
+      "forwardOffsetX": 50.0,
+      "forwardOffsetY": 15.0,
+      "backwardOffsetX": -50.0,
+      "backwardOffsetY": 20.0,
+      "label": "attack"
     },
     "feedConfig": {
       "class": "ShooterActionConfig",

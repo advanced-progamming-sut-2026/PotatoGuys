@@ -79,6 +79,9 @@ public class PlantFactory {
         if (config instanceof KiwiBeastConfig kiwiBeastConfig){
             return new KiwiBeastAction(kiwiBeastConfig, false);
         }
+        if (config instanceof SplitPeaConfig splitPeaConfig){
+            return new SplitPeaAction(splitPeaConfig);
+        }
         if (config instanceof BonkChoyConfig bonkChoyConfig){
             return new BonkChoyAttack(bonkChoyConfig);
         }
