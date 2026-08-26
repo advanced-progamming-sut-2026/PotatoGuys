@@ -32,6 +32,9 @@ public class LawnMower extends Entity {
                         ctx.log("[LawnMower] activated in lane " + GameController.worldYtoLane(position.y) + "!");
                     }
                     zombie.takeDamage(100000);
+                    if (zombie.isDead()) {
+                        ctx.getGameStats().onLawnmowerKill(1);
+                    }
                 }
             }
         });

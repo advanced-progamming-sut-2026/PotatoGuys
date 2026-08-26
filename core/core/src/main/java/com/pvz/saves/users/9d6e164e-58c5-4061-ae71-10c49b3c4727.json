@@ -10,8 +10,8 @@
   "profilePicture": "textures/avatars/avatar_nami.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 2250,
-    "diamonds": 561,
+    "coins": 3800,
+    "diamonds": 1003,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -31,13 +31,13 @@
           "Type": "Cabbagepult",
           "level": 2,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "BonkChoy",
           "level": 2,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "Repeater",
@@ -59,7 +59,7 @@
         },
         {
           "Type": "SnowPea",
-          "level": 2,
+          "level": 3,
           "seed": 0,
           "isBoosted": false
         },
@@ -67,7 +67,7 @@
           "Type": "CherryBomb",
           "level": 1,
           "seed": 0,
-          "isBoosted": false
+          "isBoosted": true
         },
         {
           "Type": "Wallnut",
@@ -77,6 +77,12 @@
         },
         {
           "Type": "Enlightenmint",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": true
+        },
+        {
+          "Type": "Armamint",
           "level": 1,
           "seed": 0,
           "isBoosted": false
@@ -130,12 +136,12 @@
       "seedPackets": {
         "Peashooter": 60,
         "Sunflower": 35,
-        "BonkChoy": 5,
+        "BonkChoy": 22,
         "Repeater": 5,
-        "TwinSunflower": 10,
-        "Cabbagepult": 5,
+        "TwinSunflower": 26,
+        "Cabbagepult": 15,
         "Enlightenmint": 10,
-        "SnowPea": 5
+        "SnowPea": 10
       }
     },
     "news": {
@@ -315,6 +321,10 @@
         {
           "message": "New Plant Unlocked: Enlightenmint!",
           "unread": false
+        },
+        {
+          "message": "New Plant Unlocked: Armamint!",
+          "unread": false
         }
       ]
     },
@@ -360,8 +370,8 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": "SnowPea",
-    "dailyOfferDate": "2026-08-22",
+    "dailyOfferPlantType": "Cabbagepult",
+    "dailyOfferDate": "2026-08-26",
     "dailyOfferPurchased": true
   },
   "setting": {
@@ -379,8 +389,8 @@
     "lastSeason": 0,
     "lastLevel": 0,
     "numMiniGames": 0,
-    "dailyQuests": 0,
-    "nonDailyQuests": 0,
+    "dailyQuests": 15,
+    "nonDailyQuests": 3,
     "highestScore": 0
   },
   "greenHouse": {
@@ -389,23 +399,13 @@
         "x": 1,
         "y": 1,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-19T18:07:36.733025700",
-          "growthHours": 2
-        }
+        "greenHousePlant": null
       },
       {
         "x": 2,
         "y": 1,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "mariGold",
-          "plantType": null,
-          "plantedTime": "2026-08-22T16:57:14.766880200",
-          "growthHours": 2
-        }
+        "greenHousePlant": null
       },
       {
         "x": 3,
@@ -413,8 +413,8 @@
         "locked": false,
         "greenHousePlant": {
           "kind": "unlocked",
-          "plantType": "Peashooter",
-          "plantedTime": "2026-08-22T16:52:05.496951300",
+          "plantType": "Sunflower",
+          "plantedTime": "2026-08-26T21:15:05.120614400",
           "growthHours": 8
         }
       },
@@ -425,7 +425,7 @@
         "greenHousePlant": {
           "kind": "mariGold",
           "plantType": null,
-          "plantedTime": "2026-08-19T18:06:29.357375900",
+          "plantedTime": "2026-08-26T21:02:46.185594500",
           "growthHours": 2
         }
       },
@@ -433,12 +433,7 @@
         "x": 1,
         "y": 2,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "Cabbagepult",
-          "plantedTime": "2026-08-22T16:52:08.703915500",
-          "growthHours": 8
-        }
+        "greenHousePlant": null
       },
       {
         "x": 2,
@@ -458,7 +453,7 @@
         "greenHousePlant": {
           "kind": "mariGold",
           "plantType": null,
-          "plantedTime": "2026-08-22T16:51:56.550802900",
+          "plantedTime": "2026-08-26T21:15:10.650209800",
           "growthHours": 2
         }
       },
@@ -494,23 +489,13 @@
         "x": 3,
         "y": 3,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "CherryBomb",
-          "plantedTime": "2026-08-22T08:55:00.465029700",
-          "growthHours": 8
-        }
+        "greenHousePlant": null
       },
       {
         "x": 4,
         "y": 3,
         "locked": false,
-        "greenHousePlant": {
-          "kind": "unlocked",
-          "plantType": "BonkChoy",
-          "plantedTime": "2026-08-22T16:52:16.911226800",
-          "growthHours": 8
-        }
+        "greenHousePlant": null
       }
     ]
   },
@@ -524,7 +509,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 3000,
-          "currentAmount": 0
+          "currentAmount": 1925
         },
         "active": true,
         "claimed": false,
@@ -539,7 +524,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 4000,
-          "currentAmount": 0
+          "currentAmount": 1925
         },
         "active": true,
         "claimed": false,
@@ -554,7 +539,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 5000,
-          "currentAmount": 0
+          "currentAmount": 1925
         },
         "active": true,
         "claimed": false,
@@ -569,7 +554,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 50,
-          "currentAmount": 0
+          "currentAmount": 22
         },
         "active": true,
         "claimed": false,
@@ -629,10 +614,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 10,
-          "currentAmount": 0
+          "currentAmount": 13
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "Peashooter"
       },
@@ -749,10 +734,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": false,
         "variable": "3"
       },
@@ -764,10 +749,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": false,
         "variable": "4"
       },
@@ -779,10 +764,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": false,
         "variable": "5"
       },
@@ -839,10 +824,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": null
       },
@@ -884,7 +869,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 10,
-          "currentAmount": 0
+          "currentAmount": 3
         },
         "active": true,
         "claimed": false,
@@ -914,10 +899,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": null
       },
@@ -929,10 +914,10 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "SHOOTER"
       },
@@ -974,10 +959,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "LOBBER"
       },
@@ -1004,10 +989,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "EXPLOSIVE"
       },
@@ -1034,10 +1019,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "WALL_NUT"
       },
@@ -1064,10 +1049,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "MELEE"
       },
@@ -1109,10 +1094,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "2"
       },
@@ -1124,10 +1109,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "3"
       },
@@ -1139,10 +1124,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "4"
       },
@@ -1154,10 +1139,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "5"
       },
@@ -1169,10 +1154,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "6"
       },
@@ -1184,10 +1169,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "7"
       },
@@ -1199,10 +1184,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "8"
       },
@@ -1364,7 +1349,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 10,
-          "currentAmount": 0
+          "currentAmount": 9
         },
         "active": true,
         "claimed": false,
@@ -1379,7 +1364,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 20,
-          "currentAmount": 0
+          "currentAmount": 9
         },
         "active": true,
         "claimed": false,
@@ -1394,7 +1379,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 30,
-          "currentAmount": 0
+          "currentAmount": 9
         },
         "active": true,
         "claimed": false,
@@ -1409,7 +1394,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 40,
-          "currentAmount": 0
+          "currentAmount": 9
         },
         "active": true,
         "claimed": false,
@@ -1424,7 +1409,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 50,
-          "currentAmount": 0
+          "currentAmount": 9
         },
         "active": true,
         "claimed": false,
@@ -1432,7 +1417,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1787409775056
+    "lastDailyReset": 1787770345020
   },
   "questLogRefreshed": true
 }

@@ -53,8 +53,8 @@ public class PasswordChangeMenu extends ScreenAdapter {
         currentUser = AppContext.getInstance().getCurrentUser();
 
         BorderedTable mainPanel = new BorderedTable();
-        mainPanel.setSize(600, 700);
-        mainPanel.setPosition((1920 - 600) / 2, (1080 - 700) / 2);
+        mainPanel.setSize(600, 800);
+        mainPanel.setPosition((1920 - 600) / 2, (1080 - 800) / 2);
         mainPanel.defaults().space(18);
         mainPanel.center();
         stage.addActor(mainPanel);

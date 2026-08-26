@@ -4,22 +4,17 @@ import com.pvz.models.games.GameContext;
 import com.pvz.models.games.GameStats;
 import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
-import com.pvz.models.user.User;
 
 public class QuestEvaluator {
 
     public static void evaluateAll(QuestLog questLog, GameStats stats, boolean levelWon,
-            int currentSun, int difficulty, User user, GameContext context) {
+            int currentSun, int difficulty, GameContext context) {
         for (Quest quest : questLog.getAllQuests()) {
             if (!quest.isActive() || quest.isClaimed()) {
                 continue;
             }
 
             evaluateQuest(quest, stats, levelWon, currentSun, difficulty, context);
-
-            if (quest.isCompleted() && !quest.isClaimed()) {
-                quest.claim(user);
-            }
         }
     }
 

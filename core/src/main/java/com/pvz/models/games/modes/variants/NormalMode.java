@@ -62,6 +62,7 @@ public class NormalMode implements GameMode, PlantPlacer {
     public void initMode(GameContext context) {
         if (currentWave != null) {
             currentWave.startWave(context);
+            context.getGameStats().onFirstWaveStart(0);
             for (ChapterEffect effect : context.getActiveEffects()) {
                 effect.onWaveStart(currentWave, context);
             }
