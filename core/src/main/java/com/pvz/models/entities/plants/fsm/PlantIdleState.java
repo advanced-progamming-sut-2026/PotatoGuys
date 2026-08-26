@@ -1,5 +1,7 @@
 package com.pvz.models.entities.plants.fsm;
 
+import java.util.Map;
+
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
@@ -86,6 +88,8 @@ public class PlantIdleState extends PlantState {
             animTime = mfAction.getClipElapsedTime();
         }
 
-        return new FrameConfig(config.pamFilePath, idleLabel, animTime, pos, scale, null, looping);
+        Map<String, Boolean> partsVisibility = plant.getArmorPartsVisibility();
+
+        return new FrameConfig(config.pamFilePath, idleLabel, animTime, pos, scale, partsVisibility, looping);
     }
 }
