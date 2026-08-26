@@ -157,20 +157,6 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         }
     }
 
-    @Override
-    public void showVases(GameContext context) {
-        context.log("=== VASES ON BOARD ===");
-        for (int lane = 0; lane < context.getMap().getLanes(); lane++) {
-            for (int col = 0; col < context.getMap().getColumns(); col++) {
-                Tile tile = context.getTileAt(col, lane);
-                VaseBehavior vase = findVaseBehavior(tile);
-                if (vase != null && !vase.isBroken()) {
-                    context.log(String.format("Vase at (%d, %d) -> Type: %s", col, lane, vase.getVaseType()));
-                }
-            }
-        }
-    }
-
     private boolean anyVasesRemain() {
         if (cachedContext == null)
             return false;
