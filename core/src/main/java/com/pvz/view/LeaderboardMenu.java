@@ -144,7 +144,7 @@ public class LeaderboardMenu extends ScreenAdapter {
 
         Label titleLabel = new Label("LEADERBOARD", skin, "big");
         titleLabel.setFontScale(1.4f);
-        titleLabel.setColor(Color.BLACK);
+        titleLabel.setColor(Color.valueOf("F1E4C0"));
 
         top.add(backBtn).size(75, 70).left();
         top.add(titleLabel).expandX().center();
@@ -154,7 +154,7 @@ public class LeaderboardMenu extends ScreenAdapter {
 
     private Table buildWallet() {
         Table table = new Table();
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"));
 
         Image coinIcon = new Image(skin.getDrawable("image_ui_generic_coin_icon_small"));
         coinsLabel = new Label("0", style);
@@ -181,7 +181,7 @@ public class LeaderboardMenu extends ScreenAdapter {
 
     private void buildSortBar() {
         sortBar.clearChildren();
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"));
         Label sortByLabel = new Label("Sort by:", style);
         sortByLabel.setFontScale(1.05f);
         sortBar.add(sortByLabel).padRight(10);
@@ -237,7 +237,7 @@ public class LeaderboardMenu extends ScreenAdapter {
     // --- Column header ------------------------------------------------
 
     private Table buildColumnHeader() {
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("555555"));
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("D8C9A8"));
         Table header = new Table();
         header.pad(0, 16, 4, 16);
         header.defaults().left().padRight(8);
@@ -286,7 +286,7 @@ public class LeaderboardMenu extends ScreenAdapter {
         row.pad(8, 16, 8, 16);
         row.defaults().left().padRight(8);
 
-        Label.LabelStyle mainStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Label.LabelStyle mainStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"));
 
         row.add(rankBadge(rank, mainStyle)).width(COL_RANK).center();
         row.add(avatarImage(entry.username)).size(COL_AVATAR - 10);
@@ -321,7 +321,7 @@ public class LeaderboardMenu extends ScreenAdapter {
     }
 
     private Label scoreLabel(int score) {
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"));
         Label label = new Label(String.valueOf(score), style);
         label.setFontScale(1.3f);
         return label;
@@ -354,7 +354,7 @@ public class LeaderboardMenu extends ScreenAdapter {
         }
 
         Label.LabelStyle style = medalColor != null
-            ? new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK)
+            ? new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"))
             : fallbackStyle;
         Label number = new Label(String.valueOf(rank), style);
         number.setFontScale(1.05f);
