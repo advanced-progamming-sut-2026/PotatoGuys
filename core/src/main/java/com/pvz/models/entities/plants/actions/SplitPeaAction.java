@@ -103,19 +103,19 @@ public class SplitPeaAction extends PlantAction {
         if (!shotFront && hasFront && stateTime > hitTime) {
             spawnProjectile(ctx,
                     x + config.forwardOffsetX, y + config.forwardOffsetY,
-                    config.projectileSpeed, 0);
+                    config.projectileSpeed, 0, plant.getType());
             shotFront = true;
         }
         if (!shotBack1 && hasBack && stateTime > hitTime) {
             spawnProjectile(ctx,
                     x + config.backwardOffsetX, y + config.backwardOffsetY,
-                    -config.projectileSpeed, 0);
+                    -config.projectileSpeed, 0, plant.getType());
             shotBack1 = true;
         }
         if (!shotBack2 && hasBack && stateTime > hitTime + 0.1f) {
             spawnProjectile(ctx,
                     x + config.backwardOffsetX, y + config.backwardOffsetY,
-                    -config.projectileSpeed, 0);
+                    -config.projectileSpeed, 0, plant.getType());
             shotBack2 = true;
         }
 
@@ -124,11 +124,12 @@ public class SplitPeaAction extends PlantAction {
         }
     }
 
-    private void spawnProjectile(GameContext ctx, float x, float y, float velX, float velY) {
+    private void spawnProjectile(GameContext ctx, float x, float y, float velX, float velY, com.pvz.models.entities.plants.enums.PlantType plantType) {
         Projectile p = ProjectileFactory.create(
                 ProjectileType.PEA, ctx,
                 new Vector2(x, y), new Vector2(velX, velY),
                 config.damage);
+        p.setSourcePlantType(plantType);
         ctx.spawnProjectile(p);
     }
 

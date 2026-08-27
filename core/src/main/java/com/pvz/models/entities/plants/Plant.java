@@ -247,6 +247,7 @@ public class Plant extends Entity {
         if (currentState != null)
             currentState.onExit(this, context);
         currentState = new PlantDeadState();
+        context.getGameStats().onPlantLost();
         context.removePlant(this);
         context.log("[Plant] " + sheet.getName() + " at (" + col + "," + lane + ") was destroyed.");
     }

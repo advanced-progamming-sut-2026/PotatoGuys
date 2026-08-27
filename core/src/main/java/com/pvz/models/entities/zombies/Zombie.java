@@ -722,6 +722,15 @@ public class Zombie extends Entity {
         ZombieLootService.rollAndApplyLoot(context, this);
         context.getGameStats().onZombieKilled();
         context.getGameStats().onZombieKilledInSeason(context.getSeasonName());
+        int col = com.pvz.controller.game.GameController.worldXtoCol(position.x);
+        if (col <= 0) {
+            boolean hasMower = context.getLawnMowers() != null
+                    && com.pvz.controller.game.GameController.worldYtoLane(position.y) >= 0
+                    && com.pvz.controller.game.GameController.worldYtoLane(position.y) < context.getLawnMowers().length
+                    && context.getLawnMowers()[com.pvz.controller.game.GameController.worldYtoLane(position.y)] != null
+                    && !context.getLawnMowers()[com.pvz.controller.game.GameController.worldYtoLane(position.y)].isTriggered();
+            context.getGameStats().onZombieKilledInCol0(hasMower);
+        }
         context.log("Zombie of type " + sheet.getAlias()
                 + " is dead at (" + String.format("%.1f", position.x) + "," + GameController.worldYtoLane(position.y)
                 + ")");

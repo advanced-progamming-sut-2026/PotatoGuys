@@ -111,6 +111,7 @@ public class LobberAction extends PlantAction {
             Zombie target = targets.get(i);
             Projectile projectile = ProjectileFactory.create(
                     pattern.projectileType, ctx, new Vector2(x, y), new Vector2(), pattern.damage, target);
+            projectile.setSourcePlantType(plant.getType());
             ctx.spawnProjectile(projectile);
             ctx.log("[Action] " + plant.getSheet().getName() + " lobbed " + pattern.projectileType
                     + " at zombie in lane " + GameController.worldYtoLane(target.getY()) + ".");

@@ -41,6 +41,7 @@ public class GameContext implements TickAware {
     private int levelNumber;
     private boolean gameOver;
     private int plantFoodCount;
+    private int profilePlantFoodOnEntry;
 
     private final GameEngine engine;
     private List<Projectile> projectiles;
@@ -132,7 +133,9 @@ public class GameContext implements TickAware {
         }
 
         this.log("DEBUG: GameContext initialized with season: '" + this.seasonName + "'");
-        this.plantFoodCount = 0;
+        com.pvz.models.user.User user = com.pvz.models.AppContext.getInstance().getCurrentUser();
+        this.plantFoodCount = (user != null && user.getProfile() != null) ? user.getProfile().getPlantFood() : 0;
+        this.profilePlantFoodOnEntry = this.plantFoodCount;
         this.gameStats = new GameStats();
         engine.register(new SunManager(this));
 
@@ -536,6 +539,10 @@ public class GameContext implements TickAware {
         if (plantFoodCount > 3) {
             plantFoodCount = 3;
         }
+    }
+
+    public int getProfilePlantFoodOnEntry() {
+        return profilePlantFoodOnEntry;
     }
 
     public boolean spendPlantFood() {

@@ -138,6 +138,7 @@ public class MultiStageFeedAction extends ShooterAction {
         Vector2 startPos = new Vector2(plantX + pat.positionOffset.x, plantY + pat.positionOffset.y);
         Vector2 vel = new Vector2(pat.velocity.x, pat.velocity.y);
         var proj = ProjectileFactory.create(pat.projectileType, ctx, startPos, vel, pat.damage);
+        proj.setSourcePlantType(plant.getType());
         ctx.spawnProjectile(proj);
         ctx.log("[Action] " + plant.getSheet().getName() + " PF fired " + pat.projectileType);
     }
