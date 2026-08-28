@@ -8,6 +8,8 @@ import java.util.Random;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
+import com.pvz.models.entities.plants.data.PlantPropertySheet;
+import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.ZombieType;
@@ -35,12 +37,14 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     private int greenPots;
     private int gargantuarPots;
     private int xOffset;
+    private MyPlant defaultPlant;
 
     public VaseBreakerMode(Level level) {
 
         if (level instanceof VaseBreakerLevel vaseLevel) {
             this.plantPool = vaseLevel.getBasedPlants();
             this.zombiePool = vaseLevel.getBasedZombies();
+            this.defaultPlant = vaseLevel.getDefaultPlant();
             this.cols = vaseLevel.getCols();
 
             this.greenPots = vaseLevel.getGreenPots();
@@ -97,6 +101,9 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
                 vases.add(vaseBehavior);
             }
         }
+        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(defaultPlant.getType());
+        ctx.addCard(new PlantCard(defaultPlant, sheet.getSunCost(), sheet.getRechargeSeconds()));
+        ctx.addCard(null);
         ctx.log("gamemap lanes: " + gameMapLanes);
         ctx.log("gamemap cols: " + gameMapCols);
         ctx.log("vase cols: " + cols);
@@ -109,7 +116,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
     @Override
     public void updateMode(GameContext context, float dt) {
-        if (!anyVasesRemain()) {
+        if (!anyVasesRemain() && context.getZombies().isEmpty()) {
             context.setGameOver(true);
             context.log("VICTORY! All vases cleared and all zombies defeated!");
             return;
@@ -239,7 +246,9 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
                 card.getPlant().getLevel(), card.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
         context.getGameStats().onPlantPlaced(col, lane, card.getPlant().getType());
-        context.removeCard(card);
+        if (card.getPlant() != defaultPlant) {
+            context.removeCard(card);
+        }
         context.log(card.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
     }
 

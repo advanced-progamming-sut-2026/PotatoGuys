@@ -41,6 +41,12 @@
     "BUCKETHEAD",
     "IMP"
   ],
+  "defaultPlant": {
+    "Type": "CherryBomb",
+    "level": 1,
+    "seed": 0,
+    "isBoosted": false
+  },
   "cols": 4,
   "xOffset": 0,
   "greenPots": 3,
