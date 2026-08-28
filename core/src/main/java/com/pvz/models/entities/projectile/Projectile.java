@@ -57,6 +57,8 @@ public class Projectile extends Entity {
     private boolean lobbed = false;
     private int launchLane = -1;
 
+    private com.pvz.models.entities.plants.enums.PlantType sourcePlantType;
+
     private ProjectileMotionState motionState;
     private ProjectileEffectState effectState;
 
@@ -102,6 +104,10 @@ public class Projectile extends Entity {
     public void setLobbed(int launchLane) {
         this.lobbed = true;
         this.launchLane = launchLane;
+    }
+
+    public void setSourcePlantType(com.pvz.models.entities.plants.enums.PlantType type) {
+        this.sourcePlantType = type;
     }
 
     public ProjectileMotionState getMotionState() {
@@ -175,7 +181,8 @@ public class Projectile extends Entity {
     public List<FrameConfig> draw() {
         List<FrameConfig> frameConfigs = new ArrayList<>();
         frameConfigs.add(
-                new FrameConfig(type.path, type.lable, stateTime, position, new Vector2(0.9f, 0.9f), null, true));
+                new FrameConfig(type.path, type.lable, stateTime, position, new Vector2(type.scale, type.scale), null,
+                        true));
         return frameConfigs;
     }
 
@@ -189,6 +196,11 @@ public class Projectile extends Entity {
         hitZombies.add(zombie);
 
         effectState.onImpact(this, zombie, ctx);
+
+        if (sourcePlantType != null && zombie.isDead()) {
+            ctx.getGameStats().onZombieKilledByPlant(sourcePlantType);
+        }
+
         ctx.log("[Projectile] " + type + " (" + effectState.getLabel() + ") hit zombie at ("
                 + zombie.getX() + ", " + zombie.getY() + ")");
 

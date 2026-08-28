@@ -54,18 +54,18 @@ public class LeaderboardMenu extends ScreenAdapter {
     private static final String AVATAR_DIR = "textures/avatars/";
     private static final String DEFAULT_AVATAR = AVATAR_DIR + "avatar_luffy.png";
 
-    private static final float PANEL_WIDTH = 1100f;
-    private static final float PANEL_HEIGHT = 940f;
-    private static final float ROW_WIDTH = 1020f;
+    private static final float PANEL_WIDTH = 1160f;
+    private static final float PANEL_HEIGHT = 830f;
+    private static final float ROW_WIDTH = 1100f;
 
-    private static final float COL_RANK = 64f;
-    private static final float COL_AVATAR = 72f;
-    private static final float COL_NAME = 170f;
-    private static final float COL_PROGRESS = 160f;
-    private static final float COL_MINIGAMES = 105f;
-    private static final float COL_DAILY = 115f;
-    private static final float COL_NONDAILY = 115f;
-    private static final float COL_SCORE = 105f;
+    private static final float COL_RANK = 50f;
+    private static final float COL_AVATAR = 58f;
+    private static final float COL_NAME = 148f;
+    private static final float COL_PROGRESS = 138f;
+    private static final float COL_MINIGAMES = 88f;
+    private static final float COL_DAILY = 98f;
+    private static final float COL_NONDAILY = 98f;
+    private static final float COL_SCORE = 82f;
 
     private final PvZ2 game;
     private final LeaderBoardController controller;
@@ -77,6 +77,7 @@ public class LeaderboardMenu extends ScreenAdapter {
     private Table listTable;
     private Label coinsLabel;
     private Label diamondsLabel;
+    private Texture darkBgTexture;
 
     public LeaderboardMenu(PvZ2 game) {
         this.game = game;
@@ -91,16 +92,17 @@ public class LeaderboardMenu extends ScreenAdapter {
         Gdx.input.setInputProcessor(stage);
         skin = PvzSkin.get();
 
-        Stack stack = new Stack();
-        stack.setFillParent(true);
-        stage.addActor(stack);
-
-        MenuUiKit.installRotatingBackground(stack, game.getGlobalAssetManager());
+        MenuUiKit.installRotatingBackground(stage.getRoot(), game.getGlobalAssetManager());
 
         mainPanel = new BorderedTable();
         mainPanel.setSize(PANEL_WIDTH, PANEL_HEIGHT);
         mainPanel.setPosition((1920 - PANEL_WIDTH) / 2f, (1080 - PANEL_HEIGHT) / 2f);
-        stack.add(mainPanel);
+        stage.addActor(mainPanel);
+
+        darkBgTexture = roundedRectTexture(1126, 798, 16, new Color(0.24f, 0.14f, 0.06f, 1f));
+        Image darkBg = new Image(darkBgTexture);
+        darkBg.setBounds(17, 16, 1126, 798);
+        mainPanel.addActor(darkBg);
 
         mainPanel.add(buildTopBar()).fillX().padTop(15).padLeft(25).padRight(25).row();
 
@@ -117,7 +119,7 @@ public class LeaderboardMenu extends ScreenAdapter {
         // rows stay pinned to exactly ROW_WIDTH - same as the header above.
         scrollPane.setScrollbarsOnTop(true);
         scrollPane.setOverscroll(false, false);
-        mainPanel.add(scrollPane).width(ROW_WIDTH).height(620).padTop(10).padBottom(15).row();
+        mainPanel.add(scrollPane).width(ROW_WIDTH).height(560).padTop(10).padBottom(15).row();
 
         buildSortBar();
         refreshWallet();
@@ -136,13 +138,13 @@ public class LeaderboardMenu extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                game.setScreen(new MainMenu(game));
+                game.setScreen(new GameModesMenu(game));
             }
         });
 
         Label titleLabel = new Label("LEADERBOARD", skin, "big");
         titleLabel.setFontScale(1.4f);
-        titleLabel.setColor(Color.BLACK);
+        titleLabel.setColor(Color.valueOf("F1E4C0"));
 
         top.add(backBtn).size(75, 70).left();
         top.add(titleLabel).expandX().center();
@@ -152,7 +154,7 @@ public class LeaderboardMenu extends ScreenAdapter {
 
     private Table buildWallet() {
         Table table = new Table();
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"));
 
         Image coinIcon = new Image(skin.getDrawable("image_ui_generic_coin_icon_small"));
         coinsLabel = new Label("0", style);
@@ -179,7 +181,7 @@ public class LeaderboardMenu extends ScreenAdapter {
 
     private void buildSortBar() {
         sortBar.clearChildren();
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"));
         Label sortByLabel = new Label("Sort by:", style);
         sortByLabel.setFontScale(1.05f);
         sortBar.add(sortByLabel).padRight(10);
@@ -235,7 +237,7 @@ public class LeaderboardMenu extends ScreenAdapter {
     // --- Column header ------------------------------------------------
 
     private Table buildColumnHeader() {
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("555555"));
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("D8C9A8"));
         Table header = new Table();
         header.pad(0, 16, 4, 16);
         header.defaults().left().padRight(8);
@@ -284,7 +286,7 @@ public class LeaderboardMenu extends ScreenAdapter {
         row.pad(8, 16, 8, 16);
         row.defaults().left().padRight(8);
 
-        Label.LabelStyle mainStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Label.LabelStyle mainStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"));
 
         row.add(rankBadge(rank, mainStyle)).width(COL_RANK).center();
         row.add(avatarImage(entry.username)).size(COL_AVATAR - 10);
@@ -319,7 +321,7 @@ public class LeaderboardMenu extends ScreenAdapter {
     }
 
     private Label scoreLabel(int score) {
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK);
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"));
         Label label = new Label(String.valueOf(score), style);
         label.setFontScale(1.3f);
         return label;
@@ -352,7 +354,7 @@ public class LeaderboardMenu extends ScreenAdapter {
         }
 
         Label.LabelStyle style = medalColor != null
-            ? new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.BLACK)
+            ? new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"))
             : fallbackStyle;
         Label number = new Label(String.valueOf(rank), style);
         number.setFontScale(1.05f);
@@ -404,6 +406,21 @@ public class LeaderboardMenu extends ScreenAdapter {
         return new TextureRegionDrawable(texture);
     }
 
+    private Texture roundedRectTexture(int width, int height, int radius, Color color) {
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        pixmap.setBlending(Pixmap.Blending.None);
+        pixmap.setColor(color);
+        pixmap.fillCircle(radius, radius, radius);
+        pixmap.fillCircle(width - radius - 1, radius, radius);
+        pixmap.fillCircle(radius, height - radius - 1, radius);
+        pixmap.fillCircle(width - radius - 1, height - radius - 1, radius);
+        pixmap.fillRectangle(radius, 0, width - 2 * radius, height);
+        pixmap.fillRectangle(0, radius, width, height - 2 * radius);
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return texture;
+    }
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -421,5 +438,6 @@ public class LeaderboardMenu extends ScreenAdapter {
     public void dispose() {
         stage.dispose();
         skin.dispose();
+        if (darkBgTexture != null) darkBgTexture.dispose();
     }
 }

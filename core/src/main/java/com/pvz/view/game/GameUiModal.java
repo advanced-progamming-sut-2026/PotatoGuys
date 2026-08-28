@@ -53,8 +53,8 @@ import pvz.skin.PvzSkin;
  */
 public class GameUiModal extends Table {
 
-    private static final float SLOT_WIDTH = 135f;
-    private static final float SLOT_HEIGHT = 95f;
+    protected static final float SLOT_WIDTH = 135f;
+    protected static final float SLOT_HEIGHT = 95f;
 
     private static final int CHEAT_SUN_AMOUNT = 25;
     private static final int MAX_PLANT_FOOD = 3;
@@ -86,20 +86,20 @@ public class GameUiModal extends Table {
     private final Image[] plantFoodDots = new Image[MAX_PLANT_FOOD];
     private final ImageButton addSunButton;
     private final ImageButton addFoodButton;
-    private final Table cardsBarTable;
-    private PlantCard selectedCard = null;
-    private ZombieCard selectedZombieCard = null;
+    protected final Table cardsBarTable;
+    protected PlantCard selectedCard = null;
+    protected ZombieCard selectedZombieCard = null;
     private boolean shovelSelected = false;
     private Runnable onShovelRequested = null;
     private ImageButton shovelButton = null;
     private boolean plantFoodSelected = false;
     private Runnable onPlantFoodRequested = null;
 
-    private final Map<PlantCard, Table> slotByCard = new HashMap<>();
-    private final Map<PlantCard, Image> cooldownOverlayByCard = new HashMap<>();
-    private final Map<ZombieCard, Table> zombieSlotByCard = new HashMap<>();
-    private final Map<ZombieCard, Image> zombieCooldownOverlayByCard = new HashMap<>();
-    private Map<PlantType, PlantData> dataByType = new HashMap<>();
+    protected final Map<PlantCard, Table> slotByCard = new HashMap<>();
+    protected final Map<PlantCard, Image> cooldownOverlayByCard = new HashMap<>();
+    protected final Map<ZombieCard, Table> zombieSlotByCard = new HashMap<>();
+    protected final Map<ZombieCard, Image> zombieCooldownOverlayByCard = new HashMap<>();
+    protected Map<PlantType, PlantData> dataByType = new HashMap<>();
 
     private Label timerLabel;
     private Stack timerBank;
@@ -560,6 +560,19 @@ public class GameUiModal extends Table {
         }
     }
 
+    /**
+     * Loads the static plant artwork/label data shared by every card slot.
+     * Exposed as a separate hook so subclasses (e.g. the conveyor-belt HUD)
+     * can reuse it while managing their own tray layout.
+     */
+    protected void loadPlantData() {
+        List<PlantData> allData = PlantData.loadAll();
+        dataByType = new HashMap<>();
+        for (PlantData data : allData) {
+            dataByType.put(data.type, data);
+        }
+    }
+
     public void initCards() {
         cardsBarTable.clearChildren();
         slotByCard.clear();
@@ -578,11 +591,7 @@ public class GameUiModal extends Table {
                 + " matchSession=" + (__ms == null ? "null" : __ms.getMyRole())
                 + " isNetworked=" + (__ms != null));
 
-        List<PlantData> allData = PlantData.loadAll();
-        dataByType = new HashMap<>();
-        for (PlantData data : allData) {
-            dataByType.put(data.type, data);
-        }
+        loadPlantData();
 
         for (Card card : context.getCards()) {
             com.pvz.models.MatchSession matchSession = com.pvz.models.AppContext.getInstance().getMatchSession();
@@ -630,7 +639,7 @@ public class GameUiModal extends Table {
         }
     }
 
-    private Table buildSlot(PlantCard pc, boolean isConveyor) {
+    protected Table buildSlot(PlantCard pc, boolean isConveyor) {
         PlantType type = pc.getPlant().getType();
         PlantData data = dataByType.get(type);
 
@@ -874,7 +883,7 @@ public class GameUiModal extends Table {
         }
     }
 
-    private void updateCardStyles() {
+    protected void updateCardStyles() {
         for (Map.Entry<PlantCard, Table> entry : slotByCard.entrySet()) {
             PlantCard pc = entry.getKey();
             Table slot = entry.getValue();

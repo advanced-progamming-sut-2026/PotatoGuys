@@ -38,7 +38,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
-    "description": "تولید 50 خورشید هر 24 ثانیه."
+    "description": "تولید 50 خورشید هر 24 ثانیه.",
+    "tags": "DAY"
   },
   {
     "id": 2,
@@ -79,7 +80,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 16
     },
-    "description": "تولید 100 خورشید در هر دور."
+    "description": "تولید 100 خورشید در هر دور.",
+    "tags": "DAY"
   },
   {
     "id": 3,
@@ -91,7 +93,7 @@
     "actionIntervalSeconds": 24.0,
     "rechargeSeconds": 5.0,
     "attackConfig": {
-      "class": "SunProducerActionConfig",
+      "class": "GrowthSunProducerConfig",
       "label": "special_stage1",
       "intervalSeconds": 24.0,
       "delaySeconds": 0.6,
@@ -108,7 +110,21 @@
       "spawnOffset": {
         "x": 0.0,
         "y": 0.2
-      }
+      },
+      "idleLabels": [
+        "idle_stage1",
+        "idle_stage2",
+        "idle_stage3"
+      ],
+      "attackLabels": [
+        "special_stage1",
+        "special_stage2",
+        "special_stage3"
+      ],
+      "growthLabels": [
+        "growth_stage1",
+        "growth_stage2"
+      ]
     },
     "feedConfig": {
       "class": "SunProducerActionConfig",
@@ -128,7 +144,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 18
     },
-    "description": "رشد در 3 مرحله و تولید خورشید بیشتر (25/50/75). تغذیه فوراً حداکثر مقدار را تولید می‌کند."
+    "description": "رشد در 3 مرحله و تولید خورشید بیشتر (25/50/75). تغذیه فوراً حداکثر مقدار را تولید می‌کند.",
+    "tags": "SHROOM, WRAMP_UP, NIGHT"
   },
   {
     "id": 4,
@@ -169,7 +186,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
-    "description": "تولید خورشید بزرگ 75 تایی از ابتدا."
+    "description": "تولید خورشید بزرگ 75 تایی از ابتدا.",
+    "tags": ""
   },
   {
     "id": 5,
@@ -199,7 +217,8 @@
       "animSpeed": 1.0,
       "actionTriggerLabel": "trigger_release"
     },
-    "description": "تولید فوری و یک‌باره مقدار زیادی خورشید و سپس ناپدید شدن (375 خورشید)."
+    "description": "تولید فوری و یک‌باره مقدار زیادی خورشید و سپس ناپدید شدن (375 خورشید).",
+    "tags": ""
   },
   {
     "id": 6,
@@ -215,19 +234,33 @@
       "label": "attack",
       "intervalSeconds": 1.5,
       "patterns": [
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.6}
-      ]
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.6}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.1},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.3},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.4}
-      ]
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":10},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.05},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":30},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.1},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":10},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.15},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":30},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.25},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.3},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":10},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.35},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":30},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.4},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":10},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.45},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.5},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":30},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.55},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.6},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":10},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.65},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":30},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.7},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":10},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.75},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.8},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":30},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.85},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":215.0,"y":0.0},"delaySeconds":0.9}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/PEASHOOTER/PEASHOOTER.PAM",
@@ -235,7 +268,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
-    "description": "شلیک تیر مستقیم."
+    "description": "شلیک تیر مستقیم.",
+    "tags": "PEA"
   },
   {
     "id": 7,
@@ -251,24 +285,16 @@
       "label": "attack",
       "intervalSeconds": 1.5,
       "patterns": [
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.5},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6}
-      ]
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.5},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood2",
       "patterns": [
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.4},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.8},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.0},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.2},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.4},
-        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.6}
-      ]
+          {"projectileType":"REAPETER_PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":65,"y":16},"velocity":{"x":250.0,"y":0.0},"delaySeconds":1.83}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/REPEATER/REPEATER.PAM",
@@ -276,7 +302,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 12
     },
-    "description": "شلیک 2 تیر مستقیم متوالی."
+    "description": "شلیک 2 تیر مستقیم متوالی.",
+    "tags": "PEA"
   },
   {
     "id": 8,
@@ -292,19 +319,37 @@
       "label": "attack",
       "intervalSeconds": 1.5,
       "patterns": [
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":100},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.4},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":20},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.4},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":-80},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.4}
-      ]
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":100},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.4},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":20},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.4},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":-80},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.4}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":100},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":20},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.1},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":-80},"velocity":{"x":150.0,"y":0.0},"delaySeconds":0.2}
-      ]
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":100},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":20},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":100},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":20},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.1},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":-80},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.1},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":100},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.1},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":20},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":-80},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":100},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":20},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.3},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":-80},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.3},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":100},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.3},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":20},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.4},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":-80},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.4},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":100},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.4},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":-80},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.5},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":-80},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.5},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":100},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.5},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":-80},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.6},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":-80},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.6},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":10,"y":100},"velocity":{"x":200.0,"y":0.0},"delaySeconds":0.6}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/THREEPEATER/THREEPEATER.PAM",
@@ -312,7 +357,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 12
     },
-    "description": "شلیک همزمان تیر در 3 لاین موازی."
+    "description": "شلیک همزمان تیر در 3 لاین موازی.",
+    "tags": "PEA"
   },
   {
     "id": 9,
@@ -327,19 +373,22 @@
       "class": "ShooterActionConfig",
       "label": "attack",
       "patterns": [
-        {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.7}
-      ]
+          {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.7}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.1},
-        {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.3},
-        {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.4}
-      ]
+          {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.12},
+          {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.24},
+          {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.36},
+          {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.48},
+          {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.5},
+          {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.52},
+          {"projectileType":"SNOW_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":190.0,"y":0.0},"delaySeconds":0.54}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/SNOWPEA/SNOWPEA.PAM",
@@ -347,7 +396,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
-    "description": "شلیک تیر مستقیم کندکننده سرعت."
+    "description": "شلیک تیر مستقیم کندکننده سرعت.",
+    "tags": "ICE, PEA"
   },
   {
     "id": 10,
@@ -362,33 +412,45 @@
       "class": "ShooterActionConfig",
       "label": "attack",
       "patterns": [
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":0.95},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":0.95},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":0.95},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":0.95}
-      ]
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":0.95},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":0.95},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":0.95},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":0.95}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood_on",
       "patterns": [
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":0.0},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":0.0},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":0.0},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":0.0},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":0.2},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":0.2},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":0.2},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":0.2},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":0.4},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":0.4},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":0.4},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":0.4},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":0.6},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":0.6},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":0.6},
-        {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":0.6}
-      ]
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":1.0},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":1.0},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":1.0},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":1.0},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":1.1},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":1.1},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":1.1},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":1.1},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":1.2},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":1.2},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":1.2},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":1.2},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":1.3},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":1.3},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":1.3},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":1.3},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":1.4},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":1.4},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":1.4},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":1.4},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":1.5},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":1.5},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":1.5},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":1.5},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":7,"y":15},"velocity":{"x":180.0,"y":180.0},"delaySeconds":1.6},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-20,"y":18},"velocity":{"x":-180.0,"y":180.0},"delaySeconds":1.6},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":0,"y":-2},"velocity":{"x":180.0,"y":-180.0},"delaySeconds":1.6},
+          {"projectileType":"ROTOBAGA_PROJECTILE","damage":10.0,"laneOffset":0,"positionOffset":{"x":-19,"y":1},"velocity":{"x":-180.0,"y":-180.0},"delaySeconds":1.6}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/ROTORUTABAGA/ROTORUTABAGA.PAM",
@@ -396,7 +458,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
-    "description": "شلیک در 4 جهت اریب."
+    "description": "شلیک در 4 جهت اریب.",
+    "tags": ""
   },
   {
     "id": 11,
@@ -408,26 +471,41 @@
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "attackConfig": {
-      "class": "ShooterActionConfig",
+      "class": "StackedShooterConfig",
       "label": "attack",
+      "intervalSeconds": 1.5,
+      "idleLabels": [
+        "idle",
+        "idle2",
+        "idle3",
+        "idle4",
+        "idle5"
+      ],
+      "attackLabels": [
+        "attack",
+        "attack 2",
+        "attack 3",
+        "attack 4",
+        "attack 5"
+      ],
       "patterns": [
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":25},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":30},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":40},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0}
-      ]
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":19.5,"y":-19.5},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-9.75,"y":-9.75},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.55},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":45.5,"y":-9.75},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.73},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":19.5,"y":9.75},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.5},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":19.5,"y":32.5},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.4}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":25},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":30},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":40},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0}
-      ]
+          {"projectileType":"PEAPOD_GIANT_PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6},
+          {"projectileType":"PEAPOD_GIANT_PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.6},
+          {"projectileType":"PEAPOD_GIANT_PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":2.7},
+          {"projectileType":"PEAPOD_GIANT_PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":3.8},
+          {"projectileType":"PEAPOD_GIANT_PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":4.7}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/PEAPOD/PEAPOD.PAM",
@@ -435,7 +513,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
-    "description": "شلیک تیر مستقیم به ازای هر سر کاشته شده روی هم (تا 5 سر، دمیج 20 تا 100)."
+    "description": "شلیک تیر مستقیم به ازای هر سر کاشته شده روی هم (تا 5 سر، دمیج 20 تا 100).",
+    "tags": "PEA, STACK"
   },
   {
     "id": 12,
@@ -447,28 +526,33 @@
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 5.0,
     "attackConfig": {
-      "class": "ShooterActionConfig",
-      "label": "attack2",
-      "patterns": [
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.7},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.8}
-      ]
+      "class": "SplitPeaConfig",
+      "intervalSeconds": 1.5,
+      "damage": 20.0,
+      "attackFrontClip": "attack",
+      "attackBothClip": "attack2",
+      "attackBackClip": "attack3",
+      "projectileSpeed": 180.0,
+      "forwardOffsetX": 50.0,
+      "forwardOffsetY": 15.0,
+      "backwardOffsetX": -50.0,
+      "backwardOffsetY": 20.0,
+      "label": "attack"
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.4},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.4},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.4}
-      ]
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.4},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.4},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":-50,"y":20},"velocity":{"x":-180.0,"y":0.0},"delaySeconds":0.4}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/SPLITPEA/SPLITPEA.PAM",
@@ -476,10 +560,150 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
-    "description": "شلیک 1 تیر به جلو و 2 تیر به عقب."
+    "description": "شلیک 1 تیر به جلو و 2 تیر به عقب.",
+    "tags": "PEA"
   },
   {
     "id": 13,
+    "name": "Citron",
+    "type": "Citron",
+    "category": "SHOOTER",
+    "sunCost": 350,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 9.0,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ChargingShooterConfig",
+      "label": "attack",
+      "intervalSeconds": 9.0,
+      "chargeLabel": "charge",
+      "chargeDuration": 7.0,
+      "idleLabel": "idle2",
+      "patterns": [
+          {"projectileType":"CITRON_BALL","damage":800.0,"laneOffset":0,"positionOffset":{"x":30,"y":0},"velocity":{"x":120,"y":0.0},"delaySeconds":0.6}
+        ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+          {"projectileType":"CITRON_PLANTFOOD_ORB","damage":1200.0,"laneOffset":0,"positionOffset":{"x":13,"y":0},"velocity":{"x":120,"y":0.0},"delaySeconds":0.97}
+        ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/CITRON/CITRON.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 12
+    },
+    "description": "شلیک تیر سنگین مستقیم (نیازمند زمان شارژ).",
+    "tags": "CHARGE"
+  },
+  {
+    "id": 14,
+    "name": "Caulipower",
+    "type": "Caulipower",
+    "category": "HOMING",
+    "sunCost": 250,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 12.0,
+    "rechargeSeconds": 15.0,
+    "attackConfig": {
+      "class": "ClipProgressionShooterConfig",
+      "chargeIdleLabels": [
+        "idle1_1",
+        "idle2_1",
+        "idle3_1",
+        "idle4_1"
+      ],
+      "readyIdleLabel": "idle4_1",
+      "attackLabel": "attack",
+      "label": "attack",
+      "intervalSeconds": 12.0,
+      "patterns": [
+          {"projectileType":"CAULIPOWER_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.8}
+        ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood_loop",
+      "patterns": [
+          {"projectileType":"CAULIPOWER_PF_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"CAULIPOWER_PF_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.1},
+          {"projectileType":"CAULIPOWER_PF_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2}
+        ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/CAULIPOWER/CAULIPOWER.PAM",
+      "idleLabel": "idle1_1",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "شلیک تیر جادویی هیپنوتیزم‌کننده.",
+    "tags": "MAGIC, CHARGE"
+  },
+  {
+    "id": 15,
+    "name": "Electric Blueberry",
+    "type": "ElectricBlueberry",
+    "category": "HOMING",
+    "sunCost": 150,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 12.0,
+    "rechargeSeconds": 15.0,
+    "attackConfig": {
+      "class": "ClipProgressionShooterConfig",
+      "chargeIdleLabels": [
+        "idle1_1",
+        "idle1_2",
+        "idle2_1",
+        "idle2_2",
+        "idle2_3",
+        "idle2_4",
+        "idle3_1",
+        "idle3_2",
+        "idle3_3",
+        "idle4_1",
+        "idle4_2",
+        "idle4_3"
+      ],
+      "readyIdleLabel": "idle4_3",
+      "attackLabel": "attack",
+      "allTargets": true,
+      "cloudPamPath": "768/INITIAL/EFFECTS/ELECTRICBLUEBERRY_CLOUD_PROJECTILE/ELECTRICBLUEBERRY_CLOUD_PROJECTILE.PAM",
+      "cloudClip": "attack",
+      "label": "attack",
+      "intervalSeconds": 12.0,
+      "patterns": [
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0}
+        ]
+    },
+    "feedConfig": {
+      "class": "ClipProgressionShooterConfig",
+      "label": "plantfood",
+      "allTargets": true,
+      "cloudPamPath": "768/INITIAL/EFFECTS/ELECTRICBLUEBERRY_CLOUD_PROJECTILE/ELECTRICBLUEBERRY_CLOUD_PROJECTILE.PAM",
+      "cloudClip": "attack",
+      "chargeIdleLabels": [
+        "plantfood"
+      ],
+      "readyIdleLabel": "plantfood",
+      "attackLabel": "plantfood",
+      "patterns": [
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0}
+        ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/ELECTRICBLUEBERRY/ELECTRICBLUEBERRY.PAM",
+      "idleLabel": "idle1_1",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی.",
+    "tags": "CHARGE"
+  },
+  {
+    "id": 16,
     "name": "Bowling Bulb",
     "type": "BowlingBulb",
     "category": "SHOOTER",
@@ -488,22 +712,41 @@
     "actionIntervalSeconds": 2.0,
     "rechargeSeconds": 5.0,
     "attackConfig": {
-      "class": "ShooterActionConfig",
+      "class": "MultiStageShooterConfig",
+      "stageLabels": [
+        "special",
+        "special2",
+        "special3"
+      ],
+      "reloadLabels": [
+        "reload",
+        "reload2",
+        "reload3"
+      ],
       "label": "special",
+      "intervalSeconds": 2.0,
       "patterns": [
-        {"projectileType":"BULB_CYAN","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":10},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.6},
-        {"projectileType":"BULB_BLUE","damage":120.0,"laneOffset":-1,"positionOffset":{"x":50,"y":10},"velocity":{"x":225.0,"y":270.0},"delaySeconds":0.7},
-        {"projectileType":"BULB_ORANGE","damage":180.0,"laneOffset":1,"positionOffset":{"x":50,"y":10},"velocity":{"x":225.0,"y":-270.0},"delaySeconds":1.0}
-      ]
+          {"projectileType":"BOWLINGBULB_PROJ1","damage":40.0,"laneOffset":0,"positionOffset":{"x":25,"y":-15},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.6},
+          {"projectileType":"BOWLINGBULB_PROJ2","damage":120.0,"laneOffset":0,"positionOffset":{"x":-10,"y":-10},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.6},
+          {"projectileType":"BOWLINGBULB_PROJ3","damage":180.0,"laneOffset":0,"positionOffset":{"x":0,"y":15},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.6}
+        ]
     },
     "feedConfig": {
-      "class": "ShooterActionConfig",
-      "label": "plantfood1",
-      "patterns": [
-        {"projectileType":"BULB_CYAN","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":10},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"BULB_BLUE","damage":120.0,"laneOffset":-1,"positionOffset":{"x":50,"y":10},"velocity":{"x":225.0,"y":270.0},"delaySeconds":0.3},
-        {"projectileType":"BULB_ORANGE","damage":180.0,"laneOffset":1,"positionOffset":{"x":50,"y":10},"velocity":{"x":225.0,"y":-270.0},"delaySeconds":0.6}
-      ]
+      "class": "MultiStageShooterConfig",
+      "plantfoodOnLabel": "plantfood_on",
+      "plantfoodIdleLabel": "plantfood_idle",
+      "plantfoodLabels": [
+        "plantfood1",
+        "plantfood2",
+        "plantfood3"
+      ],
+      "plantfoodPatterns": [
+          {"projectileType":"BOWLINGBULB_PF_PROJ","damage":60.0,"laneOffset":0,"positionOffset":{"x":25,"y":-15},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.6},
+          {"projectileType":"BOWLINGBULB_PF_PROJ","damage":60.0,"laneOffset":0,"positionOffset":{"x":-10,"y":-10},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.6},
+          {"projectileType":"BOWLINGBULB_PF_PROJ","damage":60.0,"laneOffset":0,"positionOffset":{"x":0,"y":15},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.6}
+      ],
+      "label": "plantfood_on",
+      "patterns": []
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/BOWLINGBULB/BOWLINGBULB.PAM",
@@ -511,10 +754,11 @@
       "animSpeed": 1.0,
       "actionTriggerLabel": "trigger_release"
     },
-    "description": "شلیک 3 نوع پیاز که بین لاین‌ها کمانه می‌کند (دمیج 40/120/180)."
+    "description": "شلیک 3 نوع پیاز که بین لاین‌ها کمانه می‌کند (دمیج 40/120/180).",
+    "tags": "CHARGE"
   },
   {
-    "id": 14,
+    "id": 17,
     "name": "Cactus",
     "type": "Cactus",
     "category": "STRIKE_THROUGH",
@@ -526,22 +770,22 @@
       "class": "ShooterActionConfig",
       "label": "attack",
       "patterns": [
-        {"projectileType":"SPIKE","damage":30.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.6}
-      ]
+          {"projectileType":"SPIKE","damage":30.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.6}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.1},
-        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.3},
-        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.4},
-        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.5},
-        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.6},
-        {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.7}
-      ]
+          {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.11},
+          {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.22},
+          {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.33},
+          {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.44},
+          {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.55},
+          {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.66},
+          {"projectileType":"SPIKE","damage":300.0,"laneOffset":0,"positionOffset":{"x":50,"y":35},"velocity":{"x":225.0,"y":0.0},"delaySeconds":0.77}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/CACTUS/CACTUS.PAM",
@@ -549,10 +793,11 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
-    "description": "شلیک خار مستقیم (عبور از چند زامبی)."
+    "description": "شلیک خار مستقیم (عبور از چند زامبی).",
+    "tags": ""
   },
   {
-    "id": 15,
+    "id": 18,
     "name": "Fire Peashooter",
     "type": "FirePeashooter",
     "category": "SHOOTER",
@@ -564,20 +809,20 @@
       "class": "ShooterActionConfig",
       "label": "attack",
       "patterns": [
-        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6}
-      ]
+          {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.1},
-        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.3},
-        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.4},
-        {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.5}
-      ]
+          {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.1},
+          {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.3},
+          {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.4},
+          {"projectileType":"FIRE_PEA","damage":40.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.5}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/FIREPEASHOOTER/FIREPEASHOOTER.PAM",
@@ -585,10 +830,11 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
-    "description": "شلیک تیر مستقیم آتشین (دمیج 2 برابر)."
+    "description": "شلیک تیر مستقیم آتشین (دمیج 2 برابر).",
+    "tags": "FIRE, PEA"
   },
   {
-    "id": 16,
+    "id": 19,
     "name": "Starfruit",
     "type": "Starfruit",
     "category": "SHOOTER",
@@ -600,28 +846,33 @@
       "class": "ShooterActionConfig",
       "label": "attack",
       "patterns": [
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6},
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":171.0},"delaySeconds":0.6},
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":106.2},"delaySeconds":0.6},
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":-106.2},"delaySeconds":0.6},
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":-171.0},"delaySeconds":0.6}
-      ]
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":171.0},"delaySeconds":0.6},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":106.2},"delaySeconds":0.6},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":-106.2},"delaySeconds":0.6},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":-171.0},"delaySeconds":0.6}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":171.0},"delaySeconds":0.0},
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":106.2},"delaySeconds":0.0},
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":-106.2},"delaySeconds":0.0},
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":-171.0},"delaySeconds":0.0},
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":171.0},"delaySeconds":0.2},
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":106.2},"delaySeconds":0.2},
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":-106.2},"delaySeconds":0.2},
-        {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":-171.0},"delaySeconds":0.2}
-      ]
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":171.0},"delaySeconds":0.0},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":106.2},"delaySeconds":0.0},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":-106.2},"delaySeconds":0.0},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":-171.0},"delaySeconds":0.0},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.17},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":171.0},"delaySeconds":0.17},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":106.2},"delaySeconds":0.17},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":-106.2},"delaySeconds":0.17},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":-171.0},"delaySeconds":0.17},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.35},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":171.0},"delaySeconds":0.35},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":106.2},"delaySeconds":0.35},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":-145.8,"y":-106.2},"delaySeconds":0.35},
+          {"projectileType":"STAR","damage":20.0,"laneOffset":0,"positionOffset":{"x":0,"y":0},"velocity":{"x":55.8,"y":-171.0},"delaySeconds":0.35}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/STARFRUIT/STARFRUIT.PAM",
@@ -629,10 +880,11 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 12
     },
-    "description": "شلیک در 5 جهت ستاره‌ای شامل عقب."
+    "description": "شلیک در 5 جهت ستاره‌ای شامل عقب.",
+    "tags": ""
   },
   {
-    "id": 17,
+    "id": 20,
     "name": "Goo Peashooter",
     "type": "GooPeashooter",
     "category": "SHOOTER",
@@ -644,24 +896,15 @@
       "class": "ShooterActionConfig",
       "label": "attack",
       "patterns": [
-        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6}
-      ]
+          {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":60,"y":10},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.5}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.15},
-        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.3},
-        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.45},
-        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.6},
-        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.75},
-        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":0.9},
-        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.05},
-        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.2},
-        {"projectileType":"GOO_PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":180.0,"y":0.0},"delaySeconds":1.35}
-      ]
+          {"projectileType":"GOO_PLANTFOOD_PEA","damage":200.0,"laneOffset":0,"positionOffset":{"x":168,"y":15},"velocity":{"x":200.0,"y":0.0},"delaySeconds":1.13}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/GOOPEASHOOTER/GOOPEASHOOTER.PAM",
@@ -669,10 +912,11 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
-    "description": "شلیک تیر مستقیم (نادیده گرفتن زره + آسیب مستمر)."
+    "description": "شلیک تیر مستقیم (نادیده گرفتن زره + آسیب مستمر).",
+    "tags": "POISON"
   },
   {
-    "id": 18,
+    "id": 21,
     "name": "Mega Gatlin Pea",
     "type": "MegaGatlingPea",
     "category": "SHOOTER",
@@ -684,29 +928,29 @@
       "class": "ShooterActionConfig",
       "label": "attack",
       "patterns": [
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.6},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.72},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.84},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.96}
-      ]
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.6},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.72},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.84},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.96}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.04},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.08},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.12},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.16},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.24},
-        {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.28},
-        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.05},
-        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.13},
-        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.21},
-        {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.29}
-      ]
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.04},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.08},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.12},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.16},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.24},
+          {"projectileType":"PEA","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.28},
+          {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.05},
+          {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.13},
+          {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.21},
+          {"projectileType":"PEA","damage":400.0,"laneOffset":0,"positionOffset":{"x":50,"y":20},"velocity":{"x":270.0,"y":0.0},"delaySeconds":0.29}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/MEGAGATLING/MEGAGATLING.PAM",
@@ -714,10 +958,11 @@
       "animSpeed": 1.2,
       "actionTriggerFrame": 8
     },
-    "description": "شلیک 4 تیر مستقیم متوالی با سرعت بسیار بالا."
+    "description": "شلیک 4 تیر مستقیم متوالی با سرعت بسیار بالا.",
+    "tags": "PEA"
   },
   {
-    "id": 19,
+    "id": 22,
     "name": "Sea-shroom",
     "type": "Seashroom",
     "category": "SHOOTER",
@@ -729,22 +974,22 @@
       "class": "ShooterActionConfig",
       "label": "attack",
       "patterns": [
-        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0}
-      ]
+          {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "pf",
       "patterns": [
-        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.15},
-        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.3},
-        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.45},
-        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.6},
-        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.75},
-        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.9},
-        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":1.05}
-      ]
+          {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.15},
+          {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.3},
+          {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.45},
+          {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.6},
+          {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.75},
+          {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.9},
+          {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":1.05}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/SEASHROOM/SEASHROOM.PAM",
@@ -752,10 +997,11 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
-    "description": "شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه."
+    "description": "شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه.",
+    "tags": "SHROOM, WATER"
   },
   {
-    "id": 20,
+    "id": 23,
     "name": "Puff-shroom",
     "type": "Puffshroom",
     "category": "SHOOTER",
@@ -767,17 +1013,17 @@
       "class": "ShooterActionConfig",
       "label": "special_stage1",
       "patterns": [
-        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0}
-      ]
+          {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.03},
-        {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.06}
-      ]
+          {"projectileType":"SPORE","damage":20.0,"laneOffset":0,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"SPORE","damage":20.0,"laneOffset":1,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"SPORE","damage":20.0,"laneOffset":-1,"positionOffset":{"x":50,"y":15},"velocity":{"x":135.0,"y":0.0},"delaySeconds":0.0}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/PUFFSHROOM/PUFFSHROOM.PAM",
@@ -785,7 +1031,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
-    "description": "شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه."
+    "description": "شلیک تیر با برد کوتاه. دارای طول عمر محدود 60 ثانیه.",
+    "tags": "SHROOM"
   },
   {
     "id": 24,
@@ -801,17 +1048,17 @@
       "label": "special",
       "intervalSeconds": 1.5,
       "patterns": [
-        {"projectileType":"FUME","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":170,"y":0.0},"delaySeconds":0.6}
-      ]
+          {"projectileType":"FUME","damage":20.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":170,"y":0.0},"delaySeconds":0.6}
+        ]
     },
     "feedConfig": {
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"FUME","damage":400.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":170,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"FUME","damage":400.0,"laneOffset":0,"positionOffset":{"x":30,"y":-50},"velocity":{"x":170,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"FUME","damage":400.0,"laneOffset":0,"positionOffset":{"x":30,"y":90},"velocity":{"x":170,"y":0.0},"delaySeconds":0.4}
-      ]
+          {"projectileType":"FUME","damage":400.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":170,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"FUME","damage":400.0,"laneOffset":0,"positionOffset":{"x":30,"y":-50},"velocity":{"x":170,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"FUME","damage":400.0,"laneOffset":0,"positionOffset":{"x":30,"y":90},"velocity":{"x":170,"y":0.0},"delaySeconds":0.4}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/FUMESHROOM/FUMESHROOM.PAM",
@@ -819,7 +1066,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 10
     },
-    "description": "شلیک دود با برد متوسط که از زامبی‌ها رد می‌شود."
+    "description": "شلیک دود با برد متوسط که از زامبی‌ها رد می‌شود.",
+    "tags": "SHROOM"
   },
   {
     "id": 25,
@@ -835,15 +1083,15 @@
       "label": "attack",
       "intervalSeconds": 2.9,
       "patterns": [
-        {"projectileType":"CABBAGE","damage":40.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.6}
-      ]
+          {"projectileType":"CABBAGE","damage":40.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.6}
+        ]
     },
     "feedConfig": {
       "class": "LobberActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"CABBAGE","damage":40.0,"targets":5,"allLanes":true,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.55}
-      ]
+          {"projectileType":"CABBAGE","damage":40.0,"targets":5,"allLanes":true,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.55}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/CABBAGEPULT/CABBAGEPULT.PAM",
@@ -851,7 +1099,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
-    "description": "شلیک هوایی از روی موانع. پرتاب کلم به چند زامبی تصادفی."
+    "description": "شلیک هوایی از روی موانع. پرتاب کلم به چند زامبی تصادفی.",
+    "tags": ""
   },
   {
     "id": 26,
@@ -867,16 +1116,16 @@
       "label": "attack",
       "intervalSeconds": 2.9,
       "patterns": [
-        {"projectileType":"KERNEL","damage":20.0,"targets":1,"positionOffset":{"x":0,"y":40},"delaySeconds":0.6,"chance":0.8},
-        {"projectileType":"BUTTER","damage":40.0,"targets":1,"positionOffset":{"x":0,"y":40},"delaySeconds":0.6,"chance":0.2}
-      ]
+          {"projectileType":"KERNEL","damage":20.0,"targets":1,"positionOffset":{"x":0,"y":40},"delaySeconds":0.6,"chance":0.8},
+          {"projectileType":"BUTTER","damage":40.0,"targets":1,"positionOffset":{"x":0,"y":40},"delaySeconds":0.6,"chance":0.2}
+        ]
     },
     "feedConfig": {
       "class": "LobberActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"BUTTER","damage":40.0,"targets":5,"positionOffset":{"x":0,"y":40},"delaySeconds":0.57,"allLanes":true}
-      ]
+          {"projectileType":"BUTTER","damage":40.0,"targets":5,"positionOffset":{"x":0,"y":40},"delaySeconds":0.57,"allLanes":true}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/KERNALPULT/KERNALPULT.PAM",
@@ -884,7 +1133,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
-    "description": "شلیک دانه ذرت (آسیب کم) یا کره (توقف موقت زامبی). پرتاب کره به سر تمامی زامبی‌های زمین."
+    "description": "شلیک دانه ذرت (آسیب کم) یا کره (توقف موقت زامبی). پرتاب کره به سر تمامی زامبی‌های زمین.",
+    "tags": ""
   },
   {
     "id": 27,
@@ -900,18 +1150,18 @@
       "label": "attack",
       "intervalSeconds": 2.9,
       "patterns": [
-        {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.6}
-      ]
+          {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":0.6}
+        ]
     },
     "feedConfig": {
       "class": "LobberActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.0,"allLanes":true},
-        {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.55,"allLanes":true},
-        {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.9,"allLanes":true},
-        {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":2.15,"allLanes":true}
-      ]
+          {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.0,"allLanes":true},
+          {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.55,"allLanes":true},
+          {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.9,"allLanes":true},
+          {"projectileType":"MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":2.15,"allLanes":true}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/MELONPULT/MELONPULT.PAM",
@@ -919,7 +1169,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
-    "description": "شلیک هوایی سنگین با آسیب مساحتی. پرتاب هندوانه غول‌پیکر به زامبی‌های تصادفی."
+    "description": "شلیک هوایی سنگین با آسیب مساحتی. پرتاب هندوانه غول‌پیکر به زامبی‌های تصادفی.",
+    "tags": "AOE"
   },
   {
     "id": 28,
@@ -935,18 +1186,18 @@
       "label": "attack",
       "intervalSeconds": 2.9,
       "patterns": [
-        {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":0,"y":40},"delaySeconds":0.7}
-      ]
+          {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":0,"y":40},"delaySeconds":0.7}
+        ]
     },
     "feedConfig": {
       "class": "LobberActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.0,"allLanes":true},
-        {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.55,"allLanes":true},
-        {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.9,"allLanes":true},
-        {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":2.15,"allLanes":true}
-      ]
+          {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.0,"allLanes":true},
+          {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.55,"allLanes":true},
+          {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":1.9,"allLanes":true},
+          {"projectileType":"WINTER_MELON","damage":80.0,"targets":1,"positionOffset":{"x":-10,"y":40},"delaySeconds":2.15,"allLanes":true}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/WINTERMELON/WINTERMELON.PAM",
@@ -954,7 +1205,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
-    "description": "شلیک هوایی سنگین با آسیب مساحتی (کندکننده سرعت). پرتاب هندوانه یخی به زامبی‌های تصادفی."
+    "description": "شلیک هوایی سنگین با آسیب مساحتی (کندکننده سرعت). پرتاب هندوانه یخی به زامبی‌های تصادفی.",
+    "tags": "ICE, AOE"
   },
   {
     "id": 29,
@@ -970,17 +1222,17 @@
       "label": "attack",
       "intervalSeconds": 2.9,
       "patterns": [
-        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":1,"positionOffset":{"x":0,"y":40},"delaySeconds":0.5}
-      ]
+          {"projectileType":"PEPPER_BALL","damage":50.0,"targets":1,"positionOffset":{"x":0,"y":40},"delaySeconds":0.5}
+        ]
     },
     "feedConfig": {
       "class": "LobberActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":1.30},
-        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":1.63},
-        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":2.35}
-      ]
+          {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":1.3},
+          {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":1.63},
+          {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"positionOffset":{"x":0,"y":40},"delaySeconds":2.35}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/PEPPERPULT/PEPPERPULT.PAM",
@@ -988,165 +1240,11 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 14
     },
-    "description": "شلیک هوایی با آسیب مساحتی (گرم‌کننده محیط اطراف). پرتاب فلفل‌های بزرگ به ۳ زامبی تصادفی."
+    "description": "شلیک هوایی با آسیب مساحتی (گرم‌کننده محیط اطراف). پرتاب فلفل‌های بزرگ به ۳ زامبی تصادفی.",
+    "tags": "FIRE, AOE"
   },
   {
     "id": 30,
-    "name": "Bonk Choy",
-    "type": "BonkChoy",
-    "category": "MELEE",
-    "sunCost": 150,
-    "baseHp": 300.0,
-    "actionIntervalSeconds": 2.9,
-    "rechargeSeconds": 5.0,
-    "attackConfig": {
-      "class": "BonkChoyConfig",
-      "label": "attack"
-    },
-    "feedConfig": {
-      "class": "LobberActionConfig",
-      "label": "plantfood",
-      "intervalSeconds": 2.9,
-      "patterns": [
-        {"projectileType":"PEPPER_BALL","damage":50.0,"targets":3,"allLanes":true,"positionOffset":{"x":50,"y":20},"delaySeconds":0.0}
-      ]
-    },
-    "pamAnimationConfig": {
-      "pamFilePath": "768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM",
-      "idleLabel": "idle",
-      "animSpeed": 1.0,
-      "actionTriggerFrame": 14
-    },
-    "description": "شلیک هوایی با آسیب مساحتی (گرم‌کننده محیط اطراف). پرتاب فلفل‌های بزرگ به ۳ زامبی تصادفی."
-  },
-  {
-    "id": 31,
-    "name": "Grave Buster",
-    "type": "GraveBuster",
-    "category": "EXPLOSIVE",
-    "sunCost": 0,
-    "baseHp": 300.0,
-    "actionIntervalSeconds": 2.9,
-    "rechargeSeconds": 10.0,
-    "attackConfig": {
-      "class": "GraveBusterConfig",
-      "label": "attack1"
-    },
-    "feedConfig": null,
-    "pamAnimationConfig": {
-      "pamFilePath": "768/INITIAL/PLANT/GRAVEBUSTER/GRAVEBUSTER.PAM",
-      "idleLabel": "attack",
-      "animSpeed": 1.0,
-      "actionTriggerFrame": 14
-    },
-    "description": "شلیک هوایی با آسیب مساحتی (گرم‌کننده محیط اطراف). پرتاب فلفل‌های بزرگ به ۳ زامبی تصادفی."
-  },
-  {
-    "id": 32,
-    "name": "Citron",
-    "type": "Citron",
-    "category": "SHOOTER",
-    "sunCost": 350,
-    "baseHp": 300.0,
-    "actionIntervalSeconds": 9.0,
-    "rechargeSeconds": 5.0,
-    "attackConfig": {
-      "class": "ShooterActionConfig",
-      "label": "attack",
-      "intervalSeconds": 9.0,
-      "patterns": [
-        {"projectileType":"CITRON_BALL","damage":800.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":120,"y":0.0},"delaySeconds":0.6}
-      ]
-    },
-    "feedConfig": {
-      "class": "ShooterActionConfig",
-      "label": "plantfood",
-      "patterns": [
-        {"projectileType":"CITRON_BALL","damage":800.0,"laneOffset":0,"positionOffset":{"x":30,"y":-60},"velocity":{"x":120,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"CITRON_BALL","damage":800.0,"laneOffset":0,"positionOffset":{"x":30,"y":-30},"velocity":{"x":120,"y":0.0},"delaySeconds":0.1},
-        {"projectileType":"CITRON_BALL","damage":800.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":120,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"CITRON_BALL","damage":800.0,"laneOffset":0,"positionOffset":{"x":30,"y":70},"velocity":{"x":120,"y":0.0},"delaySeconds":0.3},
-        {"projectileType":"CITRON_BALL","damage":800.0,"laneOffset":0,"positionOffset":{"x":30,"y":120},"velocity":{"x":120,"y":0.0},"delaySeconds":0.4}
-      ]
-    },
-    "pamAnimationConfig": {
-      "pamFilePath": "768/FULL/PLANT/CITRON/CITRON.PAM",
-      "idleLabel": "idle",
-      "animSpeed": 1.0,
-      "actionTriggerFrame": 12
-    },
-    "description": "شلیک تیر سنگین مستقیم (نیازمند زمان شارژ)."
-  },
-  {
-    "id": 33,
-    "name": "Caulipower",
-    "type": "Caulipower",
-    "category": "HOMING",
-    "sunCost": 250,
-    "baseHp": 300.0,
-    "actionIntervalSeconds": 12.0,
-    "rechargeSeconds": 15.0,
-    "attackConfig": {
-      "class": "ShooterActionConfig",
-      "label": "attack",
-      "intervalSeconds": 12.0,
-      "patterns": [
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.8}
-      ]
-    },
-    "feedConfig": {
-      "class": "ShooterActionConfig",
-      "label": "plantfood_loop",
-      "patterns": [
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.1},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2}
-      ]
-    },
-    "pamAnimationConfig": {
-      "pamFilePath": "768/INITIAL/PLANT/CAULIPOWER/CAULIPOWER.PAM",
-      "idleLabel": "idle1_1",
-      "animSpeed": 1.0,
-      "actionTriggerFrame": 8
-    },
-    "description": "شلیک تیر جادویی هیپنوتیزم‌کننده."
-  },
-  {
-    "id": 34,
-    "name": "Electric Blueberry",
-    "type": "ElectricBlueberry",
-    "category": "HOMING",
-    "sunCost": 150,
-    "baseHp": 300.0,
-    "actionIntervalSeconds": 12.0,
-    "rechargeSeconds": 15.0,
-    "attackConfig": {
-      "class": "ShooterActionConfig",
-      "label": "attack",
-      "intervalSeconds": 12.0,
-      "patterns": [
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.8}
-      ]
-    },
-    "feedConfig": {
-      "class": "ShooterActionConfig",
-      "label": "plantfood",
-      "patterns": [
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
-      ]
-    },
-    "pamAnimationConfig": {
-      "pamFilePath": "768/INITIAL/PLANT/ELECTRICBLUEBERRY/ELECTRICBLUEBERRY.PAM",
-      "idleLabel": "idle1_1",
-      "animSpeed": 1.0,
-      "actionTriggerFrame": 8
-    },
-    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
-  },
-  {
-    "id": 35,
     "name": "Potato Mine",
     "type": "PotatoMine",
     "category": "EXPLOSIVE",
@@ -1164,10 +1262,10 @@
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
-      ]
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/POTATOMINE/POTATOMINE.PAM",
@@ -1175,10 +1273,11 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
-    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
+    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی.",
+    "tags": "TRAP, CHARGE"
   },
   {
-    "id": 36,
+    "id": 31,
     "name": "Primal Potato Mine",
     "type": "PrimalPotatoMine",
     "category": "EXPLOSIVE",
@@ -1201,10 +1300,10 @@
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
-      ]
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/PRIMAL_POTATOMINE/PRIMAL_POTATOMINE.PAM",
@@ -1212,10 +1311,11 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
-    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
+    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی.",
+    "tags": "TRAP, CHARGE"
   },
   {
-    "id": 37,
+    "id": 32,
     "name": "Cherry Bomb",
     "type": "CherryBomb",
     "category": "EXPLOSIVE",
@@ -1234,27 +1334,84 @@
       "plantClip": "attack",
       "idleClip": "idle",
       "explosionClip": "attack",
-      "explosionType": "PRIMAL_POTATO_MINE"
+      "explosionType": "PRIMAL_POTATO_MINE",
+      "recoverClip": "idle"
     },
-    "feedConfig": {
-      "class": "ShooterActionConfig",
-      "label": "plantfood",
-      "patterns": [
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
-      ]
-    },
+    "feedConfig": null,
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/CHERRYBOMB/CHERRYBOMB.PAM",
       "idleLabel": "idle",
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
-    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
+    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی.",
+    "tags": ""
   },
   {
-    "id": 38,
+    "id": 33,
+    "name": "Squash",
+    "type": "Squash",
+    "category": "EXPLOSIVE",
+    "sunCost": 50,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 12.0,
+    "rechargeSeconds": 20.0,
+    "attackConfig": {
+      "class": "SquashConfig"
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
+        ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/SQUASH/SQUASH.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی.",
+    "tags": "TRAP"
+  },
+  {
+    "id": 34,
+    "name": "Grapeshot",
+    "type": "Grapeshot",
+    "category": "EXPLOSIVE",
+    "tags": "",
+    "sunCost": 150,
+    "baseHp": 0.0,
+    "actionIntervalSeconds": 12.0,
+    "rechargeSeconds": 35.0,
+    "attackConfig": {
+      "class": "ExplosiveConfig",
+      "plantTime": 0.7,
+      "idleTime": 0.0,
+      "recoverTime": 0.0,
+      "explosionTime": 0.0,
+      "damageDealTime": 0.0,
+      "baseDamage": 1800.0,
+      "plantClip": "attack",
+      "idleClip": "idle",
+      "explosionClip": "attack",
+      "explosionType": "PRIMAL_POTATO_MINE",
+      "recoverClip": "idle"
+    },
+    "feedConfig": null,
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/GRAPESHOT/GRAPESHOT.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "انفجار مساحتی ۳x۳ و پرتاب حبه‌های کمانه‌کننده."
+  },
+  {
+    "id": 35,
     "name": "Jalapeno",
     "type": "Jalapeno",
     "category": "EXPLOSIVE",
@@ -1273,27 +1430,21 @@
       "plantClip": "attack",
       "idleClip": "idle",
       "explosionClip": "attack",
-      "explosionType": "PRIMAL_POTATO_MINE"
+      "explosionType": "PRIMAL_POTATO_MINE",
+      "recoverClip": "idle"
     },
-    "feedConfig": {
-      "class": "ShooterActionConfig",
-      "label": "plantfood",
-      "patterns": [
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
-      ]
-    },
+    "feedConfig": null,
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/JALAPENO/JALAPENO.PAM",
       "idleLabel": "idle",
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
-    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
+    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی.",
+    "tags": "FIRE"
   },
   {
-    "id": 39,
+    "id": 36,
     "name": "Doom-Shroom",
     "type": "Doomshroom",
     "category": "EXPLOSIVE",
@@ -1306,33 +1457,61 @@
       "plantTime": 2.0,
       "idleTime": 0.0,
       "recoverTime": 0.0,
-      "explosionTime": 3.30,
+      "explosionTime": 3.3,
       "damageDealTime": 0.8,
       "baseDamage": 1800.0,
       "plantClip": "stage2_transform",
       "idleClip": "stage3_idle2",
       "explosionClip": "stage3_explode",
-      "explosionType": "PRIMAL_POTATO_MINE"
+      "explosionType": "PRIMAL_POTATO_MINE",
+      "recoverClip": "stage1_idle"
     },
-    "feedConfig": {
-      "class": "ShooterActionConfig",
-      "label": "plantfood",
-      "patterns": [
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
-      ]
-    },
+    "feedConfig": null,
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/DOOMSHROOM/DOOMSHROOM.PAM",
       "idleLabel": "stage3_idle2",
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
-    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
+    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی.",
+    "tags": "SHROOM"
   },
   {
-    "id": 40,
+    "id": 37,
+    "name": "Tangle Kelp",
+    "type": "TangleKelp",
+    "category": "EXPLOSIVE",
+    "tags": "TRAP, WATER",
+    "sunCost": 25,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.0,
+    "rechargeSeconds": 15.0,
+    "attackConfig": {
+      "class": "SquashConfig",
+      "turnDuration": 1.0,
+      "jumpUpDuration": 0.8,
+      "jumpDownDuration": 0.8,
+      "radarRangeCoefficient": 1.2,
+      "baseDamage": 1800.0
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2}
+        ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/TANGLEKELP/TANGLEKELP.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "کشیدن اولین زامبی آبی به زیر آب و نابودی آن (مخصوص ساحل)."
+  },
+  {
+    "id": 38,
     "name": "Iceberg Lettuce",
     "type": "IcebergLettuce",
     "category": "EXPLOSIVE",
@@ -1361,10 +1540,10 @@
       "class": "ShooterActionConfig",
       "label": "plantfood",
       "patterns": [
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
-      ]
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
+        ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/ICEBURG/ICEBURG.PAM",
@@ -1372,36 +1551,274 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
-    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
+    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی.",
+    "tags": "TRAP, ICE"
   },
   {
-    "id": 41,
-    "name": "Squash",
-    "type": "Squash",
-    "category": "EXPLOSIVE",
-    "sunCost": 50,
+    "id": 39,
+    "name": "Bonk Choy",
+    "type": "BonkChoy",
+    "category": "MELEE",
+    "sunCost": 150,
     "baseHp": 300.0,
-    "actionIntervalSeconds": 12.0,
-    "rechargeSeconds": 20.0,
+    "actionIntervalSeconds": 2.9,
+    "rechargeSeconds": 5.0,
     "attackConfig": {
-      "class": "SquashConfig"
+      "class": "WasabiWhipConfig",
+      "intervalSeconds": 2.9,
+      "baseDamage": 15.0,
+      "attackRangeFactor": 1.6,
+      "attackFrontClip": "attack",
+      "attackBackClip": "attack2",
+      "attackBothClip": "attack3",
+      "pfOnClip": "plantfood_on",
+      "pfClip": "plantfood",
+      "pfOffClip": "plantfood_off",
+      "pfRadius": 1,
+      "pfDuration": 1.0,
+      "label": "attack"
     },
     "feedConfig": {
-      "class": "ShooterActionConfig",
-      "label": "plantfood",
-      "patterns": [
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2},
-        {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.4}
-      ]
+      "class": "WasabiWhipConfig",
+      "intervalSeconds": 2.9,
+      "baseDamage": 15.0,
+      "attackRangeFactor": 1.6,
+      "attackFrontClip": "attack",
+      "attackBackClip": "attack2",
+      "attackBothClip": "attack3",
+      "pfOnClip": "plantfood_on",
+      "pfClip": "plantfood",
+      "pfOffClip": "plantfood_off",
+      "pfRadius": 1,
+      "pfDuration": 1.0,
+      "label": "plantfood"
     },
     "pamAnimationConfig": {
-      "pamFilePath": "768/INITIAL/PLANT/SQUASH/SQUASH.PAM",
+      "pamFilePath": "768/INITIAL/PLANT/BONKCHOY/BONKCHOY.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 14
+    },
+    "description": "شلیک هوایی با آسیب مساحتی (گرم‌کننده محیط اطراف). پرتاب فلفل‌های بزرگ به ۳ زامبی تصادفی.",
+    "tags": ""
+  },
+  {
+    "id": 40,
+    "name": "Phat Beet",
+    "type": "PhatBeet",
+    "category": "MELEE",
+    "tags": "AOE",
+    "sunCost": 150,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 2.0,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "PhatBeetConfig",
+      "intervalSeconds": 2.0,
+      "baseDamage": 15.0,
+      "attackRangeFactor": 1.6,
+      "attackRadius": 1,
+      "label": "attack",
+      "effectPamPath": "768/FULL/EFFECTS/PHATBEETS_ATTACK_PULSE/PHATBEETS_ATTACK_PULSE.PAM",
+      "effectClip": "animation",
+      "effectScale": 0.65,
+      "pfDamage": 30.0,
+      "pfIntervalSeconds": 2.0,
+      "pfRadius": 2,
+      "pfEffectPamPath": "768/FULL/EFFECTS/PHATBEETS_PF_PULSE/PHATBEETS_PF_PULSE.PAM",
+      "pfEffectClip": "animation"
+    },
+    "feedConfig": {
+      "class": "PhatBeetConfig",
+      "intervalSeconds": 2.0,
+      "baseDamage": 15.0,
+      "attackRangeFactor": 1.6,
+      "attackRadius": 1,
+      "label": "plantfood",
+      "effectPamPath": "768/FULL/EFFECTS/PHATBEETS_ATTACK_PULSE/PHATBEETS_ATTACK_PULSE.PAM",
+      "effectClip": "animation",
+      "effectScale": 0.65,
+      "pfDamage": 30.0,
+      "pfIntervalSeconds": 2.0,
+      "pfRadius": 2,
+      "pfEffectPamPath": "768/FULL/EFFECTS/PHATBEETS_PF_PULSE/PHATBEETS_PF_PULSE.PAM",
+      "pfEffectClip": "animation"
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/PHATBEETS/PHATBEETS.PAM",
       "idleLabel": "idle",
       "animSpeed": 1.0,
       "actionTriggerFrame": 8
     },
-    "description": "شلیک رعدوبرق، نابودی کامل یک زامبی."
+    "description": "ضربه صوتی به مساحت ۳x۳ اطراف."
+  },
+  {
+    "id": 41,
+    "name": "Chomper",
+    "type": "Chomper",
+    "category": "MELEE",
+    "tags": "",
+    "sunCost": 150,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 40.0,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ChomperConfig",
+      "digestionSeconds": 40.0,
+      "biteRangeFactor": 1.6,
+      "biteClip": "bite",
+      "specialClip": "special",
+      "digestClip": "special_idle",
+      "digestEndClip": "special_end",
+      "pfOnClip": "plantfood_on",
+      "pfClip": "plantfood",
+      "pfOffClip": "plantfood_off",
+      "pfBurpClip": "plantfood_burp",
+      "pfBurpEndClip": "plantfood_burp_end",
+      "pfMaxTargets": 3,
+      "pfPullSpeed": 300.0,
+      "label": "bite"
+    },
+    "feedConfig": {
+      "class": "ChomperConfig",
+      "digestionSeconds": 40.0,
+      "biteRangeFactor": 1.6,
+      "biteClip": "bite",
+      "specialClip": "special",
+      "digestClip": "special_idle",
+      "digestEndClip": "special_end",
+      "pfOnClip": "plantfood_on",
+      "pfClip": "plantfood",
+      "pfOffClip": "plantfood_off",
+      "pfBurpClip": "plantfood_burp",
+      "pfBurpEndClip": "plantfood_burp_end",
+      "pfMaxTargets": 3,
+      "pfPullSpeed": 300.0,
+      "label": "plantfood"
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/CHOMPER/CHOMPER.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "بلعیدن آنی؛ نابودی یک زامبی درجا و سپس توقف برای هضم به مدت ۴۰ ثانیه."
+  },
+  {
+    "id": 42,
+    "name": "Wasabi Whip",
+    "type": "WasabiWhip",
+    "category": "MELEE",
+    "tags": "FIRE",
+    "sunCost": 150,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 2.0,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "WasabiWhipConfig",
+      "intervalSeconds": 2.0,
+      "baseDamage": 40.0,
+      "attackRangeFactor": 1.6,
+      "attackFrontClip": "attack",
+      "attackBackClip": "attack2",
+      "attackBothClip": "attack3",
+      "pfOnClip": "plantfood_on",
+      "pfClip": "plantfood",
+      "pfOffClip": "plantfood_off",
+      "pfRadius": 1,
+      "pfDuration": 1.0,
+      "label": "attack"
+    },
+    "feedConfig": {
+      "class": "WasabiWhipConfig",
+      "intervalSeconds": 2.0,
+      "baseDamage": 40.0,
+      "attackRangeFactor": 1.6,
+      "attackFrontClip": "attack",
+      "attackBackClip": "attack2",
+      "attackBothClip": "attack3",
+      "pfOnClip": "plantfood_on",
+      "pfClip": "plantfood",
+      "pfOffClip": "plantfood_off",
+      "pfRadius": 1,
+      "pfDuration": 1.0,
+      "label": "plantfood"
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/WASABIWHIP/WASABIWHIP.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "ضربه شلاق به خانه‌های جلو و عقب (گرم‌کننده محیط)."
+  },
+  {
+    "id": 43,
+    "name": "Kiwibeast",
+    "type": "Kiwibeast",
+    "category": "MELEE",
+    "tags": "AOE, WRAMP_UP",
+    "sunCost": 175,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 2.0,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "KiwiBeastConfig",
+      "intervalSeconds": 2.0,
+      "baseDamage": 15.0,
+      "attackRangeFactor": 1.6,
+      "attackRadius": 1,
+      "effectPamPath": "768/INITIAL/EFFECTS/KIWIBEAST_ATTACK_PULSE/KIWIBEAST_ATTACK_PULSE.PAM",
+      "effectClip": "animation",
+      "effectScale": 0.65,
+      "tileHitPamPath": "768/INITIAL/EFFECTS/KIWIBEAST_ATTACK_PULSE/KIWIBEAST_ATTACK_PULSE.PAM",
+      "tileHitClip": "animation",
+      "tileHitScale": 0.5,
+      "idleLabels": ["idle_stage1_", "idle_stage2_", "idle_stage3_"],
+      "attackLabels": ["attack_stage1", "attack_stage2", "attack_stage3"],
+      "growthLabels": ["growth_stage1", "growth_stage2"],
+      "stageIntervals": [24.0, 72.0],
+      "damageMultipliers": [1.0, 2.0, 3.0],
+      "pfGrowthClip": "growth_stage1_2",
+      "pfAttackClip": "plantfood_stage3",
+      "pfEffectPamPath": "768/INITIAL/EFFECTS/KIWIBEAST_PF_PULSE/KIWIBEAST_PF_PULSE.PAM",
+      "pfEffectClip": "animation",
+      "pfRadius": 2,
+      "pfHitTimes": [0.5, 1.27, 2.27],
+      "label": "attack_stage1"
+    },
+    "feedConfig": {
+      "class": "KiwiBeastConfig",
+      "intervalSeconds": 2.0,
+      "baseDamage": 15.0,
+      "attackRangeFactor": 1.6,
+      "attackRadius": 1,
+      "effectPamPath": "768/INITIAL/EFFECTS/KIWIBEAST_ATTACK_PULSE/KIWIBEAST_ATTACK_PULSE.PAM",
+      "effectClip": "animation",
+      "effectScale": 0.65,
+      "tileHitPamPath": "768/INITIAL/EFFECTS/KIWIBEAST_ATTACK_PULSE/KIWIBEAST_ATTACK_PULSE.PAM",
+      "tileHitClip": "animation",
+      "tileHitScale": 0.5,
+      "idleLabels": ["idle_stage1_", "idle_stage2_", "idle_stage3_"],
+      "attackLabels": ["attack_stage1", "attack_stage2", "attack_stage3"],
+      "growthLabels": ["growth_stage1", "growth_stage2"],
+      "stageIntervals": [24.0, 72.0],
+      "damageMultipliers": [1.0, 2.0, 3.0],
+      "pfGrowthClip": "growth_stage1_2",
+      "pfAttackClip": "plantfood_stage3",
+      "pfEffectPamPath": "768/INITIAL/EFFECTS/KIWIBEAST_PF_PULSE/KIWIBEAST_PF_PULSE.PAM",
+      "pfEffectClip": "animation",
+      "pfRadius": 2,
+      "pfHitTimes": [0.5, 1.27, 2.27],
+      "label": "plantfood_stage3"
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/KIWIBEAST/KIWIBEAST.PAM",
+      "idleLabel": "idle_stage1_",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "موج صوتی مساحتی؛ با گذر زمان بزرگتر شده و دمیج بیشتر می‌دهد."
   },
   {
     "id": 44,
@@ -1423,7 +1840,19 @@
       "class": "WallNutFeedConfig",
       "kind": "ARMOR",
       "amount": 4000.0,
-      "clips": ["plantfood_on", "plantfood", "plantfood2", "plantfood3", "plantfood_off"]
+      "clips": [
+        "plantfood_on",
+        "plantfood",
+        "plantfood2",
+        "plantfood3",
+        "plantfood_off"
+      ],
+      "armorPartNames": [
+        "wallnut_plantfood_armor_01",
+        "wallnut_plantfood_armor_02",
+        "wallnut_plantfood_armor_03"
+      ],
+      "armorContainerName": "_wallnut_armor_states"
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/WALLNUT/WALLNUT.PAM",
@@ -1431,7 +1860,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 0
     },
-    "description": "سد دفاعی مقاوم برای متوقف کردن زامبی‌ها."
+    "description": "سد دفاعی مقاوم برای متوقف کردن زامبی‌ها.",
+    "tags": ""
   },
   {
     "id": 45,
@@ -1453,7 +1883,13 @@
       "class": "WallNutFeedConfig",
       "kind": "ARMOR",
       "amount": 8000.0,
-      "clips": []
+      "clips": [],
+      "armorPartNames": [
+        "tallnut_plantfood_armor_norm",
+        "tallnut_plantfood_armor_damage_01",
+        "tallnut_plantfood_armor_damage_02"
+      ],
+      "armorContainerName": "_tallnut_plantfood_armor"
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/TALLNUT/TALLNUT.PAM",
@@ -1461,7 +1897,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 0
     },
-    "description": "سد بلند؛ جلوگیری از پریدن زامبی‌ها از روی آن."
+    "description": "سد بلند؛ جلوگیری از پریدن زامبی‌ها از روی آن.",
+    "tags": ""
   },
   {
     "id": 46,
@@ -1485,7 +1922,13 @@
       "kind": "ARMOR",
       "amount": 1000.0,
       "reflectBonus": 20.0,
-      "clips": ["plantfood_on"]
+      "clips": [
+        "plantfood_on"
+      ],
+      "armorPartNames": [
+        "PF_armor_1"
+      ],
+      "armorContainerName": "endurian_plantfood_armor"
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/ENDURIAN/ENDURIAN.PAM",
@@ -1493,7 +1936,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 0
     },
-    "description": "سد دفاعی با قابلیت بازتاب دمیج به زامبی مهاجم."
+    "description": "سد دفاعی با قابلیت بازتاب دمیج به زامبی مهاجم.",
+    "tags": ""
   },
   {
     "id": 47,
@@ -1516,7 +1960,9 @@
       "class": "WallNutFeedConfig",
       "kind": "FORCE_MOVE_ALL_IN_LANE",
       "amount": 0.0,
-      "clips": ["plantfood"]
+      "clips": [
+        "plantfood"
+      ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/GARLIC/GARLIC.PAM",
@@ -1524,7 +1970,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 0
     },
-    "description": "با خورده شدن، زامبی را مجبور به حرکت به لاین مجاور می‌کند."
+    "description": "با خورده شدن، زامبی را مجبور به حرکت به لاین مجاور می‌کند.",
+    "tags": "MOVE_ZOMBIES"
   },
   {
     "id": 48,
@@ -1547,7 +1994,9 @@
       "class": "WallNutFeedConfig",
       "kind": "FULL_HEAL_AND_ABSORB",
       "amount": 0.0,
-      "clips": ["plantfood"]
+      "clips": [
+        "plantfood"
+      ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/SWEETPOTATO/SWEETPOTATO.PAM",
@@ -1555,7 +2004,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 0
     },
-    "description": "جذب‌کننده؛ زامبی‌های لاین‌های مجاور را به لاین خود می‌کشد."
+    "description": "جذب‌کننده؛ زامبی‌های لاین‌های مجاور را به لاین خود می‌کشد.",
+    "tags": "MOVE_ZOMBIES"
   },
   {
     "id": 49,
@@ -1579,7 +2029,13 @@
       "class": "WallNutFeedConfig",
       "kind": "ARMOR",
       "amount": 1000.0,
-      "clips": ["plantfood_on", "plantfood", "plantfood2", "plantfood3", "plantfood_off"]
+      "clips": [
+        "plantfood_on",
+        "plantfood",
+        "plantfood2",
+        "plantfood3",
+        "plantfood_off"
+      ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/EXPLODEONUT/EXPLODEONUT.PAM",
@@ -1587,7 +2043,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 0
     },
-    "description": "سد دفاعی که به محض از بین رفتن جانش، انفجار مساحتی ایجاد می‌کند."
+    "description": "سد دفاعی که به محض از بین رفتن جانش، انفجار مساحتی ایجاد می‌کند.",
+    "tags": "EXPLOSIVE"
   },
   {
     "id": 50,
@@ -1609,7 +2066,12 @@
       "class": "WallNutFeedConfig",
       "kind": "ARMOR",
       "amount": 1000.0,
-      "clips": ["idle_plantfood", "idle_plantfood2", "idle_plantfood3", "idle_plantfood4"]
+      "clips": [
+        "idle_plantfood",
+        "idle_plantfood2",
+        "idle_plantfood3",
+        "idle_plantfood4"
+      ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/INITIAL/PLANT/PUMPKIN/PUMPKIN.PAM",
@@ -1617,7 +2079,8 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 0
     },
-    "description": "سد دفاعی پوششی؛ روی سایر گیاهان کاشته می‌شود تا از آن‌ها محافظت کند."
+    "description": "سد دفاعی پوششی؛ روی سایر گیاهان کاشته می‌شود تا از آن‌ها محافظت کند.",
+    "tags": "STACK"
   },
   {
     "id": 51,
@@ -1640,7 +2103,10 @@
       "class": "WallNutFeedConfig",
       "kind": "ARMOR",
       "amount": 1000.0,
-      "clips": ["plantfood_on", "plantfood"]
+      "clips": [
+        "plantfood_on",
+        "plantfood"
+      ]
     },
     "pamAnimationConfig": {
       "pamFilePath": "768/FULL/PLANT/SUNBEAN/SUNBEAN.PAM",
@@ -1648,10 +2114,274 @@
       "animSpeed": 1.0,
       "actionTriggerFrame": 0
     },
-    "description": "با هر بار گاز گرفته شدن، خورشید تولید می‌کند."
+    "description": "با هر بار گاز گرفته شدن، خورشید تولید می‌کند.",
+    "tags": "SUN"
   },
   {
     "id": 52,
+    "name": "Torchwood",
+    "type": "Torchwood",
+    "category": "MODIFIER",
+    "tags": "FIRE",
+    "sunCost": 175,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "PassiveConfig"
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0}
+        ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/TORCHWOOD/TORCHWOOD.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "تغییر خواص تیر؛ تبدیل تیر عبوری به آتشی (دمیج دو برابر)."
+  },
+  {
+    "id": 53,
+    "name": "Magnet-shroom",
+    "type": "Magnetshroom",
+    "category": "HOMING",
+    "tags": "SHROOM, MAGIC",
+    "sunCost": 100,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 10.0,
+    "rechargeSeconds": 15.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "label": "special",
+      "intervalSeconds": 10.0,
+      "patterns": [
+          {"projectileType":"HOMING_BOLT","damage":0.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0}
+        ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2}
+        ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/MAGNETSHROOM/MAGNETSHROOM.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "خلع سلاح؛ جذب اشیای فلزی (سطل/کلاهخود) از سر زامبی‌ها."
+  },
+  {
+    "id": 54,
+    "name": "Hypno-shroom",
+    "type": "Hypnoshroom",
+    "category": "MODIFIER",
+    "tags": "SHROOM, MAGIC",
+    "sunCost": 125,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 20.0,
+    "attackConfig": {
+      "class": "PassiveConfig"
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0}
+        ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/HYPNOSHROOM/HYPNOSHROOM.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "با خورده شدن، زامبی مهاجم هیپنوتیزم شده و به نفع بازیکن می‌جنگد."
+  },
+  {
+    "id": 55,
+    "name": "Cat-tail",
+    "type": "Cattail",
+    "category": "HOMING",
+    "tags": "",
+    "sunCost": 175,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 1.5,
+    "rechargeSeconds": 20.0,
+    "attackConfig": {
+      "class": "ShooterActionConfig",
+      "label": "attack",
+      "intervalSeconds": 1.5,
+      "patterns": [
+          {"projectileType":"HOMING_BOLT","damage":15.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0}
+        ]
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0},
+          {"projectileType":"HOMING_BOLT","damage":5000.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.2}
+        ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/PEASHOOTER/PEASHOOTER.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "تیر هدف‌دار به سمت نزدیک‌ترین زامبی شلیک می‌کند."
+  },
+  {
+    "id": 56,
+    "name": "Imitater",
+    "type": "Imitater",
+    "category": "MODIFIER",
+    "tags": "",
+    "sunCost": 0,
+    "baseHp": 0.0,
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 0.0,
+    "attackConfig": {
+      "class": "PassiveConfig"
+    },
+    "feedConfig": null,
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/IMITATER/IMITATER.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "کپی کردن یک گیاه دیگر (امکان استفاده از دو کارت یکسان)."
+  },
+  {
+    "id": 57,
+    "name": "Ice-shroom",
+    "type": "Iceshroom",
+    "category": "EXPLOSIVE",
+    "tags": "SHROOM, ICE",
+    "sunCost": 75,
+    "baseHp": 0.0,
+    "actionIntervalSeconds": 12.0,
+    "rechargeSeconds": 50.0,
+    "attackConfig": {
+      "class": "ExplosiveConfig",
+      "plantTime": 0.7,
+      "idleTime": 0.0,
+      "recoverTime": 0.0,
+      "explosionTime": 0.0,
+      "damageDealTime": 0.0,
+      "baseDamage": 20.0,
+      "plantClip": "attack",
+      "idleClip": "idle",
+      "explosionClip": "attack",
+      "explosionType": "PRIMAL_POTATO_MINE",
+      "recoverClip": "idle"
+    },
+    "feedConfig": null,
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/ICESHROOM/ICESHROOM.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "یخ زدن و توقف موقت تمامی زامبی‌های موجود در کل نقشه."
+  },
+  {
+    "id": 58,
+    "name": "Lily Pad",
+    "type": "LilyPad",
+    "category": "MODIFIER",
+    "tags": "WATER, STACK",
+    "sunCost": 25,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": null,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "PassiveConfig"
+    },
+    "feedConfig": {
+      "class": "ShooterActionConfig",
+      "label": "plantfood",
+      "patterns": [
+          {"projectileType":"HOMING_BOLT","damage":0.0,"laneOffset":0,"positionOffset":{"x":30,"y":20},"velocity":{"x":220,"y":0.0},"delaySeconds":0.0}
+        ]
+    },
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/LILYPAD/LILYPAD.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "بستر کاشت سایر گیاهان روی آب (ضروری برای ساحل)."
+  },
+  {
+    "id": 59,
+    "name": "Hot Potato",
+    "type": "HotPotato",
+    "category": "EXPLOSIVE",
+    "tags": "FIRE",
+    "sunCost": 0,
+    "baseHp": 0.0,
+    "actionIntervalSeconds": 12.0,
+    "rechargeSeconds": 5.0,
+    "attackConfig": {
+      "class": "ExplosiveConfig",
+      "plantTime": 0.5,
+      "idleTime": 0.0,
+      "recoverTime": 0.0,
+      "explosionTime": 0.0,
+      "damageDealTime": 0.0,
+      "baseDamage": 0.0,
+      "plantClip": "attack",
+      "idleClip": "idle",
+      "explosionClip": "attack",
+      "explosionType": "PRIMAL_POTATO_MINE",
+      "recoverClip": "idle"
+    },
+    "feedConfig": null,
+    "pamAnimationConfig": {
+      "pamFilePath": "768/FULL/PLANT/HOTPOTATO/HOTPOTATO.PAM",
+      "idleLabel": "idle",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 8
+    },
+    "description": "کاشت روی یخ برای آب کردن فوری آن (ضروری برای غار یخ‌زده)."
+  },
+  {
+    "id": 60,
+    "name": "Grave Buster",
+    "type": "GraveBuster",
+    "category": "EXPLOSIVE",
+    "sunCost": 0,
+    "baseHp": 300.0,
+    "actionIntervalSeconds": 2.9,
+    "rechargeSeconds": 10.0,
+    "attackConfig": {
+      "class": "GraveBusterConfig",
+      "label": "attack1"
+    },
+    "feedConfig": null,
+    "pamAnimationConfig": {
+      "pamFilePath": "768/INITIAL/PLANT/GRAVEBUSTER/GRAVEBUSTER.PAM",
+      "idleLabel": "attack",
+      "animSpeed": 1.0,
+      "actionTriggerFrame": 14
+    },
+    "description": "شلیک هوایی با آسیب مساحتی (گرم‌کننده محیط اطراف). پرتاب فلفل‌های بزرگ به ۳ زامبی تصادفی.",
+    "tags": ""
+  },
+  {
+    "id": 61,
     "name": "Enlighten-mint",
     "type": "Enlightenmint",
     "category": "SUN_PRODUCER",
@@ -1669,10 +2399,11 @@
       "idleLabel": "loop",
       "animSpeed": 1.0
     },
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خورشید."
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده خورشید.",
+    "tags": ""
   },
   {
-    "id": 53,
+    "id": 62,
     "name": "Appease-mint",
     "type": "Appeasemint",
     "category": "SHOOTER",
@@ -1690,10 +2421,11 @@
       "idleLabel": "loop",
       "animSpeed": 1.0
     },
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده تیرانداز."
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده تیرانداز.",
+    "tags": ""
   },
   {
-    "id": 54,
+    "id": 63,
     "name": "Arma-mint",
     "type": "Armamint",
     "category": "LOBBER",
@@ -1711,10 +2443,11 @@
       "idleLabel": "loop",
       "animSpeed": 1.0
     },
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده پرتابه."
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده پرتابه.",
+    "tags": ""
   },
   {
-    "id": 55,
+    "id": 64,
     "name": "Bombard-mint",
     "type": "Bombardmint",
     "category": "EXPLOSIVE",
@@ -1732,10 +2465,11 @@
       "idleLabel": "loop",
       "animSpeed": 1.0
     },
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده انفجاری."
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده انفجاری.",
+    "tags": ""
   },
   {
-    "id": 56,
+    "id": 65,
     "name": "Enforce-mint",
     "type": "Enforcemint",
     "category": "MELEE",
@@ -1753,10 +2487,11 @@
       "idleLabel": "loop",
       "animSpeed": 1.0
     },
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده نزدیک‌زن."
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده نزدیک‌زن.",
+    "tags": ""
   },
   {
-    "id": 57,
+    "id": 66,
     "name": "Reinforce-mint",
     "type": "Reinforcemint",
     "category": "WALL_NUT",
@@ -1774,10 +2509,11 @@
       "idleLabel": "loop",
       "animSpeed": 1.0
     },
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده دفاعی."
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده دفاعی.",
+    "tags": ""
   },
   {
-    "id": 58,
+    "id": 67,
     "name": "Enchant-mint",
     "type": "Enchantmint",
     "category": "MODIFIER",
@@ -1795,10 +2531,11 @@
       "idleLabel": "loop",
       "animSpeed": 1.0
     },
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده تغییردهنده."
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده تغییردهنده.",
+    "tags": ""
   },
   {
-    "id": 59,
+    "id": 68,
     "name": "Pierce-mint",
     "type": "Piercemint",
     "category": "STRIKE_THROUGH",
@@ -1816,10 +2553,11 @@
       "idleLabel": "loop",
       "animSpeed": 1.0
     },
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده نفوذی."
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده نفوذی.",
+    "tags": ""
   },
   {
-    "id": 60,
+    "id": 69,
     "name": "catTail-mint",
     "type": "catTailmint",
     "category": "HOMING",
@@ -1837,6 +2575,7 @@
       "idleLabel": "loop",
       "animSpeed": 1.0
     },
-    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده هدف‌گیر."
+    "description": "اعمال موقت پلنت فود به تمامی گیاهان خانواده هدف‌گیر.",
+    "tags": ""
   }
 ]

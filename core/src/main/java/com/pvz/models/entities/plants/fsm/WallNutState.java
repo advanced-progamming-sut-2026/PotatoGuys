@@ -202,7 +202,8 @@ public class WallNutState extends PlantAction {
         PamAnimationConfig pam = plant.getSheet().pamAnimationConfig;
         Vector2 pos = new Vector2(GameController.colToWorldX(plant.getCol()), GameController.laneToWorldY(plant.getLane()));
         Vector2 scale = new Vector2(0.65f, 0.65f);
-        return new FrameConfig(pam.pamFilePath, currentClip, stateTime, pos, scale, null, true);
+
+        return new FrameConfig(pam.pamFilePath, currentClip, stateTime, pos, scale, plant.getArmorPartsVisibility(), true);
     }
 
     @Override

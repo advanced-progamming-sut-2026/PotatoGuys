@@ -56,10 +56,14 @@ public class WallNutFeedAction extends PlantAction {
                 absorbNearbyZombies(plant, ctx);
             }
             default -> {
+                ctx.log("[DEBUG] applyEffect default case: amount=" + config.amount
+                        + " armorPartNames=" + java.util.Arrays.toString(config.armorPartNames)
+                        + " armorContainerName=" + config.armorContainerName);
                 if (config.amount > 0f) {
-                    plant.boostMaxHp(config.amount);
+                    plant.setArmor(config.amount, config.armorPartNames, config.armorContainerName);
                     ctx.log("[PlantFood] " + plant.getSheet().getName() + " gained " + (int) config.amount
-                            + " permanent armor HP.");
+                            + " armor HP. hasArmor=" + plant.hasArmor()
+                            + " armorPartNames=" + java.util.Arrays.toString(plant.getArmorPartNames()));
                 }
                 if (config.reflectBonus > 0f) {
                     plant.addReflectDamageBonus(config.reflectBonus);
@@ -135,7 +139,7 @@ public class WallNutFeedAction extends PlantAction {
         PamAnimationConfig pam = plant.getSheet().pamAnimationConfig;
         Vector2 pos = new Vector2(GameController.colToWorldX(plant.getCol()), GameController.laneToWorldY(plant.getLane()));
         Vector2 scale = new Vector2(0.65f, 0.65f);
-        return new FrameConfig(pam.pamFilePath, currentClip(plant), stateTime, pos, scale, null, true);
+        return new FrameConfig(pam.pamFilePath, currentClip(plant), stateTime, pos, scale, plant.getArmorPartsVisibility(), true);
     }
 
     @Override

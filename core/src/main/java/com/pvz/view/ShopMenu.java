@@ -145,7 +145,7 @@ public class ShopMenu extends Table {
 
         Table header = new Table();
         header.add(title).left();
-        header.add(buildWalletDisplay()).expandX().right();
+        header.add(buildWalletDisplay()).expandX().right().padRight(60f);
         panel.contentLayer.add(header).growX().padBottom(5f).row();
 
         Table body = new Table();
@@ -231,7 +231,7 @@ public class ShopMenu extends Table {
         }
 
         Table card = new Table();
-        card.setBackground(PvzSkin.get().newDrawable("white_pixel", CARD_BG));
+        card.setBackground(PvzSkin.get().newDrawable("image_ui_dialog_asset_inner_bkgd_10", CARD_BG));
         card.top();
         card.pad(10f);
 
@@ -252,9 +252,8 @@ public class ShopMenu extends Table {
         Duration remaining = controller.getDailyOfferTimeRemaining();
         if (remaining != null) {
             String timeText = "Resets in " + remaining.toHours() + "h " + (remaining.toMinutes() % 60) + "m";
-            Label timeLabel = new Label(timeText, PvzSkin.get());
-            timeLabel.setColor(Color.BLACK);
-            timeLabel.setFontScale(0.85f);
+            Label timeLabel = new Label(timeText, new Label.LabelStyle(PvzSkin.get().getFont("FBUSV8C5EI_2"), Color.BLACK));
+            timeLabel.setFontScale(1.1f);
             card.add(timeLabel).padBottom(8f).row();
         }
 
@@ -286,7 +285,7 @@ public class ShopMenu extends Table {
     private Table buildItemCard(ShopItem item) {
         Skin skin = PvzSkin.get();
         Table card = new Table();
-        card.setBackground(skin.newDrawable("white_pixel", CARD_BG));
+        card.setBackground(skin.newDrawable("image_ui_dialog_asset_inner_bkgd_10", CARD_BG));
         card.top();
         card.pad(10f);
 
@@ -300,19 +299,20 @@ public class ShopMenu extends Table {
         Image icon = safeImage(iconPathFor(item));
         card.add(icon).size(iconSizeFor(item)).padBottom(6f).row();
 
-        Label descLabel = new Label(item.getDescription(), PvzSkin.get());
-        descLabel.setColor(Color.BLACK);
+        Label descLabel = new Label(item.getDescription(), new Label.LabelStyle(PvzSkin.get().getFont("FBUSV8C5EI_2"), Color.BLACK));
         descLabel.setWrap(true);
         descLabel.setAlignment(Align.center);
         descLabel.setFontScale(1.2f);
         card.add(descLabel).width(cardWidthFor(item) - 20f).align(Align.center).padBottom(6f).row();
 
-        int remaining = controller.getRemainingCapacity(item);
-        if (remaining >= 0) {
-            Label capacityLabel = new Label("Remaining: " + remaining, PvzSkin.get());
-            capacityLabel.setColor(Color.BLACK);
-            capacityLabel.setFontScale(0.8f);
-            card.add(capacityLabel).padBottom(6f).row();
+        if (!(item instanceof PlantFoodItem || item instanceof PotSlotItem)) {
+            int remaining = controller.getRemainingCapacity(item);
+            if (remaining >= 0) {
+                Label capacityLabel = new Label("Remaining: " + remaining, PvzSkin.get());
+                capacityLabel.setColor(Color.BLACK);
+                capacityLabel.setFontScale(0.8f);
+                card.add(capacityLabel).padBottom(6f).row();
+            }
         }
 
         TextButton buyBtn = new TextButton(priceLabel(item.getPrice()), PvzSkin.get(), "green");

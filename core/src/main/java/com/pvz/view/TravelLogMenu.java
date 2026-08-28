@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
@@ -259,15 +260,15 @@ public class TravelLogMenu extends ScreenAdapter {
         Label progressLabel = new Label(quest.getProgress().toString(), descStyle);
         progressLabel.setFontScale(1.0f);
         progressRow.add(progressLabel).padLeft(10);
-        card.add(progressRow).left().padTop(10).row();
+        card.add(progressRow).left().padTop(4).row();
 
         Table footer = new Table();
         Label rewardLabel = new Label("Reward: " + quest.getRewardDescription(), descStyle);
         rewardLabel.setFontScale(1.0f);
         rewardLabel.setColor(Color.valueOf("8FCE7E"));
         footer.add(rewardLabel).left().expandX();
-        footer.add(statusWidget(quest)).right();
-        card.add(footer).fillX().padTop(10).row();
+        footer.add(statusWidget(quest)).width(120).right();
+        card.add(footer).fillX().padTop(0).row();
 
         return card;
     }
@@ -301,17 +302,17 @@ public class TravelLogMenu extends ScreenAdapter {
     }
 
     private Actor statusWidget(Quest quest) {
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_2"), Color.valueOf("D8C9A8"));
-
-        if (!quest.isCompleted()) {
-            Label label = new Label("In Progress", style);
+        if (quest.isClaimed()) {
+            Label.LabelStyle claimedStyle = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_2"), Color.valueOf("6B6B6B"));
+            Label label = new Label("Already received", claimedStyle);
             label.setFontScale(1.0f);
             return label;
         }
-        if (!quest.isClaimed()) {
-            TextButton claimBtn = new TextButton("Collect", skin, "green_small");
-            claimBtn.getLabel().setFontScale(1.1f);
-            claimBtn.addListener(new ClickListener() {
+
+        if (quest.isCompleted()) {
+            TextButton btn = new TextButton("Claim", skin, "green_small");
+            btn.getLabel().setFontScale(1.1f);
+            btn.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
@@ -320,12 +321,18 @@ public class TravelLogMenu extends ScreenAdapter {
                     refreshList();
                 }
             });
-            return claimBtn;
+            return btn;
         }
-        Label claimed = new Label("Claimed", style);
-        claimed.setFontScale(1.0f);
-        claimed.setColor(Color.valueOf("8FCE7E"));
-        return claimed;
+
+        Stack grayStack = new Stack();
+        grayStack.add(new Image(roundedRectTexture(120, 36, 12, Color.valueOf("555555"))));
+        grayStack.add(new Image(roundedRectOutline(120, 36, 12, 2, Color.valueOf("888888"))));
+        Label lbl = new Label("Claim", new Label.LabelStyle(skin.getFont("FBUSV8C5EI_2"), Color.valueOf("999999")));
+        lbl.setFontScale(1.1f);
+        Table content = new Table();
+        content.add(lbl);
+        grayStack.add(content);
+        return grayStack;
     }
 
     private void buildMinigamesList() {
@@ -494,6 +501,31 @@ public class TravelLogMenu extends ScreenAdapter {
         Texture texture = new Texture(pixmap);
         pixmap.dispose();
         return texture;
+    }
+
+    private Texture roundedRectOutline(int width, int height, int radius, int lineW, Color color) {
+        Pixmap pm = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        pm.setBlending(Pixmap.Blending.None);
+        pm.setColor(color);
+        pm.fillCircle(radius, radius, radius);
+        pm.fillCircle(width - radius - 1, radius, radius);
+        pm.fillCircle(radius, height - radius - 1, radius);
+        pm.fillCircle(width - radius - 1, height - radius - 1, radius);
+        pm.fillRectangle(radius, 0, width - 2 * radius, height);
+        pm.fillRectangle(0, radius, width, height - 2 * radius);
+        pm.setColor(Color.CLEAR);
+        int in = radius - lineW;
+        if (in > 0) {
+            pm.fillCircle(in, in, in);
+            pm.fillCircle(width - in - 1, in, in);
+            pm.fillCircle(in, height - in - 1, in);
+            pm.fillCircle(width - in - 1, height - in - 1, in);
+        }
+        pm.fillRectangle(Math.max(radius, lineW), lineW, width - Math.max(radius, lineW) * 2, height - 2 * lineW);
+        pm.fillRectangle(lineW, Math.max(radius, lineW), width - 2 * lineW, height - Math.max(radius, lineW) * 2);
+        Texture t = new Texture(pm);
+        pm.dispose();
+        return t;
     }
 
     @Override

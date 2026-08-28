@@ -1,7 +1,9 @@
 package com.pvz.models.entities.plants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
@@ -58,6 +60,12 @@ public class Plant extends Entity {
 
     /** When true the plant is bound by an octopus overlay and cannot act. */
     private boolean bound;
+
+    private float armorHp = 0f;
+    private float armorMaxHp = 0f;
+    private boolean hasArmor = false;
+    private String[] armorPartNames = new String[0];
+    private String armorContainerName = null;
 
     private int freezeLevel = 0; // 0, 1, 2, 3
     private boolean isFrozen = false;
@@ -194,11 +202,22 @@ public class Plant extends Entity {
         if (dead || amount <= 0f)
             return;
 
-        // If frozen, ice takes damage first
         if (isFrozen) {
-            boolean isFire = (kind == DamageKind.FIRE); // Need to define/check Fire damage
+            boolean isFire = (kind == DamageKind.FIRE);
             takeIceDamage(amount, isFire);
-            return; // Ice absorbed the damage
+            return;
+        }
+
+        if (hasArmor && armorHp > 0f) {
+            armorHp = Math.max(0f, armorHp - amount);
+            if (armorHp <= 0f) {
+                hasArmor = false;
+            }
+            if (currentState != null && !(currentState instanceof PlantDeadState)
+                    && !(currentState instanceof PlantFlashState)) {
+                currentState = new PlantFlashState(currentState);
+            }
+            return;
         }
 
         hp = Math.max(0f, hp - amount);
@@ -228,6 +247,7 @@ public class Plant extends Entity {
         if (currentState != null)
             currentState.onExit(this, context);
         currentState = new PlantDeadState();
+        context.getGameStats().onPlantLost();
         context.removePlant(this);
         context.log("[Plant] " + sheet.getName() + " at (" + col + "," + lane + ") was destroyed.");
     }
@@ -401,6 +421,68 @@ public class Plant extends Entity {
 
     public void setBound(boolean bound) {
         this.bound = bound;
+    }
+
+    // ── Armor ────────────────────────────────────────────────────────────────
+
+    public void setArmor(float maxHp, String[] partNames, String containerName) {
+        this.armorMaxHp = maxHp;
+        this.armorHp = maxHp;
+        this.hasArmor = true;
+        this.armorPartNames = partNames != null ? partNames : new String[0];
+        this.armorContainerName = containerName;
+    }
+
+    public boolean hasArmor() {
+        return hasArmor;
+    }
+
+    public float getArmorHp() {
+        return armorHp;
+    }
+
+    public float getArmorMaxHp() {
+        return armorMaxHp;
+    }
+
+    public String[] getArmorPartNames() {
+        return armorPartNames;
+    }
+
+    /**
+     * Returns the armor part name to show based on armor HP fraction.
+     * index 0 = full, 1 = 1/3 gone, 2 = 2/3 gone.
+     */
+    public String getVisibleArmorPart() {
+        if (!hasArmor || armorPartNames.length == 0)
+            return null;
+        float fraction = armorMaxHp <= 0f ? 1f : armorHp / armorMaxHp;
+        if (fraction > 0.66f) {
+            return armorPartNames[0];
+        } else if (fraction > 0.33f) {
+            return armorPartNames.length > 1 ? armorPartNames[1] : armorPartNames[0];
+        } else {
+            return armorPartNames.length > 2 ? armorPartNames[2] : armorPartNames[armorPartNames.length - 1];
+        }
+    }
+
+    /**
+     * Returns the partsVisibility map for the current armor state, or {@code null}
+     * if no armor is active. Every state's {@code draw()} should pass this directly
+     * into {@link FrameConfig#FrameConfig}.
+     */
+    public Map<String, Boolean> getArmorPartsVisibility() {
+        if (!hasArmor || armorPartNames.length == 0)
+            return null;
+        String visiblePart = getVisibleArmorPart();
+        Map<String, Boolean> map = new HashMap<>();
+        if (armorContainerName != null) {
+            map.put(armorContainerName, true);
+        }
+        for (String partName : armorPartNames) {
+            map.put(partName, partName.equals(visiblePart));
+        }
+        return map;
     }
 
     public PlantState getCurrentState() {

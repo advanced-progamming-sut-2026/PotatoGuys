@@ -20,4 +20,8 @@ public class WallNutFeedConfig extends PlantActionConfig {
     /** Optional permanent reflect-damage bonus applied alongside {@code ARMOR} (Endurian). */
     public float reflectBonus = 0f;
     public String[] clips = new String[0];
+    /** PAM part names for the armor visual: [full, 1/3 gone, 2/3 gone]. */
+    public String[] armorPartNames = new String[0];
+    /** PAM container part name that parents the armor parts (required for BFS visibility traversal). */
+    public String armorContainerName = null;
 }

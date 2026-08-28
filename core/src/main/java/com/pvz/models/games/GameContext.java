@@ -41,6 +41,7 @@ public class GameContext implements TickAware {
     private int levelNumber;
     private boolean gameOver;
     private int plantFoodCount;
+    private int profilePlantFoodOnEntry;
 
     private final GameEngine engine;
     private List<Projectile> projectiles;
@@ -132,7 +133,9 @@ public class GameContext implements TickAware {
         }
 
         this.log("DEBUG: GameContext initialized with season: '" + this.seasonName + "'");
-        this.plantFoodCount = 0;
+        com.pvz.models.user.User user = com.pvz.models.AppContext.getInstance().getCurrentUser();
+        this.plantFoodCount = (user != null && user.getProfile() != null) ? user.getProfile().getPlantFood() : 0;
+        this.profilePlantFoodOnEntry = this.plantFoodCount;
         this.gameStats = new GameStats();
         engine.register(new SunManager(this));
 
@@ -241,6 +244,22 @@ public class GameContext implements TickAware {
     }
 
     public void spawnPlant(Plant p) {
+        // PeaPod stacking: if a PeaPod is planted on a tile that already has a
+        // PeaPod, increment the existing one's stack count instead of spawning
+        // a duplicate.
+        if (p.getType() == com.pvz.models.entities.plants.enums.PlantType.PeaPod) {
+            for (Plant existing : getPlantsAt(p.getCol(), p.getLane())) {
+                if (existing.getType() == com.pvz.models.entities.plants.enums.PlantType.PeaPod
+                        && !existing.isDead()
+                        && existing.getAttackAction() instanceof com.pvz.models.entities.plants.actions.StackedShooterAction action) {
+                    action.incrementStack();
+                    log("[Stack] " + p.getType() + " stacked → " + action.getStackCount() + " pods at ("
+                            + p.getCol() + "," + p.getLane() + ")");
+                    return;
+                }
+            }
+        }
+
         getTileAt(p.getCol(), p.getLane()).addPlant(p);
         pendingPlantsToAdd.add(p);
         engine.register(p);
@@ -520,6 +539,10 @@ public class GameContext implements TickAware {
         if (plantFoodCount > 3) {
             plantFoodCount = 3;
         }
+    }
+
+    public int getProfilePlantFoodOnEntry() {
+        return profilePlantFoodOnEntry;
     }
 
     public boolean spendPlantFood() {

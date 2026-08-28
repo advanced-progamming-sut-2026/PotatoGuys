@@ -1,6 +1,8 @@
 package com.pvz.models.entities.plants.config;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import com.pvz.models.Constants;
@@ -9,6 +11,7 @@ import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.data.ProductionKind;
 import com.pvz.models.entities.plants.enums.PlantCategory;
+import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.plants.enums.PlantType;
 
 public final class PlantConfigRegistry {
@@ -78,11 +81,32 @@ public final class PlantConfigRegistry {
 
         PlantPropertySheet profile = PlantRegistry.getInstance().getSheet(PlantType.valueOf(cfg.type));
         if (profile != null) {
-            builder.tags(profile.getTags())
-                   .levelUpgrades(profile.getLevelUpgrades())
+            builder.levelUpgrades(profile.getLevelUpgrades())
                    .damage(profile.getDamage());
         }
 
+        List<PlantTag> tags = parseTags(cfg.tags);
+        if (!tags.isEmpty()) {
+            builder.tags(tags);
+        } else if (profile != null) {
+            builder.tags(profile.getTags());
+        }
+
         return builder.build();
+    }
+
+    private List<PlantTag> parseTags(String tagsStr) {
+        List<PlantTag> result = new ArrayList<>();
+        if (tagsStr == null || tagsStr.isBlank()) return result;
+        for (String t : tagsStr.split(",")) {
+            String trimmed = t.trim();
+            if (trimmed.isEmpty()) continue;
+            try {
+                result.add(PlantTag.valueOf(trimmed.toUpperCase().replace("-", "_").replace(" ", "_")));
+            } catch (IllegalArgumentException e) {
+                System.err.println("[PlantConfigRegistry] Unknown tag: '" + trimmed + "'");
+            }
+        }
+        return result;
     }
 }

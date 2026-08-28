@@ -127,7 +127,7 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
     private static final DecorTuning ZOMBOSS_TUNING = new DecorTuning(560f, 760f, 0.30f, 37f, 140f);
     private static final DecorTuning WAVE_TUNING = new DecorTuning(90f, 180f, 0.05f, -60f, -60f);
     private static final DecorTuning ROCK_TUNING = new DecorTuning(100f, 100f, 0.32f, 32f, -480f);
-    private static final DecorTuning SPLASH_TUNING = new DecorTuning(200f, 150f, 0.50f, 20f, 60f);
+    private static final DecorTuning SPLASH_TUNING = new DecorTuning(200f, 150f, 0.25f, 20f, 60f);
     private static final DecorTuning STAR_TUNING = new DecorTuning(25f, 25f, 0.30f, 0f, 0f);
     private static final DecorTuning WATER_DROP_TUNING = new DecorTuning(100f, 100f, 0.40f, 0f, -20f);
     private static final DecorTuning WATERFALL_TUNING = new DecorTuning(200f, 250f, 0.80f, 520f, -85f);

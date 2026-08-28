@@ -58,6 +58,7 @@ import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.games.modes.capabilities.ZombiePlacer;
+import com.pvz.models.games.modes.GameModeType;
 import com.pvz.models.games.modes.variants.IZombieMode;
 import com.pvz.models.games.modes.variants.VaseBreakerMode;
 import com.pvz.models.games.card.ZombieCard;
@@ -66,6 +67,7 @@ import com.pvz.view.GameModesMenu;
 import com.pvz.view.TravelLogMenu;
 import com.pvz.view.game.GameScreen;
 import com.pvz.view.game.GameUiModal;
+import com.pvz.view.game.ConveyorBeltUiModal;
 import com.pvz.view.game.GameOverPopup;
 import com.pvz.view.game.GameWinPopup;
 import com.pvz.view.game.PauseMenuPopup;
@@ -311,7 +313,9 @@ public class GameController {
         plantSelectModal = new PlantSelectModal(level, this::startGameSession);
         stage.addActor(plantSelectModal);
 
-        gameUiModal = new GameUiModal(this::pauseGame);
+        gameUiModal = (level.getGameMode() == GameModeType.CONVEYORBELT)
+                ? new ConveyorBeltUiModal(this::pauseGame)
+                : new GameUiModal(this::pauseGame);
         gameUiModal.setOnShovelRequested(this::toggleShovelMode);
         gameUiModal.setOnPlantFoodRequested(this::togglePlantFoodMode);
         stage.addActor(gameUiModal);
@@ -545,8 +549,10 @@ public class GameController {
         paused = true;
 
         var user = com.pvz.models.AppContext.getInstance().getCurrentUser();
-        if (user != null)
+        if (user != null) {
+            syncPlantFoodToProfile(user);
             user.saveUser();
+        }
 
         boolean won;
         if (ctx.getMode() instanceof IZombieMode izMode) {
@@ -560,6 +566,13 @@ public class GameController {
             }
         } else {
             won = ctx.getZombies().isEmpty();
+        }
+
+        if (user != null && user.getQuestLog() != null && ctx.getGameStats() != null) {
+            com.pvz.models.quests.QuestEvaluator.evaluateAll(
+                    user.getQuestLog(), ctx.getGameStats(), won,
+                    ctx.getCurrentSun(), 1, ctx);
+            user.saveUser();
         }
 
         Runnable exitAction = () -> Gdx.app.postRunnable(() -> {
@@ -616,11 +629,20 @@ public class GameController {
         popup.toFront();
     }
 
+    private void syncPlantFoodToProfile(com.pvz.models.user.User user) {
+        if (ctx != null && user.getProfile() != null) {
+            int synced = Math.min(ctx.getProfilePlantFoodOnEntry(), ctx.getPlantFoodCount());
+            user.getProfile().setPlantFood(synced);
+        }
+    }
+
     private void saveAndExit() {
         resumeGame();
         var user = com.pvz.models.AppContext.getInstance().getCurrentUser();
-        if (user != null)
+        if (user != null) {
+            syncPlantFoodToProfile(user);
             user.saveUser();
+        }
         if (isNetworkedMatch) {
             NetworkClient.getInstance().setDisconnectListener(null);
             NetworkClient.getInstance().clearPushListener(MessageType.OPPONENT_DISCONNECTED);

@@ -1,10 +1,20 @@
 package com.pvz.models.entities.plants.fsm;
 
+import java.util.Map;
+
 import com.badlogic.gdx.math.Vector2;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.actions.ChargingShooterAction;
+import com.pvz.models.entities.plants.actions.ClipProgressionShooterAction;
+import com.pvz.models.entities.plants.actions.GrowthMeleeAction;
+import com.pvz.models.entities.plants.actions.GrowthSunProducerAction;
+import com.pvz.models.entities.plants.actions.KiwiBeastAction;
+import com.pvz.models.entities.plants.actions.MultiStageFeedAction;
+import com.pvz.models.entities.plants.actions.MultiStageShooterAction;
+import com.pvz.models.entities.plants.actions.StackedShooterAction;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.games.GameContext;
 
@@ -41,6 +51,45 @@ public class PlantIdleState extends PlantState {
         float y = GameController.laneToWorldY(plant.getLane());
         Vector2 pos = new Vector2(x,y);
         Vector2 scale = new Vector2(0.7f,0.7f);
-        return new FrameConfig(config.pamFilePath,config.idleLabel,stateTime,pos,scale,null,true);
+
+        String idleLabel = config.idleLabel;
+        boolean looping = true;
+        float animTime = stateTime;
+        if (plant.getAttackAction() instanceof GrowthSunProducerAction growthAction) {
+            idleLabel = growthAction.getIdleLabel(plant);
+        } else if (plant.getAttackAction() instanceof GrowthMeleeAction growthMeleeAction) {
+            idleLabel = growthMeleeAction.getCurrentIdleLabel();
+        } else if (plant.getAttackAction() instanceof KiwiBeastAction kiwiAction) {
+            idleLabel = kiwiAction.getCurrentIdleLabel();
+        } else if (plant.getAttackAction() instanceof StackedShooterAction stackedAction) {
+            idleLabel = stackedAction.getIdleLabel();
+        } else if (plant.getAttackAction() instanceof ChargingShooterAction chargingAction) {
+            if (chargingAction.isCharging()) {
+                idleLabel = chargingAction.getChargeLabel();
+                looping = false;
+            } else {
+                idleLabel = chargingAction.getReadyIdleLabel();
+            }
+        } else if (plant.getAttackAction() instanceof ClipProgressionShooterAction cpAction) {
+            idleLabel = cpAction.getCurrentIdleLabel();
+            looping = cpAction.shouldLoopIdle();
+            if (!looping) {
+                animTime = cpAction.getClipElapsedTime();
+            }
+        } else if (plant.getAttackAction() instanceof MultiStageShooterAction msAction) {
+            idleLabel = msAction.getCurrentIdleLabel();
+            looping = msAction.shouldLoopIdle();
+            if (!looping) {
+                animTime = msAction.getClipElapsedTime();
+            }
+        } else if (plant.getAttackAction() instanceof MultiStageFeedAction mfAction) {
+            idleLabel = mfAction.getCurrentIdleLabel();
+            looping = mfAction.shouldLoopIdle();
+            animTime = mfAction.getClipElapsedTime();
+        }
+
+        Map<String, Boolean> partsVisibility = plant.getArmorPartsVisibility();
+
+        return new FrameConfig(config.pamFilePath, idleLabel, animTime, pos, scale, partsVisibility, looping);
     }
 }
