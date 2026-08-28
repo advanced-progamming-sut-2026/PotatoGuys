@@ -266,7 +266,8 @@ public class Zombie extends Entity {
         if (currentState != null)
             currentState.onExit(this, context);
         this.currentState = state;
-        currentState.onExit(this, context);
+        if (currentState != null)
+            currentState.onEnter(this, context);
     }
 
     /** Replaces the current FSM state cleanly (onExit → onEnter). */

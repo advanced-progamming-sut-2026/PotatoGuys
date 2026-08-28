@@ -48,12 +48,13 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
 
     private final List<MyPlant> basedPlants;
     private final List<ZombieType> basedZombies;
-    private final boolean[] brainsEaten;
+    private boolean[] brainsEaten;
     private int laneCount = 5;
     private int redLineColumn = 6;
 
     private int ticksElapsed = 0;
     private boolean sunProducersSpawned = false;
+    private boolean guestSunProducersSpawned = false;
     private final java.util.Map<Zombie, Float> brainEatTimers = new java.util.IdentityHashMap<>();
     private static final float BRAIN_EAT_DURATION = 3.0f;
 
@@ -150,7 +151,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         } else {
             throw new IllegalArgumentException("Level must be an instance of IZombieLevel.");
         }
-        this.brainsEaten = new boolean[10];
+        this.brainsEaten = new boolean[laneCount];
     }
 
     public boolean[] getBrainsEaten() {
@@ -182,6 +183,35 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         if (!sunProducers.contains(z)) {
             sunProducers.add(z);
             sunProducerTimers.put(z, SUN_PRODUCTION_INTERVAL_SECONDS);
+        }
+    }
+
+    /**
+     * Guest (zombie) side: spawns the per-lane sun-producer zombies as
+     * lightweight local entities. They are NOT rendered — the guest draws whatever
+     * the host sends (the remote frame already includes the producers and their
+     * sun icons) — but they exist locally so {@link #updateSunProducers} can mint
+     * the player's own collectible zombie suns. Rendered state and actual gameplay
+     * stay on the host.
+     */
+    public void ensureGuestSunProducers(GameContext context) {
+        if (guestSunProducersSpawned)
+            return;
+        guestSunProducersSpawned = true;
+        int lastCol = context.getMap().getColumns() - 1;
+        float spawnX = GameController.colToWorldX(lastCol);
+        int lanes = context.getMap().getLanes();
+        for (int lane = 0; lane < lanes; lane++) {
+            try {
+                Zombie producer = new ZombieFactory().create(SUN_PRODUCER_ALIAS, spawnX, lane, context, 1, 1);
+                producer.setPendingInitialState(new com.pvz.models.entities.zombies.fsm.IdleState());
+                producer.setHp(SUN_PRODUCER_HP);
+                context.spawnZombie(producer);
+                sunProducers.add(producer);
+                sunProducerTimers.put(producer, SUN_PRODUCTION_INTERVAL_SECONDS);
+            } catch (Exception e) {
+                Gdx.app.error("IZombieMode", "Failed to spawn guest sun producer: " + e.getMessage());
+            }
         }
     }
 
@@ -242,8 +272,13 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
     @Override
     public void initMode(GameContext context) {
         laneCount = context.getMap().getLanes();
+        brainsEaten = new boolean[laneCount];
         setupZombieCards(context);
-        setupPlantCards(context);
+        // The plant-side cards only belong on the plant-playing side (single-player
+        // or the network host). A network guest plays zombies only, so skip them.
+        if (!networkGuest) {
+            setupPlantCards(context);
+        }
         context.log("I, Zombie ready! " + basedZombies.size() + " zombie types available, "
                 + (basedPlants == null ? 0 : basedPlants.size()) + " plant types available.");
     }

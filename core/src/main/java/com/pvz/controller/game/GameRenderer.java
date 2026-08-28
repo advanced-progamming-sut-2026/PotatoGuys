@@ -44,6 +44,18 @@ public class GameRenderer {
     /** When true, ZOMBIE-owned suns are not drawn (host side of networked IZombie). */
     private boolean hideZombieSuns;
 
+    /**
+     * When set (network guest), draw() renders these remote frames directly instead
+     * of reconstructing entities locally. The guest's ctx entity lists are empty.
+     */
+    private java.util.List<FrameConfig> remoteFrames;
+    private IZombieMode remoteFramesIzMode;
+
+    public void setRemoteFrame(java.util.List<FrameConfig> frames, IZombieMode izMode) {
+        this.remoteFrames = frames;
+        this.remoteFramesIzMode = izMode;
+    }
+
     public GameRenderer(GameContext ctx, GameController controller, SpriteBatch batch,
             TextureRegion[] backgroundTextures) {
         this.ctx = ctx;
@@ -61,6 +73,13 @@ public class GameRenderer {
     }
 
     public void draw() {
+        // Network guest: draw the host's rendered frames directly, no local entity
+        // simulation. Background + I,Zombie HUD overlays stay local.
+        if (remoteFrames != null) {
+            drawRemoteFrames(remoteFrames, remoteFramesIzMode);
+            drawDebugShapes();
+            return;
+        }
         batch.setProjectionMatrix(controller.getCamera().combined);
         batch.begin();
         drawBackground();
@@ -380,6 +399,8 @@ public class GameRenderer {
         com.badlogic.gdx.graphics.g2d.TextureRegion brainRegion = PvZ2.textureBank
                 .region("IMAGE_UI_CURRENCY_VALENBRAINZ_STACK_0");
         boolean[] brainsEaten = izMode.getBrainsEaten();
+        if (brainsEaten == null)
+            return;
         float brainX = GameController.colToWorldX(-1);
         float brainSize = 65f;
         for (int lane = 0; lane < lanes; lane++) {
@@ -543,6 +564,173 @@ public class GameRenderer {
     public void update(float dt) {
         previewStateTime += dt;
         stateTime += dt;
+    }
+
+    /**
+     * Drawn by the guest instead of the entity-based {@link #draw()} body: renders
+     * the exact list of frames the host sent (see {@link #collectFrames()}) in order,
+     * on top of the local background, plus the locally-rendered I,Zombie HUD scalars
+     * (brains / red line). Background and non-PAM overlays stay local.
+     */
+    public void drawRemoteFrames(List<FrameConfig> frames, IZombieMode izMode) {
+        batch.setProjectionMatrix(controller.getCamera().combined);
+        batch.begin();
+        drawBackground();
+        if (frames != null) {
+            for (FrameConfig fc : frames) {
+                drawFrame(fc);
+            }
+        }
+        // The guest's own collectible zombie suns are minted locally (not part of the
+        // host's frame), so draw them on top of the remote picture.
+        if (ctx != null) {
+            drawSuns();
+        }
+        drawIZombieOverlayLocal(izMode);
+        batch.end();
+    }
+
+    private void drawIZombieOverlayLocal(IZombieMode izMode) {
+        if (izMode == null || ctx == null)
+            return;
+        drawIZombieOverlay();
+    }
+
+    /**
+     * Collects every {@link FrameConfig} that {@link #draw()} would render, in the
+     * exact same draw order, without touching the batch. Used by the networking
+     * layer to ship the host's rendered picture to the guest (see
+     * {@link com.pvz.network.game.RenderFrame}).
+     *
+     * <p>Elements that aren't PAM frames (the background textures, the I,Zombie red
+     * line and brain indicators) are not included here: they're drawn locally on the
+     * guest with its own synced scalars (brainsEaten / plantSurvivalSeconds). Only the
+     * actual animated sprite frames need to cross the wire.
+     */
+    public List<FrameConfig> collectFrames() {
+        List<FrameConfig> frames = new java.util.ArrayList<>();
+        if (ctx == null)
+            return frames;
+
+        int totalLanes = ctx.getMap().getLanes();
+        for (int lane = 0; lane < totalLanes; lane++) {
+            collectInactiveLawnMowers(lane, frames);
+            collectPlants(lane, frames);
+            collectTileBehaviors(lane, frames);
+            collectZombies(lane, frames);
+            collectProjectiles(lane, frames);
+            collectOctopusProjectiles(lane, frames);
+            collectEffects(lane, frames);
+            collectActiveLawnMowers(lane, frames);
+        }
+        collectProjectilesOutsideGrid(frames);
+        collectSuns(frames);
+        collectLootDrops(frames);
+        return frames;
+    }
+
+    private static void addFrames(List<FrameConfig> frames, java.util.List<FrameConfig> more) {
+        if (more == null)
+            return;
+        for (FrameConfig fc : more) {
+            if (fc != null)
+                frames.add(fc);
+        }
+    }
+
+    private void collectInactiveLawnMowers(int row, List<FrameConfig> frames) {
+        if (ctx.getLawnMowers() == null || ctx.getLawnMowers().length < 1)
+            return;
+        LawnMower lm = ctx.getLawnMowers()[row];
+        if (lm != null && !lm.isTriggered())
+            addFrames(frames, lm.draw());
+    }
+
+    private void collectPlants(int row, List<FrameConfig> frames) {
+        for (Plant p : ctx.getPlants()) {
+            if (p.getLane() == row && !p.isBound())
+                addFrames(frames, p.draw());
+        }
+    }
+
+    private void collectTileBehaviors(int row, List<FrameConfig> frames) {
+        for (int col = 0; col < ctx.getMap().getColumns(); col++) {
+            addFrames(frames, ctx.getMap().getTileAt(col, row).drawBehaviors());
+        }
+    }
+
+    private void collectZombies(int row, List<FrameConfig> frames) {
+        for (Zombie z : ctx.getZombies()) {
+            if (GameController.worldYtoLane(z.getY()) == row) {
+                addFrames(frames, z.draw());
+                if (z.isFrozenInIceBlock()) {
+                    frames.add(new FrameConfig(ICE_BLOCK_PAM, ICE_BLOCK_CLIP,
+                            z.getIceBlockStateTime(), new com.badlogic.gdx.math.Vector2(z.getX(), z.getY()),
+                            new com.badlogic.gdx.math.Vector2(0.65f, 0.65f), null, false));
+                }
+            }
+        }
+    }
+
+    private void collectProjectiles(int row, List<FrameConfig> frames) {
+        for (Projectile p : ctx.getProjectiles()) {
+            int pLane = GameController.worldYtoLane(p.getY());
+            if (pLane == row)
+                addFrames(frames, p.draw());
+        }
+    }
+
+    private void collectOctopusProjectiles(int row, List<FrameConfig> frames) {
+        for (var op : ctx.getOctopusProjectiles()) {
+            int opLane = GameController.worldYtoLane(op.getPosition().y);
+            if (opLane == row)
+                frames.addAll(op.draw());
+        }
+    }
+
+    private void collectProjectilesOutsideGrid(List<FrameConfig> frames) {
+        int totalLanes = ctx.getMap().getLanes();
+        for (Projectile p : ctx.getProjectiles()) {
+            int pLane = GameController.worldYtoLane(p.getY());
+            if (pLane < 0 || pLane >= totalLanes)
+                addFrames(frames, p.draw());
+        }
+        for (var op : ctx.getOctopusProjectiles()) {
+            int opLane = GameController.worldYtoLane(op.getPosition().y);
+            if (opLane < 0 || opLane >= totalLanes)
+                frames.addAll(op.draw());
+        }
+    }
+
+    private void collectEffects(int row, List<FrameConfig> frames) {
+        for (Effect e : ctx.getEffects()) {
+            int lane = Math.max(0, Math.min(GameController.worldYtoLane(e.getPos().y),
+                    ctx.getMap().getLanes() - 1));
+            if (lane == row)
+                addFrames(frames, e.draw());
+        }
+    }
+
+    private void collectSuns(List<FrameConfig> frames) {
+        for (Sun s : ctx.getSuns()) {
+            if (hideZombieSuns && s.getOwner() == Sun.SunOwner.ZOMBIE)
+                continue;
+            addFrames(frames, s.draw());
+        }
+    }
+
+    private void collectLootDrops(List<FrameConfig> frames) {
+        for (LootDrop ld : ctx.getLootDrops()) {
+            addFrames(frames, ld.draw());
+        }
+    }
+
+    private void collectActiveLawnMowers(int row, List<FrameConfig> frames) {
+        if (ctx.getLawnMowers() == null || ctx.getLawnMowers().length < 1)
+            return;
+        LawnMower lm = ctx.getLawnMowers()[row];
+        if (lm != null && lm.isTriggered())
+            addFrames(frames, lm.draw());
     }
 
     public void toggleShowHitBoxes() {
