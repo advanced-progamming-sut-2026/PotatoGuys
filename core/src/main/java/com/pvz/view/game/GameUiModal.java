@@ -621,6 +621,23 @@ public class GameUiModal extends Table {
         com.pvz.models.MatchSession matchSession = com.pvz.models.AppContext.getInstance().getMatchSession();
         com.pvz.network.PlayerRole myRole = matchSession != null ? matchSession.getMyRole() : null;
 
+        // ── Detect cards that disappeared from the context and rebuild the
+        //    bar so their slots (and any leftover empty cells) are removed.
+        //    e.g. VaseBreaker / ConveyorBelt used a card and it was removed
+        //    via ctx.removeCard.
+        boolean removedAny = false;
+        for (PlantCard pc : new java.util.ArrayList<>(slotByCard.keySet())) {
+            if (!context.getCards().contains(pc)) {
+                removedAny = true;
+                break;
+            }
+        }
+        if (removedAny) {
+            rebuildCardBar(context, matchSession, myRole);
+            return;
+        }
+
+        // ── Add slots for cards that are in the context but not yet in the UI ──
         boolean changed = false;
         for (Card card : context.getCards()) {
             if (matchSession != null) {
@@ -637,6 +654,28 @@ public class GameUiModal extends Table {
         if (changed) {
             updateCardStyles();
         }
+    }
+
+    /** Clears the card bar and re-adds every current card in context order. */
+    private void rebuildCardBar(GameContext context,
+                                com.pvz.models.MatchSession matchSession,
+                                com.pvz.network.PlayerRole myRole) {
+        cardsBarTable.clearChildren();
+        slotByCard.clear();
+        cooldownOverlayByCard.clear();
+        selectedCard = null;
+        for (Card card : context.getCards()) {
+            if (matchSession != null) {
+                if (card instanceof PlantCard && myRole != com.pvz.network.PlayerRole.PLANT)
+                    continue;
+                if (card instanceof ZombieCard && myRole != com.pvz.network.PlayerRole.ZOMBIE)
+                    continue;
+            }
+            if (card instanceof PlantCard pc) {
+                cardsBarTable.add(buildSlot(pc, true)).row();
+            }
+        }
+        updateCardStyles();
     }
 
     protected Table buildSlot(PlantCard pc, boolean isConveyor) {

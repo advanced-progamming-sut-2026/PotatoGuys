@@ -3,7 +3,6 @@ package com.pvz.models.games.modes.variants;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
@@ -223,26 +222,5 @@ public class TimedWarMode implements GameMode, PlantPlacer {
             }
         }
         return null;
-    }
-
-    @Override
-    public String getCardsStatus(GameContext context) {
-        StringBuilder result = new StringBuilder();
-        List<Card> cards = context.getCards();
-        if (cards == null || cards.isEmpty()) {
-            result.append("No plant cards available.");
-        } else {
-            result.append("=== SEED PACKETS ===");
-            int cardWidth = 40;
-            for (Card card : cards) {
-                PlantCard ps = (PlantCard) card;
-                String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | Cooldown:%.1f%s",
-                        ps.getPlant().getType(), ps.getCost(), ps.getPlant().getLevel(),
-                        (float) ps.getCooldown() / (float) Constants.TICK_PER_SECOND,
-                        ps.getPlant().isBoosted() ? " | ⚡B" : "");
-                result.append("\n").append(String.format("%-" + cardWidth + "s", cardInfo));
-            }
-        }
-        return result.toString();
     }
 }

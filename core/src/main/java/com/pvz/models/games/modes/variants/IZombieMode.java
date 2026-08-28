@@ -583,19 +583,6 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         return null;
     }
 
-    @Override
-    public String getCardsStatus(GameContext context) {
-        StringBuilder sb = new StringBuilder();
-        for (Card card : context.getCards()) {
-            if (card instanceof ZombieCard zc) {
-                sb.append(String.format("%s | %d sun%n", zc.getZombieType(), zc.getCost()));
-            } else if (card instanceof PlantCard pc) {
-                sb.append(String.format("%s | %d sun%n", pc.getPlant().getType(), pc.getCost()));
-            }
-        }
-        return sb.toString();
-    }
-
     /**
      * Guest-side per-tick update for sun producer zombies.
      * Called from GameController on the guest (zombie) side since the guest

@@ -20,12 +20,15 @@ public class VaseBehavior implements TileBehavior {
     private final VaseType vaseType;
     private boolean broken;
     private boolean breakAnimDone;
+    private Tile tile;
 
-    public VaseBehavior(VaseType vaseType) {
+    public VaseBehavior(VaseType vaseType, Tile tile) {
         this.vaseType = vaseType;
         this.broken = false;
         this.breakAnimDone = false;
         this.stateTime = 0;
+        this.tile = tile;
+        tile.addBehavior(this);
     }
 
     public VaseType getVaseType() {
@@ -55,6 +58,7 @@ public class VaseBehavior implements TileBehavior {
             float breakDuration = 1.8f;
             if (stateTime >= breakDuration) {
                 breakAnimDone = true;
+                dispose();
             }
         }
     }
@@ -89,5 +93,10 @@ public class VaseBehavior implements TileBehavior {
     @Override
     public String getName() {
         return "Vase";
+    }
+
+    @Override
+    public void dispose() {
+        tile.removeBehavior(this);
     }
 }

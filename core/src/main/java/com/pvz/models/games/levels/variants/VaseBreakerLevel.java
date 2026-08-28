@@ -12,13 +12,15 @@ import com.pvz.models.user.MyPlant;
 public class VaseBreakerLevel extends Level {
     private List<MyPlant> basedPlants;
     private List<ZombieType> basedZombies;
+    private MyPlant defaultPlant;
     private int cols;
     private int xOffset;
     private int greenPots;
     private int gargantuarPots;
 
     public VaseBreakerLevel(GameMapDefinition gameMap, int levelNumber, LevelType type, int initialSun,
-            List<MyPlant> basedPlants, List<ZombieType> basedZombies, int cols, int lanes, int xOffset, int greenPots,
+            List<MyPlant> basedPlants, List<ZombieType> basedZombies, MyPlant defaultPlant, int cols, int lanes,
+            int xOffset, int greenPots,
             int gargantuarPots) {
         super(GameModeType.VASEBREAKER, gameMap, levelNumber, type, initialSun);
         this.basedPlants = basedPlants;
@@ -27,6 +29,7 @@ public class VaseBreakerLevel extends Level {
         this.xOffset = xOffset;
         this.greenPots = greenPots;
         this.gargantuarPots = gargantuarPots;
+        this.defaultPlant = defaultPlant;
     }
 
     public List<MyPlant> getBasedPlants() {
@@ -64,5 +67,9 @@ public class VaseBreakerLevel extends Level {
 
     public int getGargantuarPots() {
         return gargantuarPots;
+    }
+
+    public MyPlant getDefaultPlant() {
+        return defaultPlant;
     }
 }

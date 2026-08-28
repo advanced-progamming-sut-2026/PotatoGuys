@@ -60,13 +60,6 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
 
     @Override
     public void initMode(GameContext context) {
-        context.log("\n=========================================================");
-        context.log("🌱 PLANT WHAT YOU GET MODE ACTIVATED! 🌱");
-        context.log("• Strategy: You only have your initial Sun resource.");
-        context.log("• Rule: No sky suns! No Sunflowers allowed!");
-        context.log("• Phase: PREPARATION! Plant freely without cooldowns.");
-        context.log("• Command: Type 'start zombie waves' when your defense is ready!");
-        context.log("=========================================================\n");
     }
 
     /**
@@ -211,36 +204,6 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
     @Override
     public boolean supportsFallingSuns() {
         return false;
-    }
-
-    @Override
-    public String getCardsStatus(GameContext context) {
-        StringBuilder sb = new StringBuilder();
-        List<Card> cards = context.getCards();
-
-        if (cards == null || cards.isEmpty()) {
-            sb.append("No plant cards available.");
-        } else {
-            sb.append("=== SEED PACKETS ===");
-            int cardWidth = 45;
-
-            for (Card card : cards) {
-                PlantCard ps = (PlantCard) card;
-                String cooldownStatus = preparationPhase ? "0.0 (PREP FREE)"
-                        : String.format("%.1f", (float) ps.getCooldown() / (float) Constants.TICK_PER_SECOND);
-
-                String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | CD:%s%s",
-                        ps.getPlant().getType(),
-                        ps.getCost(),
-                        ps.getPlant().getLevel(),
-                        cooldownStatus,
-                        ps.getPlant().isBoosted() ? " | ⚡B" : "");
-
-                sb.append("\n");
-                sb.append(String.format("%-" + cardWidth + "s", cardInfo));
-            }
-        }
-        return sb.toString();
     }
 
     @Override

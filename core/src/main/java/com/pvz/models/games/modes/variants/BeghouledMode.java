@@ -61,14 +61,9 @@ public class BeghouledMode implements GameMode, BoardSwapper {
     private boolean inBounds(int col, int lane) {
         return lane >= 0 && lane < board.length && col >= 0 && col < board[0].length;
     }
+
     @Override
     public boolean supportsFallingSuns() {
         return false;
-    }
-
-    @Override
-    public String getCardsStatus(GameContext context) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCardsStatus'");
     }
 }
