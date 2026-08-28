@@ -24,10 +24,12 @@ import com.pvz.models.games.card.PlantCard;
  * plant-food dots, wallet, wave meter, shovel, pause) but replaces the static
  * left-hand seed tray with a vertical "conveyor belt":
  * <ul>
- *   <li>The tray is anchored to the bottom of the screen instead of the top.</li>
- *   <li>Cards accumulate from the bottom upward, like a belt that fills up.</li>
- *   <li>A freshly delivered plant rises in from below the screen edge and slides
- *       into place while the existing cards nudge up to make room.</li>
+ *   <li>The tray is anchored to the top-left of the screen, its first card
+ *       pushed down by {@link #TRAY_TOP_OFFSET} so it never overlaps the sun
+ *       bank and never runs off the top edge.</li>
+ *   <li>Cards accumulate downward: every new card is appended at the bottom.</li>
+ *   <li>A freshly delivered card flies in from the bottom-right of the screen
+ *       and slides up into the bottom of the tray.</li>
  *   <li>When a card is used (planted) it is drained out of the tray and the
  *       remaining cards condense to fill the gap.</li>
  * </ul>
@@ -35,9 +37,19 @@ import com.pvz.models.games.card.PlantCard;
 public class ConveyorBeltUiModal extends GameUiModal {
 
     private static final float TRAY_PAD_LEFT = 18f;
-    private static final float TRAY_PAD_BOTTOM = 26f;
-    private static final float SLIDE_TIME = 0.38f;
+    private static final float TRAY_PAD_TOP = 26f;
+    private static final float SLIDE_TIME = 0.42f;
     private static final float DRAIN_TIME = 0.28f;
+
+    /**
+     * Vertical gap between the top of the screen and the top of the first card.
+     * Mirrors the offset the base {@link GameUiModal} uses to tuck the left-hand
+     * tray under the sun bank, so the belt clears the top HUD and stays on screen.
+     */
+    private static final float TRAY_TOP_OFFSET = 64f;
+
+    /** Stage size of the 1280x720 gameplay viewport. */
+    private static final float STAGE_HEIGHT = 720f;
 
     private final Group trayGroup;
     private final List<PlantCard> trayCards = new ArrayList<>();
@@ -51,9 +63,20 @@ public class ConveyorBeltUiModal extends GameUiModal {
 
         Table overlay = new Table();
         overlay.setFillParent(true);
-        overlay.bottom().left();
-        overlay.add(trayGroup).bottom().left().padLeft(TRAY_PAD_LEFT).padBottom(TRAY_PAD_BOTTOM);
+        overlay.top().left();
+        overlay.add(trayGroup).top().left().padLeft(TRAY_PAD_LEFT).padTop(TRAY_PAD_TOP);
         addActor(overlay);
+    }
+
+    /**
+     * Group-local Y for the card at {@code index} counting from the top of the
+     * tray. The tray group is anchored to the top-left of the screen, so the
+     * group's (0, 0) sits at the top edge; every card therefore lives at a
+     * <em>negative</em> offset that grows downward as cards stack, keeping the
+     * first card just under the sun bank and the whole belt fully on-screen.
+     */
+    private float slotYForIndex(int index) {
+        return -(TRAY_TOP_OFFSET + (index + 1) * SLOT_HEIGHT);
     }
 
     @Override
@@ -77,7 +100,7 @@ public class ConveyorBeltUiModal extends GameUiModal {
                 addSlotInitial(pc);
             }
         }
-        reflow(false);
+        reflow(false, null);
         updateCardStyles();
     }
 
@@ -113,15 +136,23 @@ public class ConveyorBeltUiModal extends GameUiModal {
         }
 
         boolean addedAny = false;
+        List<PlantCard> freshlyAdded = new ArrayList<>();
         for (PlantCard pc : desired) {
             if (!slotByCard.containsKey(pc) && !draining.contains(pc)) {
-                addSlotFresh(pc);
                 addedAny = true;
+                freshlyAdded.add(pc);
             }
         }
 
+        if (addedAny) {
+            addFreshCards(freshlyAdded);
+        }
+
         if (addedAny || removedAny) {
-            reflow(true);
+            // Animate the surviving cards into place. Newly delivered cards already
+            // carry their own bottom-right entrance animation, so they are excluded
+            // here to avoid snapping them to the final spot prematurely.
+            reflow(true, freshlyAdded);
             updateCardStyles();
         }
     }
@@ -136,28 +167,40 @@ public class ConveyorBeltUiModal extends GameUiModal {
         super.updateHud();
     }
 
-    /** Builds a slot for the first batch of cards (no entry animation). */
+    /**
+     * Builds a slot for the first batch of cards (no entry animation). The first
+     * card sits just under the sun bank ({@link #TRAY_TOP_OFFSET}) and later cards
+     * stack downward.
+     */
     private void addSlotInitial(PlantCard pc) {
         Table slot = buildSlot(pc, true);
         slot.setSize(SLOT_WIDTH, SLOT_HEIGHT);
-        slot.setPosition(0f, trayCards.size() * SLOT_HEIGHT);
+        slot.setPosition(0f, slotYForIndex(trayCards.size()));
         trayGroup.addActor(slot);
         trayCards.add(pc);
     }
 
     /**
-     * Adds a just-delivered card below the visible tray. The subsequent
-     * {@link #reflow(boolean)} then slides the whole stack up, so the new card
-     * "emerges" from the bottom of the screen while the older cards rise to make
-     * room — a continuous filling belt.
+     * Appends every newly delivered card to the bottom of the tray (they are added
+     * to {@link #trayCards} in the same order they appear in the hand, so they
+     * stack at the bottom, never the top). Each one starts at the bottom-right of
+     * the screen and glides up into its slot.
      */
-    private void addSlotFresh(PlantCard pc) {
-        Table slot = buildSlot(pc, true);
-        slot.setSize(SLOT_WIDTH, SLOT_HEIGHT);
-        int index = trayCards.size();
-        slot.setPosition(0f, index * SLOT_HEIGHT - SLOT_HEIGHT - 60f);
-        trayGroup.addActor(slot);
-        trayCards.add(pc);
+    private void addFreshCards(List<PlantCard> fresh) {
+        for (PlantCard pc : fresh) {
+            Table slot = buildSlot(pc, true);
+            slot.setSize(SLOT_WIDTH, SLOT_HEIGHT);
+            int index = trayCards.size();
+            trayGroup.addActor(slot);
+            trayCards.add(pc);
+
+            float targetX = 0f;
+            float targetY = slotYForIndex(index);
+            // The belt is vertical: the card keeps the tray's x (centre of the
+            // stack) and only rises from the bottom of the screen up to its slot.
+            slot.setPosition(0f, -STAGE_HEIGHT - SLOT_HEIGHT);
+            slot.addAction(Actions.moveTo(targetX, targetY, SLIDE_TIME));
+        }
     }
 
     /**
@@ -179,18 +222,22 @@ public class ConveyorBeltUiModal extends GameUiModal {
     }
 
     /**
-     * Repositions every live belt slot to its target {@code y = index * SLOT_HEIGHT}.
-     * When {@code animate} is true the slots glide up to their new spots, which
-     * produces both the "belt rises as a card is delivered" and the "tray
-     * condenses after a card is planted" motions.
+     * Places every live belt card at its final position
+     * {@code y = TRAY_TOP_OFFSET + index * SLOT_HEIGHT}. Existing cards keep their
+     * spot; freshly delivered cards arrive already animated, so this only snaps
+     * positions to ground truth.
      */
-    private void reflow(boolean animate) {
+    private void reflow(boolean animate, List<PlantCard> skip) {
         for (int i = 0; i < trayCards.size(); i++) {
-            Table slot = slotByCard.get(trayCards.get(i));
+            PlantCard pc = trayCards.get(i);
+            if (skip != null && skip.contains(pc)) {
+                continue;
+            }
+            Table slot = slotByCard.get(pc);
             if (slot == null) {
                 continue;
             }
-            float targetY = i * SLOT_HEIGHT;
+            float targetY = slotYForIndex(i);
             if (animate) {
                 slot.clearActions();
                 slot.addAction(Actions.moveTo(0f, targetY, SLIDE_TIME));
