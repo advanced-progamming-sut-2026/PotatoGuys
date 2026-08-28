@@ -55,7 +55,6 @@ public class GameStateSync {
             snap.plantSurvivalSecondsRemaining = izMode.getPlantSurvivalSecondsRemaining();
             sunProducers = izMode.getSunProducers();
         }
-
         List<GameSnapshot.PlantSnap> plants = new ArrayList<>();
         for (Plant p : ctx.getPlants()) {
             if (p.isDead())
@@ -93,7 +92,13 @@ public class GameStateSync {
         for (Sun s : ctx.getSuns()) {
             if (s.isDone())
                 continue;
-            if (isIZombie || s.getOwner() == Sun.SunOwner.ZOMBIE)
+            // In I, Zombie the zombie-owned suns (from sun producers) are generated
+            // locally on the guest, so the host only syncs the plant-owned ones — those
+            // are the sunflower drops the zombie player can click to have the host
+            // collect. In other modes sync all suns.
+            if (isIZombie && s.getOwner() != Sun.SunOwner.PLANT)
+                continue;
+            if (!isIZombie && s.getOwner() == Sun.SunOwner.ZOMBIE)
                 continue;
             GameSnapshot.SunSnap ss = new GameSnapshot.SunSnap();
             ss.id = System.identityHashCode(s);
@@ -104,6 +109,25 @@ public class GameStateSync {
             suns.add(ss);
         }
         snap.suns = suns;
+
+        List<GameSnapshot.ProjectileSnap> projectiles = new ArrayList<>();
+        for (com.pvz.models.entities.projectile.Projectile p : ctx.getProjectiles()) {
+            if (p.isDead())
+                continue;
+            GameSnapshot.ProjectileSnap ps = new GameSnapshot.ProjectileSnap();
+            ps.id = System.identityHashCode(p);
+            ps.type = p.getType().name();
+            ps.x = p.getX();
+            ps.y = p.getY();
+            ps.velX = p.getVelocity().x;
+            ps.velY = p.getVelocity().y;
+            ps.damage = p.getDamage();
+            ps.lobbed = p.getMotionState()
+                    instanceof com.pvz.models.entities.projectile.fsm.LobbedMotionState;
+            ps.launchLane = com.pvz.controller.game.GameController.worldYtoLane(p.getY());
+            projectiles.add(ps);
+        }
+        snap.projectiles = projectiles;
 
         return snap;
     }
@@ -119,6 +143,7 @@ public class GameStateSync {
         public final Map<Integer, Plant> plantsById = new HashMap<>();
         public final Map<Integer, Zombie> zombiesById = new HashMap<>();
         public final Map<Integer, Sun> sunsById = new HashMap<>();
+        public final Map<Integer, com.pvz.models.entities.projectile.Projectile> projectilesById = new HashMap<>();
 
         /**
          * Reverse lookup: given a locally-reconstructed Sun the guest just clicked,
@@ -148,6 +173,7 @@ public class GameStateSync {
         applyPlants(ctx, snap.plants, mirror);
         applyZombies(ctx, snap.zombies, mirror);
         applySuns(ctx, snap.suns, mirror);
+        applyProjectiles(ctx, snap.projectiles, mirror);
 
         // Moves everything just spawnPlant/spawnZombie/spawnSun'd (and everything
         // just removePlant/removeZombie/removeSun'd) from pending queues into the
@@ -250,6 +276,57 @@ public class GameStateSync {
     }
 
     /**
+     * Reconstructs host projectiles on the guest so the pea/melon/etc. flight
+     * animation is actually visible (previously they were never synced at all).
+     * We match by host id; existing entries just get their position/velocity
+     * overwritten from the snapshot. Removed on the host are removed here.
+     *
+     * <p>The guest never runs collision, so reconstructed projectiles must not
+     * register their hitboxes / engage the engine — we build them with
+     * ProjectileFactory (for correct motion/effect states) but drop them into
+     * the mirror only, not into ctx.getProjectiles(), and tick them by hand in
+     * {@link #tickVisualsOnly}. Building via the factory guarantees the PAM path
+     * / clip / scale for the drawn frame match the host's.
+     */
+    private static void applyProjectiles(GameContext ctx,
+            List<GameSnapshot.ProjectileSnap> snaps, GuestMirrorState mirror) {
+        if (snaps == null)
+            return;
+        Set<Integer> seen = new HashSet<>();
+        for (GameSnapshot.ProjectileSnap ps : snaps) {
+            seen.add(ps.id);
+            com.pvz.models.entities.projectile.Projectile local = mirror.projectilesById.get(ps.id);
+            if (local == null) {
+                try {
+                    com.pvz.models.entities.projectile.ProjectileType type =
+                            com.pvz.models.entities.projectile.ProjectileType.valueOf(ps.type);
+                    local = com.pvz.models.entities.projectile.ProjectileFactory.create(type, ctx,
+                            new com.badlogic.gdx.math.Vector2(ps.x, ps.y),
+                            new com.badlogic.gdx.math.Vector2(ps.velX, ps.velY), ps.damage);
+                } catch (Exception e) {
+                    continue; // unknown type — skip, shouldn't happen
+                }
+                if (ps.lobbed) {
+                    com.pvz.models.entities.projectile.fsm.LobbedMotionState lobbed =
+                            new com.pvz.models.entities.projectile.fsm.LobbedMotionState(
+                                    new com.badlogic.gdx.math.Vector2(ps.x, ps.y), 0.8f, 90f);
+                    local.setMotionState(lobbed);
+                    local.setLobbed(ps.launchLane);
+                }
+                mirror.projectilesById.put(ps.id, local);
+            }
+            local.getPos().set(ps.x, ps.y);
+            local.getVelocity().set(ps.velX, ps.velY);
+        }
+        mirror.projectilesById.entrySet().removeIf(entry -> {
+            if (seen.contains(entry.getKey()))
+                return false;
+            entry.getValue().destroy();
+            return true;
+        });
+    }
+
+    /**
      * Guest-only: advances animation/visual state for the locally-mirrored
      * entities every frame, without running CollisionSystem or flushPending —
      * those stay exclusively the host's job. Any gameplay side-effect this
@@ -268,6 +345,10 @@ public class GameStateSync {
         for (Sun s : mirror.sunsById.values()) {
             if (!s.isDone())
                 s.update(dt);
+        }
+        for (com.pvz.models.entities.projectile.Projectile p : mirror.projectilesById.values()) {
+            if (!p.isDead())
+                p.update(dt);
         }
     }
 

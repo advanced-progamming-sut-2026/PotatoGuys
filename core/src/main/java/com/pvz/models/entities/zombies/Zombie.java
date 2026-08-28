@@ -195,20 +195,79 @@ public class Zombie extends Entity {
         syncHitbox();
     }
 
+    /**
+     * Column threshold (grid column index) at or below which a zombie has reached
+     * the danger zone near the finish line and starts blinking red so the player
+     * notices it. Column 0 sits on the finish line; column 1 is just before it.
+     */
+    private static final int RED_ALERT_MAX_COL = 1;
+
+    /** Blink speed (radians per second) of the red-alert tint. */
+    private static final float RED_ALERT_SPEED = 9f;
+
+    /** Blink speed (radians per second) of the green plant-food tint. */
+    private static final float PLANT_FOOD_SPEED = 9f;
+
     @Override
     public List<FrameConfig> draw() {
         List<FrameConfig> frameConfigs = new ArrayList<>();
         if (currentState != null) {
-            frameConfigs.add(currentState.draw(this, context));
+            frameConfigs.add(applyAlert(currentState.draw(this, context)));
         }
         return frameConfigs;
+    }
+
+    /**
+     * Applies persistent blinking tints on the produced frame, borrowed from
+     * {@link com.pvz.models.entities.zombies.fsm.ZombieFlashState}: the visual
+     * effect is a tint on the frame's {@code r/g/b/a} values, which
+     * {@code GameRenderer} applies to the batch each frame. Two independent alerts
+     * are supported, each additive, and the intensity oscillates so the zombie
+     * visibly blinks:
+     * <ul>
+     *   <li><b>red</b> — while the zombie stays in the danger zone near the finish
+     *       line (column {@code <= RED_ALERT_MAX_COL});</li>
+     *   <li><b>green</b> — while the zombie carries plant food
+     *       ({@link #isGlowing()}).</li>
+     * </ul>
+     *
+     * @param fc the frame drawn by the current state
+     * @return the same (possibly tinted) frame
+     */
+    private FrameConfig applyAlert(FrameConfig fc) {
+        if (fc == null) {
+            return fc;
+        }
+        boolean redAlert = GameController.worldXtoCol(position.x) <= RED_ALERT_MAX_COL;
+        boolean plantFood = glowing;
+        if (!redAlert && !plantFood) {
+            return fc;
+        }
+        float pulse = 0.5f + 0.5f * (float) Math.sin(stateTime * RED_ALERT_SPEED);
+        float attenuated = 0.4f + 0.35f * pulse;
+        float r = fc.r;
+        float g = fc.g;
+        float b = fc.b;
+        if (redAlert) {
+            r = 1f;
+            g *= attenuated;
+            b *= attenuated;
+        }
+        if (plantFood) {
+            g = 1f;
+            r *= attenuated;
+            b *= attenuated;
+        }
+        fc.setColor(r, g, b, fc.a);
+        return fc;
     }
 
     public void changeState(ZombieState state) {
         if (currentState != null)
             currentState.onExit(this, context);
         this.currentState = state;
-        currentState.onExit(this, context);
+        if (currentState != null)
+            currentState.onEnter(this, context);
     }
 
     /** Replaces the current FSM state cleanly (onExit → onEnter). */
@@ -395,6 +454,14 @@ public class Zombie extends Entity {
      */
     public void startEating(Plant plant) {
         if (dead || currentState instanceof EatState || currentState instanceof FrozenState) {
+            return;
+        }
+        // `takeDamage` temporarily wraps the current state in a ZombieFlashState.
+        // While the damage-flash is playing we're still eating (the flash delegates
+        // to the wrapped EatState), so re-entering would restart the eat animation.
+        // Detect that and keep eating instead of restarting.
+        if (currentState instanceof ZombieFlashState flash
+                && flash.getUnderlying() instanceof EatState) {
             return;
         }
         currentState.onExit(this, context);

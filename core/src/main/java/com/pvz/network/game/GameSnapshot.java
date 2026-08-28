@@ -24,6 +24,14 @@ public class GameSnapshot {
     public List<PlantSnap> plants;
     public List<ZombieSnap> zombies;
     public List<SunSnap> suns;
+    public List<ProjectileSnap> projectiles;
+
+    /**
+     * Sequence counter for ordering/stale-detection. The guest keeps only the
+     * snapshot with the highest seq. Currently the guest applies snapshots
+     * unconditionally, but callers may use this to skip out-of-order ones.
+     */
+    public int seq;
 
     public static class PlantSnap {
         /** Synthetic id — System.identityHashCode(plant) on the host. Network-layer only. */
@@ -57,5 +65,19 @@ public class GameSnapshot {
         public int col;
         public int lane;
         public int amount;
+    }
+
+    public static class ProjectileSnap {
+        public int id;
+        /** ProjectileType enum name — what ProjectileFactory#create expects. */
+        public String type;
+        public float x;
+        public float y;
+        public float velX;
+        public float velY;
+        public float damage;
+        /** True when the host projectile is lobbed, so the guest renders the arc. */
+        public boolean lobbed;
+        public int launchLane;
     }
 }

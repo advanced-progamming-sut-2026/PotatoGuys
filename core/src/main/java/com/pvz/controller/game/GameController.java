@@ -9,6 +9,7 @@ import com.pvz.network.game.GameAction;
 import com.pvz.network.game.GameSnapshot;
 import com.pvz.network.game.GameStateSync;
 import com.pvz.network.game.GameSyncEnvelope;
+import com.pvz.network.game.RenderFrame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -113,7 +114,11 @@ public class GameController {
     private final GameStateSync.GuestMirrorState guestMirror = new GameStateSync.GuestMirrorState();
     private float snapshotAccumulator = 0f;
     private boolean lastGameOver = false;
-    private static final float SNAPSHOT_INTERVAL_SECONDS = 0.15f;
+    private static final float SNAPSHOT_INTERVAL_SECONDS = 0.01f;
+    /** Monotonic snapshot counter stamped onto every snapshot for stale/ordering checks. */
+    private int snapshotSeq = 0;
+    /** Highest seq the guest has applied so far (drops out-of-order/stale snapshots). */
+    private int lastAppliedSeq = -1;
 
     private final Vector3 touchPos = new Vector3();
 
@@ -195,7 +200,8 @@ public class GameController {
                                         ctx.removePlant(target);
                                         gameUiModal.setShovelSelected(false);
                                         hideShovelCursor();
-                                        Gdx.app.log("Shovel", "Dug up " + target.getType() + " (no sun refund).");
+                                        if (com.pvz.utils.DebugMode.isEnabled())
+                                            Gdx.app.log("Shovel", "Dug up " + target.getType() + " (no sun refund).");
                                         return true;
                                     }
                                 } else {
@@ -419,7 +425,7 @@ public class GameController {
             }
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+        if (com.pvz.utils.DebugMode.isEnabled() && Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             renderer.toggleShowHitBoxes();
         }
 
@@ -454,9 +460,12 @@ public class GameController {
             if (!isNetworkedMatch || isHost) {
                 GameEngine.getInstance().update(dt);
             } else if (ctx != null) {
-                GameStateSync.tickVisualsOnly(guestMirror, dt);
-                GameStateSync.tickCardsOnly(ctx, dt);
+                // Guest: no entity simulation for rendering — the drawn picture (a
+                // list of FrameConfigs) arrives from the host each frame. But the
+                // zombie player's own sun economy (sun producers minting collectible
+                // zombie suns) stays local so they can afford zombies.
                 if (ctx.getMode() instanceof IZombieMode izMode) {
+                    izMode.ensureGuestSunProducers(ctx);
                     izMode.updateSunProducers(ctx, dt);
                 }
                 for (Sun s : new ArrayList<>(ctx.getSuns())) {
@@ -465,17 +474,8 @@ public class GameController {
                     }
                 }
                 ctx.flushPending();
-                // Remove any plant-owned suns spawned as a side-effect of
-                // tickVisualsOnly → Plant.update() → SunProducerAction.update().
-                // Only zombie-owned suns (from updateSunProducers) should exist
-                // on the guest side.
-                if (isNetworkedMatch && !isHost) {
-                    for (Sun s : new ArrayList<>(ctx.getSuns())) {
-                        if (s.getOwner() == Sun.SunOwner.PLANT) {
-                            ctx.removeSun(s);
-                        }
-                    }
-                }
+                // Cards still need their cooldown overlays ticked for the HUD.
+                GameStateSync.tickCardsOnly(ctx, dt);
             }
 
             if (isNetworkedMatch && isHost) {
@@ -485,10 +485,7 @@ public class GameController {
                 lastGameOver = gameOverNow;
                 if (forceSend || snapshotAccumulator >= SNAPSHOT_INTERVAL_SECONDS) {
                     snapshotAccumulator = 0f;
-                    GameSnapshot snapshot = GameStateSync.buildSnapshot(ctx);
-                    String inner = gson.toJson(new GameSyncEnvelope(
-                            GameSyncEnvelope.Kind.SNAPSHOT, gson.toJson(snapshot)));
-                    NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
+                    sendRenderFrame(forceSend);
                 }
             }
 
@@ -832,11 +829,12 @@ public class GameController {
                     // Guest never runs GameEngine#update, so GameContext#enter() (which is
                     // what actually calls mode.initMode()) never fires the way it does for
                     // the host via the engine's newly-registered-entity processing.
-                    // Call it once, by hand, here.
-                    ctx.enter();
+                    // Flag networkGuest first so initMode only builds the zombie-side cards,
+                    // then call enter() once, by hand, here.
                     if (ctx.getMode() instanceof IZombieMode izMode) {
                         izMode.setNetworkGuest(true);
                     }
+                    ctx.enter();
                 }
                 if (isNetworkedMatch && isHost && ctx.getMode() instanceof IZombieMode izMode) {
                     izMode.setNetworkHost(true);
@@ -857,7 +855,8 @@ public class GameController {
                     NetworkClient.getInstance().setDisconnectListener(() -> handleDisconnect());
                 }
 
-                Gdx.app.log("GameScreen", "Starting camera pan back for " + seasonName + " Level " + levelNumber);
+                if (com.pvz.utils.DebugMode.isEnabled())
+                    Gdx.app.log("GameScreen", "Starting camera pan back for " + seasonName + " Level " + levelNumber);
             } else {
                 Gdx.app.error("GameScreen", "Failed to load level: " + seasonName + " Level " + levelNumber);
             }
@@ -893,7 +892,8 @@ public class GameController {
                     } else {
                         sun.collect(ctx);
                     }
-                    Gdx.app.log("GameScreen", "Sun collected! Amount: " + sun.getAmount());
+                    if (com.pvz.utils.DebugMode.isEnabled())
+                        Gdx.app.log("GameScreen", "Sun collected! Amount: " + sun.getAmount());
                     return true;
                 }
             }
@@ -919,12 +919,14 @@ public class GameController {
             if (dist < 55f) {
                 if (drop.getType() == LootDrop.LootType.POT || drop.getType() == LootDrop.LootType.PLANT_FOOD) {
                     drop.collect();
-                    Gdx.app.log("GameScreen", drop.getType().name() + " drop clicked, collected.");
+                    if (com.pvz.utils.DebugMode.isEnabled())
+                        Gdx.app.log("GameScreen", drop.getType().name() + " drop clicked, collected.");
                 } else {
                     Vector2 target = lootWalletWorld(drop.getType());
                     drop.flyTo(target.x, target.y);
-                    Gdx.app.log("GameScreen", "Loot drop clicked, flying to wallet: +" + drop.getAmount() + " "
-                            + drop.getType().name().toLowerCase() + "s.");
+                    if (com.pvz.utils.DebugMode.isEnabled())
+                        Gdx.app.log("GameScreen", "Loot drop clicked, flying to wallet: +" + drop.getAmount() + " "
+                                + drop.getType().name().toLowerCase() + "s.");
                 }
                 return true;
             }
@@ -1042,10 +1044,10 @@ public class GameController {
         if (envelope.kind == GameSyncEnvelope.Kind.QUIT) {
             handleDisconnect();
         } else if (envelope.kind == GameSyncEnvelope.Kind.SNAPSHOT && !isHost) {
-            GameSnapshot snapshot = gson.fromJson(envelope.data, GameSnapshot.class);
-            if (ctx != null) {
-                GameStateSync.applySnapshot(ctx, snapshot, guestMirror);
-            }
+            // The SNAPSHOT payload is now a compact binary RenderFrame (base64) —
+            // the full list of FrameConfigs the host is drawing. No entity
+            // reconstruction needed; we just render these frames directly.
+            handleRenderFrame(envelope.data);
         } else if (envelope.kind == GameSyncEnvelope.Kind.ACTION && isHost) {
             GameAction action = gson.fromJson(envelope.data, GameAction.class);
             applyRemoteAction(action);
@@ -1092,6 +1094,68 @@ public class GameController {
         GameAction action = GameAction.placeCard(type, cardTypeName, col, lane);
         String inner = gson.toJson(new GameSyncEnvelope(GameSyncEnvelope.Kind.ACTION, gson.toJson(action)));
         NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
+    }
+
+    /**
+     * Host side: serializes the current rendered picture (the exact FrameConfig list
+     * in draw order) into one compact binary {@link RenderFrame}, base64-encodes it
+     * (the match relay only carries a String payload), and sends it to the guest.
+     */
+    private void sendRenderFrame(boolean forceGameOver) {
+        RenderFrame rf = new RenderFrame();
+        rf.seq = ++snapshotSeq;
+        rf.gameOver = forceGameOver || ctx.isGameOver();
+        rf.currentSun = ctx.getCurrentSun();
+        if (ctx.getMode() instanceof IZombieMode izMode) {
+            boolean[] brains = izMode.getBrainsEaten();
+            rf.brainCount = brains != null ? brains.length : 0;
+            rf.brainsEaten = brains != null ? brains.clone() : new boolean[0];
+            rf.plantSurvivalSecondsRemaining = izMode.getPlantSurvivalSecondsRemaining();
+        } else {
+            rf.brainCount = -1;
+            rf.plantSurvivalSecondsRemaining = 0f;
+        }
+        rf.frames = renderer.collectFrames();
+
+        byte[] payload = rf.write();
+        String data = java.util.Base64.getEncoder().encodeToString(payload);
+        String inner = gson.toJson(new GameSyncEnvelope(GameSyncEnvelope.Kind.SNAPSHOT, data));
+        NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
+    }
+
+    /** Guest side: decode+store the latest rendered frame; it's drawn next render pass. */
+    private void handleRenderFrame(String base64Data) {
+        try {
+            byte[] payload = java.util.Base64.getDecoder().decode(base64Data);
+            RenderFrame rf = RenderFrame.read(payload);
+            if (rf.seq <= lastAppliedSeq) {
+                return; // stale / out-of-order
+            }
+            lastAppliedSeq = rf.seq;
+            com.pvz.models.games.modes.variants.IZombieMode iz = null;
+            if (ctx != null && ctx.getMode() instanceof com.pvz.models.games.modes.variants.IZombieMode m) {
+                iz = m;
+            }
+            renderer.setRemoteFrame(rf.frames, iz);
+            if (ctx != null) {
+                ctx.setCurrentSunDirect(rf.currentSun);
+                if (rf.gameOver && !ctx.isGameOver()) {
+                    ctx.setGameOver(true);
+                }
+                if (iz != null && rf.brainCount >= 0 && rf.brainsEaten != null) {
+                    // The guest uses the synced brain array solely for its HUD overlay.
+                    boolean[] local = iz.getBrainsEaten();
+                    if (local == null) {
+                        local = new boolean[rf.brainCount];
+                    }
+                    System.arraycopy(rf.brainsEaten, 0, local, 0,
+                            Math.min(local.length, rf.brainsEaten.length));
+                    iz.setPlantSurvivalSecondsRemaining(rf.plantSurvivalSecondsRemaining);
+                }
+            }
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            Gdx.app.error("GameController", "Failed to decode remote frame", e);
+        }
     }
 
     public GameRenderer getRenderer() {

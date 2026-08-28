@@ -52,7 +52,7 @@
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": ["DODO"],
+          "allowedTypes": ["GARGANTUAR"],
           "isBurst": false
         },
         {
