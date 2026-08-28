@@ -58,6 +58,7 @@ import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.games.modes.capabilities.ZombiePlacer;
+import com.pvz.models.games.modes.GameModeType;
 import com.pvz.models.games.modes.variants.IZombieMode;
 import com.pvz.models.games.modes.variants.VaseBreakerMode;
 import com.pvz.models.games.card.ZombieCard;
@@ -66,6 +67,7 @@ import com.pvz.view.GameModesMenu;
 import com.pvz.view.TravelLogMenu;
 import com.pvz.view.game.GameScreen;
 import com.pvz.view.game.GameUiModal;
+import com.pvz.view.game.ConveyorBeltUiModal;
 import com.pvz.view.game.GameOverPopup;
 import com.pvz.view.game.GameWinPopup;
 import com.pvz.view.game.PauseMenuPopup;
@@ -311,7 +313,9 @@ public class GameController {
         plantSelectModal = new PlantSelectModal(level, this::startGameSession);
         stage.addActor(plantSelectModal);
 
-        gameUiModal = new GameUiModal(this::pauseGame);
+        gameUiModal = (level.getGameMode() == GameModeType.CONVEYORBELT)
+                ? new ConveyorBeltUiModal(this::pauseGame)
+                : new GameUiModal(this::pauseGame);
         gameUiModal.setOnShovelRequested(this::toggleShovelMode);
         gameUiModal.setOnPlantFoodRequested(this::togglePlantFoodMode);
         stage.addActor(gameUiModal);
