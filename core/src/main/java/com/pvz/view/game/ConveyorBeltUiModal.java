@@ -46,7 +46,7 @@ public class ConveyorBeltUiModal extends GameUiModal {
      * Mirrors the offset the base {@link GameUiModal} uses to tuck the left-hand
      * tray under the sun bank, so the belt clears the top HUD and stays on screen.
      */
-    private static final float TRAY_TOP_OFFSET = 64f;
+    private static final float TRAY_TOP_OFFSET = 54f;
 
     /** Stage size of the 1280x720 gameplay viewport. */
     private static final float STAGE_HEIGHT = 720f;

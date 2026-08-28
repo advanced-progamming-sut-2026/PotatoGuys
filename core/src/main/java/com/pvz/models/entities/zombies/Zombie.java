@@ -397,6 +397,14 @@ public class Zombie extends Entity {
         if (dead || currentState instanceof EatState || currentState instanceof FrozenState) {
             return;
         }
+        // `takeDamage` temporarily wraps the current state in a ZombieFlashState.
+        // While the damage-flash is playing we're still eating (the flash delegates
+        // to the wrapped EatState), so re-entering would restart the eat animation.
+        // Detect that and keep eating instead of restarting.
+        if (currentState instanceof ZombieFlashState flash
+                && flash.getUnderlying() instanceof EatState) {
+            return;
+        }
         currentState.onExit(this, context);
         boolean garg = sheet.getSmashDamage() > 0;
         EatState eat = new EatState(plant, garg);
