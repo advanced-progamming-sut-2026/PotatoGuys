@@ -8,6 +8,7 @@ import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.plants.Plant;
+import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
@@ -18,10 +19,13 @@ public class Sun extends Entity {
 
     private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
     private static final String SUN_CLIP = "animation";
+    private static final String TRANSITION_RED_CLIP = "transition_red";
+    private static final String RED_CLIP = "red";
     private static final String RADIOACTIVE_SUN_PAM = "768/FULL/EFFECTS/SUN_BOMB/SUN_BOMB.PAM";
 
     private static final float DEFAULT_LIFESPAN_SECONDS = 50f;
     private static final float DEFAULT_FALL_SPEED = 70f;
+    private static final float TRANSITION_RED_FALLBACK_SECONDS = 0.5333f;
 
     private final SunType type;
     private final int col;
@@ -37,6 +41,14 @@ public class Sun extends Entity {
 
     private float stateTime;
     private Vector2 targetPos;
+
+    // ── Ra steal animation ───────────────────────────────────────────────────
+    // While a Ra zombie is stealing this sun, the drawn clip is overridden from
+    // the normal "animation" clip to "transition_red" (one shot) and then "red"
+    // (held/looped) until the steal completes.
+    private boolean stealing;
+    private float stealStateTime;
+    private float stealRedHoldSeconds = 2f;
 
     /** Backward-compatible constructor (plant-produced suns, no falling). */
     public Sun(SunType type, int col, int lane, int amount) {
@@ -66,7 +78,18 @@ public class Sun extends Entity {
     @Override
     public List<FrameConfig> draw() {
         List<FrameConfig> frameConfigs = new ArrayList<>();
-        if (type == SunType.NORMAL) {
+        if (stealing) {
+            // Ra steal sequence: one-shot transition_red, then the red clip looped
+            // for the rest of the steal window.
+            float transitionRedDuration = getTransitionRedDuration();
+            if (stealStateTime < transitionRedDuration) {
+                frameConfigs.add(new FrameConfig(SUN_PAM, TRANSITION_RED_CLIP, stealStateTime, position,
+                        new Vector2(0.65f, 0.65f), null, false));
+            } else {
+                frameConfigs.add(new FrameConfig(SUN_PAM, RED_CLIP, stealStateTime - transitionRedDuration, position,
+                        new Vector2(0.65f, 0.65f), null, true));
+            }
+        } else if (type == SunType.NORMAL) {
             frameConfigs.add(
                     new FrameConfig(SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.65f, 0.65f), null, true));
         } else if (type == SunType.SPECIAL) {
@@ -87,6 +110,9 @@ public class Sun extends Entity {
     @Override
     public void update(float dt) {
         stateTime += dt;
+        if (stealing) {
+            stealStateTime += dt;
+        }
         if (collected)
             return;
 
@@ -162,6 +188,49 @@ public class Sun extends Entity {
         if (context != null) {
             context.log("Radioactive sun at (" + col + ", " + lane + ") became a normal sun upon reaching the ground.");
         }
+    }
+
+    // ── Ra steal animation API ────────────────────────────────────────────────
+
+    /**
+     * Kicks off the Ra steal animation: the sun plays the {@code transition_red}
+     * clip once, then holds the {@code red} clip for {@code redHoldSeconds}.
+     *
+     * @param redHoldSeconds how long the {@code red} clip is shown after the
+     *                       transition finishes (Ra adds this on top of the
+     *                       transition duration before stealing the sun)
+     */
+    public void startStealAnimation(float redHoldSeconds) {
+        stealing = true;
+        stealStateTime = 0f;
+        stealRedHoldSeconds = redHoldSeconds;
+    }
+
+    /** Resets the steal animation, restoring the normal sun clip. */
+    public void stopStealAnimation() {
+        stealing = false;
+        stealStateTime = 0f;
+    }
+
+    public boolean isStealing() {
+        return stealing;
+    }
+
+    /** Seconds already spent inside the steal animation (transition + red). */
+    public float getStealStateTime() {
+        return stealStateTime;
+    }
+
+    /** Duration of the one-shot {@code transition_red} clip. */
+    public float getTransitionRedDuration() {
+        AnimationCatalog catalog = AnimationCatalog.getInstance();
+        float d = catalog != null ? catalog.getClipDuration(SUN_PAM, TRANSITION_RED_CLIP) : -1f;
+        return d > 0f ? d : TRANSITION_RED_FALLBACK_SECONDS;
+    }
+
+    /** True once the transition clip plus the red hold have fully played. */
+    public boolean isStealAnimationComplete() {
+        return stealing && stealStateTime >= getTransitionRedDuration() + stealRedHoldSeconds;
     }
 
     public boolean isFalling() {
