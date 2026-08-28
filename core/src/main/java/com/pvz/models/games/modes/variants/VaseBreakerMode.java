@@ -1,6 +1,7 @@
 package com.pvz.models.games.modes.variants;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -30,36 +31,81 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     private final List<ZombieType> zombiePool;
     private final Random random = new Random();
     private GameContext cachedContext;
+    private List<VaseBehavior> vases;
+    private int cols;
+    private int greenPots;
+    private int gargantuarPots;
+    private int xOffset;
 
     public VaseBreakerMode(Level level) {
 
         if (level instanceof VaseBreakerLevel vaseLevel) {
             this.plantPool = vaseLevel.getBasedPlants();
             this.zombiePool = vaseLevel.getBasedZombies();
+            this.cols = vaseLevel.getCols();
 
-            if (vaseLevel.getVases() != null) {
-                for (VaseDefinition def : vaseLevel.getVases()) {
-                    vasesToPlace.add(def);
-                }
-            }
+            this.greenPots = vaseLevel.getGreenPots();
+            this.gargantuarPots = vaseLevel.getGargantuarPots();
+            this.xOffset = vaseLevel.getXOffset();
+
+            vases = new ArrayList<>();
         } else {
             this.plantPool = List.of();
             this.zombiePool = List.of();
         }
     }
 
-    private final List<VaseDefinition> vasesToPlace = new ArrayList<>();
-
     @Override
-    public void initMode(GameContext context) {
-        this.cachedContext = context;
-        for (VaseDefinition def : vasesToPlace) {
-            Tile tile = context.getTileAt(def.getCol(), def.getLane());
-            if (tile != null) {
-                tile.addBehavior(new VaseBehavior(def.getVaseType()));
+    public void initMode(GameContext ctx) {
+        this.cachedContext = ctx;
+
+        int gameMapLanes = ctx.getMap().getLanes();
+        int gameMapCols = ctx.getMap().getColumns();
+
+        // تعداد کل کوزه‌ها
+        int totalVases = gameMapLanes * cols;
+
+        // ۱. ساخت لیست اولیه از نوع NORMAL
+        List<VaseType> vaseTypes = new ArrayList<>(Collections.nCopies(totalVases, VaseType.NORMAL));
+
+        // ۲. آماده‌سازی اندیس‌ها برای انتخاب تصادفی
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < totalVases; i++) {
+            indices.add(i);
+        }
+        Collections.shuffle(indices, random);
+
+        // ۳. تخصیص کوزه‌های سبز (PLANT)
+        int idx = 0;
+        for (int i = 0; i < greenPots; i++) {
+            vaseTypes.set(indices.get(idx++), VaseType.PLANT);
+        }
+
+        // ۴. تخصیص کوزه‌های غول (GARGANTUAR)
+        for (int i = 0; i < gargantuarPots; i++) {
+            vaseTypes.set(indices.get(idx++), VaseType.GARGANTUAR);
+        }
+        // بقیه اندیس‌ها همان NORMAL می‌مانند
+
+        // ۵. ایجاد کوزه‌ها روی نقشه با نوع‌های تعیین‌شده
+        int counter = 0;
+        for (int i = 0; i < gameMapLanes; i++) {
+            // حلقه از سمت راست به چپ، به اندازه cols ستون
+            for (int j = gameMapCols - 1 - xOffset; j > gameMapCols - 1 - cols - xOffset; j--) {
+                VaseType currentType = vaseTypes.get(counter++);
+                VaseBehavior vaseBehavior = new VaseBehavior(currentType);
+                ctx.getMap().getTileAt(j, i).addBehavior(vaseBehavior);
+                vases.add(vaseBehavior);
             }
         }
-        context.log("Vasebreaker level started! Click vases to break them.");
+        ctx.log("gamemap lanes: " + gameMapLanes);
+        ctx.log("gamemap cols: " + gameMapCols);
+        ctx.log("vase cols: " + cols);
+        ctx.log("xOffset: " + xOffset);
+        ctx.log("green vases: " + greenPots);
+        ctx.log("gargantuar vases: " + gargantuarPots);
+        ctx.log("vases size: " + vases.size());
+        ctx.log("vases type size: " + vaseTypes.size());
     }
 
     @Override
@@ -141,7 +187,8 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     }
 
     private void spawnZombie(GameContext context, ZombieType type, int col, int lane) {
-        Zombie zombie = new ZombieFactory().create(type.getAlias(), col, lane, context, 0, 0);
+        Zombie zombie = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(col), lane, context, 0,
+                0);
         if (zombie != null) {
             context.spawnZombie(zombie);
             context.log("ALERT: " + type + " emerged from the vase at (" + col + ", " + lane + ")!");
@@ -160,15 +207,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     private boolean anyVasesRemain() {
         if (cachedContext == null)
             return false;
-        for (int lane = 0; lane < cachedContext.getMap().getLanes(); lane++) {
-            for (int col = 0; col < cachedContext.getMap().getColumns(); col++) {
-                Tile tile = cachedContext.getTileAt(col, lane);
-                VaseBehavior vase = findVaseBehavior(tile);
-                if (vase != null && !vase.isBroken())
-                    return true;
-            }
-        }
-        return false;
+        return !vases.isEmpty();
     }
 
     // -- PlantPlacer capability --

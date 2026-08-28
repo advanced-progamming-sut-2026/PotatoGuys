@@ -171,3 +171,4 @@ Thumbs.db
 /assets/browser.jar
 /core/src/main/java/com/pvz/saves/
 core/src/main/java/com/pvz/saves/session.json
+.vscode/

@@ -10,6 +10,7 @@ import com.pvz.models.games.map.tile.Tile;
 
 public class VaseBehavior implements TileBehavior {
     private static final String BROWN_PAM = "768/FULL/VASEBREAKER/VASE_BROWN/VASE_BROWN.PAM";
+    private static final String GREEN_PAM = "768/FULL/VASEBREAKER/VASE_GREEN/VASE_GREEN.PAM";
     private static final String GARGANTUAR_PAM = "768/FULL/VASEBREAKER/VASE_GARGANTUAR/VASE_GARGANTUAR.PAM";
 
     private static final String IDLE_CLIP = "idle";
@@ -27,9 +28,17 @@ public class VaseBehavior implements TileBehavior {
         this.stateTime = 0;
     }
 
-    public VaseType getVaseType() { return vaseType; }
-    public boolean isBroken() { return broken; }
-    public boolean isBreakAnimDone() { return breakAnimDone; }
+    public VaseType getVaseType() {
+        return vaseType;
+    }
+
+    public boolean isBroken() {
+        return broken;
+    }
+
+    public boolean isBreakAnimDone() {
+        return breakAnimDone;
+    }
 
     public void breakVase() {
         if (!broken) {
@@ -43,7 +52,6 @@ public class VaseBehavior implements TileBehavior {
         TileBehavior.super.update(ctx, tile, dt);
         stateTime += dt;
         if (broken && !breakAnimDone) {
-            String pamPath = (vaseType == VaseType.GARGANTUAR) ? GARGANTUAR_PAM : BROWN_PAM;
             float breakDuration = 1.8f;
             if (stateTime >= breakDuration) {
                 breakAnimDone = true;
@@ -59,19 +67,27 @@ public class VaseBehavior implements TileBehavior {
     @Override
     public FrameConfig draw(Tile tile) {
         TileBehavior.super.draw(tile);
-        if (broken && breakAnimDone) return null;
+        if (broken && breakAnimDone)
+            return null;
 
-        String pamPath = (vaseType == VaseType.GARGANTUAR) ? GARGANTUAR_PAM : BROWN_PAM;
+        String pamPath = BROWN_PAM;
+        switch (vaseType) {
+            case NORMAL -> pamPath = BROWN_PAM;
+            case PLANT -> pamPath = GREEN_PAM;
+            case GARGANTUAR -> pamPath = GARGANTUAR_PAM;
+        }
         String clip = broken ? BREAK_CLIP : IDLE_CLIP;
 
         Vector2 pos = new Vector2(
-            GameController.colToWorldX(tile.getCol()),
-            GameController.laneToWorldY(tile.getLane()));
+                GameController.colToWorldX(tile.getCol()),
+                GameController.laneToWorldY(tile.getLane()));
         Vector2 scale = new Vector2(0.65f, 0.65f);
 
         return new FrameConfig(pamPath, clip, stateTime, pos, scale, null, false);
     }
 
     @Override
-    public String getName() { return "Vase"; }
+    public String getName() {
+        return "Vase";
+    }
 }
