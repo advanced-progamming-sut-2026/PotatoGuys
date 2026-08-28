@@ -200,7 +200,8 @@ public class GameController {
                                         ctx.removePlant(target);
                                         gameUiModal.setShovelSelected(false);
                                         hideShovelCursor();
-                                        Gdx.app.log("Shovel", "Dug up " + target.getType() + " (no sun refund).");
+                                        if (com.pvz.utils.DebugMode.isEnabled())
+                                            Gdx.app.log("Shovel", "Dug up " + target.getType() + " (no sun refund).");
                                         return true;
                                     }
                                 } else {
@@ -424,7 +425,7 @@ public class GameController {
             }
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+        if (com.pvz.utils.DebugMode.isEnabled() && Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             renderer.toggleShowHitBoxes();
         }
 
@@ -854,7 +855,8 @@ public class GameController {
                     NetworkClient.getInstance().setDisconnectListener(() -> handleDisconnect());
                 }
 
-                Gdx.app.log("GameScreen", "Starting camera pan back for " + seasonName + " Level " + levelNumber);
+                if (com.pvz.utils.DebugMode.isEnabled())
+                    Gdx.app.log("GameScreen", "Starting camera pan back for " + seasonName + " Level " + levelNumber);
             } else {
                 Gdx.app.error("GameScreen", "Failed to load level: " + seasonName + " Level " + levelNumber);
             }
@@ -890,7 +892,8 @@ public class GameController {
                     } else {
                         sun.collect(ctx);
                     }
-                    Gdx.app.log("GameScreen", "Sun collected! Amount: " + sun.getAmount());
+                    if (com.pvz.utils.DebugMode.isEnabled())
+                        Gdx.app.log("GameScreen", "Sun collected! Amount: " + sun.getAmount());
                     return true;
                 }
             }
@@ -916,12 +919,14 @@ public class GameController {
             if (dist < 55f) {
                 if (drop.getType() == LootDrop.LootType.POT || drop.getType() == LootDrop.LootType.PLANT_FOOD) {
                     drop.collect();
-                    Gdx.app.log("GameScreen", drop.getType().name() + " drop clicked, collected.");
+                    if (com.pvz.utils.DebugMode.isEnabled())
+                        Gdx.app.log("GameScreen", drop.getType().name() + " drop clicked, collected.");
                 } else {
                     Vector2 target = lootWalletWorld(drop.getType());
                     drop.flyTo(target.x, target.y);
-                    Gdx.app.log("GameScreen", "Loot drop clicked, flying to wallet: +" + drop.getAmount() + " "
-                            + drop.getType().name().toLowerCase() + "s.");
+                    if (com.pvz.utils.DebugMode.isEnabled())
+                        Gdx.app.log("GameScreen", "Loot drop clicked, flying to wallet: +" + drop.getAmount() + " "
+                                + drop.getType().name().toLowerCase() + "s.");
                 }
                 return true;
             }

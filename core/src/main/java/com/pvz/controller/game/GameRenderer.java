@@ -506,7 +506,7 @@ public class GameRenderer {
     // ── Hitbox debug ─────────────────────────────────────────────────────────
 
     private void drawHitboxes() {
-        if (!showHitboxes)
+        if (!showHitboxes || !com.pvz.utils.DebugMode.isEnabled())
             return;
 
         drawEntityHitboxes(Color.GREEN, ctx.getPlants());

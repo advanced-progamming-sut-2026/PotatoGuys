@@ -453,6 +453,8 @@ public class GameContext implements TickAware {
     }
 
     public void log(String message) {
+        if (!com.pvz.utils.DebugMode.isEnabled())
+            return;
         System.out.println("  " + message);
     }
 
