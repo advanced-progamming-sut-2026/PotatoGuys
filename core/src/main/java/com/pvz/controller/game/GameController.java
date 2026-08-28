@@ -868,7 +868,7 @@ public class GameController {
     private boolean checkSunClick(float worldX, float worldY) {
         if (ctx != null) {
             for (Sun sun : new ArrayList<>(ctx.getSuns())) {
-                if (sun.isDone())
+                if (sun.isDone() || sun.isStealing())
                     continue;
                 float sunX = sun.getX();
                 float sunY = sun.getY();

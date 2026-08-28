@@ -20,4 +20,10 @@ public class RaStealSunSkillConfig extends ZombieSkillConfig {
 
     /** Maximum total sun this Ra may steal. */
     public int maxClaimedSun = 250;
+
+    /**
+     * How long (seconds) the target sun stays lit in its {@code red} clip after
+     * the {@code transition_red} clip finishes, before Ra actually steals it.
+     */
+    public float redHoldSeconds = 2.0f;
 }
