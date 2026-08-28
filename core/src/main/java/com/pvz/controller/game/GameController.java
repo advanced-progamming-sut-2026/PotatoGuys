@@ -465,6 +465,17 @@ public class GameController {
                     }
                 }
                 ctx.flushPending();
+                // Remove any plant-owned suns spawned as a side-effect of
+                // tickVisualsOnly → Plant.update() → SunProducerAction.update().
+                // Only zombie-owned suns (from updateSunProducers) should exist
+                // on the guest side.
+                if (isNetworkedMatch && !isHost) {
+                    for (Sun s : new ArrayList<>(ctx.getSuns())) {
+                        if (s.getOwner() == Sun.SunOwner.PLANT) {
+                            ctx.removeSun(s);
+                        }
+                    }
+                }
             }
 
             if (isNetworkedMatch && isHost) {

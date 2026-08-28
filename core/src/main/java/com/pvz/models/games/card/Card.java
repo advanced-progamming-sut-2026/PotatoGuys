@@ -2,7 +2,7 @@ package com.pvz.models.games.card;
 
 import com.pvz.models.engine.TickAware;
 
-public abstract class Card implements TickAware{
+public abstract class Card implements TickAware {
 
     protected final int cost;
     protected final float baseCooldown;
@@ -28,14 +28,17 @@ public abstract class Card implements TickAware{
         return baseCooldown;
     }
 
-    public void decrementCooldown() {
+    public void decrementCooldown(float amount) {
         if (cooldown > 0) {
-            cooldown -= 1.0f;
+            cooldown -= amount;
+        } else {
+            cooldown = 0;
         }
     }
 
     public boolean canUse() {
-        if(!cooldownEnable) return true;
+        if (!cooldownEnable)
+            return true;
         return cooldown == 0;
     }
 
@@ -74,7 +77,7 @@ public abstract class Card implements TickAware{
 
     @Override
     public void update(float dt) {
-        decrementCooldown();
+        decrementCooldown(dt);
     }
 
 }

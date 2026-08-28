@@ -27,6 +27,4 @@
             "vmArgs": "-XstartOnFirstThread -javaagent:/Users/yousofrahimzadeh/SDKs/hotswap-agent-2.0.3.jar -XX:+AllowEnhancedClassRedefinition --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED"
         }
     ]
-
-    
 }

@@ -15,6 +15,7 @@ import com.pvz.models.entities.sun.Sun;
 import com.pvz.models.entities.sun.SunType;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
+import com.pvz.models.entities.zombies.fsm.WalkState;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.modes.variants.IZombieMode;
 
@@ -82,6 +83,7 @@ public class GameStateSync {
             zs.lane = GameController.worldYtoLane(z.getY());
             zs.hp = z.getHp();
             zs.sunProducer = sunProducers.contains(z);
+            zs.eating = z.getCurrentState() instanceof com.pvz.models.entities.zombies.fsm.EatState;
             zombies.add(zs);
         }
         snap.zombies = zombies;
@@ -208,6 +210,16 @@ public class GameStateSync {
             }
             local.setHp(zs.hp);
             local.setPosition(zs.x, local.getY());
+
+            // Sync eating animation: switch to VisualEatState when host says
+            // eating, back to WalkState when host says not eating.
+            boolean currentlyEating = local.getCurrentState()
+                    instanceof com.pvz.models.entities.zombies.fsm.VisualEatState;
+            if (zs.eating && !currentlyEating) {
+                local.changeState(new com.pvz.models.entities.zombies.fsm.VisualEatState());
+            } else if (!zs.eating && currentlyEating) {
+                local.changeState(new WalkState());
+            }
         }
         mirror.zombiesById.entrySet().removeIf(entry -> {
             if (seen.contains(entry.getKey()))

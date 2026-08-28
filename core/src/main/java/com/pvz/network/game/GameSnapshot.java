@@ -46,6 +46,9 @@ public class GameSnapshot {
         /** True for I,Zombie's auto sun-generating zombies, so the guest can
          *  register them for the same floating-sun-icon overlay the host draws. */
         public boolean sunProducer;
+        /** True when the zombie is currently eating a plant on the host side,
+         *  so the guest can switch to the eat animation. */
+        public boolean eating;
     }
 
     public static class SunSnap {
