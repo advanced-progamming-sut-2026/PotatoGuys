@@ -15,7 +15,6 @@ import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.Card;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.levels.Level;
-import com.pvz.models.games.levels.data.VaseDefinition;
 import com.pvz.models.games.levels.data.VaseType;
 import com.pvz.models.games.levels.variants.VaseBreakerLevel;
 import com.pvz.models.games.map.behaviors.VaseBehavior;
@@ -93,8 +92,8 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             // حلقه از سمت راست به چپ، به اندازه cols ستون
             for (int j = gameMapCols - 1 - xOffset; j > gameMapCols - 1 - cols - xOffset; j--) {
                 VaseType currentType = vaseTypes.get(counter++);
-                VaseBehavior vaseBehavior = new VaseBehavior(currentType);
-                ctx.getMap().getTileAt(j, i).addBehavior(vaseBehavior);
+                Tile tile = ctx.getMap().getTileAt(j, i);
+                VaseBehavior vaseBehavior = new VaseBehavior(currentType, tile);
                 vases.add(vaseBehavior);
             }
         }
@@ -124,13 +123,6 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
                 context.removeZombie(z);
             }
         }
-
-        for (int i = context.getCards().size() - 1; i >= 0; i--) {
-            Card card = context.getCards().get(i);
-            if (card.getCooldown() <= 0.01f) {
-                context.removeCard(card);
-            }
-        }
     }
 
     @Override
@@ -146,6 +138,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         }
 
         vase.breakVase();
+        vases.remove(vase);
         context.log("Vase at (" + col + ", " + lane + ") shattered!");
 
         spawnRandomContent(context, vase.getVaseType(), col, lane);
@@ -258,24 +251,6 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
             }
         }
         return null;
-    }
-
-    @Override
-    public String getCardsStatus(GameContext context) {
-        StringBuilder result = new StringBuilder();
-        List<Card> cards = context.getCards();
-        if (cards == null || cards.isEmpty()) {
-            result.append("No plant cards available.");
-        } else {
-            result.append("=== HELD SEED PACKETS ===");
-            for (Card card : cards) {
-                if (card instanceof PlantCard ps) {
-                    result.append(String.format("\n- %s | Lvl:%d", ps.getPlant().getType(),
-                            ps.getPlant().getLevel()));
-                }
-            }
-        }
-        return result.toString();
     }
 
     @Override

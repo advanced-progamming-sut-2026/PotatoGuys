@@ -163,24 +163,6 @@ public class WallnutBowlingMode implements GameMode, PlantPlacer {
         return null;
     }
 
-    @Override
-    public String getCardsStatus(GameContext context) {
-        List<Card> currentCards = context.getCards();
-        if (currentCards.isEmpty()) {
-            return "Conveyor belt is empty. Waiting for the next bowling nut...";
-        }
-
-        StringBuilder sb = new StringBuilder("=== Bowling Conveyor Belt ===\n");
-        for (int i = 0; i < currentCards.size(); i++) {
-            if (currentCards.get(i) instanceof PlantCard pc) {
-                String boostLabel = pc.getPlant().isBoosted() ? " [BOOSTED]" : "";
-                sb.append(String.format("[%d] %s (Lv: %d) | Cost: Free%s\n",
-                        i, pc.getPlant().getType().toString(), pc.getPlant().getLevel(), boostLabel));
-            }
-        }
-        return sb.toString().trim();
-    }
-
     private void addRandomBowlingCard(GameContext context) {
         Random random = new Random();
         PlantType randomType = BOWLING_PLANTS.get(random.nextInt(BOWLING_PLANTS.size()));

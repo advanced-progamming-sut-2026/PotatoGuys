@@ -175,33 +175,4 @@ public class NormalMode implements GameMode, PlantPlacer {
         }
         return null;
     }
-
-    @Override
-    public String getCardsStatus(GameContext context) {
-        StringBuilder result = new StringBuilder();
-        List<Card> cards = context.getCards();
-
-        if (cards == null || cards.isEmpty()) {
-            result.append("No plant cards available.");
-        } else {
-            result.append("=== SEED PACKETS ===");
-
-            int cardWidth = 40;
-
-            for (int i = 0; i < cards.size(); i++) {
-                PlantCard ps = (PlantCard) cards.get(i);
-
-                String cardInfo = String.format("- %s | Cost:%d | Lvl:%d | Cooldown:%.1f%s",
-                        ps.getPlant().getType(),
-                        ps.getCost(),
-                        ps.getPlant().getLevel(),
-                        (float) ps.getCooldown() / (float) Constants.TICK_PER_SECOND,
-                        ps.getPlant().isBoosted() ? " | ⚡B" : "");
-
-                result.append("\n");
-                result.append(String.format("%-" + cardWidth + "s", cardInfo));
-            }
-        }
-        return result.toString();
-    }
 }
