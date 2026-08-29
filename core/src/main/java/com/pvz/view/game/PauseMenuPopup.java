@@ -21,7 +21,7 @@ import com.pvz.view.BorderedPanel;
 import pvz.skin.PvzSkin;
 
 /**
- * Rey-style pause dialog: the PvZ2 pause menu window with the decorative
+ * Pause dialog: the PvZ2 pause menu window with the decorative
  * topper banner + sunflower, "Game Paused" title, music/sound sliders and the
  * SAVE AND EXIT / RESTART / RESUME buttons. Layout is a verbatim port of the
  * PauseMenuPopup from the phase-0 group project, adapted to this codebase's

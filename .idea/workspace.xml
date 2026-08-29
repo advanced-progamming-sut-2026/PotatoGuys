@@ -4,16 +4,26 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="...">
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="some little fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/QuestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/QuestController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/effects/PlantFoodFxEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/effects/PlantFoodFxEffect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/Zombie.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/zombies/Zombie.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/quests/QuestLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/quests/QuestLog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/user/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/TravelLogMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/TravelLogMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/config/PlantConfigRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/config/PlantConfigRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/config/PlantJsonConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/config/PlantJsonConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/data/PlantPropertySheet.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/data/PlantPropertySheet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/data/PlantRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/entities/plants/data/PlantRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/AdventureMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/AdventureMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/BorderedPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/BorderedPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/CollectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/CollectionMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/DarkAgesChapterMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/DarkAgesChapterMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PlantCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PlantCard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PlantData.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PlantData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PlantDetailsTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/PlantDetailsTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ShopMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ShopMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ZombieCard.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ZombieCard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ZombieDetailsTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ZombieDetailsTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/PauseMenuPopup.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/PauseMenuPopup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/PlantSelectModal.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/PlantSelectModal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/ui/GameUiModal.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/ui/GameUiModal.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -624,14 +634,21 @@
       <option name="project" value="LOCAL" />
       <updated>1787409843470</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="some little fixes">
+      <option name="closed" value="true" />
+      <created>1788027546223</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1788027546223</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added frostbite_caves chapter menu screen" />
     <MESSAGE value="updated setting menu you can now change the brightness and music vol" />
     <MESSAGE value="added Collection menu ( just for plants )" />
     <MESSAGE value="bug fixes" />
@@ -656,7 +673,8 @@
     <MESSAGE value="jangoolak bazi" />
     <MESSAGE value="some important fixes&#10;and added zombies food drop" />
     <MESSAGE value="..." />
-    <option name="LAST_COMMIT_MESSAGE" value="..." />
+    <MESSAGE value="some little fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="some little fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

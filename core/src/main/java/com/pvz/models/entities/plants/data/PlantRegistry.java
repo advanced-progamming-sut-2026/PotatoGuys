@@ -72,6 +72,9 @@ public final class PlantRegistry {
                 .growth(toGrowth(dto.growth))
                 .levelUpgrades(toLevelUpgrades(dto.levelUpgrades))
                 .description(dto.description == null ? "" : dto.description)
+                .onPlantFoodDescription(dto.onPlantFoodDescription == null ? "" : dto.onPlantFoodDescription)
+                .overallDescription(dto.overallDescription == null ? "" : dto.overallDescription)
+                .funDescription(dto.funDescription == null ? "" : dto.funDescription)
                 .build();
     }
 
@@ -117,6 +120,9 @@ public final class PlantRegistry {
         List<LevelUpgradeDto> levelUpgrades;
         GrowthDto growth;
         String description;
+        String onPlantFoodDescription;
+        String overallDescription;
+        String funDescription;
     }
 
     private static final class DamageDto {

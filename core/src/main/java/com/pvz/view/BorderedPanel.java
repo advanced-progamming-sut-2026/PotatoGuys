@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import pvz.skin.PvzSkin;
 
 /**
- * Rey-style two-layer bordered panel: a solid tinted backdrop, an inset padding ring
+ * Two-layer bordered panel: a solid tinted backdrop, an inset padding ring
  * and a bordered content layer on top. Add your widgets to {@link #contentLayer}.
  */
 public class BorderedPanel extends Stack {

@@ -126,15 +126,10 @@ public class PlantDetailsTable extends Table {
                 "SPECIAL", data.tagsText()));
         addStatRow(right, familyBlock());
 
-        String description = data.sheet.getDescription();
-        if (description != null && !description.isBlank()) {
-            Label desc = new Label(description, skin, "medium");
-            desc.setWrap(true);
-            desc.setFontScale(0.85f);
-            desc.setColor(new Color(0xD8E6FFFF));
-            desc.setAlignment(Align.topLeft);
-            right.add(desc).width(RIGHT_W).left().padTop(18f).row();
-        }
+        addDescriptionRow(right, "IMAGE_UI_ALMANAC_PLANT_FOOD_STAT_ICON",
+                "Plant Food:", data.onPlantFoodDescription(), 20f);
+        addDescriptionRow(right, null, null, data.overallDescription(), 15f);
+        addFunDescriptionRow(right, data.funDescription());
 
         ScrollPane cardsScroll = new ScrollPane(right, skin);
         cardsScroll.setFadeScrollBars(false);
@@ -148,13 +143,46 @@ public class PlantDetailsTable extends Table {
         add(content).colspan(2).growX().growY().top().left();
     }
 
-    /** Fixed width of the right-hand stat column (matches Rey's almanac). */
-    private static final float RIGHT_W = 500f;
+    /** Fixed width of the right-hand stat column. */
+    private static final float RIGHT_W = 700f;
 
     // ── right side building blocks ─────────────────────────────────────────────
 
     private void addStatRow(Table right, Actor stat) {
         right.add(stat).width(RIGHT_W).left().row();
+    }
+
+    /**
+     * Wrapped description row matching the reference almanac: an optional leading icon
+     * followed by "title text" in the big (white) font.
+     */
+    private void addDescriptionRow(Table right, String iconId, String title, String text, float padTop) {
+        if (text == null || text.isBlank()) return;
+        Table row = new Table();
+        row.left().top();
+        if (iconId != null) {
+            Drawable icon = PlantData.regionDrawableOr(
+                    iconId, PvzSkin.get().newDrawable("white_pixel", FALLBACK_TINT));
+            row.add(new Image(icon)).size(42f).top().padRight(8f).padTop(2f);
+        }
+        Label label = new Label(
+                (title == null ? "" : title + " ") + text,
+                PvzSkin.get().get("big", Label.LabelStyle.class));
+        label.setWrap(true);
+        label.setColor(Color.WHITE);
+        label.setAlignment(Align.topLeft);
+        row.add(label).growX().left().top();
+        right.add(row).width(RIGHT_W).left().top().padTop(padTop).row();
+    }
+
+    /** Yellow fun/quote description, exactly like the reference almanac's fun line. */
+    private void addFunDescriptionRow(Table right, String text) {
+        if (text == null || text.isBlank()) return;
+        Label label = new Label(text, PvzSkin.get().get("big", Label.LabelStyle.class));
+        label.setWrap(true);
+        label.setColor(Color.valueOf("FFD75A"));
+        label.setAlignment(Align.topLeft);
+        right.add(label).width(RIGHT_W).left().top().padTop(15f).padBottom(15f).row();
     }
 
     /** Icon + gray title over a big white value, like the reference almanac page. */
