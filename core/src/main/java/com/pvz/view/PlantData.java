@@ -21,6 +21,7 @@ import com.pvz.models.entities.plants.config.PlantJsonConfig;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.plants.data.DamageProfile;
 import com.pvz.models.entities.plants.data.LevelUpgrade;
+import com.pvz.models.entities.plants.data.PlantDescriptions;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
@@ -129,6 +130,24 @@ public final class PlantData {
 
     public String getName() {
         return sheet.getName();
+    }
+
+    public String onPlantFoodDescription() {
+        PlantDescriptions.Descriptions d = PlantDescriptions.forType(type);
+        if (d != null) return d.plantFood();
+        return sheet.getOnPlantFoodDescription();
+    }
+
+    public String overallDescription() {
+        PlantDescriptions.Descriptions d = PlantDescriptions.forType(type);
+        if (d != null) return d.overall();
+        return sheet.getOverallDescription();
+    }
+
+    public String funDescription() {
+        PlantDescriptions.Descriptions d = PlantDescriptions.forType(type);
+        if (d != null) return d.fun();
+        return sheet.getFunDescription();
     }
 
     public PlantCategory getCategory() {

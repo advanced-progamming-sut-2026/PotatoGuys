@@ -41,7 +41,7 @@ import com.pvz.models.user.User;
 import pvz.skin.PvzSkin;
 
 /**
- * Rey-style Collection screen: a dimmed backdrop, a bordered panel holding the Plants / Zombies
+ * Collection screen: a dimmed backdrop, a bordered panel holding the Plants / Zombies
  * tabs, a close button and a grid of collectible plant cards. Only the Plants tab is populated;
  * the Zombies tab is a placeholder until zombie data lands. Opening a card (details) is the only
  * interaction the player has inside.
@@ -640,7 +640,7 @@ public class CollectionMenu extends ScreenAdapter {
             () -> closeDetails(),
             () -> tryPurchase(data),
             () -> tryUpgrade(data));
-        detailsOverlay.add(details).size(840f, 920f);
+        detailsOverlay.add(details).size(1400f, 920f);
     }
 
     private void openZombieDetails(ZombieCard.ViewData data) {

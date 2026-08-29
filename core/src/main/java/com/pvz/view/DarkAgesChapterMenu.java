@@ -41,7 +41,7 @@ import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
 /**
- * Dark Ages level-select ("stage map") screen. Ported from Dani's
+ * Dark Ages level-select ("stage map") screen. Ported from the reference
  * DarkAgesStagesScreen: 3 islands plus a separate boss node, tap a stage to
  * select it, then hit Play in the bottom bar - same interaction pattern as
  * {@link EgyptChapterMenu} and {@link FrostbiteCavesChapterMenu}.
@@ -567,7 +567,7 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
             LevelNodeState nodeState = levelNodeStateOf(index, status);
 
             if (boss) {
-                // Dani's Dark Ages never defines a separate static boss island
+                // Dark Ages never defines a separate static boss island
                 // texture - the Zomboss PAM clip itself IS the boss node's art.
                 String zombossState = (status == StageStatus.COMPLETED) ? "defeated" : "active";
                 addActor(createAnchoredAnimation(MapObjectType.ZOMBOSS_BOSS_ISLAND, ZOMBOSS_TUNING, zombossState,
@@ -576,7 +576,7 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
                 String islandPath = STAGE_ISLAND_TEXTURES[index % STAGE_ISLAND_TEXTURES.length];
 
                 // Day 2's island renders taller and top-anchored instead of
-                // centered - a quirk specific to Dani's Dark Ages layout.
+                // centered - a quirk specific to the Dark Ages layout.
                 float islandWidth = width;
                 float islandHeight = (index == 1) ? height * 1.5f : height;
 
@@ -652,7 +652,7 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
             return new TextureRegionDrawable(texture);
         }
 
-        /** A cloud that continuously drifts left-to-right and wraps around, per Dani's Dark Ages map. */
+        /** A cloud that continuously drifts left-to-right and wraps around, per the Dark Ages map. */
         private class DriftingCloud extends Group {
             private final float renderWidth;
             private final float baseY;

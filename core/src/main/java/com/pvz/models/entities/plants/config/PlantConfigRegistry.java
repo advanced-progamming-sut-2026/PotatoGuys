@@ -75,6 +75,9 @@ public final class PlantConfigRegistry {
                 .rechargeSeconds(cfg.rechargeSeconds)
                 .growth(growth)
                 .description(cfg.description == null ? "" : cfg.description)
+                .onPlantFoodDescription(cfg.onPlantFoodDescription == null ? "" : cfg.onPlantFoodDescription)
+                .overallDescription(cfg.overallDescription == null ? "" : cfg.overallDescription)
+                .funDescription(cfg.funDescription == null ? "" : cfg.funDescription)
                 .plantAttackConfig(cfg.attackConfig)
                 .plantFeedConfig(cfg.feedConfig)
                 .pamAnimationConfig(cfg.pamAnimationConfig);

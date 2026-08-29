@@ -34,7 +34,7 @@ import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
 /**
- * Pre-game plant selection screen — structurally mirrors Rey's
+ * Pre-game plant selection screen — structurally mirrors
  * PlantSelectionMenuTable (card grid + preview panel + selected-slots bar +
  * LET'S ROCK button), rebuilt on this project's own PlantData/PlantCard
  * (already matching her IMAGE_UI_PACKETS_* texture-bank convention) instead
@@ -119,7 +119,7 @@ public class PlantSelectModal extends Table {
         scrollPane.setOverscroll(false, false);
         scrollPane.setScrollingDisabled(true, false);
         // grow() instead of a fixed height: the grid now takes all the vertical
-        // space the panel has left over (title + preview), same as Rey's
+        // space the panel has left over (title + preview),
         // cardsScroll.grow() — this is what gets 4 rows on screen instead of ~2.5.
         content.add(scrollPane).grow().minWidth(0f).minHeight(0f).padBottom(10f).row();
 
@@ -165,7 +165,7 @@ public class PlantSelectModal extends Table {
         }
 
         // LET'S ROCK! lives OUTSIDE the bordered panel entirely, pinned to the
-        // bottom-right corner of the whole screen — matches Rey's rockLayer,
+        // bottom-right corner of the whole screen — matches the rockLayer,
         // stacked on top of mainLayout instead of taking up a row inside the
         // panel (that row was the other thing eating into the grid's height).
         startButton = new TextButton("LET'S ROCK!", PvzSkin.get(), "purple");
@@ -180,7 +180,7 @@ public class PlantSelectModal extends Table {
 
         // Selected-plant slots: a plain column of small slot cells (no ScrollPane —
         // at SLOT_HEIGHT=63 each, all 7 comfortably fit the screen without scrolling,
-        // same as Rey's PlantSlotsBar).
+        // same as the PlantSlotsBar).
         selectedSlotsTable = new Table();
         selectedSlotsTable.top().left();
         selectedSlotsTable.defaults().padBottom(2f);
@@ -333,7 +333,7 @@ public class PlantSelectModal extends Table {
     /**
      * A shrunk-down version of {@link PlantCard}'s look (packet background, family badge
      * top-left, sun cost) sized exactly to the slot bar's SLOT_WIDTH/SLOT_HEIGHT, so the
-     * left-side slots show the full card like Rey's PlantSlotsBar instead of a bare icon.
+     * left-side slots show the full card like the PlantSlotsBar instead of a bare icon.
      * Built by hand rather than reusing PlantCard itself, since PlantCard is a fixed
      * 160x105 Button and scaling a Table-based widget down via Actor.setScale() clips/
      * misaligns its internal cells instead of shrinking them cleanly.

@@ -39,7 +39,7 @@ import pvz.skin.PvzSkin;
  * In-game HUD: top bar (sun/plant food/wallet) plus the seed-packet tray,
  * a vertical column hugging the left edge of the screen showing full cards
  * (packet background, family badge, sun cost) — same look as the pregame
- * slot bar and Rey's in-match tray — with a cooldown overlay on top.
+ * slot bar and the in-match tray — with a cooldown overlay on top.
  *
  * <p>
  * Slot size is tuned to the 1280x720 gameplay viewport (see
@@ -245,7 +245,7 @@ public class GameUiModal extends Table {
         gemCell.add(gemLabel).padLeft(8);
         walletTable.add(gemCell);
 
-        // Pause button pinned to the very top-right corner (same look as Rey's
+        // Pause button pinned to the very top-right corner (same look as the
         // in-match HUD), pushing the coin/gem counters a bit to the left.
         ImageButton pauseButton = new ImageButton(PvzSkin.get(), "ingame_pause");
         pauseButton.setTouchable(Touchable.enabled);
