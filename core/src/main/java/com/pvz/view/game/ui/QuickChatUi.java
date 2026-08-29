@@ -5,6 +5,7 @@ import java.util.function.BiConsumer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -27,6 +28,7 @@ import com.pvz.PvZ2;
 import com.pvz.network.game.QuickChatMessage;
 import com.pvz.view.MenuUiKit;
 
+import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 
 /**
@@ -175,36 +177,57 @@ public class QuickChatUi extends Table {
     }
 
     /**
-     * The picker window: a bordered dark panel with the preset messages on top
-     * (drawn with the game's text-box background) and the emojis below.
+     * The picker window, styled like a Travel Log quest card: a
+     * {@link BorderedTable} supplies the rounded brown frame, and a solid brown
+     * rounded rect fills the middle (same colour as the quest card body). The
+     * preset messages (text-box chips) sit on top, the emojis below.
      */
     private Table buildPicker() {
-        Table border = new Table();
-        border.setBackground(skin.newDrawable("white_pixel", Color.valueOf("8F4909")));
-
-        Table body = new Table();
-        body.setBackground(skin.newDrawable("white_pixel", new Color(0.05f, 0.05f, 0.08f, 0.9f)));
-        body.pad(8f);
-
         Table msgRow = new Table();
         for (int i = 0; i < MESSAGES.length; i++) {
             msgRow.add(buildMessageButton(MESSAGES[i], i)).pad(2f);
         }
-        body.add(msgRow).row();
 
         Table emojiRow = new Table();
         for (int i = 0; i < EMOJI_PATHS.length; i++) {
             emojiRow.add(buildEmojiButton(i)).size(46f, 46f).pad(3f);
         }
-        body.add(emojiRow).padTop(4f);
 
-        border.add(body).pad(2f);
+        Table content = new Table();
+        content.add(msgRow).row();
+        content.add(emojiRow).padTop(4f).row();
 
-        Table picker = new Table();
+        int innerW = Math.round(content.getPrefWidth()) + 60;
+        int innerH = Math.round(content.getPrefHeight()) + 44;
+
+        // Brown rounded interior exactly like a quest card; the BorderedTable
+        // frame is drawn around it (its inner area starts at +17/+16).
+        Image bg = new Image(roundedRectTexture(innerW, innerH, 20, new Color(0.36f, 0.24f, 0.12f, 1f)));
+        bg.setBounds(17f, 16f, innerW, innerH);
+
+        BorderedTable picker = new BorderedTable();
+        picker.pad(16f, 17f, 16f, 17f);
         picker.setTouchable(Touchable.enabled);
-        picker.add(border).pad(2f);
-        picker.pack();
+        picker.addActor(bg);
+        picker.add(content);
+        picker.setSize(innerW + 34f, innerH + 32f);
         return picker;
+    }
+
+    /** Solid rounded-rect PNG helper, matching the Travel Log quest palette. */
+    private Texture roundedRectTexture(int width, int height, int radius, Color color) {
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
+        pixmap.setBlending(Pixmap.Blending.None);
+        pixmap.setColor(color);
+        pixmap.fillCircle(radius, radius, radius);
+        pixmap.fillCircle(width - radius - 1, radius, radius);
+        pixmap.fillCircle(radius, height - radius - 1, radius);
+        pixmap.fillCircle(width - radius - 1, height - radius - 1, radius);
+        pixmap.fillRectangle(radius, 0, width - 2 * radius, height);
+        pixmap.fillRectangle(0, radius, width, height - 2 * radius);
+        Texture texture = new Texture(pixmap);
+        pixmap.dispose();
+        return texture;
     }
 
     /** The small speech-bubble button that opens/closes the picker. */
