@@ -52,6 +52,23 @@ public class QuestController {
     }
 
     /**
+     * Milliseconds until the next daily-quest reset (next local midnight).
+     * Returns a small positive value if the reset is overdue (shouldn't happen
+     * because the reset is applied on read), but stays non-negative.
+     */
+    public long getMillisUntilDailyReset() {
+        User user = getCurrentUser();
+        if (user == null || user.getQuestLog() == null) return 0;
+        return user.getQuestLog().millisUntilNextReset();
+    }
+
+    public String getMillisUntilDailyResetFormatted() {
+        User user = getCurrentUser();
+        if (user == null || user.getQuestLog() == null) return "00:00:00";
+        return user.getQuestLog().formatTimeUntilReset();
+    }
+
+    /**
      * Attempts to claim the reward for the given quest id.
      * Returns a status message describing what happened.
      */

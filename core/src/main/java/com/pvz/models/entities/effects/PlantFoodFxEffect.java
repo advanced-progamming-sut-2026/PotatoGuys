@@ -9,6 +9,8 @@ import com.pvz.models.games.GameContext;
 
 public class PlantFoodFxEffect extends Effect {
 
+    public static final String KIND = "plant_food_fx";
+
     private static final String PAM_PATH = "768/INITIAL/EFFECTS/PLANTFOOD_FX/PLANTFOOD_FX.PAM";
     private static final String CLIP = "plantfood";
     private static final float SCALE = 1.0f;

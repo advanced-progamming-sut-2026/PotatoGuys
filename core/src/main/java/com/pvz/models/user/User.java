@@ -117,7 +117,7 @@ public class User {
         this.greenHouse = greenHouse;
     }
 
-    private boolean questLogRefreshed = false;
+    private transient boolean questLogRefreshed = false;
 
     public QuestLog getQuestLog() {
         if (questLog == null) {
@@ -130,7 +130,9 @@ public class User {
     }
 
     public void refreshQuestLog() {
+        long lastReset = (questLog != null) ? questLog.getLastDailyReset() : System.currentTimeMillis();
         QuestLog fresh = QuestFactory.createDefaultQuests();
+        fresh.setLastDailyReset(lastReset);
         if (questLog != null) {
             for (Quest freshQuest : fresh.getAllQuests()) {
                 Quest existing = questLog.findById(freshQuest.getId());
@@ -141,6 +143,7 @@ public class User {
                     freshQuest.setClaimed(existing.isClaimed());
                 }
             }
+            fresh.checkAndResetDaily();
         }
         this.questLog = fresh;
     }

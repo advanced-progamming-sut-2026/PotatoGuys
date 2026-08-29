@@ -255,9 +255,12 @@ public class Zombie extends Entity {
             b *= attenuated;
         }
         if (plantFood) {
-            g = 1f;
-            r *= attenuated;
-            b *= attenuated;
+            // Gentle green shade so a plant-food carrier stands out without
+            // washing out the zombie's sprite, with a soft pulse.
+            float shade = 0.85f + 0.15f * pulse;
+            r = 0.45f * shade;
+            g = 1.0f * shade;
+            b = 0.5f * shade;
         }
         fc.setColor(r, g, b, fc.a);
         return fc;
