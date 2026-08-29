@@ -3,6 +3,7 @@ package com.pvz.view.game.ui;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -32,6 +33,7 @@ import com.pvz.models.games.card.Card;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.card.ZombieCard;
 import com.pvz.models.user.User;
+import com.pvz.network.game.Reaction;
 import com.pvz.view.MenuUiKit;
 import com.pvz.view.PlantData;
 
@@ -94,6 +96,12 @@ public class GameUiModal extends Table {
     private ImageButton shovelButton = null;
     private boolean plantFoodSelected = false;
     private Runnable onPlantFoodRequested = null;
+
+    /** Quick-reaction (PvP) picker, pinned bottom-right; only shown in networked matches. */
+    private ImageButton reactionButton = null;
+    private ReactionUiModal reactionModal = null;
+    private Consumer<Reaction> onReactionRequested = null;
+    private boolean reactionEnabled = false;
 
     protected final Map<PlantCard, Table> slotByCard = new HashMap<>();
     protected final Map<PlantCard, Image> cooldownOverlayByCard = new HashMap<>();
@@ -318,6 +326,40 @@ public class GameUiModal extends Table {
         shovelOverlay.bottom().right();
         shovelOverlay.add(shovelButton).size(58f).padRight(20f).padBottom(15f);
         addActor(shovelOverlay);
+
+        // Quick-reaction picker: a small speech-bubble button just above the
+        // shovel. Clicking it toggles the ReactionUiModal, which only covers a
+        // tiny corner of the screen so the fight underneath stays playable.
+        reactionModal = new ReactionUiModal(reaction -> {
+            hideReactionModal();
+            if (onReactionRequested != null) {
+                onReactionRequested.accept(reaction);
+            }
+        });
+        addActor(reactionModal);
+
+        ImageButton.ImageButtonStyle reactionStyle = new ImageButton.ImageButtonStyle();
+        com.badlogic.gdx.graphics.g2d.TextureRegion reactionRegion = PvZ2.textureBank
+                .region("IMAGE_UI_ALMANAC_GENERIC_LTE_IMAGE");
+        if (reactionRegion != null) {
+            Drawable reactionUp = new TextureRegionDrawable(reactionRegion);
+            reactionStyle.imageUp = reactionUp;
+            reactionStyle.imageDown = reactionUp;
+            reactionStyle.imageOver = reactionUp;
+        }
+        reactionButton = new ImageButton(reactionStyle);
+        reactionButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                toggleReactionModal();
+            }
+        });
+
+        Table reactionOverlay = new Table();
+        reactionOverlay.setFillParent(true);
+        reactionOverlay.bottom().right();
+        reactionOverlay.add(reactionButton).size(50f).padRight(20f).padBottom(82f);
+        addActor(reactionOverlay);
     }
 
     public PlantCard getSelectedCard() {
@@ -542,6 +584,70 @@ public class GameUiModal extends Table {
 
     public void setOnPlantFoodRequested(Runnable onPlantFoodRequested) {
         this.onPlantFoodRequested = onPlantFoodRequested;
+    }
+
+    public void setOnReactionRequested(Consumer<Reaction> onReactionRequested) {
+        this.onReactionRequested = onReactionRequested;
+    }
+
+    /**
+     * Turns the quick-reaction picker on/off. It's only wired for networked
+     * (PvP I,Zombie) matches, so solo play never shows the button.
+     */
+    public void setReactionEnabled(boolean enabled) {
+        this.reactionEnabled = enabled;
+        if (reactionButton != null) {
+            reactionButton.setVisible(enabled);
+        }
+        if (!enabled && reactionModal != null) {
+            reactionModal.setVisible(false);
+        }
+    }
+
+    public boolean isReactionModalVisible() {
+        return reactionModal != null && reactionModal.isVisible();
+    }
+
+    /**
+     * True when {@code (x, y)} (stage coordinates, 1280x720 origin bottom-left)
+     * lands on the open reaction picker — used to swallow gameplay input clicks
+     * that hit the picker instead of the field.
+     */
+    public boolean reactionModalContains(float x, float y) {
+        if (reactionModal == null || !reactionModal.isVisible()) {
+            return false;
+        }
+        float mx = reactionModal.getX();
+        float my = reactionModal.getY();
+        float mw = reactionModal.getWidth();
+        float mh = reactionModal.getHeight();
+        return x >= mx && x <= mx + mw && y >= my && y <= my + mh;
+    }
+
+    public void toggleReactionModal() {
+        if (!reactionEnabled || reactionModal == null) {
+            return;
+        }
+        if (reactionModal.isVisible()) {
+            hideReactionModal();
+        } else {
+            positionReactionModal();
+            reactionModal.toFront();
+            reactionModal.setVisible(true);
+        }
+    }
+
+    public void hideReactionModal() {
+        if (reactionModal != null) {
+            reactionModal.setVisible(false);
+        }
+    }
+
+    /** Parks the picker just above the reaction button, right-aligned to the corner. */
+    private void positionReactionModal() {
+        float margin = 20f;
+        float buttonTop = 82f + 50f;
+        reactionModal.setPosition(Math.max(0f, 1280f - margin - reactionModal.getWidth()), buttonTop + 6f);
     }
 
     public boolean isShovelSelected() {

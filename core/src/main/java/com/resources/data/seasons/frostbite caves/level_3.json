@@ -125,9 +125,29 @@
     }
   ],
   "allowedPlantTypes": [
-    "Rotobaga",
-    "FirePeashooter",
-    "Pepperpult",
-    "Tallnut"
+    {
+      "Type": "Rotobaga",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "FirePeashooter",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "Pepperpult",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "Tallnut",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    }
   ]
 }

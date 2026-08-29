@@ -10,6 +10,7 @@ import com.pvz.network.game.GameSnapshot;
 import com.pvz.network.game.GameStateSync;
 import com.pvz.network.game.GameSyncEnvelope;
 import com.pvz.network.game.QuickChatMessage;
+import com.pvz.network.game.Reaction;
 import com.pvz.network.game.RenderFrame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -26,6 +27,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
@@ -116,9 +119,15 @@ public class GameController {
     private float snapshotAccumulator = 0f;
     private boolean lastGameOver = false;
     private static final float SNAPSHOT_INTERVAL_SECONDS = 0.01f;
-    /** Monotonic snapshot counter stamped onto every snapshot for stale/ordering checks. */
+    /**
+     * Monotonic snapshot counter stamped onto every snapshot for stale/ordering
+     * checks.
+     */
     private int snapshotSeq = 0;
-    /** Highest seq the guest has applied so far (drops out-of-order/stale snapshots). */
+    /**
+     * Highest seq the guest has applied so far (drops out-of-order/stale
+     * snapshots).
+     */
     private int lastAppliedSeq = -1;
 
     private final Vector3 touchPos = new Vector3();
@@ -134,6 +143,13 @@ public class GameController {
     private boolean paused = false;
     private Table pauseOverlay;
     private boolean cardsInitialized = false;
+
+    /**
+     * Pinned just above the bottom-centre of the field; shows sent/received
+     * reactions.
+     */
+    private Table reactionBubbleContainer;
+    private static final float REACTION_BUBBLE_HOLD_SECONDS = 1.6f;
 
     /**
      * Placement-preview ghost: plays the selected plant's idle PAM under the
@@ -173,6 +189,15 @@ public class GameController {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (state instanceof Playing && !paused) {
                     if (ctx != null) {
+                        // Clicks on the open quick-reaction picker never reach the
+                        // battlefield — the picker's own buttons handle them.
+                        com.badlogic.gdx.math.Vector2 stageClick = stage.screenToStageCoordinates(
+                                new com.badlogic.gdx.math.Vector2(Gdx.input.getX(), Gdx.input.getY()));
+                        if (gameUiModal != null && gameUiModal.isReactionModalVisible()
+                                && gameUiModal.reactionModalContains(stageClick.x, stageClick.y)) {
+                            return true;
+                        }
+
                         // تبدیل ورودی ماوس/لمس به مختصات دقیق World
                         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                         viewport.unproject(touchPos);
@@ -322,11 +347,13 @@ public class GameController {
 
         gameUiModal = switch (level.getGameMode()) {
             case com.pvz.models.games.modes.GameModeType.CONVEYORBELT -> new ConveyorBeltUiModal(this::pauseGame);
-            case com.pvz.models.games.modes.GameModeType.IZOMBIE -> new IZombieUiModal(this::pauseGame, this::sendQuickChat);
+            case com.pvz.models.games.modes.GameModeType.IZOMBIE ->
+                new IZombieUiModal(this::pauseGame, this::sendQuickChat);
             default -> new GameUiModal(this::pauseGame);
         };
         gameUiModal.setOnShovelRequested(this::toggleShovelMode);
         gameUiModal.setOnPlantFoodRequested(this::togglePlantFoodMode);
+        gameUiModal.setOnReactionRequested(this::sendReaction);
         stage.addActor(gameUiModal);
 
         backgroundTextures = new TextureRegion[3];
@@ -447,7 +474,13 @@ public class GameController {
         if (state instanceof Playing && !paused
                 && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
             boolean zombieCardActive = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
-            if (!zombieCardActive) {
+            boolean onReactionModal = gameUiModal != null && gameUiModal.isReactionModalVisible();
+            if (onReactionModal) {
+                com.badlogic.gdx.math.Vector2 uClick = stage.screenToStageCoordinates(
+                        new com.badlogic.gdx.math.Vector2(Gdx.input.getX(), Gdx.input.getY()));
+                onReactionModal = gameUiModal.reactionModalContains(uClick.x, uClick.y);
+            }
+            if (!zombieCardActive && !onReactionModal) {
                 touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                 viewport.unproject(touchPos);
                 if (checkSunClick(touchPos.x, touchPos.y) || checkLootClick(touchPos.x, touchPos.y)) {
@@ -857,6 +890,7 @@ public class GameController {
                             msg -> handleDisconnect());
                     NetworkClient.getInstance().setDisconnectListener(() -> handleDisconnect());
                 }
+                gameUiModal.setReactionEnabled(isNetworkedMatch);
 
                 if (com.pvz.utils.DebugMode.isEnabled())
                     Gdx.app.log("GameScreen", "Starting camera pan back for " + seasonName + " Level " + levelNumber);
@@ -1051,6 +1085,12 @@ public class GameController {
             if (gameUiModal instanceof IZombieUiModal izombieUi) {
                 izombieUi.showChat(chat);
             }
+        } else if (envelope.kind == GameSyncEnvelope.Kind.REACTION) {
+            // Opponent's reaction — render it identically to how the sender sees it.
+            Reaction reaction = gson.fromJson(envelope.data, Reaction.class);
+            if (reaction != null) {
+                showReaction(reaction);
+            }
         } else if (envelope.kind == GameSyncEnvelope.Kind.SNAPSHOT && !isHost) {
             // The SNAPSHOT payload is now a compact binary RenderFrame (base64) —
             // the full list of FrameConfigs the host is drawing. No entity
@@ -1118,7 +1158,72 @@ public class GameController {
     }
 
     /**
-     * Host side: serializes the current rendered picture (the exact FrameConfig list
+     * Player picked a quick-reaction. It's shown on our own screen right away
+     * (so sending feels instant) and relayed to the opponent over the match
+     * channel for an identical bottom-centre display on their side.
+     */
+    private void sendReaction(Reaction reaction) {
+        showReaction(reaction);
+        if (isNetworkedMatch) {
+            String inner = gson.toJson(
+                    new GameSyncEnvelope(GameSyncEnvelope.Kind.REACTION, gson.toJson(reaction)));
+            NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
+        }
+    }
+
+    /**
+     * Pops a reaction bubble at the bottom-centre of the screen (both for the
+     * sender and the receiver). Fades in, lingers briefly, then fades back out.
+     */
+    private void showReaction(Reaction reaction) {
+        if (reaction == null || reaction.value == null) {
+            return;
+        }
+        if (reactionBubbleContainer == null) {
+            reactionBubbleContainer = new Table();
+            reactionBubbleContainer.setFillParent(true);
+            reactionBubbleContainer.bottom().center();
+            reactionBubbleContainer.setTouchable(Touchable.disabled);
+            stage.addActor(reactionBubbleContainer);
+        }
+        reactionBubbleContainer.clearChildren();
+
+        com.badlogic.gdx.scenes.scene2d.Actor bubble = buildReactionBubble(reaction);
+        reactionBubbleContainer.add(bubble).padBottom(28f);
+        reactionBubbleContainer.toFront();
+
+        bubble.setColor(1f, 1f, 1f, 0f);
+        bubble.addAction(Actions.sequence(
+                Actions.fadeIn(0.18f),
+                Actions.delay(REACTION_BUBBLE_HOLD_SECONDS),
+                Actions.fadeOut(0.35f),
+                Actions.removeActor()));
+    }
+
+    private com.badlogic.gdx.scenes.scene2d.Actor buildReactionBubble(Reaction reaction) {
+        Table bubble = new Table();
+        bubble.setBackground(PvzSkin.get().newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.72f)));
+        bubble.pad(7f, 14f, 7f, 14f);
+        if (reaction.kind == Reaction.Kind.EMOJI) {
+            com.badlogic.gdx.graphics.g2d.TextureRegion region = PvZ2.textureBank.region(reaction.value);
+            Image image = new Image(region != null
+                    ? new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(region)
+                    : PvzSkin.get().newDrawable("white_pixel", new Color(0.5f, 0.5f, 0.5f, 1f)));
+            image.setScaling(com.badlogic.gdx.utils.Scaling.fit);
+            bubble.add(image).size(52f, 52f);
+        } else {
+            Label label = new Label(reaction.value, PvzSkin.get(), "big_outline");
+            label.setColor(Color.WHITE);
+            label.setFontScale(1.1f);
+            label.setAlignment(Align.center);
+            bubble.add(label);
+        }
+        return bubble;
+    }
+
+    /**
+     * Host side: serializes the current rendered picture (the exact FrameConfig
+     * list
      * in draw order) into one compact binary {@link RenderFrame}, base64-encodes it
      * (the match relay only carries a String payload), and sends it to the guest.
      */
@@ -1144,7 +1249,10 @@ public class GameController {
         NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
     }
 
-    /** Guest side: decode+store the latest rendered frame; it's drawn next render pass. */
+    /**
+     * Guest side: decode+store the latest rendered frame; it's drawn next render
+     * pass.
+     */
     private void handleRenderFrame(String base64Data) {
         try {
             byte[] payload = java.util.Base64.getDecoder().decode(base64Data);
