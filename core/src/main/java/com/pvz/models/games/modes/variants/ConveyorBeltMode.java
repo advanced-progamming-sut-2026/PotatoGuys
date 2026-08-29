@@ -1,6 +1,5 @@
 package com.pvz.models.games.modes.variants;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -8,8 +7,6 @@ import com.pvz.controller.game.GameController;
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
-import com.pvz.models.entities.plants.enums.PlantType;
-import com.pvz.models.entities.sun.Sun;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.Card;
@@ -19,7 +16,6 @@ import com.pvz.models.games.levels.Wave;
 import com.pvz.models.games.levels.variants.ConveyorBeltLevel;
 import com.pvz.models.games.modes.GameMode;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
-import com.pvz.models.user.Collection;
 import com.pvz.models.user.MyPlant;
 
 public class ConveyorBeltMode implements GameMode, PlantPlacer {
@@ -34,13 +30,7 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
     public ConveyorBeltMode(Level level) {
         if (level instanceof ConveyorBeltLevel beltLevel) {
             waves = beltLevel.getWaves();
-            availablePlants = new ArrayList<>();
-
-            Collection collection = AppContext.getInstance().getCurrentUser().getProfile().getCollection();
-            for (PlantType pt : beltLevel.getAllowedPlantTypes()) {
-                availablePlants.add(collection.getPlant(pt));
-            }
-
+            availablePlants = beltLevel.getAllowedPlantTypes();
         } else {
             throw new IllegalArgumentException("ConveyorBeltMode requires a ConveyorBeltLevel");
         }
