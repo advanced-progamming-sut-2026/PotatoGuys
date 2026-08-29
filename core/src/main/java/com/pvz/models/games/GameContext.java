@@ -3,14 +3,15 @@ package com.pvz.models.games;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.GameEngine;
 import com.pvz.models.engine.TickAware;
-import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.LawnMower;
 import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.effects.LootDrop;
+import com.pvz.models.entities.effects.Water;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.enums.PlantTag;
@@ -251,7 +252,8 @@ public class GameContext implements TickAware {
             for (Plant existing : getPlantsAt(p.getCol(), p.getLane())) {
                 if (existing.getType() == com.pvz.models.entities.plants.enums.PlantType.PeaPod
                         && !existing.isDead()
-                        && existing.getAttackAction() instanceof com.pvz.models.entities.plants.actions.StackedShooterAction action) {
+                        && existing
+                                .getAttackAction() instanceof com.pvz.models.entities.plants.actions.StackedShooterAction action) {
                     action.incrementStack();
                     log("[Stack] " + p.getType() + " stacked → " + action.getStackCount() + " pods at ("
                             + p.getCol() + "," + p.getLane() + ")");
@@ -465,6 +467,9 @@ public class GameContext implements TickAware {
     @Override
     public void enter() {
         mode.initMode(this);
+        for (ChapterEffect effect : activeEffects) {
+            effect.first(this);
+        }
     }
 
     @Override

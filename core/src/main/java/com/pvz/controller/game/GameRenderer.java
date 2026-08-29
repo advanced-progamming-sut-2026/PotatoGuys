@@ -24,6 +24,7 @@ import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.card.ZombieCard;
+import com.pvz.models.games.effects.ChapterEffect;
 import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.variants.IZombieMode;
@@ -41,7 +42,9 @@ public class GameRenderer {
     /** Debug: draws every entity's hitbox rectangle (toggle with F1). */
     private boolean showHitboxes = true;
 
-    /** When true, ZOMBIE-owned suns are not drawn (host side of networked IZombie). */
+    /**
+     * When true, ZOMBIE-owned suns are not drawn (host side of networked IZombie).
+     */
     private boolean hideZombieSuns;
 
     /**
@@ -85,7 +88,8 @@ public class GameRenderer {
         drawBackground();
         if (ctx != null) {
             int totalLanes = ctx.getMap().getLanes();
-            for (int lane = 0; lane < totalLanes; lane++) {
+            drawChapterEffects();
+            for (int lane = -1; lane < totalLanes; lane++) {
                 drawInactiveLawnMowers(lane);
                 drawPlants(lane);
                 drawTileBehaviors(lane);
@@ -129,8 +133,14 @@ public class GameRenderer {
         batch.draw(backgroundTextures[2], backgroundTextures[1].getRegionWidth(), 0);
     }
 
+    private void drawChapterEffects() {
+        for (ChapterEffect ce : ctx.getActiveEffects()) {
+            drawFrames(ce.draw());
+        }
+    }
+
     private void drawInactiveLawnMowers(int row) {
-        if (ctx.getLawnMowers() == null || ctx.getLawnMowers().length < 1) {
+        if (row < 0 || ctx.getLawnMowers() == null || ctx.getLawnMowers().length < 1) {
             return;
         }
         LawnMower lm = ctx.getLawnMowers()[row];
@@ -147,9 +157,12 @@ public class GameRenderer {
         }
     }
 
-    private void drawTileBehaviors(int row) {
+    private void drawTileBehaviors(int lane) {
+        if (lane < 0) {
+            return;
+        }
         for (int col = 0; col < ctx.getMap().getColumns(); col++) {
-            List<FrameConfig> frames = ctx.getMap().getTileAt(col, row).drawBehaviors();
+            List<FrameConfig> frames = ctx.getMap().getTileAt(col, lane).drawBehaviors();
             drawFrames(frames);
         }
     }
@@ -215,7 +228,7 @@ public class GameRenderer {
 
     private void drawEffects(int row) {
         for (Effect e : ctx.getEffects()) {
-            int lane = Math.max(0, Math.min(GameController.worldYtoLane(e.getPos().y),
+            int lane = Math.max(-1, Math.min(GameController.worldYtoLane(e.getPos().y),
                     ctx.getMap().getLanes() - 1));
             if (lane == row) {
                 drawFrames(e.draw());
@@ -238,7 +251,7 @@ public class GameRenderer {
     }
 
     private void drawActiveLawnMowers(int row) {
-        if (ctx.getLawnMowers() == null || ctx.getLawnMowers().length < 1) {
+        if (row < 0 || ctx.getLawnMowers() == null || ctx.getLawnMowers().length < 1) {
             return;
         }
         LawnMower lm = ctx.getLawnMowers()[row];
@@ -568,8 +581,10 @@ public class GameRenderer {
 
     /**
      * Drawn by the guest instead of the entity-based {@link #draw()} body: renders
-     * the exact list of frames the host sent (see {@link #collectFrames()}) in order,
-     * on top of the local background, plus the locally-rendered I,Zombie HUD scalars
+     * the exact list of frames the host sent (see {@link #collectFrames()}) in
+     * order,
+     * on top of the local background, plus the locally-rendered I,Zombie HUD
+     * scalars
      * (brains / red line). Background and non-PAM overlays stay local.
      */
     public void drawRemoteFrames(List<FrameConfig> frames, IZombieMode izMode) {
@@ -602,9 +617,12 @@ public class GameRenderer {
      * layer to ship the host's rendered picture to the guest (see
      * {@link com.pvz.network.game.RenderFrame}).
      *
-     * <p>Elements that aren't PAM frames (the background textures, the I,Zombie red
-     * line and brain indicators) are not included here: they're drawn locally on the
-     * guest with its own synced scalars (brainsEaten / plantSurvivalSeconds). Only the
+     * <p>
+     * Elements that aren't PAM frames (the background textures, the I,Zombie red
+     * line and brain indicators) are not included here: they're drawn locally on
+     * the
+     * guest with its own synced scalars (brainsEaten / plantSurvivalSeconds). Only
+     * the
      * actual animated sprite frames need to cross the wire.
      */
     public List<FrameConfig> collectFrames() {

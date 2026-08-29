@@ -31,9 +31,12 @@ import com.pvz.models.entities.zombies.fsm.*;
 import com.pvz.models.entities.zombies.skills.ExplorerTorchSkill;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.behaviors.TileBehavior;
+import com.pvz.models.games.map.behaviors.WaterBehavior;
 import com.pvz.models.games.map.tile.Tile;
 
 public class Zombie extends Entity {
+    private static final String WATER_RIPPLE_PAM = "768/FULL/BACKGROUNDS/WATER_ZOMBIE_RIPPLE/WATER_ZOMBIE_RIPPLE.PAM";
+    private static final String WATER_RIPPLE_CLIP = "ripple";
 
     public static final int TICKS_PER_SECOND = 10;
 
@@ -215,6 +218,26 @@ public class Zombie extends Entity {
         if (currentState != null) {
             frameConfigs.add(applyAlert(currentState.draw(this, context)));
         }
+
+        int col = GameController.worldXtoCol(position.x);
+        int lane = GameController.worldYtoLane(position.y);
+
+        Tile tile = context.getTileAt(col, lane);
+
+        FrameConfig waterRipple = new FrameConfig(WATER_RIPPLE_PAM, WATER_RIPPLE_CLIP, stateTime,
+                new Vector2(position.x, position.y - getHitbox().getHeight() / 1.7f),
+                new Vector2(0.8f, 1.1f), null, true);
+
+        if (tile != null) {
+            for (TileBehavior behavior : tile.getBehaviors()) {
+                if (behavior instanceof WaterBehavior) {
+                    frameConfigs.add(waterRipple);
+                    break;
+                }
+            }
+        } else if (col >= context.getMap().getColumns()) {
+            frameConfigs.add(waterRipple);
+        }
         return frameConfigs;
     }
 
@@ -226,10 +249,10 @@ public class Zombie extends Entity {
      * are supported, each additive, and the intensity oscillates so the zombie
      * visibly blinks:
      * <ul>
-     *   <li><b>red</b> — while the zombie stays in the danger zone near the finish
-     *       line (column {@code <= RED_ALERT_MAX_COL});</li>
-     *   <li><b>green</b> — while the zombie carries plant food
-     *       ({@link #isGlowing()}).</li>
+     * <li><b>red</b> — while the zombie stays in the danger zone near the finish
+     * line (column {@code <= RED_ALERT_MAX_COL});</li>
+     * <li><b>green</b> — while the zombie carries plant food
+     * ({@link #isGlowing()}).</li>
      * </ul>
      *
      * @param fc the frame drawn by the current state
@@ -829,7 +852,8 @@ public class Zombie extends Entity {
                     && com.pvz.controller.game.GameController.worldYtoLane(position.y) >= 0
                     && com.pvz.controller.game.GameController.worldYtoLane(position.y) < context.getLawnMowers().length
                     && context.getLawnMowers()[com.pvz.controller.game.GameController.worldYtoLane(position.y)] != null
-                    && !context.getLawnMowers()[com.pvz.controller.game.GameController.worldYtoLane(position.y)].isTriggered();
+                    && !context.getLawnMowers()[com.pvz.controller.game.GameController.worldYtoLane(position.y)]
+                            .isTriggered();
             context.getGameStats().onZombieKilledInCol0(hasMower);
         }
         context.log("Zombie of type " + sheet.getAlias()

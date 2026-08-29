@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -36,6 +35,7 @@ import com.pvz.models.user.User;
 import com.pvz.network.game.Reaction;
 import com.pvz.view.MenuUiKit;
 import com.pvz.view.PlantData;
+import com.pvz.view.game.ReactionUiModal;
 
 import pvz.skin.PvzSkin;
 
@@ -97,7 +97,10 @@ public class GameUiModal extends Table {
     private boolean plantFoodSelected = false;
     private Runnable onPlantFoodRequested = null;
 
-    /** Quick-reaction (PvP) picker, pinned bottom-right; only shown in networked matches. */
+    /**
+     * Quick-reaction (PvP) picker, pinned bottom-right; only shown in networked
+     * matches.
+     */
     private ImageButton reactionButton = null;
     private ReactionUiModal reactionModal = null;
     private Consumer<Reaction> onReactionRequested = null;
@@ -643,7 +646,9 @@ public class GameUiModal extends Table {
         }
     }
 
-    /** Parks the picker just above the reaction button, right-aligned to the corner. */
+    /**
+     * Parks the picker just above the reaction button, right-aligned to the corner.
+     */
     private void positionReactionModal() {
         float margin = 20f;
         float buttonTop = 82f + 50f;
@@ -728,9 +733,9 @@ public class GameUiModal extends Table {
         com.pvz.network.PlayerRole myRole = matchSession != null ? matchSession.getMyRole() : null;
 
         // ── Detect cards that disappeared from the context and rebuild the
-        //    bar so their slots (and any leftover empty cells) are removed.
-        //    e.g. VaseBreaker / ConveyorBelt used a card and it was removed
-        //    via ctx.removeCard.
+        // bar so their slots (and any leftover empty cells) are removed.
+        // e.g. VaseBreaker / ConveyorBelt used a card and it was removed
+        // via ctx.removeCard.
         boolean removedAny = false;
         for (PlantCard pc : new java.util.ArrayList<>(slotByCard.keySet())) {
             if (!context.getCards().contains(pc)) {
@@ -764,8 +769,8 @@ public class GameUiModal extends Table {
 
     /** Clears the card bar and re-adds every current card in context order. */
     private void rebuildCardBar(GameContext context,
-                                com.pvz.models.MatchSession matchSession,
-                                com.pvz.network.PlayerRole myRole) {
+            com.pvz.models.MatchSession matchSession,
+            com.pvz.network.PlayerRole myRole) {
         cardsBarTable.clearChildren();
         slotByCard.clear();
         cooldownOverlayByCard.clear();

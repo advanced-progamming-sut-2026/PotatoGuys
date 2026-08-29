@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
+import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.TickAware;
 import com.pvz.models.entities.plants.Plant;
@@ -145,7 +146,7 @@ public class Tile implements TickAware {
     }
 
     public Vector2 getPosition() {
-        return new Vector2(x, y);
+        return new Vector2(GameController.colToWorldX(col), GameController.laneToWorldY(lane));
     }
 
     @Override
