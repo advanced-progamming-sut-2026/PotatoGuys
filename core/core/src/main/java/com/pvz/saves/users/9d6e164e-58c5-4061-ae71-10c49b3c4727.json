@@ -10,8 +10,8 @@
   "profilePicture": "textures/avatars/avatar_nami.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 3800,
-    "diamonds": 1003,
+    "coins": 2100,
+    "diamonds": 1004,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -37,7 +37,7 @@
           "Type": "BonkChoy",
           "level": 2,
           "seed": 0,
-          "isBoosted": true
+          "isBoosted": false
         },
         {
           "Type": "Repeater",
@@ -83,6 +83,12 @@
         },
         {
           "Type": "Armamint",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "LilyPad",
           "level": 1,
           "seed": 0,
           "isBoosted": false
@@ -325,6 +331,10 @@
         {
           "message": "New Plant Unlocked: Armamint!",
           "unread": false
+        },
+        {
+          "message": "New Plant Unlocked: LilyPad!",
+          "unread": true
         }
       ]
     },
@@ -1417,7 +1427,7 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1787770592739
+    "lastDailyReset": 1788030918191
   },
-  "questLogRefreshed": true
+  "questLogRefreshed": false
 }

@@ -35,7 +35,7 @@ import com.pvz.models.user.User;
 import pvz.skin.PvzSkin;
 
 /**
- * Graphical Shop menu — structurally mirrors Dani's ShopScreen (daily offer
+ * Graphical Shop menu — structurally mirrors the reference ShopScreen (daily offer
  * panel + scrollable item cards, confirm-purchase modal, plant-picker modal
  * for the selectable seed packet, inline error display) but built entirely
  * on this project's own Shop/ShopItem/ShopController models.

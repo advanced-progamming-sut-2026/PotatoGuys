@@ -10,8 +10,8 @@ import com.pvz.network.game.GameSnapshot;
 import com.pvz.network.game.GameStateSync;
 import com.pvz.network.game.GameSyncEnvelope;
 import com.pvz.network.game.QuickChatMessage;
-import com.pvz.network.game.Reaction;
 import com.pvz.network.game.RenderFrame;
+import com.pvz.network.game.StickerMessage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -55,10 +55,16 @@ import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.sun.Sun;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.ZombieType;
+import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
+import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
+import com.pvz.models.entities.zombies.data.ZombieRegistry;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.LevelLoader;
+import com.pvz.models.games.levels.Wave;
+import com.pvz.models.games.levels.WavePhase;
 import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
@@ -145,11 +151,11 @@ public class GameController {
     private boolean cardsInitialized = false;
 
     /**
-     * Pinned just above the bottom-centre of the field; shows sent/received
-     * reactions.
+     * Decorative wave-1 zombies shown on the far right during the intro camera
+     * pan (before the real GameContext exists). They loop their idle clip the
+     * whole time; cleared when the camera returns to its starting spot.
      */
-    private Table reactionBubbleContainer;
-    private static final float REACTION_BUBBLE_HOLD_SECONDS = 1.6f;
+    private final List<DisplayZombie> displayZombies = new ArrayList<>();
 
     /**
      * Placement-preview ghost: plays the selected plant's idle PAM under the
@@ -174,6 +180,12 @@ public class GameController {
         this.seasonName = seasonName;
         this.levelNumber = levelNumber;
 
+        // Fresh session: wipe any state left over from a previously played level
+        // so stale entities (zombies/plants/projectiles/context) never leak into
+        // the new one before the real game session starts.
+        GameEngine.getInstance().reset();
+        AppContext.getInstance().setGameContext(null);
+
         this.batch = PvZ2.batch;
         shapeRenderer = new ShapeRenderer();
 
@@ -189,12 +201,13 @@ public class GameController {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (state instanceof Playing && !paused) {
                     if (ctx != null) {
-                        // Clicks on the open quick-reaction picker never reach the
-                        // battlefield — the picker's own buttons handle them.
+                        // Clicks on the open quick-chat picker or sticker box never
+                        // reach the battlefield — their own buttons handle them.
                         com.badlogic.gdx.math.Vector2 stageClick = stage.screenToStageCoordinates(
                                 new com.badlogic.gdx.math.Vector2(Gdx.input.getX(), Gdx.input.getY()));
-                        if (gameUiModal != null && gameUiModal.isReactionModalVisible()
-                                && gameUiModal.reactionModalContains(stageClick.x, stageClick.y)) {
+                        if (gameUiModal instanceof com.pvz.view.game.ui.IZombieUiModal izombieUi
+                                && ((izombieUi.isChatPickerVisible() && izombieUi.chatPickerContains(stageClick.x, stageClick.y))
+                                || (izombieUi.isStickerBoxVisible() && izombieUi.stickerBoxContains(stageClick.x, stageClick.y)))) {
                             return true;
                         }
 
@@ -348,12 +361,11 @@ public class GameController {
         gameUiModal = switch (level.getGameMode()) {
             case com.pvz.models.games.modes.GameModeType.CONVEYORBELT -> new ConveyorBeltUiModal(this::pauseGame);
             case com.pvz.models.games.modes.GameModeType.IZOMBIE ->
-                new IZombieUiModal(this::pauseGame, this::sendQuickChat);
+                new IZombieUiModal(this::pauseGame, this::sendQuickChat, this::sendSticker);
             default -> new GameUiModal(this::pauseGame);
         };
         gameUiModal.setOnShovelRequested(this::toggleShovelMode);
         gameUiModal.setOnPlantFoodRequested(this::togglePlantFoodMode);
-        gameUiModal.setOnReactionRequested(this::sendReaction);
         stage.addActor(gameUiModal);
 
         backgroundTextures = new TextureRegion[3];
@@ -434,6 +446,7 @@ public class GameController {
         stage.addActor(errorTable);
 
         renderer = new GameRenderer(ctx, this, batch, backgroundTextures);
+        createDisplayZombies();
         state.enter();
     }
 
@@ -474,13 +487,16 @@ public class GameController {
         if (state instanceof Playing && !paused
                 && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
             boolean zombieCardActive = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
-            boolean onReactionModal = gameUiModal != null && gameUiModal.isReactionModalVisible();
-            if (onReactionModal) {
+            boolean onPopup = false;
+            com.pvz.view.game.ui.IZombieUiModal izombieUi =
+                    gameUiModal instanceof com.pvz.view.game.ui.IZombieUiModal m ? m : null;
+            if (izombieUi != null) {
                 com.badlogic.gdx.math.Vector2 uClick = stage.screenToStageCoordinates(
                         new com.badlogic.gdx.math.Vector2(Gdx.input.getX(), Gdx.input.getY()));
-                onReactionModal = gameUiModal.reactionModalContains(uClick.x, uClick.y);
+                onPopup = (izombieUi.isChatPickerVisible() && izombieUi.chatPickerContains(uClick.x, uClick.y))
+                        || (izombieUi.isStickerBoxVisible() && izombieUi.stickerBoxContains(uClick.x, uClick.y));
             }
-            if (!zombieCardActive && !onReactionModal) {
+            if (!zombieCardActive && !onPopup) {
                 touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                 viewport.unproject(touchPos);
                 if (checkSunClick(touchPos.x, touchPos.y) || checkLootClick(touchPos.x, touchPos.y)) {
@@ -822,6 +838,63 @@ public class GameController {
         plantFoodCursorPreview.toFront();
     }
 
+    /**
+     * Builds the decorative wave-1 zombies that stand on the far right (two
+     * columns past the last ground column) during the intro camera pan. One per
+     * lane, cycling through the distinct zombie types defined in wave 1's phases.
+     * They are purely visual — created before the real GameContext exists and
+     * cleared in {@link #startGameSession()}.
+     */
+    private void createDisplayZombies() {
+        displayZombies.clear();
+        try {
+            List<Wave> waves = level != null ? level.getWaves() : java.util.Collections.emptyList();
+            if (waves == null || waves.isEmpty())
+                return;
+
+            int lanes = level.getGameMapDefinition().rows;
+            if (lanes <= 0)
+                lanes = com.pvz.models.Constants.DEFAULT_ROWS;
+
+            List<ZombieType> types = new ArrayList<>();
+            java.util.Set<ZombieType> seen = new java.util.LinkedHashSet<>();
+            for (WavePhase phase : waves.get(0).getPhases()) {
+                if (phase.getAllowedTypes() == null)
+                    continue;
+                for (ZombieType t : phase.getAllowedTypes()) {
+                    if (t != null && seen.add(t)) {
+                        types.add(t);
+                    }
+                }
+            }
+            if (types.isEmpty())
+                return;
+
+            int col = level.getGameMapDefinition().columns + 2; // two columns past the last ground column
+            float x = colToWorldX(col);
+            for (int lane = 0; lane < lanes; lane++) {
+                ZombieType type = types.get(lane % types.size());
+                if (type.getAlias() == null)
+                    continue;
+                ZombiePropertySheet sheet = ZombieRegistry.getInstance().getSheet(type.getAlias());
+                if (sheet == null)
+                    continue;
+                ZombieAnimationConfig anim = sheet.getAnimationConfig();
+                String pamPath = (anim != null && anim.pamFilePath != null)
+                        ? anim.pamFilePath
+                        : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
+                float scale = (anim != null && anim.scale != null) ? anim.scale : 0.65f;
+                String idle = (anim != null && anim.idleLabel != null) ? anim.idleLabel : "idle";
+                displayZombies.add(new DisplayZombie(pamPath, idle, x, laneToWorldY(lane), scale));
+            }
+        } catch (Exception e) {
+            if (com.pvz.utils.DebugMode.isEnabled()) {
+                Gdx.app.log("GameController", "Failed to create display zombies", e);
+            }
+            displayZombies.clear();
+        }
+    }
+
     public void startGameSession() {
         try {
             if (level != null) {
@@ -890,7 +963,6 @@ public class GameController {
                             msg -> handleDisconnect());
                     NetworkClient.getInstance().setDisconnectListener(() -> handleDisconnect());
                 }
-                gameUiModal.setReactionEnabled(isNetworkedMatch);
 
                 if (com.pvz.utils.DebugMode.isEnabled())
                     Gdx.app.log("GameScreen", "Starting camera pan back for " + seasonName + " Level " + levelNumber);
@@ -1058,6 +1130,15 @@ public class GameController {
         return endX;
     }
 
+    public List<DisplayZombie> getDisplayZombies() {
+        return displayZombies;
+    }
+
+    /** Removes the decorative intro zombies. */
+    public void clearDisplayZombies() {
+        displayZombies.clear();
+    }
+
     public Label getReadyPlantLabel() {
         return readyPlantLabel;
     }
@@ -1085,11 +1166,10 @@ public class GameController {
             if (gameUiModal instanceof IZombieUiModal izombieUi) {
                 izombieUi.showChat(chat);
             }
-        } else if (envelope.kind == GameSyncEnvelope.Kind.REACTION) {
-            // Opponent's reaction — render it identically to how the sender sees it.
-            Reaction reaction = gson.fromJson(envelope.data, Reaction.class);
-            if (reaction != null) {
-                showReaction(reaction);
+        } else if (envelope.kind == GameSyncEnvelope.Kind.STICKER) {
+            StickerMessage sticker = gson.fromJson(envelope.data, StickerMessage.class);
+            if (gameUiModal instanceof IZombieUiModal izombieUi) {
+                izombieUi.showSticker(sticker);
             }
         } else if (envelope.kind == GameSyncEnvelope.Kind.SNAPSHOT && !isHost) {
             // The SNAPSHOT payload is now a compact binary RenderFrame (base64) —
@@ -1158,67 +1238,14 @@ public class GameController {
     }
 
     /**
-     * Player picked a quick-reaction. It's shown on our own screen right away
-     * (so sending feels instant) and relayed to the opponent over the match
-     * channel for an identical bottom-centre display on their side.
+     * Sends a sticker (a one-shot PAM clip) to the opponent. The sender's side
+     * stays silent; only the receiver plays it, for {@code seconds}.
      */
-    private void sendReaction(Reaction reaction) {
-        showReaction(reaction);
-        if (isNetworkedMatch) {
-            String inner = gson.toJson(
-                    new GameSyncEnvelope(GameSyncEnvelope.Kind.REACTION, gson.toJson(reaction)));
-            NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
-        }
-    }
-
-    /**
-     * Pops a reaction bubble at the bottom-centre of the screen (both for the
-     * sender and the receiver). Fades in, lingers briefly, then fades back out.
-     */
-    private void showReaction(Reaction reaction) {
-        if (reaction == null || reaction.value == null) {
+    private void sendSticker(StickerMessage sticker) {
+        if (!isNetworkedMatch || matchSession == null)
             return;
-        }
-        if (reactionBubbleContainer == null) {
-            reactionBubbleContainer = new Table();
-            reactionBubbleContainer.setFillParent(true);
-            reactionBubbleContainer.bottom().center();
-            reactionBubbleContainer.setTouchable(Touchable.disabled);
-            stage.addActor(reactionBubbleContainer);
-        }
-        reactionBubbleContainer.clearChildren();
-
-        com.badlogic.gdx.scenes.scene2d.Actor bubble = buildReactionBubble(reaction);
-        reactionBubbleContainer.add(bubble).padBottom(28f);
-        reactionBubbleContainer.toFront();
-
-        bubble.setColor(1f, 1f, 1f, 0f);
-        bubble.addAction(Actions.sequence(
-                Actions.fadeIn(0.18f),
-                Actions.delay(REACTION_BUBBLE_HOLD_SECONDS),
-                Actions.fadeOut(0.35f),
-                Actions.removeActor()));
-    }
-
-    private com.badlogic.gdx.scenes.scene2d.Actor buildReactionBubble(Reaction reaction) {
-        Table bubble = new Table();
-        bubble.setBackground(PvzSkin.get().newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.72f)));
-        bubble.pad(7f, 14f, 7f, 14f);
-        if (reaction.kind == Reaction.Kind.EMOJI) {
-            com.badlogic.gdx.graphics.g2d.TextureRegion region = PvZ2.textureBank.region(reaction.value);
-            Image image = new Image(region != null
-                    ? new com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable(region)
-                    : PvzSkin.get().newDrawable("white_pixel", new Color(0.5f, 0.5f, 0.5f, 1f)));
-            image.setScaling(com.badlogic.gdx.utils.Scaling.fit);
-            bubble.add(image).size(52f, 52f);
-        } else {
-            Label label = new Label(reaction.value, PvzSkin.get(), "big_outline");
-            label.setColor(Color.WHITE);
-            label.setFontScale(1.1f);
-            label.setAlignment(Align.center);
-            bubble.add(label);
-        }
-        return bubble;
+        String inner = gson.toJson(new GameSyncEnvelope(GameSyncEnvelope.Kind.STICKER, gson.toJson(sticker)));
+        NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
     }
 
     /**

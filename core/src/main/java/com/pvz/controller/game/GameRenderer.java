@@ -86,11 +86,13 @@ public class GameRenderer {
         batch.setProjectionMatrix(controller.getCamera().combined);
         batch.begin();
         drawBackground();
+        drawDisplayZombies();
         if (ctx != null) {
             int totalLanes = ctx.getMap().getLanes();
             drawChapterEffects();
             for (int lane = -1; lane < totalLanes; lane++) {
                 drawInactiveLawnMowers(lane);
+                drawPlantFoodFx(lane);
                 drawPlants(lane);
                 drawTileBehaviors(lane);
                 drawZombies(lane);
@@ -139,6 +141,22 @@ public class GameRenderer {
         }
     }
 
+    /**
+     * Draws the decorative wave-1 zombies that stand on the far right during the
+     * intro camera pan (before the real GameContext exists). They always loop
+     * their idle clip; they use the renderer's shared {@link #stateTime}, so
+     * there is no per-frame lag.
+     */
+    private void drawDisplayZombies() {
+        List<DisplayZombie> zombies = controller.getDisplayZombies();
+        if (zombies == null || zombies.isEmpty())
+            return;
+        for (DisplayZombie dz : zombies) {
+            PvZ2.pamPlayer.draw(batch, dz.pamPath, dz.idleClip, stateTime,
+                    dz.x, dz.y, dz.scale, dz.scale, true);
+        }
+    }
+
     private void drawInactiveLawnMowers(int row) {
         if (row < 0 || ctx.getLawnMowers() == null || ctx.getLawnMowers().length < 1) {
             return;
@@ -146,6 +164,19 @@ public class GameRenderer {
         LawnMower lm = ctx.getLawnMowers()[row];
         if (lm != null && !lm.isTriggered()) {
             drawFrames(lm.draw());
+        }
+    }
+
+    private void drawPlantFoodFx(int row) {
+        for (Effect e : ctx.getEffects()) {
+            if (!(e instanceof com.pvz.models.entities.effects.PlantFoodFxEffect)) {
+                continue;
+            }
+            int lane = Math.max(0, Math.min(GameController.worldYtoLane(e.getPos().y),
+                    ctx.getMap().getLanes() - 1));
+            if (lane == row) {
+                drawFrames(e.draw());
+            }
         }
     }
 
@@ -228,6 +259,10 @@ public class GameRenderer {
 
     private void drawEffects(int row) {
         for (Effect e : ctx.getEffects()) {
+            // Plant-food shine is drawn behind the plants by drawPlantFoodFx().
+            if (e instanceof com.pvz.models.entities.effects.PlantFoodFxEffect) {
+                continue;
+            }
             int lane = Math.max(-1, Math.min(GameController.worldYtoLane(e.getPos().y),
                     ctx.getMap().getLanes() - 1));
             if (lane == row) {

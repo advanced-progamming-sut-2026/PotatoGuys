@@ -27,7 +27,7 @@ import pvz.skin.PvzSkin;
  * blow up to match its parent overlay's full-screen bounds instead (that was the bug: the panel
  * came out far too large and badly positioned instead of a neat centered popup).
  *
- * <p>Mirrors Rey's ZombieDetailsTable layout and reuses her real, confirmed
+ * <p>Mirrors the ZombieDetailsTable layout and reuses real, confirmed
  * texture-bank region IDs (back button, toughness/speed icons) since you
  * have the same asset pack.
  *
@@ -96,7 +96,7 @@ public final class ZombieDetailsTable extends Table {
 
         // Same structure as the plant details preview (PlantDetailsTable): a card
         // background Stack with the PAM idle animation centered on top of it.
-        // Sized 320x440 like Rey's reference preview, with the actor fit inside.
+        // Sized 320x440 like the reference preview, with the actor fit inside.
         Stack preview = new Stack();
         Image cardBg = new Image(regionOrSolid(
                 "IMAGE_UI_CARDS_BACKGROUNDS_CARD_PLANT_BG_MODERN",

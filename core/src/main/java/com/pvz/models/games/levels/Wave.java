@@ -68,6 +68,10 @@ public class Wave {
         return done;
     }
 
+    public List<WavePhase> getPhases() {
+        return phases;
+    }
+
     public int getTotalZombieCount() {
         if (phases == null) return 0;
         int total = 0;
@@ -138,7 +142,7 @@ public class Wave {
         // after spawn: a normal zombie starts walking immediately, while a
         // sandstorm zombie starts inside SandstormCarryState, which hides it in
         // a traveling sand-cloud effect until it reaches its landing column.
-        int spawnCol = context.getMap().getColumns() + 1;
+        int spawnCol = context.getMap().getColumns() + 2;
 
         // Sandstorm: during final wave burst in Ancient Egypt, zombies are carried
         // deeper into the map (1-4 columns from the right edge) instead of

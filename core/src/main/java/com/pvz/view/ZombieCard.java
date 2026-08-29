@@ -31,13 +31,13 @@ import com.pvz.models.entities.zombies.data.ZombieRegistry;
 import pvz.skin.PvzSkin;
 
 /**
- * A single zombie card in the Collection menu's Zombies grid — mirrors Rey's
- * ZombieCard exactly in structure (READY/SELECTED background state, hover
- * highlight, lock state for undiscovered zombies), reusing her actual
+ * A single zombie card in the Collection menu's Zombies grid — mirrors the
+ * ZombieCard structure (READY/SELECTED background state, hover
+ * highlight, lock state for undiscovered zombies), reusing actual
  * confirmed texture-bank region IDs for the chrome since you have the same
  * asset pack.
  *
- * <p>Card size is NOT hardcoded — like Rey's version, it's read straight off
+ * <p>Card size is NOT hardcoded — like the reference version, it's read straight off
  * IMAGE_UI_ALMANAC_PACKETS_ZOMBIES_READY's real pixel dimensions. That packet
  * art is portrait (taller than wide), unlike the plant packet, which is why
  * a copy-pasted landscape WIDTH/HEIGHT (from PlantCard) stretched it into
@@ -235,7 +235,7 @@ public final class ZombieCard extends Button {
         stateBackground.setDrawable(regionOrSolid(asset, fallback));
     }
 
-    /** Rey's real texture-bank region if it resolves, otherwise a plain solid fallback
+    /** Real texture-bank region if it resolves, otherwise a plain solid fallback
      *  (never a crash) — same safety net used throughout the rest of this project. */
     private static Drawable regionOrSolid(String regionId, Color fallbackColor) {
         Drawable fallback = new TextureRegionDrawable(MenuUiKit.solidTexture(fallbackColor));

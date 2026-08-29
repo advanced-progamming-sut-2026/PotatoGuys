@@ -86,6 +86,15 @@ public abstract class Level {
         return gameType;
     }
 
+    /**
+     * The level's wave definitions, or an empty list for modes that don't use the
+     * standard wave system (e.g. IZombie, VaseBreaker). Subclasses that carry
+     * {@link Wave}s override this to return their own list.
+     */
+    public List<Wave> getWaves() {
+        return new ArrayList<>();
+    }
+
     public void setGameMode(GameModeType gameMode) {
         this.gameType = gameMode;
     }

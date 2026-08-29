@@ -31,6 +31,9 @@ public final class PlantPropertySheet {
     private final GrowthProfile growth;
     private final List<LevelUpgrade> levelUpgrades;
     private final String description;
+    private final String onPlantFoodDescription;
+    private final String overallDescription;
+    private final String funDescription;
 
     public PlantPropertySheet(Builder b) {
         this.id = b.id;
@@ -47,6 +50,9 @@ public final class PlantPropertySheet {
         this.growth = b.growth;
         this.levelUpgrades = List.copyOf(b.levelUpgrades);
         this.description = b.description;
+        this.onPlantFoodDescription = b.onPlantFoodDescription;
+        this.overallDescription = b.overallDescription;
+        this.funDescription = b.funDescription;
 
         this.attackConfig = b.attackConfig;
         this.feedConfig = b.feedConfig;
@@ -67,6 +73,9 @@ public final class PlantPropertySheet {
     public GrowthProfile getGrowth()               { return growth; }
     public List<LevelUpgrade> getLevelUpgrades()   { return levelUpgrades; }
     public String getDescription()                 { return description; }
+    public String getOnPlantFoodDescription()      { return onPlantFoodDescription; }
+    public String getOverallDescription()          { return overallDescription; }
+    public String getFunDescription()              { return funDescription; }
 
     public boolean hasTag(PlantTag tag) { return tags.contains(tag); }
 
@@ -92,6 +101,9 @@ public final class PlantPropertySheet {
         private GrowthProfile growth = null;
         private List<LevelUpgrade> levelUpgrades = List.of();
         private String description = "";
+        private String onPlantFoodDescription = "";
+        private String overallDescription = "";
+        private String funDescription = "";
         private PlantActionConfig attackConfig;
         private PlantActionConfig feedConfig;
         private PamAnimationConfig pamAnimationConfig;
@@ -113,6 +125,9 @@ public final class PlantPropertySheet {
         public Builder growth(GrowthProfile v)                 { growth = v; return this; }
         public Builder levelUpgrades(List<LevelUpgrade> v)     { levelUpgrades = v; return this; }
         public Builder description(String v)                   { description = v; return this; }
+        public Builder onPlantFoodDescription(String v)        { onPlantFoodDescription = v; return this; }
+        public Builder overallDescription(String v)            { overallDescription = v; return this; }
+        public Builder funDescription(String v)                { funDescription = v; return this; }
         public Builder plantAttackConfig(PlantActionConfig v)  { attackConfig = v; return this;}
         public Builder plantFeedConfig(PlantActionConfig v)    { feedConfig = v; return this;}
         public Builder pamAnimationConfig(PamAnimationConfig v){ pamAnimationConfig = v; return this;}

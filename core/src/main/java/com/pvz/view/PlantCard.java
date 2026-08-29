@@ -17,7 +17,7 @@ import pvz.skin.PvzSkin;
  * One collectible plant card: the packet art doubled as the button background, with the family
  * badge at the top-left, the plant level at the top-right, the sun cost and seed-packet counter
  * just above a full-width progress bar across the bottom edge. Locked cards are dimmed with a
- * gold lock badge in the top-right corner (matching Rey's IMAGE_UI_LOCK_SMALL_GOLD) but stay
+ * gold lock badge in the top-right corner (matching IMAGE_UI_LOCK_SMALL_GOLD) but stay
  * clickable so the player can open the details and buy the plant there.
  */
 public class PlantCard extends Button {
@@ -76,7 +76,7 @@ public class PlantCard extends Button {
         badgeLayer.top().left();
         badgeLayer.add(badge).size(36f, 36f).pad(3f);
 
-        // ── top-right: gold lock on locked cards (matches Rey's IMAGE_UI_LOCK_SMALL_GOLD) ─
+        // ── top-right: gold lock on locked cards (matches IMAGE_UI_LOCK_SMALL_GOLD) ─
         Table lockLayer = new Table();
         lockLayer.top().right();
         lockLayer.add(lockImage).size(26f).pad(4f);

@@ -70,7 +70,7 @@ public class QuestLog {
         lastDailyReset = System.currentTimeMillis();
     }
 
-    private void checkAndResetDaily() {
+    public void checkAndResetDaily() {
         LocalDate lastResetDate = LocalDate.ofInstant(
             java.time.Instant.ofEpochMilli(lastDailyReset), ZoneId.systemDefault());
         LocalDate today = LocalDate.now(ZoneId.systemDefault());
@@ -82,6 +82,25 @@ public class QuestLog {
 
     public long getLastDailyReset() {
         return lastDailyReset;
+    }
+
+    /** Milliseconds remaining until the next daily reset (next local midnight). */
+    public long millisUntilNextReset() {
+        LocalDate today = LocalDate.now(ZoneId.systemDefault());
+        java.time.LocalDateTime todayMidnight = today.plusDays(1).atStartOfDay();
+        long nextReset = todayMidnight.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long remaining = nextReset - System.currentTimeMillis();
+        return Math.max(0, remaining);
+    }
+
+    /** ISO 8601 string (HH:mm:ss) of the time remaining until the next daily reset. */
+    public String formatTimeUntilReset() {
+        long remaining = millisUntilNextReset();
+        long totalSeconds = remaining / 1000;
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+        long seconds = totalSeconds % 60;
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     public void setLastDailyReset(long lastDailyReset) {

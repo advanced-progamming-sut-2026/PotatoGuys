@@ -16,4 +16,7 @@ public class PlantJsonConfig {
     public PlantActionConfig feedConfig;
     public PamAnimationConfig pamAnimationConfig;
     public String description;
+    public String onPlantFoodDescription;
+    public String overallDescription;
+    public String funDescription;
 }
