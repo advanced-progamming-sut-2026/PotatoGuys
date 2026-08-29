@@ -72,6 +72,7 @@ public class TravelLogMenu extends ScreenAdapter {
     private Table listTable;
     private Label coinsLabel;
     private Label diamondsLabel;
+    private Label resetTimerLabel;
 
     private Texture barBgTexture;
     private Texture barFillTexture;
@@ -116,6 +117,11 @@ public class TravelLogMenu extends ScreenAdapter {
 
         tabsTable = new Table();
         mainPanel.add(tabsTable).padTop(15).row();
+
+        Label.LabelStyle resetStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("8FCE7E"));
+        resetTimerLabel = new Label("", resetStyle);
+        resetTimerLabel.setFontScale(1.1f);
+        mainPanel.add(resetTimerLabel).padTop(6).row();
 
         listTable = new Table();
         listTable.top();
@@ -183,6 +189,15 @@ public class TravelLogMenu extends ScreenAdapter {
         }
     }
 
+    private void updateResetTimer() {
+        if (resetTimerLabel == null) return;
+        boolean showTimer = currentTab == Tab.DAILY || currentTab == Tab.ALL;
+        resetTimerLabel.setVisible(showTimer);
+        if (showTimer) {
+            resetTimerLabel.setText("Daily quests reset in " + controller.getMillisUntilDailyResetFormatted());
+        }
+    }
+
     private TextButton tabButton(Tab tab) {
         String style = tab == currentTab ? "purple" : "brown";
         TextButton button = new TextButton(tabLabel(tab), skin, style);
@@ -211,6 +226,7 @@ public class TravelLogMenu extends ScreenAdapter {
 
     private void refreshList() {
         listTable.clearChildren();
+        updateResetTimer();
 
         if (currentTab == Tab.MINIGAMES) {
             buildMinigamesList();
@@ -532,6 +548,9 @@ public class TravelLogMenu extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        if (resetTimerLabel != null && resetTimerLabel.isVisible()) {
+            updateResetTimer();
+        }
         stage.act(delta);
         stage.draw();
     }

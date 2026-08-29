@@ -88,6 +88,7 @@ public class GameRenderer {
             int totalLanes = ctx.getMap().getLanes();
             for (int lane = 0; lane < totalLanes; lane++) {
                 drawInactiveLawnMowers(lane);
+                drawPlantFoodFx(lane);
                 drawPlants(lane);
                 drawTileBehaviors(lane);
                 drawZombies(lane);
@@ -153,6 +154,19 @@ public class GameRenderer {
         LawnMower lm = ctx.getLawnMowers()[row];
         if (lm != null && !lm.isTriggered()) {
             drawFrames(lm.draw());
+        }
+    }
+
+    private void drawPlantFoodFx(int row) {
+        for (Effect e : ctx.getEffects()) {
+            if (!(e instanceof com.pvz.models.entities.effects.PlantFoodFxEffect)) {
+                continue;
+            }
+            int lane = Math.max(0, Math.min(GameController.worldYtoLane(e.getPos().y),
+                    ctx.getMap().getLanes() - 1));
+            if (lane == row) {
+                drawFrames(e.draw());
+            }
         }
     }
 
@@ -232,6 +246,10 @@ public class GameRenderer {
 
     private void drawEffects(int row) {
         for (Effect e : ctx.getEffects()) {
+            // Plant-food shine is drawn behind the plants by drawPlantFoodFx().
+            if (e instanceof com.pvz.models.entities.effects.PlantFoodFxEffect) {
+                continue;
+            }
             int lane = Math.max(0, Math.min(GameController.worldYtoLane(e.getPos().y),
                     ctx.getMap().getLanes() - 1));
             if (lane == row) {
