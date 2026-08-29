@@ -9,6 +9,7 @@ import com.pvz.network.game.GameAction;
 import com.pvz.network.game.GameSnapshot;
 import com.pvz.network.game.GameStateSync;
 import com.pvz.network.game.GameSyncEnvelope;
+import com.pvz.network.game.QuickChatMessage;
 import com.pvz.network.game.RenderFrame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -73,6 +74,7 @@ import com.pvz.view.game.GameOverPopup;
 import com.pvz.view.game.GameWinPopup;
 import com.pvz.view.game.PauseMenuPopup;
 import com.pvz.view.game.PlantSelectModal;
+import com.pvz.view.game.QuickChatUi;
 import com.pvz.view.PamActor;
 import com.pvz.view.PlantData;
 import pvz.skin.PvzSkin;
@@ -94,6 +96,7 @@ public class GameController {
     private Level level;
     private PlantSelectModal plantSelectModal;
     private GameUiModal gameUiModal;
+    private QuickChatUi quickChatUi;
     private State state = new ObjectiveScreen(this);
 
     private GameRenderer renderer;
@@ -325,6 +328,11 @@ public class GameController {
         gameUiModal.setOnShovelRequested(this::toggleShovelMode);
         gameUiModal.setOnPlantFoodRequested(this::togglePlantFoodMode);
         stage.addActor(gameUiModal);
+
+        if (isNetworkedMatch) {
+            quickChatUi = new QuickChatUi(this::sendQuickChat);
+            gameUiModal.addActor(quickChatUi);
+        }
 
         backgroundTextures = new TextureRegion[3];
         switch (seasonName.toLowerCase()) {
@@ -1043,6 +1051,11 @@ public class GameController {
 
         if (envelope.kind == GameSyncEnvelope.Kind.QUIT) {
             handleDisconnect();
+        } else if (envelope.kind == GameSyncEnvelope.Kind.CHAT) {
+            QuickChatMessage chat = gson.fromJson(envelope.data, QuickChatMessage.class);
+            if (quickChatUi != null) {
+                quickChatUi.showChat(chat);
+            }
         } else if (envelope.kind == GameSyncEnvelope.Kind.SNAPSHOT && !isHost) {
             // The SNAPSHOT payload is now a compact binary RenderFrame (base64) —
             // the full list of FrameConfigs the host is drawing. No entity
@@ -1093,6 +1106,19 @@ public class GameController {
     private void sendPlacementAction(GameAction.Type type, String cardTypeName, int col, int lane) {
         GameAction action = GameAction.placeCard(type, cardTypeName, col, lane);
         String inner = gson.toJson(new GameSyncEnvelope(GameSyncEnvelope.Kind.ACTION, gson.toJson(action)));
+        NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
+    }
+
+    /**
+     * Sends a predefined quick-chat line (text or emoji) to the opponent only.
+     * The bubble is shown solely on the receiver's side; the sender sees no
+     * feedback popup of its own message.
+     */
+    private void sendQuickChat(QuickChatMessage.Kind kind, int index) {
+        if (matchSession == null)
+            return;
+        QuickChatMessage msg = new QuickChatMessage(kind, index);
+        String inner = gson.toJson(new GameSyncEnvelope(GameSyncEnvelope.Kind.CHAT, gson.toJson(msg)));
         NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
     }
 
@@ -1191,6 +1217,9 @@ public class GameController {
     }
 
     public void dispose() {
+        if (quickChatUi != null) {
+            quickChatUi.dispose();
+        }
         NetworkClient.getInstance().clearPushListener(MessageType.MATCH_MESSAGE);
         NetworkClient.getInstance().clearPushListener(MessageType.OPPONENT_DISCONNECTED);
         NetworkClient.getInstance().clearDisconnectListener();
