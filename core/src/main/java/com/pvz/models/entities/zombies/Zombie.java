@@ -20,6 +20,7 @@ import com.pvz.models.entities.zombies.armor.ArmorFlag;
 import com.pvz.models.entities.zombies.armor.ArmorPiece;
 import com.pvz.models.entities.zombies.armor.ArmorType;
 import com.pvz.models.entities.effects.DetachedArmEffect;
+import com.pvz.models.entities.effects.DetachedArmorEffect;
 import com.pvz.models.entities.effects.LootDrop;
 import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
 import com.pvz.models.entities.zombies.data.ScaledProp;
@@ -764,6 +765,7 @@ public class Zombie extends Entity {
             if (armor.isDestroyed()) {
                 context.log(sheet.getAlias() + "'s "
                         + armor.getType().name() + " armour was destroyed!");
+                spawnDetachedArmor(armor);
             }
             if (!armor.hasFlag(ArmorFlag.PASSDAMAGE)) {
                 return overflow;
@@ -771,6 +773,38 @@ public class Zombie extends Entity {
             // PASSDAMAGE: armour depletes but full amount continues
         }
         return amount;
+    }
+
+    /**
+     * When a helm armour (cone / bucket / brick / crown) is destroyed, spawns a
+     * falling-armour effect identical to the detached arm: the helmet drops
+     * straight down from the head. The visible part is the armour's current —
+     * at the moment of destruction always the critical/last — damage layer, so
+     * what falls off looks exactly like the cracked armour that was on the head.
+     */
+    private void spawnDetachedArmor(ArmorPiece armor) {
+        if (!armor.isHelm())
+            return;
+        String[] layers = armor.getType().pamLayers();
+        if (layers == null || layers.length == 0)
+            return;
+        List<String> hideParts = new ArrayList<>(getArmPartsToHide());
+        hideParts.addAll(getArmPartsToShow());
+        if (hideParts.isEmpty())
+            return;
+        List<String> showParts = new ArrayList<>();
+        showParts.add(layers[Math.min(armor.getLayerIndex(), layers.length - 1)]);
+        String container = armor.getType().pamContainerName();
+        if (container != null)
+            showParts.add(container);
+        ZombieAnimationConfig anim = sheet.getAnimationConfig();
+        float sc = (anim != null && anim.scale != null) ? anim.scale : 0.65f;
+        String pam = (anim != null && anim.pamFilePath != null)
+                ? anim.pamFilePath
+                : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
+        context.addEffect(new DetachedArmorEffect(context,
+                new Vector2(position.x, position.y), pam, sc,
+                showParts, hideParts));
     }
 
     private void triggerDeath() {

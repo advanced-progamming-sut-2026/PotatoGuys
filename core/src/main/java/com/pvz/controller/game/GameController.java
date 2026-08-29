@@ -9,6 +9,7 @@ import com.pvz.network.game.GameAction;
 import com.pvz.network.game.GameSnapshot;
 import com.pvz.network.game.GameStateSync;
 import com.pvz.network.game.GameSyncEnvelope;
+import com.pvz.network.game.QuickChatMessage;
 import com.pvz.network.game.Reaction;
 import com.pvz.network.game.RenderFrame;
 import com.badlogic.gdx.Gdx;
@@ -62,7 +63,6 @@ import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.games.modes.capabilities.ZombiePlacer;
-import com.pvz.models.games.modes.GameModeType;
 import com.pvz.models.games.modes.variants.IZombieMode;
 import com.pvz.models.games.modes.variants.VaseBreakerMode;
 import com.pvz.models.games.card.ZombieCard;
@@ -70,12 +70,13 @@ import com.pvz.models.user.MyPlant;
 import com.pvz.view.GameModesMenu;
 import com.pvz.view.TravelLogMenu;
 import com.pvz.view.game.GameScreen;
-import com.pvz.view.game.GameUiModal;
-import com.pvz.view.game.ConveyorBeltUiModal;
 import com.pvz.view.game.GameOverPopup;
 import com.pvz.view.game.GameWinPopup;
 import com.pvz.view.game.PauseMenuPopup;
 import com.pvz.view.game.PlantSelectModal;
+import com.pvz.view.game.ui.ConveyorBeltUiModal;
+import com.pvz.view.game.ui.GameUiModal;
+import com.pvz.view.game.ui.IZombieUiModal;
 import com.pvz.view.PamActor;
 import com.pvz.view.PlantData;
 import pvz.skin.PvzSkin;
@@ -118,9 +119,15 @@ public class GameController {
     private float snapshotAccumulator = 0f;
     private boolean lastGameOver = false;
     private static final float SNAPSHOT_INTERVAL_SECONDS = 0.01f;
-    /** Monotonic snapshot counter stamped onto every snapshot for stale/ordering checks. */
+    /**
+     * Monotonic snapshot counter stamped onto every snapshot for stale/ordering
+     * checks.
+     */
     private int snapshotSeq = 0;
-    /** Highest seq the guest has applied so far (drops out-of-order/stale snapshots). */
+    /**
+     * Highest seq the guest has applied so far (drops out-of-order/stale
+     * snapshots).
+     */
     private int lastAppliedSeq = -1;
 
     private final Vector3 touchPos = new Vector3();
@@ -137,7 +144,10 @@ public class GameController {
     private Table pauseOverlay;
     private boolean cardsInitialized = false;
 
-    /** Pinned just above the bottom-centre of the field; shows sent/received reactions. */
+    /**
+     * Pinned just above the bottom-centre of the field; shows sent/received
+     * reactions.
+     */
     private Table reactionBubbleContainer;
     private static final float REACTION_BUBBLE_HOLD_SECONDS = 1.6f;
 
@@ -335,9 +345,12 @@ public class GameController {
         plantSelectModal = new PlantSelectModal(level, this::startGameSession);
         stage.addActor(plantSelectModal);
 
-        gameUiModal = (level.getGameMode() == GameModeType.CONVEYORBELT)
-                ? new ConveyorBeltUiModal(this::pauseGame)
-                : new GameUiModal(this::pauseGame);
+        gameUiModal = switch (level.getGameMode()) {
+            case com.pvz.models.games.modes.GameModeType.CONVEYORBELT -> new ConveyorBeltUiModal(this::pauseGame);
+            case com.pvz.models.games.modes.GameModeType.IZOMBIE ->
+                new IZombieUiModal(this::pauseGame, this::sendQuickChat);
+            default -> new GameUiModal(this::pauseGame);
+        };
         gameUiModal.setOnShovelRequested(this::toggleShovelMode);
         gameUiModal.setOnPlantFoodRequested(this::togglePlantFoodMode);
         gameUiModal.setOnReactionRequested(this::sendReaction);
@@ -1067,6 +1080,11 @@ public class GameController {
 
         if (envelope.kind == GameSyncEnvelope.Kind.QUIT) {
             handleDisconnect();
+        } else if (envelope.kind == GameSyncEnvelope.Kind.CHAT) {
+            QuickChatMessage chat = gson.fromJson(envelope.data, QuickChatMessage.class);
+            if (gameUiModal instanceof IZombieUiModal izombieUi) {
+                izombieUi.showChat(chat);
+            }
         } else if (envelope.kind == GameSyncEnvelope.Kind.REACTION) {
             // Opponent's reaction — render it identically to how the sender sees it.
             Reaction reaction = gson.fromJson(envelope.data, Reaction.class);
@@ -1123,6 +1141,19 @@ public class GameController {
     private void sendPlacementAction(GameAction.Type type, String cardTypeName, int col, int lane) {
         GameAction action = GameAction.placeCard(type, cardTypeName, col, lane);
         String inner = gson.toJson(new GameSyncEnvelope(GameSyncEnvelope.Kind.ACTION, gson.toJson(action)));
+        NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
+    }
+
+    /**
+     * Sends a predefined quick-chat line (text or emoji) to the opponent only.
+     * The bubble is shown solely on the receiver's side; the sender sees no
+     * feedback popup of its own message.
+     */
+    private void sendQuickChat(QuickChatMessage.Kind kind, int index) {
+        if (matchSession == null)
+            return;
+        QuickChatMessage msg = new QuickChatMessage(kind, index);
+        String inner = gson.toJson(new GameSyncEnvelope(GameSyncEnvelope.Kind.CHAT, gson.toJson(msg)));
         NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
     }
 
@@ -1191,7 +1222,8 @@ public class GameController {
     }
 
     /**
-     * Host side: serializes the current rendered picture (the exact FrameConfig list
+     * Host side: serializes the current rendered picture (the exact FrameConfig
+     * list
      * in draw order) into one compact binary {@link RenderFrame}, base64-encodes it
      * (the match relay only carries a String payload), and sends it to the guest.
      */
@@ -1217,7 +1249,10 @@ public class GameController {
         NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
     }
 
-    /** Guest side: decode+store the latest rendered frame; it's drawn next render pass. */
+    /**
+     * Guest side: decode+store the latest rendered frame; it's drawn next render
+     * pass.
+     */
     private void handleRenderFrame(String base64Data) {
         try {
             byte[] payload = java.util.Base64.getDecoder().decode(base64Data);
@@ -1285,6 +1320,9 @@ public class GameController {
     }
 
     public void dispose() {
+        if (gameUiModal instanceof IZombieUiModal izombieUi) {
+            izombieUi.disposeChat();
+        }
         NetworkClient.getInstance().clearPushListener(MessageType.MATCH_MESSAGE);
         NetworkClient.getInstance().clearPushListener(MessageType.OPPONENT_DISCONNECTED);
         NetworkClient.getInstance().clearDisconnectListener();
