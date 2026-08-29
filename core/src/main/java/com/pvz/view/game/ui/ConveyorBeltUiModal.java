@@ -1,4 +1,4 @@
-package com.pvz.view.game;
+package com.pvz.view.game.ui;
 
 import java.util.ArrayList;
 import java.util.HashSet;

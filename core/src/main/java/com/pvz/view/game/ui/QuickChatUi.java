@@ -1,4 +1,4 @@
-package com.pvz.view.game;
+package com.pvz.view.game.ui;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -136,7 +136,7 @@ public class QuickChatUi extends Table {
 
         bubble.setColor(1f, 1f, 1f, 0f);
         bubble.addAction(Actions.sequence(
-                Actions.fadeIn(0.18f),
+                Actions.fadeIn(0.2f),
                 Actions.delay(BUBBLE_LIFETIME),
                 Actions.fadeOut(0.5f),
                 Actions.removeActor()));
@@ -204,7 +204,7 @@ public class QuickChatUi extends Table {
         img.setScaling(Scaling.fit);
 
         Table slot = new Table();
-        slot.setBackground(skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.32f)));
+        slot.setBackground(skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0f)));
         slot.add(img).size(42f, 42f);
 
         slot.setTouchable(Touchable.enabled);
@@ -245,7 +245,7 @@ public class QuickChatUi extends Table {
         img.setScaling(Scaling.fit);
 
         Table bubble = new Table();
-        bubble.setBackground(skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.55f)));
+        bubble.setBackground(skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0f)));
         bubble.pad(6f);
         bubble.add(img).size(94f, 94f);
 
@@ -258,7 +258,7 @@ public class QuickChatUi extends Table {
         if (tfs != null && tfs.background != null) {
             return tfs.background;
         }
-        return skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.5f));
+        return skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0f));
     }
 
     private Drawable textBoxFocusedBackground() {

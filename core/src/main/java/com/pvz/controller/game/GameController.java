@@ -60,7 +60,6 @@ import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.games.modes.capabilities.ZombiePlacer;
-import com.pvz.models.games.modes.GameModeType;
 import com.pvz.models.games.modes.variants.IZombieMode;
 import com.pvz.models.games.modes.variants.VaseBreakerMode;
 import com.pvz.models.games.card.ZombieCard;
@@ -68,13 +67,13 @@ import com.pvz.models.user.MyPlant;
 import com.pvz.view.GameModesMenu;
 import com.pvz.view.TravelLogMenu;
 import com.pvz.view.game.GameScreen;
-import com.pvz.view.game.GameUiModal;
-import com.pvz.view.game.ConveyorBeltUiModal;
 import com.pvz.view.game.GameOverPopup;
 import com.pvz.view.game.GameWinPopup;
 import com.pvz.view.game.PauseMenuPopup;
 import com.pvz.view.game.PlantSelectModal;
-import com.pvz.view.game.QuickChatUi;
+import com.pvz.view.game.ui.ConveyorBeltUiModal;
+import com.pvz.view.game.ui.GameUiModal;
+import com.pvz.view.game.ui.IZombieUiModal;
 import com.pvz.view.PamActor;
 import com.pvz.view.PlantData;
 import pvz.skin.PvzSkin;
@@ -96,7 +95,6 @@ public class GameController {
     private Level level;
     private PlantSelectModal plantSelectModal;
     private GameUiModal gameUiModal;
-    private QuickChatUi quickChatUi;
     private State state = new ObjectiveScreen(this);
 
     private GameRenderer renderer;
@@ -322,17 +320,14 @@ public class GameController {
         plantSelectModal = new PlantSelectModal(level, this::startGameSession);
         stage.addActor(plantSelectModal);
 
-        gameUiModal = (level.getGameMode() == GameModeType.CONVEYORBELT)
-                ? new ConveyorBeltUiModal(this::pauseGame)
-                : new GameUiModal(this::pauseGame);
+        gameUiModal = switch (level.getGameMode()) {
+            case com.pvz.models.games.modes.GameModeType.CONVEYORBELT -> new ConveyorBeltUiModal(this::pauseGame);
+            case com.pvz.models.games.modes.GameModeType.IZOMBIE -> new IZombieUiModal(this::pauseGame, this::sendQuickChat);
+            default -> new GameUiModal(this::pauseGame);
+        };
         gameUiModal.setOnShovelRequested(this::toggleShovelMode);
         gameUiModal.setOnPlantFoodRequested(this::togglePlantFoodMode);
         stage.addActor(gameUiModal);
-
-        if (isNetworkedMatch) {
-            quickChatUi = new QuickChatUi(this::sendQuickChat);
-            gameUiModal.addActor(quickChatUi);
-        }
 
         backgroundTextures = new TextureRegion[3];
         switch (seasonName.toLowerCase()) {
@@ -1053,8 +1048,8 @@ public class GameController {
             handleDisconnect();
         } else if (envelope.kind == GameSyncEnvelope.Kind.CHAT) {
             QuickChatMessage chat = gson.fromJson(envelope.data, QuickChatMessage.class);
-            if (quickChatUi != null) {
-                quickChatUi.showChat(chat);
+            if (gameUiModal instanceof IZombieUiModal izombieUi) {
+                izombieUi.showChat(chat);
             }
         } else if (envelope.kind == GameSyncEnvelope.Kind.SNAPSHOT && !isHost) {
             // The SNAPSHOT payload is now a compact binary RenderFrame (base64) —
@@ -1217,8 +1212,8 @@ public class GameController {
     }
 
     public void dispose() {
-        if (quickChatUi != null) {
-            quickChatUi.dispose();
+        if (gameUiModal instanceof IZombieUiModal izombieUi) {
+            izombieUi.disposeChat();
         }
         NetworkClient.getInstance().clearPushListener(MessageType.MATCH_MESSAGE);
         NetworkClient.getInstance().clearPushListener(MessageType.OPPONENT_DISCONNECTED);
