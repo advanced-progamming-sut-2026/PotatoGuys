@@ -6,11 +6,14 @@ import java.util.function.BiConsumer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -20,27 +23,29 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 
+import com.pvz.PvZ2;
 import com.pvz.network.game.QuickChatMessage;
 import com.pvz.view.MenuUiKit;
 
 import pvz.skin.PvzSkin;
 
 /**
- * Bottom-right quick-chat panel for online I,Zombie matches.
+ * Quick-chat for online I,Zombie matches, merging the reaction picker's
+ * interaction model with the canned text/emoji payloads:
  *
  * <p>
- * It offers 3 canned messages (drawn with the same background the login /
- * register text boxes use) and 3 emojis loaded from {@code assets/images/emojies}.
- * Pressing one sends a {@link QuickChatMessage} to the opponent through the
- * existing MATCH_MESSAGE relay. The bubble pops up at the bottom-right only on
- * the opponent's side, so the sender never sees its own sent emoji/text.
+ * A small toggle button pinned just above the shovel opens a compact picker
+ * window where the player chooses one of the preset messages (drawn with the
+ * game's text-box background) or one of the emojis (loaded from
+ * {@code assets/images/emojies}). Selecting one sends a {@link QuickChatMessage}
+ * to the opponent through the existing MATCH_MESSAGE relay and closes the
+ * picker.
  *
  * <p>
- * Layout is tuned for the 1280x720 gameplay viewport: the bar hugs the
- * bottom-right corner (just left of the shovel button) and incoming/outgoing
- * bubbles stack upward above it, fading out after a short while. Emojis load at
- * their natural size but are drawn with {@code Scaling.fit} so the big 640px
- * PNGs are scaled to fit the small on-screen slots/bubbles.
+ * The sender never sees its own item; the opponent renders it as a bubble
+ * popping up at the bottom-right, above the toggle button (text-box bubble for
+ * messages, the emoji image for emojis), fading out after a short while. All
+ * coordinates are tuned for the 1280x720 gameplay viewport.
  */
 public class QuickChatUi extends Table {
 
@@ -61,22 +66,25 @@ public class QuickChatUi extends Table {
     /** How many bubbles are kept on screen at once (oldest drops first). */
     private static final int MAX_BUBBLES = 4;
 
-    /** Right padding so the bar sits left of the shovel button (58px + margin). */
-    private static final float BAR_PAD_RIGHT = 92f;
-    /** Bottom padding for the bar itself. */
-    private static final float BAR_PAD_BOTTOM = 15f;
+    /** Size and corner padding of the toggle button (sits above the shovel). */
+    private static final float TOGGLE_SIZE = 50f;
+    private static final float TOGGLE_PAD_BOTTOM = 82f;
+    private static final float TOGGLE_PAD_RIGHT = 20f;
+    /** Right edge margin of the picker window and its offset above the button. */
+    private static final float PICKER_MARGIN = 20f;
+    private static final float PICKER_CLEARANCE = 6f;
     /**
-     * Extra vertical clearance between the bottom of the first chat bubble and
-     * the top of the message/emoji selection bar, so incoming bubbles don't
-     * sit flush against the buttons.
+     * Extra vertical space between the bottom of the first chat bubble and the
+     * top of the toggle button, so incoming bubbles don't sit flush on it.
      */
-    private static final float FIRST_BUBBLE_CLEARANCE = 55f;
+    private static final float FIRST_BUBBLE_CLEARANCE = 20f;
 
     private final Skin skin;
     private final BiConsumer<QuickChatMessage.Kind, Integer> onSend;
     private final Texture[] emojiTextures = new Texture[EMOJI_PATHS.length];
     private final Table popupLayer = new Table();
     private final List<Texture> ownedTextures = new java.util.ArrayList<>();
+    private final Table picker;
 
     public QuickChatUi(BiConsumer<QuickChatMessage.Kind, Integer> onSend) {
         this.onSend = onSend;
@@ -89,31 +97,27 @@ public class QuickChatUi extends Table {
             emojiTextures[i] = loadEmojiTexture(EMOJI_PATHS[i]);
         }
 
-        // Chat-bubble layer, pinned above the bar with extra clearance so the
-        // first bubble never sticks to the selection buttons.
+        // Chat-bubble layer, pinned above the toggle button with a clearance so
+        // the first bubble never sticks to it.
         popupLayer.setFillParent(true);
         popupLayer.bottom().right();
-        popupLayer.pad(0f, 0f, BAR_PAD_BOTTOM + 96f + FIRST_BUBBLE_CLEARANCE, BAR_PAD_RIGHT);
+        popupLayer.setTouchable(Touchable.disabled);
+        popupLayer.pad(0f, 0f, TOGGLE_PAD_BOTTOM + TOGGLE_SIZE + FIRST_BUBBLE_CLEARANCE,
+                TOGGLE_PAD_RIGHT + TOGGLE_SIZE + 20f);
         addActor(popupLayer);
 
-        Table msgRow = new Table();
-        for (int i = 0; i < MESSAGES.length; i++) {
-            msgRow.add(buildMessageButton(MESSAGES[i], i)).padRight(5f);
-        }
+        // Picker window: hidden until the toggle button pushes it open.
+        picker = buildPicker();
+        picker.setVisible(false);
+        addActor(picker);
 
-        Table emojiRow = new Table();
-        for (int i = 0; i < EMOJI_PATHS.length; i++) {
-            emojiRow.add(buildEmojiButton(i)).size(48f, 46f).padRight(5f);
-        }
+        Table toggleOverlay = new Table();
+        toggleOverlay.setFillParent(true);
+        toggleOverlay.bottom().right();
+        toggleOverlay.add(buildToggleButton()).size(TOGGLE_SIZE).padRight(TOGGLE_PAD_RIGHT).padBottom(TOGGLE_PAD_BOTTOM);
+        addActor(toggleOverlay);
 
-        Table bar = new Table();
-        bar.bottom().right();
-        bar.add(msgRow).row();
-        bar.add(emojiRow).padTop(6f);
-
-        add(bar).padBottom(BAR_PAD_BOTTOM).padRight(BAR_PAD_RIGHT);
-
-        // Keep chat bubbles above the bar in case the two ever overlap.
+        // Keep chat bubbles above the picker in case the two ever overlap.
         popupLayer.toFront();
     }
 
@@ -149,6 +153,20 @@ public class QuickChatUi extends Table {
                 Actions.removeActor()));
     }
 
+    /** True while the picker window is open. */
+    public boolean isPickerVisible() {
+        return picker.isVisible();
+    }
+
+    /** True when the picker (if open) covers the stage point (sx, sy). */
+    public boolean pickerContains(float sx, float sy) {
+        if (!picker.isVisible())
+            return false;
+        Vector2 min = picker.localToStageCoordinates(new Vector2(0f, 0f));
+        Vector2 max = picker.localToStageCoordinates(new Vector2(picker.getWidth(), picker.getHeight()));
+        return sx >= min.x && sx <= max.x && sy >= min.y && sy <= max.y;
+    }
+
     public void dispose() {
         for (Texture t : ownedTextures) {
             t.dispose();
@@ -157,10 +175,90 @@ public class QuickChatUi extends Table {
     }
 
     /**
-     * One canned message as a small button that looks like the game's text
-     * boxes (same background drawable + "big" font), so the chat stays visually
-     * consistent with the login/register fields. Clicking it both sends the
-     * message and stops the tap from reaching the gameplay input handler below.
+     * The picker window: a bordered dark panel with the preset messages on top
+     * (drawn with the game's text-box background) and the emojis below.
+     */
+    private Table buildPicker() {
+        Table border = new Table();
+        border.setBackground(skin.newDrawable("white_pixel", Color.valueOf("8F4909")));
+
+        Table body = new Table();
+        body.setBackground(skin.newDrawable("white_pixel", new Color(0.05f, 0.05f, 0.08f, 0.9f)));
+        body.pad(8f);
+
+        Table msgRow = new Table();
+        for (int i = 0; i < MESSAGES.length; i++) {
+            msgRow.add(buildMessageButton(MESSAGES[i], i)).pad(2f);
+        }
+        body.add(msgRow).row();
+
+        Table emojiRow = new Table();
+        for (int i = 0; i < EMOJI_PATHS.length; i++) {
+            emojiRow.add(buildEmojiButton(i)).size(46f, 46f).pad(3f);
+        }
+        body.add(emojiRow).padTop(4f);
+
+        border.add(body).pad(2f);
+
+        Table picker = new Table();
+        picker.setTouchable(Touchable.enabled);
+        picker.add(border).pad(2f);
+        picker.pack();
+        return picker;
+    }
+
+    /** The small speech-bubble button that opens/closes the picker. */
+    private Actor buildToggleButton() {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        TextureRegion region = PvZ2.textureBank.region("IMAGE_UI_ALMANAC_GENERIC_LTE_IMAGE");
+        if (region != null) {
+            Drawable up = new TextureRegionDrawable(region);
+            style.imageUp = up;
+            style.imageDown = up;
+            style.imageOver = up;
+        }
+        ImageButton button = new ImageButton(style);
+        button.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                boolean handled = super.touchDown(event, x, y, pointer, button);
+                event.stop();
+                return handled;
+            }
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                togglePicker();
+            }
+        });
+        return button;
+    }
+
+    private void togglePicker() {
+        if (picker.isVisible()) {
+            picker.setVisible(false);
+            picker.clearActions();
+        } else {
+            positionPicker();
+            picker.setColor(1f, 1f, 1f, 0f);
+            picker.setVisible(true);
+            picker.addAction(Actions.fadeIn(0.12f));
+            picker.toFront();
+            popupLayer.toFront();
+        }
+    }
+
+    /** Parks the picker just above the toggle button, right-aligned to the corner. */
+    private void positionPicker() {
+        float buttonTop = TOGGLE_PAD_BOTTOM + TOGGLE_SIZE;
+        float x = 1280f - PICKER_MARGIN - picker.getWidth();
+        picker.setPosition(Math.max(0f, x), buttonTop + PICKER_CLEARANCE);
+    }
+
+    /**
+     * One preset message as a chip that looks like the game's text boxes (same
+     * background drawable + "big" font). Clicking it sends the message and
+     * closes the picker.
      */
     private Actor buildMessageButton(String text, int index) {
         Drawable bg = textBoxBackground();
@@ -171,7 +269,7 @@ public class QuickChatUi extends Table {
         slot.pad(3f, 8f, 3f, 8f);
 
         Label label = new Label(text, skin, "big");
-        label.setFontScale(0.38f);
+        label.setFontScale(0.36f);
         label.setColor(Color.BLACK);
         slot.add(label);
 
@@ -200,12 +298,14 @@ public class QuickChatUi extends Table {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                hidePicker();
                 onSend.accept(QuickChatMessage.Kind.TEXT, index);
             }
         });
         return slot;
     }
 
+    /** One preset emoji as a button; clicking sends it and closes the picker. */
     private Actor buildEmojiButton(int index) {
         Image img = new Image(new TextureRegionDrawable(emojiTextures[index]));
         img.setScaling(Scaling.fit);
@@ -225,13 +325,14 @@ public class QuickChatUi extends Table {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                hidePicker();
                 onSend.accept(QuickChatMessage.Kind.EMOJI, index);
             }
         });
         return slot;
     }
 
-    /** Message bubble shown for incoming/outgoing chat (textbox look, slightly larger). */
+    /** Message bubble shown for received chat (textbox look). */
     private Actor buildMessageBubble(String text) {
         Table bubble = new Table();
         bubble.setBackground(textBoxBackground());
@@ -246,7 +347,7 @@ public class QuickChatUi extends Table {
         return bubble;
     }
 
-    /** Emoji bubble: the 640px PNG scaled with {@code Scaling.fit} into a small box. */
+    /** Emoji bubble: the emoji PNG scaled with {@code Scaling.fit} into a box. */
     private Actor buildEmojiBubble(int index) {
         Image img = new Image(new TextureRegionDrawable(emojiTextures[index]));
         img.setScaling(Scaling.fit);
@@ -258,6 +359,11 @@ public class QuickChatUi extends Table {
 
         bubble.setTouchable(Touchable.disabled);
         return bubble;
+    }
+
+    private void hidePicker() {
+        picker.setVisible(false);
+        picker.clearActions();
     }
 
     private Drawable textBoxBackground() {

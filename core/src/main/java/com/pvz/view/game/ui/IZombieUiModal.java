@@ -42,6 +42,16 @@ public class IZombieUiModal extends GameUiModal {
         }
     }
 
+    /** True while the quick-chat picker window is open. */
+    public boolean isChatPickerVisible() {
+        return quickChatUi != null && quickChatUi.isPickerVisible();
+    }
+
+    /** True when the open quick-chat picker covers the stage point (x, y). */
+    public boolean chatPickerContains(float x, float y) {
+        return quickChatUi != null && quickChatUi.pickerContains(x, y);
+    }
+
     /** Releases the chat textures owned by the quick-chat panel. */
     public void disposeChat() {
         if (quickChatUi != null) {
