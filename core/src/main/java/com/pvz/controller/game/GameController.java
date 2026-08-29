@@ -54,10 +54,16 @@ import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.sun.Sun;
 import com.pvz.models.entities.zombies.Zombie;
+import com.pvz.models.entities.zombies.ZombieType;
+import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
+import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
+import com.pvz.models.entities.zombies.data.ZombieRegistry;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.LevelLoader;
+import com.pvz.models.games.levels.Wave;
+import com.pvz.models.games.levels.WavePhase;
 import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
@@ -144,6 +150,13 @@ public class GameController {
     private boolean cardsInitialized = false;
 
     /**
+     * Decorative wave-1 zombies shown on the far right during the intro camera
+     * pan (before the real GameContext exists). They loop their idle clip the
+     * whole time; cleared when the camera returns to its starting spot.
+     */
+    private final List<DisplayZombie> displayZombies = new ArrayList<>();
+
+    /**
      * Placement-preview ghost: plays the selected plant's idle PAM under the
      * cursor.
      */
@@ -165,6 +178,12 @@ public class GameController {
     public GameController(String seasonName, int levelNumber) {
         this.seasonName = seasonName;
         this.levelNumber = levelNumber;
+
+        // Fresh session: wipe any state left over from a previously played level
+        // so stale entities (zombies/plants/projectiles/context) never leak into
+        // the new one before the real game session starts.
+        GameEngine.getInstance().reset();
+        AppContext.getInstance().setGameContext(null);
 
         this.batch = PvZ2.batch;
         shapeRenderer = new ShapeRenderer();
@@ -426,6 +445,7 @@ public class GameController {
         stage.addActor(errorTable);
 
         renderer = new GameRenderer(ctx, this, batch, backgroundTextures);
+        createDisplayZombies();
         state.enter();
     }
 
@@ -816,6 +836,63 @@ public class GameController {
         plantFoodCursorPreview.toFront();
     }
 
+    /**
+     * Builds the decorative wave-1 zombies that stand on the far right (two
+     * columns past the last ground column) during the intro camera pan. One per
+     * lane, cycling through the distinct zombie types defined in wave 1's phases.
+     * They are purely visual — created before the real GameContext exists and
+     * cleared in {@link #startGameSession()}.
+     */
+    private void createDisplayZombies() {
+        displayZombies.clear();
+        try {
+            List<Wave> waves = level != null ? level.getWaves() : java.util.Collections.emptyList();
+            if (waves == null || waves.isEmpty())
+                return;
+
+            int lanes = level.getGameMapDefinition().rows;
+            if (lanes <= 0)
+                lanes = com.pvz.models.Constants.DEFAULT_ROWS;
+
+            List<ZombieType> types = new ArrayList<>();
+            java.util.Set<ZombieType> seen = new java.util.LinkedHashSet<>();
+            for (WavePhase phase : waves.get(0).getPhases()) {
+                if (phase.getAllowedTypes() == null)
+                    continue;
+                for (ZombieType t : phase.getAllowedTypes()) {
+                    if (t != null && seen.add(t)) {
+                        types.add(t);
+                    }
+                }
+            }
+            if (types.isEmpty())
+                return;
+
+            int col = level.getGameMapDefinition().columns + 2; // two columns past the last ground column
+            float x = colToWorldX(col);
+            for (int lane = 0; lane < lanes; lane++) {
+                ZombieType type = types.get(lane % types.size());
+                if (type.getAlias() == null)
+                    continue;
+                ZombiePropertySheet sheet = ZombieRegistry.getInstance().getSheet(type.getAlias());
+                if (sheet == null)
+                    continue;
+                ZombieAnimationConfig anim = sheet.getAnimationConfig();
+                String pamPath = (anim != null && anim.pamFilePath != null)
+                        ? anim.pamFilePath
+                        : "768/INITIAL/ZOMBIE/ZOMBIE_TUTORIAL/ZOMBIE_TUTORIAL.PAM";
+                float scale = (anim != null && anim.scale != null) ? anim.scale : 0.65f;
+                String idle = (anim != null && anim.idleLabel != null) ? anim.idleLabel : "idle";
+                displayZombies.add(new DisplayZombie(pamPath, idle, x, laneToWorldY(lane), scale));
+            }
+        } catch (Exception e) {
+            if (com.pvz.utils.DebugMode.isEnabled()) {
+                Gdx.app.log("GameController", "Failed to create display zombies", e);
+            }
+            displayZombies.clear();
+        }
+    }
+
     public void startGameSession() {
         try {
             if (level != null) {
@@ -1049,6 +1126,15 @@ public class GameController {
 
     public float getEndX() {
         return endX;
+    }
+
+    public List<DisplayZombie> getDisplayZombies() {
+        return displayZombies;
+    }
+
+    /** Removes the decorative intro zombies. */
+    public void clearDisplayZombies() {
+        displayZombies.clear();
     }
 
     public Label getReadyPlantLabel() {

@@ -20,6 +20,8 @@ public class PanningBack extends State {
         controller.getCamera().position.set(currentXBack, 720f / 2f, 0);
 
         if (progressBack >= 1f) {
+            // Camera is back in place — the decorative intro zombies vanish now.
+            controller.clearDisplayZombies();
             controller.changeState(new ReadyPlant(controller));
             controller.getReadyPlantLabel().setVisible(true);
         }

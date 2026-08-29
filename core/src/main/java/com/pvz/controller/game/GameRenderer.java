@@ -83,6 +83,7 @@ public class GameRenderer {
         batch.setProjectionMatrix(controller.getCamera().combined);
         batch.begin();
         drawBackground();
+        drawDisplayZombies();
         if (ctx != null) {
             int totalLanes = ctx.getMap().getLanes();
             for (int lane = 0; lane < totalLanes; lane++) {
@@ -127,6 +128,22 @@ public class GameRenderer {
         batch.draw(backgroundTextures[0], x, 0);
         batch.draw(backgroundTextures[1], 0, controller.getBackgroundYOffset());
         batch.draw(backgroundTextures[2], backgroundTextures[1].getRegionWidth(), 0);
+    }
+
+    /**
+     * Draws the decorative wave-1 zombies that stand on the far right during the
+     * intro camera pan (before the real GameContext exists). They always loop
+     * their idle clip; they use the renderer's shared {@link #stateTime}, so
+     * there is no per-frame lag.
+     */
+    private void drawDisplayZombies() {
+        List<DisplayZombie> zombies = controller.getDisplayZombies();
+        if (zombies == null || zombies.isEmpty())
+            return;
+        for (DisplayZombie dz : zombies) {
+            PvZ2.pamPlayer.draw(batch, dz.pamPath, dz.idleClip, stateTime,
+                    dz.x, dz.y, dz.scale, dz.scale, true);
+        }
     }
 
     private void drawInactiveLawnMowers(int row) {
