@@ -65,6 +65,12 @@ public class QuickChatUi extends Table {
     private static final float BAR_PAD_RIGHT = 92f;
     /** Bottom padding for the bar itself. */
     private static final float BAR_PAD_BOTTOM = 15f;
+    /**
+     * Extra vertical clearance between the bottom of the first chat bubble and
+     * the top of the message/emoji selection bar, so incoming bubbles don't
+     * sit flush against the buttons.
+     */
+    private static final float FIRST_BUBBLE_CLEARANCE = 55f;
 
     private final Skin skin;
     private final BiConsumer<QuickChatMessage.Kind, Integer> onSend;
@@ -83,10 +89,11 @@ public class QuickChatUi extends Table {
             emojiTextures[i] = loadEmojiTexture(EMOJI_PATHS[i]);
         }
 
-        // Chat-bubble layer, pinned just above the bar.
+        // Chat-bubble layer, pinned above the bar with extra clearance so the
+        // first bubble never sticks to the selection buttons.
         popupLayer.setFillParent(true);
         popupLayer.bottom().right();
-        popupLayer.pad(0f, 0f, BAR_PAD_BOTTOM + 96f, BAR_PAD_RIGHT);
+        popupLayer.pad(0f, 0f, BAR_PAD_BOTTOM + 96f + FIRST_BUBBLE_CLEARANCE, BAR_PAD_RIGHT);
         addActor(popupLayer);
 
         Table msgRow = new Table();
