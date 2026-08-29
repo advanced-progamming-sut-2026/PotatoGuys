@@ -10,7 +10,7 @@ public class LevelLoader {
     private static final String BASE_PATH = "core/src/main/java/com/resources/data/seasons/";
 
     public static Level loadLevel(String seasonName, int levelNumber) {
-        String subDir = seasonName.equalsIgnoreCase("IZombie") ? "IZombie" : seasonName.toLowerCase();
+        String subDir = seasonName.equalsIgnoreCase("izombie") ? "izombie" : seasonName.toLowerCase();
         String path = BASE_PATH + subDir + "/level_" + levelNumber + ".json";
 
         JsonObject jsonObject = SaveManager.getInstance().loadAbsolute(path, JsonObject.class);
