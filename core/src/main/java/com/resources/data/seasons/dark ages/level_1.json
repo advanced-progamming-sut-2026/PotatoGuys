@@ -54,12 +54,21 @@
       "difficulty": 2,
       "phases": [
         {
+          "zombieCount": 3,
+          "intervalSeconds": 6.0,
+          "allowedTypes": ["DARK", "KNIGHT"],
+          "isBurst": false
+        },
+        {
           "zombieCount": 2,
-          "intervalTicks": 100,
-          "allowedTypes": [
-            "BASIC",
-            "KNIGHT"
-          ],
+          "intervalSeconds": 6.0,
+          "allowedTypes": ["DARK_CONE"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 1,
+          "intervalSeconds": 5.0,
+          "allowedTypes": ["KNIGHT"],
           "isBurst": false
         }
       ]
@@ -67,56 +76,53 @@
     {
       "waveNumber": 2,
       "isFinalWave": false,
-      "baseTotalWaveCost": 120,
+      "baseTotalWaveCost": 130,
       "lanes": 5,
       "difficulty": 3,
       "phases": [
         {
           "zombieCount": 3,
-          "intervalTicks": 90,
-          "allowedTypes": [
-            "KNIGHT",
-            "CONEHEAD"
-          ],
+          "intervalSeconds": 5.5,
+          "allowedTypes": ["DARK", "DARK_CONE", "KNIGHT"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 2,
+          "intervalSeconds": 5.5,
+          "allowedTypes": ["DARK_BUCKET"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 2,
+          "intervalSeconds": 5.0,
+          "allowedTypes": ["JUGGLER", "DARK_IMP"],
           "isBurst": false
         }
       ]
     },
     {
       "waveNumber": 3,
-      "isFinalWave": false,
-      "baseTotalWaveCost": 144,
+      "isFinalWave": true,
+      "baseTotalWaveCost": 260,
       "lanes": 5,
       "difficulty": 4,
       "phases": [
         {
-          "zombieCount": 4,
-          "intervalTicks": 80,
-          "allowedTypes": [
-            "CONEHEAD",
-            "BUCKETHEAD",
-            "DARK_IMP"
-          ],
-          "isBurst": false
-        }
-      ]
-    },
-    {
-      "waveNumber": 4,
-      "isFinalWave": true,
-      "baseTotalWaveCost": 288,
-      "lanes": 5,
-      "difficulty": 7,
-      "phases": [
+          "zombieCount": 3,
+          "intervalSeconds": 4.0,
+          "allowedTypes": ["DARK_BUCKET", "KNIGHT"],
+          "isBurst": true
+        },
         {
-          "zombieCount": 6,
-          "intervalTicks": 60,
-          "allowedTypes": [
-            "BUCKETHEAD",
-            "KNIGHT",
-            "DARK_IMP",
-            "BRICKHEAD"
-          ],
+          "zombieCount": 2,
+          "intervalSeconds": 4.0,
+          "allowedTypes": ["JUGGLER", "DARK_IMP"],
+          "isBurst": true
+        },
+        {
+          "zombieCount": 2,
+          "intervalSeconds": 4.0,
+          "allowedTypes": ["DARK_IMP", "DARK_BUCKET"],
           "isBurst": true
         }
       ]

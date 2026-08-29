@@ -50,136 +50,76 @@
       "difficulty": 1,
       "phases": [
         {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["RA"],
+          "zombieCount": 3,
+          "intervalSeconds": 6.0,
+          "allowedTypes": ["MUMMY", "RA"],
           "isBurst": false
         },
         {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["CONEHEAD"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["BUCKETHEAD"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["BRICKHEAD"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["FLAG"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["MUMMY"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
+          "zombieCount": 2,
+          "intervalSeconds": 6.0,
           "allowedTypes": ["MUMMY_CONE"],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 5.0,
-          "allowedTypes": ["MUMMY_BUCKET"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["MUMMY_BRICK"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
           "allowedTypes": ["RA"],
           "isBurst": false
-        },
+        }
+      ]
+    },
+    {
+      "waveNumber": 2,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 130,
+      "lanes": 5,
+      "difficulty": 2,
+      "phases": [
         {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["EXPLORER"],
+          "zombieCount": 3,
+          "intervalSeconds": 5.5,
+          "allowedTypes": ["MUMMY", "MUMMY_CONE"],
           "isBurst": false
         },
         {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["DARK"],
+          "zombieCount": 2,
+          "intervalSeconds": 5.5,
+          "allowedTypes": ["MUMMY_BUCKET", "RA"],
           "isBurst": false
         },
         {
-          "zombieCount": 1,
+          "zombieCount": 2,
           "intervalSeconds": 5.0,
-          "allowedTypes": ["DARK_CONE"],
+          "allowedTypes": ["EXPLORER", "MUMMY"],
           "isBurst": false
+        }
+      ]
+    },
+    {
+      "waveNumber": 3,
+      "isFinalWave": true,
+      "baseTotalWaveCost": 260,
+      "lanes": 5,
+      "difficulty": 3,
+      "phases": [
+        {
+          "zombieCount": 3,
+          "intervalSeconds": 4.0,
+          "allowedTypes": ["MUMMY_BUCKET", "MUMMY_CONE"],
+          "isBurst": true
         },
         {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["DARK_BUCKET"],
-          "isBurst": false
+          "zombieCount": 2,
+          "intervalSeconds": 4.0,
+          "allowedTypes": ["EXPLORER", "RA"],
+          "isBurst": true
         },
         {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["KNIGHT"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["BEACH"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["BEACH_CONE"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["BEACH_BUCKET"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["ICE_AGE"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["ICE_AGE_CONE"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["ICE_AGE_BUCKET"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["OCTOPUS"],
-          "isBurst": false
+          "zombieCount": 2,
+          "intervalSeconds": 4.0,
+          "allowedTypes": ["EGYPT_IMP", "MUMMY_BUCKET"],
+          "isBurst": true
         }
       ]
     }

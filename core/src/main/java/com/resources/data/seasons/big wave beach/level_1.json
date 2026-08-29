@@ -256,12 +256,21 @@
       "difficulty": 2,
       "phases": [
         {
+          "zombieCount": 3,
+          "intervalSeconds": 6.0,
+          "allowedTypes": ["BEACH", "SNORKEL"],
+          "isBurst": false
+        },
+        {
           "zombieCount": 2,
-          "intervalTicks": 100,
-          "allowedTypes": [
-            "BASIC",
-            "SNORKEL"
-          ],
+          "intervalSeconds": 6.0,
+          "allowedTypes": ["BEACH_CONE"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 1,
+          "intervalSeconds": 5.0,
+          "allowedTypes": ["SNORKEL"],
           "isBurst": false
         }
       ]
@@ -269,57 +278,53 @@
     {
       "waveNumber": 2,
       "isFinalWave": false,
-      "baseTotalWaveCost": 120,
+      "baseTotalWaveCost": 130,
       "lanes": 5,
       "difficulty": 3,
       "phases": [
         {
           "zombieCount": 3,
-          "intervalTicks": 90,
-          "allowedTypes": [
-            "BASIC",
-            "CONEHEAD",
-            "SNORKEL"
-          ],
+          "intervalSeconds": 5.5,
+          "allowedTypes": ["BEACH", "BEACH_CONE", "SNORKEL"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 2,
+          "intervalSeconds": 5.5,
+          "allowedTypes": ["BEACH_BUCKET"],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 2,
+          "intervalSeconds": 5.0,
+          "allowedTypes": ["OCTOPUS", "SNORKEL"],
           "isBurst": false
         }
       ]
     },
     {
       "waveNumber": 3,
-      "isFinalWave": false,
-      "baseTotalWaveCost": 144,
+      "isFinalWave": true,
+      "baseTotalWaveCost": 260,
       "lanes": 5,
       "difficulty": 4,
       "phases": [
         {
-          "zombieCount": 4,
-          "intervalTicks": 80,
-          "allowedTypes": [
-            "CONEHEAD",
-            "BUCKETHEAD",
-            "OCTOPUS"
-          ],
-          "isBurst": false
-        }
-      ]
-    },
-    {
-      "waveNumber": 4,
-      "isFinalWave": true,
-      "baseTotalWaveCost": 288,
-      "lanes": 5,
-      "difficulty": 7,
-      "phases": [
+          "zombieCount": 3,
+          "intervalSeconds": 4.0,
+          "allowedTypes": ["BEACH_BUCKET", "BEACH_CONE"],
+          "isBurst": true
+        },
         {
-          "zombieCount": 6,
-          "intervalTicks": 60,
-          "allowedTypes": [
-            "BUCKETHEAD",
-            "SNORKEL",
-            "OCTOPUS",
-            "BRICKHEAD"
-          ],
+          "zombieCount": 2,
+          "intervalSeconds": 4.0,
+          "allowedTypes": ["OCTOPUS", "SNORKEL"],
+          "isBurst": true
+        },
+        {
+          "zombieCount": 2,
+          "intervalSeconds": 4.0,
+          "allowedTypes": ["BEACH_IMP", "BEACH_BUCKET"],
           "isBurst": true
         }
       ]
