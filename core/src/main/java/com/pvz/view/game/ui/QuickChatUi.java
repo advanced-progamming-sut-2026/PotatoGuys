@@ -77,19 +77,32 @@ public class QuickChatUi extends Table {
     private static final float PICKER_CLEARANCE = 6f;
     /**
      * Extra vertical space between the bottom of the first chat bubble and the
-     * top of the toggle button, so incoming bubbles don't sit flush on it.
+     * top of the topmost panel button, so incoming bubbles don't sit flush on
+     * it. Bubble layer is parked above both the chat toggle (82 + 50 = 132)
+     * and the sticker button above it (140 + 50 = 190).
      */
+    private static final float CHAT_STACK_TOP = 190f;
     private static final float FIRST_BUBBLE_CLEARANCE = 20f;
+
+    /**
+     * Shared tuning for the pop-up items (stickers, chat bubbles, emoji
+     * bubbles): shift everything 10px left and 120px down. Keep these in sync
+     * with the identical constants in {@link IZombieUiModal}.
+     */
+    private static final float POPUP_OFFSET_X = -10f;
+    private static final float POPUP_OFFSET_Y = -120f;
 
     private final Skin skin;
     private final BiConsumer<QuickChatMessage.Kind, Integer> onSend;
+    private final Runnable onRaise;
     private final Texture[] emojiTextures = new Texture[EMOJI_PATHS.length];
     private final Table popupLayer = new Table();
     private final List<Texture> ownedTextures = new java.util.ArrayList<>();
     private final Table picker;
 
-    public QuickChatUi(BiConsumer<QuickChatMessage.Kind, Integer> onSend) {
+    public QuickChatUi(BiConsumer<QuickChatMessage.Kind, Integer> onSend, Runnable onRaise) {
         this.onSend = onSend;
+        this.onRaise = onRaise;
         this.skin = PvzSkin.get();
 
         setFillParent(true);
@@ -100,27 +113,23 @@ public class QuickChatUi extends Table {
         }
 
         // Chat-bubble layer, pinned above the toggle button with a clearance so
-        // the first bubble never sticks to it.
+        // the first bubble never sticks to it. Stays behind the picker box.
         popupLayer.setFillParent(true);
         popupLayer.bottom().right();
         popupLayer.setTouchable(Touchable.disabled);
-        popupLayer.pad(0f, 0f, TOGGLE_PAD_BOTTOM + TOGGLE_SIZE + FIRST_BUBBLE_CLEARANCE,
-                TOGGLE_PAD_RIGHT + TOGGLE_SIZE + 20f);
+        popupLayer.pad(0f, 0f, CHAT_STACK_TOP + FIRST_BUBBLE_CLEARANCE + POPUP_OFFSET_Y,
+                TOGGLE_PAD_RIGHT + TOGGLE_SIZE + 20f - POPUP_OFFSET_X);
         addActor(popupLayer);
 
-        // Picker window: hidden until the toggle button pushes it open.
+        // Picker window: hidden until the toggle button pushes it open. Always
+        // front-most inside this panel (above bubbles and buttons).
         picker = buildPicker();
         picker.setVisible(false);
         addActor(picker);
 
-        Table toggleOverlay = new Table();
-        toggleOverlay.setFillParent(true);
-        toggleOverlay.bottom().right();
-        toggleOverlay.add(buildToggleButton()).size(TOGGLE_SIZE).padRight(TOGGLE_PAD_RIGHT).padBottom(TOGGLE_PAD_BOTTOM);
-        addActor(toggleOverlay);
-
-        // Keep chat bubbles above the picker in case the two ever overlap.
-        popupLayer.toFront();
+        // Toggle button placed directly via a cell (right/bottom), so no
+        // fullscreen overlay swallows clicks meant for the picker box.
+        add(buildToggleButton()).size(TOGGLE_SIZE).padRight(TOGGLE_PAD_RIGHT).padBottom(TOGGLE_PAD_BOTTOM);
     }
 
     /**
@@ -147,9 +156,13 @@ public class QuickChatUi extends Table {
         }
         popupLayer.add(bubble).row();
 
+        // Rise from below its spot while fading in, hold, then fade out.
         bubble.setColor(1f, 1f, 1f, 0f);
         bubble.addAction(Actions.sequence(
-                Actions.fadeIn(0.2f),
+                Actions.moveBy(0f, -14f, 0f),
+                Actions.parallel(
+                        Actions.moveBy(0f, 14f, 0.25f),
+                        Actions.fadeIn(0.2f)),
                 Actions.delay(BUBBLE_LIFETIME),
                 Actions.fadeOut(0.5f),
                 Actions.removeActor()));
@@ -257,7 +270,7 @@ public class QuickChatUi extends Table {
         return button;
     }
 
-    private void togglePicker() {
+private void togglePicker() {
         if (picker.isVisible()) {
             picker.setVisible(false);
             picker.clearActions();
@@ -267,7 +280,9 @@ public class QuickChatUi extends Table {
             picker.setVisible(true);
             picker.addAction(Actions.fadeIn(0.12f));
             picker.toFront();
-            popupLayer.toFront();
+            if (onRaise != null) {
+                onRaise.run();
+            }
         }
     }
 

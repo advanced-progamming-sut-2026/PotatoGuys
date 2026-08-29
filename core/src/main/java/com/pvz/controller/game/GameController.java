@@ -11,6 +11,7 @@ import com.pvz.network.game.GameStateSync;
 import com.pvz.network.game.GameSyncEnvelope;
 import com.pvz.network.game.QuickChatMessage;
 import com.pvz.network.game.RenderFrame;
+import com.pvz.network.game.StickerMessage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -200,13 +201,13 @@ public class GameController {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (state instanceof Playing && !paused) {
                     if (ctx != null) {
-                        // Clicks on the open quick-chat picker never reach the
-                        // battlefield — the picker's own buttons handle them.
+                        // Clicks on the open quick-chat picker or sticker box never
+                        // reach the battlefield — their own buttons handle them.
                         com.badlogic.gdx.math.Vector2 stageClick = stage.screenToStageCoordinates(
                                 new com.badlogic.gdx.math.Vector2(Gdx.input.getX(), Gdx.input.getY()));
                         if (gameUiModal instanceof com.pvz.view.game.ui.IZombieUiModal izombieUi
-                                && izombieUi.isChatPickerVisible()
-                                && izombieUi.chatPickerContains(stageClick.x, stageClick.y)) {
+                                && ((izombieUi.isChatPickerVisible() && izombieUi.chatPickerContains(stageClick.x, stageClick.y))
+                                || (izombieUi.isStickerBoxVisible() && izombieUi.stickerBoxContains(stageClick.x, stageClick.y)))) {
                             return true;
                         }
 
@@ -360,7 +361,7 @@ public class GameController {
         gameUiModal = switch (level.getGameMode()) {
             case com.pvz.models.games.modes.GameModeType.CONVEYORBELT -> new ConveyorBeltUiModal(this::pauseGame);
             case com.pvz.models.games.modes.GameModeType.IZOMBIE ->
-                new IZombieUiModal(this::pauseGame, this::sendQuickChat);
+                new IZombieUiModal(this::pauseGame, this::sendQuickChat, this::sendSticker);
             default -> new GameUiModal(this::pauseGame);
         };
         gameUiModal.setOnShovelRequested(this::toggleShovelMode);
@@ -486,15 +487,16 @@ public class GameController {
         if (state instanceof Playing && !paused
                 && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
             boolean zombieCardActive = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
-            boolean onChatPicker = false;
+            boolean onPopup = false;
             com.pvz.view.game.ui.IZombieUiModal izombieUi =
                     gameUiModal instanceof com.pvz.view.game.ui.IZombieUiModal m ? m : null;
-            if (izombieUi != null && izombieUi.isChatPickerVisible()) {
+            if (izombieUi != null) {
                 com.badlogic.gdx.math.Vector2 uClick = stage.screenToStageCoordinates(
                         new com.badlogic.gdx.math.Vector2(Gdx.input.getX(), Gdx.input.getY()));
-                onChatPicker = izombieUi.chatPickerContains(uClick.x, uClick.y);
+                onPopup = (izombieUi.isChatPickerVisible() && izombieUi.chatPickerContains(uClick.x, uClick.y))
+                        || (izombieUi.isStickerBoxVisible() && izombieUi.stickerBoxContains(uClick.x, uClick.y));
             }
-            if (!zombieCardActive && !onChatPicker) {
+            if (!zombieCardActive && !onPopup) {
                 touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                 viewport.unproject(touchPos);
                 if (checkSunClick(touchPos.x, touchPos.y) || checkLootClick(touchPos.x, touchPos.y)) {
@@ -1164,6 +1166,11 @@ public class GameController {
             if (gameUiModal instanceof IZombieUiModal izombieUi) {
                 izombieUi.showChat(chat);
             }
+        } else if (envelope.kind == GameSyncEnvelope.Kind.STICKER) {
+            StickerMessage sticker = gson.fromJson(envelope.data, StickerMessage.class);
+            if (gameUiModal instanceof IZombieUiModal izombieUi) {
+                izombieUi.showSticker(sticker);
+            }
         } else if (envelope.kind == GameSyncEnvelope.Kind.SNAPSHOT && !isHost) {
             // The SNAPSHOT payload is now a compact binary RenderFrame (base64) —
             // the full list of FrameConfigs the host is drawing. No entity
@@ -1227,6 +1234,17 @@ public class GameController {
             return;
         QuickChatMessage msg = new QuickChatMessage(kind, index);
         String inner = gson.toJson(new GameSyncEnvelope(GameSyncEnvelope.Kind.CHAT, gson.toJson(msg)));
+        NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
+    }
+
+    /**
+     * Sends a sticker (a one-shot PAM clip) to the opponent. The sender's side
+     * stays silent; only the receiver plays it, for {@code seconds}.
+     */
+    private void sendSticker(StickerMessage sticker) {
+        if (!isNetworkedMatch || matchSession == null)
+            return;
+        String inner = gson.toJson(new GameSyncEnvelope(GameSyncEnvelope.Kind.STICKER, gson.toJson(sticker)));
         NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
     }
 
