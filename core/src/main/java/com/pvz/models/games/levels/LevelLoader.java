@@ -22,6 +22,7 @@ public class LevelLoader {
             level = switch (type) {
                 case "NORMAL" -> gson.fromJson(jsonObject, NormalLevel.class);
                 case "IZOMBIE" -> gson.fromJson(jsonObject, IZombieLevel.class);
+                case "SPLIT_IZOMBIE" -> gson.fromJson(jsonObject, IZombieLocalLevel.class);
                 case "CONVEYORBELT" -> gson.fromJson(jsonObject, ConveyorBeltLevel.class);
                 case "TIMEDWAR" -> gson.fromJson(jsonObject, TimedWarLevel.class);
                 case "VASEBREAKER" -> gson.fromJson(jsonObject, VaseBreakerLevel.class);

@@ -52,8 +52,10 @@ public class TravelLogMenu extends ScreenAdapter {
 
     private enum Tab { DAILY, MAIN, EPIC, ALL, MINIGAMES }
 
-    private static final String[] MINI_GAME_SEASON_FOLDERS = { "VaseBreaker", "Wallnut Bowling", "IZombie" };
-    private static final String[] MINI_GAME_LABELS = { "Vasebreaker", "Wallnut Bowling", "I, Zombie" };
+    private static final String[] MINI_GAME_SEASON_FOLDERS = {
+            "VaseBreaker", "Wallnut Bowling", "IZombie" };
+    private static final String[] MINI_GAME_LABELS = {
+            "Vasebreaker", "Wallnut Bowling", "I, Zombie" };
     private static final String[] MINI_GAME_WALLPAPERS = {
         "textures/backgrounds/VASEBREAKER/wallpaper.png",
         "textures/backgrounds/WALLNUTBOWLING/wallpaper.png",
@@ -439,27 +441,48 @@ public class TravelLogMenu extends ScreenAdapter {
     private Table buildMinigameCard(String seasonFolder, String displayName, String wallpaperPath) {
         Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_1"), Color.BLACK);
 
-        Label subLabel = new Label("Choose a level to play.", descStyle);
+        Label subLabel = new Label(
+                seasonFolder.equals("IZombie") ? "Choose a mode to play." : "Choose a level to play.", descStyle);
         subLabel.setFontScale(1.05f);
         subLabel.setColor(Color.valueOf("D8C9A8"));
 
         Table levels = new Table();
-        for (int level = 1; level <= 3; level++) {
-            int chosenLevel = level;
-            TextButton levelBtn = new TextButton("Level " + level, skin, "brown");
-            levelBtn.getLabel().setFontScale(1.0f);
-            levelBtn.addListener(new ClickListener() {
+        if (seasonFolder.equals("IZombie")) {
+            TextButton onlineBtn = new TextButton("Online", skin, "purple");
+            onlineBtn.getLabel().setFontScale(1.0f);
+            onlineBtn.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
-                    if (seasonFolder.equals("IZombie")) {
-                        game.setScreen(new OpponentSelectMenu(game, seasonFolder, chosenLevel));
-                    } else {
-                        game.setScreen(new GameScreen(seasonFolder, chosenLevel));
-                    }
+                    game.setScreen(new OpponentSelectMenu(game, seasonFolder, 1));
                 }
             });
-            levels.add(levelBtn).size(140, 55).padLeft(6);
+            levels.add(onlineBtn).size(140, 55).padLeft(6);
+
+            TextButton localBtn = new TextButton("Local", skin, "brown");
+            localBtn.getLabel().setFontScale(1.0f);
+            localBtn.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    game.setScreen(new GameScreen("SplitIZombie", 1));
+                }
+            });
+            levels.add(localBtn).size(140, 55).padLeft(6);
+        } else {
+            for (int level = 1; level <= 3; level++) {
+                int chosenLevel = level;
+                TextButton levelBtn = new TextButton("Level " + level, skin, "brown");
+                levelBtn.getLabel().setFontScale(1.0f);
+                levelBtn.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        super.clicked(event, x, y);
+                        game.setScreen(new GameScreen(seasonFolder, chosenLevel));
+                    }
+                });
+                levels.add(levelBtn).size(140, 55).padLeft(6);
+            }
         }
 
         Table rightPanel = new Table();
