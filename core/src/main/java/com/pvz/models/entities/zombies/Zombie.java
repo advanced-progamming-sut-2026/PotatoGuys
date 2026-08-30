@@ -228,16 +228,19 @@ public class Zombie extends Entity {
                 new Vector2(position.x, position.y - getHitbox().getHeight() / 1.7f),
                 new Vector2(0.8f, 1.1f), null, true);
 
-        if (tile != null) {
-            for (TileBehavior behavior : tile.getBehaviors()) {
-                if (behavior instanceof WaterBehavior) {
-                    frameConfigs.add(waterRipple);
-                    break;
+        if (context.getSeasonName().equalsIgnoreCase("big wave beach")) {
+            if (tile != null) {
+                for (TileBehavior behavior : tile.getBehaviors()) {
+                    if (behavior instanceof WaterBehavior) {
+                        frameConfigs.add(waterRipple);
+                        break;
+                    }
                 }
+            } else if (col >= context.getMap().getColumns()) {
+                frameConfigs.add(waterRipple);
             }
-        } else if (col >= context.getMap().getColumns()) {
-            frameConfigs.add(waterRipple);
         }
+
         return frameConfigs;
     }
 

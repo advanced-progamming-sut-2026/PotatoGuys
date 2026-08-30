@@ -44,81 +44,47 @@
   "waves": [
     {
       "waveNumber": 1,
-      "isFinalWave": false,
+      "isFinalWave": true,
       "baseTotalWaveCost": 100,
       "lanes": 5,
       "difficulty": 1,
       "phases": [
         {
-          "zombieCount": 3,
-          "intervalSeconds": 6.0,
-          "allowedTypes": ["MUMMY", "RA"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 6.0,
-          "allowedTypes": ["MUMMY_CONE"],
-          "isBurst": false
-        },
-        {
           "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["RA"],
-          "isBurst": false
-        }
-      ]
-    },
-    {
-      "waveNumber": 2,
-      "isFinalWave": false,
-      "baseTotalWaveCost": 130,
-      "lanes": 5,
-      "difficulty": 2,
-      "phases": [
-        {
-          "zombieCount": 3,
-          "intervalSeconds": 5.5,
-          "allowedTypes": ["MUMMY", "MUMMY_CONE"],
+          "intervalSeconds": 13.0,
+          "allowedTypes": [
+            "MUMMY"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 2,
-          "intervalSeconds": 5.5,
-          "allowedTypes": ["MUMMY_BUCKET", "RA"],
+          "intervalSeconds": 11.0,
+          "allowedTypes": [
+            "MUMMY",
+            "MUMMY_CONE"
+          ],
           "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["EXPLORER", "MUMMY"],
+          "zombieCount": 4,
+          "intervalSeconds": 10.0,
+          "allowedTypes": [
+            "MUMMY",
+            "MUMMY_CONE",
+            "MUMMY_BUCKET"
+          ],
           "isBurst": false
-        }
-      ]
-    },
-    {
-      "waveNumber": 3,
-      "isFinalWave": true,
-      "baseTotalWaveCost": 260,
-      "lanes": 5,
-      "difficulty": 3,
-      "phases": [
+        },
         {
-          "zombieCount": 3,
+          "zombieCount": 5,
           "intervalSeconds": 4.0,
-          "allowedTypes": ["MUMMY_BUCKET", "MUMMY_CONE"],
-          "isBurst": true
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 4.0,
-          "allowedTypes": ["EXPLORER", "RA"],
-          "isBurst": true
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 4.0,
-          "allowedTypes": ["EGYPT_IMP", "MUMMY_BUCKET"],
+          "allowedTypes": [
+            "MUMMY",
+            "MUMMY_CONE",
+            "MUMMY_BUCKET",
+            "RA"
+          ],
           "isBurst": true
         }
       ]
