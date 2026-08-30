@@ -3,7 +3,6 @@ package com.pvz.models.games;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.math.Vector2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.GameEngine;
 import com.pvz.models.engine.TickAware;
@@ -11,10 +10,8 @@ import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.LawnMower;
 import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.effects.LootDrop;
-import com.pvz.models.entities.effects.Water;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
-import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.projectile.OctopusProjectile;
 import com.pvz.models.entities.sun.Sun;
@@ -28,8 +25,6 @@ import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.data.EffectDefinition;
 import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.GameMapFactory;
-import com.pvz.models.games.map.behaviors.IceBlockBehavior;
-import com.pvz.models.games.map.behaviors.TileBehavior;
 import com.pvz.models.games.map.data.PrePlantedPlant;
 import com.pvz.models.games.map.data.PreFrozenZombie;
 import com.pvz.models.games.map.tile.Tile;
@@ -474,47 +469,10 @@ public class GameContext implements TickAware {
 
     @Override
     public void update(float dt) {
-        applyFireAuras();
         for (ChapterEffect effect : activeEffects) {
             effect.update(this, dt);
         }
         mode.updateMode(this, dt);
-    }
-
-    private void applyFireAuras() {
-        for (Plant p : plants) {
-            if (p.getSheet().hasTag(PlantTag.FIRE)) {
-                // Find neighbors
-                for (int dx = -1; dx <= 1; dx++) {
-                    for (int dy = -1; dy <= 1; dy++) {
-                        if (dx == 0 && dy == 0)
-                            continue;
-                        int neighborCol = p.getCol() + dx;
-                        int neighborLane = p.getLane() + dy;
-                        if (neighborCol >= 0 && neighborCol < map.getColumns() &&
-                                neighborLane >= 0 && neighborLane < map.getLanes()) {
-
-                            Tile tile = getTileAt(neighborCol, neighborLane);
-
-                            // 1. Damage frozen plants
-                            List<Plant> neighbors = tile.getPlants();
-                            for (Plant neighbor : neighbors) {
-                                if (neighbor.isFrozen()) {
-                                    neighbor.takeIceDamage(60f / Plant.TICKS_PER_SECOND, true);
-                                }
-                            }
-
-                            // 2. Damage IceBlockBehaviors
-                            for (TileBehavior b : tile.getBehaviors()) {
-                                if (b instanceof IceBlockBehavior ice) {
-                                    ice.takeDamage(60f / Plant.TICKS_PER_SECOND, true);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
     @Override

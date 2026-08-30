@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
-import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
-import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.behaviors.TileBehavior;
@@ -30,25 +28,14 @@ public class Water extends Effect {
     public List<FrameConfig> draw() {
         List<FrameConfig> frameConfigs = new ArrayList<>();
 
+        // Underlayer
         FrameConfig waterUnderlayer = new FrameConfig(WATER_UNDERLAYER_PAM, WATER_UNDERLAYER_CLIP, stateTime,
                 new Vector2(pos.x - GameMap.TILE_WIDTH * 2, 324),
                 new Vector2(0.6f, 0.6f), null, true);
         waterUnderlayer.setColor(1f, 1f, 1f, 1f);
         frameConfigs.add(waterUnderlayer);
-        /*
-         * // Water UnderLayer
-         * for (int lane = 0; lane < ctx.getMap().getLanes(); lane++) {
-         * Vector2 layerPos = new Vector2(pos.x, pos.y + (lane - 2) *
-         * GameMap.TILE_HEIGHT);
-         * FrameConfig waterUnderlayer = new FrameConfig(WATER_UNDERLAYER_PAM,
-         * WATER_UNDERLAYER_CLIP, stateTime,
-         * layerPos,
-         * new Vector2(0.4f, 0.08f), null, true);
-         * waterUnderlayer.setColor(1f, 1f, 1f, 1f);
-         * frameConfigs.add(waterUnderlayer);
-         * }
-         */
 
+        // Water Squares
         for (int lane = 0; lane < ctx.getMap().getLanes(); lane++) {
             for (int col = 0; col < ctx.getMap().getColumns(); col++) {
                 for (TileBehavior tb : ctx.getTileAt(col, lane).getBehaviors()) {
@@ -62,6 +49,7 @@ public class Water extends Effect {
             }
         }
 
+        // Upperlayer
         FrameConfig waterUpperLayer = new FrameConfig(WATER_UPPERLAYER_PAM, WATER_UPPERLAYER_CLIP, stateTime,
                 new Vector2(pos.x, 324),
                 new Vector2(0.6f, 0.6f), null, true);

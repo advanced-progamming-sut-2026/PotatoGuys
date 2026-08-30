@@ -31,7 +31,8 @@ public class Plant extends Entity {
     private static final String CHILL_CLIP_1 = "chill_stage1";
     private static final String CHILL_CLIP_2 = "chill_stage2";
 
-    public static final int TICKS_PER_SECOND = 10;
+    private static final String FROZEN_PAM = "768/FULL/EFFECTS/FROSTBITE_ICE_BLOCK_PLANT/FROSTBITE_ICE_BLOCK_PLANT.PAM";
+    private static final String FROZEN_CLIP = "freeze_idle";
 
     private final PlantPropertySheet sheet;
     private final GameContext context;
@@ -113,7 +114,7 @@ public class Plant extends Entity {
         if (dead || isFrozen || bound)
             return;
         syncHitbox();
-        tickGrowth();
+        // tickGrowth();
         tickBoost();
         if (this.currentState != null) {
             currentState.update(this, context, dt);
@@ -140,6 +141,12 @@ public class Plant extends Entity {
             frameConfigs.add(new FrameConfig(CHILL_PAM_PATH, CHILL_CLIP_2, stateTime, position,
                     new Vector2(0.65f, 0.65f), null, false));
         }
+        if (isFrozen) {
+            Vector2 scale = new Vector2(0.65f, 0.65f);
+            FrameConfig iceBlock = new FrameConfig(FROZEN_PAM, FROZEN_CLIP, stateTime, position, scale, null, false);
+            iceBlock.setColor(1, 1, 1, 0.45f);
+            frameConfigs.add(iceBlock);
+        }
         return frameConfigs;
     }
 
@@ -163,7 +170,7 @@ public class Plant extends Entity {
             Tile tile = context.getTileAt(col, lane);
             if (!tile.getTags().contains(TileTags.ICE_BLOCK))
                 tile.getTags().add(TileTags.ICE_BLOCK);
-            context.getTileAt(col, lane).addBehavior(new IceBlockBehavior(this));
+            tile.addBehavior(new IceBlockBehavior(tile, this));
             context.log("[Freeze] " + sheet.getName() + " is frozen!");
         }
     }
@@ -282,12 +289,14 @@ public class Plant extends Entity {
 
     // ── Growth (wramp-up plants) ───────────────────────────────────────────────
 
-    private void tickGrowth() {
-        ageTicks++;
-        if (growth != null) {
-            growthStageIndex = growth.stageIndexFor(ageTicks / TICKS_PER_SECOND);
-        }
-    }
+    /*
+     * private void tickGrowth() {
+     * ageTicks++;
+     * if (growth != null) {
+     * growthStageIndex = growth.stageIndexFor(ageTicks / TICKS_PER_SECOND);
+     * }
+     * }
+     */
 
     private void tickBoost() {
         if (boostedTicksRemaining <= 0)
@@ -495,15 +504,5 @@ public class Plant extends Entity {
 
     public boolean isPlantableOnTile(Tile tile) {
         return true;
-    }
-
-    // ── CLI display ────────────────────────────────────────────────────────────
-
-    public String toInfoString() {
-        return sheet.getName() + " (" + sheet.getCategory() + ")"
-                + "\n  position: " + col + ", " + lane
-                + "\n  health: " + String.format("%.0f", hp) + " / " + String.format("%.0f", getMaxHp())
-                + "\n  level: " + level
-                + "\n  state: " + (currentState != null ? currentState.getLabel() : "?");
     }
 }

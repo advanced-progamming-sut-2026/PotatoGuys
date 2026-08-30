@@ -16,6 +16,7 @@ import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.map.behaviors.GraveBehavior;
+import com.pvz.models.games.map.behaviors.IceBlockBehavior;
 import com.pvz.models.games.map.behaviors.TileBehavior;
 
 public class Tile implements TickAware {
@@ -44,14 +45,21 @@ public class Tile implements TickAware {
 
     public boolean isPlantable(PlantCard newPlant) {
         if (newPlant.getPlant().getType() == PlantType.HotPotato) {
-            return true;
+            for (TileBehavior behavior : behaviors) {
+                if (behavior instanceof IceBlockBehavior) {
+                    return true;
+                }
+            }
+            return false;
         }
+
         if (newPlant.getPlant().getType() == PlantType.GraveBuster) {
             boolean hasGrave = tags.contains(TileTags.GRAVE) || behaviors.stream()
                     .anyMatch(b -> b instanceof GraveBehavior);
             if (!hasGrave)
                 return false;
         }
+
         for (TileBehavior b : behaviors) {
             if (!b.canPlant(newPlant, this))
                 return false;

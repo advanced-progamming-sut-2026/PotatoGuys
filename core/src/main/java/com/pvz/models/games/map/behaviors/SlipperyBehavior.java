@@ -23,7 +23,7 @@ public class SlipperyBehavior implements TileBehavior {
     public SlipperyBehavior(int laneDelta) {
         this.laneDelta = laneDelta;
 
-        if (laneDelta > 0)
+        if (laneDelta < 0)
             pamPath = UP_PAM_PATH;
         else
             pamPath = DOWN_PAM_PATH;

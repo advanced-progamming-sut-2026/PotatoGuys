@@ -1,7 +1,6 @@
 package com.pvz.models.entities.plants.actions.explosive.squash;
 
 import com.badlogic.gdx.math.Vector2;
-import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.actions.PlantAction;
@@ -13,10 +12,12 @@ import com.pvz.models.games.GameContext;
 public class SquashTurnAction extends PlantAction {
     SquashConfig config;
     Zombie target;
-    public SquashTurnAction(SquashConfig config, Zombie target){
-        this.config=config;
-        this.target=target;
+
+    public SquashTurnAction(SquashConfig config, Zombie target) {
+        this.config = config;
+        this.target = target;
     }
+
     @Override
     public boolean shouldTrigger(Plant plant, GameContext ctx, float dt) {
         return false;
@@ -30,8 +31,8 @@ public class SquashTurnAction extends PlantAction {
     @Override
     public void update(Plant plant, GameContext ctx, float dt) {
         super.update(plant, ctx, dt);
-        if (stateTime>=config.turnDuration) {
-            plant.changeState(new SquashJumpAction(config,target,false));
+        if (stateTime >= config.turnDuration) {
+            plant.changeState(new SquashJumpAction(config, target, false));
         }
     }
 
@@ -42,9 +43,10 @@ public class SquashTurnAction extends PlantAction {
 
     @Override
     public FrameConfig draw(Plant plant, GameContext ctx) {
-        Vector2 scale = new Vector2(0.65f,0.65f);
+        Vector2 scale = new Vector2(0.65f, 0.65f);
         PamAnimationConfig pamAnimationConfig = plant.getSheet().pamAnimationConfig;
-        return new FrameConfig(pamAnimationConfig.pamFilePath,config.turnClip,stateTime,plant.getPosition(),scale,null,true);
+        return new FrameConfig(pamAnimationConfig.pamFilePath, config.turnClip, stateTime, plant.getPosition(), scale,
+                null, true);
     }
 
     @Override
