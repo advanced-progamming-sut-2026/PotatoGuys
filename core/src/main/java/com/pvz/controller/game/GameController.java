@@ -492,10 +492,22 @@ public class GameController {
         state.enter();
     }
 
+    /** The logged-in user's Game Speed setting (1/2/3), clamped to a safe range. */
+    public int getGameSpeed() {
+        com.pvz.models.user.User user = AppContext.getInstance().getCurrentUser();
+        int speed = 1;
+        if (user != null && user.getSetting() != null) {
+            speed = user.getSetting().getGameSpeed();
+        }
+        return Math.max(1, Math.min(3, speed));
+    }
+
     public void update(float dt) {
         camera.update();
         updateShovelCursorPreview();
         updatePlantFoodCursorPreview();
+
+        float simDt = dt * getGameSpeed();
 
         if (errorMessageLabel != null && errorMessageLabel.isVisible()) {
             errorMessageTimer += dt;
@@ -518,7 +530,7 @@ public class GameController {
 
         handleSplitIZombieKeyboardUpdate(dt);
 
-        state.update(dt);
+        state.update(state instanceof Playing ? simDt : dt);
 
         // Check sun & coin-drop clicks in PLAYING state on left click (only when no
         // card selected)
@@ -549,7 +561,7 @@ public class GameController {
         // ۴. آپدیت Engine
         if (state instanceof Playing && !paused) {
             if (!isNetworkedMatch || isHost) {
-                GameEngine.getInstance().update(dt);
+                GameEngine.getInstance().update(simDt);
             } else if (ctx != null) {
                 // Guest: no entity simulation for rendering — the drawn picture (a
                 // list of FrameConfigs) arrives from the host each frame. But the
@@ -557,7 +569,7 @@ public class GameController {
                 // zombie suns) stays local so they can afford zombies.
                 if (ctx.getMode() instanceof IZombieMode izMode) {
                     izMode.ensureGuestSunProducers(ctx);
-                    izMode.updateSunProducers(ctx, dt);
+                    izMode.updateSunProducers(ctx, simDt);
                 }
                 for (Sun s : new ArrayList<>(ctx.getSuns())) {
                     if (s.isDone()) {
@@ -566,7 +578,7 @@ public class GameController {
                 }
                 ctx.flushPending();
                 // Cards still need their cooldown overlays ticked for the HUD.
-                GameStateSync.tickCardsOnly(ctx, dt);
+                GameStateSync.tickCardsOnly(ctx, simDt);
             }
 
             if (isNetworkedMatch && isHost) {
@@ -587,7 +599,7 @@ public class GameController {
             }
         }
 
-        renderer.update(dt);
+        renderer.update(state instanceof Playing ? simDt : dt);
     }
 
     // ---- Split I,Zombie (local 2-player): zombie-side keyboard input ----

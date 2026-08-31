@@ -386,11 +386,11 @@
   },
   "setting": {
     "difficulty": 3,
-    "gameSpeed": 1,
+    "gameSpeed": 3,
     "showGrid": true,
     "debugMode": true,
     "brightness": 1.0,
-    "musicVolume": 0.6,
+    "musicVolume": 0.17,
     "sfxVolume": 0.31,
     "musicMuted": false,
     "sfxMuted": true
@@ -519,7 +519,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 3000,
-          "currentAmount": 0
+          "currentAmount": 400
         },
         "active": true,
         "claimed": false,
@@ -534,7 +534,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 4000,
-          "currentAmount": 0
+          "currentAmount": 400
         },
         "active": true,
         "claimed": false,
@@ -549,7 +549,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 5000,
-          "currentAmount": 0
+          "currentAmount": 400
         },
         "active": true,
         "claimed": false,
@@ -564,7 +564,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 50,
-          "currentAmount": 22
+          "currentAmount": 32
         },
         "active": true,
         "claimed": false,
@@ -624,7 +624,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 10,
-          "currentAmount": 0
+          "currentAmount": 3
         },
         "active": true,
         "claimed": false,
@@ -699,7 +699,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -714,7 +714,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -729,7 +729,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -879,7 +879,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 10,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -894,7 +894,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -909,7 +909,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -924,7 +924,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -969,7 +969,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -999,7 +999,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1029,7 +1029,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1059,7 +1059,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1089,7 +1089,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1104,7 +1104,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1119,7 +1119,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1134,7 +1134,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1149,7 +1149,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1164,7 +1164,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1179,7 +1179,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1194,7 +1194,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1224,7 +1224,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1254,7 +1254,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1299,7 +1299,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1329,7 +1329,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 0
+          "currentAmount": 1
         },
         "active": true,
         "claimed": false,
@@ -1359,7 +1359,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 10,
-          "currentAmount": 9
+          "currentAmount": 12
         },
         "active": true,
         "claimed": false,
@@ -1374,7 +1374,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 20,
-          "currentAmount": 9
+          "currentAmount": 12
         },
         "active": true,
         "claimed": false,
@@ -1389,7 +1389,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 30,
-          "currentAmount": 9
+          "currentAmount": 12
         },
         "active": true,
         "claimed": false,
@@ -1404,7 +1404,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 40,
-          "currentAmount": 9
+          "currentAmount": 12
         },
         "active": true,
         "claimed": false,
@@ -1419,7 +1419,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 50,
-          "currentAmount": 9
+          "currentAmount": 12
         },
         "active": true,
         "claimed": false,
