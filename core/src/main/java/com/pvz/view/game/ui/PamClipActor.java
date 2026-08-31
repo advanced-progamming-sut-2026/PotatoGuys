@@ -32,6 +32,7 @@ public class PamClipActor extends Actor {
     private final float scale;
     private final float seconds;
     private final boolean timed;
+    private final boolean staticFrame;
     private float stateTime;
 
     /**
@@ -41,11 +42,26 @@ public class PamClipActor extends Actor {
      * @param seconds duration before self-removal; {@code <= 0} loops forever.
      */
     public PamClipActor(String pamPath, String clip, float scale, float seconds) {
+        this(pamPath, clip, scale, seconds, false);
+    }
+
+    /**
+     * Creates a clip actor, optionally pinned to a single static frame.
+     *
+     * @param pamPath PAM path relative to the assets root.
+     * @param clip desired clip label (validated at construction).
+     * @param scale draw scale; {@code <= 0} means "fit to this actor's cell".
+     * @param seconds duration before self-removal; {@code <= 0} loops forever.
+     * @param staticFrame when true the animation is never advanced, drawing one
+     *            fixed frame (the first) instead of looping.
+     */
+    public PamClipActor(String pamPath, String clip, float scale, float seconds, boolean staticFrame) {
         super();
         this.pamPath = pamPath;
         this.scale = scale;
         this.seconds = seconds;
         this.timed = seconds > 0f;
+        this.staticFrame = staticFrame;
 
         String resolved = null;
         if (pamPath != null) {
@@ -82,7 +98,7 @@ public class PamClipActor extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if (available) {
+        if (available && !staticFrame) {
             stateTime += delta;
             if (timed && stateTime >= seconds) {
                 remove();
@@ -109,6 +125,7 @@ public class PamClipActor extends Actor {
         }
         float cx = getX() + getWidth() / 2f;
         float cy = getY() + getHeight() / 2f;
-        PvZ2.pamPlayer.draw(batch, pamPath, clipLabel, stateTime, cx, cy, drawScale, drawScale, true);
+        float playTime = staticFrame ? 0f : stateTime;
+        PvZ2.pamPlayer.draw(batch, pamPath, clipLabel, playTime, cx, cy, drawScale, drawScale, true);
     }
 }

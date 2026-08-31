@@ -11,7 +11,7 @@
     "attackConfig": {
       "class": "SunProducerActionConfig",
       "label": "special",
-      "intervalSeconds": 15.0,
+      "intervalSeconds": 18.0,
       "delaySeconds": 0.6,
       "productionKind": "FIXED",
       "amount": 50,

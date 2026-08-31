@@ -3,6 +3,7 @@ package com.pvz.models.games.modes.variants;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
@@ -20,24 +21,59 @@ import com.pvz.models.games.levels.variants.TimedWarLevel;
 import com.pvz.models.games.modes.GameMode;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 
+/**
+ * Timed War mode. Plays like Normal Mode — waves keep spawning zombies and the
+ * player must defend — but carries a single objective: kill a number of zombies
+ * (the "target") within any fixed-length time interval (the "window").
+ *
+ * <p>
+ * {@link #outcome} is {@link Outcome#NONE} while the level is running, and
+ * becomes {@link Outcome#VICTORY} or {@link Outcome#DEFEAT} once it ends:
+ * <ul>
+ * <li>{@code VICTORY}: every zombie has been cleared <em>and</em> the objective
+ * was completed at some point.</li>
+ * <li>{@code DEFEAT}: every zombie has been cleared <em>without</em> ever
+ * reaching the target in a single window.</li>
+ * </ul>
+ */
 public class TimedWarMode implements GameMode, PlantPlacer {
+
+    /** The terminal result of a Timed War level. */
+    public enum Outcome {
+        NONE, VICTORY, DEFEAT
+    }
+
     private Wave currentWave;
     private List<Wave> waves;
 
-    private static final int WINDOW_SECONDS = 8;
-    private static final int TARGET_KILLS = 5;
-    private static final int TOTAL_TIME_LIMIT_SECONDS = 60;
+    private final int targetKills;
+    private final float windowSeconds;
 
-    float stateTime;
+    private float stateTime;
 
+    /**
+     * Death time (in seconds since {@code initMode}) of every kill that still
+     * falls inside the current sliding window.
+     */
     private final List<Float> killedZombieSeconds = new ArrayList<>();
-    private List<Zombie> lastTickZombies = new ArrayList<>();
+    /** Alive zombies from the previous update, used to detect new kills. */
+    private List<Zombie> lastTickAliveZombies = new ArrayList<>();
+
+    private boolean objectiveComplete;
+    private Outcome outcome = Outcome.NONE;
 
     public TimedWarMode(Level level) {
         if (level instanceof TimedWarLevel timedWarLevel) {
             waves = timedWarLevel.getWaves();
+            targetKills = timedWarLevel.getTargetKills();
+            windowSeconds = timedWarLevel.getWindowSeconds();
+        } else {
+            targetKills = 5;
+            windowSeconds = 10f;
         }
-        currentWave = waves.getFirst();
+        if (waves != null && !waves.isEmpty()) {
+            currentWave = waves.getFirst();
+        }
     }
 
     @Override
@@ -47,12 +83,12 @@ public class TimedWarMode implements GameMode, PlantPlacer {
 
     @Override
     public int getCurrentWaveIndex() {
-        return waves.indexOf(currentWave);
+        return waves != null ? waves.indexOf(currentWave) : 0;
     }
 
     @Override
     public int getTotalWaves() {
-        return waves.size();
+        return waves != null ? waves.size() : 0;
     }
 
     @Override
@@ -60,11 +96,54 @@ public class TimedWarMode implements GameMode, PlantPlacer {
         return waves.stream().mapToInt(Wave::getTotalZombieCount).sum();
     }
 
+    /** True once the objective (target kills inside one window) has been met. */
+    public boolean isObjectiveComplete() {
+        return objectiveComplete;
+    }
+
+    /**
+     * Fill amount [0,1] for the HUD objective bar: the number of zombies killed
+     * inside the current window divided by the target. Once the objective is met
+     * it stays pinned at 1.
+     */
+    public float getObjectiveProgress() {
+        if (objectiveComplete || targetKills <= 0) {
+            return 1f;
+        }
+        float progress = killedZombieSeconds.size() / (float) targetKills;
+        return Math.max(0f, Math.min(progress, 1f));
+    }
+
+    /** Number of zombies killed inside the current window. */
+    public int getKillsInWindow() {
+        return killedZombieSeconds.size();
+    }
+
+    public int getTargetKills() {
+        return targetKills;
+    }
+
+    public float getWindowSeconds() {
+        return windowSeconds;
+    }
+
+    /** Outcome after the level has ended ({@link Outcome#NONE} while running). */
+    public Outcome getOutcome() {
+        return outcome;
+    }
+
     @Override
     public void initMode(GameContext context) {
+        if (currentWave != null) {
+            currentWave.startWave(context);
+        }
+        stateTime = 0f;
+        killedZombieSeconds.clear();
+        lastTickAliveZombies = new ArrayList<>(context.getZombies());
+        objectiveComplete = false;
+        outcome = Outcome.NONE;
         context.log("⏱ TIMED WAR MODE STARTED ⏱");
-        context.log("Objective: Kill " + TARGET_KILLS + " zombies within any " + WINDOW_SECONDS + "-second window!");
-        lastTickZombies = new ArrayList<>(context.getZombies());
+        context.log("Objective: kill " + targetKills + " zombies within any " + windowSeconds + "-second window!");
     }
 
     @Override
@@ -72,84 +151,80 @@ public class TimedWarMode implements GameMode, PlantPlacer {
         stateTime += dt;
         trackZombieKills(context);
         cleanupExpiredKills(stateTime);
+        detectObjectiveCompletion();
 
-        if (checkVictoryCondition(context)) {
+        if (updateWaves(context, dt)) {
             return;
         }
 
-        if (checkGameOverCondition(context, stateTime)) {
-            return;
-        }
-
-        updateWaveAndEntities(context, stateTime);
+        updateLawnMowersAndSuns(context);
     }
 
     private void trackZombieKills(GameContext context) {
         List<Zombie> currentZombies = context.getZombies();
-        for (Zombie oldZombie : lastTickZombies) {
-            if (!currentZombies.contains(oldZombie)) {
-                if (oldZombie.getX() > 0f) {
-                    killedZombieSeconds.add(stateTime);
-                }
+
+        for (Zombie last : lastTickAliveZombies) {
+            // A zombie that was alive on the previous tick and is now dead was a
+            // genuine kill. Zombies that merely leave the field (reached the house)
+            // are removed directly without ever becoming dead, so they never reach
+            // this branch.
+            if (last.isDead()) {
+                killedZombieSeconds.add(stateTime);
             }
         }
-        lastTickZombies = new ArrayList<>(currentZombies);
+
+        lastTickAliveZombies.clear();
+        for (Zombie z : currentZombies) {
+            if (!z.isDead()) {
+                lastTickAliveZombies.add(z);
+            }
+        }
     }
 
+    /** Drops kills that have fallen outside the sliding window. */
     private void cleanupExpiredKills(float stateTime) {
-        killedZombieSeconds.removeIf(deathTime -> (stateTime - deathTime) > WINDOW_SECONDS);
+        killedZombieSeconds.removeIf(deathTime -> (stateTime - deathTime) > windowSeconds);
     }
 
-    private boolean checkVictoryCondition(GameContext context) {
-        if (killedZombieSeconds.size() >= TARGET_KILLS) {
-            context.setGameOver(true);
-            context.log(" VICTORY! You successfully killed " + TARGET_KILLS + " zombies in a " + WINDOW_SECONDS
-                    + " second window!");
-            return true;
+    private void detectObjectiveCompletion() {
+        if (!objectiveComplete && killedZombieSeconds.size() >= targetKills) {
+            objectiveComplete = true;
         }
-        return false;
     }
 
-    private boolean checkGameOverCondition(GameContext context, float stateTime) {
-        if (stateTime >= TOTAL_TIME_LIMIT_SECONDS) {
-            context.setGameOver(true);
-            context.log(" GAME OVER! Time ran out. You failed to reach the target kill streak.");
-            return true;
-        }
-        return false;
-    }
-
-    private void updateWaveAndEntities(GameContext context, float stateTime) {
+    /**
+     * Advances waves like Normal Mode. Returns true (ending the update early) once
+     * the whole level is cleared and the win/loss outcome has been decided.
+     */
+    private boolean updateWaves(GameContext context, float dt) {
         if (currentWave.isDone() && context.getZombies().isEmpty()) {
-            int nextWaveIndex = waves.indexOf(currentWave) + 1;
-            if (nextWaveIndex < waves.size()) {
-                currentWave = waves.get(nextWaveIndex);
-                currentWave.startWave(context);
-                context.log("Wave " + currentWave.getWaveNumber() + " started.");
+            if (objectiveComplete) {
+                outcome = Outcome.VICTORY;
+                context.log(" VICTORY! Objective completed — you defeated every zombie!");
+            } else {
+                outcome = Outcome.DEFEAT;
+                context.log(" GAME OVER! All zombies cleared but you never reached the target kills in one window.");
             }
-            return;
+            context.setGameOver(true);
+            return true;
         }
 
         if (!currentWave.isDone()) {
-            currentWave.updateWave(context, 0);
+            currentWave.updateWave(context, dt);
         }
-
-        updateLawnMowersAndZombies(context);
-        updateSuns(context);
+        return false;
     }
 
-    private void updateLawnMowersAndZombies(GameContext context) {
+    private void updateLawnMowersAndSuns(GameContext context) {
         for (int i = 0; i < context.getZombies().size(); i++) {
             Zombie z = context.getZombies().get(i);
-            if (z.getX() <= 0f) {
+            if (z.getX() <= GameController.colToWorldX(-1)) {
                 context.setGameOver(true);
                 context.log("The zombie ate your brain; LOOSER!!!");
                 context.removeZombie(z);
             }
         }
-    }
 
-    private void updateSuns(GameContext context) {
         for (Sun sun : new ArrayList<>(context.getSuns())) {
             if (sun.isDone()) {
                 context.removeSun(sun);
@@ -166,11 +241,6 @@ public class TimedWarMode implements GameMode, PlantPlacer {
 
         if (col < 0 || col >= context.getMap().getColumns() || lane < 0 || lane >= context.getMap().getLanes()) {
             context.log("[Placement Failed] Out of bounds: (" + col + ", " + lane + ")");
-            return false;
-        }
-
-        if (!context.getPlantsAt(col, lane).isEmpty()) {
-            context.log("[Placement Failed] Tile (" + col + ", " + lane + ") is already occupied by another plant.");
             return false;
         }
 
@@ -199,26 +269,34 @@ public class TimedWarMode implements GameMode, PlantPlacer {
 
     @Override
     public void handlePlacement(GameContext context, int col, int lane, PlantCard card) {
+        if (!(card instanceof PlantCard plantCard)) {
+            context.log("Error: card is not a plant card.");
+            return;
+        }
         PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(card.getPlant().getType());
         ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
         if (!context.spendSun(stats.getSunCost())) {
             context.log("Not enough sun.");
             return;
         }
-        Plant plant = new PlantFactory().create(card.getPlant().getType(), col, lane,
-                card.getPlant().getLevel(), card.getPlant().isBoosted(), context);
+        Plant plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
+                plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
+        if (!plant.getAttackAction().isPlantableOnTile(context.getTileAt(col, lane))) {
+            return;
+        }
         context.spawnPlant(plant);
-        context.getGameStats().onPlantPlaced(col, lane, card.getPlant().getType());
-        card.use();
-        context.log(card.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
+        context.getGameStats().onPlantPlaced(col, lane, plantCard.getPlant().getType());
+        plantCard.use();
+        context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
     }
 
     @Override
     public PlantCard findCard(GameContext context, String plantType) {
         for (Card card : context.getCards()) {
-            PlantCard plantCard = (PlantCard) card;
-            if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
-                return plantCard;
+            if (card instanceof PlantCard plantCard) {
+                if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
+                    return plantCard;
+                }
             }
         }
         return null;

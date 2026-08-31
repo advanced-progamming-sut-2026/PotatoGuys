@@ -231,7 +231,8 @@ public class GameController {
                         // If a zombie card is selected, prioritize zombie placement.
                         // In the local split mode the zombie side is keyboard-driven, so the
                         // mouse is the plant player and never routes clicks toward zombies.
-                        boolean mouseZombieActive = ctx.getMode() instanceof com.pvz.models.games.modes.variants.IZombieMode;
+                        boolean mouseZombieActive = ctx
+                                .getMode() instanceof com.pvz.models.games.modes.variants.IZombieMode;
                         boolean zombieCardSelected = gameUiModal != null
                                 && gameUiModal.getSelectedZombieCard() != null
                                 && mouseZombieActive;
@@ -755,6 +756,8 @@ public class GameController {
             }
         } else if (ctx.getMode() instanceof IZombieLocalMode izLocalMode) {
             won = (izLocalMode.getOutcome() == IZombieLocalMode.Outcome.ZOMBIES_WIN);
+        } else if (ctx.getMode() instanceof com.pvz.models.games.modes.variants.TimedWarMode twMode) {
+            won = twMode.getOutcome() == com.pvz.models.games.modes.variants.TimedWarMode.Outcome.VICTORY;
         } else {
             won = ctx.getZombies().isEmpty();
         }
