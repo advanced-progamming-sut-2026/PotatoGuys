@@ -5,6 +5,9 @@
   "levelType": "SPECIAL",
   "initialSun": 300,
   "deadlineColumn": 3,
+  "objectives": [
+    "Don't let zombies cross Column 4"
+  ],
   "effects": [
     {
       "type": "DARK_AGES",

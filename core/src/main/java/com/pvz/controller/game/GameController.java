@@ -6,7 +6,6 @@ import com.pvz.network.MessageType;
 import com.pvz.network.NetworkClient;
 import com.pvz.network.PlayerRole;
 import com.pvz.network.game.GameAction;
-import com.pvz.network.game.GameSnapshot;
 import com.pvz.network.game.GameStateSync;
 import com.pvz.network.game.GameSyncEnvelope;
 import com.pvz.network.game.QuickChatMessage;
@@ -15,12 +14,10 @@ import com.pvz.network.game.StickerMessage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -28,8 +25,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
@@ -41,21 +36,14 @@ import com.pvz.controller.game.State.PanningBack;
 import com.pvz.controller.game.State.Playing;
 import com.pvz.controller.game.State.State;
 import com.pvz.models.AppContext;
-import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.engine.GameEngine;
-import com.pvz.models.entities.Entity;
-import com.pvz.models.entities.Hitbox;
-import com.pvz.models.entities.LawnMower;
 import com.pvz.models.entities.effects.LootDrop;
-import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.enums.PlantType;
-import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.sun.Sun;
-import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieType;
 import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
@@ -87,8 +75,6 @@ import com.pvz.view.game.ui.GameUiModal;
 import com.pvz.view.game.ui.IZombieOnlineUiModal;
 import com.pvz.view.game.ui.IZombieLocalUiModal;
 import com.pvz.view.game.ui.NormalUiModal;
-import com.pvz.view.PamActor;
-import com.pvz.view.PlantData;
 import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
@@ -219,8 +205,10 @@ public class GameController {
                         com.badlogic.gdx.math.Vector2 stageClick = stage.screenToStageCoordinates(
                                 new com.badlogic.gdx.math.Vector2(Gdx.input.getX(), Gdx.input.getY()));
                         if (gameUiModal instanceof com.pvz.view.game.ui.IZombieOnlineUiModal izombieUi
-                                && ((izombieUi.isChatPickerVisible() && izombieUi.chatPickerContains(stageClick.x, stageClick.y))
-                                || (izombieUi.isStickerBoxVisible() && izombieUi.stickerBoxContains(stageClick.x, stageClick.y)))) {
+                                && ((izombieUi.isChatPickerVisible()
+                                        && izombieUi.chatPickerContains(stageClick.x, stageClick.y))
+                                        || (izombieUi.isStickerBoxVisible()
+                                                && izombieUi.stickerBoxContains(stageClick.x, stageClick.y)))) {
                             return true;
                         }
 
@@ -537,8 +525,9 @@ public class GameController {
                 && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
             boolean zombieCardActive = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
             boolean onPopup = false;
-            com.pvz.view.game.ui.IZombieOnlineUiModal izombieUi =
-                    gameUiModal instanceof com.pvz.view.game.ui.IZombieOnlineUiModal m ? m : null;
+            com.pvz.view.game.ui.IZombieOnlineUiModal izombieUi = gameUiModal instanceof com.pvz.view.game.ui.IZombieOnlineUiModal m
+                    ? m
+                    : null;
             if (izombieUi != null) {
                 com.badlogic.gdx.math.Vector2 uClick = stage.screenToStageCoordinates(
                         new com.badlogic.gdx.math.Vector2(Gdx.input.getX(), Gdx.input.getY()));
