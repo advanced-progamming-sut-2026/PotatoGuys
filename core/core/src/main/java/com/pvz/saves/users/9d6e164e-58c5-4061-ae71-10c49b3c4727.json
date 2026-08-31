@@ -386,12 +386,12 @@
   },
   "setting": {
     "difficulty": 3,
-    "gameSpeed": 3,
+    "gameSpeed": 1,
     "showGrid": true,
     "debugMode": true,
     "brightness": 1.0,
     "musicVolume": 0.17,
-    "sfxVolume": 0.31,
+    "sfxVolume": 0.35,
     "musicMuted": false,
     "sfxMuted": true
   },
