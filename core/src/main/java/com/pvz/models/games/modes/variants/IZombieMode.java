@@ -10,6 +10,7 @@ import com.pvz.controller.game.GameController;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
+import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
@@ -547,7 +548,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             return false;
         }
 
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(card.getPlant().getType());
         ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
         if (context.getCurrentSun() < stats.getSunCost()) {
             context.log("[Placement Failed] Not enough sun for " + sheet.getName()
@@ -559,7 +560,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
 
     @Override
     public void handlePlacement(GameContext context, int col, int lane, PlantCard card) {
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(card.getPlant().getType());
         ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
         if (!context.spendSun(stats.getSunCost())) {
             context.log("Not enough sun.");

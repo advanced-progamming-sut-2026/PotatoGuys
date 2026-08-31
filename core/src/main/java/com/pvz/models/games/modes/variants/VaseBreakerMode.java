@@ -8,8 +8,11 @@ import java.util.Random;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
+import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.PlantRegistry;
+import com.pvz.models.entities.plants.data.PlantStatResolver;
+import com.pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.ZombieType;
@@ -101,9 +104,10 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
                 vases.add(vaseBehavior);
             }
         }
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(defaultPlant.getType());
-        ctx.addCard(new PlantCard(defaultPlant, sheet.getSunCost(), sheet.getRechargeSeconds()));
-        ctx.addCard(null);
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(defaultPlant.getType());
+        ResolvedStats stats = PlantStatResolver.resolve(sheet, defaultPlant.getLevel());
+        ctx.addCard(new PlantCard(defaultPlant, stats.getSunCost(), stats.getRechargeSeconds()));
+        // ctx.addCard(null);
         ctx.log("gamemap lanes: " + gameMapLanes);
         ctx.log("gamemap cols: " + gameMapCols);
         ctx.log("vase cols: " + cols);
