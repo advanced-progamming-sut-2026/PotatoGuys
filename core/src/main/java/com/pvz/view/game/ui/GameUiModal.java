@@ -90,7 +90,6 @@ public class GameUiModal extends Table {
     private Image objectiveFill;
     private Image objectiveFrame;
     private PamClipActor objectiveTick;
-    private com.badlogic.gdx.scenes.scene2d.ui.Cell<Group> objectiveCell;
     private float lastObjectiveProgress = -1f;
     private boolean lastObjectiveComplete = false;
     private final Image coinIcon;
@@ -161,11 +160,6 @@ public class GameUiModal extends Table {
         sunRow.add(addSunButton).size(50f).padRight(3f);
         sunRow.add(sunBank).width(150f).height(54f);
         topBar.add(sunRow).left();
-
-        buildObjectiveProgress();
-        objectiveCell = topBar.add(objectiveGroup).left().padLeft(15f).size(OBJ_BAR_WIDTH + 46f, 46f);
-        objectiveCell.getActor().setVisible(false);
-        objectiveCell.size(0f, 0f);
 
         buildWaveProgress();
         topBar.add(waveGroup).left().padLeft(15f).size(WAVE_BAR_WIDTH + 50f, 50f);
@@ -335,6 +329,17 @@ public class GameUiModal extends Table {
         shovelOverlay.bottom().right();
         shovelOverlay.add(shovelButton).size(58f).padRight(20f).padBottom(15f);
         addActor(shovelOverlay);
+
+        // Objective progress bar for Timed War: kept out of the top bar table so
+        // the HUD keeps the exact known-good Normal-mode layout. It sits in its
+        // own fill-parent overlay just under the sun bank (below the wave bar,
+        // clear of the seed-packet column).
+        buildObjectiveProgress();
+        Table objectiveOverlay = new Table();
+        objectiveOverlay.setFillParent(true);
+        objectiveOverlay.top().left();
+        objectiveOverlay.add(objectiveGroup).size(OBJ_BAR_WIDTH + 46f, 46f).padLeft(228f).padTop(70f);
+        addActor(objectiveOverlay);
     }
 
     public PlantCard getSelectedCard() {
@@ -433,7 +438,7 @@ public class GameUiModal extends Table {
 
     private void ensureObjectiveTick() {
         if (objectiveTick == null) {
-            objectiveTick = new PamClipActor(CHECK_MARK_PAM, CHECK_MARK_CLIP, 0.55f, 0f);
+            objectiveTick = new PamClipActor(CHECK_MARK_PAM, CHECK_MARK_CLIP, 0.55f, 0f, true);
             objectiveTick.setBounds(OBJ_BAR_WIDTH + 4f, 0f, 40f, 40f);
             objectiveGroup.addActor(objectiveTick);
         }
@@ -443,7 +448,6 @@ public class GameUiModal extends Table {
 
     private void updateObjectiveProgress(com.pvz.models.games.modes.variants.TimedWarMode timedWar) {
         objectiveGroup.setVisible(true);
-        objectiveCell.size(OBJ_BAR_WIDTH + 46f, 46f);
 
         boolean complete = timedWar.isObjectiveComplete();
         float progress = timedWar.getObjectiveProgress();
@@ -978,9 +982,6 @@ public class GameUiModal extends Table {
             updateObjectiveProgress(timedWar);
         } else {
             objectiveGroup.setVisible(false);
-            if (objectiveCell != null) {
-                objectiveCell.size(0f, 0f);
-            }
         }
 
         if (context.getMode() instanceof com.pvz.models.games.modes.variants.IZombieMode izMode) {

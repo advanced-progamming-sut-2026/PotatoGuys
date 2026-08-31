@@ -153,7 +153,7 @@ public class TimedWarMode implements GameMode, PlantPlacer {
         cleanupExpiredKills(stateTime);
         detectObjectiveCompletion();
 
-        if (updateWaves(context)) {
+        if (updateWaves(context, dt)) {
             return;
         }
 
@@ -196,7 +196,7 @@ public class TimedWarMode implements GameMode, PlantPlacer {
      * Advances waves like Normal Mode. Returns true (ending the update early) once
      * the whole level is cleared and the win/loss outcome has been decided.
      */
-    private boolean updateWaves(GameContext context) {
+    private boolean updateWaves(GameContext context, float dt) {
         if (currentWave.isDone() && context.getZombies().isEmpty()) {
             if (objectiveComplete) {
                 outcome = Outcome.VICTORY;
@@ -210,7 +210,7 @@ public class TimedWarMode implements GameMode, PlantPlacer {
         }
 
         if (!currentWave.isDone()) {
-            currentWave.updateWave(context, 0);
+            currentWave.updateWave(context, dt);
         }
         return false;
     }

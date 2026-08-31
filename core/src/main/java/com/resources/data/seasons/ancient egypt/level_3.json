@@ -52,8 +52,8 @@
       "difficulty": 1,
       "phases": [
         {
-          "zombieCount": 3,
-          "intervalSeconds": 10,
+          "zombieCount": 2,
+          "intervalSeconds": 12,
           "allowedTypes": [
             "MUMMY",
             "MUMMY_CONE"
@@ -71,6 +71,66 @@
         },
         {
           "zombieCount": 4,
+          "intervalSeconds": 8,
+          "allowedTypes": [
+            "MUMMY",
+            "MUMMY_CONE",
+            "RA",
+            "EXPLORER"
+          ],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 2,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 200,
+      "lanes": 5,
+      "difficulty": 1,
+      "phases": [
+        {
+          "zombieCount": 4,
+          "intervalSeconds": 10,
+          "allowedTypes": [
+            "MUMMY",
+            "MUMMY_CONE",
+            "MUMMY_BUCKET"
+          ],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 6,
+          "intervalSeconds": 5,
+          "allowedTypes": [
+            "MUMMY",
+            "MUMMY_CONE",
+            "RA",
+            "EXPLORER"
+          ],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 3,
+      "isFinalWave": true,
+      "baseTotalWaveCost": 300,
+      "lanes": 5,
+      "difficulty": 1,
+      "phases": [
+        {
+          "zombieCount": 6,
+          "intervalSeconds": 9,
+          "allowedTypes": [
+            "MUMMY",
+            "MUMMY_BUCKET",
+            "RA"
+          ],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 10,
           "intervalSeconds": 6,
           "allowedTypes": [
             "MUMMY",
