@@ -121,6 +121,18 @@ public class Wave {
         secondsUntilNextSpawn = phases.get(currentPhase).getIntervalSeconds();
     }
 
+    /** Difficulty used for spawned zombies: the logged-in user's Difficulty setting
+     *  (1-5), clamped to a safe range. Falls back to the JSON-declared wave difficulty
+     *  when no user/setting is available. */
+    private int effectiveDifficulty() {
+        com.pvz.models.user.User user = AppContext.getInstance().getCurrentUser();
+        int value = difficulty;
+        if (user != null && user.getSetting() != null) {
+            value = user.getSetting().getDifficulty();
+        }
+        return Math.max(1, Math.min(5, value));
+    }
+
     private void spawnZombie(GameContext context, WavePhase phase) {
         List<ZombieType> allowed = phase.getAllowedTypes();
         if (allowed == null || allowed.isEmpty())
@@ -150,7 +162,7 @@ public class Wave {
         boolean isSandstorm = isFinalWave && phase.isBurst()
             && "ancient egypt".equalsIgnoreCase(context.getSeasonName());
 
-        Zombie newZombie = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(spawnCol), lane, context, waveNumber, difficulty);
+        Zombie newZombie = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(spawnCol), lane, context, waveNumber, effectiveDifficulty());
 
         if (isSandstorm) {
             int targetCol = context.getMap().getColumns() - 2 - rand.nextInt(3);

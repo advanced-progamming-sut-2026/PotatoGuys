@@ -113,8 +113,7 @@ public class SettingsMenu extends ScreenAdapter {
     }
 
     private Label sectionLabel(String text) {
-        Label label = new Label(text, skin);
-        label.setFontScale(1.2f);
+        Label label = new Label(text, new Label.LabelStyle(skin.getFont("FBUSV8C5EI_2"), Color.BLACK));
         label.setColor(Color.BLACK);
         return label;
     }
@@ -126,7 +125,6 @@ public class SettingsMenu extends ScreenAdapter {
         for (int i = 0; i < 5; i++) {
             final int diff = i + 1;
             buttons[i] = new TextButton(String.valueOf(diff), skin, "purple");
-            buttons[i].getLabel().setFontScale(1.3f);
             buttons[i].getLabel().setColor(Color.BLACK);
             buttons[i].setDisabled(diff != current);
             buttons[i].addListener(new ClickListener() {
@@ -153,7 +151,6 @@ public class SettingsMenu extends ScreenAdapter {
         for (int i = 0; i < 3; i++) {
             final int speed = i + 1;
             buttons[i] = new TextButton(String.valueOf(speed), skin, "brown");
-            buttons[i].getLabel().setFontScale(1.3f);
             buttons[i].getLabel().setColor(Color.BLACK);
             buttons[i].setDisabled(speed != current);
             buttons[i].addListener(new ClickListener() {
@@ -178,7 +175,8 @@ public class SettingsMenu extends ScreenAdapter {
         Slider slider = new Slider(0.5f, 1.5f, 0.01f, false, safeSliderStyle());
         slider.setValue(setting.getBrightness());
 
-        Label valueLabel = new Label(Math.round(setting.getBrightness() * 100) + "%", skin);
+        Label valueLabel = new Label(Math.round(setting.getBrightness() * 100) + "%",
+                new Label.LabelStyle(skin.getFont("FBUSV8C5EI_2"), Color.BLACK));
         valueLabel.setColor(Color.BLACK);
 
         slider.addListener(new ChangeListener() {
@@ -217,7 +215,8 @@ public class SettingsMenu extends ScreenAdapter {
         Slider slider = new Slider(0f, 1f, 0.01f, false, safeSliderStyle());
         slider.setValue(initialValue);
 
-        Label valueLabel = new Label(Math.round(initialValue * 100) + "%", skin);
+        Label valueLabel = new Label(Math.round(initialValue * 100) + "%",
+                new Label.LabelStyle(skin.getFont("FBUSV8C5EI_2"), Color.BLACK));
         valueLabel.setColor(Color.BLACK);
 
         slider.addListener(new ChangeListener() {
@@ -300,7 +299,7 @@ public class SettingsMenu extends ScreenAdapter {
         CheckBox.CheckBoxStyle style = new CheckBox.CheckBoxStyle();
         style.checkboxOn = new TextureRegionDrawable(loadTickTexture(CHECKBOX_ON_PATH, true));
         style.checkboxOff = new TextureRegionDrawable(loadTickTexture(CHECKBOX_OFF_PATH, false));
-        style.font = skin.getFont("FBUSV8C6EI_3");
+        style.font = skin.getFont("FBUSV8C5EI_2");
         style.fontColor = Color.BLACK;
         return style;
     }

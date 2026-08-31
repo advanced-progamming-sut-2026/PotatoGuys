@@ -16,6 +16,10 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 
 import com.pvz.PvZ2;
+import com.pvz.controller.AudioManager;
+import com.pvz.models.AppContext;
+import com.pvz.models.user.Setting;
+import com.pvz.models.user.User;
 import com.pvz.view.BorderedPanel;
 
 import pvz.skin.PvzSkin;
@@ -55,11 +59,37 @@ public class PauseMenuPopup extends BorderedPanel {
         titleLabel.setAlignment(Align.center);
 
         Slider.SliderStyle sliderStyle = new Slider.SliderStyle(PvzSkin.get().get("default-horizontal", Slider.SliderStyle.class));
-        sliderStyle.knob = new TextureRegionDrawable(sliderKnob);
+        TextureRegionDrawable sliderKnobDrawable = new TextureRegionDrawable(sliderKnob);
+        sliderStyle.knob = sliderKnobDrawable;
+        // Keep the bolt "setting" knob in all states (idle, hover, and while
+        // dragging) instead of swapping to the plain nav-dot the default style uses.
+        sliderStyle.knobOver = sliderKnobDrawable;
+        sliderStyle.knobDown = sliderKnobDrawable;
 
         Table slidersTable = new Table();
         Label musicLabel = new Label("Music", PvzSkin.get().get("medium_outline", Label.LabelStyle.class));
         Slider musicSlider = new Slider(0, 100, 1, false, sliderStyle);
+        musicSlider.setValue(AudioManager.getInstance().getMusicVolume() * 100f);
+        musicSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                float volume = musicSlider.getValue() / 100f;
+                AudioManager.getInstance().setMusicVolume(volume);
+                User user = AppContext.getInstance().getCurrentUser();
+                if (user != null) {
+                    Setting setting = user.getSetting();
+                    if (setting != null) {
+                        setting.setMusicVolume(volume);
+                        if (volume <= 0f) {
+                            setting.setMusicMuted(true);
+                        } else if (setting.isMusicMuted()) {
+                            setting.setMusicMuted(false);
+                        }
+                        user.saveUser();
+                    }
+                }
+            }
+        });
         slidersTable.add(musicLabel).padRight(15).align(Align.right);
         slidersTable.add(musicSlider).width(200).row();
 
