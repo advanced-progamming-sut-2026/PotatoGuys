@@ -10,8 +10,8 @@
   "profilePicture": "textures/avatars/avatar_nami.png",
   "profile": {
     "gamePlayed": 0,
-    "coins": 2100,
-    "diamonds": 1004,
+    "coins": 700,
+    "diamonds": 1034,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -89,6 +89,18 @@
         },
         {
           "Type": "LilyPad",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "SunBean",
+          "level": 1,
+          "seed": 0,
+          "isBoosted": false
+        },
+        {
+          "Type": "GraveBuster",
           "level": 1,
           "seed": 0,
           "isBoosted": false
@@ -335,6 +347,14 @@
         {
           "message": "New Plant Unlocked: LilyPad!",
           "unread": false
+        },
+        {
+          "message": "New Plant Unlocked: SunBean!",
+          "unread": false
+        },
+        {
+          "message": "New Plant Unlocked: GraveBuster!",
+          "unread": true
         }
       ]
     },
@@ -399,8 +419,8 @@
     "lastSeason": 0,
     "lastLevel": 0,
     "numMiniGames": 0,
-    "dailyQuests": 15,
-    "nonDailyQuests": 3,
+    "dailyQuests": 17,
+    "nonDailyQuests": 4,
     "highestScore": 0
   },
   "greenHouse": {
@@ -912,7 +932,7 @@
           "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": null
       },
@@ -1107,7 +1127,7 @@
           "currentAmount": 1
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": true,
         "variable": "2"
       },
@@ -1362,7 +1382,7 @@
           "currentAmount": 12
         },
         "active": true,
-        "claimed": false,
+        "claimed": true,
         "repeatable": false,
         "variable": "10"
       },

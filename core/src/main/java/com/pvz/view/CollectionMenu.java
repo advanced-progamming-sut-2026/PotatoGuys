@@ -8,7 +8,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -25,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
@@ -143,6 +146,7 @@ public class CollectionMenu extends ScreenAdapter {
         buildTabs();
         buildWalletBar();
         buildFilterBar();
+        refreshFilterBar();
         refreshWallet();
     }
 
@@ -285,9 +289,13 @@ public class CollectionMenu extends ScreenAdapter {
 
         if (tab == Tab.ZOMBIES) {
             buildZombieGrid();
-            refreshFilterBar();
+            if (filterButton != null) filterButton.setVisible(false);
+            if (plantsCollectedLabel != null) plantsCollectedLabel.setVisible(false);
             return;
         }
+
+        if (filterButton != null) filterButton.setVisible(true);
+        if (plantsCollectedLabel != null) plantsCollectedLabel.setVisible(true);
 
         List<PlantData> plants = PlantData.loadAll();
         ButtonGroup<PlantCard> group = new ButtonGroup<>();
@@ -367,7 +375,7 @@ public class CollectionMenu extends ScreenAdapter {
         Skin skin = PvzSkin.get();
 
         Table bar = new Table();
-        bar.setBackground(skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.35f)));
+        bar.setBackground(roundedBarBackground());
         bar.pad(10f, 16f, 10f, 16f);
 
         filterButton = new ImageTextButton("Filters", filterButtonStyle(skin));
@@ -383,12 +391,31 @@ public class CollectionMenu extends ScreenAdapter {
 
         bar.add().expandX();
 
-        plantsCollectedLabel = new Label("", skin);
-        plantsCollectedLabel.setColor(Color.WHITE);
-        plantsCollectedLabel.setFontScale(0.9f);
+        plantsCollectedLabel = new Label("",
+                new Label.LabelStyle(skin.getFont("FBUSV8C5EI_2"), Color.WHITE));
         bar.add(plantsCollectedLabel).right();
 
         contentLayer.add(bar).growX().padTop(8f);
+    }
+
+    /** Rounded-corner dark strip background, built as a 9-patch so it keeps its
+     *  curved corners no matter how wide the filter bar stretches. */
+    private NinePatchDrawable roundedBarBackground() {
+        int size = 48;
+        int radius = 16;
+        Pixmap pm = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+        pm.setBlending(Pixmap.Blending.None);
+        pm.setColor(0f, 0f, 0f, 0.35f);
+        pm.fillCircle(radius, radius, radius);
+        pm.fillCircle(size - radius - 1, radius, radius);
+        pm.fillCircle(radius, size - radius - 1, radius);
+        pm.fillCircle(size - radius - 1, size - radius - 1, radius);
+        pm.fillRectangle(radius, 0, size - 2 * radius, size);
+        pm.fillRectangle(0, radius, size, size - 2 * radius);
+        Texture texture = new Texture(pm);
+        pm.dispose();
+        NinePatch patch = new NinePatch(texture, radius, radius, radius, radius);
+        return new NinePatchDrawable(patch);
     }
 
     /** Funnel icon (your two PNGs) + label, no background box — matches the reference

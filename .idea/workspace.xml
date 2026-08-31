@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="Game speed changing now works">
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/levels/Wave.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/levels/Wave.java" afterDir="false" />
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="Game difficulty implementing completed">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/CollectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/CollectionMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -640,14 +642,21 @@
       <option name="project" value="LOCAL" />
       <updated>1788192950906</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="Game difficulty implementing completed">
+      <option name="closed" value="true" />
+      <created>1788193581360</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1788193581360</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="bug fixes" />
     <MESSAGE value="added shop" />
     <MESSAGE value="updated PlantSelectModal &#10;and also plant choosing during the game" />
     <MESSAGE value="conflict" />
@@ -672,7 +681,8 @@
     <MESSAGE value="some little fixes" />
     <MESSAGE value="wired chapter music volume to music slider in pause menu" />
     <MESSAGE value="Game speed changing now works" />
-    <option name="LAST_COMMIT_MESSAGE" value="Game speed changing now works" />
+    <MESSAGE value="Game difficulty implementing completed" />
+    <option name="LAST_COMMIT_MESSAGE" value="Game difficulty implementing completed" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
