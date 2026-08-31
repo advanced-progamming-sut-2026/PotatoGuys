@@ -334,7 +334,7 @@
         },
         {
           "message": "New Plant Unlocked: LilyPad!",
-          "unread": true
+          "unread": false
         }
       ]
     },
@@ -385,14 +385,14 @@
     "dailyOfferPurchased": true
   },
   "setting": {
-    "difficulty": 1,
+    "difficulty": 3,
     "gameSpeed": 1,
     "showGrid": true,
     "debugMode": true,
     "brightness": 1.0,
-    "musicVolume": 0.17999999,
+    "musicVolume": 0.6,
     "sfxVolume": 0.31,
-    "musicMuted": true,
+    "musicMuted": false,
     "sfxMuted": true
   },
   "score": {
@@ -519,7 +519,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 3000,
-          "currentAmount": 1925
+          "currentAmount": 0
         },
         "active": true,
         "claimed": false,
@@ -534,7 +534,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 4000,
-          "currentAmount": 1925
+          "currentAmount": 0
         },
         "active": true,
         "claimed": false,
@@ -549,7 +549,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 5000,
-          "currentAmount": 1925
+          "currentAmount": 0
         },
         "active": true,
         "claimed": false,
@@ -624,10 +624,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 10,
-          "currentAmount": 13
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "Peashooter"
       },
@@ -834,10 +834,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": null
       },
@@ -879,7 +879,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 10,
-          "currentAmount": 3
+          "currentAmount": 0
         },
         "active": true,
         "claimed": false,
@@ -909,10 +909,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": null
       },
@@ -924,10 +924,10 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "SHOOTER"
       },
@@ -969,10 +969,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "LOBBER"
       },
@@ -999,10 +999,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "EXPLOSIVE"
       },
@@ -1029,10 +1029,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "WALL_NUT"
       },
@@ -1059,10 +1059,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "MELEE"
       },
@@ -1104,10 +1104,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "2"
       },
@@ -1119,10 +1119,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "3"
       },
@@ -1134,10 +1134,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "4"
       },
@@ -1149,10 +1149,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "5"
       },
@@ -1164,10 +1164,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "6"
       },
@@ -1179,10 +1179,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "7"
       },
@@ -1194,10 +1194,10 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 1,
-          "currentAmount": 1
+          "currentAmount": 0
         },
         "active": true,
-        "claimed": true,
+        "claimed": false,
         "repeatable": true,
         "variable": "8"
       },
@@ -1427,7 +1427,6 @@
         "variable": "50"
       }
     ],
-    "lastDailyReset": 1788030918191
-  },
-  "questLogRefreshed": false
+    "lastDailyReset": 1788190505682
+  }
 }
