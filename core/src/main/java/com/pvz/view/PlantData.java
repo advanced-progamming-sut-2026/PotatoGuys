@@ -23,7 +23,6 @@ import com.pvz.models.entities.plants.data.DamageProfile;
 import com.pvz.models.entities.plants.data.LevelUpgrade;
 import com.pvz.models.entities.plants.data.PlantDescriptions;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
-import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.plants.enums.PlantTag;
@@ -62,15 +61,11 @@ public final class PlantData {
 
     public static List<PlantData> loadAll() {
         List<PlantData> result = new ArrayList<>();
-        PlantRegistry registry = PlantRegistry.getInstance();
         PlantConfigRegistry configs = PlantConfigRegistry.getInstance();
         for (PlantType type : PlantType.values()) {
-            PlantPropertySheet sheet = registry.getSheet(type);
             PlantJsonConfig cfg = configs.getConfig(type);
-            if (sheet == null && cfg != null) {
-                sheet = configs.toSheet(cfg);
-            }
-            if (sheet == null) continue;
+            if (cfg == null) continue;
+            PlantPropertySheet sheet = configs.toSheet(cfg);
             result.add(new PlantData(type, sheet, cfg));
         }
         result.sort((a, b) -> Integer.compare(a.sheet.getId(), b.sheet.getId()));
@@ -81,15 +76,10 @@ public final class PlantData {
      *  placement previews to look up the idle PAM path without loading every plant). */
     public static PlantData forType(PlantType type) {
         if (type == null) return null;
-        PlantRegistry registry = PlantRegistry.getInstance();
         PlantConfigRegistry configs = PlantConfigRegistry.getInstance();
-        PlantPropertySheet sheet = registry.getSheet(type);
         PlantJsonConfig cfg = configs.getConfig(type);
-        if (sheet == null && cfg != null) {
-            sheet = configs.toSheet(cfg);
-        }
-        if (sheet == null) return null;
-        return new PlantData(type, sheet, cfg);
+        if (cfg == null) return null;
+        return new PlantData(type, configs.toSheet(cfg), cfg);
     }
 
     private static Profile currentProfile() {

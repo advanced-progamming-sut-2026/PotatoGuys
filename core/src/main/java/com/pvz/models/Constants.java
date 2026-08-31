@@ -9,9 +9,6 @@ public class Constants {
     public static final float TICK_PER_SECOND = 10f;
 
     /** Static, read-only game-data resource (not a user save file). */
-    public static final String PLANT_PROFILES_PATH = "core/src/main/java/com/resources/plant_profiles.json";
-
-    /** Static, read-only game-data resource (not a user save file). */
     public static final String PLANT_ACTIONS_PATH = "core/src/main/java/com/resources/plant_actions.json";
 
     /** Static, read-only game-data resource (not a user save file).

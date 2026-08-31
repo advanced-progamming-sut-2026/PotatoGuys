@@ -10,7 +10,6 @@ import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
-import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
 import com.pvz.models.entities.zombies.Zombie;
@@ -192,7 +191,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
     private void spawnZombie(GameContext context, ZombieType type, int col, int lane) {
         Zombie zombie = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(col), lane, context, 0,
-                0);
+                1);
         if (zombie != null) {
             context.spawnZombie(zombie);
             context.log("ALERT: " + type + " emerged from the vase at (" + col + ", " + lane + ")!");

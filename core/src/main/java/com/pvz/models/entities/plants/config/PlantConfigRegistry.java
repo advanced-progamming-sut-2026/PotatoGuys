@@ -8,7 +8,6 @@ import java.util.Map;
 import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.data.GrowthProfile;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
-import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.data.ProductionKind;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.plants.enums.PlantTag;
@@ -33,16 +32,12 @@ public final class PlantConfigRegistry {
     }
 
     /**
-     * Resolves a {@link PlantPropertySheet} for the given type, first trying
-     * the profile registry and falling back to the config registry (for mints
-     * and other plants that only exist in plant_actions.json).
+     * Resolves a {@link PlantPropertySheet} for the given type from the config
+     * registry (plant_actions.json), or {@code null} if the type is unknown.
      */
     public PlantPropertySheet resolveSheet(PlantType type) {
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(type);
-        if (sheet != null) return sheet;
         PlantJsonConfig cfg = configs.get(type);
-        if (cfg != null) return toSheet(cfg);
-        return null;
+        return cfg != null ? toSheet(cfg) : null;
     }
 
     private void load() {
@@ -56,9 +51,7 @@ public final class PlantConfigRegistry {
         }
     }
 
-    /** Adapts a {@link PlantJsonConfig} into the {@link PlantPropertySheet} shape {@code Plant} already understands.
-     *  When a profile exists for the same type it also copies the profile's tags, level-upgrades and damage
-     *  profile, so level-scaling and flavour flags keep working for config-driven plants. */
+    /** Adapts a {@link PlantJsonConfig} into the {@link PlantPropertySheet} shape {@code Plant} already understands. */
     public PlantPropertySheet toSheet(PlantJsonConfig cfg) {
         GrowthProfile growth = null;
         if (cfg.attackConfig instanceof SunProducerActionConfig sunConfig) {
@@ -67,35 +60,22 @@ public final class PlantConfigRegistry {
             }
         }
 
-        PlantPropertySheet.Builder builder = new PlantPropertySheet.Builder(cfg.id, cfg.name, PlantType.valueOf(cfg.type))
+        return new PlantPropertySheet.Builder(cfg.id, cfg.name, PlantType.valueOf(cfg.type))
                 .category(PlantCategory.valueOf(cfg.category))
                 .sunCost(cfg.sunCost)
                 .baseHp(cfg.baseHp)
                 .actionIntervalSeconds(cfg.actionIntervalSeconds)
                 .rechargeSeconds(cfg.rechargeSeconds)
                 .growth(growth)
+                .tags(parseTags(cfg.tags))
                 .description(cfg.description == null ? "" : cfg.description)
                 .onPlantFoodDescription(cfg.onPlantFoodDescription == null ? "" : cfg.onPlantFoodDescription)
                 .overallDescription(cfg.overallDescription == null ? "" : cfg.overallDescription)
                 .funDescription(cfg.funDescription == null ? "" : cfg.funDescription)
                 .plantAttackConfig(cfg.attackConfig)
                 .plantFeedConfig(cfg.feedConfig)
-                .pamAnimationConfig(cfg.pamAnimationConfig);
-
-        PlantPropertySheet profile = PlantRegistry.getInstance().getSheet(PlantType.valueOf(cfg.type));
-        if (profile != null) {
-            builder.levelUpgrades(profile.getLevelUpgrades())
-                   .damage(profile.getDamage());
-        }
-
-        List<PlantTag> tags = parseTags(cfg.tags);
-        if (!tags.isEmpty()) {
-            builder.tags(tags);
-        } else if (profile != null) {
-            builder.tags(profile.getTags());
-        }
-
-        return builder.build();
+                .pamAnimationConfig(cfg.pamAnimationConfig)
+                .build();
     }
 
     private List<PlantTag> parseTags(String tagsStr) {

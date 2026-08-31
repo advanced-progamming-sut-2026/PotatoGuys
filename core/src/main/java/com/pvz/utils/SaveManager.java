@@ -51,7 +51,7 @@ public class SaveManager {
     /**
      * Loads and deserializes JSON from {@code fullPath} taken as-is (no
      * {@link Constants#SAVE_PATH} prefix). Used for static, read-only game
-     * data resources such as {@code plant_profiles.json}, as opposed to
+     * data resources such as {@code plant_actions.json}, as opposed to
      * user save files.
      */
     public <T> T loadAbsolute(String fullPath, Class<T> classType) {

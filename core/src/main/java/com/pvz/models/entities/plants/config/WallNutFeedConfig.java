@@ -3,7 +3,7 @@ package com.pvz.models.entities.plants.config;
 /**
  * Plant Food config for wall-nut category plants.
  *
- * <p>{@code kind} mirrors the profile-level {@code PlantFoodKind} values:
+ * <p>{@code kind} values:
  * <ul>
  *   <li>{@code ARMOR} — permanently raises max HP by {@code amount}.</li>
  *   <li>{@code FORCE_MOVE_ALL_IN_LANE} — pushes every zombie in the lane to an adjacent lane.</li>

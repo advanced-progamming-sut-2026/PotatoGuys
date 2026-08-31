@@ -25,7 +25,7 @@ import com.pvz.models.entities.zombies.config.ZombieJsonConfig;
  * {@code zombie_actions.json} resource (which absorbed the old
  * {@code zombie_profiles.json}: stats, scaling presets and armour definitions)
  * via {@link ZombieConfigRegistry} — the zombie-side counterpart of
- * {@link pvz.models.entities.plants.data.PlantRegistry}. Rebalancing or adding
+ * {@link com.pvz.models.entities.plants.config.PlantConfigRegistry}. Rebalancing or adding
  * a zombie means editing that JSON file only; this class never hard-codes any
  * zombie's stats.
  *
