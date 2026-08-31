@@ -7,8 +7,11 @@ import java.util.Map;
 
 import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.data.GrowthProfile;
+import com.pvz.models.entities.plants.data.LevelUpgrade;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.data.ProductionKind;
+import com.pvz.models.entities.plants.data.StatKey;
+import com.pvz.models.entities.plants.data.StatModifier;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.plants.enums.PlantType;
@@ -75,6 +78,7 @@ public final class PlantConfigRegistry {
                 .plantAttackConfig(cfg.attackConfig)
                 .plantFeedConfig(cfg.feedConfig)
                 .pamAnimationConfig(cfg.pamAnimationConfig)
+                .levelUpgrades(convertUpgrades(cfg.levelUpgrades))
                 .build();
     }
 
@@ -89,6 +93,22 @@ public final class PlantConfigRegistry {
             } catch (IllegalArgumentException e) {
                 System.err.println("[PlantConfigRegistry] Unknown tag: '" + trimmed + "'");
             }
+        }
+        return result;
+    }
+
+    private List<LevelUpgrade> convertUpgrades(List<LevelUpgradeConfig> raw) {
+        if (raw == null || raw.isEmpty()) return List.of();
+        List<LevelUpgrade> result = new ArrayList<>();
+        for (LevelUpgradeConfig cfg : raw) {
+            List<StatModifier> mods = new ArrayList<>();
+            if (cfg.stats != null) {
+                for (LevelUpgradeStatConfig sc : cfg.stats) {
+                    mods.add(new StatModifier(StatKey.valueOf(sc.stat), sc.delta));
+                }
+            }
+            List<String> flags = cfg.flags != null ? List.of(cfg.flags) : List.of();
+            result.add(new LevelUpgrade(cfg.level, mods, flags));
         }
         return result;
     }

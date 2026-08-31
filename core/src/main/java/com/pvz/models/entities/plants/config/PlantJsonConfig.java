@@ -19,4 +19,5 @@ public class PlantJsonConfig {
     public String onPlantFoodDescription;
     public String overallDescription;
     public String funDescription;
+    public java.util.List<LevelUpgradeConfig> levelUpgrades;
 }
