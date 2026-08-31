@@ -81,6 +81,10 @@ public class GameRenderer {
         if (remoteFrames != null) {
             drawRemoteFrames(remoteFrames, remoteFramesIzMode);
             drawDebugShapes();
+            // The guest (online zombie client) still needs the mouse placement
+            // preview + hover highlight, even though the world itself is drawn
+            // from the host's frames (drawRemoteFrames returns early above).
+            drawMouseArmedHighlights();
             return;
         }
         batch.setProjectionMatrix(controller.getCamera().combined);
@@ -111,42 +115,54 @@ public class GameRenderer {
         batch.end();
 
         if (controller.getState() instanceof Playing && controller.getGameUiModal() != null && ctx != null) {
-            com.pvz.view.game.ui.GameUiModal ui = controller.getGameUiModal();
-            boolean shovelArmed = ui.isShovelSelected();
-            boolean plantFoodArmed = ui.isPlantFoodSelected();
-
-            // Split I,Zombie: the zombie side places with the keyboard, so the
-            // hover highlight follows the keyboard cursor tile, not the mouse.
-            boolean splitZombieArmed = ctx.getMode() instanceof IZombieLocalMode
-                    && controller.isZombiePlacing()
-                    && ui.getSelectedZombieCard() != null;
-
-            if (splitZombieArmed) {
-                Tile cursorTile = ctx.getMap().getTileAt(
-                        controller.getZombieCursorCol(), controller.getZombieCursorLane());
-                if (cursorTile != null) {
-                    drawPlacementHighlights(cursorTile);
-                }
-            }
-
-            // Plant side (and mouse-driven modes like online I,Zombie) keeps the
-            // mouse highlight.
-            boolean mouseArmed = ui.getSelectedCard() != null
-                    || shovelArmed
-                    || plantFoodArmed
-                    || (ui.getSelectedZombieCard() != null && !(ctx.getMode() instanceof IZombieLocalMode));
-            if (mouseArmed) {
-                controller.getTouchPos().set(Gdx.input.getX(), Gdx.input.getY(), 0);
-                controller.getViewport().unproject(controller.getTouchPos());
-
-                Tile hoveredTile = ctx.getMap().getTileAt(controller.getTouchPos().x, controller.getTouchPos().y);
-
-                if (hoveredTile != null) {
-                    drawPlacementHighlights(hoveredTile);
-                }
-            }
+            drawMouseArmedHighlights();
         }
         drawDebugShapes();
+    }
+
+    /**
+     * Highlights the placement target under the mouse (and under the split
+     * I,Zombie keyboard cursor) whenever something is armed: a selected plant
+     * card, the shovel, plant food, or a selected zombie card (mouse-driven in
+     * every mode except local split I,Zombie). Shared by the host path and the
+     * network guest, whose world is drawn from remote frames (see
+     * {@link #drawRemoteFrames}).
+     */
+    private void drawMouseArmedHighlights() {
+        if (!(controller.getState() instanceof Playing) || controller.isPaused() || ctx == null)
+            return;
+        com.pvz.view.game.ui.GameUiModal ui = controller.getGameUiModal();
+        if (ui == null)
+            return;
+        boolean shovelArmed = ui.isShovelSelected();
+        boolean plantFoodArmed = ui.isPlantFoodSelected();
+
+        boolean splitZombieArmed = ctx.getMode() instanceof IZombieLocalMode
+                && controller.isZombiePlacing()
+                && ui.getSelectedZombieCard() != null;
+
+        if (splitZombieArmed) {
+            Tile cursorTile = ctx.getMap().getTileAt(
+                    controller.getZombieCursorCol(), controller.getZombieCursorLane());
+            if (cursorTile != null) {
+                drawPlacementHighlights(cursorTile);
+            }
+        }
+
+        boolean mouseArmed = ui.getSelectedCard() != null
+                || shovelArmed
+                || plantFoodArmed
+                || (ui.getSelectedZombieCard() != null && !(ctx.getMode() instanceof IZombieLocalMode));
+        if (mouseArmed) {
+            controller.getTouchPos().set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            controller.getViewport().unproject(controller.getTouchPos());
+
+            Tile hoveredTile = ctx.getMap().getTileAt(controller.getTouchPos().x, controller.getTouchPos().y);
+
+            if (hoveredTile != null) {
+                drawPlacementHighlights(hoveredTile);
+            }
+        }
     }
 
     private void drawBackground() {
@@ -717,6 +733,10 @@ public class GameRenderer {
             drawSuns();
         }
         drawIZombieOverlayLocal(izMode);
+        // The zombie card the guest selected must still follow the mouse here,
+        // even though the world comes from the host's frames. drawPlacementPreview
+        // only needs the batch (active here) and the touched-position state.
+        drawPlacementPreview();
         batch.end();
     }
 

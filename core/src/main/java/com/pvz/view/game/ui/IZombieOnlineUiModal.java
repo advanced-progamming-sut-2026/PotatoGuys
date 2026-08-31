@@ -9,6 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
+import com.pvz.models.games.GameContext;
+import com.pvz.models.games.card.Card;
+import com.pvz.models.games.card.PlantCard;
+import com.pvz.models.games.card.ZombieCard;
 import com.pvz.network.game.QuickChatMessage;
 import com.pvz.network.game.StickerMessage;
 
@@ -16,16 +20,26 @@ import com.pvz.network.game.StickerMessage;
  * In-game HUD specialised for {@code IZombieMode} (the online I,Zombie game).
  *
  * <p>
- * Reuses the entire global HUD from {@link GameUiModal} (top bar, sun bank,
- * plant-food dots, wallet, wave meter, shovel, pause) and, when an online
- * match is running, adds the bottom-right quick-chat panel and the sticker
- * (emote) picker on top of it.
+ * Reuses the entire global HUD from {@link NormalUiModal} (top bar, sun bank,
+ * the static seed tray for whichever side the match assigns, plant-food dots,
+ * wallet, wave meter, shovel, pause) and, when an online match is running, adds
+ * the bottom-right quick-chat panel and the sticker (emote) picker on top of it.
  *
  * <p>
- * Both panels live here instead of in the base HUD so that normal levels never
+ * Both panels live here instead of in the shared HUD so that normal levels never
  * render the chat/emoji bar — they only exist in I,Zombie matches.
  */
-public class IZombieUiModal extends GameUiModal {
+public class IZombieOnlineUiModal extends NormalUiModal {
+
+    /**
+     * Which side of the online I,Zombie match this HUD is currently showing.
+     * The plant side is always the authoritative host; the zombie side is the
+     * guest client. Auto-detected from the match role, with an explicit setter
+     * so it can be switched (e.g. for host/client testing).
+     */
+    public enum IZombieSide {
+        PLANT, ZOMBIE
+    }
 
     /**
      * Where received stickers pop up: bottom-right, clear of the button stack
@@ -57,11 +71,18 @@ public class IZombieUiModal extends GameUiModal {
     private final QuickChatUi quickChatUi;
     private final StickerUi stickerUi;
     private final Table stickerLayer = new Table();
+    private IZombieSide side;
 
-    public IZombieUiModal(Runnable onPauseRequested,
-                          BiConsumer<QuickChatMessage.Kind, Integer> onChatSend,
-                          Consumer<StickerMessage> onStickerSend) {
+    public IZombieOnlineUiModal(Runnable onPauseRequested,
+                                BiConsumer<QuickChatMessage.Kind, Integer> onChatSend,
+                                Consumer<StickerMessage> onStickerSend) {
         super(onPauseRequested);
+
+        // The player's role in the online match decides which side this HUD
+        // serves: PLANT (host) places plants and defends, ZOMBIE (guest)
+        // attacks. Auto-detect from the match session; see setSide() to
+        // override while testing.
+        side = resolveSideFromRole();
 
         // Quick chat and stickers are online-match features; a single-player
         // I,Zombie level has no opponent to talk to, so both are skipped there.
@@ -83,6 +104,84 @@ public class IZombieUiModal extends GameUiModal {
             stickerUi = new StickerUi(onStickerSend, this::raiseStickerPanel);
             addActor(stickerUi);
         }
+    }
+
+    /**
+     * Derives the current side from the online match role: the PLANT role is
+     * the host, the ZOMBIE role is the client. Without a match session there is
+     * no side, so it falls back to PLANT.
+     */
+    private IZombieSide resolveSideFromRole() {
+        com.pvz.models.MatchSession ms = AppContext.getInstance().getMatchSession();
+        if (ms != null && ms.getMyRole() == com.pvz.network.PlayerRole.ZOMBIE) {
+            return IZombieSide.ZOMBIE;
+        }
+        return IZombieSide.PLANT;
+    }
+
+    /**
+     * @return which side of the online I,Zombie match this HUD currently
+     *         represents (PLANT = host, ZOMBIE = client).
+     */
+    public IZombieSide getSide() {
+        return side;
+    }
+
+    /**
+     * Switches the HUD between the two online I,Zombie sides. Primarily used to
+     * auto-select from the match role; on the PLANT side only the plant tray is
+     * shown (host plays plants), on the ZOMBIE side only the zombie tray
+     * (client attacks), mirroring the split screen's per-side layout.
+     *
+     * @return {@code true} if the side actually changed.
+     */
+    public boolean setSide(IZombieSide newSide) {
+        if (newSide == null) {
+            newSide = IZombieSide.PLANT;
+        }
+        if (newSide == side) {
+            return false;
+        }
+        this.side = newSide;
+        initCards();
+        return true;
+    }
+
+    /**
+     * Builds the static seed tray for just the active side. The plant side
+     * (host) shows only plant cards; the zombie side (client) shows only zombie
+     * cards. This overrides the shared {@link NormalUiModal} role-filtering with
+     * our own internal side state so the displayed deck always matches
+     * {@link #getSide()}.
+     */
+    @Override
+    public void initCards() {
+        cardsBarTable.clearChildren();
+        slotByCard.clear();
+        cooldownOverlayByCard.clear();
+        zombieSlotByCard.clear();
+        zombieCooldownOverlayByCard.clear();
+        selectedCard = null;
+        selectedZombieCard = null;
+
+        GameContext context = AppContext.getInstance().getGameContext();
+        if (context == null)
+            return;
+
+        loadPlantData();
+
+        for (Card card : context.getCards()) {
+            if (side == IZombieSide.PLANT) {
+                if (card instanceof PlantCard pc) {
+                    cardsBarTable.add(buildSlot(pc, false)).row();
+                }
+            } else {
+                if (card instanceof ZombieCard zc) {
+                    cardsBarTable.add(buildZombieSlot(zc)).pad(1f).row();
+                }
+            }
+        }
+        updateCardStyles();
     }
 
     /** Brings the chat panel (and its open box) in front of the sticker panel. */

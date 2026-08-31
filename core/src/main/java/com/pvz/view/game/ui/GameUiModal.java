@@ -26,7 +26,6 @@ import com.pvz.PvZ2;
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.GameContext;
-import com.pvz.models.games.card.Card;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.card.ZombieCard;
 import com.pvz.models.user.User;
@@ -84,7 +83,6 @@ public class GameUiModal extends Table {
     private final Image[] plantFoodDots = new Image[MAX_PLANT_FOOD];
     private final ImageButton addSunButton;
     private final ImageButton addFoodButton;
-    protected final Table cardsBarTable;
     protected PlantCard selectedCard = null;
     protected ZombieCard selectedZombieCard = null;
     private boolean shovelSelected = false;
@@ -281,20 +279,6 @@ public class GameUiModal extends Table {
         add(topBar).top().left().expandX().fillX();
         add(rightControls).top().right().padTop(15).padRight(15);
         row();
-
-        // Seed-packet tray: vertical column pinned to the left edge, below the top bar.
-        cardsBarTable = new Table();
-        cardsBarTable.top();
-        cardsBarTable.defaults().pad(-2f).size(SLOT_WIDTH, SLOT_HEIGHT);
-
-        Table leftColumnWrapper = new Table();
-        leftColumnWrapper.top().left();
-        leftColumnWrapper.add(cardsBarTable);
-
-        // Seed-packet tray tucked right under the sun bank: the top bar only keeps
-        // the sun row, and padTop(10) starts the first card just under the sun
-        // amount display (the food row moved to the bottom overlay).
-        add(leftColumnWrapper).left().top().colspan(2).padLeft(15).padTop(-17);
 
         // Plant food pinned at normalized (0.25, 0.1): centered on x = 0.25 * 1280 =
         // 320
@@ -571,109 +555,20 @@ public class GameUiModal extends Table {
         }
     }
 
+    /**
+     * Builds the per-mode seed/card tray. The base {@link GameUiModal} has no
+     * tray of its own; each mode's HUD (e.g. {@link NormalUiModal}'s static
+     * tray, {@link ConveyorBeltUiModal}'s belt) implements this with its own
+     * layout. Called once per game session from {@code GameController}.
+     */
     public void initCards() {
-        cardsBarTable.clearChildren();
-        slotByCard.clear();
-        cooldownOverlayByCard.clear();
-        zombieSlotByCard.clear();
-        zombieCooldownOverlayByCard.clear();
-        selectedCard = null;
-        selectedZombieCard = null;
-
-        GameContext context = AppContext.getInstance().getGameContext();
-        if (context == null)
-            return;
-
-        com.pvz.models.MatchSession __ms = com.pvz.models.AppContext.getInstance().getMatchSession();
-        com.badlogic.gdx.Gdx.app.log("CardsDebug", "cards=" + context.getCards().size()
-                + " matchSession=" + (__ms == null ? "null" : __ms.getMyRole())
-                + " isNetworked=" + (__ms != null));
-
-        loadPlantData();
-
-        for (Card card : context.getCards()) {
-            com.pvz.models.MatchSession matchSession = com.pvz.models.AppContext.getInstance().getMatchSession();
-            if (matchSession != null) {
-                boolean isPlantCard = card instanceof com.pvz.models.games.card.PlantCard;
-                boolean isZombieCard = card instanceof com.pvz.models.games.card.ZombieCard;
-                com.pvz.network.PlayerRole myRole = matchSession.getMyRole();
-                if (isPlantCard && myRole != com.pvz.network.PlayerRole.PLANT)
-                    continue;
-                if (isZombieCard && myRole != com.pvz.network.PlayerRole.ZOMBIE)
-                    continue;
-            }
-            if (card instanceof PlantCard pc) {
-                cardsBarTable.add(buildSlot(pc, false)).row();
-            } else if (card instanceof ZombieCard zc) {
-                cardsBarTable.add(buildZombieSlot(zc)).pad(1f).row();
-            }
-        }
-        updateCardStyles();
     }
 
+    /**
+     * Refreshes the per-mode tray each frame. The base has no tray, so this is
+     * a no-op hook that tray-bearing subclasses override.
+     */
     public void syncCards() {
-        GameContext context = AppContext.getInstance().getGameContext();
-        if (context == null)
-            return;
-
-        com.pvz.models.MatchSession matchSession = com.pvz.models.AppContext.getInstance().getMatchSession();
-        com.pvz.network.PlayerRole myRole = matchSession != null ? matchSession.getMyRole() : null;
-
-        // ── Detect cards that disappeared from the context and rebuild the
-        // bar so their slots (and any leftover empty cells) are removed.
-        // e.g. VaseBreaker / ConveyorBelt used a card and it was removed
-        // via ctx.removeCard.
-        boolean removedAny = false;
-        for (PlantCard pc : new java.util.ArrayList<>(slotByCard.keySet())) {
-            if (!context.getCards().contains(pc)) {
-                removedAny = true;
-                break;
-            }
-        }
-        if (removedAny) {
-            rebuildCardBar(context, matchSession, myRole);
-            return;
-        }
-
-        // ── Add slots for cards that are in the context but not yet in the UI ──
-        boolean changed = false;
-        for (Card card : context.getCards()) {
-            if (matchSession != null) {
-                if (card instanceof PlantCard && myRole != com.pvz.network.PlayerRole.PLANT)
-                    continue;
-                if (card instanceof ZombieCard && myRole != com.pvz.network.PlayerRole.ZOMBIE)
-                    continue;
-            }
-            if (card instanceof PlantCard pc && !slotByCard.containsKey(pc)) {
-                cardsBarTable.add(buildSlot(pc, true)).row();
-                changed = true;
-            }
-        }
-        if (changed) {
-            updateCardStyles();
-        }
-    }
-
-    /** Clears the card bar and re-adds every current card in context order. */
-    private void rebuildCardBar(GameContext context,
-            com.pvz.models.MatchSession matchSession,
-            com.pvz.network.PlayerRole myRole) {
-        cardsBarTable.clearChildren();
-        slotByCard.clear();
-        cooldownOverlayByCard.clear();
-        selectedCard = null;
-        for (Card card : context.getCards()) {
-            if (matchSession != null) {
-                if (card instanceof PlantCard && myRole != com.pvz.network.PlayerRole.PLANT)
-                    continue;
-                if (card instanceof ZombieCard && myRole != com.pvz.network.PlayerRole.ZOMBIE)
-                    continue;
-            }
-            if (card instanceof PlantCard pc) {
-                cardsBarTable.add(buildSlot(pc, true)).row();
-            }
-        }
-        updateCardStyles();
     }
 
     protected Table buildSlot(PlantCard pc, boolean isConveyor) {

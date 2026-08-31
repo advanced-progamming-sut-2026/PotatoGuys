@@ -87,7 +87,7 @@ public class QuickChatUi extends Table {
     /**
      * Shared tuning for the pop-up items (stickers, chat bubbles, emoji
      * bubbles): shift everything 10px left and 120px down. Keep these in sync
-     * with the identical constants in {@link IZombieUiModal}.
+     * with the identical constants in {@link IZombieOnlineUiModal}.
      */
     private static final float POPUP_OFFSET_X = -10f;
     private static final float POPUP_OFFSET_Y = -120f;

@@ -84,8 +84,9 @@ import com.pvz.view.game.PauseMenuPopup;
 import com.pvz.view.game.PlantSelectModal;
 import com.pvz.view.game.ui.ConveyorBeltUiModal;
 import com.pvz.view.game.ui.GameUiModal;
-import com.pvz.view.game.ui.IZombieUiModal;
+import com.pvz.view.game.ui.IZombieOnlineUiModal;
 import com.pvz.view.game.ui.IZombieLocalUiModal;
+import com.pvz.view.game.ui.NormalUiModal;
 import com.pvz.view.PamActor;
 import com.pvz.view.PlantData;
 import pvz.skin.PvzSkin;
@@ -217,7 +218,7 @@ public class GameController {
                         // reach the battlefield — their own buttons handle them.
                         com.badlogic.gdx.math.Vector2 stageClick = stage.screenToStageCoordinates(
                                 new com.badlogic.gdx.math.Vector2(Gdx.input.getX(), Gdx.input.getY()));
-                        if (gameUiModal instanceof com.pvz.view.game.ui.IZombieUiModal izombieUi
+                        if (gameUiModal instanceof com.pvz.view.game.ui.IZombieOnlineUiModal izombieUi
                                 && ((izombieUi.isChatPickerVisible() && izombieUi.chatPickerContains(stageClick.x, stageClick.y))
                                 || (izombieUi.isStickerBoxVisible() && izombieUi.stickerBoxContains(stageClick.x, stageClick.y)))) {
                             return true;
@@ -382,8 +383,8 @@ public class GameController {
             case com.pvz.models.games.modes.GameModeType.SPLIT_IZOMBIE ->
                 new com.pvz.view.game.ui.IZombieLocalUiModal(this::pauseGame);
             case com.pvz.models.games.modes.GameModeType.IZOMBIE ->
-                new IZombieUiModal(this::pauseGame, this::sendQuickChat, this::sendSticker);
-            default -> new GameUiModal(this::pauseGame);
+                new IZombieOnlineUiModal(this::pauseGame, this::sendQuickChat, this::sendSticker);
+            default -> new NormalUiModal(this::pauseGame);
         };
         gameUiModal.setOnShovelRequested(this::toggleShovelMode);
         gameUiModal.setOnPlantFoodRequested(this::togglePlantFoodMode);
@@ -523,8 +524,8 @@ public class GameController {
                 && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
             boolean zombieCardActive = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
             boolean onPopup = false;
-            com.pvz.view.game.ui.IZombieUiModal izombieUi =
-                    gameUiModal instanceof com.pvz.view.game.ui.IZombieUiModal m ? m : null;
+            com.pvz.view.game.ui.IZombieOnlineUiModal izombieUi =
+                    gameUiModal instanceof com.pvz.view.game.ui.IZombieOnlineUiModal m ? m : null;
             if (izombieUi != null) {
                 com.badlogic.gdx.math.Vector2 uClick = stage.screenToStageCoordinates(
                         new com.badlogic.gdx.math.Vector2(Gdx.input.getX(), Gdx.input.getY()));
@@ -1325,12 +1326,12 @@ public class GameController {
             handleDisconnect();
         } else if (envelope.kind == GameSyncEnvelope.Kind.CHAT) {
             QuickChatMessage chat = gson.fromJson(envelope.data, QuickChatMessage.class);
-            if (gameUiModal instanceof IZombieUiModal izombieUi) {
+            if (gameUiModal instanceof IZombieOnlineUiModal izombieUi) {
                 izombieUi.showChat(chat);
             }
         } else if (envelope.kind == GameSyncEnvelope.Kind.STICKER) {
             StickerMessage sticker = gson.fromJson(envelope.data, StickerMessage.class);
-            if (gameUiModal instanceof IZombieUiModal izombieUi) {
+            if (gameUiModal instanceof IZombieOnlineUiModal izombieUi) {
                 izombieUi.showSticker(sticker);
             }
         } else if (envelope.kind == GameSyncEnvelope.Kind.SNAPSHOT && !isHost) {
@@ -1509,7 +1510,7 @@ public class GameController {
     }
 
     public void dispose() {
-        if (gameUiModal instanceof IZombieUiModal izombieUi) {
+        if (gameUiModal instanceof IZombieOnlineUiModal izombieUi) {
             izombieUi.disposeChat();
         }
         NetworkClient.getInstance().clearPushListener(MessageType.MATCH_MESSAGE);

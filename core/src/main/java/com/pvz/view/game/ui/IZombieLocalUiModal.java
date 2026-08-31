@@ -26,7 +26,7 @@ import pvz.skin.PvzSkin;
  * The plant side and the zombie side share one screen but keep separate sun
  * pools and never touch each other's cards:
  * <ul>
- * <li>Plant cards sit in the left tray (reused from {@link GameUiModal});
+ * <li>Plant cards sit in the left tray (reused from {@link NormalUiModal});
  * the plant's sun is shown in the top-left sun bank.</li>
  * <li>Zombie cards sit in a dedicated right-hand tray; the zombie's sun is
  * shown in a separate right-side sun bank.</li>
@@ -35,7 +35,7 @@ import pvz.skin.PvzSkin;
  * also exposes helpers to move selection up/down and to read the currently
  * selected zombie card (used by the controller).
  */
-public class IZombieLocalUiModal extends GameUiModal {
+public class IZombieLocalUiModal extends NormalUiModal {
 
     private final Table zombieCardsTable = new Table();
     private final Label zombieSunLabel;
@@ -138,6 +138,14 @@ public class IZombieLocalUiModal extends GameUiModal {
         }
         populateZombieTray();
         updateCardStyles();
+    }
+
+    @Override
+    public void syncCards() {
+        // Split I,Zombie deals every plant and zombie card once during setup
+        // (initCards), and never adds/removes cards mid-match, so there is
+        // nothing to keep in sync here. A no-op avoids the shared default tray
+        // logic from the base.
     }
 
     @Override
