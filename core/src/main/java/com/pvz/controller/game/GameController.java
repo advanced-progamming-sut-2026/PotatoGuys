@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -70,6 +71,7 @@ import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.games.modes.capabilities.ZombiePlacer;
 import com.pvz.models.games.modes.variants.IZombieMode;
+import com.pvz.models.games.modes.variants.IZombieLocalMode;
 import com.pvz.models.games.modes.variants.VaseBreakerMode;
 import com.pvz.models.games.card.ZombieCard;
 import com.pvz.models.user.MyPlant;
@@ -83,6 +85,7 @@ import com.pvz.view.game.PlantSelectModal;
 import com.pvz.view.game.ui.ConveyorBeltUiModal;
 import com.pvz.view.game.ui.GameUiModal;
 import com.pvz.view.game.ui.IZombieUiModal;
+import com.pvz.view.game.ui.IZombieLocalUiModal;
 import com.pvz.view.PamActor;
 import com.pvz.view.PlantData;
 import pvz.skin.PvzSkin;
@@ -165,6 +168,15 @@ public class GameController {
     private PlantCard previewPlantCard;
     private ZombieCard previewZombieCard;
 
+    /**
+     * Split I,Zombie (local 2-player): the zombie side's keyboard-controlled
+     * tile cursor and whether it is currently in "placing" mode. While placing,
+     * arrows move this cursor and Enter spawns the armed zombie card there.
+     */
+    private boolean zombiePlacing = false;
+    private int zombieCursorCol = 0;
+    private int zombieCursorLane = 0;
+
     /** Shovel tool: translucent shovel icon that follows the mouse while armed. */
     private com.badlogic.gdx.scenes.scene2d.ui.Image shovelCursorPreview;
     private final com.badlogic.gdx.math.Vector2 shovelCursorPosition = new com.badlogic.gdx.math.Vector2();
@@ -206,8 +218,10 @@ public class GameController {
                         com.badlogic.gdx.math.Vector2 stageClick = stage.screenToStageCoordinates(
                                 new com.badlogic.gdx.math.Vector2(Gdx.input.getX(), Gdx.input.getY()));
                         if (gameUiModal instanceof com.pvz.view.game.ui.IZombieUiModal izombieUi
-                                && ((izombieUi.isChatPickerVisible() && izombieUi.chatPickerContains(stageClick.x, stageClick.y))
-                                || (izombieUi.isStickerBoxVisible() && izombieUi.stickerBoxContains(stageClick.x, stageClick.y)))) {
+                                && ((izombieUi.isChatPickerVisible()
+                                        && izombieUi.chatPickerContains(stageClick.x, stageClick.y))
+                                        || (izombieUi.isStickerBoxVisible()
+                                                && izombieUi.stickerBoxContains(stageClick.x, stageClick.y)))) {
                             return true;
                         }
 
@@ -215,8 +229,14 @@ public class GameController {
                         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                         viewport.unproject(touchPos);
 
-                        // If a zombie card is selected, prioritize zombie placement
-                        boolean zombieCardSelected = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
+                        // If a zombie card is selected, prioritize zombie placement.
+                        // In the local split mode the zombie side is keyboard-driven, so the
+                        // mouse is the plant player and never routes clicks toward zombies.
+                        boolean mouseZombieActive = ctx
+                                .getMode() instanceof com.pvz.models.games.modes.variants.IZombieMode;
+                        boolean zombieCardSelected = gameUiModal != null
+                                && gameUiModal.getSelectedZombieCard() != null
+                                && mouseZombieActive;
 
                         // Plant food: clicking a planted tile feeds the plant
                         if (gameUiModal != null && gameUiModal.isPlantFoodSelected()) {
@@ -320,8 +340,10 @@ public class GameController {
                             }
                         }
 
-                        // ۲.۱. کاشت زامبی در صورت انتخاب کارت زامبی (IZombie)
-                        if (gameUiModal != null && gameUiModal.getSelectedZombieCard() != null) {
+                        // ۲.۱. کاشت زامبی در صورت انتخاب کارت زامبی (IZombie).
+                        // In the local split mode zombies are keyboard-only, never mouse.
+                        if (gameUiModal != null && gameUiModal.getSelectedZombieCard() != null
+                                && !(ctx.getMode() instanceof com.pvz.models.games.modes.variants.IZombieLocalMode)) {
                             Tile hoveredTile = ctx.getMap().getTileAt(touchPos.x, touchPos.y);
                             if (hoveredTile != null) {
                                 ZombieCard zCard = gameUiModal.getSelectedZombieCard();
@@ -360,6 +382,8 @@ public class GameController {
 
         gameUiModal = switch (level.getGameMode()) {
             case com.pvz.models.games.modes.GameModeType.CONVEYORBELT -> new ConveyorBeltUiModal(this::pauseGame);
+            case com.pvz.models.games.modes.GameModeType.SPLIT_IZOMBIE ->
+                new com.pvz.view.game.ui.IZombieLocalUiModal(this::pauseGame);
             case com.pvz.models.games.modes.GameModeType.IZOMBIE ->
                 new IZombieUiModal(this::pauseGame, this::sendQuickChat, this::sendSticker);
             default -> new GameUiModal(this::pauseGame);
@@ -392,6 +416,18 @@ public class GameController {
                 backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE_RIGHT");
             }
             case "izombie" -> {
+                isIZombie = true;
+                com.badlogic.gdx.graphics.Texture left = new com.badlogic.gdx.graphics.Texture(
+                        Gdx.files.internal("textures/backgrounds/IZOMBIE/texture_left.png"));
+                com.badlogic.gdx.graphics.Texture mid = new com.badlogic.gdx.graphics.Texture(
+                        Gdx.files.internal("textures/backgrounds/IZOMBIE/texture.png"));
+                com.badlogic.gdx.graphics.Texture right = new com.badlogic.gdx.graphics.Texture(
+                        Gdx.files.internal("textures/backgrounds/IZOMBIE/texture_right.png"));
+                backgroundTextures[0] = new TextureRegion(left);
+                backgroundTextures[1] = new TextureRegion(mid);
+                backgroundTextures[2] = new TextureRegion(right);
+            }
+            case "splitizombie" -> {
                 isIZombie = true;
                 com.badlogic.gdx.graphics.Texture left = new com.badlogic.gdx.graphics.Texture(
                         Gdx.files.internal("textures/backgrounds/IZOMBIE/texture_left.png"));
@@ -480,6 +516,8 @@ public class GameController {
             }
         }
 
+        handleSplitIZombieKeyboardUpdate(dt);
+
         state.update(dt);
 
         // Check sun & coin-drop clicks in PLAYING state on left click (only when no
@@ -488,8 +526,9 @@ public class GameController {
                 && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
             boolean zombieCardActive = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
             boolean onPopup = false;
-            com.pvz.view.game.ui.IZombieUiModal izombieUi =
-                    gameUiModal instanceof com.pvz.view.game.ui.IZombieUiModal m ? m : null;
+            com.pvz.view.game.ui.IZombieUiModal izombieUi = gameUiModal instanceof com.pvz.view.game.ui.IZombieUiModal m
+                    ? m
+                    : null;
             if (izombieUi != null) {
                 com.badlogic.gdx.math.Vector2 uClick = stage.screenToStageCoordinates(
                         new com.badlogic.gdx.math.Vector2(Gdx.input.getX(), Gdx.input.getY()));
@@ -549,6 +588,110 @@ public class GameController {
         }
 
         renderer.update(dt);
+    }
+
+    // ---- Split I,Zombie (local 2-player): zombie-side keyboard input ----
+
+    private void handleSplitIZombieKeyboardUpdate(float dt) {
+        if (ctx == null || !(state instanceof Playing) || paused)
+            return;
+        if (!(ctx.getMode() instanceof IZombieLocalMode izMode))
+            return;
+        if (!(gameUiModal instanceof IZombieLocalUiModal izUi))
+            return;
+
+        // S: collect every zombie-owned sun on the board.
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            collectAllZombieSuns(izMode);
+        }
+
+        if (zombiePlacing) {
+            // Placing mode: arrows move the tile cursor, Enter spawns.
+            if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+                zombieCursorLane = Math.max(0, zombieCursorLane - 1);
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+                zombieCursorLane = Math.min(ctx.getMap().getLanes() - 1, zombieCursorLane + 1);
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+                zombieCursorCol = Math.max(izMode.getRedLineColumn(), zombieCursorCol - 1);
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+                zombieCursorCol = Math.min(ctx.getMap().getColumns() - 1, zombieCursorCol + 1);
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                placeZombieAtCursor(izMode, izUi);
+            }
+        } else {
+            // Selection mode: up/down cycle the highlighted zombie card.
+            if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+                izUi.moveZombieSelection(-1);
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+                izUi.moveZombieSelection(1);
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                enterZombiePlacing(izMode, izUi);
+            }
+        }
+    }
+
+    /** Arms the currently highlighted zombie card and opens tile-placement mode. */
+    private void enterZombiePlacing(IZombieLocalMode izMode, IZombieLocalUiModal izUi) {
+        if (izUi.getZombieCardCount() == 0)
+            return;
+        izUi.armSelectedZombie();
+        // Park the cursor on a legal placement tile (right of the red line).
+        zombieCursorCol = Math.max(zombieCursorCol, izMode.getRedLineColumn());
+        zombieCursorLane = MathUtils.clamp(zombieCursorLane, 0, ctx.getMap().getLanes() - 1);
+        zombiePlacing = true;
+    }
+
+    /** Spawns the armed zombie at the cursor tile, then exits placing mode. */
+    private void placeZombieAtCursor(IZombieLocalMode izMode, IZombieLocalUiModal izUi) {
+        ZombieCard zCard = izUi.getSelectedZombieCard();
+        if (zCard != null && ctx.getMode() instanceof ZombiePlacer placer) {
+            int col = zombieCursorCol;
+            int lane = zombieCursorLane;
+            if (placer.isValidPlacement(ctx, col, lane, zCard)) {
+                placer.handlePlacement(ctx, col, lane, zCard);
+            } else if (izMode.getZombieSun() < zCard.getCost()) {
+                showErrorMessage("Zombie side needs " + zCard.getCost() + " sun (you have "
+                        + izMode.getZombieSun() + ").");
+            } else {
+                showErrorMessage("Can't place a zombie there.");
+            }
+        }
+        zombiePlacing = false;
+    }
+
+    /** Collects every zombie-owned sun into the zombie player's pool. */
+    private void collectAllZombieSuns(IZombieLocalMode izMode) {
+        if (ctx == null)
+            return;
+        boolean any = false;
+        for (Sun sun : new ArrayList<>(ctx.getSuns())) {
+            if (sun.isDone() || sun.isStealing())
+                continue;
+            if (sun.getOwner() == Sun.SunOwner.ZOMBIE) {
+                izMode.addZombieSun(sun.getAmount());
+                // Collect into the zombie pool only — sun.collect(ctx) would also
+                // credit the plant-side pool, so just drop the sun entity instead.
+                ctx.removeSun(sun);
+                any = true;
+            }
+        }
+        if (com.pvz.utils.DebugMode.isEnabled() && any) {
+            Gdx.app.log("SplitIZombie", "Collected zombie suns, pool now " + izMode.getZombieSun());
+        }
+    }
+
+    /** Whether the zombie side is currently in tile-placement mode. */
+    public boolean isZombiePlacing() {
+        return zombiePlacing && ctx != null
+                && (ctx.getMode() instanceof IZombieLocalMode);
+    }
+
+    public int getZombieCursorCol() {
+        return zombieCursorCol;
+    }
+
+    public int getZombieCursorLane() {
+        return zombieCursorLane;
     }
 
     private void pauseGame() {
@@ -613,6 +756,8 @@ public class GameController {
             } else {
                 won = (outcome == IZombieMode.Outcome.ZOMBIES_WIN);
             }
+        } else if (ctx.getMode() instanceof IZombieLocalMode izLocalMode) {
+            won = (izLocalMode.getOutcome() == IZombieLocalMode.Outcome.ZOMBIES_WIN);
         } else if (ctx.getMode() instanceof com.pvz.models.games.modes.variants.TimedWarMode twMode) {
             won = twMode.getOutcome() == com.pvz.models.games.modes.variants.TimedWarMode.Outcome.VICTORY;
         } else {
@@ -627,7 +772,8 @@ public class GameController {
         }
 
         Runnable exitAction = () -> Gdx.app.postRunnable(() -> {
-            if (ctx.getMode() instanceof IZombieMode) {
+            if (ctx.getMode() instanceof IZombieMode
+                    || ctx.getMode() instanceof IZombieLocalMode) {
                 PvZ2.instance.setScreen(new TravelLogMenu(PvZ2.instance));
             } else {
                 PvZ2.instance.setScreen(new GameModesMenu(PvZ2.instance));
@@ -646,16 +792,25 @@ public class GameController {
                     title = "I, ZOMBIE COMPLETE!";
                     msg = "All five brains were eaten!";
                 }
+            } else if (ctx.getMode() instanceof IZombieLocalMode) {
+                title = "ZOMBIES WIN!";
+                msg = "All five brains were eaten!";
             }
-            Runnable nextAction = () -> Gdx.app.postRunnable(() -> {
-                if (isNetworkedMatch) {
-                    AppContext.getInstance().setMatchSession(null);
-                    PvZ2.instance
-                            .setScreen(new com.pvz.view.OpponentSelectMenu(PvZ2.instance, seasonName, levelNumber));
-                } else {
-                    PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber + 1));
-                }
-            });
+            Runnable nextAction;
+            if (ctx.getMode() instanceof IZombieLocalMode) {
+                // Single local split level: no "next level" — head straight back to the map.
+                nextAction = exitAction;
+            } else {
+                nextAction = () -> Gdx.app.postRunnable(() -> {
+                    if (isNetworkedMatch) {
+                        AppContext.getInstance().setMatchSession(null);
+                        PvZ2.instance
+                                .setScreen(new com.pvz.view.OpponentSelectMenu(PvZ2.instance, seasonName, levelNumber));
+                    } else {
+                        PvZ2.instance.setScreen(new GameScreen(seasonName, levelNumber + 1));
+                    }
+                });
+            }
             popup = new GameWinPopup(title, msg, "EXIT TO MAP", exitAction, "NEXT LEVEL", nextAction);
         } else {
             String title = "THE ZOMBIES\nATE YOUR\nBRAINS!";
@@ -663,6 +818,8 @@ public class GameController {
                 if (isNetworkedMatch && matchSession.getMyRole() == PlayerRole.ZOMBIE) {
                     title = "THE ZOMBIES\nCOULD NOT EAT\nTHE BRAINS!";
                 }
+            } else if (ctx.getMode() instanceof IZombieLocalMode) {
+                title = "THE ZOMBIES\nCOULD NOT EAT\nTHE BRAINS!";
             }
             Runnable retryAction = () -> Gdx.app.postRunnable(() -> {
                 if (isNetworkedMatch) {
@@ -703,7 +860,8 @@ public class GameController {
         }
         AppContext.getInstance().setMatchSession(null);
         Gdx.app.postRunnable(() -> {
-            if (ctx != null && ctx.getMode() instanceof IZombieMode) {
+            if (ctx != null && (ctx.getMode() instanceof IZombieMode
+                    || ctx.getMode() instanceof IZombieLocalMode)) {
                 PvZ2.instance.setScreen(new TravelLogMenu(PvZ2.instance));
             } else {
                 PvZ2.instance.setScreen(new GameModesMenu(PvZ2.instance));
@@ -1001,7 +1159,15 @@ public class GameController {
                             }
                         }
                     } else {
-                        sun.collect(ctx);
+                        if (ctx.getMode() instanceof IZombieLocalMode izLocal
+                                && sun.getOwner() == Sun.SunOwner.ZOMBIE) {
+                            // Local split mode: zombie sun goes to the zombie pool,
+                            // never to the plant-side context sun.
+                            izLocal.addZombieSun(sun.getAmount());
+                            ctx.removeSun(sun);
+                        } else {
+                            sun.collect(ctx);
+                        }
                     }
                     if (com.pvz.utils.DebugMode.isEnabled())
                         Gdx.app.log("GameScreen", "Sun collected! Amount: " + sun.getAmount());

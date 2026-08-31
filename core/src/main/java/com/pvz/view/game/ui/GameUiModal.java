@@ -679,7 +679,7 @@ public class GameUiModal extends Table {
             if (card instanceof PlantCard pc) {
                 cardsBarTable.add(buildSlot(pc, false)).row();
             } else if (card instanceof ZombieCard zc) {
-                cardsBarTable.add(buildZombieSlot(zc)).row();
+                cardsBarTable.add(buildZombieSlot(zc)).pad(1f).row();
             }
         }
         updateCardStyles();
@@ -817,7 +817,7 @@ public class GameUiModal extends Table {
         return slot;
     }
 
-    private Table buildZombieSlot(ZombieCard zc) {
+    protected Table buildZombieSlot(ZombieCard zc) {
         Skin skin = PvzSkin.get();
         Drawable fallback = skin.newDrawable("white_pixel", new Color(0.35f, 0.15f, 0.15f, 1f));
 
@@ -984,9 +984,22 @@ public class GameUiModal extends Table {
             objectiveGroup.setVisible(false);
         }
 
+        if (mode instanceof com.pvz.models.games.modes.variants.TimedWarMode timedWar) {
+            updateObjectiveProgress(timedWar);
+        } else {
+            objectiveGroup.setVisible(false);
+        }
+
+        float survivalSeconds = -1f;
         if (context.getMode() instanceof com.pvz.models.games.modes.variants.IZombieMode izMode) {
+            survivalSeconds = izMode.getPlantSurvivalSecondsRemaining();
+        } else if (context.getMode() instanceof com.pvz.models.games.modes.variants.IZombieLocalMode izLocalMode) {
+            survivalSeconds = izLocalMode.getPlantSurvivalSecondsRemaining();
+        }
+
+        if (survivalSeconds >= 0f) {
             timerBank.setVisible(true);
-            float seconds = Math.max(0f, izMode.getPlantSurvivalSecondsRemaining());
+            float seconds = Math.max(0f, survivalSeconds);
             int mins = (int) (seconds / 60);
             int secs = (int) (seconds % 60);
             timerLabel.setText(String.format("%d:%02d", mins, secs));

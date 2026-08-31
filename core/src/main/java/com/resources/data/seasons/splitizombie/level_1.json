@@ -1,0 +1,76 @@
+{
+  "gameType": "SPLIT_IZOMBIE",
+  "levelNumber": 1,
+  "levelType": "MINIGAME",
+  "initialSun": 150,
+  "seasonName": "Default",
+  "redLineColumn": 4,
+  "plantSun": 150,
+  "zombieSun": 150,
+  "gameMap": {
+    "rows": 5,
+    "columns": 9,
+    "specialTiles": [
+      {
+        "x": 2,
+        "y": 4,
+        "behaviors": [
+          { "type": "DESTRUCTIBLE", "hp": 500.0, "name": "Grave", "laneDelta": 0 }
+        ],
+        "tags": ["GRAVE"]
+      }
+    ]
+  },
+  "basedPlants": [
+    {
+      "Type": "Sunflower",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "Peashooter",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "Wallnut",
+      "level": 2,
+      "seed": 10,
+      "isBoosted": true
+    },
+    {
+      "Type": "SnowPea",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "Squash",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "PotatoMine",
+      "level": 1,
+      "seed": 5,
+      "isBoosted": false
+    },
+    {
+      "Type": "Chomper",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    }
+  ],
+  "basedZombies": [
+    "BASIC",
+    "CONEHEAD",
+    "BUCKETHEAD",
+    "IMP",
+    "GARGANTUAR"
+  ],
+  "effects": []
+}

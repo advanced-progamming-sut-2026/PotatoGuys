@@ -28,6 +28,7 @@ import com.pvz.models.games.effects.ChapterEffect;
 import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.Tile;
 import com.pvz.models.games.modes.variants.IZombieMode;
+import com.pvz.models.games.modes.variants.IZombieLocalMode;
 import com.pvz.view.PamActor;
 import com.pvz.view.PlantData;
 
@@ -40,8 +41,7 @@ public class GameRenderer {
     private float stateTime;
 
     /** Debug: draws every entity's hitbox rectangle (toggle with F1). */
-    private boolean showHitboxes = true;
-
+    private boolean showHitboxes = false;
     /**
      * When true, ZOMBIE-owned suns are not drawn (host side of networked IZombie).
      */
@@ -106,15 +106,36 @@ public class GameRenderer {
             drawLootDrops();
             drawPlacementPreview();
             drawIZombieOverlay();
+            drawSplitIZombieCursor();
         }
         batch.end();
 
         if (controller.getState() instanceof Playing && controller.getGameUiModal() != null && ctx != null) {
-            boolean hasSelectedCard = controller.getGameUiModal().getSelectedCard() != null
-                    || controller.getGameUiModal().getSelectedZombieCard() != null;
-            boolean shovelArmed = controller.getGameUiModal().isShovelSelected();
-            boolean plantFoodArmed = controller.getGameUiModal().isPlantFoodSelected();
-            if (hasSelectedCard || shovelArmed || plantFoodArmed) {
+            com.pvz.view.game.ui.GameUiModal ui = controller.getGameUiModal();
+            boolean shovelArmed = ui.isShovelSelected();
+            boolean plantFoodArmed = ui.isPlantFoodSelected();
+
+            // Split I,Zombie: the zombie side places with the keyboard, so the
+            // hover highlight follows the keyboard cursor tile, not the mouse.
+            boolean splitZombieArmed = ctx.getMode() instanceof IZombieLocalMode
+                    && controller.isZombiePlacing()
+                    && ui.getSelectedZombieCard() != null;
+
+            if (splitZombieArmed) {
+                Tile cursorTile = ctx.getMap().getTileAt(
+                        controller.getZombieCursorCol(), controller.getZombieCursorLane());
+                if (cursorTile != null) {
+                    drawPlacementHighlights(cursorTile);
+                }
+            }
+
+            // Plant side (and mouse-driven modes like online I,Zombie) keeps the
+            // mouse highlight.
+            boolean mouseArmed = ui.getSelectedCard() != null
+                    || shovelArmed
+                    || plantFoodArmed
+                    || (ui.getSelectedZombieCard() != null && !(ctx.getMode() instanceof IZombieLocalMode));
+            if (mouseArmed) {
                 controller.getTouchPos().set(Gdx.input.getX(), Gdx.input.getY(), 0);
                 controller.getViewport().unproject(controller.getTouchPos());
 
@@ -330,8 +351,10 @@ public class GameRenderer {
             return;
         }
 
-        // Zombie preview
-        if (controller.getGameUiModal() != null && controller.getGameUiModal().getSelectedZombieCard() != null) {
+        // Zombie preview (mouse-driven preview only; the local split mode's
+        // zombie preview follows the keyboard cursor in drawSplitIZombieCursor).
+        if (controller.getGameUiModal() != null && controller.getGameUiModal().getSelectedZombieCard() != null
+                && !(ctx.getMode() instanceof IZombieLocalMode)) {
             ZombieCard zCard = controller.getGameUiModal().getSelectedZombieCard();
             if (zCard != controller.getPreviewZombieCard()) {
                 controller.setPreviewZombieCard(zCard);
@@ -412,6 +435,10 @@ public class GameRenderer {
         float rowY = tile.getY();
         float colX = tile.getX();
 
+        // Explicitly pin the world projection. drawDebugShapes no longer sets it
+        // unconditionally (it is debug-only now), so relying on a stale matrix
+        // would render the highlight at the wrong spot/shape in normal levels.
+        controller.getShapeRenderer().setProjectionMatrix(controller.getCamera().combined);
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
@@ -420,6 +447,8 @@ public class GameRenderer {
         controller.getShapeRenderer().rect(colX, gridBottom, GameMap.TILE_WIDTH, lanes * GameMap.TILE_HEIGHT);
         controller.getShapeRenderer().end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
+        // Restore blending for the SpriteBatch after the shapeRenderer block.
+        Gdx.gl.glEnable(GL20.GL_BLEND);
     }
 
     private void drawIZombieOverlay() {
@@ -440,6 +469,8 @@ public class GameRenderer {
                 lanes * GameMap.TILE_HEIGHT);
         controller.getShapeRenderer().end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
+        // Re-enable blending for the SpriteBatch (it expects GL_BLEND active).
+        Gdx.gl.glEnable(GL20.GL_BLEND);
         batch.setProjectionMatrix(controller.getCamera().combined);
         batch.begin();
 
@@ -456,15 +487,6 @@ public class GameRenderer {
                 float brainY = GameController.laneToWorldY(lane);
                 if (brainRegion != null) {
                     batch.draw(brainRegion, brainX - brainSize / 2f, brainY - brainSize / 2f, brainSize, brainSize);
-                } else {
-                    batch.end();
-                    controller.getShapeRenderer().setProjectionMatrix(controller.getCamera().combined);
-                    controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
-                    controller.getShapeRenderer().setColor(Color.MAGENTA);
-                    controller.getShapeRenderer().circle(brainX, brainY, 18f);
-                    controller.getShapeRenderer().end();
-                    batch.setProjectionMatrix(controller.getCamera().combined);
-                    batch.begin();
                 }
             }
         }
@@ -481,72 +503,130 @@ public class GameRenderer {
         }
     }
 
-    private void drawDebugShapes() {
-        controller.getShapeRenderer().setProjectionMatrix(controller.getCamera().combined);
-        // ۶. رسم خورشیدها و خطوط دیباگ گرید
-        if (ctx != null) {
-            controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+    /**
+     * Split I,Zombie (local 2-player): red placement line + brain indicators
+     * (mirroring {@link #drawIZombieOverlay}) plus the zombie side's
+     * keyboard-driven tile cursor highlight while it is in placing mode.
+     */
+    private void drawSplitIZombieCursor() {
+        if (!(ctx.getMode() instanceof IZombieLocalMode izMode))
+            return;
 
-            // رسم خورشیدها
-            controller.getShapeRenderer().setColor(Color.YELLOW);
-            /*
-             * for (Sun sun : new ArrayList<>(context.getSuns())) {
-             * if (!sun.isDone()) {
-             * shapeRenderer.circle(sun.getX(), sun.getY(), 50);
-             * }
-             * }
-             */
-            // رسم خطوط گرید دیباگ
-            boolean showGrid = false;
-            try {
-                var user = com.pvz.models.AppContext.getInstance().getCurrentUser();
-                if (user != null)
-                    showGrid = user.getSetting().isShowGrid();
-            } catch (Exception ignored) {
+        int lanes = ctx.getMap().getLanes();
+
+        // Red line at the placement boundary (shapeRenderer). Flush the batch
+        // first — the queued background sprites would otherwise overwrite the
+        // line when they are finally drawn.
+        batch.end();
+        float redLineX = GameController.colToWorldX(izMode.getRedLineColumn()) - GameMap.TILE_WIDTH / 2f;
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        controller.getShapeRenderer().setProjectionMatrix(controller.getCamera().combined);
+        controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+        controller.getShapeRenderer().setColor(Color.RED);
+        controller.getShapeRenderer().rect(redLineX, GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT, 4f,
+                lanes * GameMap.TILE_HEIGHT);
+        controller.getShapeRenderer().end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        batch.setProjectionMatrix(controller.getCamera().combined);
+        batch.begin();
+
+        // Brain indicators at column -1.
+        com.badlogic.gdx.graphics.g2d.TextureRegion brainRegion = PvZ2.textureBank
+                .region("IMAGE_UI_CURRENCY_VALENBRAINZ_STACK_0");
+        boolean[] brainsEaten = izMode.getBrainsEaten();
+        if (brainsEaten != null) {
+            float brainX = GameController.colToWorldX(-1);
+            float brainSize = 65f;
+            for (int lane = 0; lane < lanes; lane++) {
+                if (lane < brainsEaten.length && !brainsEaten[lane]) {
+                    float brainY = GameController.laneToWorldY(lane);
+                    if (brainRegion != null) {
+                        batch.draw(brainRegion, brainX - brainSize / 2f, brainY - brainSize / 2f, brainSize, brainSize);
+                    }
+                }
             }
-            if (showGrid) {
-                controller.getShapeRenderer().end();
+        }
+
+        // Sun icon above sun-producer zombies (mirroring I,Zombie).
+        List<Zombie> sunProducers = izMode.getSunProducers();
+        if (sunProducers != null) {
+            float bob = 4f * (float) Math.sin(stateTime * 2.0f);
+            float sunScale = 0.45f;
+            for (Zombie z : sunProducers) {
+                if (z.isDead())
+                    continue;
+                PvZ2.pamPlayer.draw(batch, "768/INITIAL/EFFECTS/SUN/SUN.PAM", "animation",
+                        stateTime, z.getX(), z.getY() + 55f + bob, sunScale, sunScale, true);
+            }
+        }
+
+        // Keyboard tile cursor while placing. The armed zombie is shown with
+        // pamPlayer (never shapeRenderer) so it previews the actual PAM sprite.
+        if (controller.isZombiePlacing()) {
+            int col = controller.getZombieCursorCol();
+            int lane = controller.getZombieCursorLane();
+            Tile cursorTile = ctx.getMap().getTileAt(col, lane);
+            if (cursorTile != null) {
+                float cx = cursorTile.getX();
+                float cy = cursorTile.getY();
+                ZombieCard armed = controller.getGameUiModal() != null
+                        ? controller.getGameUiModal().getSelectedZombieCard() : null;
+                if (armed != null && armed.getZombieType() != null) {
+                    com.pvz.models.entities.zombies.data.ZombiePropertySheet sheet = com.pvz.models.entities.zombies.data.ZombieRegistry
+                            .getInstance().getSheet(armed.getZombieType().getAlias());
+                    String pamPath = null;
+                    String idleLabel = null;
+                    float scale = 0.65f;
+                    if (sheet != null && sheet.getAnimationConfig() != null) {
+                        pamPath = sheet.getAnimationConfig().pamFilePath;
+                        idleLabel = sheet.getAnimationConfig().idleLabel;
+                        if (sheet.getAnimationConfig().scale != null)
+                            scale = sheet.getAnimationConfig().scale;
+                    }
+                    if (pamPath != null && idleLabel != null) {
+                        java.util.Map<String, Boolean> partsVisibility = buildPreviewPartsVisibility(sheet);
+                        batch.setColor(1f, 1f, 1f, 0.90f);
+                        if (partsVisibility != null) {
+                            PamActor.drawWithVisibility(batch, pamPath, idleLabel, stateTime,
+                                    cx + GameMap.TILE_WIDTH / 2f, cy + GameMap.TILE_HEIGHT / 2f,
+                                    scale, true, partsVisibility);
+                        } else {
+                            PvZ2.pamPlayer.draw(batch, pamPath, idleLabel, stateTime,
+                                    cx + GameMap.TILE_WIDTH / 2f, cy + GameMap.TILE_HEIGHT / 2f,
+                                    scale, scale, true);
+                        }
+                        batch.setColor(Color.WHITE);
+                    }
+                }
+                // Thin outline so the keyboard cursor position stays visible.
+                batch.end();
+                controller.getShapeRenderer().setProjectionMatrix(controller.getCamera().combined);
                 Gdx.gl.glEnable(GL20.GL_BLEND);
                 Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-                controller.getShapeRenderer().setProjectionMatrix(controller.getCamera().combined);
-                controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
-                controller.getShapeRenderer().setColor(1f, 0f, 0f, 0.4f);
-                int lanes = ctx.getMap().getLanes();
-                int cols = ctx.getMap().getColumns();
-                float boardWidth = cols * GameMap.TILE_WIDTH;
-                float gridBottom = GameMap.TOP_LANE_Y - (lanes - 1) * GameMap.TILE_HEIGHT;
-                float gridHeight = lanes * GameMap.TILE_HEIGHT;
-                for (int i = 0; i <= lanes; i++) {
-                    float y = GameMap.TOP_LANE_Y + GameMap.TILE_HEIGHT - i * GameMap.TILE_HEIGHT;
-                    controller.getShapeRenderer().rect(GameMap.START_X, y - 1f, boardWidth, 2f);
-                }
-                for (int i = 0; i <= cols; i++) {
-                    float x = GameMap.START_X + i * GameMap.TILE_WIDTH;
-                    controller.getShapeRenderer().rect(x - 1f, gridBottom, 2f, gridHeight);
-                }
+                controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Line);
+                controller.getShapeRenderer().setColor(1f, 1f, 1f, 1f);
+                controller.getShapeRenderer().rect(cx + 2f, cy + 2f, GameMap.TILE_WIDTH - 4f, GameMap.TILE_HEIGHT - 4f);
                 controller.getShapeRenderer().end();
                 Gdx.gl.glDisable(GL20.GL_BLEND);
-                controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+                // Restore blending for the SpriteBatch before drawing entities again.
+                Gdx.gl.glEnable(GL20.GL_BLEND);
+                batch.setProjectionMatrix(controller.getCamera().combined);
+                batch.begin();
             }
+        }
+    }
 
-            // for(Plant a : ctx.getPlants()){
-            // shapeRenderer.circle(GameController.xToWorldX(a.getCol()),
-            // GameController.yToWorldY(a.getLane()), 10);
-            // }
-
-            // for(Projectile a : ctx.getProjectiles()){
-            // shapeRenderer.circle(a.getX(), a.getY(), 10);
-            // }
-
-            // for(Zombie a : ctx.getZombies()){
-            // shapeRenderer.circle(a.getX(),a.getY(), 10);
-            // }
-
-            controller.getShapeRenderer().end();
-
-            // Hitbox debug (outline)
-            controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Line);
-            drawHitboxes();
+    private void drawDebugShapes() {
+        // No-op: entity sprites are drawn strictly via pamPlayer (with their pam +
+        // clip). This debug path previously drew colored hitbox/grid rectangles with
+        // ShapeRenderer on top of every entity; that must never happen during normal
+        // display, so the whole block is disabled.
+        if (com.pvz.utils.DebugMode.isEnabled()) {
+            controller.getShapeRenderer().setProjectionMatrix(controller.getCamera().combined);
+            controller.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
+            controller.getShapeRenderer().setColor(Color.YELLOW);
             controller.getShapeRenderer().end();
         }
     }

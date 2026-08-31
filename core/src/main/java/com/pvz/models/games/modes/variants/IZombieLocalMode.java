@@ -7,11 +7,10 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.pvz.controller.game.GameController;
-import com.pvz.models.Constants;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
+import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
-import com.pvz.models.entities.plants.data.PlantRegistry;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.data.PlantStatResolver.ResolvedStats;
 import com.pvz.models.entities.sun.Sun;
@@ -24,26 +23,24 @@ import com.pvz.models.games.card.Card;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.card.ZombieCard;
 import com.pvz.models.games.levels.Level;
-import com.pvz.models.games.levels.variants.IZombieLevel;
+import com.pvz.models.games.levels.variants.IZombieLocalLevel;
 import com.pvz.models.games.modes.GameMode;
+import com.pvz.models.games.modes.GameModeType;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.games.modes.capabilities.ZombiePlacer;
 import com.pvz.models.user.MyPlant;
 
 /**
- * I, Zombie: one player defends with plants (PlantPlacer, same
- * card-and-cooldown
- * mechanics as NormalMode, restricted to the columns left of the red line),
- * the other attacks with zombies (ZombiePlacer, unchanged from before).
+ * Local two-player split I,Zombie mode.
  *
- * Networked play (Phase 3): the plant-side client is always the authoritative
- * host — it's the one running GameEngine, so it's the only side whose
- * PlantCard cooldowns actually tick. The zombie-side client is the guest; see
- * GameController and GameStateSync for how its input/rendering are wired.
- * This class itself doesn't know or care whether it's networked — it's driven
- * identically either way, exactly like single-player.
+ * <p>
+ * Both sides share one screen: the plant player uses the mouse and spends the
+ * normal {@link GameContext} sun pool; the zombie player uses the keyboard and
+ * spends a separate {@link #zombieSun} pool. Unlike {@link IZombieMode} there
+ * is no networking — both controlled here, so the zombie sun economy is
+ * tracked directly in this class.
  */
-public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
+public class IZombieLocalMode implements GameMode, ZombiePlacer, PlantPlacer {
     private static final float PLANT_SURVIVAL_SECONDS = 120f;
 
     private final List<MyPlant> basedPlants;
@@ -52,10 +49,8 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
     private int laneCount = 5;
     private int redLineColumn = 6;
 
-    private int ticksElapsed = 0;
     private boolean sunProducersSpawned = false;
-    private boolean guestSunProducersSpawned = false;
-    private final java.util.Map<Zombie, Float> brainEatTimers = new java.util.IdentityHashMap<>();
+    private final Map<Zombie, Float> brainEatTimers = new java.util.IdentityHashMap<>();
     private static final float BRAIN_EAT_DURATION = 3.0f;
 
     private static final String SUN_PRODUCER_ALIAS = "ZombieTutorialArmor2Default";
@@ -64,33 +59,14 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
     private static final float SUN_PRODUCTION_INTERVAL_SECONDS = 10f;
     private final List<Zombie> sunProducers = new ArrayList<>();
     private final java.util.IdentityHashMap<Zombie, Float> sunProducerTimers = new java.util.IdentityHashMap<>();
+
+    /** The zombie (keyboard) player's separate sun pool. */
     private int zombieSun = 0;
 
-    /**
-     * Counts down from PLANT_SURVIVAL_SECONDS in real time (dt-based, not ticks).
-     * Plants win if this hits zero before all five brains are eaten.
-     */
+    /** Real-time (dt-based) countdown; plants win at zero. */
     private float plantSurvivalSecondsRemaining = PLANT_SURVIVAL_SECONDS;
 
-    /**
-     * Set when the zombie side runs out of live zombies, sun producers, and
-     * affordable cards all at once — mirrors what used to be an unconditional
-     * loss; now (with a real plant-side player) it's a plant win.
-     */
     private boolean zombieSideStuck = false;
-
-    /**
-     * Set by the guest in a networked match so that sun checks use
-     * {@link #zombieSun}.
-     */
-    private boolean networkGuest = false;
-
-    /**
-     * Set by the host in a networked match so that zombie placement skips sun
-     * spending
-     * (the guest already spent zombie sun locally).
-     */
-    private boolean networkHost = false;
 
     public enum Outcome {
         IN_PROGRESS, ZOMBIES_WIN, PLANTS_WIN
@@ -143,13 +119,16 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         ZOMBIE_SUN_COSTS.put(ZombieType.DARK_IMP, 25);
     }
 
-    public IZombieMode(Level level) {
-        if (level instanceof IZombieLevel iZombieLevel) {
-            this.basedPlants = iZombieLevel.getBasedPlants();
-            this.basedZombies = iZombieLevel.getBasedZombies();
-            this.redLineColumn = iZombieLevel.getRedLineColumn();
+    public IZombieLocalMode(Level level) {
+        if (level instanceof IZombieLocalLevel izLevel) {
+            this.basedPlants = izLevel.getBasedPlants();
+            this.basedZombies = izLevel.getBasedZombies();
+            this.redLineColumn = izLevel.getRedLineColumn();
+            if (izLevel.getGameMode() == GameModeType.SPLIT_IZOMBIE) {
+                this.zombieSun = izLevel.getZombieSun();
+            }
         } else {
-            throw new IllegalArgumentException("Level must be an instance of IZombieLevel.");
+            throw new IllegalArgumentException("Level must be an instance of IZombieLocalLevel.");
         }
         this.brainsEaten = new boolean[laneCount];
     }
@@ -174,59 +153,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         this.plantSurvivalSecondsRemaining = seconds;
     }
 
-    /**
-     * Used only by the network layer (GameStateSync) on a guest client, to mark a
-     * reconstructed zombie as a sun producer so the floating-sun-icon overlay
-     * (GameController#drawIZombieOverlay) still works on the guest's own screen.
-     */
-    public void registerRemoteSunProducer(Zombie z) {
-        if (!sunProducers.contains(z)) {
-            sunProducers.add(z);
-            sunProducerTimers.put(z, SUN_PRODUCTION_INTERVAL_SECONDS);
-        }
-    }
-
-    /**
-     * Guest (zombie) side: spawns the per-lane sun-producer zombies as
-     * lightweight local entities. They are NOT rendered — the guest draws whatever
-     * the host sends (the remote frame already includes the producers and their
-     * sun icons) — but they exist locally so {@link #updateSunProducers} can mint
-     * the player's own collectible zombie suns. Rendered state and actual gameplay
-     * stay on the host.
-     */
-    public void ensureGuestSunProducers(GameContext context) {
-        if (guestSunProducersSpawned)
-            return;
-        guestSunProducersSpawned = true;
-        int lastCol = context.getMap().getColumns() - 1;
-        float spawnX = GameController.colToWorldX(lastCol);
-        int lanes = context.getMap().getLanes();
-        for (int lane = 0; lane < lanes; lane++) {
-            try {
-                Zombie producer = new ZombieFactory().create(SUN_PRODUCER_ALIAS, spawnX, lane, context, 1, 1);
-                producer.setPendingInitialState(new com.pvz.models.entities.zombies.fsm.IdleState());
-                producer.setHp(SUN_PRODUCER_HP);
-                context.spawnZombie(producer);
-                sunProducers.add(producer);
-                sunProducerTimers.put(producer, SUN_PRODUCTION_INTERVAL_SECONDS);
-            } catch (Exception e) {
-                Gdx.app.error("IZombieMode", "Failed to spawn guest sun producer: " + e.getMessage());
-            }
-        }
-    }
-
-    public void setNetworkGuest(boolean networkGuest) {
-        this.networkGuest = networkGuest;
-    }
-
-    public void setNetworkHost(boolean networkHost) {
-        this.networkHost = networkHost;
-    }
-
-    public boolean isNetworkGuest() {
-        return networkGuest;
-    }
-
+    /** Returns the zombie (keyboard) player's sun pool. */
     public int getZombieSun() {
         return zombieSun;
     }
@@ -243,10 +170,6 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         return false;
     }
 
-    /**
-     * Who's currently ahead, from a neutral (not per-role) point of view.
-     * GameController maps this onto "did *I* win" using the local player's role.
-     */
     public Outcome getOutcome() {
         boolean allBrainsEaten = true;
         for (int i = 0; i < laneCount; i++) {
@@ -274,19 +197,14 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         laneCount = context.getMap().getLanes();
         brainsEaten = new boolean[laneCount];
         setupZombieCards(context);
-        // The plant-side cards only belong on the plant-playing side (single-player
-        // or the network host). A network guest plays zombies only, so skip them.
-        if (!networkGuest) {
-            setupPlantCards(context);
-        }
-        context.log("I, Zombie ready! " + basedZombies.size() + " zombie types available, "
+        setupPlantCards(context);
+        context.log("Split I,Zombie ready! " + basedZombies.size() + " zombie types available, "
                 + (basedPlants == null ? 0 : basedPlants.size()) + " plant types available.");
     }
 
     private void setupZombieCards(GameContext context) {
         if (basedZombies == null || basedZombies.isEmpty())
             return;
-
         for (ZombieType zt : basedZombies) {
             if (zt == null)
                 continue;
@@ -298,15 +216,9 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         }
     }
 
-    /**
-     * Mirrors setupZombieCards: one PlantCard per allowed plant type, using the
-     * same cost/recharge resolution NormalMode uses (real cooldown, unlike
-     * zombie cards — the plant side plays a normal PvZ card economy).
-     */
     private void setupPlantCards(GameContext context) {
         if (basedPlants == null || basedPlants.isEmpty())
             return;
-
         for (MyPlant mp : basedPlants) {
             if (mp == null)
                 continue;
@@ -325,8 +237,6 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
 
     @Override
     public void updateMode(GameContext context, float dt) {
-        ticksElapsed++;
-
         if (!sunProducersSpawned) {
             sunProducersSpawned = true;
             int lastCol = context.getMap().getColumns() - 1;
@@ -341,12 +251,11 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
                     sunProducers.add(producer);
                     sunProducerTimers.put(producer, SUN_PRODUCTION_INTERVAL_SECONDS);
                 } catch (Exception e) {
-                    Gdx.app.error("IZombieMode", "Failed to spawn sun producer: " + e.getMessage());
+                    Gdx.app.error("IZombieLocalMode", "Failed to spawn sun producer: " + e.getMessage());
                 }
             }
         }
 
-        // Brain eating: brains sit at column -1 (off-screen, like lawn mowers).
         float brainX = GameController.colToWorldX(-1);
         int lanes = context.getMap().getLanes();
         List<Zombie> toRemove = new ArrayList<>();
@@ -357,11 +266,9 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
                 int lane = GameController.worldYtoLane(z.getY());
                 if (lane >= 0 && lane < lanes && lane < brainsEaten.length) {
                     if (!brainsEaten[lane]) {
-                        // Brain not yet eaten — start (or continue) eating.
                         if (!brainEatTimers.containsKey(z)) {
                             brainEatTimers.put(z, BRAIN_EAT_DURATION);
                         }
-                        // Pin zombie in place at the brain while it eats.
                         z.setX(brainX);
                         float remaining = brainEatTimers.get(z) - dt;
                         brainEatTimers.put(z, remaining);
@@ -370,11 +277,9 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
                             toRemove.add(z);
                         }
                     } else {
-                        // Brain already eaten in this lane — zombie walks past, remove it.
                         toRemove.add(z);
                     }
                 } else {
-                    // Out-of-range lane — just remove the zombie.
                     toRemove.add(z);
                 }
             }
@@ -396,8 +301,6 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             return;
         }
 
-        // Plant-side win condition: survive PLANT_SURVIVAL_SECONDS without losing
-        // all five brains. Real elapsed time, not a tick count.
         plantSurvivalSecondsRemaining -= dt;
         if (plantSurvivalSecondsRemaining <= 0f) {
             plantSurvivalSecondsRemaining = 0f;
@@ -405,8 +308,6 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             return;
         }
 
-        // Per-zombie sun production (host side — needed for single-player IZombie;
-        // filtered out of snapshots by GameStateSync so the guest never sees them)
         java.util.Iterator<java.util.Map.Entry<Zombie, Float>> timerIt = sunProducerTimers.entrySet().iterator();
         while (timerIt.hasNext()) {
             java.util.Map.Entry<Zombie, Float> entry = timerIt.next();
@@ -442,7 +343,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         if (!hasLivingPlayerZombies) {
             int cheapest = Integer.MAX_VALUE;
             for (Card card : context.getCards()) {
-                if (card instanceof ZombieCard zc && context.getCurrentSun() >= zc.getCost()) {
+                if (card instanceof ZombieCard zc && zombieSun >= zc.getCost()) {
                     cheapest = Math.min(cheapest, zc.getCost());
                 }
             }
@@ -453,8 +354,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         }
     }
 
-    // ---- ZombiePlacer
-    // ------------------------------------------------------------------
+    // ---- ZombiePlacer ----
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, Card card) {
@@ -466,12 +366,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             return false;
         if (!zombieCard.canUse())
             return false;
-        // Guest validates against its own zombie sun; host skips sun check
-        // (the guest already validated before sending the action).
-        if (networkHost)
-            return true;
-        int availableSun = networkGuest ? zombieSun : context.getCurrentSun();
-        if (availableSun < zombieCard.getCost())
+        if (zombieSun < zombieCard.getCost())
             return false;
         return true;
     }
@@ -480,31 +375,18 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
     public void handlePlacement(GameContext context, int col, int lane, Card card) {
         if (!(card instanceof ZombieCard zombieCard))
             return;
-        if (networkGuest) {
-            if (!spendZombieSun(zombieCard.getCost())) {
-                Gdx.app.log("IZombieMode", "Not enough zombie sun for " + zombieCard.getZombieType());
-                return;
-            }
-        } else if (!networkHost) {
-            if (!context.spendSun(zombieCard.getCost())) {
-                Gdx.app.log("IZombieMode", "Not enough sun for " + zombieCard.getZombieType());
-                return;
-            }
+        if (!spendZombieSun(zombieCard.getCost())) {
+            Gdx.app.log("IZombieLocalMode", "Not enough zombie sun for " + zombieCard.getZombieType());
+            return;
         }
-        // else networkHost: guest already spent zombie sun, no local deduction needed
         try {
             float spawnX = GameController.colToWorldX(col);
-            Zombie zombie = new ZombieFactory().create(zombieCard.getZombieType().getAlias(), spawnX, lane, context, 1,
-                    1);
+            Zombie zombie = new ZombieFactory().create(zombieCard.getZombieType().getAlias(), spawnX, lane, context, 1, 1);
             context.spawnZombie(zombie);
             zombieCard.use();
         } catch (Exception e) {
-            Gdx.app.error("IZombieMode", "Failed to place " + zombieCard.getZombieType() + ": " + e.getMessage());
-            if (networkGuest) {
-                addZombieSun(zombieCard.getCost());
-            } else {
-                context.addSun(zombieCard.getCost());
-            }
+            Gdx.app.error("IZombieLocalMode", "Failed to place " + zombieCard.getZombieType() + ": " + e.getMessage());
+            addZombieSun(zombieCard.getCost());
         }
     }
 
@@ -518,9 +400,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         return null;
     }
 
-    // ---- PlantPlacer
-    // ---------------------------------------------------------------------
-    // Same rules as NormalMode, restricted to the defense side of the red line.
+    // ---- PlantPlacer ----
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
@@ -529,8 +409,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             return false;
         }
         if (col < 0 || col >= redLineColumn) {
-            context.log(
-                    "[Placement Failed] Plants can only be placed left of the red line (col < " + redLineColumn + ").");
+            context.log("[Placement Failed] Plants can only be placed left of the red line (col < " + redLineColumn + ").");
             return false;
         }
         if (lane < 0 || lane >= context.getMap().getLanes()) {
@@ -547,7 +426,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             return false;
         }
 
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(card.getPlant().getType());
         ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
         if (context.getCurrentSun() < stats.getSunCost()) {
             context.log("[Placement Failed] Not enough sun for " + sheet.getName()
@@ -559,7 +438,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
 
     @Override
     public void handlePlacement(GameContext context, int col, int lane, PlantCard card) {
-        PlantPropertySheet sheet = PlantRegistry.getInstance().getSheet(card.getPlant().getType());
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(card.getPlant().getType());
         ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
         if (!context.spendSun(stats.getSunCost())) {
             context.log("Not enough sun.");
@@ -586,33 +465,5 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
             }
         }
         return null;
-    }
-
-    /**
-     * Guest-side per-tick update for sun producer zombies.
-     * Called from GameController on the guest (zombie) side since the guest
-     * never runs GameEngine.update() → updateMode().
-     */
-    public void updateSunProducers(GameContext context, float dt) {
-        java.util.Iterator<java.util.Map.Entry<Zombie, Float>> timerIt = sunProducerTimers.entrySet().iterator();
-        while (timerIt.hasNext()) {
-            java.util.Map.Entry<Zombie, Float> entry = timerIt.next();
-            Zombie z = entry.getKey();
-            if (z.isDead()) {
-                timerIt.remove();
-                continue;
-            }
-            float remaining = entry.getValue() - dt;
-            if (remaining <= 0) {
-                int col = GameController.worldXtoCol(z.getX());
-                int lane = GameController.worldYtoLane(z.getY());
-                Sun sun = new Sun(SunType.NORMAL, col, lane, SUN_AMOUNT, false, context);
-                sun.setOwner(Sun.SunOwner.ZOMBIE);
-                sun.getCurrentPos().add(0, 30f);
-                context.spawnSun(sun);
-                remaining = SUN_PRODUCTION_INTERVAL_SECONDS;
-            }
-            entry.setValue(remaining);
-        }
     }
 }

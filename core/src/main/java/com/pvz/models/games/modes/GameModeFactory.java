@@ -4,6 +4,7 @@ import com.pvz.models.games.modes.variants.BeghouledMode;
 import com.pvz.models.games.modes.variants.ConveyorBeltMode;
 import com.pvz.models.games.modes.variants.DeadLineMode;
 import com.pvz.models.games.modes.variants.IZombieMode;
+import com.pvz.models.games.modes.variants.IZombieLocalMode;
 import com.pvz.models.games.modes.variants.NormalMode;
 import com.pvz.models.games.modes.variants.PlantWhatYouGetMode;
 import com.pvz.models.games.modes.variants.TimedWarMode;
@@ -21,6 +22,8 @@ public class GameModeFactory {
                 return new TimedWarMode(level);
             case IZOMBIE:
                 return new IZombieMode(level);
+            case SPLIT_IZOMBIE:
+                return new IZombieLocalMode(level);
             case PLANTWHATYOUGET:
                 return new PlantWhatYouGetMode(level);
             case DEADLINE:
