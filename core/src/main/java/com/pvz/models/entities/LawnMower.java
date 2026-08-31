@@ -11,7 +11,11 @@ import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
 
 public class LawnMower extends Entity {
-    private static final String PAM_PATH = "768/INITIAL/MOWERS/MOWER_EGYPT/MOWER_EGYPT.PAM";
+    private static final String DEFAULT_PAM = "768/INITIAL/MOWERS/MOWER_TUTORIAL/MOWER_TUTORIAL.PAM";
+    private static final String EGYPT_PAM = "768/INITIAL/MOWERS/MOWER_EGYPT/MOWER_EGYPT.PAM";
+    private static final String ICEAGE_PAM = "768/FULL/MOWERS/MOWER_ICEAGE/MOWER_ICEAGE.PAM";
+    private static final String DARKAGES_PAM = "768/FULL/MOWERS/MOWER_DARK/MOWER_DARK.PAM";
+    private static final String BEACH_PAM = "768/FULL/MOWERS/MOWER_BEACH/MOWER_BEACH.PAM";
     private static final String PAM_LABEL_IDLE = "idle";
     private static final String PAM_LABEL_ATTACK = "attack";
     private static final float VELOCITY = 300f;
@@ -62,12 +66,21 @@ public class LawnMower extends Entity {
 
     @Override
     public List<FrameConfig> draw() {
+        String pam;
+        switch (ctx.getSeasonName().toLowerCase()) {
+            case "ancient egypt" -> pam = EGYPT_PAM;
+            case "frostbite caves" -> pam = ICEAGE_PAM;
+            case "dark ages" -> pam = DARKAGES_PAM;
+            case "big wave beach" -> pam = BEACH_PAM;
+            default -> pam = DEFAULT_PAM;
+        }
+
         List<FrameConfig> frameConfigs = new ArrayList<>();
         if (!triggered)
-            frameConfigs.add(new FrameConfig(PAM_PATH, PAM_LABEL_IDLE, stateTime, position,
+            frameConfigs.add(new FrameConfig(pam, PAM_LABEL_IDLE, stateTime, position,
                     new Vector2(0.75f, 0.75f), null, true));
         else
-            frameConfigs.add(new FrameConfig(PAM_PATH, PAM_LABEL_ATTACK, stateTime, position,
+            frameConfigs.add(new FrameConfig(pam, PAM_LABEL_ATTACK, stateTime, position,
                     new Vector2(0.75f, 0.75f), null, true));
         return frameConfigs;
     }
