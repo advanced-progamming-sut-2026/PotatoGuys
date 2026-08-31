@@ -58,105 +58,35 @@
       "isFinalWave": false,
       "baseTotalWaveCost": 120,
       "lanes": 5,
-      "difficulty": 3,
+      "difficulty": 1,
       "phases": [
         {
           "zombieCount": 3,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["MUMMY", "MUMMY_CONE"],
+          "intervalSeconds": 10,
+          "allowedTypes": [
+            "MUMMY",
+            "MUMMY_CONE"
+          ],
           "isBurst": false
         },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["MUMMY_BUCKET", "RA"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 4.5,
-          "allowedTypes": ["EXPLORER"],
-          "isBurst": false
-        }
-      ]
-    },
-    {
-      "waveNumber": 2,
-      "isFinalWave": false,
-      "baseTotalWaveCost": 144,
-      "lanes": 5,
-      "difficulty": 4,
-      "phases": [
         {
           "zombieCount": 3,
-          "intervalSeconds": 4.5,
-          "allowedTypes": ["MUMMY_CONE", "MUMMY_BUCKET"],
+          "intervalSeconds": 10,
+          "allowedTypes": [
+            "MUMMY_BUCKET",
+            "RA"
+          ],
           "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 4.5,
-          "allowedTypes": ["RA", "EXPLORER"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 4.0,
-          "allowedTypes": ["TOMB_RAISER", "MUMMY"],
-          "isBurst": false
-        }
-      ]
-    },
-    {
-      "waveNumber": 3,
-      "isFinalWave": false,
-      "baseTotalWaveCost": 173,
-      "lanes": 5,
-      "difficulty": 5,
-      "phases": [
-        {
-          "zombieCount": 3,
-          "intervalSeconds": 4.0,
-          "allowedTypes": ["MUMMY_BUCKET", "MUMMY_BRICK"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 4.0,
-          "allowedTypes": ["TOMB_RAISER", "EXPLORER"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 4.0,
-          "allowedTypes": ["RA", "EGYPT_IMP"],
-          "isBurst": false
-        }
-      ]
-    },
-    {
-      "waveNumber": 4,
-      "isFinalWave": true,
-      "baseTotalWaveCost": 346,
-      "lanes": 5,
-      "difficulty": 7,
-      "phases": [
-        {
-          "zombieCount": 3,
-          "intervalSeconds": 3.0,
-          "allowedTypes": ["MUMMY_BRICK", "TOMB_RAISER"],
-          "isBurst": true
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 3.0,
-          "allowedTypes": ["EXPLORER", "RA"],
-          "isBurst": true
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 3.0,
-          "allowedTypes": ["EGYPT_GARG", "EGYPT_IMP"],
+          "zombieCount": 4,
+          "intervalSeconds": 6,
+          "allowedTypes": [
+            "MUMMY",
+            "MUMMY_CONE",
+            "RA",
+            "EXPLORER"
+          ],
           "isBurst": true
         }
       ]

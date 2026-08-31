@@ -74,8 +74,6 @@ public class Zombie extends Entity {
     // ── Flags ─────────────────────────────────────────────────────────────────
     private boolean dead;
     private final boolean glowing;
-    private boolean frozen;
-    private float frozenDuration;
     private boolean frozenInIceBlock;
     private float iceBlockStateTime;
     private boolean impAlreadyThrown = false;
@@ -132,9 +130,6 @@ public class Zombie extends Entity {
             }
         });
         velocity.set(-getEffectiveSpeedPerTick() * 1000f, 0f);
-
-        frozen = false;
-        frozenDuration = 0;
     }
 
     // ── TickAware ─────────────────────────────────────────────────────────────
@@ -494,7 +489,9 @@ public class Zombie extends Entity {
                 && flash.getUnderlying() instanceof EatState) {
             return;
         }
-        currentState.onExit(this, context);
+        if (currentState != null) {
+            currentState.onExit(this, context);
+        }
         boolean garg = sheet.getSmashDamage() > 0;
         EatState eat = new EatState(plant, garg);
         eat.onEnter(this, context);
@@ -885,36 +882,5 @@ public class Zombie extends Entity {
             return anim.detachedArmHideParts;
         }
         return Collections.emptyList();
-    }
-
-    private boolean isParalysed() {
-        return hasEffect(EffectType.FROZEN)
-                || hasEffect(EffectType.TRANSFORMED)
-                || hasEffect(EffectType.STUN);
-    }
-
-    private void appendArmorDetails(StringBuilder sb) {
-        sb.append("\n  armor:");
-        boolean any = armors.stream().anyMatch(a -> !a.isDestroyed());
-        if (!any) {
-            sb.append(" (none)");
-            return;
-        }
-        for (ArmorPiece a : armors) {
-            if (!a.isDestroyed()) {
-                sb.append("\n    ").append(a.getType().name().toLowerCase())
-                        .append(": ").append(String.format("%.0f", a.getCurrentHealth()));
-            }
-        }
-    }
-
-    private void appendEffectDetails(StringBuilder sb) {
-        sb.append("\n  effects:");
-        if (activeEffects.isEmpty()) {
-            sb.append(" (none)");
-            return;
-        }
-        activeEffects.forEach((type, eff) -> sb.append("\n    ").append(type.name().toLowerCase())
-                .append(": ").append(String.format("%.1f", eff.getRemainingDuration())).append("s"));
     }
 }

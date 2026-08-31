@@ -71,6 +71,13 @@ public class GameUiModal extends Table {
     private static final float FLAG_UP_Y = 55f;
     private static final float FLAG_X_OFFSET = 22f;
 
+    private static final float OBJ_BAR_WIDTH = 220f;
+    private static final float OBJ_BAR_HEIGHT = 36f;
+    private static final float OBJ_TRACK_HEIGHT = 20f;
+    private static final float OBJ_TRACK_Y = 9f;
+    private static final String CHECK_MARK_PAM = "768/INITIAL/UI/GENERIC/CHECK_MARK_ANIM/CHECK_MARK_ANIM.PAM";
+    private static final String CHECK_MARK_CLIP = "check_idle";
+
     private final Label sunLabel;
     private final Label coinLabel;
     private final Label gemLabel;
@@ -79,6 +86,13 @@ public class GameUiModal extends Table {
     private Image waveZombieHead;
     private Image[] waveFlagImages;
     private int lastCompletedWaves = -1;
+    private Group objectiveGroup;
+    private Image objectiveFill;
+    private Image objectiveFrame;
+    private PamClipActor objectiveTick;
+    private com.badlogic.gdx.scenes.scene2d.ui.Cell<Group> objectiveCell;
+    private float lastObjectiveProgress = -1f;
+    private boolean lastObjectiveComplete = false;
     private final Image coinIcon;
     private final Image gemIcon;
     private final Image[] plantFoodDots = new Image[MAX_PLANT_FOOD];
@@ -147,6 +161,11 @@ public class GameUiModal extends Table {
         sunRow.add(addSunButton).size(50f).padRight(3f);
         sunRow.add(sunBank).width(150f).height(54f);
         topBar.add(sunRow).left();
+
+        buildObjectiveProgress();
+        objectiveCell = topBar.add(objectiveGroup).left().padLeft(15f).size(OBJ_BAR_WIDTH + 46f, 46f);
+        objectiveCell.getActor().setVisible(false);
+        objectiveCell.size(0f, 0f);
 
         buildWaveProgress();
         topBar.add(waveGroup).left().padLeft(15f).size(WAVE_BAR_WIDTH + 50f, 50f);
@@ -388,6 +407,57 @@ public class GameUiModal extends Table {
         style.imageOver = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button_down");
         style.imageChecked = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button_down");
         return new ImageButton(style);
+    }
+
+    private void buildObjectiveProgress() {
+        objectiveGroup = new Group();
+        objectiveGroup.setSize(OBJ_BAR_WIDTH + 46f, 46f);
+
+        Drawable fillDrawable = safeSkinDrawable("image_ui_hud_ingame_progress_meter_fill",
+                PvzSkin.get().newDrawable("white_pixel", Color.valueOf("65B83B")));
+        objectiveFill = new Image(fillDrawable);
+        objectiveFill.setBounds(0f, OBJ_TRACK_Y, 0f, OBJ_TRACK_HEIGHT);
+        objectiveGroup.addActor(objectiveFill);
+
+        Drawable frameDrawable = safeSkinDrawable("image_ui_hud_ingame_progress_meter",
+                PvzSkin.get().newDrawable("white_pixel", new Color(0.15f, 0.15f, 0.15f, 0.85f)));
+        objectiveFrame = new Image(frameDrawable);
+        objectiveFrame.setScaling(Scaling.stretch);
+        objectiveFrame.setBounds(0f, 0f, OBJ_BAR_WIDTH, OBJ_BAR_HEIGHT);
+        objectiveGroup.addActor(objectiveFrame);
+
+        objectiveTick = null;
+
+        objectiveGroup.setVisible(false);
+    }
+
+    private void ensureObjectiveTick() {
+        if (objectiveTick == null) {
+            objectiveTick = new PamClipActor(CHECK_MARK_PAM, CHECK_MARK_CLIP, 0.55f, 0f);
+            objectiveTick.setBounds(OBJ_BAR_WIDTH + 4f, 0f, 40f, 40f);
+            objectiveGroup.addActor(objectiveTick);
+        }
+        objectiveTick.setVisible(true);
+        objectiveTick.toFront();
+    }
+
+    private void updateObjectiveProgress(com.pvz.models.games.modes.variants.TimedWarMode timedWar) {
+        objectiveGroup.setVisible(true);
+        objectiveCell.size(OBJ_BAR_WIDTH + 46f, 46f);
+
+        boolean complete = timedWar.isObjectiveComplete();
+        float progress = timedWar.getObjectiveProgress();
+
+        if (complete && !lastObjectiveComplete) {
+            ensureObjectiveTick();
+            lastObjectiveComplete = true;
+        }
+
+        if (progress != lastObjectiveProgress) {
+            lastObjectiveProgress = progress;
+            float fillWidth = OBJ_BAR_WIDTH * MathUtils.clamp(progress, 0f, 1f);
+            objectiveFill.setBounds(0f, OBJ_TRACK_Y, fillWidth, OBJ_TRACK_HEIGHT);
+        }
     }
 
     private void buildWaveProgress() {
@@ -902,6 +972,15 @@ public class GameUiModal extends Table {
             updateWaveFill(progress, completed, totalWaves);
         } else {
             waveGroup.setVisible(false);
+        }
+
+        if (mode instanceof com.pvz.models.games.modes.variants.TimedWarMode timedWar) {
+            updateObjectiveProgress(timedWar);
+        } else {
+            objectiveGroup.setVisible(false);
+            if (objectiveCell != null) {
+                objectiveCell.size(0f, 0f);
+            }
         }
 
         if (context.getMode() instanceof com.pvz.models.games.modes.variants.IZombieMode izMode) {

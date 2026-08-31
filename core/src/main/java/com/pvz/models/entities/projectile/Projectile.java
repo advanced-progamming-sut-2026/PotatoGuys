@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
-import com.pvz.PvZ2;
 import com.pvz.controller.game.GameController;
 import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;

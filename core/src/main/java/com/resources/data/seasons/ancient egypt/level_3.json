@@ -3,94 +3,80 @@
   "musicPath": "assets/audio/music/ancient_egypt/Ancient Egypt Demo Game.mp3",
   "levelNumber": 3,
   "levelType": "SPECIAL",
+  "objectives": [
+    "Kill 5 zombies within any 10-second window!"
+  ],
   "initialSun": 150,
-  "timeLimitSeconds": 60,
   "targetKills": 5,
-  "windowSeconds": 8,
+  "windowSeconds": 10,
   "gameMap": {
     "rows": 5,
     "columns": 9,
-    "specialTiles": []
+    "specialTiles": [
+      {
+        "x": 4,
+        "y": 2,
+        "behaviors": [
+          {
+            "type": "DESTRUCTIBLE",
+            "hp": 500.0,
+            "name": "Grave"
+          }
+        ],
+        "tags": [
+          "GRAVE"
+        ]
+      },
+      {
+        "x": 6,
+        "y": 4,
+        "behaviors": [
+          {
+            "type": "DESTRUCTIBLE",
+            "hp": 500.0,
+            "name": "Grave"
+          }
+        ],
+        "tags": [
+          "GRAVE"
+        ]
+      }
+    ]
   },
   "waves": [
     {
       "waveNumber": 1,
       "isFinalWave": false,
-      "baseTotalWaveCost": 300,
+      "baseTotalWaveCost": 120,
       "lanes": 5,
-      "difficulty": 3,
+      "difficulty": 1,
       "phases": [
         {
-          "zombieCount": 4,
-          "intervalTicks": 60,
+          "zombieCount": 3,
+          "intervalSeconds": 10,
           "allowedTypes": [
-            "BASIC"
+            "MUMMY",
+            "MUMMY_CONE"
           ],
           "isBurst": false
         },
         {
           "zombieCount": 3,
-          "intervalTicks": 40,
+          "intervalSeconds": 10,
           "allowedTypes": [
-            "BASIC",
-            "CONEHEAD"
-          ],
-          "isBurst": true
-        }
-      ]
-    },
-    {
-      "waveNumber": 2,
-      "isFinalWave": false,
-      "baseTotalWaveCost": 600,
-      "lanes": 5,
-      "difficulty": 6,
-      "phases": [
-        {
-          "zombieCount": 5,
-          "intervalTicks": 45,
-          "allowedTypes": [
-            "BASIC",
-            "CONEHEAD",
-            "FLAG"
+            "MUMMY_BUCKET",
+            "RA"
           ],
           "isBurst": false
         },
         {
-          "zombieCount": 6,
-          "intervalTicks": 30,
+          "zombieCount": 4,
+          "intervalSeconds": 6,
           "allowedTypes": [
-            "CONEHEAD",
-            "BUCKETHEAD"
-          ],
-          "isBurst": true
-        }
-      ]
-    },
-    {
-      "waveNumber": 3,
-      "isFinalWave": true,
-      "baseTotalWaveCost": 1500,
-      "lanes": 5,
-      "difficulty": 9,
-      "phases": [
-        {
-          "zombieCount": 6,
-          "intervalTicks": 35,
-          "allowedTypes": [
-            "CONEHEAD",
-            "BUCKETHEAD",
-            "NEWSPAPER"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 10,
-          "intervalTicks": 20,
-          "allowedTypes": [
-            "BUCKETHEAD",
-            "IMP",
-            "GARGANTUAR"
+            "MUMMY",
+            "MUMMY_CONE",
+            "RA",
+            "EXPLORER"
           ],
           "isBurst": true
         }
