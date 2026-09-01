@@ -71,6 +71,7 @@ public class PlantSelectModal extends Table {
     private final Table previewContent;
     private final TextButton startButton;
     private Label previewMessageLabel;
+    private Table waitingOverlay;
 
     public PlantSelectModal(Level level, Runnable onStartCallback) {
         this.level = level;
@@ -207,6 +208,18 @@ public class PlantSelectModal extends Table {
         rootStack.add(mainLayout);
         rootStack.add(walletLayer);
         rootStack.add(rockLayer);
+
+        waitingOverlay = new Table();
+        waitingOverlay.setFillParent(true);
+        waitingOverlay.setTouchable(Touchable.enabled);
+        waitingOverlay.setVisible(false);
+        Label waitLabel = new Label("Waiting for opponent...", PvzSkin.get(), "big");
+        waitLabel.setColor(Color.WHITE);
+        Drawable dimBg = new TextureRegionDrawable(
+                MenuUiKit.solidTexture(new Color(0f, 0f, 0f, 0.55f)));
+        waitingOverlay.setBackground(dimBg);
+        waitingOverlay.add(waitLabel).center();
+        rootStack.add(waitingOverlay);
 
         top().left();
         add(rootStack).grow().minWidth(0f).minHeight(0f);
@@ -382,5 +395,21 @@ public class PlantSelectModal extends Table {
 
     public List<PlantType> getSelectedPlants() {
         return selectedPlants;
+    }
+
+    /**
+     * Shows or hides the "Waiting for opponent..." overlay on top of the
+     * selection screen. While waiting, the entire modal is touch-disabled
+     * so the player cannot change their selection.
+     */
+    public void setWaiting(boolean waiting) {
+        if (waitingOverlay != null) {
+            waitingOverlay.setVisible(waiting);
+        }
+        if (waiting) {
+            setTouchable(Touchable.disabled);
+        } else {
+            setTouchable(Touchable.childrenOnly);
+        }
     }
 }

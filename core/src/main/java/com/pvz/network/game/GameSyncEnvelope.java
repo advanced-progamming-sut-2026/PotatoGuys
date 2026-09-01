@@ -7,7 +7,7 @@ package com.pvz.network.game;
  */
 public class GameSyncEnvelope {
     public enum Kind {
-        SNAPSHOT, ACTION, QUIT, CHAT, STICKER
+        SNAPSHOT, ACTION, QUIT, CHAT, STICKER, PRE_GAME_READY
     }
 
     public Kind kind;

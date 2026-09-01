@@ -47,8 +47,8 @@ import com.pvz.models.user.MyPlant;
 public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
     private static final float PLANT_SURVIVAL_SECONDS = 120f;
 
-    private final List<MyPlant> basedPlants;
-    private final List<ZombieType> basedZombies;
+    private List<MyPlant> basedPlants;
+    private List<ZombieType> basedZombies;
     private boolean[] brainsEaten;
     private int laneCount = 5;
     private int redLineColumn = 6;
@@ -161,6 +161,18 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
 
     public int getRedLineColumn() {
         return redLineColumn;
+    }
+
+    public static int sunCostFor(ZombieType type) {
+        return ZOMBIE_SUN_COSTS.getOrDefault(type, 50);
+    }
+
+    public void setBasedPlants(List<MyPlant> plants) {
+        this.basedPlants = plants;
+    }
+
+    public void setBasedZombies(List<ZombieType> zombies) {
+        this.basedZombies = zombies;
     }
 
     public List<Zombie> getSunProducers() {
