@@ -90,6 +90,7 @@ public class LeaderboardMenu extends ScreenAdapter {
         Viewport viewport = new FitViewport(1920, 1080);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
+        MenuUiKit.installClickSound(stage);
         skin = PvzSkin.get();
 
         MenuUiKit.installRotatingBackground(stage.getRoot(), game.getGlobalAssetManager());
