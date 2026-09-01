@@ -61,14 +61,17 @@ public class Tile implements TickAware {
                 return false;
         }
 
-        // Aquatic plants (Tangle Kelp, Sea Shroom, Lily Pad) can only be planted
-        // on a tile that has water. A dry tile must reject them.
-        PlantPropertySheet newSheet = PlantConfigRegistry.getInstance().resolveSheet(newPlant.getPlant().getType());
-        if (newSheet != null && newSheet.getTags().contains(PlantTag.WATER)) {
-            boolean isWater = tags.contains(TileTags.WATER)
-                    || behaviors.stream().anyMatch(b -> b instanceof WaterBehavior);
-            if (!isWater) {
-                return false;
+        // Aquatic plants (Tangle Kelp, Sea Shroom) can only be planted on a tile
+        // that has water. Lily Pad is the exception: it floats and can be planted
+        // on both land and water.
+        if (newPlant.getPlant().getType() != PlantType.LilyPad) {
+            PlantPropertySheet newSheet = PlantConfigRegistry.getInstance().resolveSheet(newPlant.getPlant().getType());
+            if (newSheet != null && newSheet.getTags().contains(PlantTag.WATER)) {
+                boolean isWater = tags.contains(TileTags.WATER)
+                        || behaviors.stream().anyMatch(b -> b instanceof WaterBehavior);
+                if (!isWater) {
+                    return false;
+                }
             }
         }
 
