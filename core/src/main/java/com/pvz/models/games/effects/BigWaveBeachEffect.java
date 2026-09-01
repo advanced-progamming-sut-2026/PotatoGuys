@@ -128,10 +128,17 @@ public class BigWaveBeachEffect implements ChapterEffect {
                         }
                     }
                 } else {
-                    // Tide receded: aquatic plants (WATER tag) left without water underneath
-                    // are washed away / die.
+                    // Tide receded. Lily Pad floats, so it — and anything planted
+                    // on it — survives even when the water drops. Only aquatic
+                    // plants standing directly on now-dry water get washed away.
                     List<Plant> plantsAt = ctx.getPlantsAt(col, lane);
                     for (Plant p : new ArrayList<>(plantsAt)) {
+                        boolean isLilyPad = p.getType() == PlantType.LilyPad;
+                        boolean hasLilyPadUnderneath = tile.getPlants().stream()
+                                .anyMatch(pl -> pl.getType() == PlantType.LilyPad);
+                        if (isLilyPad || hasLilyPadUnderneath) {
+                            continue;
+                        }
                         if (p.getSheet().getTags().contains(PlantTag.WATER)) {
                             ctx.removePlant(p);
                             ctx.log("Water tide receded and destroyed " + p.getSheet().getName() + " at (" + col + ","
