@@ -23,7 +23,6 @@ import com.badlogic.gdx.utils.Scaling;
 
 import com.pvz.models.entities.zombies.ZombieType;
 import com.pvz.models.games.levels.Level;
-import com.pvz.models.games.levels.variants.IZombieLevel;
 import com.pvz.view.MenuUiKit;
 import com.pvz.view.PlantData;
 import com.pvz.view.ZombieData;
@@ -191,10 +190,9 @@ public class ZombieSelectModal extends Table {
     // ── zombie data loading ───────────────────────────────────────────────────
 
     private List<ZombieData> loadZombieData() {
-        if (level instanceof IZombieLevel iZombieLevel) {
-            return ZombieData.loadForLevel(iZombieLevel.getBasedZombies());
-        }
-        return List.of();
+        // Let the zombie player pick from the full roster of playable zombies in
+        // the game, not just the few the level JSON happens to list.
+        return ZombieData.loadAll();
     }
 
     // ── preview ───────────────────────────────────────────────────────────────

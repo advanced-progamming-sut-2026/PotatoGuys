@@ -166,6 +166,16 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         return ZOMBIE_SUN_COSTS.getOrDefault(type, 50);
     }
 
+    /**
+     * All zombie types the game can actually place as cards, in a stable order
+     * (the order they were registered in {@link #ZOMBIE_SUN_COSTS}). Used by the
+     * online zombie select modal to let the player choose from the full roster
+     * rather than only the level's default pool.
+     */
+    public static List<ZombieType> playableZombieTypes() {
+        return new ArrayList<>(ZOMBIE_SUN_COSTS.keySet());
+    }
+
     public void setBasedPlants(List<MyPlant> plants) {
         this.basedPlants = plants;
     }

@@ -52,6 +52,15 @@ public final class ZombieData {
         return result;
     }
 
+    /**
+     * Builds a {@link ZombieData} for every playable zombie in the game (those
+     * with a defined sun cost), so the zombie player can pick from the full
+     * roster rather than only the level's default pool.
+     */
+    public static List<ZombieData> loadAll() {
+        return loadForLevel(IZombieMode.playableZombieTypes());
+    }
+
     public String getName() {
         return name;
     }
