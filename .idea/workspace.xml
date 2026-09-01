@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="bug fix">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" afterDir="false" />
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment=".">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +129,7 @@
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/104/IdeaProjects/plantsvszombies2/assets/textures/zombies",
+    "last_opened_file_path": "C:/Users/104/IdeaProjects/plantsvszombies2/assets/audio/music",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -147,8 +146,8 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\zombies" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\audio\music" />
+      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\zombies" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\shop" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse\plants" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\backgrounds" />
@@ -291,38 +290,6 @@
       <workItem from="1786945016250" duration="3889000" />
       <workItem from="1786959755105" duration="5011000" />
       <workItem from="1787219129016" duration="489000" />
-    </task>
-    <task id="LOCAL-00001" summary="added Login and register and forgot password menu to the game">
-      <option name="closed" value="true" />
-      <created>1785853536390</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1785853536390</updated>
-    </task>
-    <task id="LOCAL-00002" summary="added settings menu and some details for it">
-      <option name="closed" value="true" />
-      <created>1785856363023</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1785856363023</updated>
-    </task>
-    <task id="LOCAL-00003" summary="added travel log menu">
-      <option name="closed" value="true" />
-      <created>1786200508463</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1786200508463</updated>
-    </task>
-    <task id="LOCAL-00004" summary="setting and news and profile menu updated">
-      <option name="closed" value="true" />
-      <created>1786200570399</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1786200570399</updated>
     </task>
     <task id="LOCAL-00005" summary="updated chapter selection menu and game mode menu appearance">
       <option name="closed" value="true" />
@@ -684,7 +651,39 @@
       <option name="project" value="LOCAL" />
       <updated>1788258681432</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="added clicking sfx">
+      <option name="closed" value="true" />
+      <created>1788273364242</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1788273364242</updated>
+    </task>
+    <task id="LOCAL-00051" summary="added README.md">
+      <option name="closed" value="true" />
+      <created>1788274879004</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1788274879004</updated>
+    </task>
+    <task id="LOCAL-00052" summary="updated readme">
+      <option name="closed" value="true" />
+      <created>1788275227938</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1788275227938</updated>
+    </task>
+    <task id="LOCAL-00053" summary=".">
+      <option name="closed" value="true" />
+      <created>1788275265689</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1788275265689</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -737,9 +736,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="conflict" />
-    <MESSAGE value="added zombies collection tab" />
-    <MESSAGE value="added zombies collection tab pngs and also updated the PlantCardDetails" />
     <MESSAGE value="added plants idle animation before planting" />
     <MESSAGE value="rows and cols white highlighting added" />
     <MESSAGE value="sun and plant food amount in game updated and wired to debug mode" />
@@ -760,9 +756,12 @@
     <MESSAGE value="Game speed changing now works" />
     <MESSAGE value="Game difficulty implementing completed" />
     <MESSAGE value="..." />
-    <MESSAGE value="." />
     <MESSAGE value="bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="bug fix" />
+    <MESSAGE value="added clicking sfx" />
+    <MESSAGE value="added README.md" />
+    <MESSAGE value="updated readme" />
+    <MESSAGE value="." />
+    <option name="LAST_COMMIT_MESSAGE" value="." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -6574,12 +6574,16 @@
     "actionIntervalSeconds": null,
     "rechargeSeconds": 20.0,
     "attackConfig": {
-      "class": "NutConfig",
+      "class": "SunBeanConfig",
       "idleClip": "idle",
       "damage1Clip": "idle",
       "damage2Clip": "idle2",
       "damage3Clip": "idle2",
-      "sunOnHit": 5
+      "sunOnHit": 5,
+      "spawnOffset": {
+        "x": 0.0,
+        "y": 0.35
+      }
     },
     "feedConfig": {
       "class": "WallNutFeedConfig",

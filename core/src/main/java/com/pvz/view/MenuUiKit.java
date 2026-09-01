@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -27,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 
+import com.pvz.controller.AudioManager;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.Profile;
 import com.pvz.models.user.User;
@@ -75,6 +77,21 @@ public final class MenuUiKit {
     /** Installs a rotating background that crossfades between bg1–bg4 into the given parent group. */
     public static void installRotatingBackground(Group parent, com.badlogic.gdx.assets.AssetManager assets) {
         RotatingBackground.install(parent, assets);
+    }
+
+    /**
+     * Plays the shared UI click sound on every touch on this stage. InputListener
+     * events bubble up from the pressed actor to the stage root, so a single
+     * listener here covers all buttons/cards without touching each handler.
+     */
+    public static void installClickSound(Stage stage) {
+        stage.getRoot().addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                AudioManager.getInstance().playClick();
+                return false;
+            }
+        });
     }
 
     /** How far (at the 130px reference size) the value number sits from the left edge of the

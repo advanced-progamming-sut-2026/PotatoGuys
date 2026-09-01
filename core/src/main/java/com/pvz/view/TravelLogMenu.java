@@ -97,6 +97,7 @@ private static final String[] MINI_GAME_SEASON_FOLDERS = {
         Viewport viewport = new FitViewport(1920, 1080);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
+        MenuUiKit.installClickSound(stage);
         skin = PvzSkin.get();
 
         barBgTexture = solidTexture(new Color(0f, 0f, 0f, 0.45f));
