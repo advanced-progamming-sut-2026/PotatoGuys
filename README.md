@@ -46,9 +46,9 @@
 |---|---|
 | <img src="screenshots/lawn.png" width="420" alt="Battle on the lawn"> | <img src="screenshots/greenhouse.png" width="420" alt="The Zen Garden"> |
 
-| Facing the Zomboss 👑 | Online I, Zombie ⚔️ |
+| Big Wave Beach 🌊 | Online I, Zombie ⚔️ |
 |---|---|
-| <img src="screenshots/zomboss.png" width="420" alt="Facing the Zomboss"> | <img src="screenshots/online_izombie.png" width="420" alt="Online I, Zombie"> |
+| <img src="screenshots/big_wave_beach.png" width="420" alt="Big Wave Beach — a world full of game modes"> | <img src="screenshots/online_izombie.png" width="420" alt="Online I, Zombie"> |
 
 </div>
 
