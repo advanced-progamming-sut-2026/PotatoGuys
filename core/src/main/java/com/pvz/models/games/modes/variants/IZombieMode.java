@@ -19,6 +19,7 @@ import com.pvz.models.entities.sun.SunType;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.ZombieType;
+import com.pvz.models.entities.zombies.fsm.VisualEatState;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.Card;
 import com.pvz.models.games.card.PlantCard;
@@ -360,6 +361,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
                         // Brain not yet eaten — start (or continue) eating.
                         if (!brainEatTimers.containsKey(z)) {
                             brainEatTimers.put(z, BRAIN_EAT_DURATION);
+                            z.changeState(new VisualEatState());
                         }
                         // Pin zombie in place at the brain while it eats.
                         z.setX(brainX);

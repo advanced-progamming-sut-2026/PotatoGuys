@@ -82,7 +82,8 @@ public class GameStateSync {
             zs.lane = GameController.worldYtoLane(z.getY());
             zs.hp = z.getHp();
             zs.sunProducer = sunProducers.contains(z);
-            zs.eating = z.getCurrentState() instanceof com.pvz.models.entities.zombies.fsm.EatState;
+            zs.eating = z.getCurrentState() instanceof com.pvz.models.entities.zombies.fsm.EatState
+                    || z.getCurrentState() instanceof com.pvz.models.entities.zombies.fsm.VisualEatState;
             zombies.add(zs);
         }
         snap.zombies = zombies;
