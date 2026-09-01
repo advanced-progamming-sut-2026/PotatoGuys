@@ -573,6 +573,9 @@ public class Zombie extends Entity {
     }
 
     public void setFrozen(float duration) {
+        if (dead || currentState instanceof DeadState) {
+            return;
+        }
         FrameConfig frameConfig = currentState.draw(this, context);
         currentState = new FrozenState(currentState, currentState.getStateTime(),
                 duration, frameConfig.pamPath, frameConfig.label, frameConfig.partsVisibility);
@@ -596,6 +599,9 @@ public class Zombie extends Entity {
     }
 
     public void setButterStunned(float duration) {
+        if (dead || currentState instanceof DeadState) {
+            return;
+        }
         FrameConfig frameConfig = currentState.draw(this, context);
         currentState = new ButterStunState(currentState, currentState.getStateTime(),
                 duration, frameConfig.pamPath, frameConfig.label);

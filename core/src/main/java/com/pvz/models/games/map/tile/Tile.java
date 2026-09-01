@@ -18,6 +18,7 @@ import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.map.behaviors.GraveBehavior;
 import com.pvz.models.games.map.behaviors.IceBlockBehavior;
 import com.pvz.models.games.map.behaviors.TileBehavior;
+import com.pvz.models.games.map.behaviors.WaterBehavior;
 
 public class Tile implements TickAware {
     public static final float WIDTH = 82f;
@@ -58,6 +59,17 @@ public class Tile implements TickAware {
                     .anyMatch(b -> b instanceof GraveBehavior);
             if (!hasGrave)
                 return false;
+        }
+
+        // Aquatic plants (Tangle Kelp, Sea Shroom, Lily Pad) can only be planted
+        // on a tile that has water. A dry tile must reject them.
+        PlantPropertySheet newSheet = PlantConfigRegistry.getInstance().resolveSheet(newPlant.getPlant().getType());
+        if (newSheet != null && newSheet.getTags().contains(PlantTag.WATER)) {
+            boolean isWater = tags.contains(TileTags.WATER)
+                    || behaviors.stream().anyMatch(b -> b instanceof WaterBehavior);
+            if (!isWater) {
+                return false;
+            }
         }
 
         for (TileBehavior b : behaviors) {

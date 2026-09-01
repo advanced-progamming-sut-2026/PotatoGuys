@@ -43,6 +43,7 @@ import com.pvz.models.entities.plants.data.PlantPropertySheet;
 import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.enums.PlantType;
+import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.sun.Sun;
 import com.pvz.models.entities.zombies.ZombieType;
 import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
@@ -55,7 +56,9 @@ import com.pvz.models.games.levels.LevelLoader;
 import com.pvz.models.games.levels.Wave;
 import com.pvz.models.games.levels.WavePhase;
 import com.pvz.models.games.map.GameMap;
+import com.pvz.models.games.map.behaviors.WaterBehavior;
 import com.pvz.models.games.map.tile.Tile;
+import com.pvz.models.games.map.tile.TileTags;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.games.modes.capabilities.ZombiePlacer;
 import com.pvz.models.games.modes.variants.IZombieMode;
@@ -322,6 +325,9 @@ public class GameController {
                                     } else if (card.getCost() > ctx.getCurrentSun()) {
                                         showErrorMessage("Not enough sun! You need "
                                                 + card.getCost() + " sun (you have " + ctx.getCurrentSun() + ").");
+                                    } else if (isAquaticPlant(card) && !isWaterTile(hoveredTile)) {
+                                        String name = aquaticPlantName(card);
+                                        showErrorMessage(name + " must be planted on water!");
                                     }
                                 }
                             }
@@ -882,6 +888,27 @@ public class GameController {
         errorMessageLabel.toFront();
     }
 
+    private boolean isAquaticPlant(PlantCard card) {
+        if (card == null)
+            return false;
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(card.getPlant().getType());
+        return sheet != null && sheet.getTags().contains(PlantTag.WATER);
+    }
+
+    private String aquaticPlantName(PlantCard card) {
+        if (card == null)
+            return "This plant";
+        PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(card.getPlant().getType());
+        return sheet != null ? sheet.getName() : card.getPlant().getType().toString();
+    }
+
+    private boolean isWaterTile(Tile tile) {
+        if (tile == null)
+            return false;
+        return tile.getTags().contains(TileTags.WATER)
+                || tile.getBehaviors().stream().anyMatch(b -> b instanceof WaterBehavior);
+    }
+
     /**
      * Toggles the shovel tool. Selecting it clears any armed plant/zombie card
      * and shows a translucent shovel cursor following the mouse; clicking a
@@ -1238,23 +1265,60 @@ public class GameController {
         if (ctx == null) {
             return false;
         }
-        for (Plant plant : new ArrayList<>(ctx.getPlants())) {
-            if (plant.isDead()) {
-                continue;
-            }
-            if (plant.getHitbox() != null
-                    && plant.getHitbox().getRectangle().contains(worldX, worldY)) {
-                if (!ctx.spendPlantFood()) {
-                    ctx.log("[PlantFood] No plant food available!");
-                    return false;
+
+        Plant target = null;
+        int hitCol = -1;
+        int hitLane = -1;
+
+        // Resolve the clicked tile first so stacked plants (e.g. a LilyPad with a
+        // plant on top) are handled correctly. Every plant on a tile shares the same
+        // full-tile hitbox, so we prefer the plant drawn on top (last in the tile
+        // list) that isn't a LilyPad, and fall back to the sole occupant otherwise.
+        Tile tile = ctx.getMap().getTileAt(worldX, worldY);
+        if (tile != null) {
+            hitCol = tile.getCol();
+            hitLane = tile.getLane();
+            List<Plant> plantsOnTile = ctx.getPlantsAt(hitCol, hitLane);
+            for (Plant p : plantsOnTile) {
+                if (p.isDead()) {
+                    continue;
                 }
-                plant.triggerPlantFood(ctx);
-                ctx.log("[PlantFood] " + plant.getSheet().getName()
-                        + " at (" + plant.getCol() + "," + plant.getLane() + ") used Plant Food!");
-                return true;
+                if (p.getType() == PlantType.LilyPad) {
+                    continue;
+                }
+                target = p;
+            }
+            if (target == null && !plantsOnTile.isEmpty()) {
+                target = plantsOnTile.get(plantsOnTile.size() - 1);
             }
         }
-        return false;
+
+        // Fallback: if the tile doesn't map to any plant, scan the global list.
+        if (target == null) {
+            for (Plant plant : new ArrayList<>(ctx.getPlants())) {
+                if (plant.isDead()) {
+                    continue;
+                }
+                if (plant.getHitbox() != null
+                        && plant.getHitbox().getRectangle().contains(worldX, worldY)) {
+                    target = plant;
+                    break;
+                }
+            }
+        }
+
+        if (target == null) {
+            return false;
+        }
+
+        if (!ctx.spendPlantFood()) {
+            ctx.log("[PlantFood] No plant food available!");
+            return false;
+        }
+        target.triggerPlantFood(ctx);
+        ctx.log("[PlantFood] " + target.getSheet().getName()
+                + " at (" + target.getCol() + "," + target.getLane() + ") used Plant Food!");
+        return true;
     }
 
     public GameContext getCtx() {

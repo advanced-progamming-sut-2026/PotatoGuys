@@ -127,13 +127,24 @@ public class BigWaveBeachEffect implements ChapterEffect {
                                     + lane + ")!");
                         }
                     }
+                } else {
+                    // Tide receded: aquatic plants (WATER tag) left without water underneath
+                    // are washed away / die.
+                    List<Plant> plantsAt = ctx.getPlantsAt(col, lane);
+                    for (Plant p : new ArrayList<>(plantsAt)) {
+                        if (p.getSheet().getTags().contains(PlantTag.WATER)) {
+                            ctx.removePlant(p);
+                            ctx.log("Water tide receded and destroyed " + p.getSheet().getName() + " at (" + col + ","
+                                    + lane + ")!");
+                        }
+                    }
+                }
 
-                    if (wave.getWaveNumber() > 1) {
-                        // Low tide zombie emergence
-                        if (tile.getTags().contains(TileTags.LOW_TIDE)) {
-                            if (rand.nextFloat() < 0.6f) {
-                                spawnLowTideZombie(ctx, col, lane, wave);
-                            }
+                if (wave.getWaveNumber() > 1) {
+                    // Low tide zombie emergence
+                    if (tile.getTags().contains(TileTags.LOW_TIDE)) {
+                        if (rand.nextFloat() < 0.6f) {
+                            spawnLowTideZombie(ctx, col, lane, wave);
                         }
                     }
                 }
