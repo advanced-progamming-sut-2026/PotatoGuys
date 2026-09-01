@@ -91,9 +91,12 @@ public class GameModesMenu extends ScreenAdapter {
         Table topBar = new Table();
 
         Table topLeft = new Table();
-        topLeft.add(MenuUiKit.backButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)), () -> game.setScreen(new MainMenu(game))))
+        topLeft.add(MenuUiKit.backButton(MenuUiKit.textureDrawable(
+                game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)),
+                () -> game.setScreen(new MainMenu(game))))
             .size(75, 70).padRight(24);
-        ImageButton leaderboardBtn = new ImageButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get("textures/ui/leaderboard.png")));
+        ImageButton leaderboardBtn = new ImageButton(MenuUiKit.textureDrawable(
+            game.getGlobalAssetManager().get("textures/ui/leaderboard.png")));
         leaderboardBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -103,7 +106,8 @@ public class GameModesMenu extends ScreenAdapter {
         });
         topLeft.add(leaderboardBtn).size(75, 70);
 
-        ImageButton greenhouseBtn = new ImageButton(MenuUiKit.textureDrawable(MenuUiKit.loadTextureSafe("textures/greenhouse/greenhouse.png")));
+        ImageButton greenhouseBtn = new ImageButton(MenuUiKit.textureDrawable(
+            MenuUiKit.loadTextureSafe("textures/greenhouse/greenhouse.png")));
         greenhouseBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

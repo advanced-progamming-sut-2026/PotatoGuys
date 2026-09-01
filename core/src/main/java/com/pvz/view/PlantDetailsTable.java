@@ -295,6 +295,7 @@ public class PlantDetailsTable extends Table {
     private String xpText() {
         if (!data.isUnlocked()) return "Locked — buy it to collect packets";
         if (data.isMaxLevel()) return "Level " + data.getLevel() + " · Max Level";
-        return "Level " + data.getLevel() + " · " + data.seedPackets() + " / " + data.requiredSeedPackets() + " packets";
+        return "Level " + data.getLevel() + " · " + data.seedPackets() + " / "
+            + data.requiredSeedPackets() + " packets";
     }
 }

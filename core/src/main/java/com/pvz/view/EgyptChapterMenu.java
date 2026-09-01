@@ -481,7 +481,8 @@ public class EgyptChapterMenu extends ScreenAdapter {
 
         private void addMapDecorations() {
             // Purely decorative starting island - not clickable (no Greenhouse hookup here).
-            MapDecorationActor houseIsland = new MapDecorationActor(MapObjectType.DECOR_HOUSE_ISLAND, HOUSE_ISLAND_WIDTH, HOUSE_ISLAND_HEIGHT, "idle");
+            MapDecorationActor houseIsland = new MapDecorationActor(MapObjectType.DECOR_HOUSE_ISLAND,
+                HOUSE_ISLAND_WIDTH, HOUSE_ISLAND_HEIGHT, "idle");
             houseIsland.setPosition(houseX, houseY);
             addActor(houseIsland);
         }
@@ -489,12 +490,17 @@ public class EgyptChapterMenu extends ScreenAdapter {
         private void addForegroundEffects() {
             PyramidState pState = calculatePyramidState();
             String zombossState = (pState == PyramidState.UNLOCKED_IDLE) ? "defeated" : "active";
-            addActor(createAnchoredAnimation(MapObjectType.BIG_BOSS_DECOR_ISLAND, ZOMBOSS_TUNING, zombossState, zombossNodeX, zombossNodeY));
-            addActor(createAnchoredAnimation(MapObjectType.PYRAMID_ANIM, PYRAMID_TUNING, pState.pamState, pyramidAnchorX, pyramidAnchorY));
+            addActor(createAnchoredAnimation(MapObjectType.BIG_BOSS_DECOR_ISLAND, ZOMBOSS_TUNING, zombossState,
+                zombossNodeX, zombossNodeY));
+            addActor(createAnchoredAnimation(MapObjectType.PYRAMID_ANIM, PYRAMID_TUNING, pState.pamState,
+                pyramidAnchorX, pyramidAnchorY));
 
-            addActor(createAnchoredAnimation(MapObjectType.DUST_EFFECT_ANIM, DUST_TUNING, "idle", houseX + 45f, houseY + 20f));
-            addActor(createAnchoredAnimation(MapObjectType.DUST_EFFECT_ANIM, DUST_TUNING, "idle", centerX[0], centerY[0] - 20f));
-            addActor(createAnchoredAnimation(MapObjectType.DUST_EFFECT_ANIM, DUST_TUNING, "idle", centerX[2], centerY[2] - 20f));
+            addActor(createAnchoredAnimation(MapObjectType.DUST_EFFECT_ANIM, DUST_TUNING, "idle",
+                houseX + 45f, houseY + 20f));
+            addActor(createAnchoredAnimation(MapObjectType.DUST_EFFECT_ANIM, DUST_TUNING, "idle",
+                centerX[0], centerY[0] - 20f));
+            addActor(createAnchoredAnimation(MapObjectType.DUST_EFFECT_ANIM, DUST_TUNING, "idle",
+                centerX[2], centerY[2] - 20f));
 
             float tornadoOffsetX = 130f * LAYOUT_SCALE_X;
             float tornadoOffsetY = 70f * LAYOUT_SCALE_Y;
@@ -523,7 +529,8 @@ public class EgyptChapterMenu extends ScreenAdapter {
             Stack stack = new Stack();
             stack.setSize(width, height);
 
-            String islandPath = boss ? BOSS_STAGE_ISLAND_TEXTURE : STAGE_ISLAND_TEXTURES[index % STAGE_ISLAND_TEXTURES.length];
+            String islandPath = boss ? BOSS_STAGE_ISLAND_TEXTURE
+                : STAGE_ISLAND_TEXTURES[index % STAGE_ISLAND_TEXTURES.length];
             Image islandImage = new Image(getTextureDrawable(islandPath, (int) width, (int) height));
             stack.add(islandImage);
 

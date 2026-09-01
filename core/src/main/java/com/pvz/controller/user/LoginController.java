@@ -61,7 +61,8 @@ public class LoginController {
             return "Email is incorrect!";
         }
 
-        return "Answer to this question: " + SecurityQuestions.QUESTIONS.get(Integer.parseInt(user.getSecurityQuestion()));
+        return "Answer to this question: "
+                + SecurityQuestions.QUESTIONS.get(Integer.parseInt(user.getSecurityQuestion()));
     }
 
     public String answer(Matcher matcher) {

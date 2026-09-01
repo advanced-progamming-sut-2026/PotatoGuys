@@ -58,7 +58,8 @@ public class PauseMenuPopup extends BorderedPanel {
         Label titleLabel = new Label("Game Paused", PvzSkin.get().get("big_outline", Label.LabelStyle.class));
         titleLabel.setAlignment(Align.center);
 
-        Slider.SliderStyle sliderStyle = new Slider.SliderStyle(PvzSkin.get().get("default-horizontal", Slider.SliderStyle.class));
+        Slider.SliderStyle sliderStyle = new Slider.SliderStyle(
+            PvzSkin.get().get("default-horizontal", Slider.SliderStyle.class));
         TextureRegionDrawable sliderKnobDrawable = new TextureRegionDrawable(sliderKnob);
         sliderStyle.knob = sliderKnobDrawable;
         // Keep the bolt "setting" knob in all states (idle, hover, and while
@@ -98,7 +99,8 @@ public class PauseMenuPopup extends BorderedPanel {
         slidersTable.add(sfxLabel).padRight(15).align(Align.right).padTop(10);
         slidersTable.add(sfxSlider).width(200).padTop(10).row();
 
-        TextButton exitButton = new TextButton("SAVE AND EXIT", PvzSkin.get().get("purple", TextButton.TextButtonStyle.class));
+        TextButton exitButton = new TextButton("SAVE AND EXIT",
+            PvzSkin.get().get("purple", TextButton.TextButtonStyle.class));
         TextButton restartButton = new TextButton("RESTART", PvzSkin.get(), "purple");
         TextButton resumeButton = new TextButton("RESUME", PvzSkin.get(), "brown");
 

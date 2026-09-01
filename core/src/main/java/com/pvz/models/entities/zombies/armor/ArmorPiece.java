@@ -22,9 +22,6 @@ import java.util.Set;
  */
 public class ArmorPiece {
 
-    /** Maximum number of visual damage layers (intact + up to 2 damaged states). */
-    private static final int MAX_LAYERS = 3;
-
     private final ArmorType type;
     private final float baseHealth;
     private final Set<ArmorFlag> flags;

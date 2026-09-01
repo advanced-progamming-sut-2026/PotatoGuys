@@ -72,7 +72,8 @@ public class ForgotPasswordMenu extends ScreenAdapter {
         });
         mainTable.add(nextBtn).width(200).height(60).row();
 
-        ImageButton backBtn = new ImageButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
+        ImageButton backBtn = new ImageButton(MenuUiKit.textureDrawable(
+                game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -130,7 +131,8 @@ public class ForgotPasswordMenu extends ScreenAdapter {
         });
         mainTable.add(verifyBtn).width(200).height(60).row();
 
-        ImageButton backBtn = new ImageButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
+        ImageButton backBtn = new ImageButton(MenuUiKit.textureDrawable(
+                game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -162,7 +164,8 @@ public class ForgotPasswordMenu extends ScreenAdapter {
         confirmPasswordField.setPasswordCharacter('*');
         Table confirmPassWrapper = new Table();
         confirmPassWrapper.add(confirmPasswordField).width(300).height(50).row();
-        confirmPassWrapper.add(PasswordToggleHelper.createToggle(confirmPasswordField, skin)).left().padLeft(4f).padTop(12f);
+        confirmPassWrapper.add(PasswordToggleHelper.createToggle(
+                confirmPasswordField, skin)).left().padLeft(4f).padTop(12f);
         mainTable.add(confirmPassWrapper).row();
 
         Label resetStatus = new Label("", skin);
@@ -197,7 +200,8 @@ public class ForgotPasswordMenu extends ScreenAdapter {
         });
         mainTable.add(resetBtn).width(200).height(60).row();
 
-        ImageButton backBtn = new ImageButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
+        ImageButton backBtn = new ImageButton(MenuUiKit.textureDrawable(
+                game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

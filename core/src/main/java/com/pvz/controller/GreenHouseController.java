@@ -69,7 +69,10 @@ public class GreenHouseController {
         return planted;
     }
 
-    /** Harvests a ready plant: MariGold pays coins, an unlocked plant stores a boost. Returns a HarvestResult describing the prize, or null. */
+    /**
+     * Harvests a ready plant: MariGold pays coins, an unlocked plant stores a boost.
+     * Returns a HarvestResult describing the prize, or null.
+     */
     public HarvestResult collect(int x, int y) {
         GreenHouse greenHouse = getGreenHouse();
         if (!greenHouse.isValidCoordinate(x, y)) return null;

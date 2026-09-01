@@ -50,7 +50,6 @@ public class Plant extends Entity {
     private float hp;
     private float maxHpBonus;
     private float reflectDamageBonus;
-    private float ageTicks;
     private int growthStageIndex;
 
     private float stateTime;

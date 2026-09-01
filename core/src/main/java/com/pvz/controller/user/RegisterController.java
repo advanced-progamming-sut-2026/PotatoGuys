@@ -24,7 +24,8 @@ public class RegisterController {
         String email = matcher.group("email");
         String genderString = matcher.group("gender");
 
-        String validationResult = validateRegistrationInputs(username, password, passwordConfirm, nickname, email, genderString);
+        String validationResult = validateRegistrationInputs(
+                username, password, passwordConfirm, nickname, email, genderString);
         if (validationResult != null) {
             return validationResult;
         }

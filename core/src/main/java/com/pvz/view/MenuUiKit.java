@@ -106,7 +106,8 @@ public final class MenuUiKit {
     }
 
     /** Coin/diamond style pill with a custom size. Label padding and font scale follow the width. */
-    public static Table resourceWidget(Skin skin, String iconPath, Color fallbackTint, String value, float width, float height) {
+    public static Table resourceWidget(Skin skin, String iconPath, Color fallbackTint, String value, float width,
+                                       float height) {
         Stack stack = new Stack();
 
         Table bg = new Table();
@@ -160,8 +161,8 @@ public final class MenuUiKit {
     }
 
     /** Same pill look as {@link #resourceWidget}, but with a working "+" button over the engraved one. */
-    public static PlusResourceWidget resourceWidgetWithPlus(Skin skin, String iconPath, Color fallbackTint, String value,
-                                                           float width, float height) {
+    public static PlusResourceWidget resourceWidgetWithPlus(Skin skin, String iconPath, Color fallbackTint,
+                                                            String value, float width, float height) {
         Stack stack = new Stack();
 
         Table bg = new Table();
@@ -237,7 +238,8 @@ public final class MenuUiKit {
     }
 
     /** A round-ish icon button with a caption underneath (profile, settings, news...). */
-    public static Actor iconButtonWithLabel(Skin skin, Drawable iconDrawable, float size, String caption, Runnable onClick) {
+    public static Actor iconButtonWithLabel(Skin skin, Drawable iconDrawable, float size, String caption,
+                                            Runnable onClick) {
         Table container = new Table();
         ImageButton button = new ImageButton(iconDrawable);
         button.getImageCell().size(size, size);
@@ -300,8 +302,8 @@ public final class MenuUiKit {
 
         if (locked && showLock) {
             Table lockTable = new Table();
-            float size = Math.min(cardW * 0.5f, Math.min(LOCK_BADGE_WIDTH, LOCK_BADGE_HEIGHT));
-            lockTable.add(new Image(loadTextureSafe("textures/greenhouse/goldlock_icon.png"))).size(LOCK_BADGE_WIDTH, LOCK_BADGE_HEIGHT);
+            lockTable.add(new Image(loadTextureSafe("textures/greenhouse/goldlock_icon.png")))
+                .size(LOCK_BADGE_WIDTH, LOCK_BADGE_HEIGHT);
             stack.add(lockTable);
         }
 

@@ -95,13 +95,6 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
     private static final float HOUSE_ISLAND_OFFSET_X = -170f * LAYOUT_SCALE_X;
     private static final float HOUSE_ISLAND_OFFSET_Y = 70f * LAYOUT_SCALE_Y;
 
-    // Resize multipliers for the three beach island PNGs (anim12/anim13/anim17).
-    // The PNGs render at their native pixel size times this scale, so a bigger
-    // value = bigger island. Tweak each one independently.
-    private static final float BEACH_ISLAND_ANIM_12_SCALE = 0.15f;
-    private static final float BEACH_ISLAND_ANIM_13_SCALE = 0.15f;
-    private static final float BEACH_ISLAND_ANIM_17_SCALE = 0.15f;
-
     private static final Color TRAIL_COLOR = new Color(0.35f, 0.65f, 0.80f, 0.85f);
 
     private static final int PLAYABLE_LEVEL_COUNT = 3;
@@ -544,26 +537,6 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
                 addActor(actor);
             }
 
-            float[][] smallRocksNode1 = {
-                {centerX[0] - 65f * LAYOUT_SCALE_X, centerY[0] - 35f * LAYOUT_SCALE_Y},
-                {centerX[0] + 75f * LAYOUT_SCALE_X, centerY[0] + 40f * LAYOUT_SCALE_Y},
-                {400f * LAYOUT_SCALE_X, 160f * LAYOUT_SCALE_Y}
-            };
-            for (float[] coord : smallRocksNode1) {
-                //addActor(createAnchoredAnimation(MapObjectType.SMALL_ROCK_BEACH_1, SMALL_ROCK_BEACH_TUNING, "idle",
-                    //coord[0], coord[1]));
-            }
-
-            float[][] smallRocksNode2 = {
-                {centerX[1] - 70f * LAYOUT_SCALE_X, centerY[1] - 40f * LAYOUT_SCALE_Y},
-                {centerX[1] + 70f * LAYOUT_SCALE_X, centerY[1] + 35f * LAYOUT_SCALE_Y},
-                {zombossNodeX - 80f * LAYOUT_SCALE_X, zombossNodeY + 40f * LAYOUT_SCALE_Y}
-            };
-            for (float[] coord : smallRocksNode2) {
-                //addActor(createAnchoredAnimation(MapObjectType.SMALL_ROCK_BEACH_2, SMALL_ROCK_BEACH_TUNING, "idle",
-                    //coord[0], coord[1]));
-            }
-
             //addActor(createAnchoredAnimation(MapObjectType.SMALL_ROCK_BEACH_1, SMALL_ROCK_BEACH_TUNING, "idle",
                 //centerX[2] + 80f * LAYOUT_SCALE_X, centerY[2] - 35f * LAYOUT_SCALE_Y));
             //addActor(createAnchoredAnimation(MapObjectType.SMALL_ROCK_BEACH_2, SMALL_ROCK_BEACH_TUNING, "idle",
@@ -590,13 +563,17 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
         private void addForegroundEffects() {
             DangerNodeState dState = calculateDangerNodeState();
             String zombossState = (dState == DangerNodeState.UNLOCKED_IDLE) ? "defeated" : "idle";
-            addActor(createAnchoredAnimation(MapObjectType.ZOMBOSS_NODE, ZOMBOSS_TUNING, zombossState, zombossNodeX, zombossNodeY));
+            addActor(createAnchoredAnimation(MapObjectType.ZOMBOSS_NODE, ZOMBOSS_TUNING, zombossState,
+                zombossNodeX, zombossNodeY));
             addActor(createAnchoredAnimation(MapObjectType.DANGER_NODE_ANIM, DANGER_NODE_TUNING, dState.pamState,
                 dangerNodeAnchorX, dangerNodeAnchorY));
 
-            addActor(createAnchoredAnimation(MapObjectType.SPLASH_EFFECT_ANIM, SPLASH_TUNING, "idle", centerX[0], centerY[0] - 20f));
-            addActor(createAnchoredAnimation(MapObjectType.SPLASH_EFFECT_ANIM, SPLASH_TUNING, "idle", centerX[1], centerY[1] - 20f));
-            addActor(createAnchoredAnimation(MapObjectType.SPLASH_EFFECT_ANIM, SPLASH_TUNING, "idle", centerX[2], centerY[2] - 20f));
+            addActor(createAnchoredAnimation(MapObjectType.SPLASH_EFFECT_ANIM, SPLASH_TUNING, "idle",
+                centerX[0], centerY[0] - 20f));
+            addActor(createAnchoredAnimation(MapObjectType.SPLASH_EFFECT_ANIM, SPLASH_TUNING, "idle",
+                centerX[1], centerY[1] - 20f));
+            addActor(createAnchoredAnimation(MapObjectType.SPLASH_EFFECT_ANIM, SPLASH_TUNING, "idle",
+                centerX[2], centerY[2] - 20f));
 
             float waveOffsetX = 130f * LAYOUT_SCALE_X;
             float waveOffsetY = 70f * LAYOUT_SCALE_Y;
@@ -625,7 +602,8 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
             Stack stack = new Stack();
             stack.setSize(width, height);
 
-            String islandPath = boss ? BOSS_STAGE_ISLAND_TEXTURE : STAGE_ISLAND_TEXTURES[index % STAGE_ISLAND_TEXTURES.length];
+            String islandPath = boss ? BOSS_STAGE_ISLAND_TEXTURE
+                : STAGE_ISLAND_TEXTURES[index % STAGE_ISLAND_TEXTURES.length];
             Image islandImage = new Image(getTextureDrawable(islandPath, (int) width, (int) height));
             stack.add(islandImage);
 

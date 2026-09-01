@@ -41,7 +41,8 @@ import pvz.libpvz.textures.TextureBank;
 import pvz.skin.PvzSkin;
 
 /**
- * Frostbite Caves level-select ("stage map") screen. Ported from  FrostbiteCavesStagesScreen: 3 icy islands plus a separate boss altar,
+ * Frostbite Caves level-select ("stage map") screen. Ported from
+ * FrostbiteCavesStagesScreen: 3 icy islands plus a separate boss altar,
  * tap a stage to select it, then hit Play in the bottom bar - same
  * interaction pattern as {@link EgyptChapterMenu}.
  * <p>
@@ -493,7 +494,9 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
             }
 
             // Purely decorative starting island - not clickable (no Greenhouse hookup here).
-            MapDecorationActor houseIsland = new MapDecorationActor(MapObjectType.DECOR_HOUSE_ISLAND, START_ISLAND_WIDTH, START_ISLAND_HEIGHT, "idle");
+            MapDecorationActor houseIsland = new MapDecorationActor(
+                    MapObjectType.DECOR_HOUSE_ISLAND,
+                    START_ISLAND_WIDTH, START_ISLAND_HEIGHT, "idle");
             houseIsland.setPosition(houseX, houseY + START_ISLAND_Y_OFFSET);
             addActor(houseIsland);
         }
@@ -505,8 +508,10 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
             addActor(createAnchoredAnimation(MapObjectType.DANGER_NODE_ANIM, DANGER_NODE_TUNING, dState.pamState,
                 dangerNodeAnchorX, dangerNodeAnchorY));
 
-            addActor(createAnchoredAnimation(MapObjectType.SNOW_DUST_ANIM, SNOW_DUST_TUNING, "loop", centerX[0] + 35f, centerY[0] - 30f));
-            addActor(createAnchoredAnimation(MapObjectType.SNOW_DUST_ANIM, SNOW_DUST_TUNING, "loop", centerX[2] + 35f, centerY[2] - 30f));
+            addActor(createAnchoredAnimation(MapObjectType.SNOW_DUST_ANIM,
+                    SNOW_DUST_TUNING, "loop", centerX[0] + 35f, centerY[0] - 30f));
+            addActor(createAnchoredAnimation(MapObjectType.SNOW_DUST_ANIM,
+                    SNOW_DUST_TUNING, "loop", centerX[2] + 35f, centerY[2] - 30f));
 
             float blizzardOffsetX = 130f * LAYOUT_SCALE_X;
             float blizzardOffsetY = 70f * LAYOUT_SCALE_Y;
@@ -535,7 +540,9 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
             Stack stack = new Stack();
             stack.setSize(width, height);
 
-            String islandPath = boss ? BOSS_STAGE_ISLAND_TEXTURE : STAGE_ISLAND_TEXTURES[index % STAGE_ISLAND_TEXTURES.length];
+            String islandPath = boss
+                    ? BOSS_STAGE_ISLAND_TEXTURE
+                    : STAGE_ISLAND_TEXTURES[index % STAGE_ISLAND_TEXTURES.length];
             Image islandImage = new Image(getTextureDrawable(islandPath, (int) width, (int) height));
             stack.add(islandImage);
 

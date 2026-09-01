@@ -150,7 +150,8 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
 
         FIREFLY_ANIM("768/FULL/WORLDMAP/DARK/ANIM5/ANIM5.PAM", true),
 
-        LIGHTNING_ANIM("768/FULL/EFFECTS/ZOMBIE_DARK_WIZARD_PROJECTILE_HIT/ZOMBIE_DARK_WIZARD_PROJECTILE_HIT.PAM", true);
+        LIGHTNING_ANIM("768/FULL/EFFECTS/ZOMBIE_DARK_WIZARD_PROJECTILE_HIT"
+                + "/ZOMBIE_DARK_WIZARD_PROJECTILE_HIT.PAM", true);
 
         final String path;
         final boolean isPamAnimation;

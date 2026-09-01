@@ -107,7 +107,6 @@ public class GameController {
     private GameRenderer renderer;
 
     private TextureRegion[] backgroundTextures;
-    private boolean isIZombie = false;
     private float backgroundYOffset = 0f;
 
     // --- Phase 3: I,Zombie online sync -------------------------------------------
@@ -149,7 +148,6 @@ public class GameController {
 
     private float startX;
     private float endX;
-    private boolean gameStarted = false;
     private Label readyPlantLabel;
     private Label errorMessageLabel;
     private float errorMessageTimer = 0f;
@@ -431,7 +429,6 @@ public class GameController {
                 backgroundTextures[2] = PvZ2.textureBank.region("IMAGE_BACKGROUNDS_BEACH_TEXTURE_RIGHT");
             }
             case "izombie" -> {
-                isIZombie = true;
                 com.badlogic.gdx.graphics.Texture left = new com.badlogic.gdx.graphics.Texture(
                         Gdx.files.internal("textures/backgrounds/IZOMBIE/texture_left.png"));
                 com.badlogic.gdx.graphics.Texture mid = new com.badlogic.gdx.graphics.Texture(
@@ -443,7 +440,6 @@ public class GameController {
                 backgroundTextures[2] = new TextureRegion(right);
             }
             case "splitizombie" -> {
-                isIZombie = true;
                 com.badlogic.gdx.graphics.Texture left = new com.badlogic.gdx.graphics.Texture(
                         Gdx.files.internal("textures/backgrounds/IZOMBIE/texture_left.png"));
                 com.badlogic.gdx.graphics.Texture mid = new com.badlogic.gdx.graphics.Texture(
@@ -574,7 +570,8 @@ public class GameController {
                 && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
             boolean zombieCardActive = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
             boolean onPopup = false;
-            com.pvz.view.game.ui.IZombieOnlineUiModal izombieUi = gameUiModal instanceof com.pvz.view.game.ui.IZombieOnlineUiModal m
+            com.pvz.view.game.ui.IZombieOnlineUiModal izombieUi =
+                    gameUiModal instanceof com.pvz.view.game.ui.IZombieOnlineUiModal m
                     ? m
                     : null;
             if (izombieUi != null) {
@@ -1567,7 +1564,6 @@ public class GameController {
     }
 
     public void setGameStarted(boolean gameStarted) {
-        this.gameStarted = gameStarted;
     }
 
     public boolean isPaused() {

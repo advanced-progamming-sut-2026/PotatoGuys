@@ -41,7 +41,6 @@ public class OctopusOverlayBehavior implements TileBehavior {
 
     private final GameContext ctx;
     private final Tile tile;
-    private final float maxHp;
     private float hp;
     private float stateTime = 0f;
     private float flashTimer;
@@ -55,7 +54,6 @@ public class OctopusOverlayBehavior implements TileBehavior {
         this.ctx = ctx;
         this.tile = tile;
         this.hp = hp;
-        this.maxHp = hp;
         this.col = col;
         this.lane = lane;
     }

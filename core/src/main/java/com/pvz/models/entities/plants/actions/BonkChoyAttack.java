@@ -51,7 +51,8 @@ public class BonkChoyAttack extends PlantAction{
 
         Tile frontTile = ctx.getMap().getTileAt(plantCol + 1, plantLane);
         boolean frontTileHasDestructible = false;
-        if (frontTile != null && (frontTile.getTags().contains(TileTags.GRAVE) || frontTile.getTags().contains(TileTags.ICE_BLOCK))) {
+        if (frontTile != null && (frontTile.getTags().contains(TileTags.GRAVE)
+                || frontTile.getTags().contains(TileTags.ICE_BLOCK))) {
             frontTileHasDestructible = true;
         }
 
@@ -95,7 +96,9 @@ public class BonkChoyAttack extends PlantAction{
 
     @Override
     public FrameConfig draw(Plant plant, GameContext ctx) {
-        Vector2 position= new Vector2(GameController.colToWorldX(plant.getCol()),GameController.laneToWorldY(plant.getLane()));
+        Vector2 position= new Vector2(
+                GameController.colToWorldX(plant.getCol()),
+                GameController.laneToWorldY(plant.getLane()));
         Vector2 scale = new Vector2(0.65f,0.65f);
         PamAnimationConfig pamAnimationConfig = plant.getSheet().pamAnimationConfig;
         return new FrameConfig(pamAnimationConfig.pamFilePath,bonkChoyConfig.label,stateTime,position,scale,null,true);

@@ -65,7 +65,6 @@ public class ChomperFeedAction extends PlantAction {
         if (burpDuration <= 0) burpDuration = 0.5f;
         if (burpEndDuration <= 0) burpEndDuration = 0.5f;
 
-        int plantCol = plant.getCol();
         int plantLane = plant.getLane();
         float range = config.biteRangeFactor * GameMap.TILE_WIDTH;
 

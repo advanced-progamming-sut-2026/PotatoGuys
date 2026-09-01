@@ -122,7 +122,8 @@ private static final String[] MINI_GAME_SEASON_FOLDERS = {
         tabsTable = new Table();
         mainPanel.add(tabsTable).padTop(15).row();
 
-        Label.LabelStyle resetStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("8FCE7E"));
+        Label.LabelStyle resetStyle = new Label.LabelStyle(
+            skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("8FCE7E"));
         resetTimerLabel = new Label("", resetStyle);
         resetTimerLabel.setFontScale(1.1f);
         mainPanel.add(resetTimerLabel).padTop(6).row();
@@ -143,7 +144,8 @@ private static final String[] MINI_GAME_SEASON_FOLDERS = {
     private Table buildTopBar() {
         Table top = new Table();
 
-        ImageButton backBtn = new ImageButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
+        ImageButton backBtn = new ImageButton(
+            MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -164,7 +166,8 @@ private static final String[] MINI_GAME_SEASON_FOLDERS = {
 
     private Table buildWallet() {
         Table table = new Table();
-        Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"));
+        Label.LabelStyle descStyle = new Label.LabelStyle(
+            skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"));
 
         Image coinIcon = new Image(skin.getDrawable("image_ui_generic_coin_icon_small"));
         coinsLabel = new Label("0", descStyle);

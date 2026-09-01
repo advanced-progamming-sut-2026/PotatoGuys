@@ -14,10 +14,7 @@ import com.pvz.models.games.GameContext;
  */
 public class PassiveAction extends PlantAction {
 
-    private final PassiveConfig config;
-
     public PassiveAction(PassiveConfig config) {
-        this.config = config;
     }
 
     @Override

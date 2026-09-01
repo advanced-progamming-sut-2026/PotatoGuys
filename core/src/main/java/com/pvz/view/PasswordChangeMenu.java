@@ -80,7 +80,8 @@ public class PasswordChangeMenu extends ScreenAdapter {
         confirmPasswordField = createPasswordField("Confirm New Password");
         Table confirmWrapper = new Table();
         confirmWrapper.add(confirmPasswordField).width(FIELD_WIDTH).height(FIELD_HEIGHT).row();
-        confirmWrapper.add(PasswordToggleHelper.createToggle(confirmPasswordField, skin)).left().padLeft(4f).padTop(12f);
+        confirmWrapper.add(PasswordToggleHelper.createToggle(confirmPasswordField, skin))
+            .left().padLeft(4f).padTop(12f);
         mainPanel.add(confirmWrapper).row();
 
         statusLabel = new Label("", skin);
@@ -100,7 +101,8 @@ public class PasswordChangeMenu extends ScreenAdapter {
         });
         mainPanel.add(changeBtn).width(250).height(60).row();
 
-        ImageButton backBtn = new ImageButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
+        ImageButton backBtn = new ImageButton(
+            MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

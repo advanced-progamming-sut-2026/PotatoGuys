@@ -13,7 +13,6 @@ public class Collection {
     private List<MyPlant> unlockedPlants = new ArrayList<>();
     private List<ZombieType> unlockedZombies = new ArrayList<>();
     private Map<PlantType, Integer> seedPackets = new HashMap<>();
-    private transient News news;
 
     /**
      * True once legacy {@link MyPlant#getSeed()} values have been folded into the
@@ -42,7 +41,6 @@ public class Collection {
     }
 
     public Collection(News news) {
-        this.news = news;
     }
 
     public List<MyPlant> getUnlockedPlants() {

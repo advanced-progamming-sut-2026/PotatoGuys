@@ -94,7 +94,9 @@ public class SquashJumpAction extends PlantAction {
     public FrameConfig draw(Plant plant, GameContext ctx) {
         Vector2 scale = new Vector2(0.65f,0.65f);
         PamAnimationConfig pamAnimationConfig = plant.getSheet().pamAnimationConfig;
-        return new FrameConfig(pamAnimationConfig.pamFilePath,currentClip,stateTime,plant.getPosition(),scale,null,true);
+        return new FrameConfig(pamAnimationConfig.pamFilePath,
+                currentClip, stateTime,
+                plant.getPosition(), scale, null, true);
     }
 
     @Override

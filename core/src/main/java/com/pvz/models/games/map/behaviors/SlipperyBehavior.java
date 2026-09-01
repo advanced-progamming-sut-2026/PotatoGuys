@@ -13,8 +13,6 @@ public class SlipperyBehavior implements TileBehavior {
     private static final String DOWN_PAM_PATH = "768/FULL/EFFECTS/TILESLIDER_ICEAGE_DOWN/TILESLIDER_ICEAGE_DOWN.PAM";
     private static final String IDLE_CLIP = "idle";
 
-    private static final float SLIP_DURATION = 1.5f;
-
     private final int laneDelta;
     private final String pamPath;
     private String currentClip = IDLE_CLIP;

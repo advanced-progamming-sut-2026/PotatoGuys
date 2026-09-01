@@ -106,10 +106,15 @@ public class ShooterAction extends PlantAction {
         float y = GameController.laneToWorldY(plant.getLane()) + pattern.positionOffset.y;
         float velX = pattern.velocity.x;
         float velY = pattern.velocity.y;
-        Projectile projectile = ProjectileFactory.create(pattern.projectileType, ctx, new Vector2(x, y), new Vector2(velX, velY), pattern.damage);
+        Projectile projectile = ProjectileFactory.create(
+                pattern.projectileType, ctx,
+                new Vector2(x, y), new Vector2(velX, velY),
+                pattern.damage);
         projectile.setSourcePlantType(plant.getType());
         ctx.spawnProjectile(projectile);
-        ctx.log("projectile spawned at x= "+x+"  y= "+y+" (col: "+GameController.worldXtoCol(x)+" lane: "+GameController.worldYtoLane(y)+")");
+        ctx.log("projectile spawned at x= "+x+"  y= "+y
+                +" (col: "+GameController.worldXtoCol(x)
+                +" lane: "+GameController.worldYtoLane(y)+")");
     }
 
 

@@ -37,7 +37,9 @@ public class Eat extends PlantState {
 
     @Override
     public FrameConfig draw(Plant plant, GameContext ctx) {
-        Vector2 position= new Vector2(GameController.colToWorldX(plant.getCol()),GameController.laneToWorldY(plant.getLane()));
+        Vector2 position= new Vector2(
+                GameController.colToWorldX(plant.getCol()),
+                GameController.laneToWorldY(plant.getLane()));
         Vector2 scale = new Vector2(0.65f,0.65f);
         return new FrameConfig(GraveBuster.PAM_PATH,CLIP,stateTime,position,scale,null,true);
     }

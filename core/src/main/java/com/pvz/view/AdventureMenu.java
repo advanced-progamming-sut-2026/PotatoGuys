@@ -29,7 +29,8 @@ import com.pvz.models.user.Profile;
 import pvz.skin.PvzSkin;
 
 /**
- * "Choose a Chapter" screen — follows the reference screenshot closely: top bar (back + title + currency), then a smooth,
+ * "Choose a Chapter" screen — follows the reference screenshot closely: top bar (back + title + currency),
+ * then a smooth,
  * flick-scrollable, infinitely-looping row of big chapter cards.
  * <p>
  * Optional art (falls back to a tinted card if missing — check the console/logcat for a
@@ -104,7 +105,9 @@ public class AdventureMenu extends ScreenAdapter {
         Table topBar = new Table();
 
         Table topLeft = new Table();
-        topLeft.add(MenuUiKit.backButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)), () -> game.setScreen(new GameModesMenu(game))))
+        topLeft.add(MenuUiKit.backButton(MenuUiKit.textureDrawable(
+                game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)),
+                () -> game.setScreen(new GameModesMenu(game))))
             .size(75, 70).padRight(24);
         Label title = new Label("Choose a Chapter", skin, "big");
         topLeft.add(title);
@@ -142,7 +145,8 @@ public class AdventureMenu extends ScreenAdapter {
                     : index == 1 ? () -> game.setScreen(new FrostbiteCavesChapterMenu(game))
                     : index == 2 ? () -> game.setScreen(new DarkAgesChapterMenu(game))
                     : () -> game.setScreen(new BigWaveBeachChapterMenu(game));
-                return MenuUiKit.addHoverPop(MenuUiKit.bigCard(skin, CHAPTER_ART[index], CHAPTER_TINTS[index], chapterName,
+                return MenuUiKit.addHoverPop(MenuUiKit.bigCard(skin, CHAPTER_ART[index], CHAPTER_TINTS[index],
+                    chapterName,
                     locked, locked,
                     openChapter,
                     CARD_WIDTH, CARD_HEIGHT));

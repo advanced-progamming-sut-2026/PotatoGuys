@@ -100,7 +100,8 @@ public class ProfileEditMenu extends ScreenAdapter {
         });
         mainPanel.add(saveBtn).width(250).height(60).row();
 
-        ImageButton backBtn = new ImageButton(MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
+        ImageButton backBtn = new ImageButton(
+            MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

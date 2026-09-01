@@ -17,7 +17,6 @@ public class MintAction extends PlantAction {
     private static final int PHASE_LOOP  = 1;
     private static final int PHASE_OUTRO = 2;
 
-    private final MintActionConfig config;
     private int phase;
     private float introDuration;
     private float loopDuration;
@@ -26,7 +25,6 @@ public class MintAction extends PlantAction {
     private boolean buffApplied;
 
     public MintAction(MintActionConfig config) {
-        this.config = config;
     }
 
     @Override

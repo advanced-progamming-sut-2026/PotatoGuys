@@ -14,7 +14,6 @@ public class ButterStunState extends ZombieState {
     private final ZombieState lastState;
     private final float lastStateFrameTime;
     private final float duration;
-    private final String pamPath;
     private final String clip;
 
     public ButterStunState(ZombieState lastState, float lastStateFrameTime, float duration,
@@ -23,7 +22,6 @@ public class ButterStunState extends ZombieState {
         this.lastState = lastState;
         this.lastStateFrameTime = lastStateFrameTime;
         this.duration = duration;
-        this.pamPath = pamPath;
         this.clip = clip;
     }
 

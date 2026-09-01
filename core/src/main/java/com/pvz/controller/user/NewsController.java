@@ -46,7 +46,9 @@ public class NewsController {
         }
 
         for (Message message : messages) {
-            String status = message.isUnread() ? AnsiColors.RED+"[NEW]"+AnsiColors.RESET+" " : AnsiColors.GREEN+"[READ]"+AnsiColors.RESET+" ";
+            String status = message.isUnread()
+                    ? AnsiColors.RED + "[NEW]" + AnsiColors.RESET + " "
+                    : AnsiColors.GREEN + "[READ]" + AnsiColors.RESET + " ";
             result.append(status).append("- ").append(message.getMessage()).append("\n");
             message.setUnread(false); // Mark as read
         }
