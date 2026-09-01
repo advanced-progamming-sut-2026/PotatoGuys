@@ -1,7 +1,5 @@
 package com.pvz.view;
 
-import java.util.HashMap;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -22,7 +20,7 @@ import com.pvz.controller.user.PatternManager;
 import com.pvz.enums.commands.RegisterMenuCommand;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.User;
-import com.pvz.utils.SaveManager;
+import com.pvz.network.NetworkClient;
 
 import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
@@ -127,11 +125,6 @@ public class ProfileEditMenu extends ScreenAdapter {
             return;
         }
 
-        if (!newUsername.equals(currentUser.getUsername()) && usernameTaken(newUsername)) {
-            setError("Username is already taken.");
-            return;
-        }
-
         String nicknameValidation = PatternManager.validateNickname(newNickname);
         if (nicknameValidation != null) {
             setError(nicknameValidation);
@@ -151,36 +144,37 @@ public class ProfileEditMenu extends ScreenAdapter {
             return;
         }
 
-        SaveManager saveManager = SaveManager.getInstance();
-        HashMap<String, String> usernames = saveManager.load("users/username.json", HashMap.class);
-        if (usernames == null) {
-            usernames = new HashMap<>();
+        statusLabel.setText("Saving...");
+        statusLabel.setColor(new Color(0xCCCCCCFF));
+
+        Runnable doUpdate = () -> NetworkClient.getInstance().updateProfile(
+                currentUser.getId(), currentUser.getUsername(), newUsername, newNickname, newEmail,
+                response -> {
+                    if (!response.success) {
+                        setError(response.errorMessage);
+                        return;
+                    }
+                    User updated = NetworkClient.getInstance().parsePayload(response, User.class);
+                    if (updated != null) {
+                        AppContext.getInstance().setCurrentUser(updated);
+                        currentUser = updated;
+                    }
+                    statusLabel.setText("Profile updated successfully!");
+                    statusLabel.setColor(Color.GREEN);
+                });
+
+        boolean usernameChanged = !newUsername.equals(currentUser.getUsername());
+        if (usernameChanged) {
+            NetworkClient.getInstance().checkUsername(newUsername, taken -> {
+                if (taken) {
+                    setError("Username is already taken.");
+                    return;
+                }
+                doUpdate.run();
+            });
+        } else {
+            doUpdate.run();
         }
-
-        usernames.remove(currentUser.getUsername());
-        currentUser.setUsername(newUsername);
-        currentUser.setNickName(newNickname);
-        currentUser.setEmail(newEmail);
-        usernames.put(newUsername, currentUser.getId());
-
-        saveManager.save(usernames, "users/username.json");
-        currentUser.saveUser();
-
-        statusLabel.setText("Profile updated successfully!");
-        statusLabel.setColor(Color.GREEN);
-    }
-
-    private boolean usernameTaken(String username) {
-        SaveManager saveManager = SaveManager.getInstance();
-        HashMap<String, String> usernames = saveManager.load("users/username.json", HashMap.class);
-        if (usernames == null) {
-            return false;
-        }
-        String id = usernames.get(username);
-        if (id == null) {
-            return false;
-        }
-        return !id.equals(currentUser.getId());
     }
 
     private void setError(String message) {

@@ -63,6 +63,16 @@ public class ClientHandler implements Runnable {
             String line;
             while ((line = in.readLine()) != null) {
                 NetworkMessage request = gson.fromJson(line, NetworkMessage.class);
+                // A null type means the enum name on the wire doesn't exist in this server's
+                // MessageType (e.g. an old server process running against a newer client).
+                // Gson silently maps unknown enum names to null instead of throwing, so guard
+                // here with a readable error instead of an NPE in the switch below.
+                if (request.type == null) {
+                    System.err.println("[ClientHandler] Received message with null type: " + line);
+                    out.println(gson.toJson(NetworkMessage.error(request,
+                            "Unknown or missing message type. Make sure client and server are running the same build.")));
+                    continue;
+                }
                 NetworkMessage response = handle(request);
                 out.println(gson.toJson(response));
             }
@@ -99,6 +109,14 @@ public class ClientHandler implements Runnable {
                     return handleGetUser(request);
                 case GET_LEADERBOARD:
                     return handleGetLeaderboard(request);
+                case CHECK_USERNAME:
+                    return handleCheckUsername(request);
+                case FORGOT_PASSWORD:
+                    return handleForgotPassword(request);
+                case RESET_PASSWORD:
+                    return handleResetPassword(request);
+                case UPDATE_PROFILE:
+                    return handleUpdateProfile(request);
                 case INVITE_SEND:
                     return handleInviteSend(request);
                 case INVITE_RESPONSE:
@@ -206,6 +224,93 @@ public class ClientHandler implements Runnable {
     private NetworkMessage handleGetLeaderboard(NetworkMessage request) {
         List<LeaderBoardEntry> entries = Leaderboard.loadAll();
         return NetworkMessage.ok(request, gson.toJson(entries));
+    }
+
+    @SuppressWarnings("unchecked")
+    private NetworkMessage handleCheckUsername(NetworkMessage request) {
+        MatchDTOs.CheckUsernameRequest req = gson.fromJson(request.payload, MatchDTOs.CheckUsernameRequest.class);
+        synchronized (ACCOUNTS_LOCK) {
+            HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+            boolean taken = usernames != null && usernames.containsKey(req.username);
+            return NetworkMessage.ok(request, gson.toJson(taken));
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private NetworkMessage handleForgotPassword(NetworkMessage request) {
+        MatchDTOs.ResetPasswordRequest req = gson.fromJson(request.payload, MatchDTOs.ResetPasswordRequest.class);
+
+        HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+        if (usernames == null || !usernames.containsKey(req.username)) {
+            return NetworkMessage.error(request, "Username not found.");
+        }
+        String id = usernames.get(req.username);
+        User user = SaveManager.getInstance().load("users/" + id + ".json", User.class);
+        if (user == null) {
+            return NetworkMessage.error(request, "User data not found.");
+        }
+        if (!user.getEmail().equals(req.email)) {
+            return NetworkMessage.error(request, "Email is incorrect!");
+        }
+
+        MatchDTOs.ForgotPasswordPayload payload = new MatchDTOs.ForgotPasswordPayload();
+        payload.securityQuestion = user.getSecurityQuestion();
+        return NetworkMessage.ok(request, gson.toJson(payload));
+    }
+
+    @SuppressWarnings("unchecked")
+    private NetworkMessage handleResetPassword(NetworkMessage request) {
+        MatchDTOs.ResetPasswordRequest req = gson.fromJson(request.payload, MatchDTOs.ResetPasswordRequest.class);
+
+        HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+        if (usernames == null || !usernames.containsKey(req.username)) {
+            return NetworkMessage.error(request, "Username not found.");
+        }
+        String id = usernames.get(req.username);
+
+        synchronized (ACCOUNTS_LOCK) {
+            User user = SaveManager.getInstance().load("users/" + id + ".json", User.class);
+            if (user == null) {
+                return NetworkMessage.error(request, "User data not found.");
+            }
+            user.setPasswordHash(PasswordUtils.hashPassword(req.newPassword));
+            SaveManager.getInstance().save(user, "users/" + id + ".json");
+        }
+
+        return NetworkMessage.ok(request, null);
+    }
+
+    @SuppressWarnings("unchecked")
+    private NetworkMessage handleUpdateProfile(NetworkMessage request) {
+        MatchDTOs.UpdateProfileRequest req = gson.fromJson(request.payload, MatchDTOs.UpdateProfileRequest.class);
+
+        synchronized (ACCOUNTS_LOCK) {
+            HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+            if (usernames == null) {
+                usernames = new HashMap<>();
+            }
+
+            if (req.newUsername != null && !req.newUsername.isEmpty()
+                    && !req.newUsername.equals(req.oldUsername)) {
+                if (usernames.containsKey(req.newUsername)) {
+                    return NetworkMessage.error(request, "Username is already taken!");
+                }
+                usernames.remove(req.oldUsername);
+                usernames.put(req.newUsername, req.userId);
+                SaveManager.getInstance().save(usernames, "users/username.json");
+            }
+
+            User user = SaveManager.getInstance().load("users/" + req.userId + ".json", User.class);
+            if (user == null) {
+                return NetworkMessage.error(request, "User not found.");
+            }
+            if (req.newUsername != null) user.setUsername(req.newUsername);
+            if (req.newNickname != null) user.setNickName(req.newNickname);
+            if (req.newEmail != null) user.setEmail(req.newEmail);
+            SaveManager.getInstance().save(user, "users/" + req.userId + ".json");
+
+            return NetworkMessage.ok(request, gson.toJson(user));
+        }
     }
 
     // ---- I,Zombie matchmaking (Phase 2) -----------------------------------------------
