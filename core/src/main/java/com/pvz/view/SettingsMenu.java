@@ -106,6 +106,7 @@ public class SettingsMenu extends ScreenAdapter {
 
         mainPanel.add(gridToggle()).left().padTop(10).row();
         mainPanel.add(debugToggle()).left().row();
+        mainPanel.add(fullscreenToggle()).left().padTop(10).row();
 
         // No per-screen brightness preview actor needed anymore — PvZ2.render() draws
         // the brightness overlay globally, on top of every screen including this one,
@@ -289,6 +290,20 @@ public class SettingsMenu extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 setting.setDebugMode(checkBox.isChecked());
                 persistSetting();
+            }
+        });
+        return checkBox;
+    }
+
+    private CheckBox fullscreenToggle() {
+        CheckBox checkBox = new CheckBox(" Full Screen", tickCheckBoxStyle());
+        checkBox.setChecked(setting.isFullscreen());
+        checkBox.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                setting.setFullscreen(checkBox.isChecked());
+                persistSetting();
+                game.applyFullscreen(checkBox.isChecked());
             }
         });
         return checkBox;
