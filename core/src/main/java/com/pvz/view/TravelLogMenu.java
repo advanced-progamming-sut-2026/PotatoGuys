@@ -52,15 +52,15 @@ public class TravelLogMenu extends ScreenAdapter {
 
     private enum Tab { DAILY, MAIN, EPIC, ALL, MINIGAMES }
 
-    private static final String[] MINI_GAME_SEASON_FOLDERS = {
+private static final String[] MINI_GAME_SEASON_FOLDERS = {
             "VaseBreaker", "Wallnut Bowling", "IZombie", "Scored" };
     private static final String[] MINI_GAME_LABELS = {
-            "Vasebreaker", "Wallnut Bowling", "I, Zombie", "Mini-Point" };
+            "Vasebreaker", "Wallnut Bowling", "I, Zombie", "Scored" };
     private static final String[] MINI_GAME_WALLPAPERS = {
         "textures/backgrounds/VASEBREAKER/wallpaper.png",
         "textures/backgrounds/WALLNUTBOWLING/wallpaper.png",
         "textures/backgrounds/IZOMBIE/wallpaper.png",
-        "textures/backgrounds/SCORED/wallpaper.png"
+        "textures/backgrounds/SCORINGGAME/img.png"
     };
     private static final float BAR_WIDTH = 420f;
     private static final float BAR_HEIGHT = 20f;
