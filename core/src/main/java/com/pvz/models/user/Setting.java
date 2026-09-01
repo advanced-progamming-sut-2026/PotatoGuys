@@ -13,6 +13,7 @@ public class Setting {
     private float sfxVolume;
     private boolean musicMuted;
     private boolean sfxMuted;
+    private boolean fullscreen;
 
     // creating a setting with default difficulty
     public Setting(){
@@ -25,6 +26,7 @@ public class Setting {
         sfxVolume = 0.7f;
         musicMuted = false;
         sfxMuted = false;
+        fullscreen = false;
     }
 
     public Setting(int difficulty) {
@@ -93,5 +95,12 @@ public class Setting {
     }
     public void setSfxMuted(boolean sfxMuted) {
         this.sfxMuted = sfxMuted;
+    }
+
+    public boolean isFullscreen() {
+        return fullscreen;
+    }
+    public void setFullscreen(boolean fullscreen) {
+        this.fullscreen = fullscreen;
     }
 }

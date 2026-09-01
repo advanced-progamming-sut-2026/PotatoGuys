@@ -2,6 +2,7 @@ package com.pvz;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
@@ -97,6 +98,7 @@ public class PvZ2 extends Game {
                     if (response.success) {
                         User user = NetworkClient.getInstance().parsePayload(response, User.class);
                         AppContext.getInstance().setCurrentUser(user);
+                        applyFullscreenSetting();
                         setScreen(new MainMenu(this));
                     } else {
                         SaveManager.getInstance().delete("session.json");
@@ -109,8 +111,29 @@ public class PvZ2 extends Game {
         setScreen(new LoginMenu(this));
     }
 
-    /**
-     * Sets the window/taskbar icon from textures/ui/zombie_head.png.
+    /** Toggles the desktop window between fullscreen and windowed mode. */
+    public void applyFullscreen(boolean fullscreen) {
+        try {
+            if (fullscreen) {
+                Graphics.DisplayMode displayMode = Gdx.graphics.getDisplayMode();
+                Gdx.graphics.setFullscreenMode(displayMode);
+            } else {
+                Gdx.graphics.setWindowedMode(640, 480);
+            }
+        } catch (Exception e) {
+            Gdx.app.error("PvZ2", "could not apply fullscreen setting", e);
+        }
+    }
+
+    /** Applies the fullscreen preference of the currently logged-in user at startup. */
+    private void applyFullscreenSetting() {
+        User user = AppContext.getInstance().getCurrentUser();
+        if (user == null)
+            return;
+        applyFullscreen(user.getSetting().isFullscreen());
+    }
+
+    /** Sets the window/taskbar icon from textures/ui/zombie_head.png.
      * That PNG is a green-screen sprite (no alpha), so the background green is
      * chroma-keyed
      * out at startup before handing the pixmap to the OS — otherwise the taskbar
