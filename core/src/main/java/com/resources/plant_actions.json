@@ -3898,18 +3898,18 @@
       "label": "attack",
       "patterns": [
         {
-          "projectileType": "SPORE",
+          "projectileType": "SEASHROOM_PROJECTILE",
           "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
-            "x": 50,
-            "y": 15
+            "x": 35,
+            "y": -4
           },
           "velocity": {
             "x": 135.0,
             "y": 0.0
           },
-          "delaySeconds": 0.0
+          "delaySeconds": 0.5
         }
       ]
     },
@@ -3918,116 +3918,116 @@
       "label": "pf",
       "patterns": [
         {
-          "projectileType": "SPORE",
+          "projectileType": "SEASHROOM_PROJECTILE",
           "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
-            "x": 50,
-            "y": 15
+            "x": 35,
+            "y": -4
           },
           "velocity": {
             "x": 135.0,
             "y": 0.0
           },
-          "delaySeconds": 0.0
+          "delaySeconds": 0.5
         },
         {
-          "projectileType": "SPORE",
+          "projectileType": "SEASHROOM_PROJECTILE",
           "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
-            "x": 50,
-            "y": 15
+            "x": 35,
+            "y": -4
           },
           "velocity": {
             "x": 135.0,
             "y": 0.0
           },
-          "delaySeconds": 0.15
+          "delaySeconds": 0.65
         },
         {
-          "projectileType": "SPORE",
+          "projectileType": "SEASHROOM_PROJECTILE",
           "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
-            "x": 50,
-            "y": 15
+            "x": 35,
+            "y": -4
           },
           "velocity": {
             "x": 135.0,
             "y": 0.0
           },
-          "delaySeconds": 0.3
+          "delaySeconds": 0.8
         },
         {
-          "projectileType": "SPORE",
+          "projectileType": "SEASHROOM_PROJECTILE",
           "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
-            "x": 50,
-            "y": 15
+            "x": 35,
+            "y": -4
           },
           "velocity": {
             "x": 135.0,
             "y": 0.0
           },
-          "delaySeconds": 0.45
+          "delaySeconds": 0.95
         },
         {
-          "projectileType": "SPORE",
+          "projectileType": "SEASHROOM_PROJECTILE",
           "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
-            "x": 50,
-            "y": 15
+            "x": 35,
+            "y": -4
           },
           "velocity": {
             "x": 135.0,
             "y": 0.0
           },
-          "delaySeconds": 0.6
+          "delaySeconds": 1.1
         },
         {
-          "projectileType": "SPORE",
+          "projectileType": "SEASHROOM_PROJECTILE",
           "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
-            "x": 50,
-            "y": 15
+            "x": 35,
+            "y": -4
           },
           "velocity": {
             "x": 135.0,
             "y": 0.0
           },
-          "delaySeconds": 0.75
+          "delaySeconds": 1.25
         },
         {
-          "projectileType": "SPORE",
+          "projectileType": "SEASHROOM_PROJECTILE",
           "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
-            "x": 50,
-            "y": 15
+            "x": 35,
+            "y": -4
           },
           "velocity": {
             "x": 135.0,
             "y": 0.0
           },
-          "delaySeconds": 0.9
+          "delaySeconds": 1.4
         },
         {
-          "projectileType": "SPORE",
+          "projectileType": "SEASHROOM_PROJECTILE",
           "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
-            "x": 50,
-            "y": 15
+            "x": 35,
+            "y": -4
           },
           "velocity": {
             "x": 135.0,
             "y": 0.0
           },
-          "delaySeconds": 1.05
+          "delaySeconds": 1.55
         }
       ]
     },
@@ -4083,18 +4083,18 @@
       "label": "special_stage1",
       "patterns": [
         {
-          "projectileType": "SPORE",
+          "projectileType": "PUFFSHROOM_PROJECTILE",
           "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
-            "x": 50,
-            "y": 15
+            "x": 40,
+            "y": -5
           },
           "velocity": {
             "x": 135.0,
             "y": 0.0
           },
-          "delaySeconds": 0.0
+          "delaySeconds": 0.4
         }
       ]
     },
@@ -4103,46 +4103,74 @@
       "label": "plantfood",
       "patterns": [
         {
-          "projectileType": "SPORE",
+          "projectileType": "PUFFSHROOM_PROJECTILE",
           "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
-            "x": 50,
-            "y": 15
+            "x": 40,
+            "y": -5
           },
           "velocity": {
             "x": 135.0,
             "y": 0.0
           },
-          "delaySeconds": 0.0
+          "delaySeconds": 0.1
         },
         {
-          "projectileType": "SPORE",
+          "projectileType": "PUFFSHROOM_PROJECTILE",
           "damage": 20.0,
           "laneOffset": 1,
           "positionOffset": {
-            "x": 50,
-            "y": 15
+            "x": 40,
+            "y": -5
           },
           "velocity": {
             "x": 135.0,
             "y": 0.0
           },
-          "delaySeconds": 0.0
+          "delaySeconds": 0.2
         },
         {
-          "projectileType": "SPORE",
+          "projectileType": "PUFFSHROOM_PROJECTILE",
+          "damage": 20.0,
+          "laneOffset": 1,
+          "positionOffset": {
+            "x": 40,
+            "y": -5
+          },
+          "velocity": {
+            "x": 135.0,
+            "y": 0.0
+          },
+          "delaySeconds": 0.3
+        },
+        {
+          "projectileType": "PUFFSHROOM_PROJECTILE",
+          "damage": 20.0,
+          "laneOffset": 1,
+          "positionOffset": {
+            "x": 40,
+            "y": -5
+          },
+          "velocity": {
+            "x": 135.0,
+            "y": 0.0
+          },
+          "delaySeconds": 0.4
+        },
+        {
+          "projectileType": "PUFFSHROOM_PROJECTILE",
           "damage": 20.0,
           "laneOffset": -1,
           "positionOffset": {
-            "x": 50,
-            "y": 15
+            "x": 40,
+            "y": -5
           },
           "velocity": {
             "x": 135.0,
             "y": 0.0
           },
-          "delaySeconds": 0.0
+          "delaySeconds": 0.5
         }
       ]
     },
