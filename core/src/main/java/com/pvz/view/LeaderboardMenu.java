@@ -26,7 +26,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
 import com.pvz.controller.LeaderBoardController;
-import com.pvz.enums.GameAsset;
 import com.pvz.models.AppContext;
 import com.pvz.models.leaderboard.Leaderboard.LeaderBoardEntry;
 import com.pvz.models.leaderboard.LeaderboardSortField;
