@@ -103,6 +103,9 @@ public class PlantFactory {
         if (config instanceof TangleKelpConfig tangleKelpConfig) {
             return new TangleKelpAction(tangleKelpConfig);
         }
+        if (config instanceof SunBeanConfig sunBeanConfig) {
+            return new SunBeanAction(sunBeanConfig);
+        }
         if (config instanceof NutConfig nutConfig) {
             return nutConfig.explodesOnDestroy ? new ExplodeONutAction(nutConfig) : new WallNutState(nutConfig);
         }
