@@ -73,11 +73,28 @@ public final class ZombieData {
 
     private static final String ZOMBIE_ART_DIR = "textures/zombies/";
 
+    /**
+     * Resolves the portrait path for a type, trying both the enum-name case
+     * ("ALLSTAR.png") and the lowercase file name ("allstar.png") since the
+     * asset pack is inconsistent. Returns a path that is guaranteed to exist,
+     * or {@code null} if no portrait exists for the type.
+     */
+    private static String portraitPath(ZombieType type) {
+        String name = type.name();
+        String direct = ZOMBIE_ART_DIR + name + ".png";
+        if (Gdx.files.internal(direct).exists())
+            return direct;
+        String lower = ZOMBIE_ART_DIR + name.toLowerCase() + ".png";
+        if (Gdx.files.internal(lower).exists())
+            return lower;
+        return null;
+    }
+
     /** Loads the static PNG portrait for this zombie type. */
     public Table portraitWidget() {
         Table wrap = new Table();
-        String path = ZOMBIE_ART_DIR + type.name() + ".png";
-        if (Gdx.files.internal(path).exists()) {
+        String path = portraitPath(type);
+        if (path != null) {
             Texture texture = new Texture(Gdx.files.internal(path));
             texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             Image image = new Image(new TextureRegionDrawable(texture));
@@ -100,8 +117,8 @@ public final class ZombieData {
 
     /** Loads the portrait as a {@link Drawable} (for the mini slot cards). */
     public Drawable portraitDrawable() {
-        String path = ZOMBIE_ART_DIR + type.name() + ".png";
-        if (Gdx.files.internal(path).exists()) {
+        String path = portraitPath(type);
+        if (path != null) {
             Texture texture = new Texture(Gdx.files.internal(path));
             texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             return new TextureRegionDrawable(new TextureRegion(texture));

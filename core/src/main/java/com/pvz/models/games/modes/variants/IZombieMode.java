@@ -141,6 +141,7 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
         ZOMBIE_SUN_COSTS.put(ZombieType.KING, 200);
         ZOMBIE_SUN_COSTS.put(ZombieType.DARK_GARG, 300);
         ZOMBIE_SUN_COSTS.put(ZombieType.DARK_IMP, 25);
+        ZOMBIE_SUN_COSTS.put(ZombieType.ALLSTAR, 300);
     }
 
     public IZombieMode(Level level) {
