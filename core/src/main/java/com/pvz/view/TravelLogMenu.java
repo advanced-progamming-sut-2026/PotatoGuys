@@ -198,6 +198,7 @@ private static final String[] MINI_GAME_SEASON_FOLDERS = {
         resetTimerLabel.setVisible(showTimer);
         if (showTimer) {
             resetTimerLabel.setText("Daily quests reset in " + controller.getMillisUntilDailyResetFormatted());
+
         }
     }
 
