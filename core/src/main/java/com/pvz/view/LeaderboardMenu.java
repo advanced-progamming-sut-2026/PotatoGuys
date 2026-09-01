@@ -123,8 +123,8 @@ public class LeaderboardMenu extends ScreenAdapter {
 
         buildSortBar();
         refreshWallet();
-        refreshRows();                    // اول با کش خالی نمایش می‌ده (empty state)
-        controller.reload(this::refreshRows);  // وقتی سرور جواب داد، جدول دوباره ساخته می‌شه
+        refreshRows(); // اول با کش خالی نمایش می‌ده (empty state)
+        controller.reload(this::refreshRows); // وقتی سرور جواب داد، جدول دوباره ساخته می‌شه
     }
 
     // --- Top bar --------------------------------------------------------
@@ -133,7 +133,7 @@ public class LeaderboardMenu extends ScreenAdapter {
         Table top = new Table();
 
         ImageButton backBtn = new ImageButton(
-            MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
+                MenuUiKit.textureDrawable(game.getGlobalAssetManager().get(MenuUiKit.BACK_BUTTON_TEX)));
         backBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -286,7 +286,8 @@ public class LeaderboardMenu extends ScreenAdapter {
         row.pad(8, 16, 8, 16);
         row.defaults().left().padRight(8);
 
-        Label.LabelStyle mainStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"));
+        Label.LabelStyle mainStyle = new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"),
+                Color.valueOf("F1E4C0"));
 
         row.add(rankBadge(rank, mainStyle)).width(COL_RANK).center();
         row.add(avatarImage(entry.username)).size(COL_AVATAR - 10);
@@ -331,7 +332,7 @@ public class LeaderboardMenu extends ScreenAdapter {
         String path = DEFAULT_AVATAR;
         User user = AppContext.getInstance().getCurrentUser();
         if (user != null && username.equalsIgnoreCase(user.getUsername()) && user.getProfilePicture() != null
-            && !user.getProfilePicture().isEmpty()) {
+                && !user.getProfilePicture().isEmpty()) {
             path = user.getProfilePicture();
         }
         Texture feathered = AvatarImages.featheredCircle(path);
@@ -354,8 +355,8 @@ public class LeaderboardMenu extends ScreenAdapter {
         }
 
         Label.LabelStyle style = medalColor != null
-            ? new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"))
-            : fallbackStyle;
+                ? new Label.LabelStyle(skin.getFont("AVENIRNEXTLTPRO-DEMICN"), Color.valueOf("F1E4C0"))
+                : fallbackStyle;
         Label number = new Label(String.valueOf(rank), style);
         number.setFontScale(1.05f);
         number.setAlignment(com.badlogic.gdx.utils.Align.center);
@@ -438,6 +439,7 @@ public class LeaderboardMenu extends ScreenAdapter {
     public void dispose() {
         stage.dispose();
         skin.dispose();
-        if (darkBgTexture != null) darkBgTexture.dispose();
+        if (darkBgTexture != null)
+            darkBgTexture.dispose();
     }
 }
