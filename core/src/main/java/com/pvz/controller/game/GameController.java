@@ -63,6 +63,7 @@ import com.pvz.models.games.modes.capabilities.PlantPlacer;
 import com.pvz.models.games.modes.capabilities.ZombiePlacer;
 import com.pvz.models.games.modes.variants.IZombieMode;
 import com.pvz.models.games.modes.variants.IZombieLocalMode;
+import com.pvz.models.games.modes.variants.ScoredMode;
 import com.pvz.models.games.modes.variants.VaseBreakerMode;
 import com.pvz.models.games.card.ZombieCard;
 import com.pvz.models.user.MyPlant;
@@ -73,6 +74,7 @@ import com.pvz.view.game.GameOverPopup;
 import com.pvz.view.game.GameWinPopup;
 import com.pvz.view.game.PauseMenuPopup;
 import com.pvz.view.game.PlantSelectModal;
+import com.pvz.view.game.ScoredPopup;
 import com.pvz.view.game.ui.ConveyorBeltUiModal;
 import com.pvz.view.game.ui.GameUiModal;
 import com.pvz.view.game.ui.IZombieOnlineUiModal;
@@ -593,6 +595,27 @@ public class GameController {
         }
 
         renderer.update(state instanceof Playing ? simDt : dt);
+
+        pollScoredPopups(dt);
+    }
+
+    /**
+     * Polls the scored game mode for newly earned miopoint awards and displays a
+     * transient pop-up ("You scored N points!") for each one.
+     */
+    private void pollScoredPopups(float dt) {
+        if (ctx == null) {
+            return;
+        }
+        if (!(ctx.getMode() instanceof ScoredMode scoredMode)) {
+            return;
+        }
+        List<ScoredMode.ScoredEvent> events = scoredMode.drainEvents();
+        for (ScoredMode.ScoredEvent event : events) {
+            ScoredPopup popup = new ScoredPopup(event.points);
+            stage.addActor(popup);
+            popup.toFront();
+        }
     }
 
     // ---- Split I,Zombie (local 2-player): zombie-side keyboard input ----
@@ -769,6 +792,12 @@ public class GameController {
             won = ctx.getZombies().isEmpty();
         }
 
+        // Scored (mini-point) mode: record the miopoint total on the user.
+        if (ctx.getMode() instanceof ScoredMode scoredMode && user != null) {
+            int miopoints = scoredMode.getTotalMiopoints();
+            recordMiopoints(user, miopoints);
+        }
+
         if (user != null && user.getQuestLog() != null && ctx.getGameStats() != null) {
             com.pvz.models.quests.QuestEvaluator.evaluateAll(
                     user.getQuestLog(), ctx.getGameStats(), won,
@@ -778,7 +807,8 @@ public class GameController {
 
         Runnable exitAction = () -> Gdx.app.postRunnable(() -> {
             if (ctx.getMode() instanceof IZombieMode
-                    || ctx.getMode() instanceof IZombieLocalMode) {
+                    || ctx.getMode() instanceof IZombieLocalMode
+                    || ctx.getMode() instanceof ScoredMode) {
                 PvZ2.instance.setScreen(new TravelLogMenu(PvZ2.instance));
             } else {
                 PvZ2.instance.setScreen(new GameModesMenu(PvZ2.instance));
@@ -800,10 +830,13 @@ public class GameController {
             } else if (ctx.getMode() instanceof IZombieLocalMode) {
                 title = "ZOMBIES WIN!";
                 msg = "All five brains were eaten!";
+            } else if (ctx.getMode() instanceof ScoredMode scoredWinMode) {
+                title = "ALL WAVES CLEARED!";
+                msg = "You earned " + scoredWinMode.getTotalMiopoints() + " miopoints!";
             }
             Runnable nextAction;
-            if (ctx.getMode() instanceof IZombieLocalMode) {
-                // Single local split level: no "next level" — head straight back to the map.
+            if (ctx.getMode() instanceof IZombieLocalMode || ctx.getMode() instanceof ScoredMode) {
+                // Single level: no "next level" — head straight back to the map.
                 nextAction = exitAction;
             } else {
                 nextAction = () -> Gdx.app.postRunnable(() -> {
@@ -847,6 +880,25 @@ public class GameController {
             int synced = Math.min(ctx.getProfilePlantFoodOnEntry(), ctx.getPlantFoodCount());
             user.getProfile().setPlantFood(synced);
         }
+    }
+
+    /**
+     * Records the miopoints earned in the scored (mini-point) mode onto the
+     * user's persistent record: updates {@code Score.highestScore} and the
+     * profile's best miopoint, then persists the user (via the network when
+     * connected, otherwise to a local JSON file).
+     */
+    private void recordMiopoints(com.pvz.models.user.User user, int miopoints) {
+        if (user == null || user.getScore() == null || user.getProfile() == null) {
+            return;
+        }
+        int best = Math.max(user.getScore().getHighestScore(), miopoints);
+        user.getScore().setHighestScore(best);
+        user.getScore().setBestMiopoint(Math.max(user.getScore().getBestMiopoint(), miopoints));
+        if (miopoints > user.getProfile().getMaxMiopoint()) {
+            user.getProfile().setMaxMiopoint(miopoints);
+        }
+        user.saveUser();
     }
 
     private void saveAndExit() {

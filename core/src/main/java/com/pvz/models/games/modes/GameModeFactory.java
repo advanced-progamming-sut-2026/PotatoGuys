@@ -7,6 +7,7 @@ import com.pvz.models.games.modes.variants.IZombieMode;
 import com.pvz.models.games.modes.variants.IZombieLocalMode;
 import com.pvz.models.games.modes.variants.NormalMode;
 import com.pvz.models.games.modes.variants.SaveOurSeedsMode;
+import com.pvz.models.games.modes.variants.ScoredMode;
 import com.pvz.models.games.modes.variants.TimedWarMode;
 import com.pvz.models.games.modes.variants.VaseBreakerMode;
 import com.pvz.models.games.modes.variants.WallnutBowlingMode;
@@ -34,6 +35,8 @@ public class GameModeFactory {
                 return new BeghouledMode(level);
             case WALLNUTBOWLING:
                 return new WallnutBowlingMode(level);
+            case SCORED:
+                return new ScoredMode(level);
             default:
                 throw new IllegalArgumentException("Unknown game mode: " + level.getGameMode().toString());
         }

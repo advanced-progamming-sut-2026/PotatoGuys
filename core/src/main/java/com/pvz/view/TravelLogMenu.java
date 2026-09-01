@@ -53,13 +53,14 @@ public class TravelLogMenu extends ScreenAdapter {
     private enum Tab { DAILY, MAIN, EPIC, ALL, MINIGAMES }
 
     private static final String[] MINI_GAME_SEASON_FOLDERS = {
-            "VaseBreaker", "Wallnut Bowling", "IZombie" };
+            "VaseBreaker", "Wallnut Bowling", "IZombie", "Scored" };
     private static final String[] MINI_GAME_LABELS = {
-            "Vasebreaker", "Wallnut Bowling", "I, Zombie" };
+            "Vasebreaker", "Wallnut Bowling", "I, Zombie", "Mini-Point" };
     private static final String[] MINI_GAME_WALLPAPERS = {
         "textures/backgrounds/VASEBREAKER/wallpaper.png",
         "textures/backgrounds/WALLNUTBOWLING/wallpaper.png",
-        "textures/backgrounds/IZOMBIE/wallpaper.png"
+        "textures/backgrounds/IZOMBIE/wallpaper.png",
+        "textures/backgrounds/SCORED/wallpaper.png"
     };
     private static final float BAR_WIDTH = 420f;
     private static final float BAR_HEIGHT = 20f;
@@ -442,7 +443,9 @@ public class TravelLogMenu extends ScreenAdapter {
         Label.LabelStyle descStyle = new Label.LabelStyle(skin.getFont("FBUSV8C5EI_1"), Color.BLACK);
 
         Label subLabel = new Label(
-                seasonFolder.equals("IZombie") ? "Choose a mode to play." : "Choose a level to play.", descStyle);
+                seasonFolder.equals("IZombie") ? "Choose a mode to play."
+                : seasonFolder.equals("Scored") ? "Rack up as many points as you can!"
+                : "Choose a level to play.", descStyle);
         subLabel.setFontScale(1.05f);
         subLabel.setColor(Color.valueOf("D8C9A8"));
 
@@ -469,6 +472,17 @@ public class TravelLogMenu extends ScreenAdapter {
                 }
             });
             levels.add(localBtn).size(140, 55).padLeft(6);
+        } else if (seasonFolder.equals("Scored")) {
+            TextButton playBtn = new TextButton("Play", skin, "purple");
+            playBtn.getLabel().setFontScale(1.0f);
+            playBtn.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    game.setScreen(new GameScreen(seasonFolder, 1));
+                }
+            });
+            levels.add(playBtn).size(140, 55).padLeft(6);
         } else {
             for (int level = 1; level <= 3; level++) {
                 int chosenLevel = level;

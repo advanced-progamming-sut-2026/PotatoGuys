@@ -32,8 +32,19 @@ public class LeaderBoardController {
     }
 
     public void loadEntries(java.util.function.Consumer<List<LeaderBoardEntry>> onLoaded) {
+        // When no server is reachable, fall back to reading the local user saves
+        // so the leaderboard still shows players in offline mode.
+        if (!NetworkClient.getInstance().isConnected()) {
+            cachedEntries = Leaderboard.loadAll();
+            onLoaded.accept(Leaderboard.sort(new ArrayList<>(cachedEntries), sortField, sortOrder));
+            return;
+        }
         NetworkClient.getInstance().getLeaderboard(entries -> {
-            cachedEntries = entries;
+            if (entries == null || entries.isEmpty()) {
+                cachedEntries = Leaderboard.loadAll();
+            } else {
+                cachedEntries = entries;
+            }
             onLoaded.accept(Leaderboard.sort(new ArrayList<>(cachedEntries), sortField, sortOrder));
         });
     }
@@ -45,8 +56,7 @@ public class LeaderBoardController {
 
     /** Forces the next {@link #getEntries()} to re-read all user JSONs from disk. */
     public void reload(Runnable onLoaded) {
-        com.pvz.network.NetworkClient.getInstance().getLeaderboard(entries -> {
-            cachedEntries = entries;
+        loadEntries(entries -> {
             if (onLoaded != null) onLoaded.run();
         });
     }

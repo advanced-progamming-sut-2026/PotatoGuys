@@ -24,4 +24,9 @@ jar {
 task runServer(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   mainClass = 'com.pvz.server.PvzServer'
+  // The server reads/writes user save files under the SAME relative
+  // Constants.SAVE_PATH the desktop client uses (core/src/main/java/...).
+  // The client's run task points its workingDir at the project root, so the
+  // server must do the same or its leaderboard scans an empty directory.
+  workingDir = rootProject.projectDir
 }
