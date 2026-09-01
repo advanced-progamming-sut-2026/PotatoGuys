@@ -10,5 +10,6 @@ public enum GameModeType {
     DEADLINE,
     SAVEOURSEEDS,
     BEGHOULED,
-    WALLNUTBOWLING;
+    WALLNUTBOWLING,
+    SCORED;
 }

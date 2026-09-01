@@ -66,6 +66,10 @@ public class Profile {
         return maxMiopoint;
     }
 
+    public void setMaxMiopoint(int maxMiopoint) {
+        this.maxMiopoint = maxMiopoint;
+    }
+
     public GreenHouseCollection getGreenHouseCollection(){
         return greenHouseCollection;
     }

@@ -59,13 +59,14 @@ public class LeaderboardMenu extends ScreenAdapter {
     private static final float ROW_WIDTH = 1100f;
 
     private static final float COL_RANK = 50f;
-    private static final float COL_AVATAR = 58f;
-    private static final float COL_NAME = 148f;
-    private static final float COL_PROGRESS = 138f;
-    private static final float COL_MINIGAMES = 88f;
-    private static final float COL_DAILY = 98f;
-    private static final float COL_NONDAILY = 98f;
-    private static final float COL_SCORE = 82f;
+    private static final float COL_AVATAR = 50f;
+    private static final float COL_NAME = 138f;
+    private static final float COL_PROGRESS = 128f;
+    private static final float COL_MINIGAMES = 84f;
+    private static final float COL_DAILY = 90f;
+    private static final float COL_NONDAILY = 90f;
+    private static final float COL_SCORE = 78f;
+    private static final float COL_MIOPOINT = 78f;
 
     private final PvZ2 game;
     private final LeaderBoardController controller;
@@ -215,6 +216,7 @@ public class LeaderboardMenu extends ScreenAdapter {
             case DAILY_QUESTS_COMPLETED -> "Daily";
             case NON_DAILY_QUESTS_COMPLETED -> "Quests";
             case HIGHEST_SCORING_GAME_SCORE -> "Score";
+            case BEST_MIOPOINT -> "Miopoint";
         };
     }
 
@@ -250,6 +252,7 @@ public class LeaderboardMenu extends ScreenAdapter {
         header.add(headerLabel("Daily", style)).width(COL_DAILY);
         header.add(headerLabel("Quests", style)).width(COL_NONDAILY);
         header.add(headerLabel("Score", style)).width(COL_SCORE);
+        header.add(headerLabel("Miopoint", style)).width(COL_MIOPOINT);
         return header;
     }
 
@@ -296,6 +299,7 @@ public class LeaderboardMenu extends ScreenAdapter {
         row.add(bodyLabel(String.valueOf(entry.dailyQuestsCompleted), mainStyle)).width(COL_DAILY);
         row.add(bodyLabel(String.valueOf(entry.nonDailyQuestsCompleted), mainStyle)).width(COL_NONDAILY);
         row.add(scoreLabel(entry.highestScore)).width(COL_SCORE);
+        row.add(scoreLabel(entry.bestMiopoint)).width(COL_MIOPOINT);
 
         return row;
     }

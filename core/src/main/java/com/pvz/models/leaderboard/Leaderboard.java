@@ -21,9 +21,10 @@ public class Leaderboard {
         public int dailyQuestsCompleted;
         public int nonDailyQuestsCompleted;
         public int highestScore;
+        public int bestMiopoint;
 
         public LeaderBoardEntry(String username, int lastSeason, int lastLevel, int miniGamesPassed,
-                int dailyQuestsCompleted, int nonDailyQuestsCompleted, int highestScore) {
+                int dailyQuestsCompleted, int nonDailyQuestsCompleted, int highestScore, int bestMiopoint) {
             this.username = username;
             this.lastSeason = lastSeason;
             this.lastLevel = lastLevel;
@@ -31,6 +32,7 @@ public class Leaderboard {
             this.dailyQuestsCompleted = dailyQuestsCompleted;
             this.nonDailyQuestsCompleted = nonDailyQuestsCompleted;
             this.highestScore = highestScore;
+            this.bestMiopoint = bestMiopoint;
         }
     }
 
@@ -38,14 +40,19 @@ public class Leaderboard {
         List<LeaderBoardEntry> entries = new ArrayList<>();
         File dir = new File(Constants.SAVE_PATH + "users/");
 
-        if (dir.exists() && dir.isDirectory()) {
-            File[] files = dir.listFiles();
-            if (files != null) {
+        if (!dir.exists() || !dir.isDirectory()) {
+            System.err.println("[Leaderboard] Users dir not found: " + dir.getAbsolutePath()
+                    + " (check the server's working directory — Constants.SAVE_PATH is relative to " +
+                    "the process cwd)");
+            return entries;
+        }
+
+        File[] files = dir.listFiles();
+        if (files != null) {
                 for (File f : files) {
                     if (f.getName().endsWith(".json") && !f.getName().equals("username.json")) {
                         User u = SaveManager.getInstance().loadAbsolute(f.getAbsolutePath(), User.class);
                         if (u != null) {
-
                             // Dynamically count completed quests to prevent desync bugs
                             int daily = 0;
                             int nonDaily = 0;
@@ -65,17 +72,16 @@ public class Leaderboard {
                             int level = u.getScore() != null ? u.getScore().getLastLevel() : 0;
                             int miniGames = u.getScore() != null ? u.getScore().getMiniGamesPassed() : 0;
                             int highScore = u.getScore() != null ? u.getScore().getHighestScore() : 0;
+                            int bestMio = u.getScore() != null ? u.getScore().getBestMiopoint() : 0;
 
                             entries.add(new LeaderBoardEntry(
-                                    u.getUsername(), season, level, miniGames, daily, nonDaily, highScore));
+                                    u.getUsername(), season, level, miniGames, daily, nonDaily, highScore, bestMio));
                         }
                     }
                 }
             }
-        }
         return entries;
     }
-
     public static List<LeaderBoardEntry> sort(List<LeaderBoardEntry> list, LeaderboardSortField field,
             SortTypes order) {
         Comparator<LeaderBoardEntry> comp = switch (field) {
@@ -85,6 +91,7 @@ public class Leaderboard {
             case DAILY_QUESTS_COMPLETED -> Comparator.comparingInt(e -> e.dailyQuestsCompleted);
             case NON_DAILY_QUESTS_COMPLETED -> Comparator.comparingInt(e -> e.nonDailyQuestsCompleted);
             case HIGHEST_SCORING_GAME_SCORE -> Comparator.comparingInt(e -> e.highestScore);
+            case BEST_MIOPOINT -> Comparator.comparingInt(e -> e.bestMiopoint);
         };
 
         if (order == SortTypes.DESCENDING) {
@@ -103,9 +110,9 @@ public class Leaderboard {
 
         StringBuilder sb = new StringBuilder();
         sb.append("\n=== LEADERBOARD (Sorted by ").append(field).append(" ").append(order).append(") ===\n");
-        sb.append(String.format("%-15s | %-22s | %-10s | %-12s | %-16s | %-13s\n",
-                "Username", "Story Mode", "Minigames", "Daily Quests", "Non-Daily Quests", "Highest Score"));
-        sb.append("-".repeat(102)).append("\n");
+        sb.append(String.format("%-15s | %-22s | %-10s | %-12s | %-16s | %-13s | %-9s\n",
+                "Username", "Story Mode", "Minigames", "Daily Quests", "Non-Daily Quests", "Highest Score", "Miopoint"));
+        sb.append("-".repeat(115)).append("\n");
 
         for (LeaderBoardEntry e : list) {
             String levelStr;
@@ -117,9 +124,9 @@ public class Leaderboard {
                 levelStr = "None";
             }
 
-            sb.append(String.format("%-15s | %-22s | %-10d | %-12d | %-16d | %-13d\n",
+            sb.append(String.format("%-15s | %-22s | %-10d | %-12d | %-16d | %-13d | %-9d\n",
                     e.username, levelStr, e.miniGamesPassed, e.dailyQuestsCompleted, e.nonDailyQuestsCompleted,
-                    e.highestScore));
+                    e.highestScore, e.bestMiopoint));
         }
         return sb.toString();
     }

@@ -11,6 +11,7 @@ public class Score {
     private int dailyQuests = 0;
     private int nonDailyQuests = 0;
     private int highestScore = 0;
+    private int bestMiopoint = 0;
 
     public int getLastSeason() { return lastSeason; }
     public void setLastSeason(int lastSeason) { this.lastSeason = lastSeason; }
@@ -29,4 +30,7 @@ public class Score {
 
     public int getHighestScore() { return highestScore; }
     public void setHighestScore(int highestScore) { this.highestScore = highestScore; }
+
+    public int getBestMiopoint() { return bestMiopoint; }
+    public void setBestMiopoint(int bestMiopoint) { this.bestMiopoint = bestMiopoint; }
 }
