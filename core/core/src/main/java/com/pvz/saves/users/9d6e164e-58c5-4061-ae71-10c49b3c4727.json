@@ -7,11 +7,11 @@
   "gender": "MALE",
   "securityQuestion": "1",
   "securityAnswer": "teh",
-  "profilePicture": "textures/avatars/avatar_nami.png",
+  "profilePicture": "textures/avatars/avatar_brook.png",
   "profile": {
     "gamePlayed": 0,
     "coins": 2300,
-    "diamonds": 1044,
+    "diamonds": 1041,
     "plantFood": 0,
     "collection": {
       "unlockedPlants": [
@@ -425,15 +425,15 @@
       }
     ],
     "maxMiopoint": 0,
-    "dailyOfferPlantType": "Cabbagepult",
-    "dailyOfferDate": "2026-08-26",
-    "dailyOfferPurchased": true
+    "dailyOfferPlantType": "SplitPea",
+    "dailyOfferDate": "2026-09-01",
+    "dailyOfferPurchased": false
   },
   "setting": {
     "difficulty": 3,
     "gameSpeed": 1,
     "showGrid": false,
-    "debugMode": true,
+    "debugMode": false,
     "brightness": 1.0,
     "musicVolume": 1.0,
     "sfxVolume": 0.5,
@@ -565,7 +565,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 3000,
-          "currentAmount": 0
+          "currentAmount": 50
         },
         "active": true,
         "claimed": false,
@@ -580,7 +580,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 4000,
-          "currentAmount": 0
+          "currentAmount": 50
         },
         "active": true,
         "claimed": false,
@@ -595,7 +595,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 5000,
-          "currentAmount": 0
+          "currentAmount": 50
         },
         "active": true,
         "claimed": false,
@@ -610,7 +610,7 @@
         "priority": "HIGH",
         "progress": {
           "targetAmount": 50,
-          "currentAmount": 61
+          "currentAmount": 67
         },
         "active": true,
         "claimed": false,
@@ -925,7 +925,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 10,
-          "currentAmount": 5
+          "currentAmount": 9
         },
         "active": true,
         "claimed": false,
@@ -1420,7 +1420,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 20,
-          "currentAmount": 38
+          "currentAmount": 44
         },
         "active": true,
         "claimed": false,
@@ -1435,7 +1435,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 30,
-          "currentAmount": 38
+          "currentAmount": 44
         },
         "active": true,
         "claimed": false,
@@ -1450,7 +1450,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 40,
-          "currentAmount": 38
+          "currentAmount": 44
         },
         "active": true,
         "claimed": false,
@@ -1465,7 +1465,7 @@
         "priority": "MEDIUM",
         "progress": {
           "targetAmount": 50,
-          "currentAmount": 38
+          "currentAmount": 44
         },
         "active": true,
         "claimed": false,

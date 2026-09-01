@@ -198,7 +198,39 @@ public class ClientHandler implements Runnable {
         }
 
         synchronized (ACCOUNTS_LOCK) {
+            User stored = SaveManager.getInstance().load("users/" + updated.getId() + ".json", User.class);
+            String oldUsername = stored != null ? stored.getUsername() : null;
+            String newUsername = updated.getUsername();
+
+            if (oldUsername != null && !oldUsername.equals(newUsername)) {
+                // Username changed: keep the login index in sync so the NEW name
+                // is what works at login (otherwise the old name keeps working and
+                // the new one gets "Username is incorrect!").
+                HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+                if (usernames == null) {
+                    usernames = new HashMap<>();
+                }
+                if (usernames.containsKey(newUsername)
+                        && !usernames.get(newUsername).equals(updated.getId())) {
+                    return NetworkMessage.error(request, "Username is already taken!");
+                }
+                if (updated.getId().equals(usernames.get(oldUsername))) {
+                    usernames.remove(oldUsername);
+                }
+                usernames.put(newUsername, updated.getId());
+                SaveManager.getInstance().save(usernames, "users/username.json");
+            }
+
             SaveManager.getInstance().save(updated, "users/" + updated.getId() + ".json");
+        }
+
+        // If this connection is logged in as the old name, follow the rename so
+        // invites/matchmaking keep addressing this player by the current username.
+        if (this.username != null && !this.username.equals(updated.getUsername())) {
+            String old = this.username;
+            this.username = updated.getUsername();
+            MatchmakingRegistry.markOffline(old, this);
+            MatchmakingRegistry.markOnline(this.username, this);
         }
 
         return NetworkMessage.ok(request, null);
