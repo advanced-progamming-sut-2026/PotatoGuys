@@ -401,6 +401,7 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
             // shown bright/inviting rather than looking broken or locked.
             return StageStatus.UNLOCKED;
         }
+
         if (!controller.isLevelUnlocked(levelNumber)) {
             return StageStatus.LOCKED;
         }
