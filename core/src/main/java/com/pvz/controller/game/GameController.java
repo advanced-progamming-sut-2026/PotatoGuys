@@ -85,6 +85,7 @@ import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class GameController {
     private final String seasonName;
@@ -136,6 +137,13 @@ public class GameController {
     // Pre-game readiness tracking for online IZombie
     private boolean hostReady = false;
     private boolean guestReady = false;
+    /**
+     * Zombie types the guest picked in the zombie-select pre-game modal. The
+     * guest sends this to the host in the PRE_GAME_READY payload so the host can
+     * build the matching zombie card pool (findZombieCard must resolve whatever
+     * the guest places, not just the level's default pool).
+     */
+    private List<ZombieType> guestZombieSelection = java.util.Collections.emptyList();
 
     private final Vector3 touchPos = new Vector3();
 
@@ -1198,6 +1206,13 @@ public class GameController {
                                         return owned;
                                     })
                                     .collect(java.util.stream.Collectors.toList())));
+                    // The host's zombie card pool must mirror the guest's deck
+                    // (received in the PRE_GAME_READY payload) so the host can
+                    // resolve whatever the guest places — not just the level
+                    // defaults. Fall back to level defaults if nothing arrived yet.
+                    if (!guestZombieSelection.isEmpty()) {
+                        izMode.setBasedZombies(guestZombieSelection);
+                    }
                 }
                 if (guestIZombie && newContext.getMode() instanceof IZombieMode izMode) {
                     izMode.setBasedZombies(zombieSelectModal.getSelectedZombies());
@@ -1271,6 +1286,16 @@ public class GameController {
     }
 
     /**
+     * Small payload the guest attaches to its PRE_GAME_READY so the host learns
+     * which zombies the guest selected in the pre-game modal (the guest's deck
+     * must be rebuilt on the authoritative side for findZombieCard to resolve
+     * placements). Null on the host's own PRE_GAME_READY.
+     */
+    private static class PreGameReadyPayload {
+        List<String> zombieTypes;
+    }
+
+    /**
      * Called when the local player clicks "LET'S ROCK!" in either the plant or
      * zombie select modal during the online IZombie pre-game phase. Sends a
      * PRE_GAME_READY signal to the opponent and shows a waiting overlay. If the
@@ -1287,7 +1312,19 @@ public class GameController {
             zombieSelectModal.setWaiting(true);
         }
 
-        String inner = gson.toJson(new GameSyncEnvelope(GameSyncEnvelope.Kind.PRE_GAME_READY, null));
+        // The guest includes its zombie-team selection here so the host can build
+        // the matching zombie cards (the host's level-default pool won't contain
+        // types like DARK_IMP or EGYPT_GARG the guest may pick).
+        String data = null;
+        if (!isHost) {
+            PreGameReadyPayload payload = new PreGameReadyPayload();
+            payload.zombieTypes = zombieSelectModal.getSelectedZombies().stream()
+                    .map(ZombieType::name)
+                    .collect(java.util.stream.Collectors.toList());
+            data = gson.toJson(payload);
+        }
+
+        String inner = gson.toJson(new GameSyncEnvelope(GameSyncEnvelope.Kind.PRE_GAME_READY, data));
         NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
 
         // If the opponent was already waiting, start the game now
@@ -1568,6 +1605,25 @@ public class GameController {
         } else if (envelope.kind == GameSyncEnvelope.Kind.PRE_GAME_READY) {
             if (isHost) {
                 guestReady = true;
+                if (envelope.data != null) {
+                    try {
+                        PreGameReadyPayload payload = gson.fromJson(envelope.data, PreGameReadyPayload.class);
+                        if (payload != null && payload.zombieTypes != null) {
+                            guestZombieSelection = payload.zombieTypes.stream()
+                                    .map(name -> {
+                                        try {
+                                            return ZombieType.valueOf(name);
+                                        } catch (Exception ignored) {
+                                            return null;
+                                        }
+                                    })
+                                    .filter(Objects::nonNull)
+                                    .collect(java.util.stream.Collectors.toList());
+                        }
+                    } catch (Exception e) {
+                        Gdx.app.error("GameController", "Bad guest pre-game payload", e);
+                    }
+                }
             } else {
                 hostReady = true;
             }
