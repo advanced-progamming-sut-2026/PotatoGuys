@@ -139,7 +139,9 @@ public class ShopMenu extends Table {
         panel.contentLayer.top();
         panel.contentLayer.pad(20f);
 
-        Label title = new Label("                                                                            Shop", PvzSkin.get(), "big");
+        Label title = new Label(
+                "                                                                            Shop",
+                PvzSkin.get(), "big");
         title.setFontScale(1.5f);
         title.setColor(Color.BLACK);
 
@@ -252,7 +254,8 @@ public class ShopMenu extends Table {
         Duration remaining = controller.getDailyOfferTimeRemaining();
         if (remaining != null) {
             String timeText = "Resets in " + remaining.toHours() + "h " + (remaining.toMinutes() % 60) + "m";
-            Label timeLabel = new Label(timeText, new Label.LabelStyle(PvzSkin.get().getFont("FBUSV8C5EI_2"), Color.BLACK));
+            Label timeLabel = new Label(timeText,
+                    new Label.LabelStyle(PvzSkin.get().getFont("FBUSV8C5EI_2"), Color.BLACK));
             timeLabel.setFontScale(1.1f);
             card.add(timeLabel).padBottom(8f).row();
         }
@@ -299,7 +302,8 @@ public class ShopMenu extends Table {
         Image icon = safeImage(iconPathFor(item));
         card.add(icon).size(iconSizeFor(item)).padBottom(6f).row();
 
-        Label descLabel = new Label(item.getDescription(), new Label.LabelStyle(PvzSkin.get().getFont("FBUSV8C5EI_2"), Color.BLACK));
+        Label descLabel = new Label(item.getDescription(),
+                new Label.LabelStyle(PvzSkin.get().getFont("FBUSV8C5EI_2"), Color.BLACK));
         descLabel.setWrap(true);
         descLabel.setAlignment(Align.center);
         descLabel.setFontScale(1.2f);

@@ -137,7 +137,8 @@ public class ChapterMenu extends ScreenAdapter {
         });
         backBtnWrapper.add(backBtn).size(75, 70);
 
-        ImageButton greenhouseBtn = new ImageButton(MenuUiKit.textureDrawable(MenuUiKit.loadTextureSafe("textures/greenhouse/greenhouse.png")));
+        ImageButton greenhouseBtn = new ImageButton(MenuUiKit.textureDrawable(
+                MenuUiKit.loadTextureSafe("textures/greenhouse/greenhouse.png")));
         greenhouseBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {

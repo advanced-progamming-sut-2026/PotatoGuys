@@ -9,7 +9,8 @@ import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.games.GameContext;
 
 public class HotPotatoEffect extends Effect {
-    private static final String STEAM_PAM = "768/FULL/EFFECTS/HOTPOTATO_ICEBLOCK_STEAMFX/HOTPOTATO_ICEBLOCK_STEAMFX.PAM";
+    private static final String STEAM_PAM =
+            "768/FULL/EFFECTS/HOTPOTATO_ICEBLOCK_STEAMFX/HOTPOTATO_ICEBLOCK_STEAMFX.PAM";
     private static final String STEAM_CLIP = "animation";
     private static final float STEAM_DURATION = 3.77f;
 

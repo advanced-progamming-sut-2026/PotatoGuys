@@ -20,75 +20,397 @@ public final class PlantDescriptions {
     private static final Map<PlantType, Descriptions> MAP = new EnumMap<>(PlantType.class);
 
     static {
-        MAP.put(PlantType.Sunflower, new Descriptions("Immediately produces a large amount of sun.", "Sunflowers are essential for you to produce extra sun. Try planting as many as you can!", "After the release of her first major Youtuber video \"Zombies On Your Lawn,\" Sunflower's Youtuber channel has been bursting with fun. She is currently putting the final touches on her reality show TV pitch \"Sunflower Thinks She Can Dance.\""));
-        MAP.put(PlantType.TwinSunflower, new Descriptions("Immediately produces a large amount of sun.", "Twin Sunflowers give twice as much sun as a normal sunflower.", "With the pair of shiny and extravagant sunglasses, Twin Sunflower looks like a real superstar. Now it has to be prepared of paparazzi popping out of nowhere in a sudden anytime."));
-        MAP.put(PlantType.Sunshroom, new Descriptions("Instantly grows to full size and produces a large amount of sun.", "Sun-shrooms give small sun at first, then normal suns, and finally large suns.", "Oh sure, Sun-shroom is known for his ever-present grin and sunny disposition. But truth be told, even he has his dark days. It ain't easy keeping things light when you live in the shadows."));
-        MAP.put(PlantType.PrimalSunflower, new Descriptions("Immediately produces large amount of sun.", "Primal Sunflowers pop out large suns instead of regular ones.", "Primal Sunflower is new to all this sun-giving business, so be patient with her. She's an early adopter of the all-you-can-stuff-yourself buffet style of sun production."));
-        MAP.put(PlantType.GoldBloom, new Descriptions("No Plant Food effect.", "Gold Blooms produce a burst of sun all at once.", "\"Your botanists were so preoccupied with whether they could,\" says Gold Bloom, about nothing and to nobody in particular, \"they didn't stop to think if they should.\""));
-        MAP.put(PlantType.Peashooter, new Descriptions("Shoots a barrage of peas.", "Peashooters are your first line of defense. They shoot peas at attacking zombies.", "\"What is it like being famous?\" asked the Peashooter while sipping his bottled water, \"I can't talk right now, I'm finishing my merchandising deal. Hold my fir coat.\""));
-        MAP.put(PlantType.Repeater, new Descriptions("Shoots two volleys of peas at zombies in its row.", "Repeaters fire two peas at one time.", "\"Everyone always asks me if we've met before.\" says Repeater. \"Everyone always asks me if we've met before. Wait, did I just say that?\""));
-        MAP.put(PlantType.Threepeater, new Descriptions("Shoots a spread of peas in multiple directions, dealing damage.", "Threepeaters shoot peas in three lanes.", "Threepeater loves playing multiplayer in video games, but split-screen never works because the left head always cheats."));
-        MAP.put(PlantType.SnowPea, new Descriptions("Slows all zombies in the column , then shoots a barrage of frozen peas.", "Snow Peas fire frozen peas making it hard for zombies to advance.", "As a professional table tennis player, in the off-season he also enjoys skiing, playing the bongos, and spelunking."));
-        MAP.put(PlantType.Rotobaga, new Descriptions("Shoots multiple huge rotobagas in four directions.", "Rotobagas shoot projectiles along the four diagonals, in each direction that has a target.", "Sometimes Rotobaga hears the plants gossiping about each other. \"Did you notice so-and-so has been putting on weight?\" they might say. Or \"I hear that so-and-so is dating so-and-so. Can you believe it?\" But Rotobaga isn't the kind of plant to engage in idle gossip. She's not interested in talking about anyone behind their leaves. She does her best to just rise above it."));
-        MAP.put(PlantType.PeaPod, new Descriptions("Summons a giant Peashooter that shoots five giant peas.", "Pea Pods can be planted in the same space for up to 5 times the destruction.", "Having studied Quantum Spatial Mechanics in Clown College, Pea Pod has been amusing families of all ages."));
-        MAP.put(PlantType.SplitPea, new Descriptions("Shoots a barrage of peas at both the front and behind the plant, then fires a giant pea behind.", "Split Peas shoot peas forward and backwards.", "\"It's my turn with the eyebrows,\" said Frontie. \"Fine, we'll split them,\" said Backie. Sprouted two minutes apart, their eyebrow war is eternal."));
-        MAP.put(PlantType.Citron, new Descriptions("Shoots a giant plasma ball that can destroy most mech type zombies and flings zombies to adjacent zombies.", "Citrons shoot powerful balls of plasma.", "As the owner and primary user of \"Vitamin C-U-Later\" 20-hour energy shots, Citron is always on and always ready for action. \"Let's make this happen!!\""));
-        MAP.put(PlantType.Caulipower, new Descriptions("Tosses 5 random zombies off the lawn.", "Caulipowers use their mental powers to hypnotize random zombies and turn them against their former friends.", "Caulipower's eyes spin with distress. He's just thought of a really great ending for his novel, but he's afraid his cousin won't understand it."));
-        MAP.put(PlantType.ElectricBlueberry, new Descriptions("Creates a storm cloud that targets 3 random zombies, dealing damage.", "Electric Blueberries randomly electrocute zombies every so often.", "Electric Blueberry prides herself for being eclectic as well as electric. \"I like to keep'em guessing,\" she says. \"A zombie should always be like, 'Whoa, didn't see that coming,' when they're disintegrated.\""));
-        MAP.put(PlantType.BowlingBulb, new Descriptions("Shoots three charged explosive bulbs at zombies, dealing heavy damage. Waits until zombies appear on the lawn before shooting.", "Bowling Bulbs rolls shots that can bounce into multiple zombies.The Larger bulbs deal more damage.", "Guess which team has won the League Championship for five years running now? Team Bowling Bulb, that's who. They are on a ROLL. You and your pals think you got what it takes to stop 'em? Yeah sure. Keep dreamin, bub."));
-        MAP.put(PlantType.Cactus, new Descriptions("Permanently increases piercing power and damage.", "Cactus fires a penetrating thorn that can damage multiple enemies! Hides underground when zombies are close. Can stretch up and pop balloon zombies.", "Things have really changed for Cactus lately. Book deals, movies, truck show appearances... she's just trying to focus on staying humble and launching thorns like always."));
-        MAP.put(PlantType.FirePeashooter, new Descriptions("Creates a fire trail, unfreezing plants and damaging zombies in the row.", "Fire Peashooters are immune to frost and shoot flaming peas down the lane.", "Fire Peashooter knows that what she does looks exciting. But working with an open flame is serious and, more importantly, dangerous business. That's why, in her spare time, she talks to children about the importance of fire safety. \"I'm a trained professional.\" she explains. \"Don't try this at home, kids.\""));
-        MAP.put(PlantType.Starfruit, new Descriptions("Shoots ten giant stars in five directions, dealing damage.", "Starfruits shoot stars in 5 directions.", "Just a small town fruit that travelled to the big city and found his way to the future. His favorite modes of transportation: conveyor belts, hoverboards, and rockets. WEEEE!"));
-        MAP.put(PlantType.GooPeashooter, new Descriptions("Summons a large ball of poison that deals damage, knock back, and poison all zombies on the lawn.", "Goo Peashooters shoot poison peas at zombies, poisoning them as well as slowing them down.", "Goo Peashooter is a goopy shooter. See? See how that works? It's a play on words. Words are often playful, folks!"));
-        MAP.put(PlantType.MegaGatlingPea, new Descriptions("Shoots a huge number of peas out, dealing massive damage. Normal attack will fire five peas instead of four,", "Mega Gatling Peas fire four peas at a time, and will occasionally Plant Food itself.", "\"I used to be an upgrade,\" says Mega Gatling Pea with uncharacteristic shyness. \"Now I'm my own plant, with my own ambitions, dreams and gym club memberships!\""));
-        MAP.put(PlantType.Seashroom, new Descriptions("Creates a clone of itself, resets the wither timer on all Sea-shroom on the gameboard, then triggers all Sea-shroom to", "Fire a short range explosive spore that will damage zombies in a radius, but it will wither away after a short time.", "Sea-shroom and Puff-shroom are long distance cousins. No one knows when their family tree diverged, but the family reunions always involve a pool party."));
-        MAP.put(PlantType.Puffshroom, new Descriptions("All Puff-shroom on the lawn will shoot a spore barrage and reset their life duration.", "Puff-shrooms are short-range shooters that last for a limited time.", "Puff-shroom is hip to all the latest social networks. He loves to surf Sporebook, FungusedIn and ShroomstaGram. But he sometimes misses the simple camaraderie of a good ol' fashioned Lawn Area Network party."));
-        MAP.put(PlantType.Fumeshroom, new Descriptions("Sprays a stream of fumes that deal damage and pushes all zombies back.", "Fume-shrooms shoot fumes that damage all zombies in an area.", "\"I think of myself as a pretty confident shroom and an all-around fungi,\" says Fume-shroom. \"But sometimes, when I'm eating Plant Food, I hear them chuckling. I hear them calling me 'Balloon-shroom'. I don't think they know how much that hurts.\""));
-        MAP.put(PlantType.Cabbagepult, new Descriptions("Launches multiple cabbages at every zombie, dealing heavy damage.", "Cabbage-pults hurl cabbages at the enemy.", "Cabbage-pult received his doctorate in pulting from Harvest University. He knows a thing or two about launching his way to the top. He also makes a mean soup."));
-        MAP.put(PlantType.Kernelpult, new Descriptions("Triggers a butter storm that stuns every zombie on the lawn for a few seconds.", "Kernel-pults fling corn kernels and immobilizing butter at zombies.", "\"While working as an usher at the local movieplex, he saw \"Fried Green Tomatoes\" and found his higher calling. He packed up his husks, his kernels, his butter, and enlisted."));
-        MAP.put(PlantType.Melonpult, new Descriptions("Launches melons at every zombie, dealing both damage and splash damage on impact.", "Melon-pults do heavy damage to groups of zombies.", "\"Everyone says my head looks like a melon,\" said the middle child of the Pult family, \"And they would be right.\" Don't ask him if he's seedless or not though, it offends him and frankly it's none of your business."));
-        MAP.put(PlantType.WinterMelon, new Descriptions("Launches frozen melons at every zombie, dealing both damage and splash damage on impact.", "Winter Melons do heavy damage and slow groups of zombies.", "You may recognize Winter Melon's voice from such incredible documentaries as \"It's Cold Up Here,\" \"Ice Bingo,\" and \"Surfin' Swedes.\""));
-        MAP.put(PlantType.Pepperpult, new Descriptions("Lobs several giant fire peppers at random zombies that deal moderate splash damage on impact.", "Pepper-pults lob flaming peppers at zombies and keep nearby plants warm.", "Some say Pepper-pult is a hot head. Some find his fiery disposition off-putting. But the truth is, he's just very focused and determined. He loves what he does. He appreciates everything he has. \"I came from the weedy side of the lawn,\" Pepper-pult explains. \"I worked hard to pull myself up by my roots. I'm a self-made pepper and I don't take a single thing for granted.\""));
-        MAP.put(PlantType.PotatoMine, new Descriptions("Immediately arms and spawns multiple copies of itself.", "Potato Mines explode on contact, but they take time to arm. Plant them ahead of zombies.", "Believe it or not, SPUDOW! did not happen overnight. Having been forced to try out new catchphrases and focus testing as many variations as possible (Tubular? Really?), Potato Mine weeded out the competition to stick with what he knows best."));
-        MAP.put(PlantType.PrimalPotatoMine, new Descriptions("Immediately arms and spawns multiple copies of itself.", "Primal Potato Mines cost more than regular Potato Mines, but they arm more quickly and do damage over a larger area.", "Primal Potato Mine doesn't consider himself to be primal. As far as he's concerned he's state-of-the-art. And who knows? Maybe he is."));
-        MAP.put(PlantType.CherryBomb, new Descriptions("No Plant Food effect.", "Cherry Bombs can blow up all zombies in an area. They have a short fuse so plant them near zombies.", "The Cherry Bomb Brothers attempted to start their own band. \"We tried to figure out what the sound would be, but we kept explodonating speakers, stages, fans, and of course, zombies. Look for our LP next year.\""));
-        MAP.put(PlantType.Squash, new Descriptions("Squashes multiple tough targets on the lawn before returning to its original location.", "Squashes will smash the first zombie that gets close.", "Squash is actually his stage name. His birth name was Tracy."));
-        MAP.put(PlantType.Grapeshot, new Descriptions("No Plant Food effect.", "Grapeshots explode and scatter bouncing projectiles in eight directions.", "\"Spa-BOOM!\" enthuses Grapeshot. \"You liked that? I got a million of 'em! Wa-POW! Buh-BLAM! Za-... um... Ker-... hmmm... Okay, I guess I've only got the three.\""));
-        MAP.put(PlantType.Jalapeno, new Descriptions("No Plant Food effect.", "Jalapenos destroy an entire lane of zombies.", "This jalapeno is one spicy character by day and The Macramé Vigilante by night. You might be wondering what his secret weapons is... it's knots."));
-        MAP.put(PlantType.Doomshroom, new Descriptions("No Plant Food effect.", "Doom-shroom explodes when destroyed. Depending on the growth stage, Doom-shroom explosion radius will increase and it may even spawn additional Doom-shrooms.", "\"Things are crazy now. Back in my day, there were Browncoats, Browncoats with cones, and Browncoats with buckets. That’s it! What are all these? Jetpacks? Magicians? Dark creatures?.. Hrmph! They better not think I am old and harmless. I may be retired but I still know a thing or two about blowing up zombies.\""));
-        MAP.put(PlantType.TangleKelp, new Descriptions("Drags up to four random zombies underwater.", "Tangle Kelp are aquatic plants that pull the first zombie that nears them underwater.", "Tangle Kelp likes to go deep. He majored in philosophy. Grab a root beer with him, and he'll go on and on about Nietzsche's \"Thus Spoke Zucchini\" or hold forth on Kant's \"Critique of Petunia Reason.\" It's cool and all, but sometimes you just want to keep the conversation light. Sometimes you just want to talk about the temperature of the water."));
-        MAP.put(PlantType.IcebergLettuce, new Descriptions("Freezes or chills every zombie on lawn.", "Iceberg Lettuces freeze a zombie when stepped on.", "Don't get lost staring into Iceberg's adorably cute eyes. If you do so, it is your last step... but only if you're a zombie."));
-        MAP.put(PlantType.BonkChoy, new Descriptions("Rapidly punches in a 3x3 around it, dealing heavy damage.", "Bonk Choys rapidly punch nearby enemies that are ahead or behind them.", "A freelance dentist on the side, he's offering a special this month - he'll knock two of your teeth out for the price of one!"));
-        MAP.put(PlantType.PhatBeet, new Descriptions("Thump the ground, dealing damage to surrounding zombies.", "Phat Beets thump out damage every second.", "Phat Beet has been known to drop sick rhymes, dope grooves, and highly satisfactory jams, often within seconds of each other."));
-        MAP.put(PlantType.Chomper, new Descriptions("Consumes several nearby zombies in the column, then releases a burp that knocks back any survivors.", "Chompers can devour a zombie whole, but they are vulnerable while chewing.", "Everyone appreciates what Chomper does. His appetite has saved them on numerous occasions. But truth be told, Chomper's friends think that eating zombies is gross. And his breath! No one has the heart to tell him, and he never gets the hint when you offer him a mint."));
-        MAP.put(PlantType.WasabiWhip, new Descriptions("Spin its flaming whip around, dealing heavy damage to zombies.", "Wasabi Whips lash out with their flaming whips, delivering whuppings to zombies both in front and behind.", "\"The trick to proper whipping is all in the wrist,\" says Wasabi Whip. \"Well, not the wrist, exactly, since I don't have any. You have to, like... BE the wrist.\""));
-        MAP.put(PlantType.Kiwibeast, new Descriptions("Immediately grows to its last stage and deal massive damage to the surrounding area.", "Kiwibeasts emit damaging thumps, and become bigger and more powerful the more they are hurt by zombies.", "\"I like to keep an even keel,\" says Kiwibeast. \"But zombies... oooh... zombies make me so mad! And when I get mad... RARRRRRGGG!\""));
-        MAP.put(PlantType.Wallnut, new Descriptions("Heals itself and gains a hard armor shell.", "Wall-nuts have hard shells which you can use to protect your other plants.", "Having retired from his days as a champion bowler in the Pro Leagues, Wall-nut is looking forward to a real challenge on the front lines of home defense. DEFENSE! DEFENSE!"));
-        MAP.put(PlantType.Tallnut, new Descriptions("Heals itself and gains an extra hard armor shell.", "Tall-nuts are heavy-duty wall plants that block low flying zombies.", "Tall-nut is opening a chain of stores for Tall and Taller gentlemen. \"I'll shell out the savings to you!\""));
-        MAP.put(PlantType.Endurian, new Descriptions("Heals itself and permanently gains additional armor and damage.", "Endurians are defensive plants that deal damage to zombies attacking them.", "\"When other plants talk about me, they say I'm too gruff. They say I'm difficult to approach, that I'm afraid to let others get too close to me. Also, I smell terrible,\" said Endurian. But deep down inside, he knows that he's so much more than that. He's also short-tempered."));
-        MAP.put(PlantType.Garlic, new Descriptions("Heals itself and releases gas that will temporarily stun zombies in front and divert them to another column.", "Garlic diverts zombies into other lanes.", "Good against zombies, as well as proof against any vampires who might accidentally wander by."));
-        MAP.put(PlantType.SweetPotato, new Descriptions("Heals itself and attracts all nearby zombies to its row.", "Sweet Potatoes attract zombies from other lanes when they are close by.", "Sweet Potato really is as sweet as she looks. Her favorite animal is the unicorn. Her favorite color is (and this is a direct quote) \"all the colors in the rainbow.\" When she writes the letter \"i\", she draws a little heart where the dot belongs. Frankly, if it were anyone else, this amount of syrup would be sickening. But on her, well, it just seems right."));
-        MAP.put(PlantType.Explodeonut, new Descriptions("Heals itself and gains an armor that will absorbs additional damage. If the armor is destroyed, unleashes a large explosion.", "Explode-O-Nuts provide protection, and when their shells are eaten, they explode to blow up zombies.", "\"My only regret,\" says Explode-O-Nut, \"is that I have but one chewy center full of nitroglycerin to give in defense of this lawn.\""));
-        MAP.put(PlantType.Pumpkin, new Descriptions("Creates a hard armor shell, that can absorb additional damage.", "Pumpkins can be planted on top of other plants to provide a tough additional layer of armor.", "Pumpkin may be a hollowed-out shell, but he still has a rich inner life filled with feelings, fantasies and surprisingly disappointing opinions."));
-        MAP.put(PlantType.SunBean, new Descriptions("Increases the amount of sun produces with eaten.", "Sun Beans infect zombies with sun. As a zombie takes damage they generate sun.", "As the eldest of the bean brothers, Sun Bean often finds his siblings exasperating. Chili Bean is a little crude, Laser Bean is too far out, and Spring Bean is just plain lazy. Still, he loves them just the same. That's how it is with family."));
-        MAP.put(PlantType.Torchwood, new Descriptions("Permanently increases the damage bonus of all the peas that pass through it.", "Torchwoods turn peas that pass through them into fireballs that deal twice as much damage. They also deal close damage as well as lanewide flame damage on defeat.", "Torchwood and Snapdragon have become fast friends. They like to hang out at either the Tiki Lounge or the Renaissance Faire."));
-        MAP.put(PlantType.Magnetshroom, new Descriptions("Remove and toss all metal objects on zombies within range, dealing damage.", "Magnet-shrooms remove helmets and other metal objects from zombies.", "Despite his unusual appearance, Magnet-shroom doesn't have a problem attracting girlfriends. But he does have a problem keeping them. It's the same thing every time. In the end, they always find him too clingy."));
-        MAP.put(PlantType.Hypnoshroom, new Descriptions("Turns a hypnotized zombie into a Gargantuar.", "When zombies eat Hypno-shrooms, they will turn around and fight for you.", "Hypno-shroom has no trouble persuading zombies to fight on behalf of the plants. But he has yet to convince one to cluck like a chicken. \"One day,\" he says. \"One day.\""));
-        MAP.put(PlantType.Cattail, new Descriptions("Concentrates a laser into a powerful railgun shot, dealing massive damage over 5 seconds.", "Cattail launches homing spikes at zombies that can stun them briefly.", "Cattail was interviewed regarding its competition with Homing Thistle. It answers \"Meow Meow Meow~\", or rather, \"There's no problem. It can't be solved by being a cute one~\""));
-        MAP.put(PlantType.Imitater, new Descriptions("Performs Plant Food effect of the plant it's imitating.", "Imitaters let you use two of the same plant during a level!", "Having studied French Theater at Julienne, the Imitater went to the streets with his art, and has perfected his technique he calls \"Potato stuck in a box\"."));
-        MAP.put(PlantType.Iceshroom, new Descriptions("Lobs several icicles at random zombies across the field.", "Smashes zombies in melee range. Emits a chilling aura that both buffs nearby Winter-mint plants and chills zombies.", "\"It's not easy re-inventing yourself\" says Ice-shroom after returning from an intensive stint of training in the coldest parts of the Antarctic. \"It's not often you get a second chance, but I'm back now, and this time I won't be letting my fans or any of my friends down\". Cheering erupts as Ice-shroom steps onto the lawn."));
-        MAP.put(PlantType.LilyPad, new Descriptions("Creates Lily Pads in adjacent spaces. If the adjacent space has Lily Pads- it will heal them instead.", "Lily Pads let you plant non-aquatic plants on top of them.", "Not many people know this, but Lily Pad absolutely loves square dancing. There he is, a circular plant gliding across the dance floor making squares. He loves how it pushes his boundaries and really makes him think outside the sphere."));
-        MAP.put(PlantType.HotPotato, new Descriptions("No Plant Food effect.", "Hot Potatoes melt the ice blocks they're planted on.", "How does Hot Potato stay so positive and even-peeled all the time? Yoga, that's how. She never misses a class. Also, regular meditation. It's the only way she can handle the hard work of fighting zombies, day in and day out, without melting down."));
-        MAP.put(PlantType.GraveBuster, new Descriptions("No Plant Food effect.", "Grave Busters consume graves they're planted on.", "He may appear spiky or ill-tempered, but Grave Buster just wants to give you a big hug. Unless you're a puppy. He's terrified of those."));
-        MAP.put(PlantType.Enlightenmint, new Descriptions("No Plant Food effect.", "Enlighten-mints give a burst of sun when planted, and provide an additional temporary boost to Enlighten-mint Family plants.", "Enlighten-mint wants to stress that while \"enlightenment\" is properly understood as \"full comprehension of a situation,\" she herself frequently likes to ask follow-up questions just to be sure."));
-        MAP.put(PlantType.Appeasemint, new Descriptions("No Plant Food effect.", "Appease-mints fire a volley of huge peas that break into smaller peas and provide a temporary boost to all Appease-mint Family plants on the lawn.", "Appease-mint takes great umbrage at the notion that he might back down from a fight. \"Yes, my name is 'Appease-mint,' but that has more to do with my affinity towards peas than any disinclination to stand up for my beliefs. Rescind your vile calumny this instant, lest I compose a blistering letter of outrage!\""));
-        MAP.put(PlantType.Armamint, new Descriptions("No Plant Food effect.", "Arma-mints launch a volley of heavy stunning projectiles and provide a temporary boost to all Arma-mint Family plants on the lawn.", "\"Lobbing projectiles, for me, has always been a very personal endeavor,\" says Arma-mint. \"It's a great way for me to express myself, my identity, and my preference that zombies can be defeated in large groups.\""));
-        MAP.put(PlantType.Bombardmint, new Descriptions("No Plant Food effect.", "Bombard-mints set off a number of explosions on the board and provide a temporary boost to all Bombard-mint Family plants on the lawn.", "\"Explosions are fun,\" says Bombard-mint with an impish twinkle in her eye. \"In the context of eliminating zombies, a cascade of detonations not only clears much of the board, but leaves a lovely fragrance in its wake. It smells like... victory.\""));
-        MAP.put(PlantType.Enforcemint, new Descriptions("No Plant Food effect.", "Enforce-mints shrink a number of zombies when planted and provide a temporary boost to all Enforce-mint Family plants on the lawn.", "Enforce-mint shrinks zombies, which may seem a bit off-brand for a guy who's all about melee damage. Enforce-mint shrugs. \"I don't set policy,\" he says."));
-        MAP.put(PlantType.Reinforcemint, new Descriptions("No Plant Food effect.", "Reinforce-mints push all zombies back and provide a temporary boost to all Reinforce-mint Family plants on the lawn.", "Reinforce-mint isn't scowling. He's just workshopping defense strategies, doing what he can to support the team. Maybe he's scowling just a little bit. Fine."));
-        MAP.put(PlantType.Enchantmint, new Descriptions("No Plant Food effect.", "Enchant-mints randomly hypnotize a number of zombies and provide a temporary boost to all Enchant-mint Family plants on the lawn.", "\"I just love musical theater,\" says Enchant-mint. Yeah, it doesn't have much to do with magic or his abilities or strategic strengths, but it's a fact. He just likes the songs."));
-        MAP.put(PlantType.Piercemint, new Descriptions("No Plant Food effect.", "Spear-mints generate a number of higher-level Spikerocks on the board and provide a temporary boost to all Spear-mint Family plants on the lawn.", "\"Slash!\" Spear-mint enthuses. \"Slishy-slashy-slice!\" she adds, wanting to make sure she's getting her point across. She wants to be very clear on this."));
-        MAP.put(PlantType.catTailmint, new Descriptions("No Plant Food effect.", "Contain-mints stun all zombies on the board and provide a temporary boost to all Contain-mint Family plants on the lawn.", "\"Go easy, there,\" says Contain-mint. \"No need to be in such a rush all the time. Movement is totally overrated.\""));
+        MAP.put(PlantType.Sunflower, new Descriptions("Immediately produces a large amount of sun.",
+            "Sunflowers are essential for you to produce extra sun. Try planting as many as you can!",
+            "After the release of her first major Youtuber video \"Zombies On Your Lawn,\" "
+            + "Sunflower's Youtuber channel has been bursting with fun. She is currently "
+            + "putting the final touches on her reality show TV pitch "
+            + "\"Sunflower Thinks She Can Dance.\""));
+        MAP.put(PlantType.TwinSunflower, new Descriptions("Immediately produces a large amount of sun.",
+            "Twin Sunflowers give twice as much sun as a normal sunflower.",
+            "With the pair of shiny and extravagant sunglasses, Twin Sunflower looks like a real "
+            + "superstar. Now it has to be prepared of paparazzi popping out of nowhere in a sudden "
+            + "anytime."));
+        MAP.put(PlantType.Sunshroom, new Descriptions(
+            "Instantly grows to full size and produces a large amount of sun.",
+            "Sun-shrooms give small sun at first, then normal suns, and finally large suns.",
+            "Oh sure, Sun-shroom is known for his ever-present grin and sunny disposition. But "
+            + "truth be told, even he has his dark days. It ain't easy keeping things light when "
+            + "you live in the shadows."));
+        MAP.put(PlantType.PrimalSunflower, new Descriptions("Immediately produces large amount of sun.",
+            "Primal Sunflowers pop out large suns instead of regular ones.",
+            "Primal Sunflower is new to all this sun-giving business, so be patient with her. "
+            + "She's an early adopter of the all-you-can-stuff-yourself buffet style of sun "
+            + "production."));
+        MAP.put(PlantType.GoldBloom, new Descriptions("No Plant Food effect.",
+            "Gold Blooms produce a burst of sun all at once.",
+            "\"Your botanists were so preoccupied with whether they could,\" says Gold Bloom, "
+            + "about nothing and to nobody in particular, "
+            + "\"they didn't stop to think if they should.\""));
+        MAP.put(PlantType.Peashooter, new Descriptions("Shoots a barrage of peas.",
+            "Peashooters are your first line of defense. They shoot peas at attacking zombies.",
+            "\"What is it like being famous?\" asked the Peashooter while sipping his bottled "
+            + "water, \"I can't talk right now, I'm finishing my merchandising deal. Hold my "
+            + "fir coat.\""));
+        MAP.put(PlantType.Repeater, new Descriptions("Shoots two volleys of peas at zombies in its row.",
+            "Repeaters fire two peas at one time.",
+            "\"Everyone always asks me if we've met before.\" says Repeater. "
+            + "\"Everyone always asks me if we've met before. Wait, did I just say that?\""));
+        MAP.put(PlantType.Threepeater, new Descriptions(
+            "Shoots a spread of peas in multiple directions, dealing damage.",
+            "Threepeaters shoot peas in three lanes.",
+            "Threepeater loves playing multiplayer in video games, but split-screen never works "
+            + "because the left head always cheats."));
+        MAP.put(PlantType.SnowPea, new Descriptions(
+            "Slows all zombies in the column , then shoots a barrage of frozen peas.",
+            "Snow Peas fire frozen peas making it hard for zombies to advance.",
+            "As a professional table tennis player, in the off-season he also enjoys skiing, "
+            + "playing the bongos, and spelunking."));
+        MAP.put(PlantType.Rotobaga, new Descriptions("Shoots multiple huge rotobagas in four directions.",
+            "Rotobagas shoot projectiles along the four diagonals, in each direction that has a target.",
+            "Sometimes Rotobaga hears the plants gossiping about each other. "
+            + "\"Did you notice so-and-so has been putting on weight?\" they might say. "
+            + "Or \"I hear that so-and-so is dating so-and-so. Can you believe it?\" "
+            + "But Rotobaga isn't the kind of plant to engage in idle gossip. "
+            + "She's not interested in talking about anyone behind their leaves. "
+            + "She does her best to just rise above it."));
+        MAP.put(PlantType.PeaPod, new Descriptions("Summons a giant Peashooter that shoots five giant peas.",
+            "Pea Pods can be planted in the same space for up to 5 times the destruction.",
+            "Having studied Quantum Spatial Mechanics in Clown College, Pea Pod has been amusing "
+            + "families of all ages."));
+        MAP.put(PlantType.SplitPea, new Descriptions(
+            "Shoots a barrage of peas at both the front and behind the plant, then fires a giant pea behind.",
+            "Split Peas shoot peas forward and backwards.",
+            "\"It's my turn with the eyebrows,\" said Frontie. \"Fine, we'll split them,\" said Backie. "
+            + "Sprouted two minutes apart, their eyebrow war is eternal."));
+        MAP.put(PlantType.Citron, new Descriptions(
+            "Shoots a giant plasma ball that can destroy most mech type zombies and flings "
+            + "zombies to adjacent zombies.",
+            "Citrons shoot powerful balls of plasma.",
+            "As the owner and primary user of \"Vitamin C-U-Later\" 20-hour energy shots, Citron is "
+            + "always on and always ready for action. \"Let's make this happen!!\""));
+        MAP.put(PlantType.Caulipower, new Descriptions("Tosses 5 random zombies off the lawn.",
+            "Caulipowers use their mental powers to hypnotize random zombies and turn them against "
+            + "their former friends.",
+            "Caulipower's eyes spin with distress. He's just thought of a really great ending for "
+            + "his novel, but he's afraid his cousin won't understand it."));
+        MAP.put(PlantType.ElectricBlueberry, new Descriptions(
+            "Creates a storm cloud that targets 3 random zombies, dealing damage.",
+            "Electric Blueberries randomly electrocute zombies every so often.",
+            "Electric Blueberry prides herself for being eclectic as well as electric. "
+            + "\"I like to keep'em guessing,\" she says. "
+            + "\"A zombie should always be like, 'Whoa, didn't see that coming,' when they're "
+            + "disintegrated.\""));
+        MAP.put(PlantType.BowlingBulb, new Descriptions(
+            "Shoots three charged explosive bulbs at zombies, dealing heavy damage. Waits until zombies "
+            + "appear on the lawn before shooting.",
+            "Bowling Bulbs rolls shots that can bounce into multiple zombies.The Larger bulbs deal "
+            + "more damage.",
+            "Guess which team has won the League Championship for five years running now? Team Bowling "
+            + "Bulb, that's who. They are on a ROLL. You and your pals think you got what it takes to "
+            + "stop 'em? Yeah sure. Keep dreamin, bub."));
+        MAP.put(PlantType.Cactus, new Descriptions("Permanently increases piercing power and damage.",
+            "Cactus fires a penetrating thorn that can damage multiple enemies! Hides underground "
+            + "when zombies are close. Can stretch up and pop balloon zombies.",
+            "Things have really changed for Cactus lately. Book deals, movies, truck show "
+            + "appearances... she's just trying to focus on staying humble and launching thorns "
+            + "like always."));
+        MAP.put(PlantType.FirePeashooter, new Descriptions(
+            "Creates a fire trail, unfreezing plants and damaging zombies in the row.",
+            "Fire Peashooters are immune to frost and shoot flaming peas down the lane.",
+            "Fire Peashooter knows that what she does looks exciting. But working with an open flame is serious "
+            + "and, more importantly, dangerous business. That's why, in her spare time, she talks to children "
+            + "about the importance of fire safety. \"I'm a trained professional.\" she explains. \"Don't try this "
+            + "at home, kids.\""));
+        MAP.put(PlantType.Starfruit, new Descriptions("Shoots ten giant stars in five directions, dealing damage.",
+            "Starfruits shoot stars in 5 directions.",
+            "Just a small town fruit that travelled to the big city and found his way to the future. His favorite"
+            + " modes of transportation: conveyor belts, hoverboards, and rockets. WEEEE!"));
+        MAP.put(PlantType.GooPeashooter, new Descriptions(
+            "Summons a large ball of poison that deals damage, knock back, and poison all zombies on the lawn.",
+            "Goo Peashooters shoot poison peas at zombies, poisoning them as well as slowing them down.",
+            "Goo Peashooter is a goopy shooter. See? See how that works? It's a play on words. Words are often "
+            + "playful, folks!"));
+        MAP.put(PlantType.MegaGatlingPea, new Descriptions(
+            "Shoots a huge number of peas out, dealing massive damage. Normal attack will fire five peas instead "
+            + "of four,",
+            "Mega Gatling Peas fire four peas at a time, and will occasionally Plant Food itself.",
+            "\"I used to be an upgrade,\" says Mega Gatling Pea with uncharacteristic shyness. \"Now I'm my own "
+            + "plant, with my own ambitions, dreams and gym club memberships!\""));
+        MAP.put(PlantType.Seashroom, new Descriptions(
+            "Creates a clone of itself, resets the wither timer on all Sea-shroom on the gameboard, then triggers"
+            + " all Sea-shroom to",
+            "Fire a short range explosive spore that will damage zombies in a radius, but it will wither away "
+            + "after a short time.",
+            "Sea-shroom and Puff-shroom are long distance cousins. No one knows when their family tree diverged, "
+            + "but the family reunions always involve a pool party."));
+        MAP.put(PlantType.Puffshroom, new Descriptions(
+            "All Puff-shroom on the lawn will shoot a spore barrage and reset their life duration.",
+            "Puff-shrooms are short-range shooters that last for a limited time.",
+            "Puff-shroom is hip to all the latest social networks. He loves to surf Sporebook, FungusedIn and "
+            + "ShroomstaGram. But he sometimes misses the simple camaraderie of a good ol' fashioned Lawn Area "
+            + "Network party."));
+        MAP.put(PlantType.Fumeshroom, new Descriptions(
+            "Sprays a stream of fumes that deal damage and pushes all zombies back.",
+            "Fume-shrooms shoot fumes that damage all zombies in an area.",
+            "\"I think of myself as a pretty confident shroom and an all-around fungi,\" says Fume-shroom. \"But "
+            + "sometimes, when I'm eating Plant Food, I hear them chuckling. I hear them calling me "
+            + "'Balloon-shroom'. I don't think they know how much that hurts.\""));
+        MAP.put(PlantType.Cabbagepult, new Descriptions(
+            "Launches multiple cabbages at every zombie, dealing heavy damage.",
+            "Cabbage-pults hurl cabbages at the enemy.",
+            "Cabbage-pult received his doctorate in pulting from Harvest University. He knows a thing or two "
+            + "about launching his way to the top. He also makes a mean soup."));
+        MAP.put(PlantType.Kernelpult, new Descriptions(
+            "Triggers a butter storm that stuns every zombie on the lawn for a few seconds.",
+            "Kernel-pults fling corn kernels and immobilizing butter at zombies.",
+            "\"While working as an usher at the local movieplex, he saw \"Fried Green Tomatoes\" and found his "
+            + "higher calling. He packed up his husks, his kernels, his butter, and enlisted."));
+        MAP.put(PlantType.Melonpult, new Descriptions(
+            "Launches melons at every zombie, dealing both damage and splash damage on impact.",
+            "Melon-pults do heavy damage to groups of zombies.",
+            "\"Everyone says my head looks like a melon,\" said the middle child of the Pult family, \"And they "
+            + "would be right.\" Don't ask him if he's seedless or not though, it offends him and frankly it's none"
+            + " of your business."));
+        MAP.put(PlantType.WinterMelon, new Descriptions(
+            "Launches frozen melons at every zombie, dealing both damage and splash damage on impact.",
+            "Winter Melons do heavy damage and slow groups of zombies.",
+            "You may recognize Winter Melon's voice from such incredible documentaries as \"It's Cold Up Here,\" "
+            + "\"Ice Bingo,\" and \"Surfin' Swedes.\""));
+        MAP.put(PlantType.Pepperpult, new Descriptions(
+            "Lobs several giant fire peppers at random zombies that deal moderate splash damage on impact.",
+            "Pepper-pults lob flaming peppers at zombies and keep nearby plants warm.",
+            "Some say Pepper-pult is a hot head. Some find his fiery disposition off-putting. But the truth is, "
+            + "he's just very focused and determined. He loves what he does. He appreciates everything he has. \"I "
+            + "came from the weedy side of the lawn,\" Pepper-pult explains. \"I worked hard to pull myself up by "
+            + "my roots. I'm a self-made pepper and I don't take a single thing for granted.\""));
+        MAP.put(PlantType.PotatoMine, new Descriptions("Immediately arms and spawns multiple copies of itself.",
+            "Potato Mines explode on contact, but they take time to arm. Plant them ahead of zombies.",
+            "Believe it or not, SPUDOW! did not happen overnight. Having been forced to try out new catchphrases "
+            + "and focus testing as many variations as possible (Tubular? Really?), Potato Mine weeded out the "
+            + "competition to stick with what he knows best."));
+        MAP.put(PlantType.PrimalPotatoMine, new Descriptions("Immediately arms and spawns multiple copies of itself.",
+            "Primal Potato Mines cost more than regular Potato Mines, but they arm more quickly and do damage "
+            + "over a larger area.",
+            "Primal Potato Mine doesn't consider himself to be primal. As far as he's concerned he's "
+            + "state-of-the-art. And who knows? Maybe he is."));
+        MAP.put(PlantType.CherryBomb, new Descriptions("No Plant Food effect.",
+            "Cherry Bombs can blow up all zombies in an area. They have a short fuse so plant them near zombies.",
+            "The Cherry Bomb Brothers attempted to start their own band. \"We tried to figure out what the sound "
+            + "would be, but we kept explodonating speakers, stages, fans, and of course, zombies. Look for our LP "
+            + "next year.\""));
+        MAP.put(PlantType.Squash, new Descriptions(
+            "Squashes multiple tough targets on the lawn before returning to its original location.",
+            "Squashes will smash the first zombie that gets close.",
+            "Squash is actually his stage name. His birth name was Tracy."));
+        MAP.put(PlantType.Grapeshot, new Descriptions("No Plant Food effect.",
+            "Grapeshots explode and scatter bouncing projectiles in eight directions.",
+            "\"Spa-BOOM!\" enthuses Grapeshot. \"You liked that? I got a million of 'em! Wa-POW! Buh-BLAM! Za-..."
+            + " um... Ker-... hmmm... Okay, I guess I've only got the three.\""));
+        MAP.put(PlantType.Jalapeno, new Descriptions("No Plant Food effect.",
+            "Jalapenos destroy an entire lane of zombies.",
+            "This jalapeno is one spicy character by day and The Macramé Vigilante by night. You might be "
+            + "wondering what his secret weapons is... it's knots."));
+        MAP.put(PlantType.Doomshroom, new Descriptions("No Plant Food effect.",
+            "Doom-shroom explodes when destroyed. Depending on the growth stage,"
+            + " Doom-shroom explosion radius will increase and it may even spawn additional Doom-shrooms.",
+            "\"Things are crazy now. Back in my day, there were Browncoats,"
+            + " Browncoats with cones, and Browncoats with buckets. That’s it!"
+            + " What are all these? Jetpacks? Magicians? Dark creatures?.."
+            + " Hrmph! They better not think I am old and harmless."
+            + " I may be retired but I still know a thing or two about blowing up zombies.\""));
+        MAP.put(PlantType.TangleKelp, new Descriptions("Drags up to four random zombies underwater.",
+            "Tangle Kelp are aquatic plants that pull the first zombie that nears them underwater.",
+            "Tangle Kelp likes to go deep. He majored in philosophy."
+            + " Grab a root beer with him, and he'll go on and on about Nietzsche's"
+            + " \"Thus Spoke Zucchini\" or hold forth on Kant's \"Critique of Petunia Reason.\""
+            + " It's cool and all, but sometimes you just want to keep the conversation light."
+            + " Sometimes you just want to talk about the temperature of the water."));
+        MAP.put(PlantType.IcebergLettuce, new Descriptions("Freezes or chills every zombie on lawn.",
+            "Iceberg Lettuces freeze a zombie when stepped on.",
+            "Don't get lost staring into Iceberg's adorably cute eyes. If you do so,"
+            + " it is your last step... but only if you're a zombie."));
+        MAP.put(PlantType.BonkChoy, new Descriptions("Rapidly punches in a 3x3 around it, dealing heavy damage.",
+            "Bonk Choys rapidly punch nearby enemies that are ahead or behind them.",
+            "A freelance dentist on the side, he's offering a special this month"
+            + " - he'll knock two of your teeth out for the price of one!"));
+        MAP.put(PlantType.PhatBeet, new Descriptions("Thump the ground, dealing damage to surrounding zombies.",
+            "Phat Beets thump out damage every second.",
+            "Phat Beet has been known to drop sick rhymes, dope grooves,"
+            + " and highly satisfactory jams, often within seconds of each other."));
+        MAP.put(PlantType.Chomper, new Descriptions(
+            "Consumes several nearby zombies in the column, then releases a burp that knocks back any survivors.",
+            "Chompers can devour a zombie whole, but they are vulnerable while chewing.",
+            "Everyone appreciates what Chomper does. His appetite has saved them on numerous occasions."
+            + " But truth be told, Chomper's friends think that eating zombies is gross."
+            + " And his breath! No one has the heart to tell him,"
+            + " and he never gets the hint when you offer him a mint."));
+        MAP.put(PlantType.WasabiWhip, new Descriptions("Spin its flaming whip around, dealing heavy damage to zombies.",
+            "Wasabi Whips lash out with their flaming whips,"
+            + " delivering whuppings to zombies both in front and behind.",
+            "\"The trick to proper whipping is all in the wrist,\" says Wasabi Whip."
+            + " \"Well, not the wrist, exactly, since I don't have any."
+            + " You have to, like... BE the wrist.\""));
+        MAP.put(PlantType.Kiwibeast, new Descriptions(
+            "Immediately grows to its last stage and deal massive damage to the surrounding area.",
+            "Kiwibeasts emit damaging thumps, and become bigger and more powerful"
+            + " the more they are hurt by zombies.",
+            "\"I like to keep an even keel,\" says Kiwibeast."
+            + " \"But zombies... oooh... zombies make me so mad!"
+            + " And when I get mad... RARRRRRGGG!\""));
+        MAP.put(PlantType.Wallnut, new Descriptions("Heals itself and gains a hard armor shell.",
+            "Wall-nuts have hard shells which you can use to protect your other plants.",
+            "Having retired from his days as a champion bowler in the Pro Leagues,"
+            + " Wall-nut is looking forward to a real challenge on the front lines of home defense."
+            + " DEFENSE! DEFENSE!"));
+        MAP.put(PlantType.Tallnut, new Descriptions("Heals itself and gains an extra hard armor shell.",
+            "Tall-nuts are heavy-duty wall plants that block low flying zombies.",
+            "Tall-nut is opening a chain of stores for Tall and Taller gentlemen."
+            + " \"I'll shell out the savings to you!\""));
+        MAP.put(PlantType.Endurian, new Descriptions("Heals itself and permanently gains additional armor and damage.",
+            "Endurians are defensive plants that deal damage to zombies attacking them.",
+            "\"When other plants talk about me, they say I'm too gruff."
+            + " They say I'm difficult to approach, that I'm afraid to let others get too close to me."
+            + " Also, I smell terrible,\" said Endurian."
+            + " But deep down inside, he knows that he's so much more than that."
+            + " He's also short-tempered."));
+        MAP.put(PlantType.Garlic, new Descriptions(
+            "Heals itself and releases gas that will temporarily stun zombies in front"
+            + " and divert them to another column.",
+            "Garlic diverts zombies into other lanes.",
+            "Good against zombies, as well as proof against any vampires who might accidentally wander by."));
+        MAP.put(PlantType.SweetPotato, new Descriptions("Heals itself and attracts all nearby zombies to its row.",
+            "Sweet Potatoes attract zombies from other lanes when they are close by.",
+            "Sweet Potato really is as sweet as she looks. Her favorite animal is the unicorn."
+            + " Her favorite color is (and this is a direct quote) \"all the colors in the rainbow.\""
+            + " When she writes the letter \"i\", she draws a little heart where the dot belongs."
+            + " Frankly, if it were anyone else, this amount of syrup would be sickening."
+            + " But on her, well, it just seems right."));
+        MAP.put(PlantType.Explodeonut, new Descriptions(
+            "Heals itself and gains an armor that will absorbs additional damage."
+            + " If the armor is destroyed, unleashes a large explosion.",
+            "Explode-O-Nuts provide protection, and when their shells are eaten,"
+            + " they explode to blow up zombies.",
+            "\"My only regret,\" says Explode-O-Nut,"
+            + " \"is that I have but one chewy center full of nitroglycerin to give in defense of this lawn.\""));
+        MAP.put(PlantType.Pumpkin, new Descriptions("Creates a hard armor shell, that can absorb additional damage.",
+            "Pumpkins can be planted on top of other plants to provide a tough additional layer of armor.",
+            "Pumpkin may be a hollowed-out shell, but he still has a rich inner life"
+            + " filled with feelings, fantasies and surprisingly disappointing opinions."));
+        MAP.put(PlantType.SunBean, new Descriptions("Increases the amount of sun produces with eaten.",
+            "Sun Beans infect zombies with sun. As a zombie takes damage they generate sun.",
+            "As the eldest of the bean brothers, Sun Bean often finds his siblings exasperating."
+            + " Chili Bean is a little crude, Laser Bean is too far out,"
+            + " and Spring Bean is just plain lazy."
+            + " Still, he loves them just the same. That's how it is with family."));
+        MAP.put(PlantType.Torchwood, new Descriptions(
+            "Permanently increases the damage bonus of all the peas that pass through it.",
+            "Torchwoods turn peas that pass through them into fireballs that deal twice as much damage."
+            + " They also deal close damage as well as lanewide flame damage on defeat.",
+            "Torchwood and Snapdragon have become fast friends."
+            + " They like to hang out at either the Tiki Lounge or the Renaissance Faire."));
+        MAP.put(PlantType.Magnetshroom, new Descriptions(
+            "Remove and toss all metal objects on zombies within range, dealing damage.",
+            "Magnet-shrooms remove helmets and other metal objects from zombies.",
+            "Despite his unusual appearance, Magnet-shroom doesn't have a problem attracting girlfriends."
+            + " But he does have a problem keeping them."
+            + " It's the same thing every time. In the end, they always find him too clingy."));
+        MAP.put(PlantType.Hypnoshroom, new Descriptions("Turns a hypnotized zombie into a Gargantuar.",
+            "When zombies eat Hypno-shrooms, they will turn around and fight for you.",
+            "Hypno-shroom has no trouble persuading zombies to fight on behalf of "
+            + "the plants. But he has yet to convince one to cluck like a chicken. "
+            + "\"One day,\" he says. \"One day.\""));
+        MAP.put(PlantType.Cattail, new Descriptions(
+            "Concentrates a laser into a powerful railgun shot, dealing massive damage over "
+            + "5 seconds.",
+            "Cattail launches homing spikes at zombies that can stun them briefly.",
+            "Cattail was interviewed regarding its competition with Homing Thistle. It answers "
+            + "\"Meow Meow Meow~\", or rather, \"There's no problem. It can't be solved by being a "
+            + "cute one~\""));
+        MAP.put(PlantType.Imitater, new Descriptions(
+            "Performs Plant Food effect of the plant it's imitating.",
+            "Imitaters let you use two of the same plant during a level!",
+            "Having studied French Theater at Julienne, the Imitater went to the streets with "
+            + "his art, and has perfected his technique he calls \"Potato stuck in a box\"."));
+        MAP.put(PlantType.Iceshroom, new Descriptions(
+            "Lobs several icicles at random zombies across the field.",
+            "Smashes zombies in melee range. Emits a chilling aura that both buffs nearby "
+            + "Winter-mint plants and chills zombies.",
+            "\"It's not easy re-inventing yourself\" says Ice-shroom after returning from an "
+            + "intensive stint of training in the coldest parts of the Antarctic. \"It's not "
+            + "often you get a second chance, but I'm back now, and this time I won't be "
+            + "letting my fans or any of my friends down\". Cheering erupts as Ice-shroom "
+            + "steps onto the lawn."));
+        MAP.put(PlantType.LilyPad, new Descriptions(
+            "Creates Lily Pads in adjacent spaces. If the adjacent space has Lily Pads- it "
+            + "will heal them instead.",
+            "Lily Pads let you plant non-aquatic plants on top of them.",
+            "Not many people know this, but Lily Pad absolutely loves square dancing. There "
+            + "he is, a circular plant gliding across the dance floor making squares. He loves "
+            + "how it pushes his boundaries and really makes him think outside the sphere."));
+        MAP.put(PlantType.HotPotato, new Descriptions("No Plant Food effect.",
+            "Hot Potatoes melt the ice blocks they're planted on.",
+            "How does Hot Potato stay so positive and even-peeled all the time? Yoga, that's "
+            + "how. She never misses a class. Also, regular meditation. It's the only way she "
+            + "can handle the hard work of fighting zombies, day in and day out, without "
+            + "melting down."));
+        MAP.put(PlantType.GraveBuster, new Descriptions("No Plant Food effect.",
+            "Grave Busters consume graves they're planted on.",
+            "He may appear spiky or ill-tempered, but Grave Buster just wants to give you a "
+            + "big hug. Unless you're a puppy. He's terrified of those."));
+        MAP.put(PlantType.Enlightenmint, new Descriptions("No Plant Food effect.",
+            "Enlighten-mints give a burst of sun when planted, and provide an additional "
+            + "temporary boost to Enlighten-mint Family plants.",
+            "Enlighten-mint wants to stress that while \"enlightenment\" is properly "
+            + "understood as \"full comprehension of a situation,\" she herself frequently "
+            + "likes to ask follow-up questions just to be sure."));
+        MAP.put(PlantType.Appeasemint, new Descriptions("No Plant Food effect.",
+            "Appease-mints fire a volley of huge peas that break into smaller peas and "
+            + "provide a temporary boost to all Appease-mint Family plants on the lawn.",
+            "Appease-mint takes great umbrage at the notion that he might back down from a "
+            + "fight. \"Yes, my name is 'Appease-mint,' but that has more to do with my "
+            + "affinity towards peas than any disinclination to stand up for my beliefs. "
+            + "Rescind your vile calumny this instant, lest I compose a blistering letter of "
+            + "outrage!\""));
+        MAP.put(PlantType.Armamint, new Descriptions("No Plant Food effect.",
+            "Arma-mints launch a volley of heavy stunning projectiles and provide a "
+            + "temporary boost to all Arma-mint Family plants on the lawn.",
+            "\"Lobbing projectiles, for me, has always been a very personal endeavor,\" says "
+            + "Arma-mint. \"It's a great way for me to express myself, my identity, and my "
+            + "preference that zombies can be defeated in large groups.\""));
+        MAP.put(PlantType.Bombardmint, new Descriptions("No Plant Food effect.",
+            "Bombard-mints set off a number of explosions on the board and provide a "
+            + "temporary boost to all Bombard-mint Family plants on the lawn.",
+            "\"Explosions are fun,\" says Bombard-mint with an impish twinkle in her eye. "
+            + "\"In the context of eliminating zombies, a cascade of detonations not only "
+            + "clears much of the board, but leaves a lovely fragrance in its wake. It "
+            + "smells like... victory.\""));
+        MAP.put(PlantType.Enforcemint, new Descriptions("No Plant Food effect.",
+            "Enforce-mints shrink a number of zombies when planted and provide a temporary "
+            + "boost to all Enforce-mint Family plants on the lawn.",
+            "Enforce-mint shrinks zombies, which may seem a bit off-brand for a guy who's "
+            + "all about melee damage. Enforce-mint shrugs. \"I don't set policy,\" he says."));
+        MAP.put(PlantType.Reinforcemint, new Descriptions("No Plant Food effect.",
+            "Reinforce-mints push all zombies back and provide a temporary boost to all "
+            + "Reinforce-mint Family plants on the lawn.",
+            "Reinforce-mint isn't scowling. He's just workshopping defense strategies, doing "
+            + "what he can to support the team. Maybe he's scowling just a little bit. Fine."));
+        MAP.put(PlantType.Enchantmint, new Descriptions("No Plant Food effect.",
+            "Enchant-mints randomly hypnotize a number of zombies and provide a temporary "
+            + "boost to all Enchant-mint Family plants on the lawn.",
+            "\"I just love musical theater,\" says Enchant-mint. Yeah, it doesn't have much "
+            + "to do with magic or his abilities or strategic strengths, but it's a fact. He "
+            + "just likes the songs."));
+        MAP.put(PlantType.Piercemint, new Descriptions("No Plant Food effect.",
+            "Spear-mints generate a number of higher-level Spikerocks on the board and "
+            + "provide a temporary boost to all Spear-mint Family plants on the lawn.",
+            "\"Slash!\" Spear-mint enthuses. \"Slishy-slashy-slice!\" she adds, wanting to "
+            + "make sure she's getting her point across. She wants to be very clear on this."));
+        MAP.put(PlantType.catTailmint, new Descriptions("No Plant Food effect.",
+            "Contain-mints stun all zombies on the board and provide a temporary boost to "
+            + "all Contain-mint Family plants on the lawn.",
+            "\"Go easy, there,\" says Contain-mint. \"No need to be in such a rush all the "
+            + "time. Movement is totally overrated.\""));
     }
 
     public static Descriptions forType(PlantType type) {

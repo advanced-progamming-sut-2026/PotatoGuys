@@ -175,13 +175,19 @@ public class ProfileMenu extends ScreenAdapter {
         rightCol.add(statsGrid);
 
         if (currentUser != null) {
-            statsGrid.add(createStatCard("Games Played", String.valueOf(currentUser.getProfile().getGamePlayed()))).size(220, 120);
-            statsGrid.add(createStatCard("Completed Levels", String.valueOf(completedLevels()))).size(220, 120);
-            statsGrid.add(createStatCard("Highest Miopoint", String.valueOf(currentUser.getProfile().getMaxMiopoint()))).size(220, 120).row();
+            statsGrid.add(createStatCard("Games Played",
+                    String.valueOf(currentUser.getProfile().getGamePlayed()))).size(220, 120);
+            statsGrid.add(createStatCard("Completed Levels",
+                    String.valueOf(completedLevels()))).size(220, 120);
+            statsGrid.add(createStatCard("Highest Miopoint",
+                    String.valueOf(currentUser.getProfile().getMaxMiopoint()))).size(220, 120).row();
 
-            statsGrid.add(createStatCard("Coins", String.valueOf(currentUser.getProfile().getCoins()))).size(220, 120);
-            statsGrid.add(createStatCard("Diamonds", String.valueOf(currentUser.getProfile().getDiamonds()))).size(220, 120);
-            statsGrid.add(createStatCard("Plant Food", String.valueOf(currentUser.getProfile().getPlantFood()))).size(220, 120).row();
+            statsGrid.add(createStatCard("Coins",
+                    String.valueOf(currentUser.getProfile().getCoins()))).size(220, 120);
+            statsGrid.add(createStatCard("Diamonds",
+                    String.valueOf(currentUser.getProfile().getDiamonds()))).size(220, 120);
+            statsGrid.add(createStatCard("Plant Food",
+                    String.valueOf(currentUser.getProfile().getPlantFood()))).size(220, 120).row();
         }
 
         content.add(leftCol).width(300).top();

@@ -154,7 +154,8 @@ public class GreenHouseMenu extends ScreenAdapter {
         plantAfterWaterX = -1;
         plantAfterWaterY = -1;
         rebuild();
-        AudioManager.getInstance().playMusic(AudioPaths.GREEN_HOUSE,true,AudioManager.getInstance().getUserMusicVolume());
+        AudioManager.getInstance().playMusic(AudioPaths.GREEN_HOUSE, true,
+            AudioManager.getInstance().getUserMusicVolume());
     }
 
     /** Rebuilds the whole screen from the current model state — called after every plant/collect action. */
@@ -220,7 +221,8 @@ public class GreenHouseMenu extends ScreenAdapter {
         });
         topLeft.add(almanacBtn).size(75, 70);
 
-        ImageButton shopBtn = new ImageButton(MenuUiKit.textureDrawable(MenuUiKit.loadTextureSafe("textures/shop/buttons_hud_store_normal1.png")));
+        ImageButton shopBtn = new ImageButton(MenuUiKit.textureDrawable(
+            MenuUiKit.loadTextureSafe("textures/shop/buttons_hud_store_normal1.png")));
         shopBtn.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

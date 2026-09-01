@@ -533,7 +533,8 @@ public class GameController {
                 && Gdx.input.isButtonJustPressed(com.badlogic.gdx.Input.Buttons.LEFT)) {
             boolean zombieCardActive = gameUiModal != null && gameUiModal.getSelectedZombieCard() != null;
             boolean onPopup = false;
-            com.pvz.view.game.ui.IZombieOnlineUiModal izombieUi = gameUiModal instanceof com.pvz.view.game.ui.IZombieOnlineUiModal m
+            com.pvz.view.game.ui.IZombieOnlineUiModal izombieUi =
+                    gameUiModal instanceof com.pvz.view.game.ui.IZombieOnlineUiModal m
                     ? m
                     : null;
             if (izombieUi != null) {

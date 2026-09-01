@@ -292,7 +292,8 @@ public class PlantSelectModal extends Table {
     private void showPreviewMessage(String message, boolean success) {
         if (previewMessageLabel != null) {
             previewMessageLabel.setText(message);
-            previewMessageLabel.setColor(success ? new Color(0.15f, 0.7f, 0.15f, 1f) : new Color(0.8f, 0.2f, 0.15f, 1f));
+            previewMessageLabel.setColor(success ? new Color(0.15f, 0.7f, 0.15f, 1f)
+                : new Color(0.8f, 0.2f, 0.15f, 1f));
         }
     }
 

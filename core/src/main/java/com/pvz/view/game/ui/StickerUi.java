@@ -166,7 +166,8 @@ public class StickerUi extends Table {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hideBox();
-                onStickerSend.accept(new StickerMessage(PAM_PATHS[index], PAM_CLIPS[index], PAM_SCALES[index], STICKER_SECONDS));
+                onStickerSend.accept(new StickerMessage(PAM_PATHS[index], PAM_CLIPS[index],
+                    PAM_SCALES[index], STICKER_SECONDS));
             }
         });
         return cell;

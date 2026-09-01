@@ -162,7 +162,9 @@ public class Wave {
         boolean isSandstorm = isFinalWave && phase.isBurst()
             && "ancient egypt".equalsIgnoreCase(context.getSeasonName());
 
-        Zombie newZombie = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(spawnCol), lane, context, waveNumber, effectiveDifficulty());
+        Zombie newZombie = new ZombieFactory().create(type.getAlias(),
+                GameController.colToWorldX(spawnCol), lane,
+                context, waveNumber, effectiveDifficulty());
 
         if (isSandstorm) {
             int targetCol = context.getMap().getColumns() - 2 - rand.nextInt(3);

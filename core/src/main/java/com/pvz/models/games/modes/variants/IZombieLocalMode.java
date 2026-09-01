@@ -383,7 +383,9 @@ public class IZombieLocalMode implements GameMode, ZombiePlacer, PlantPlacer {
         }
         try {
             float spawnX = GameController.colToWorldX(col);
-            Zombie zombie = new ZombieFactory().create(zombieCard.getZombieType().getAlias(), spawnX, lane, context, 1, 1);
+            Zombie zombie = new ZombieFactory().create(
+                    zombieCard.getZombieType().getAlias(),
+                    spawnX, lane, context, 1, 1);
             context.spawnZombie(zombie);
             zombieCard.use();
         } catch (Exception e) {
@@ -411,7 +413,8 @@ public class IZombieLocalMode implements GameMode, ZombiePlacer, PlantPlacer {
             return false;
         }
         if (col < 0 || col >= redLineColumn) {
-            context.log("[Placement Failed] Plants can only be placed left of the red line (col < " + redLineColumn + ").");
+            context.log("[Placement Failed] Plants can only be placed "
+                    + "left of the red line (col < " + redLineColumn + ").");
             return false;
         }
         if (lane < 0 || lane >= context.getMap().getLanes()) {

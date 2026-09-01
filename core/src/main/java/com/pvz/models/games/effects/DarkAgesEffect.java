@@ -96,7 +96,9 @@ public class DarkAgesEffect implements ChapterEffect {
                         && tile.getTags().contains(TileTags.GRAVE)) {
                     int difficulty = AppContext.getInstance().getCurrentUser().getSetting().getDifficulty();
                     ZombieType type = ZombieType.BASIC;
-                    Zombie z = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(c), l, ctx, wave.getWaveNumber(), difficulty);
+                    Zombie z = new ZombieFactory().create(
+                            type.getAlias(), GameController.colToWorldX(c),
+                            l, ctx, wave.getWaveNumber(), difficulty);
                     if (z != null) {
                         ctx.spawnZombie(z);
                         ctx.log("A zombie dug up and emerged from the necromancy grave at (" + c + "," + l + ")!");

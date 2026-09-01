@@ -107,8 +107,10 @@ public class LoginMenu extends ScreenAdapter {
         form.add(statusLabel).colspan(2).width(FIELD_WIDTH + 12f).padTop(4f).row();
 
         // ── Stay Logged In ─────────────────────────────────────────────────
-        TextureRegionDrawable onDrawable = new TextureRegionDrawable(new Texture(Gdx.files.internal("textures/ui/checkbox_on.png")));
-        TextureRegionDrawable offDrawable = new TextureRegionDrawable(new Texture(Gdx.files.internal("textures/ui/checkbox_off.png")));
+        TextureRegionDrawable onDrawable = new TextureRegionDrawable(
+            new Texture(Gdx.files.internal("textures/ui/checkbox_on.png")));
+        TextureRegionDrawable offDrawable = new TextureRegionDrawable(
+            new Texture(Gdx.files.internal("textures/ui/checkbox_off.png")));
         stayLoggedInBtn = new ImageButton(offDrawable);
         stayLoggedInBtn.getImage().setScaling(com.badlogic.gdx.utils.Scaling.fit);
         stayLoggedInBtn.getImageCell().size(40f, 40f);

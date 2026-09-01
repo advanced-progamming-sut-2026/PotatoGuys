@@ -111,7 +111,8 @@ public class Leaderboard {
         StringBuilder sb = new StringBuilder();
         sb.append("\n=== LEADERBOARD (Sorted by ").append(field).append(" ").append(order).append(") ===\n");
         sb.append(String.format("%-15s | %-22s | %-10s | %-12s | %-16s | %-13s | %-9s\n",
-                "Username", "Story Mode", "Minigames", "Daily Quests", "Non-Daily Quests", "Highest Score", "Miopoint"));
+                "Username", "Story Mode", "Minigames",
+                "Daily Quests", "Non-Daily Quests", "Highest Score", "Miopoint"));
         sb.append("-".repeat(115)).append("\n");
 
         for (LeaderBoardEntry e : list) {

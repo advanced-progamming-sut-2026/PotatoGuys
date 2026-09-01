@@ -56,9 +56,11 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try (
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))
         ) {
-            out = new PrintWriter(new java.io.OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
+            out = new PrintWriter(
+                    new java.io.OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
 
             String line;
             while ((line = in.readLine()) != null) {
@@ -70,7 +72,8 @@ public class ClientHandler implements Runnable {
                 if (request.type == null) {
                     System.err.println("[ClientHandler] Received message with null type: " + line);
                     out.println(gson.toJson(NetworkMessage.error(request,
-                            "Unknown or missing message type. Make sure client and server are running the same build.")));
+                            "Unknown or missing message type. "
+                            + "Make sure client and server are running the same build.")));
                     continue;
                 }
                 NetworkMessage response = handle(request);
@@ -206,7 +209,8 @@ public class ClientHandler implements Runnable {
                 // Username changed: keep the login index in sync so the NEW name
                 // is what works at login (otherwise the old name keeps working and
                 // the new one gets "Username is incorrect!").
-                HashMap<String, String> usernames = SaveManager.getInstance().load("users/username.json", HashMap.class);
+                HashMap<String, String> usernames = SaveManager.getInstance()
+                        .load("users/username.json", HashMap.class);
                 if (usernames == null) {
                     usernames = new HashMap<>();
                 }

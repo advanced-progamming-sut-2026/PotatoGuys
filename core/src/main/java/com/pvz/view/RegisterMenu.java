@@ -119,7 +119,8 @@ public class RegisterMenu extends ScreenAdapter {
         confirmPasswordField = createPasswordField("Confirm Password");
         Table confirmWrapper = new Table();
         confirmWrapper.add(confirmPasswordField).width(FIELD_WIDTH).left().row();
-        confirmWrapper.add(PasswordToggleHelper.createToggle(confirmPasswordField, skin)).left().padLeft(4f).padTop(12f);
+        confirmWrapper.add(PasswordToggleHelper.createToggle(
+                confirmPasswordField, skin)).left().padLeft(4f).padTop(12f);
         form.add(label("Confirm")).right().padRight(8f);
         form.add(confirmWrapper).width(FIELD_WIDTH).left().row();
 

@@ -124,7 +124,9 @@ public class SplitPeaAction extends PlantAction {
         }
     }
 
-    private void spawnProjectile(GameContext ctx, float x, float y, float velX, float velY, com.pvz.models.entities.plants.enums.PlantType plantType) {
+    private void spawnProjectile(GameContext ctx, float x, float y,
+            float velX, float velY,
+            com.pvz.models.entities.plants.enums.PlantType plantType) {
         Projectile p = ProjectileFactory.create(
                 ProjectileType.PEA, ctx,
                 new Vector2(x, y), new Vector2(velX, velY),

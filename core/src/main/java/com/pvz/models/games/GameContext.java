@@ -249,7 +249,8 @@ public class GameContext implements TickAware {
                 if (existing.getType() == com.pvz.models.entities.plants.enums.PlantType.PeaPod
                         && !existing.isDead()
                         && existing
-                                .getAttackAction() instanceof com.pvz.models.entities.plants.actions.StackedShooterAction action) {
+                                .getAttackAction()
+                                instanceof com.pvz.models.entities.plants.actions.StackedShooterAction action) {
                     action.incrementStack();
                     log("[Stack] " + p.getType() + " stacked → " + action.getStackCount() + " pods at ("
                             + p.getCol() + "," + p.getLane() + ")");
