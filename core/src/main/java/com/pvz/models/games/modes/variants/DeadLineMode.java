@@ -3,7 +3,8 @@ package com.pvz.models.games.modes.variants;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pvz.models.Constants;
+import com.pvz.controller.game.GameController;
+import com.pvz.models.entities.effects.DeadLine;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
@@ -18,6 +19,7 @@ import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.Wave;
 import com.pvz.models.games.levels.variants.DeadLineLevel;
+import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.modes.GameMode;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
 
@@ -59,6 +61,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
     @Override
     public void initMode(GameContext context) {
         context.log("⚠️ DEADLINE MODE! Don't let zombies cross Column " + deadlineColumn + " ⚠️");
+        context.addEffect(new DeadLine(context, deadlineColumn));
     }
 
     @Override
@@ -76,7 +79,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
 
     private boolean checkDeadlineLoss(GameContext context) {
         for (Zombie z : context.getZombies()) {
-            if (!z.isDead() && z.getX() <= deadlineColumn) {
+            if (!z.isDead() && z.getX() <= GameController.colToWorldX(deadlineColumn) + GameMap.TILE_WIDTH / 2f) {
                 context.setGameOver(true);
                 context.log("💥 GAME OVER! A zombie crossed the Dead Line at Column " + deadlineColumn + "!");
                 return true;
