@@ -24,7 +24,7 @@ public class ProtectTileBehavior implements TileBehavior {
         Vector2 pos = new Vector2(
                 tile.getX() + Tile.WIDTH / 2f,
                 tile.getY() + Tile.HEIGHT / 2f);
-        Vector2 scale = new Vector2(1f, 1f);
+        Vector2 scale = new Vector2(0.65f, 0.65f);
         return new FrameConfig(PAM_PATH, CLIP, stateTime, pos, scale, null, true);
     }
 
