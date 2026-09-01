@@ -152,12 +152,13 @@ public class ProfileEditMenu extends ScreenAdapter {
         }
 
         SaveManager saveManager = SaveManager.getInstance();
+        String oldUsername = currentUser.getUsername();
         HashMap<String, String> usernames = saveManager.load("users/username.json", HashMap.class);
         if (usernames == null) {
             usernames = new HashMap<>();
         }
 
-        usernames.remove(currentUser.getUsername());
+        usernames.remove(oldUsername);
         currentUser.setUsername(newUsername);
         currentUser.setNickName(newNickname);
         currentUser.setEmail(newEmail);
@@ -165,6 +166,16 @@ public class ProfileEditMenu extends ScreenAdapter {
 
         saveManager.save(usernames, "users/username.json");
         currentUser.saveUser();
+
+        // If "stay logged in" was used, point the saved session at the new
+        // username so auto-login doesn't keep trying the old (now removed) name.
+        if (!oldUsername.equals(newUsername)) {
+            HashMap<String, String> session = saveManager.load("session.json", HashMap.class);
+            if (session != null && oldUsername.equals(session.get("username"))) {
+                session.put("username", newUsername);
+                saveManager.save(session, "session.json");
+            }
+        }
 
         statusLabel.setText("Profile updated successfully!");
         statusLabel.setColor(Color.GREEN);
