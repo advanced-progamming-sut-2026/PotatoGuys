@@ -97,8 +97,8 @@ public class GameRenderer {
             for (int lane = -1; lane < totalLanes; lane++) {
                 drawInactiveLawnMowers(lane);
                 drawPlantFoodFx(lane);
-                drawPlants(lane);
                 drawTileBehaviors(lane);
+                drawPlants(lane);
                 drawZombies(lane);
                 drawProjectiles(lane);
                 drawOctopusProjectiles(lane);
