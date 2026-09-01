@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
 import com.pvz.models.entities.plants.config.explosive.SquashConfig;
+import com.pvz.models.entities.plants.config.explosive.TangleKelpConfig;
 
 public final class PlantActionConfigLoader {
 
@@ -35,6 +36,7 @@ public final class PlantActionConfigLoader {
         json.addClassTag("GraveBusterConfig", GraveBusterConfig.class);
         json.addClassTag("ExplosiveConfig", ExplosiveConfig.class);
         json.addClassTag("SquashConfig", SquashConfig.class);
+        json.addClassTag("TangleKelpConfig", TangleKelpConfig.class);
         json.addClassTag("NutConfig", NutConfig.class);
         json.addClassTag("WallNutFeedConfig", WallNutFeedConfig.class);
         json.addClassTag("MintActionConfig", MintActionConfig.class);

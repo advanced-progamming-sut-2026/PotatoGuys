@@ -71,6 +71,10 @@ public class Zombie extends Entity {
      */
     private ZombieState pendingInitialState;
 
+    // True while Tangle Kelp (or similar) is dragging this zombie underwater.
+    // While grabbed the zombie must not eat, walk, or take further damage.
+    private boolean underwaterGrabbed;
+
     // ── Flags ─────────────────────────────────────────────────────────────────
     private boolean dead;
     private final boolean glowing;
@@ -120,7 +124,7 @@ public class Zombie extends Entity {
         setHitbox(new Hitbox(this, position.x, position.y, 48f, 80f) {
             @Override
             public void onCollision(Hitbox onHit) {
-                if (dead) {
+                if (dead || underwaterGrabbed) {
                     return;
                 }
                 if (onHit.getOwner() instanceof Plant plant && !plant.isDead() && !plant.isFrozen()) {
@@ -177,6 +181,11 @@ public class Zombie extends Entity {
             currentState.onExit(this, context);
             next.onEnter(this, context);
             currentState = next;
+        }
+
+        if (underwaterGrabbed) {
+            syncHitbox();
+            return;
         }
 
         int currentCol = GameController.worldXtoCol(position.x);
@@ -478,7 +487,7 @@ public class Zombie extends Entity {
      * Switches to {@link EatState} targeting {@code plant} if not already eating.
      */
     public void startEating(Plant plant) {
-        if (dead || currentState instanceof EatState || currentState instanceof FrozenState) {
+        if (dead || underwaterGrabbed || currentState instanceof EatState || currentState instanceof FrozenState) {
             return;
         }
         // `takeDamage` temporarily wraps the current state in a ZombieFlashState.
@@ -520,7 +529,7 @@ public class Zombie extends Entity {
      * @param explosive true → zombie was hit by an explosive plant (ash death VFX)
      */
     public void takeDamage(float amount, boolean poisonous, boolean explosive) {
-        if (dead || amount <= 0f)
+        if (dead || amount <= 0f || underwaterGrabbed)
             return;
         if (currentState instanceof IceBlockFrozenState iceBlock) {
             boolean destroyed = iceBlock.takeIceDamage(amount, false);
@@ -703,6 +712,14 @@ public class Zombie extends Entity {
 
     public boolean isDead() {
         return dead;
+    }
+
+    public boolean isUnderwaterGrabbed() {
+        return underwaterGrabbed;
+    }
+
+    public void setUnderwaterGrabbed(boolean underwaterGrabbed) {
+        this.underwaterGrabbed = underwaterGrabbed;
     }
 
     public boolean isGlowing() {
