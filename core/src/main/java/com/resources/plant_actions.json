@@ -5421,12 +5421,18 @@
     "actionIntervalSeconds": 1.0,
     "rechargeSeconds": 15.0,
     "attackConfig": {
-      "class": "SquashConfig",
-      "turnDuration": 1.0,
-      "jumpUpDuration": 0.8,
-      "jumpDownDuration": 0.8,
-      "radarRangeCoefficient": 1.2,
-      "baseDamage": 1800.0
+      "class": "TangleKelpConfig",
+      "submergeClip": "attack_submerge",
+      "attackClip": "attack",
+      "emergeClip": "attack_emerge",
+      "submergeDuration": 2.1333,
+      "attackDuration": 2.4667,
+      "emergeDuration": 1.8333,
+      "attackTriggerSeconds": 1.0,
+      "fadeDuration": 1.0,
+      "sinkDepth": 90.0,
+      "radarRangeCoefficient": 1.0,
+      "baseDamage": 9999.0
     },
     "feedConfig": {
       "class": "ShooterActionConfig",

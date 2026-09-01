@@ -5,9 +5,11 @@ import com.pvz.models.entities.plants.actions.explosive.ExplodeONutAction;
 import com.pvz.models.entities.plants.actions.explosive.ExplosiveAction;
 import com.pvz.models.entities.plants.actions.explosive.HotPotatoAction;
 import com.pvz.models.entities.plants.actions.explosive.squash.SquashAction;
+import com.pvz.models.entities.plants.actions.explosive.tangle.TangleKelpAction;
 import com.pvz.models.entities.plants.config.*;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
 import com.pvz.models.entities.plants.config.explosive.SquashConfig;
+import com.pvz.models.entities.plants.config.explosive.TangleKelpConfig;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.plants.fsm.WallNutState;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
@@ -97,6 +99,9 @@ public class PlantFactory {
         }
         if (config instanceof SquashConfig squashConfig) {
             return new SquashAction(squashConfig);
+        }
+        if (config instanceof TangleKelpConfig tangleKelpConfig) {
+            return new TangleKelpAction(tangleKelpConfig);
         }
         if (config instanceof NutConfig nutConfig) {
             return nutConfig.explodesOnDestroy ? new ExplodeONutAction(nutConfig) : new WallNutState(nutConfig);
