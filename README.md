@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 # 🌻 Plants vs. Zombies 2 — Java Edition
 
@@ -14,7 +14,7 @@
 [![Build](https://img.shields.io/badge/build-passing-brightgreen)]()
 
 > The zombies are coming… the lawn is doomed… and only the plants can save the day.
-> **72 plants. 56 zombies. 4 chapters. 11 game modes. And full online PvP.**
+> **69 plants. 56 zombies. 4 chapters. 11 game modes. And full online PvP.**
 
 </div>
 
@@ -65,7 +65,7 @@
 
 ## 🎮 Features
 
-### 🌱 The Plant Roster (72 types)
+### 🌱 The Plant Roster (69 types)
 Sunflowers, Twin Sunflowers, Sunshrooms, Repeaters, Cabbepersons… and of course the classics: Cherry Bomb 💣, Jalapeno 🔥, Doom-shroom ☠️, Wall-nut, Torchwood, Chomper, Potato Mine and the mighty Mints.
 
 Each with its own **actions** (shooters, lobbers, melee, explosives, supports) powered by **23 behavior classes** and **30 JSON config loaders**.
@@ -241,11 +241,11 @@ plantsvszombies2/
 
 A big thank-you to the team behind this garden 🌻:
 
-| Contributor                 | Student ID |
-|-----------------------------|------------|
-| **Hossein Hosseini Nezhad** | 404105756  |
-| **Yousof Rahimzadeh**       | 404105853  |
-| **Mahdi Shakeri**           | 404105959  |
+| Contributor | Student ID |
+|---|---|
+| **Mahdi Shakeri** | 404105959 |
+| **Hossein Hosseini Nezhad** | 404105756 |
+| **Yousof Rahimzadeh** | 404105853 |
 
 ---
 
