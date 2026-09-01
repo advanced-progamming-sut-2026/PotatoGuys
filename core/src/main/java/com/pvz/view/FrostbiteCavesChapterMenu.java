@@ -373,6 +373,9 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
         if (levelNumber < PLAYABLE_LEVEL_COUNT && controller.isLevelUnlocked(levelNumber + 1)) {
             return StageStatus.COMPLETED;
         }
+        if (levelNumber == PLAYABLE_LEVEL_COUNT && controller.isLevelUnlocked(levelNumber)) {
+            return StageStatus.COMPLETED;
+        }
         return StageStatus.UNLOCKED;
     }
 
@@ -479,39 +482,10 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
                 addActor(createAnchoredAnimation(MapObjectType.TWINKLING_CRYSTAL_ANIM, CRYSTAL_TUNING, "animation",
                     coord[0] * LAYOUT_SCALE_X, coord[1] * LAYOUT_SCALE_Y));
             }
-
-            MapObjectType[] iceTypes = {
-                MapObjectType.FLOATING_ICE_ANIM_1,
-                MapObjectType.FLOATING_ICE_ANIM_2,
-                MapObjectType.FLOATING_ICE_ANIM_3
-            };
-            float[][] iceCoords = {
-                {180f, 310f}, {480f, 320f}, {750f, 300f},
-                {120f, 150f}, {350f, 450f}, {600f, 120f},
-                {820f, 480f}, {1020f, 280f}, {400f, 250f},
-                {250f, 550f}, {680f, 500f}, {920f, 550f},
-                {300f, 500f}, {100f, 200f}, {600f, 400f}
-            };
-            for (int i = 0; i < iceCoords.length; i++) {
-                MapObjectType selectedIce = iceTypes[i % iceTypes.length];
-                addActor(createAnchoredAnimation(selectedIce, ICE_CHUNK_TUNING, "idle",
-                    iceCoords[i][0] * LAYOUT_SCALE_X, iceCoords[i][1] * LAYOUT_SCALE_Y));
-            }
         }
 
         private void addMapDecorations() {
             MapObjectPlacement[] placements = {
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_1, 225, 230, 50, 38),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 530, 190, 55, 40),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_3, 610, 260, 60, 45),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_4, 880, 195, 50, 35),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_5, 770, 240, 40, 60),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_5, 155, 270, 40, 60),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_5, 450, 120, 40, 60),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_6, 270, 160, 55, 42),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_6, 700, 180, 60, 45),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_6, 950, 110, 50, 38),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_6, 600, 80, 52, 40),
             };
             for (MapObjectPlacement p : placements) {
                 MapDecorationActor actor = new MapDecorationActor(p.type, p.width, p.height, "idle");
@@ -572,10 +546,12 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
             Image islandImage = new Image(getTextureDrawable(islandPath, (int) width, (int) height));
             stack.add(islandImage);
 
-            Label numberLabel = new Label(boss ? "BOSS" : String.valueOf(stageNumber), skin, "big");
-            numberLabel.setFontScale(boss ? 1.2f : 1.4f);
-            numberLabel.setAlignment(Align.center);
-            stack.add(numberLabel);
+            if (!boss) {
+                Label numberLabel = new Label(String.valueOf(stageNumber), skin, "big");
+                numberLabel.setFontScale(1.4f);
+                numberLabel.setAlignment(Align.center);
+                stack.add(numberLabel);
+            }
 
             Table column = new Table();
             column.add(stack).size(width, height).row();
@@ -600,11 +576,21 @@ public class FrostbiteCavesChapterMenu extends ScreenAdapter {
                 });
             }
 
-            addActor(column);
-
             DecorTuning tuning = boss ? BOSS_LEVEL_NODE_TUNING : LEVEL_NODE_TUNING;
-            addActor(createAnchoredAnimation(MapObjectType.LEVEL_NODE, tuning, nodeState.pamState,
-                centerX[index], centerY[index]));
+            Group nodeMarker = createAnchoredAnimation(MapObjectType.LEVEL_NODE, tuning, nodeState.pamState,
+                centerX[index], centerY[index]);
+            addActor(column);
+            addActor(nodeMarker);
+
+            if (boss) {
+                Label bossLabel = new Label("BOSS", skin, "big");
+                bossLabel.setFontScale(2.0f);
+                bossLabel.setColor(Color.BLACK);
+                bossLabel.setAlignment(Align.center);
+                bossLabel.setSize(nodeMarker.getWidth(), nodeMarker.getHeight());
+                bossLabel.setPosition(-120f, -200f);
+                nodeMarker.addActor(bossLabel);
+            }
         }
 
         private Drawable getTextureDrawable(String path, int w, int h) {

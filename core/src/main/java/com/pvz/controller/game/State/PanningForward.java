@@ -24,7 +24,14 @@ public class PanningForward extends State {
                 controller.startGameSession();
             } else {
                 controller.changeState(new PlantSelect(controller));
-                controller.getPlantSelectModal().setVisible(true);
+                // For online IZombie guest, show zombie select instead of plant select
+                if (controller.isNetworkedMatch() && !controller.isHost()
+                        && controller.getLevel() != null
+                        && controller.getLevel().getGameMode() == com.pvz.models.games.modes.GameModeType.IZOMBIE) {
+                    controller.getZombieSelectModal().setVisible(true);
+                } else {
+                    controller.getPlantSelectModal().setVisible(true);
+                }
                 Gdx.input.setInputProcessor(controller.getStage());
             }
         }

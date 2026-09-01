@@ -369,6 +369,9 @@ public class EgyptChapterMenu extends ScreenAdapter {
         if (levelNumber < PLAYABLE_LEVEL_COUNT && controller.isLevelUnlocked(levelNumber + 1)) {
             return StageStatus.COMPLETED;
         }
+        if (levelNumber == PLAYABLE_LEVEL_COUNT && controller.isLevelUnlocked(levelNumber)) {
+            return StageStatus.COMPLETED;
+        }
         return StageStatus.UNLOCKED;
     }
 
@@ -474,39 +477,9 @@ public class EgyptChapterMenu extends ScreenAdapter {
                 addActor(createAnchoredAnimation(MapObjectType.TWINKLING_STAR_ANIM, STAR_TUNING, "idle",
                     coord[0] * LAYOUT_SCALE_X, coord[1] * LAYOUT_SCALE_Y));
             }
-
-            MapObjectType[] rockTypes = {
-                MapObjectType.FLOATING_ROCK_ANIM_1,
-                MapObjectType.FLOATING_ROCK_ANIM_2,
-                MapObjectType.FLOATING_ROCK_ANIM_3
-            };
-            float[][] rockCoords = {
-                {180f, 310f}, {480f, 320f}, {750f, 300f},
-                {120f, 150f}, {350f, 450f}, {600f, 120f},
-                {820f, 480f}, {1020f, 280f}, {400f, 250f},
-                {250f, 550f}, {680f, 500f}, {920f, 550f}
-            };
-            for (int i = 0; i < rockCoords.length; i++) {
-                MapObjectType selectedRock = rockTypes[i % rockTypes.length];
-                addActor(createAnchoredAnimation(selectedRock, ROCK_TUNING, "idle",
-                    rockCoords[i][0] * LAYOUT_SCALE_X, rockCoords[i][1] * LAYOUT_SCALE_Y));
-            }
         }
 
         private void addMapDecorations() {
-            MapObjectPlacement[] placements = {
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_1, 70, 260, 50, 38),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 310, 15, 55, 40),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_3, 620, 280, 60, 45),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_4, 880, 25, 50, 35),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_5, 970, 240, 55, 40)
-            };
-            for (MapObjectPlacement p : placements) {
-                MapDecorationActor actor = new MapDecorationActor(p.type, p.width, p.height, "idle");
-                actor.setPosition(p.x * LAYOUT_SCALE_X, p.y * LAYOUT_SCALE_Y);
-                addActor(actor);
-            }
-
             // Purely decorative starting island - not clickable (no Greenhouse hookup here).
             MapDecorationActor houseIsland = new MapDecorationActor(MapObjectType.DECOR_HOUSE_ISLAND,
                 HOUSE_ISLAND_WIDTH, HOUSE_ISLAND_HEIGHT, "idle");

@@ -394,10 +394,14 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
             // shown bright/inviting rather than looking broken or locked.
             return StageStatus.UNLOCKED;
         }
+
         if (!controller.isLevelUnlocked(levelNumber)) {
             return StageStatus.LOCKED;
         }
         if (levelNumber < PLAYABLE_LEVEL_COUNT && controller.isLevelUnlocked(levelNumber + 1)) {
+            return StageStatus.COMPLETED;
+        }
+        if (levelNumber == PLAYABLE_LEVEL_COUNT && controller.isLevelUnlocked(levelNumber)) {
             return StageStatus.COMPLETED;
         }
         return StageStatus.UNLOCKED;
@@ -498,6 +502,10 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
             addActor(createAnchoredAnimation(MapObjectType.WATERFALL_ANIM, WATERFALL_TUNING, "idle",
                 centerX[0] - 40f * LAYOUT_SCALE_X, centerY[0] - 50f * LAYOUT_SCALE_Y));
 
+            float[][] largeRocks1 = { {280f, 320f}, {670f, 110f}, {930f, 280f} };
+
+            float[][] largeRocks2 = { {190f, 90f}, {510f, 330f}, {820f, 130f} };
+
             float[][] starCoords = {
                 {110f, 45f}, {320f, 330f}, {540f, 50f},
                 {210f, 270f}, {460f, 190f}, {650f, 35f},
@@ -506,23 +514,6 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
             for (float[] coord : starCoords) {
                 addActor(createAnchoredAnimation(MapObjectType.TWINKLING_STAR_ANIM, STAR_TUNING, "idle",
                     coord[0] * LAYOUT_SCALE_X, coord[1] * LAYOUT_SCALE_Y));
-            }
-
-            MapObjectType[] rockTypes = {
-                MapObjectType.FLOATING_ROCK_ANIM_1,
-                MapObjectType.FLOATING_ROCK_ANIM_2,
-                MapObjectType.FLOATING_ROCK_ANIM_3
-            };
-            float[][] rockCoords = {
-                {180f, 310f}, {480f, 320f}, {750f, 300f},
-                {120f, 150f}, {350f, 450f},
-                {820f, 480f}, {1020f, 280f},
-                {250f, 550f}, {680f, 500f}
-            };
-            for (int i = 0; i < rockCoords.length; i++) {
-                MapObjectType selectedRock = rockTypes[i % rockTypes.length];
-                addActor(createAnchoredAnimation(selectedRock, ROCK_TUNING, "idle",
-                    rockCoords[i][0] * LAYOUT_SCALE_X, rockCoords[i][1] * LAYOUT_SCALE_Y));
             }
         }
 
@@ -648,7 +639,7 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
 
             DecorTuning tuning = boss ? BOSS_LEVEL_NODE_TUNING : LEVEL_NODE_TUNING;
             addActor(createAnchoredAnimation(MapObjectType.LEVEL_NODE, tuning, nodeState.pamState,
-                centerX[index], centerY[index]));
+                centerX[index] + (boss ? 50f * LAYOUT_SCALE_X : 0f), centerY[index]));
         }
 
         private Drawable getTextureDrawable(String path, int w, int h) {

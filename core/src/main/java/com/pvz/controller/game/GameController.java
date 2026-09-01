@@ -74,6 +74,7 @@ import com.pvz.view.game.GameOverPopup;
 import com.pvz.view.game.GameWinPopup;
 import com.pvz.view.game.PauseMenuPopup;
 import com.pvz.view.game.PlantSelectModal;
+import com.pvz.view.game.ZombieSelectModal;
 import com.pvz.view.game.ScoredPopup;
 import com.pvz.view.game.ui.ConveyorBeltUiModal;
 import com.pvz.view.game.ui.GameUiModal;
@@ -98,6 +99,7 @@ public class GameController {
     private GameContext ctx;
     private Level level;
     private PlantSelectModal plantSelectModal;
+    private ZombieSelectModal zombieSelectModal;
     private GameUiModal gameUiModal;
     private State state = new ObjectiveScreen(this);
 
@@ -129,6 +131,10 @@ public class GameController {
      * snapshots).
      */
     private int lastAppliedSeq = -1;
+
+    // Pre-game readiness tracking for online IZombie
+    private boolean hostReady = false;
+    private boolean guestReady = false;
 
     private final Vector3 touchPos = new Vector3();
 
@@ -372,6 +378,9 @@ public class GameController {
 
         plantSelectModal = new PlantSelectModal(level, this::startGameSession);
         stage.addActor(plantSelectModal);
+
+        zombieSelectModal = new ZombieSelectModal(level, this::onPreGameReady);
+        stage.addActor(zombieSelectModal);
 
         gameUiModal = switch (level.getGameMode()) {
             case com.pvz.models.games.modes.GameModeType.CONVEYORBELT -> new ConveyorBeltUiModal(this::pauseGame);
@@ -1137,8 +1146,44 @@ public class GameController {
                 GameContext newContext = new GameContext(level);
                 boolean guestIZombie = isNetworkedMatch && !isHost
                         && level.getGameMode() == com.pvz.models.games.modes.GameModeType.IZOMBIE;
+                boolean hostIZombie = isNetworkedMatch && isHost
+                        && level.getGameMode() == com.pvz.models.games.modes.GameModeType.IZOMBIE;
+
+                // For online IZombie, override the mode's card lists with the player's
+                // selections from the pre-game modal so that initMode() builds the
+                // correct cards instead of the level defaults.
+                if (hostIZombie && ctx.getMode() instanceof IZombieMode izMode) {
+                    izMode.setBasedPlants(java.util.Collections.unmodifiableList(
+                            plantSelectModal.getSelectedPlants().stream()
+                                    .map(pt -> {
+                                        MyPlant owned = null;
+                                        try {
+                                            owned = AppContext.getInstance().getCurrentUser()
+                                                    .getProfile().getCollection().getPlant(pt);
+                                        } catch (Exception ignored) {
+                                        }
+                                        if (owned == null) {
+                                            owned = new MyPlant();
+                                            owned.setType(pt);
+                                            owned.setLevel(1);
+                                        }
+                                        return owned;
+                                    })
+                                    .collect(java.util.stream.Collectors.toList())));
+                }
+                if (guestIZombie && ctx.getMode() instanceof IZombieMode izMode) {
+                    izMode.setBasedZombies(zombieSelectModal.getSelectedZombies());
+                }
+
+                // For the guest in online IZombie, skip the manual plant-card loop —
+                // initMode() will build zombie cards from the overridden basedZombies
+                // and skip plant cards (networkGuest=true).
                 for (PlantType pt : plantSelectModal.getSelectedPlants()) {
                     if (guestIZombie)
+                        break;
+                    // For the host in online IZombie, skip manual plant card setup
+                    // too — initMode() will build them from the overridden basedPlants.
+                    if (hostIZombie)
                         break;
                     MyPlant owned = null;
                     try {
@@ -1154,9 +1199,6 @@ public class GameController {
                         myPlant.setLevel(1);
                     }
 
-                    // Resolve sun cost / recharge at the player's plant level so the card
-                    // shows the same values the mode actually charges (level-up SUN_COST
-                    // / RECHARGE_SECONDS modifiers are applied here, not on the sheet).
                     PlantStatResolver.ResolvedStats stats = (sheet != null)
                             ? PlantStatResolver.resolve(sheet, myPlant.getLevel())
                             : null;
@@ -1170,11 +1212,6 @@ public class GameController {
                 AppContext.getInstance().setGameContext(newContext);
                 ctx = newContext;
                 if (isNetworkedMatch && !isHost) {
-                    // Guest never runs GameEngine#update, so GameContext#enter() (which is
-                    // what actually calls mode.initMode()) never fires the way it does for
-                    // the host via the engine's newly-registered-entity processing.
-                    // Flag networkGuest first so initMode only builds the zombie-side cards,
-                    // then call enter() once, by hand, here.
                     if (ctx.getMode() instanceof IZombieMode izMode) {
                         izMode.setNetworkGuest(true);
                     }
@@ -1189,6 +1226,7 @@ public class GameController {
                 }
 
                 plantSelectModal.setVisible(false);
+                zombieSelectModal.setVisible(false);
                 changeState(new PanningBack(this));
                 Gdx.input.setInputProcessor(stage);
 
@@ -1206,6 +1244,32 @@ public class GameController {
             }
         } catch (Exception e) {
             Gdx.app.error("GameScreen", "Error starting game session", e);
+        }
+    }
+
+    /**
+     * Called when the local player clicks "LET'S ROCK!" in either the plant or
+     * zombie select modal during the online IZombie pre-game phase. Sends a
+     * PRE_GAME_READY signal to the opponent and shows a waiting overlay. If the
+     * opponent already sent their ready signal, both sides start immediately.
+     */
+    private void onPreGameReady() {
+        if (!isNetworkedMatch || matchSession == null) return;
+
+        if (isHost) {
+            hostReady = true;
+            plantSelectModal.setWaiting(true);
+        } else {
+            guestReady = true;
+            zombieSelectModal.setWaiting(true);
+        }
+
+        String inner = gson.toJson(new GameSyncEnvelope(GameSyncEnvelope.Kind.PRE_GAME_READY, null));
+        NetworkClient.getInstance().sendMatchMessage(matchSession.getMatchId(), inner);
+
+        // If the opponent was already waiting, start the game now
+        if (hostReady && guestReady) {
+            startGameSession();
         }
     }
 
@@ -1378,6 +1442,18 @@ public class GameController {
         return plantSelectModal;
     }
 
+    public ZombieSelectModal getZombieSelectModal() {
+        return zombieSelectModal;
+    }
+
+    public boolean isNetworkedMatch() {
+        return isNetworkedMatch;
+    }
+
+    public boolean isHost() {
+        return isHost;
+    }
+
     public GameUiModal getGameUiModal() {
         return gameUiModal;
     }
@@ -1458,6 +1534,15 @@ public class GameController {
         } else if (envelope.kind == GameSyncEnvelope.Kind.ACTION && isHost) {
             GameAction action = gson.fromJson(envelope.data, GameAction.class);
             applyRemoteAction(action);
+        } else if (envelope.kind == GameSyncEnvelope.Kind.PRE_GAME_READY) {
+            if (isHost) {
+                guestReady = true;
+            } else {
+                hostReady = true;
+            }
+            if (hostReady && guestReady) {
+                startGameSession();
+            }
         }
     }
 
