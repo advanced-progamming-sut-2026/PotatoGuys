@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment=".">
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="bug fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/server/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/server/ClientHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ProfileEditMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/ProfileEditMenu.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,11 +147,11 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\zombies" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\audio\music" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\shop" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse\plants" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\backgrounds" />
-      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\ui" />
     </key>
   </component>
   <component name="RunManager" selected="Gradle.plantsvszombies2 [:lwjgl3:run]">
@@ -678,11 +676,65 @@
       <option name="project" value="LOCAL" />
       <updated>1788257827461</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="bug fix">
+      <option name="closed" value="true" />
+      <created>1788258681432</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1788258681432</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="780dd6f3-de06-42eb-ae7e-6d5257fe87de" value="TOOL_WINDOW" />
+        <entry key="4f79730a-932b-4ccb-ad0c-cfca3ae112e7" value="TOOL_WINDOW" />
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="4f79730a-932b-4ccb-ad0c-cfca3ae112e7">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="range">
+                    <value>
+                      <list>
+                        <option value="8cb74cc05d26092ec11a8fe3351eda5525fa7f44..3d2e9716a8184c71f16d3b5129bd9a0f8a4b93ba" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+        <entry key="780dd6f3-de06-42eb-ae7e-6d5257fe87de">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="range">
+                    <value>
+                      <list>
+                        <option value="8cb74cc05d26092ec11a8fe3351eda5525fa7f44..3d2e9716a8184c71f16d3b5129bd9a0f8a4b93ba" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="conflict" />
@@ -707,10 +759,10 @@
     <MESSAGE value="wired chapter music volume to music slider in pause menu" />
     <MESSAGE value="Game speed changing now works" />
     <MESSAGE value="Game difficulty implementing completed" />
-    <MESSAGE value="bug fix" />
     <MESSAGE value="..." />
     <MESSAGE value="." />
-    <option name="LAST_COMMIT_MESSAGE" value="." />
+    <MESSAGE value="bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="bug fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

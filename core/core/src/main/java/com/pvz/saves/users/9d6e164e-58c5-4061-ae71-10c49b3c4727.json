@@ -113,8 +113,17 @@
         }
       ],
       "unlockedZombies": [
+        "BASIC",
+        "CONEHEAD",
+        "BUCKETHEAD",
+        "BRICKHEAD",
+        "FLAG",
+        "IMP",
         "GARGANTUAR",
         "NEWSPAPER",
+        "POLE_VAULTING",
+        "FOOTBALL",
+        "DANCING",
         "MUMMY",
         "MUMMY_CONE",
         "MUMMY_BUCKET",
@@ -122,6 +131,7 @@
         "RA",
         "EXPLORER",
         "TOMB_RAISER",
+        "EGYPT_GARG",
         "EGYPT_IMP",
         "ICE_AGE",
         "ICE_AGE_CONE",
@@ -129,6 +139,7 @@
         "HUNTER",
         "TROGLOBITE",
         "DODO",
+        "ICE_AGE_GARG",
         "ICE_AGE_IMP",
         "BEACH",
         "BEACH_CONE",
@@ -136,29 +147,28 @@
         "SNORKEL",
         "FISHERMAN",
         "OCTOPUS",
-        "BASIC",
-        "KNIGHT",
-        "CONEHEAD",
-        "DARK_IMP",
+        "BEACH_GARG",
         "BEACH_IMP",
         "DARK",
         "DARK_CONE",
         "DARK_BUCKET",
+        "KNIGHT",
         "DARK_BRICK",
         "WIZARD",
         "JUGGLER",
         "KING",
+        "DARK_GARG",
+        "DARK_IMP",
+        "ALLSTAR",
+        "ARCADE",
+        "UMBRELLA",
+        "CRYSTAL_SKULL",
+        "PROSPECTOR",
+        "PIANO",
         "ZOMBOSS_EGYPT",
         "ZOMBOSS_PIRATE",
         "ZOMBOSS_COWBOY",
-        "ZOMBOSS_DARK",
-        "BUCKETHEAD",
-        "EGYPT_GARG",
-        "BRICKHEAD",
-        "FLAG",
-        "ICE_AGE_GARG",
-        "BEACH_GARG",
-        "DARK_GARG"
+        "ZOMBOSS_DARK"
       ],
       "seedPackets": {
         "Peashooter": 60,
@@ -439,7 +449,7 @@
     "sfxVolume": 0.5,
     "musicMuted": true,
     "sfxMuted": false,
-    "fullscreen": false
+    "fullscreen": true
   },
   "score": {
     "lastSeason": 0,
@@ -455,13 +465,23 @@
         "x": 1,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "unlocked",
+          "plantType": "CherryBomb",
+          "plantedTime": "2026-09-01T14:04:56.947385800",
+          "growthHours": 8
+        }
       },
       {
         "x": 2,
         "y": 1,
         "locked": false,
-        "greenHousePlant": null
+        "greenHousePlant": {
+          "kind": "mariGold",
+          "plantType": null,
+          "plantedTime": "2026-09-01T14:04:54.536034100",
+          "growthHours": 2
+        }
       },
       {
         "x": 3,
