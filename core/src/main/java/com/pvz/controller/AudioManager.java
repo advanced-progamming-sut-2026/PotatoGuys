@@ -23,6 +23,9 @@ public class AudioManager {
     // they're decoded once and can be retriggered cheaply.
     private final Map<String, Music> sfxMusicCache = new HashMap<>();
 
+    /** UI click feedback, played on every menu button press. */
+    public static final String CLICK_SFX_PATH = "assets/audio/music/click.wav";
+
     private AudioManager() {}
 
     public static AudioManager getInstance() {
@@ -103,6 +106,11 @@ public class AudioManager {
             soundCache.put(path, sound);
         }
         sound.play(volume);
+    }
+
+    /** Plays the shared UI click sound (used by every menu button). */
+    public void playClick() {
+        playSfx(CLICK_SFX_PATH);
     }
 
     /**

@@ -122,6 +122,7 @@ public class CollectionMenu extends ScreenAdapter {
     public void show() {
         stage = new Stage(new FitViewport(1920, 1080));
         Gdx.input.setInputProcessor(stage);
+        MenuUiKit.installClickSound(stage);
         Skin skin = PvzSkin.get();
 
         // Full-screen menu background (same as Game Modes / Greenhouse), with the bordered

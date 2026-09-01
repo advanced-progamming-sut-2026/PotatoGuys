@@ -145,6 +145,7 @@ public class GreenHouseMenu extends ScreenAdapter {
         Viewport viewport = new FitViewport(1920, 1080);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
+        MenuUiKit.installClickSound(stage);
         skin = PvzSkin.get();
         // If we left the screen mid-pour, don't resume a stale animation (and its delayed plant).
         wateringX = -1;
@@ -159,6 +160,8 @@ public class GreenHouseMenu extends ScreenAdapter {
     /** Rebuilds the whole screen from the current model state — called after every plant/collect action. */
     private void rebuild() {
         stage.clear();
+        // stage.clear() wipes the root's listeners too, so the click sound must be re-installed.
+        MenuUiKit.installClickSound(stage);
         timerBindings.clear();
 
         Stack stack = new Stack();
