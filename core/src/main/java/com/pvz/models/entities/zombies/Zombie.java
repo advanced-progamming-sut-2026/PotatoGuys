@@ -213,9 +213,6 @@ public class Zombie extends Entity {
     /** Blink speed (radians per second) of the red-alert tint. */
     private static final float RED_ALERT_SPEED = 9f;
 
-    /** Blink speed (radians per second) of the green plant-food tint. */
-    private static final float PLANT_FOOD_SPEED = 9f;
-
     @Override
     public List<FrameConfig> draw() {
         List<FrameConfig> frameConfigs = new ArrayList<>();

@@ -95,13 +95,6 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
     private static final float HOUSE_ISLAND_OFFSET_X = -170f * LAYOUT_SCALE_X;
     private static final float HOUSE_ISLAND_OFFSET_Y = 70f * LAYOUT_SCALE_Y;
 
-    // Resize multipliers for the three beach island PNGs (anim12/anim13/anim17).
-    // The PNGs render at their native pixel size times this scale, so a bigger
-    // value = bigger island. Tweak each one independently.
-    private static final float BEACH_ISLAND_ANIM_12_SCALE = 0.15f;
-    private static final float BEACH_ISLAND_ANIM_13_SCALE = 0.15f;
-    private static final float BEACH_ISLAND_ANIM_17_SCALE = 0.15f;
-
     private static final Color TRAIL_COLOR = new Color(0.35f, 0.65f, 0.80f, 0.85f);
 
     private static final int PLAYABLE_LEVEL_COUNT = 3;
@@ -505,20 +498,6 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
             addActor(createAnchoredAnimation(MapObjectType.WATERFALL_ANIM, WATERFALL_TUNING, "idle",
                 centerX[0] - 40f * LAYOUT_SCALE_X, centerY[0] - 50f * LAYOUT_SCALE_Y));
 
-            float[][] largeRocks1 = { {280f, 320f}, {670f, 110f}, {930f, 280f} };
-            for (float[] coord : largeRocks1) {
-                //addActor(createAnchoredAnimation(MapObjectType.FLOATING_ROCK_BEACH_LARGE_1,
-                    //LARGE_ROCK_BEACH_TUNING, "idle",
-                    //coord[0] * LAYOUT_SCALE_X, coord[1] * LAYOUT_SCALE_Y));
-            }
-
-            float[][] largeRocks2 = { {190f, 90f}, {510f, 330f}, {820f, 130f} };
-            for (float[] coord : largeRocks2) {
-                //addActor(createAnchoredAnimation(MapObjectType.FLOATING_ROCK_BEACH_LARGE_2,
-                    //LARGE_ROCK_BEACH_TUNING, "idle",
-                    //coord[0] * LAYOUT_SCALE_X, coord[1] * LAYOUT_SCALE_Y));
-            }
-
             float[][] starCoords = {
                 {110f, 45f}, {320f, 330f}, {540f, 50f},
                 {210f, 270f}, {460f, 190f}, {650f, 35f},
@@ -565,26 +544,6 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
                 MapDecorationActor actor = new MapDecorationActor(p.type, p.width, p.height, "idle");
                 actor.setPosition(p.x * LAYOUT_SCALE_X, p.y * LAYOUT_SCALE_Y);
                 addActor(actor);
-            }
-
-            float[][] smallRocksNode1 = {
-                {centerX[0] - 65f * LAYOUT_SCALE_X, centerY[0] - 35f * LAYOUT_SCALE_Y},
-                {centerX[0] + 75f * LAYOUT_SCALE_X, centerY[0] + 40f * LAYOUT_SCALE_Y},
-                {400f * LAYOUT_SCALE_X, 160f * LAYOUT_SCALE_Y}
-            };
-            for (float[] coord : smallRocksNode1) {
-                //addActor(createAnchoredAnimation(MapObjectType.SMALL_ROCK_BEACH_1, SMALL_ROCK_BEACH_TUNING, "idle",
-                    //coord[0], coord[1]));
-            }
-
-            float[][] smallRocksNode2 = {
-                {centerX[1] - 70f * LAYOUT_SCALE_X, centerY[1] - 40f * LAYOUT_SCALE_Y},
-                {centerX[1] + 70f * LAYOUT_SCALE_X, centerY[1] + 35f * LAYOUT_SCALE_Y},
-                {zombossNodeX - 80f * LAYOUT_SCALE_X, zombossNodeY + 40f * LAYOUT_SCALE_Y}
-            };
-            for (float[] coord : smallRocksNode2) {
-                //addActor(createAnchoredAnimation(MapObjectType.SMALL_ROCK_BEACH_2, SMALL_ROCK_BEACH_TUNING, "idle",
-                    //coord[0], coord[1]));
             }
 
             //addActor(createAnchoredAnimation(MapObjectType.SMALL_ROCK_BEACH_1, SMALL_ROCK_BEACH_TUNING, "idle",

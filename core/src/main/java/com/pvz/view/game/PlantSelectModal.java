@@ -60,9 +60,6 @@ public class PlantSelectModal extends Table {
     private static final float PLANT_SLOTS_TOP_OFFSET = 75f;
     private static final float PLANT_SLOTS_CELL_TOP_PADDING = PLANT_SLOTS_TOP_OFFSET - SCREEN_PADDING;
 
-    private final Level level;
-    private final Runnable onStartCallback;
-
     private final List<PlantType> selectedPlants = new ArrayList<>();
     private final Map<PlantType, PlantCard> gridCardsByType = new HashMap<>();
     private final Map<PlantType, PlantData> dataByType = new HashMap<>();
@@ -73,9 +70,6 @@ public class PlantSelectModal extends Table {
     private Label previewMessageLabel;
 
     public PlantSelectModal(Level level, Runnable onStartCallback) {
-        this.level = level;
-        this.onStartCallback = onStartCallback;
-
         setFillParent(true);
         setVisible(false);
         pad(SCREEN_PADDING);

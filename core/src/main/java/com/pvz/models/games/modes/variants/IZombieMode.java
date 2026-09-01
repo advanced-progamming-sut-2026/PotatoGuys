@@ -53,7 +53,6 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
     private int laneCount = 5;
     private int redLineColumn = 6;
 
-    private int ticksElapsed = 0;
     private boolean sunProducersSpawned = false;
     private boolean guestSunProducersSpawned = false;
     private final java.util.Map<Zombie, Float> brainEatTimers = new java.util.IdentityHashMap<>();
@@ -326,8 +325,6 @@ public class IZombieMode implements GameMode, ZombiePlacer, PlantPlacer {
 
     @Override
     public void updateMode(GameContext context, float dt) {
-        ticksElapsed++;
-
         if (!sunProducersSpawned) {
             sunProducersSpawned = true;
             int lastCol = context.getMap().getColumns() - 1;

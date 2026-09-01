@@ -132,7 +132,6 @@ public class WasabiWhipAction extends PlantAction {
                 if (!attacked && phaseTimer > 0.1f) {
                     int plantCol = plant.getCol();
                     int plantLane = plant.getLane();
-                    float range = config.attackRangeFactor * GameMap.TILE_WIDTH;
                     int radius = config.pfRadius;
 
                     for (int lane = plantLane - radius; lane <= plantLane + radius; lane++) {

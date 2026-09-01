@@ -179,7 +179,6 @@ public class KiwiBeastAction extends PlantAction {
     }
 
     private void updateFeed(Plant plant, GameContext ctx, float dt) {
-        PamAnimationConfig pam = plant.getSheet().pamAnimationConfig;
         phaseTimer += dt;
 
         switch (phase) {

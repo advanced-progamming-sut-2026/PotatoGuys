@@ -58,8 +58,6 @@ public class StickerUi extends Table {
     };
     private static final String[] PAM_CLIPS = { "eat", "walk", "jam_idle" };
     private static final float[] PAM_SCALES = { 1f, 1f, 1f };
-
-    private final Skin skin;
     private final Consumer<StickerMessage> onStickerSend;
     private final Runnable onRaise;
     private final List<Texture> ownedTextures = new java.util.ArrayList<>();
@@ -69,7 +67,6 @@ public class StickerUi extends Table {
     public StickerUi(Consumer<StickerMessage> onStickerSend, Runnable onRaise) {
         this.onStickerSend = onStickerSend;
         this.onRaise = onRaise;
-        this.skin = PvzSkin.get();
 
         toggleTexture = loadToggleTexture();
 

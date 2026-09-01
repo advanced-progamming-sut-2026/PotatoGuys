@@ -255,7 +255,6 @@ public class RegisterMenu extends ScreenAdapter {
         String passwordConfirm = confirmPasswordField.getText().trim();
         String nickname = nicknameField.getText().trim();
         String email = emailField.getText().trim();
-        int genderIndex = genderSelect.getSelectedIndex();
         int questionIndex = questionSelect.getSelectedIndex();
         String answer = answerField.getText().trim();
         String confirmAnswer = confirmAnswerField.getText().trim();

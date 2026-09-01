@@ -8,12 +8,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.pvz.PvZ2;
 import com.pvz.controller.game.State.Playing;
 import com.pvz.models.engine.FrameConfig;
-import com.pvz.models.entities.Entity;
-import com.pvz.models.entities.Hitbox;
 import com.pvz.models.entities.LawnMower;
 import com.pvz.models.entities.effects.Effect;
 import com.pvz.models.entities.effects.LootDrop;
@@ -649,37 +646,6 @@ public class GameRenderer {
             controller.getShapeRenderer().setColor(Color.YELLOW);
             controller.getShapeRenderer().end();
         }
-    }
-
-    // ── Hitbox debug ─────────────────────────────────────────────────────────
-
-    private void drawHitboxes() {
-        if (!showHitboxes || !com.pvz.utils.DebugMode.isEnabled())
-            return;
-
-        drawEntityHitboxes(Color.GREEN, ctx.getPlants());
-        drawEntityHitboxes(Color.RED, ctx.getZombies());
-        drawEntityHitboxes(Color.CYAN, ctx.getProjectiles());
-        drawEntityHitboxes(Color.YELLOW, ctx.getSuns());
-        for (LawnMower m : ctx.getLawnMowers()) {
-            if (m != null)
-                drawEntityHitbox(Color.ORANGE, m);
-        }
-    }
-
-    private void drawEntityHitboxes(Color color, List<? extends Entity> entities) {
-        for (Entity e : entities) {
-            drawEntityHitbox(color, e);
-        }
-    }
-
-    private void drawEntityHitbox(Color color, Entity e) {
-        Hitbox hitbox = e.getHitbox();
-        if (hitbox == null)
-            return;
-        Rectangle r = hitbox.getRectangle();
-        controller.getShapeRenderer().setColor(color);
-        controller.getShapeRenderer().rect(r.x, r.y, r.width, r.height);
     }
 
     private void drawFrames(List<FrameConfig> frameConfigs) {

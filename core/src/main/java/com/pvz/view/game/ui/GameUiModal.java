@@ -67,7 +67,6 @@ public class GameUiModal extends Table {
     private static final float FLAG_POLE_WIDTH = 8f;
     private static final float FLAG_POLE_HEIGHT = 46f;
     private static final float FLAG_DOWN_Y = 28f;
-    private static final float FLAG_UP_Y = 55f;
     private static final float FLAG_X_OFFSET = 22f;
 
     private static final float OBJ_BAR_WIDTH = 220f;
@@ -714,7 +713,6 @@ public class GameUiModal extends Table {
 
     protected Table buildZombieSlot(ZombieCard zc) {
         Skin skin = PvzSkin.get();
-        Drawable fallback = skin.newDrawable("white_pixel", new Color(0.35f, 0.15f, 0.15f, 1f));
 
         Table slot = new Table();
         com.badlogic.gdx.graphics.g2d.TextureRegion bgRegion = PvZ2.textureBank

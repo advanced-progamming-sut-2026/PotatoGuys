@@ -302,7 +302,6 @@ public final class MenuUiKit {
 
         if (locked && showLock) {
             Table lockTable = new Table();
-            float size = Math.min(cardW * 0.5f, Math.min(LOCK_BADGE_WIDTH, LOCK_BADGE_HEIGHT));
             lockTable.add(new Image(loadTextureSafe("textures/greenhouse/goldlock_icon.png")))
                 .size(LOCK_BADGE_WIDTH, LOCK_BADGE_HEIGHT);
             stack.add(lockTable);
