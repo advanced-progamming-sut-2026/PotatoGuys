@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment=".">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-    </list>
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="some fixes to chapters" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -107,43 +105,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Lwjgl3Launcher.executor": "Run",
-    "Gradle.Build plantsvszombies2.executor": "Run",
-    "Gradle.Build pvz2.executor": "Run",
-    "Gradle.Download Sources.executor": "Run",
-    "Gradle.plantsvszombies2 [:core:com.pvz.ProjectMerger.main()].executor": "Run",
-    "Gradle.plantsvszombies2 [:lwjgl3:run].executor": "Run",
-    "Gradle.plantsvszombies2.executor": "Run",
-    "Gradle.pvz2 [:core:com.pvz.ProjectMerger.main()].executor": "Run",
-    "Gradle.pvz2 [:core:com.pvz.server.PvzServer.main()].executor": "Run",
-    "Gradle.pvz2 [:lwjgl3:com.pvz.lwjgl3.Lwjgl3Launcher.main()].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/104/IdeaProjects/plantsvszombies2/assets/audio/music",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.build.tools.auto.reload": "SELECTIVE",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "to.speed.mode.migration.done": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Lwjgl3Launcher.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build plantsvszombies2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build pvz2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.plantsvszombies2 [:core:com.pvz.ProjectMerger.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.plantsvszombies2 [:lwjgl3:run].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.plantsvszombies2.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.pvz2 [:core:com.pvz.ProjectMerger.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.pvz2 [:core:com.pvz.server.PvzServer.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.pvz2 [:lwjgl3:com.pvz.lwjgl3.Lwjgl3Launcher.main()].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/104/IdeaProjects/plantsvszombies2/assets/audio/music&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.build.tools.auto.reload&quot;: &quot;SELECTIVE&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\audio\music" />
@@ -290,30 +288,6 @@
       <workItem from="1786945016250" duration="3889000" />
       <workItem from="1786959755105" duration="5011000" />
       <workItem from="1787219129016" duration="489000" />
-    </task>
-    <task id="LOCAL-00005" summary="updated chapter selection menu and game mode menu appearance">
-      <option name="closed" value="true" />
-      <created>1786200686143</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1786200686143</updated>
-    </task>
-    <task id="LOCAL-00006" summary="added Greenhouse (need some fixes)">
-      <option name="closed" value="true" />
-      <created>1786311987562</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1786311987562</updated>
-    </task>
-    <task id="LOCAL-00007" summary="bug fixes">
-      <option name="closed" value="true" />
-      <created>1786312034907</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1786312034907</updated>
     </task>
     <task id="LOCAL-00008" summary="added ancient egypt menu screen">
       <option name="closed" value="true" />
@@ -683,7 +657,31 @@
       <option name="project" value="LOCAL" />
       <updated>1788275265689</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="nothing">
+      <option name="closed" value="true" />
+      <created>1788275577362</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1788275577362</updated>
+    </task>
+    <task id="LOCAL-00055" summary="nothing(2)">
+      <option name="closed" value="true" />
+      <created>1788275726637</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1788275726637</updated>
+    </task>
+    <task id="LOCAL-00056" summary="some fixes to chapters">
+      <option name="closed" value="true" />
+      <created>1788290308768</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1788290308768</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -736,9 +734,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added plants idle animation before planting" />
-    <MESSAGE value="rows and cols white highlighting added" />
-    <MESSAGE value="sun and plant food amount in game updated and wired to debug mode" />
     <MESSAGE value="added coins and gems cheat and wired it to debug mode" />
     <MESSAGE value="leaderboard delay fixed" />
     <MESSAGE value="added zombies description in collectin" />
@@ -761,7 +756,10 @@
     <MESSAGE value="added README.md" />
     <MESSAGE value="updated readme" />
     <MESSAGE value="." />
-    <option name="LAST_COMMIT_MESSAGE" value="." />
+    <MESSAGE value="nothing" />
+    <MESSAGE value="nothing(2)" />
+    <MESSAGE value="some fixes to chapters" />
+    <option name="LAST_COMMIT_MESSAGE" value="some fixes to chapters" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
