@@ -11,7 +11,7 @@ import com.badlogic.gdx.assets.AssetManager;
 public class RotatingBackground {
 
     private static final float HOLD_TIME = 0f;
-    private static final float FADE_TIME = 6f;
+    private static final float FADE_TIME = 1.4f;
     private static final String[] BG_PATHS = {
         "textures/backgrounds/bg1.png",
         "textures/backgrounds/bg2.png",

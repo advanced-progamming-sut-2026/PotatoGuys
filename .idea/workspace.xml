@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="Game difficulty implementing completed">
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="bug fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/core/src/main/java/com/pvz/saves/users/9d6e164e-58c5-4061-ae71-10c49b3c4727.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/CollectionMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/CollectionMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/AudioManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/AudioManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/State/ObjectiveScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/State/ObjectiveScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/BigWaveBeachChapterMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/BigWaveBeachChapterMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/RotatingBackground.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/RotatingBackground.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +131,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/104/IdeaProjects/plantsvszombies2/assets/textures/shop&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/104/IdeaProjects/plantsvszombies2/assets/audio/music&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -145,11 +148,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\audio\music" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\shop" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\greenhouse\plants" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\backgrounds" />
       <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\ui" />
-      <recent name="C:\Users\104\IdeaProjects\plantsvszombies2\assets\textures\backgrounds\IZOMBIE" />
     </key>
   </component>
   <component name="RunManager" selected="Gradle.plantsvszombies2 [:lwjgl3:run]">
@@ -650,14 +653,21 @@
       <option name="project" value="LOCAL" />
       <updated>1788193581360</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="bug fix">
+      <option name="closed" value="true" />
+      <created>1788194809056</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1788194809056</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added shop" />
     <MESSAGE value="updated PlantSelectModal &#10;and also plant choosing during the game" />
     <MESSAGE value="conflict" />
     <MESSAGE value="added zombies collection tab" />
@@ -682,7 +692,8 @@
     <MESSAGE value="wired chapter music volume to music slider in pause menu" />
     <MESSAGE value="Game speed changing now works" />
     <MESSAGE value="Game difficulty implementing completed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Game difficulty implementing completed" />
+    <MESSAGE value="bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="bug fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

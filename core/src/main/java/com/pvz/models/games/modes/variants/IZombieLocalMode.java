@@ -18,6 +18,7 @@ import com.pvz.models.entities.sun.SunType;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.ZombieType;
+import com.pvz.models.entities.zombies.fsm.VisualEatState;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.Card;
 import com.pvz.models.games.card.PlantCard;
@@ -268,6 +269,7 @@ public class IZombieLocalMode implements GameMode, ZombiePlacer, PlantPlacer {
                     if (!brainsEaten[lane]) {
                         if (!brainEatTimers.containsKey(z)) {
                             brainEatTimers.put(z, BRAIN_EAT_DURATION);
+                            z.changeState(new VisualEatState());
                         }
                         z.setX(brainX);
                         float remaining = brainEatTimers.get(z) - dt;
