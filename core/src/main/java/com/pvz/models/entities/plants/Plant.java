@@ -11,6 +11,7 @@ import com.pvz.models.engine.FrameConfig;
 import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.effects.PlantFoodFxEffect;
 import com.pvz.models.entities.plants.actions.PlantAction;
+import com.pvz.models.entities.plants.actions.SunBeanAction;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.plants.data.GrowthProfile;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
@@ -208,6 +209,11 @@ public class Plant extends Entity {
     public void takeDamage(float amount, DamageKind kind) {
         if (dead || amount <= 0f)
             return;
+
+        // Sun Bean: every zombie bite drops one sun onto the plant's own tile.
+        if (attackAction instanceof SunBeanAction sunBean) {
+            sunBean.spawnHitSun(this, context);
+        }
 
         if (isFrozen) {
             boolean isFire = (kind == DamageKind.FIRE);

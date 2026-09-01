@@ -322,20 +322,27 @@ public class ClientHandler implements Runnable {
                 usernames = new HashMap<>();
             }
 
-            if (req.newUsername != null && !req.newUsername.isEmpty()
-                    && !req.newUsername.equals(req.oldUsername)) {
-                if (usernames.containsKey(req.newUsername)) {
-                    return NetworkMessage.error(request, "Username is already taken!");
-                }
-                usernames.remove(req.oldUsername);
-                usernames.put(req.newUsername, req.userId);
-                SaveManager.getInstance().save(usernames, "users/username.json");
-            }
-
             User user = SaveManager.getInstance().load("users/" + req.userId + ".json", User.class);
             if (user == null) {
                 return NetworkMessage.error(request, "User not found.");
             }
+
+            if (req.newUsername != null && !req.newUsername.isEmpty()
+                    && !req.newUsername.equals(user.getUsername())) {
+                // The new name must not belong to a *different* account.
+                String existingId = usernames.get(req.newUsername);
+                if (existingId != null && !existingId.equals(req.userId)) {
+                    return NetworkMessage.error(request, "Username is already taken!");
+                }
+                // Remove EVERY mapping that points at this user id (old username —
+                // possibly stale/mismatched from the client), then record the new name.
+                // Keyed by userId, not by the client-supplied oldUsername, so a rename
+                // can never leave the old key behind in username.json.
+                usernames.entrySet().removeIf(e -> e.getValue().equals(req.userId));
+                usernames.put(req.newUsername, req.userId);
+                SaveManager.getInstance().save(usernames, "users/username.json");
+            }
+
             if (req.newUsername != null) user.setUsername(req.newUsername);
             if (req.newNickname != null) user.setNickName(req.newNickname);
             if (req.newEmail != null) user.setEmail(req.newEmail);

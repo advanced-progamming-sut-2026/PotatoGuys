@@ -8,7 +8,6 @@ import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.config.AnimationCatalog;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.plants.config.explosive.TangleKelpConfig;
-import com.pvz.models.entities.plants.fsm.PlantIdleState;
 import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.fsm.UnderwaterDragState;
 import com.pvz.models.games.GameContext;
@@ -21,7 +20,7 @@ import com.pvz.models.games.GameContext;
  */
 public class TangleKelpAction extends PlantAction {
 
-    private enum Phase { SUBMERGE, ATTACK, EMERGE, END }
+    private enum Phase { SUBMERGE, ATTACK }
 
     private final TangleKelpConfig config;
     private Phase phase;
@@ -29,7 +28,6 @@ public class TangleKelpAction extends PlantAction {
     private float phaseTimer;
     private float submergeDuration;
     private float attackDuration;
-    private float emergeDuration;
     private boolean grabbed;
 
     public TangleKelpAction(TangleKelpConfig config) {
@@ -64,11 +62,9 @@ public class TangleKelpAction extends PlantAction {
         String pamPath = pam.pamFilePath;
         submergeDuration = AnimationCatalog.getInstance().getClipDuration(pamPath, config.submergeClip);
         attackDuration = AnimationCatalog.getInstance().getClipDuration(pamPath, config.attackClip);
-        emergeDuration = AnimationCatalog.getInstance().getClipDuration(pamPath, config.emergeClip);
 
         if (submergeDuration <= 0) submergeDuration = config.submergeDuration;
         if (attackDuration <= 0) attackDuration = config.attackDuration;
-        if (emergeDuration <= 0) emergeDuration = config.emergeDuration;
     }
 
     @Override
@@ -91,22 +87,10 @@ public class TangleKelpAction extends PlantAction {
                     // Stun/drag the zombie: pull it underwater and fade it out.
                     target.setState(new UnderwaterDragState(config.fadeDuration, config.sinkDepth));
                     target = null;
+                    // Tangle Kelp is single-use: it disappears once it has pulled
+                    // the zombie down, so the emerge animation never plays.
+                    plant.dispose();
                 }
-                if (phaseTimer >= attackDuration) {
-                    phase = Phase.EMERGE;
-                    phaseTimer = 0;
-                }
-                break;
-
-            case EMERGE:
-                if (phaseTimer >= emergeDuration) {
-                    phase = Phase.END;
-                    phaseTimer = 0;
-                }
-                break;
-
-            case END:
-                plant.changeState(new PlantIdleState());
                 break;
         }
     }
@@ -132,9 +116,6 @@ public class TangleKelpAction extends PlantAction {
         switch (phase) {
             case ATTACK:
                 clip = config.attackClip;
-                break;
-            case EMERGE:
-                clip = config.emergeClip;
                 break;
             case SUBMERGE:
             default:

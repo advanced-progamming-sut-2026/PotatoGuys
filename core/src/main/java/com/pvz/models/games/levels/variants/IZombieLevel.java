@@ -41,7 +41,7 @@ public class IZombieLevel extends Level {
 
     @Override
     public boolean hasPreGame() {
-        return false;
+        return true;
     }
 
 }

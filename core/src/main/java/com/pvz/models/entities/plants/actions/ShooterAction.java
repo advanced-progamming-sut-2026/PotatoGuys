@@ -40,7 +40,7 @@ public class ShooterAction extends PlantAction {
         }
 
         boolean laneHasZombie= ctx.getZombiesInLane(plant.getLane()).stream()
-            .anyMatch(zombie -> zombie.getX() >= plant.getCol());
+            .anyMatch(zombie -> zombie.getX() >= GameController.colToWorldX(plant.getCol()));
 
         boolean laneHasGraveOrIce=false;
         for (int i = plant.getCol(); i < ctx.getMap().getColumns(); i++) {
