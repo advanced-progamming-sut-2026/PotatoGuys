@@ -1,5 +1,5 @@
 {
-  "gameType": "PLANTWHATYOUGET",
+  "gameType": "SAVEOURSEEDS",
   "musicPath": "assets/audio/music/big_wave_beach/Laura Shigihara - Ultimate Battle (In-Game).mp3",
   "levelNumber": 1,
   "levelType": "SPECIAL",
@@ -34,6 +34,108 @@
           "WATER",
           "LOW_TIDE"
         ]
+      },
+      {
+        "x": 1,
+        "y": 0,
+        "behaviors": [
+          {
+            "type": "ENDANGERED_TILE",
+            "hp": 0,
+            "name": "ProtectTile"
+          }
+        ],
+        "tags": [
+          "ENDANGERED_TILE"
+        ]
+      },
+      {
+        "x": 1,
+        "y": 1,
+        "behaviors": [
+          {
+            "type": "ENDANGERED_TILE",
+            "hp": 0,
+            "name": "ProtectTile"
+          }
+        ],
+        "tags": [
+          "ENDANGERED_TILE"
+        ]
+      },
+      {
+        "x": 1,
+        "y": 2,
+        "behaviors": [
+          {
+            "type": "ENDANGERED_TILE",
+            "hp": 0,
+            "name": "ProtectTile"
+          }
+        ],
+        "tags": [
+          "ENDANGERED_TILE"
+        ]
+      },
+      {
+        "x": 1,
+        "y": 3,
+        "behaviors": [
+          {
+            "type": "ENDANGERED_TILE",
+            "hp": 0,
+            "name": "ProtectTile"
+          }
+        ],
+        "tags": [
+          "ENDANGERED_TILE"
+        ]
+      },
+      {
+        "x": 1,
+        "y": 4,
+        "behaviors": [
+          {
+            "type": "ENDANGERED_TILE",
+            "hp": 0,
+            "name": "ProtectTile"
+          }
+        ],
+        "tags": [
+          "ENDANGERED_TILE"
+        ]
+      }
+    ],
+    "prePlantedPlants": [
+      {
+        "type": "Sunflower",
+        "col": 1,
+        "lane": 0,
+        "endangered": true
+      },
+      {
+        "type": "Sunflower",
+        "col": 1,
+        "lane": 1,
+        "endangered": true
+      },
+      {
+        "type": "Sunflower",
+        "col": 1,
+        "lane": 2,
+        "endangered": true
+      },
+      {
+        "type": "Sunflower",
+        "col": 1,
+        "lane": 3,
+        "endangered": true
+      },
+      {
+        "type": "Sunflower",
+        "col": 1,
+        "lane": 4,
+        "endangered": true
       }
     ]
   },
@@ -41,13 +143,13 @@
     {
       "waveNumber": 1,
       "isFinalWave": false,
-      "baseTotalWaveCost": 250,
+      "baseTotalWaveCost": 200,
       "lanes": 5,
-      "difficulty": 3,
+      "difficulty": 2,
       "phases": [
         {
           "zombieCount": 3,
-          "intervalTicks": 100,
+          "intervalSeconds": 8.0,
           "allowedTypes": [
             "BASIC",
             "SNORKEL"
@@ -56,7 +158,7 @@
         },
         {
           "zombieCount": 2,
-          "intervalTicks": 70,
+          "intervalSeconds": 6.0,
           "allowedTypes": [
             "CONEHEAD"
           ],
@@ -67,25 +169,26 @@
     {
       "waveNumber": 2,
       "isFinalWave": false,
-      "baseTotalWaveCost": 600,
+      "baseTotalWaveCost": 500,
       "lanes": 5,
-      "difficulty": 6,
+      "difficulty": 4,
       "phases": [
         {
           "zombieCount": 4,
-          "intervalTicks": 60,
+          "intervalSeconds": 6.0,
           "allowedTypes": [
             "CONEHEAD",
             "NEWSPAPER",
-            "OCTOPUS"
+            "SNORKEL"
           ],
           "isBurst": false
         },
         {
           "zombieCount": 3,
-          "intervalTicks": 40,
+          "intervalSeconds": 5.0,
           "allowedTypes": [
-            "BUCKETHEAD"
+            "BUCKETHEAD",
+            "OCTOPUS"
           ],
           "isBurst": true
         }
@@ -94,13 +197,13 @@
     {
       "waveNumber": 3,
       "isFinalWave": true,
-      "baseTotalWaveCost": 1600,
+      "baseTotalWaveCost": 1200,
       "lanes": 5,
-      "difficulty": 12,
+      "difficulty": 8,
       "phases": [
         {
-          "zombieCount": 4,
-          "intervalTicks": 50,
+          "zombieCount": 5,
+          "intervalSeconds": 5.0,
           "allowedTypes": [
             "BUCKETHEAD",
             "BRICKHEAD",
@@ -109,16 +212,16 @@
           "isBurst": false
         },
         {
-          "zombieCount": 1,
-          "intervalTicks": 120,
+          "zombieCount": 2,
+          "intervalSeconds": 10.0,
           "allowedTypes": [
             "GARGANTUAR"
           ],
           "isBurst": false
         },
         {
-          "zombieCount": 6,
-          "intervalTicks": 20,
+          "zombieCount": 4,
+          "intervalSeconds": 3.0,
           "allowedTypes": [
             "IMP",
             "FLAG"

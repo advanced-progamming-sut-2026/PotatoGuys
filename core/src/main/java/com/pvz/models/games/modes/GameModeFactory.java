@@ -6,7 +6,7 @@ import com.pvz.models.games.modes.variants.DeadLineMode;
 import com.pvz.models.games.modes.variants.IZombieMode;
 import com.pvz.models.games.modes.variants.IZombieLocalMode;
 import com.pvz.models.games.modes.variants.NormalMode;
-import com.pvz.models.games.modes.variants.PlantWhatYouGetMode;
+import com.pvz.models.games.modes.variants.SaveOurSeedsMode;
 import com.pvz.models.games.modes.variants.TimedWarMode;
 import com.pvz.models.games.modes.variants.VaseBreakerMode;
 import com.pvz.models.games.modes.variants.WallnutBowlingMode;
@@ -24,8 +24,8 @@ public class GameModeFactory {
                 return new IZombieMode(level);
             case SPLIT_IZOMBIE:
                 return new IZombieLocalMode(level);
-            case PLANTWHATYOUGET:
-                return new PlantWhatYouGetMode(level);
+            case SAVEOURSEEDS:
+                return new SaveOurSeedsMode(level);
             case DEADLINE:
                 return new DeadLineMode(level);
             case VASEBREAKER:

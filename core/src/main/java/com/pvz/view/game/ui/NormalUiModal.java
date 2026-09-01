@@ -10,7 +10,7 @@ import com.pvz.models.games.card.ZombieCard;
 /**
  * In-game HUD for the standard seed-packet tray, used by {@code NormalMode}
  * (and the other modes that hand the player a fixed deck: TimedWar, VaseBreaker,
- * DeadLine, PlantWhatYouGet, Beghouled, WallnutBowling).
+ * DeadLine, SaveOurSeeds, Beghouled, WallnutBowling).
  *
  * <p>
  * Everything the base {@link GameUiModal} shares with every mode stays there

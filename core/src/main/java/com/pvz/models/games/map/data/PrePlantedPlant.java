@@ -6,4 +6,5 @@ public class PrePlantedPlant {
     public PlantType type;
     public int col;
     public int lane;
+    public boolean endangered;
 }

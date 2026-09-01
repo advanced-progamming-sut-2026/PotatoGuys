@@ -3,6 +3,7 @@ package com.pvz.models.games.map;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.games.map.behaviors.GraveBehavior;
 import com.pvz.models.games.map.behaviors.IceBlockBehavior;
+import com.pvz.models.games.map.behaviors.ProtectTileBehavior;
 import com.pvz.models.games.map.behaviors.SlipperyBehavior;
 import com.pvz.models.games.map.behaviors.WaterBehavior;
 import com.pvz.models.games.map.data.BehaviorDefinition;
@@ -41,6 +42,10 @@ public class GameMapFactory {
                                 }
                             }
                             case LOW_TIDE -> {
+                            }
+                            case ENDANGERED_TILE -> {
+                                tile.addBehavior(new ProtectTileBehavior());
+                                tile.getTags().add(TileTags.ENDANGERED_TILE);
                             }
                         }
                     }
