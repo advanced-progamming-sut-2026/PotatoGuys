@@ -12,7 +12,6 @@ import com.pvz.models.entities.zombies.ZombieFactory;
 import com.pvz.models.entities.zombies.ZombieType;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.levels.Wave;
-import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.behaviors.TileBehavior;
 import com.pvz.models.games.map.behaviors.WaterBehavior;
 import com.pvz.models.games.map.tile.Tile;
@@ -44,7 +43,8 @@ public class BigWaveBeachEffect implements ChapterEffect {
 
     @Override
     public void first(GameContext ctx) {
-        water = new Water(ctx, new Vector2(1000, 900));
+        ctx.log("water col in the first frame: " + currentWaterCol);
+        water = new Water(ctx, new Vector2(GameController.colToWorldX(currentWaterCol) + 280, 900));
         ctx.addEffect(water);
     }
 
@@ -55,14 +55,13 @@ public class BigWaveBeachEffect implements ChapterEffect {
 
         // Randomly shift water level between maxWaterCol and minWaterCol
         int span = Math.abs(minWaterCol - maxWaterCol) + 1;
-        int lastCol = currentWaterCol;
         currentWaterCol = Math.min(minWaterCol, maxWaterCol) + rand.nextInt(span);
         ctx.log("[BigWaveBeach] Water tide shifts! Water level rises to column " + currentWaterCol);
 
         // updating water underlayer
         if (water != null) {
-            float distance = (currentWaterCol - lastCol) * GameMap.TILE_WIDTH;
-            Vector2 pos = new Vector2(water.getPos().x + distance, water.getPos().y);
+            float x = GameController.colToWorldX(currentWaterCol) + 280;
+            Vector2 pos = new Vector2(x, water.getPos().y);
             water.setPos(pos);
         }
 
