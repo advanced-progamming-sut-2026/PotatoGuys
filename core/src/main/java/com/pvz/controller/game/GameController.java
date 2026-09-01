@@ -378,7 +378,10 @@ public class GameController {
 
         level = LevelLoader.loadLevel(seasonName, levelNumber);
 
-        plantSelectModal = new PlantSelectModal(level, this::startGameSession);
+        // For the online IZombie host, the plant select's LET'S ROCK must route
+        // through the pre-game readiness handshake (send PRE_GAME_READY + wait for
+        // the guest) instead of starting the session immediately.
+        plantSelectModal = new PlantSelectModal(level, hostIZombieOnline() ? this::onPreGameReady : this::startGameSession);
         stage.addActor(plantSelectModal);
 
         zombieSelectModal = new ZombieSelectModal(level, this::onPreGameReady);
@@ -487,7 +490,28 @@ public class GameController {
 
         renderer = new GameRenderer(ctx, this, batch, backgroundTextures);
         createDisplayZombies();
+
+        // For an online match, wire up the match-message + disconnect handlers now
+        // (during the pre-game selection phase) so the PRE_GAME_READY handshake
+        // works — they can't wait until startGameSession(), because both players
+        // need to receive the other's READY message before the session starts.
+        registerNetworkHandlers();
+
         state.enter();
+    }
+
+    /**
+     * Registers the online-match message and disconnect handlers. Called from the
+     * constructor so the pre-game readiness exchange is received; also re-called
+     * from startGameSession() as a safety net (registration is idempotent).
+     */
+    private void registerNetworkHandlers() {
+        if (!isNetworkedMatch)
+            return;
+        NetworkClient.getInstance().onMatchMessage(this::handleMatchMessage);
+        NetworkClient.getInstance().setPushListener(MessageType.OPPONENT_DISCONNECTED,
+                msg -> handleDisconnect());
+        NetworkClient.getInstance().setDisconnectListener(() -> handleDisconnect());
     }
 
     public void changeState(State state) {
@@ -1154,8 +1178,9 @@ public class GameController {
 
                 // For online IZombie, override the mode's card lists with the player's
                 // selections from the pre-game modal so that initMode() builds the
-                // correct cards instead of the level defaults.
-                if (hostIZombie && ctx.getMode() instanceof IZombieMode izMode) {
+                // correct cards instead of the level defaults. Must target the mode
+                // on the NEW context — ctx.getMode() is still the previous session's.
+                if (hostIZombie && newContext.getMode() instanceof IZombieMode izMode) {
                     izMode.setBasedPlants(java.util.Collections.unmodifiableList(
                             plantSelectModal.getSelectedPlants().stream()
                                     .map(pt -> {
@@ -1174,7 +1199,7 @@ public class GameController {
                                     })
                                     .collect(java.util.stream.Collectors.toList())));
                 }
-                if (guestIZombie && ctx.getMode() instanceof IZombieMode izMode) {
+                if (guestIZombie && newContext.getMode() instanceof IZombieMode izMode) {
                     izMode.setBasedZombies(zombieSelectModal.getSelectedZombies());
                 }
 
@@ -1233,12 +1258,7 @@ public class GameController {
                 changeState(new PanningBack(this));
                 Gdx.input.setInputProcessor(stage);
 
-                if (isNetworkedMatch) {
-                    NetworkClient.getInstance().onMatchMessage(this::handleMatchMessage);
-                    NetworkClient.getInstance().setPushListener(MessageType.OPPONENT_DISCONNECTED,
-                            msg -> handleDisconnect());
-                    NetworkClient.getInstance().setDisconnectListener(() -> handleDisconnect());
-                }
+                registerNetworkHandlers();
 
                 if (com.pvz.utils.DebugMode.isEnabled())
                     Gdx.app.log("GameScreen", "Starting camera pan back for " + seasonName + " Level " + levelNumber);
@@ -1455,6 +1475,13 @@ public class GameController {
 
     public boolean isHost() {
         return isHost;
+    }
+
+    /** True for the plant-side (host) player of an online IZombie match. */
+    private boolean hostIZombieOnline() {
+        return isNetworkedMatch && isHost
+                && level != null
+                && level.getGameMode() == com.pvz.models.games.modes.GameModeType.IZOMBIE;
     }
 
     public GameUiModal getGameUiModal() {
