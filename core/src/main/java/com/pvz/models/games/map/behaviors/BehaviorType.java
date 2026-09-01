@@ -6,5 +6,6 @@ public enum BehaviorType {
     ICE_BLOCK,
     WATER,
     LOW_TIDE,
-    NECROMANCY;
+    NECROMANCY,
+    ENDANGERED_TILE;
 }

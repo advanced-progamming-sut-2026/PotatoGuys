@@ -3,7 +3,7 @@ package com.pvz.models.games.modes.variants;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pvz.models.Constants;
+import com.pvz.controller.game.GameController;
 import com.pvz.models.entities.plants.Plant;
 import com.pvz.models.entities.plants.PlantFactory;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
@@ -15,26 +15,31 @@ import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.Card;
 import com.pvz.models.games.card.PlantCard;
+import com.pvz.models.games.effects.ChapterEffect;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.Wave;
-import com.pvz.models.games.levels.variants.PlantWhatYouGetLevel;
+import com.pvz.models.games.levels.variants.SaveOurSeedsLevel;
 import com.pvz.models.games.modes.GameMode;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
-import com.pvz.models.games.modes.capabilities.StartWaves;
 
-public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
+public class SaveOurSeedsMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
+    private List<int[]> endangeredPositions = new ArrayList<>();
 
-    // فاز آمادگی در ابتدا فعال است
-    private boolean preparationPhase = true;
-
-    public PlantWhatYouGetMode(Level level) {
-        if (level instanceof PlantWhatYouGetLevel pwygLevel) {
-            this.waves = pwygLevel.getWaves();
+    public SaveOurSeedsMode(Level level) {
+        if (level instanceof SaveOurSeedsLevel sosLevel) {
+            this.waves = sosLevel.getWaves();
         }
         if (waves != null && !waves.isEmpty()) {
             currentWave = waves.get(0);
+        }
+        if (level.getGameMapDefinition().prePlantedPlants != null) {
+            for (var pDef : level.getGameMapDefinition().prePlantedPlants) {
+                if (pDef.endangered) {
+                    endangeredPositions.add(new int[]{pDef.col, pDef.lane});
+                }
+            }
         }
     }
 
@@ -60,70 +65,65 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
 
     @Override
     public void initMode(GameContext context) {
-    }
-
-    /**
-     * متدی برای شروع هجوم زامبی‌ها (توسط کنترلر صدا زده می‌شود)
-     */
-    @Override
-    public void startZombieWaves(GameContext context) {
-        if (!preparationPhase) {
-            context.log("Zombie waves have already started!");
-            return;
-        }
-        this.preparationPhase = false;
-        context.log("\n🧟 The zombies are coming! Defense mode activated! Cooldowns are now active! 🧟\n");
-
-        // شروع اولین موج زامبی‌ها
         if (currentWave != null) {
             currentWave.startWave(context);
+            context.getGameStats().onFirstWaveStart(0);
+            for (ChapterEffect effect : context.getActiveEffects()) {
+                effect.onWaveStart(currentWave, context);
+            }
         }
-    }
-
-    @Override
-    public boolean isPreparationPhase() {
-        return preparationPhase;
     }
 
     @Override
     public void updateMode(GameContext context, float dt) {
-        // ۱. قطع باران آفتاب: هر خورشیدی که در محیط بازی ساخته شود (از آسمان تولید شود)
-        // فوراً حذف می‌گردد
-        for (Sun sun : new ArrayList<>(context.getSuns())) {
-            context.removeSun(sun);
+        for (int[] pos : endangeredPositions) {
+            List<Plant> plantsAt = context.getPlantsAt(pos[0], pos[1]);
+            boolean survived = false;
+            for (Plant p : plantsAt) {
+                if (!p.isDead()) {
+                    survived = true;
+                    break;
+                }
+            }
+            if (!survived) {
+                context.setGameOver(true);
+                context.log("An endangered plant was destroyed! FAIL!");
+                return;
+            }
         }
 
-        // ۲. اگر در فاز آمادگی باشیم، زامبی‌ها جلو نمی‌آیند و موج‌ها آپدیت نمی‌شوند
-        if (preparationPhase) {
-            return;
-        }
-
-        // ۳. مدیریت موج زامبی‌ها پس از اتمام فاز آمادگی
         if (currentWave.isDone() && context.getZombies().isEmpty()) {
             int nextWaveIndex = waves.indexOf(currentWave) + 1;
             if (nextWaveIndex < waves.size()) {
                 currentWave = waves.get(nextWaveIndex);
                 currentWave.startWave(context);
+                for (ChapterEffect effect : context.getActiveEffects()) {
+                    effect.onWaveStart(currentWave, context);
+                }
                 context.log("Wave " + currentWave.getWaveNumber() + " started.");
             } else {
                 context.setGameOver(true);
-                context.log("🎉 CONGRATULATIONS! You survived the onslaught with your limited sun resources! 🎉");
+                context.log("You survived all waves and protected your seeds!");
             }
             return;
         }
 
         if (!currentWave.isDone()) {
-            currentWave.updateWave(context, 0);
+            currentWave.updateWave(context, dt);
         }
 
-        // ۴. منطق ماشین‌های چمن‌زنی و باخت بازی
         for (int i = 0; i < context.getZombies().size(); i++) {
             Zombie z = context.getZombies().get(i);
-            if (z.getX() <= 0f) {
+            if (z.getX() <= GameController.colToWorldX(-1)) {
                 context.setGameOver(true);
-                context.log("❌ GAME OVER! The zombies ate your brains! ❌");
+                context.log("The zombie ate your brain!");
                 context.removeZombie(z);
+            }
+        }
 
+        for (Sun sun : new ArrayList<>(context.getSuns())) {
+            if (sun.isDone()) {
+                context.removeSun(sun);
             }
         }
     }
@@ -160,10 +160,8 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
             return false;
         }
 
-        // During preparation phase, cooldowns are bypassed so the player can plant
-        // freely.
-        if (!preparationPhase && !card.canUse()) {
-            context.log("[Placement Failed] Card " + card.getPlant().getType() + " is on cooldown.");
+        if (!card.canUse()) {
+            context.log("[Placement Failed] Card " + card.getPlant().getType() + " is on cooldown or locked.");
             return false;
         }
 
@@ -172,47 +170,32 @@ public class PlantWhatYouGetMode implements GameMode, PlantPlacer, StartWaves {
 
     @Override
     public void handlePlacement(GameContext context, int col, int lane, PlantCard card) {
-        if (!(card instanceof PlantCard plantCard))
+        if (!(card instanceof PlantCard plantCard)) {
+            context.log("Error: card is not a plant card.");
             return;
-
+        }
         PlantPropertySheet sheet = PlantConfigRegistry.getInstance().resolveSheet(card.getPlant().getType());
         ResolvedStats stats = PlantStatResolver.resolve(sheet, card.getPlant().getLevel());
         if (!context.spendSun(stats.getSunCost())) {
             context.log("Not enough sun.");
             return;
         }
-
-        // ساخت و اسپان گیاه
         Plant plant = new PlantFactory().create(plantCard.getPlant().getType(), col, lane,
                 plantCard.getPlant().getLevel(), plantCard.getPlant().isBoosted(), context);
+        if (!plant.getAttackAction().isPlantableOnTile(context.getTileAt(col, lane)))
+            return;
         context.spawnPlant(plant);
         context.getGameStats().onPlantPlaced(col, lane, plantCard.getPlant().getType());
-
-        // مدیریت زمان شارژ (Recharge / Cooldown)
-        if (preparationPhase) {
-            // در فاز آمادگی، کارت مصرف نمی‌شود و به کول‌داون نمی‌رود تا بازیکن بدون وقفه
-            // بکارد
-            context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane
-                    + ") [PREP BONUS: No Cooldown].");
-        } else {
-            // در فاز اصلی، کارت وارد Cooldown می‌شود
-            plantCard.use();
-            context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
-        }
-    }
-
-    @Override
-    public boolean supportsFallingSuns() {
-        return false;
+        plantCard.use();
+        context.log(plantCard.getPlant().getType() + " placed at (" + col + ", " + lane + ").");
     }
 
     @Override
     public PlantCard findCard(GameContext context, String plantType) {
         for (Card card : context.getCards()) {
-            if (card instanceof PlantCard plantCard) {
-                if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
-                    return plantCard;
-                }
+            PlantCard plantCard = (PlantCard) card;
+            if (plantCard.getPlant().getType().toString().equalsIgnoreCase(plantType)) {
+                return plantCard;
             }
         }
         return null;
