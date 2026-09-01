@@ -54,19 +54,19 @@ public class LeaderboardMenu extends ScreenAdapter {
     private static final String AVATAR_DIR = "textures/avatars/";
     private static final String DEFAULT_AVATAR = AVATAR_DIR + "avatar_luffy.png";
 
-    private static final float PANEL_WIDTH = 1160f;
+    private static final float PANEL_WIDTH = 1360f;
     private static final float PANEL_HEIGHT = 830f;
-    private static final float ROW_WIDTH = 1100f;
+    private static final float ROW_WIDTH = 1300f;
 
-    private static final float COL_RANK = 50f;
-    private static final float COL_AVATAR = 50f;
-    private static final float COL_NAME = 138f;
-    private static final float COL_PROGRESS = 128f;
-    private static final float COL_MINIGAMES = 84f;
-    private static final float COL_DAILY = 90f;
-    private static final float COL_NONDAILY = 90f;
-    private static final float COL_SCORE = 78f;
-    private static final float COL_MIOPOINT = 78f;
+    private static final float COL_RANK = 65f;
+    private static final float COL_AVATAR = 65f;
+    private static final float COL_NAME = 153f;
+    private static final float COL_PROGRESS = 143f;
+    private static final float COL_MINIGAMES = 99f;
+    private static final float COL_DAILY = 105f;
+    private static final float COL_NONDAILY = 105f;
+    private static final float COL_SCORE = 93f;
+    private static final float COL_MIOPOINT = 93f;
 
     private final PvZ2 game;
     private final LeaderBoardController controller;
@@ -100,9 +100,9 @@ public class LeaderboardMenu extends ScreenAdapter {
         mainPanel.setPosition((1920 - PANEL_WIDTH) / 2f, (1080 - PANEL_HEIGHT) / 2f);
         stage.addActor(mainPanel);
 
-        darkBgTexture = roundedRectTexture(1126, 798, 16, new Color(0.24f, 0.14f, 0.06f, 1f));
+        darkBgTexture = roundedRectTexture(1326, 798, 16, new Color(0.24f, 0.14f, 0.06f, 1f));
         Image darkBg = new Image(darkBgTexture);
-        darkBg.setBounds(17, 16, 1126, 798);
+        darkBg.setBounds(17, 16, 1326, 798);
         mainPanel.addActor(darkBg);
 
         mainPanel.add(buildTopBar()).fillX().padTop(15).padLeft(25).padRight(25).row();
