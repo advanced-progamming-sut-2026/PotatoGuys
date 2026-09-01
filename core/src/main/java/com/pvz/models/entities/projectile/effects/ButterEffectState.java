@@ -18,7 +18,9 @@ public class ButterEffectState extends ProjectileEffectState {
             return;
         }
         primaryTarget.takeDamage(projectile.getDamage(), bypassesArmor());
-        primaryTarget.setButterStunned(STUN_DURATION);
+        if (!primaryTarget.isDead()) {
+            primaryTarget.setButterStunned(STUN_DURATION);
+        }
     }
 
     @Override
