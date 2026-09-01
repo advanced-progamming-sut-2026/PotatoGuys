@@ -53,6 +53,25 @@ configure(subprojects) {
   compileJava {
     options.incremental = true
   }
+
+  // --- Checkstyle ---
+  apply plugin: 'checkstyle'
+
+  checkstyle {
+    toolVersion = '10.21.4'
+    configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    maxWarnings = 0
+  }
+
+  // --- PMD ---
+  apply plugin: 'pmd'
+
+  pmd {
+    toolVersion = '7.9.0'
+    ruleSetFiles = files(rootProject.file('config/pmd/ruleset.xml'))
+    consoleOutput = true
+    ignoreFailures = false
+  }
 }
 
 subprojects {
