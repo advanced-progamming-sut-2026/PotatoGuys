@@ -46,7 +46,7 @@ import pvz.skin.PvzSkin;
  * select it, then hit Play in the bottom bar - same interaction pattern as
  * {@link EgyptChapterMenu} and {@link FrostbiteCavesChapterMenu}.
  * <p>
- * Genuinely unique things ported from her actual Dark Ages code (not just
+ * Genuinely unique things ported from  actual Dark Ages code (not just
  * reused from Egypt/Frostbite): drifting clouds that continuously scroll
  * across the map, a lightning effect near the danger node, fireflies
  * instead of stars/crystals, and Day 2's island rendered taller and
@@ -379,6 +379,9 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
         if (levelNumber < PLAYABLE_LEVEL_COUNT && controller.isLevelUnlocked(levelNumber + 1)) {
             return StageStatus.COMPLETED;
         }
+        if (levelNumber == PLAYABLE_LEVEL_COUNT && controller.isLevelUnlocked(levelNumber)) {
+            return StageStatus.COMPLETED;
+        }
         return StageStatus.UNLOCKED;
     }
 
@@ -490,8 +493,8 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
             };
             for (int i = 0; i < rockCoords.length; i++) {
                 MapObjectType selectedRock = rockTypes[i % rockTypes.length];
-                addActor(createAnchoredAnimation(selectedRock, ROCK_TUNING, "idle",
-                    rockCoords[i][0] * LAYOUT_SCALE_X, rockCoords[i][1] * LAYOUT_SCALE_Y));
+                //addActor(createAnchoredAnimation(selectedRock, ROCK_TUNING, "idle",
+                    //rockCoords[i][0] * LAYOUT_SCALE_X, rockCoords[i][1] * LAYOUT_SCALE_Y));
             }
 
             for (int i = 0; i < 8; i++) {
@@ -503,13 +506,13 @@ public class DarkAgesChapterMenu extends ScreenAdapter {
 
         private void addMapDecorations() {
             MapObjectPlacement[] placements = {
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 70, 260, 50, 38),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 270, 150, 55, 40),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_3, 620, 280, 60, 45),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_1, 760, 110, 100, 70),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 970, 240, 55, 40),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_3, 410, 170, 60, 45),
-                new MapObjectPlacement(MapObjectType.SMALL_ISLAND_1, 300, 200, 100, 70)
+                //new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 70, 260, 50, 38),
+                //new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 270, 150, 55, 40),
+               //new MapObjectPlacement(MapObjectType.SMALL_ISLAND_3, 620, 280, 60, 45),
+                //new MapObjectPlacement(MapObjectType.SMALL_ISLAND_1, 760, 110, 100, 70),
+               // new MapObjectPlacement(MapObjectType.SMALL_ISLAND_2, 970, 240, 55, 40),
+                //new MapObjectPlacement(MapObjectType.SMALL_ISLAND_3, 410, 170, 60, 45),
+               // new MapObjectPlacement(MapObjectType.SMALL_ISLAND_1, 300, 200, 100, 70)
             };
             for (MapObjectPlacement p : placements) {
                 MapDecorationActor actor = new MapDecorationActor(p.type, p.width, p.height, "idle");
