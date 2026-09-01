@@ -32,19 +32,13 @@ public class LeaderBoardController {
     }
 
     public void loadEntries(java.util.function.Consumer<List<LeaderBoardEntry>> onLoaded) {
-        // When no server is reachable, fall back to reading the local user saves
-        // so the leaderboard still shows players in offline mode.
-        if (!NetworkClient.getInstance().isConnected()) {
-            cachedEntries = Leaderboard.loadAll();
-            onLoaded.accept(Leaderboard.sort(new ArrayList<>(cachedEntries), sortField, sortOrder));
-            return;
-        }
+        // Client always pulls the leaderboard from the server — it never reads
+        // other players' save files directly.
         NetworkClient.getInstance().getLeaderboard(entries -> {
-            if (entries == null || entries.isEmpty()) {
-                cachedEntries = Leaderboard.loadAll();
-            } else {
-                cachedEntries = entries;
+            if (entries == null) {
+                entries = new ArrayList<>();
             }
+            cachedEntries = entries;
             onLoaded.accept(Leaderboard.sort(new ArrayList<>(cachedEntries), sortField, sortOrder));
         });
     }

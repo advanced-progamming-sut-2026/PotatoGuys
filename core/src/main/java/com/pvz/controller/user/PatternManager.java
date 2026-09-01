@@ -4,16 +4,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.pvz.enums.commands.RegisterMenuCommand;
-import com.pvz.models.user.User;
-import com.pvz.utils.SaveManager;
 
 public class PatternManager {
 
     public static String validateUsername(String username) {
         if (!username.matches(RegisterMenuCommand.USERNAME.getPattern())) {
             return "Invalid Username";
-        } else if (SaveManager.getInstance().load("users/" + username + ".json", User.class) != null) {
-            return "Username already exists";
         }
         return null;
     }

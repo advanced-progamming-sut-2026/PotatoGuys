@@ -237,6 +237,48 @@ public class NetworkClient {
         }
     }
 
+    /**
+     * Checks if the given username is already taken on the server.
+     * {@code callback} receives {@code true} if taken, {@code false} if available.
+     */
+    public void checkUsername(String username, java.util.function.Consumer<Boolean> callback) {
+        sendRequest(MessageType.CHECK_USERNAME, new MatchDTOs.CheckUsernameRequest(username), response -> {
+            if (!response.success) {
+                callback.accept(true);
+                return;
+            }
+            callback.accept(gson.fromJson(response.payload, Boolean.class));
+        });
+    }
+
+    /**
+     * Requests a password reset: server verifies username + email and returns
+     * the security question. On error, the callback receives null.
+     */
+    public void forgotPassword(String username, String email, Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.FORGOT_PASSWORD,
+                new MatchDTOs.ResetPasswordRequest(username, email, null), callback);
+    }
+
+    /**
+     * Resets the password on the server (after email verification).
+     */
+    public void resetPassword(String username, String email, String newPassword, Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.RESET_PASSWORD,
+                new MatchDTOs.ResetPasswordRequest(username, email, newPassword), callback);
+    }
+
+    /**
+     * Updates profile fields (username, nickname, email) on the server.
+     * Returns the updated User on success.
+     */
+    public void updateProfile(String userId, String oldUsername, String newUsername,
+            String newNickname, String newEmail, Consumer<NetworkMessage> callback) {
+        sendRequest(MessageType.UPDATE_PROFILE,
+                new MatchDTOs.UpdateProfileRequest(userId, oldUsername, newUsername, newNickname, newEmail),
+                callback);
+    }
+
     // ---- Typed convenience wrappers: I,Zombie matchmaking (Phase 2)
     // --------------
 

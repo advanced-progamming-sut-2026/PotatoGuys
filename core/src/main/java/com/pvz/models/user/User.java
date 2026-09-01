@@ -6,7 +6,6 @@ import com.pvz.models.greenhouse.GreenHouse;
 import com.pvz.models.quests.Quest;
 import com.pvz.models.quests.QuestFactory;
 import com.pvz.models.quests.QuestLog;
-import com.pvz.utils.SaveManager;
 
 
 public class User {
@@ -28,8 +27,6 @@ public class User {
     public void saveUser(){
         if (com.pvz.network.NetworkClient.getInstance().isConnected()) {
             com.pvz.network.NetworkClient.getInstance().saveUser(this, null);
-        } else {
-            SaveManager.getInstance().save(this, "users/" + id + ".json");
         }
     }
 

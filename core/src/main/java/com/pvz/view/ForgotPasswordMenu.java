@@ -1,7 +1,5 @@
 package com.pvz.view;
 
-import java.util.HashMap;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -18,9 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.pvz.PvZ2;
-import com.pvz.models.user.User;
-import com.pvz.utils.PasswordUtils;
-import com.pvz.utils.SaveManager;
+import com.pvz.network.NetworkClient;
 
 import pvz.skin.PvzSkin;
 
@@ -29,7 +25,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
     private Stage stage;
     private Skin skin;
     private Table mainTable;
-    private User currentUser;
+    private String username;
 
     public ForgotPasswordMenu(PvZ2 game) {
         this.game = game;
@@ -92,27 +88,8 @@ public class ForgotPasswordMenu extends ScreenAdapter {
             return;
         }
 
-        SaveManager saveManager = SaveManager.getInstance();
-        HashMap<String, String> usernames = saveManager.load("users/username.json", HashMap.class);
-        if (usernames == null) {
-            statusLabel.setText("No users found.");
-            return;
-        }
-
-        String id = usernames.get(username);
-        if (id == null) {
-            statusLabel.setText("Username not found.");
-            return;
-        }
-
-        User user = saveManager.load("users/" + id + ".json", User.class);
-        if (user == null) {
-            statusLabel.setText("User data not found.");
-            return;
-        }
-
-        currentUser = user;
-        statusLabel.setText("Username found. Please verify your email.");
+        this.username = username;
+        statusLabel.setText("Username accepted. Please verify your email.");
         showEmailScreen(statusLabel);
     }
 
@@ -139,12 +116,15 @@ public class ForgotPasswordMenu extends ScreenAdapter {
                     emailStatus.setText("Please enter your email.");
                     return;
                 }
-                if (currentUser.getEmail() != null && currentUser.getEmail().equals(email)) {
+                emailStatus.setText("Checking...");
+                NetworkClient.getInstance().forgotPassword(username, email, response -> {
+                    if (!response.success) {
+                        emailStatus.setText(response.errorMessage);
+                        return;
+                    }
                     emailStatus.setText("Email verified!");
-                    showResetPasswordScreen();
-                } else {
-                    emailStatus.setText("username and email doesn't match.");
-                }
+                    showResetPasswordScreen(email);
+                });
             }
         });
         mainTable.add(verifyBtn).width(200).height(60).row();
@@ -160,7 +140,7 @@ public class ForgotPasswordMenu extends ScreenAdapter {
         mainTable.add(backBtn).size(75, 70).left().row();
     }
 
-    private void showResetPasswordScreen() {
+    private void showResetPasswordScreen(String email) {
         mainTable.clear();
 
         Label resetLabel = new Label("Reset Password", skin);
@@ -204,11 +184,14 @@ public class ForgotPasswordMenu extends ScreenAdapter {
                     return;
                 }
 
-                currentUser.setPasswordHash(PasswordUtils.hashPassword(newPassword));
-                currentUser.saveUser();
-
-                resetStatus.setText("Password reset successfully! Please login.");
-                Gdx.app.postRunnable(() -> game.setScreen(new LoginMenu(game)));
+                NetworkClient.getInstance().resetPassword(username, email, newPassword, response -> {
+                    if (!response.success) {
+                        resetStatus.setText(response.errorMessage);
+                        return;
+                    }
+                    resetStatus.setText("Password reset successfully! Please login.");
+                    Gdx.app.postRunnable(() -> game.setScreen(new LoginMenu(game)));
+                });
             }
         });
         mainTable.add(resetBtn).width(200).height(60).row();

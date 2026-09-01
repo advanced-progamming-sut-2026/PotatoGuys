@@ -72,4 +72,44 @@ public class MatchDTOs {
             this.payload = payload;
         }
     }
+
+    /** Client -> Server: check if a username is already taken. */
+    public static class CheckUsernameRequest {
+        public String username;
+        public CheckUsernameRequest(String username) { this.username = username; }
+    }
+
+    /** Server -> Client response for FORGOT_PASSWORD: returns the security question. */
+    public static class ForgotPasswordPayload {
+        public String securityQuestion;
+    }
+
+    /** Client -> Server: reset password via username + email + new password. */
+    public static class ResetPasswordRequest {
+        public String username;
+        public String email;
+        public String newPassword;
+        public ResetPasswordRequest(String username, String email, String newPassword) {
+            this.username = username;
+            this.email = email;
+            this.newPassword = newPassword;
+        }
+    }
+
+    /** Client -> Server: update profile fields (username, nickname, email). */
+    public static class UpdateProfileRequest {
+        public String userId;
+        public String oldUsername;
+        public String newUsername;
+        public String newNickname;
+        public String newEmail;
+        public UpdateProfileRequest(String userId, String oldUsername, String newUsername,
+                String newNickname, String newEmail) {
+            this.userId = userId;
+            this.oldUsername = oldUsername;
+            this.newUsername = newUsername;
+            this.newNickname = newNickname;
+            this.newEmail = newEmail;
+        }
+    }
 }
