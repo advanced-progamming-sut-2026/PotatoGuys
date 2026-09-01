@@ -14,6 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import com.pvz.controller.game.GameController;
+import com.pvz.controller.game.npc.LevelDialogueRegistry;
+import com.pvz.controller.game.npc.NpcDialogueOverlay;
+import com.pvz.controller.game.npc.NpcDialogueSequence;
 import com.pvz.view.BorderedPanel;
 
 import pvz.skin.PvzSkin;
@@ -26,6 +29,7 @@ import pvz.skin.PvzSkin;
 public class ObjectiveScreen extends State {
 
     private Table overlay;
+    private NpcDialogueOverlay npcOverlay;
 
     public ObjectiveScreen(GameController controller) {
         super(controller);
@@ -33,6 +37,29 @@ public class ObjectiveScreen extends State {
 
     @Override
     public void enter() {
+        NpcDialogueSequence dialogue = LevelDialogueRegistry.find(
+                controller.getLevel().getSeasonName(),
+                controller.getLevel().getLevelNumber());
+
+        if (dialogue != null) {
+            npcOverlay = new NpcDialogueOverlay(dialogue, this::showNpcFinished);
+            controller.getStage().addActor(npcOverlay);
+            controller.getStage().setKeyboardFocus(npcOverlay);
+            npcOverlay.toFront();
+            Gdx.input.setInputProcessor(controller.getStage());
+            return;
+        }
+
+        showObjectives();
+    }
+
+    private void showNpcFinished() {
+        controller.getStage().setKeyboardFocus(null);
+        npcOverlay = null;
+        showObjectives();
+    }
+
+    private void showObjectives() {
         overlay = new Table();
         overlay.setFillParent(true);
 
@@ -131,10 +158,15 @@ public class ObjectiveScreen extends State {
 
     @Override
     public void exit() {
+        if (npcOverlay != null) {
+            npcOverlay.remove();
+            npcOverlay = null;
+        }
         if (overlay != null) {
             overlay.remove();
             overlay = null;
         }
+        controller.getStage().setKeyboardFocus(null);
     }
 
     private void dismiss() {
