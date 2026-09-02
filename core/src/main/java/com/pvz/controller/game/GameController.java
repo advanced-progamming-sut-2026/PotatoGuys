@@ -106,6 +106,8 @@ public class GameController {
 
     private GameRenderer renderer;
 
+    private NotificationSystem notificationSystem;
+
     private TextureRegion[] backgroundTextures;
     private float backgroundYOffset = 0f;
 
@@ -491,6 +493,8 @@ public class GameController {
         errorTable.top();
         errorTable.add(errorMessageLabel).padTop(80).width(600f);
         stage.addActor(errorTable);
+
+        notificationSystem = new NotificationSystem(stage);
 
         renderer = new GameRenderer(ctx, this, batch, backgroundTextures);
         createDisplayZombies();
@@ -1251,6 +1255,7 @@ public class GameController {
                 }
                 AppContext.getInstance().setGameContext(newContext);
                 ctx = newContext;
+                ctx.setNotificationSystem(notificationSystem);
                 if (isNetworkedMatch && !isHost) {
                     if (ctx.getMode() instanceof IZombieMode izMode) {
                         izMode.setNetworkGuest(true);

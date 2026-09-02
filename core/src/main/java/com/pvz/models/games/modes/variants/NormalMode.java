@@ -18,6 +18,7 @@ import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.effects.ChapterEffect;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.Wave;
+import com.pvz.models.games.levels.WavePhase;
 import com.pvz.models.games.levels.variants.NormalLevel;
 import com.pvz.models.games.modes.GameMode;
 import com.pvz.models.games.modes.capabilities.PlantPlacer;
@@ -29,12 +30,20 @@ import com.pvz.models.games.modes.capabilities.PlantPlacer;
 public class NormalMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
+    private int killsAtWaveStart;
+    private int phaseStartKills;
+    private int lastPhaseIndex;
+    private boolean burstNotificationFired;
 
     public NormalMode(Level level) {
         if (level instanceof NormalLevel normalLevel) {
             waves = normalLevel.getWaves();
         }
         currentWave = waves.getFirst();
+        killsAtWaveStart = 0;
+        phaseStartKills = 0;
+        lastPhaseIndex = 0;
+        burstNotificationFired = false;
     }
 
     @Override
@@ -60,12 +69,20 @@ public class NormalMode implements GameMode, PlantPlacer {
     @Override
     public void initMode(GameContext context) {
         if (currentWave != null) {
+            resetWaveTracking(context);
             currentWave.startWave(context);
             context.getGameStats().onFirstWaveStart(0);
             for (ChapterEffect effect : context.getActiveEffects()) {
                 effect.onWaveStart(currentWave, context);
             }
         }
+    }
+
+    private void resetWaveTracking(GameContext context) {
+        killsAtWaveStart = context.getGameStats().getZombiesKilled();
+        phaseStartKills = killsAtWaveStart;
+        lastPhaseIndex = currentWave != null ? currentWave.getCurrentPhaseIndex() : 0;
+        burstNotificationFired = false;
     }
 
     @Override
@@ -75,6 +92,7 @@ public class NormalMode implements GameMode, PlantPlacer {
             int nextWaveIndex = waves.indexOf(currentWave) + 1;
             if (nextWaveIndex < waves.size()) {
                 currentWave = waves.get(nextWaveIndex);
+                resetWaveTracking(context);
                 currentWave.startWave(context);
                 for (ChapterEffect effect : context.getActiveEffects()) {
                     effect.onWaveStart(currentWave, context);
@@ -91,6 +109,8 @@ public class NormalMode implements GameMode, PlantPlacer {
             currentWave.updateWave(context, dt);
         }
 
+        checkBurstNotification(context);
+
         for (int i = 0; i < context.getZombies().size(); i++) {
             Zombie z = context.getZombies().get(i);
 
@@ -104,6 +124,39 @@ public class NormalMode implements GameMode, PlantPlacer {
             if (sun.isDone()) {
                 context.removeSun(sun);
             }
+        }
+    }
+
+    /**
+     * Fires "A huge wave of zombies is approaching!" once per wave when the next
+     * phase is a burst AND at least 70% of the current phase's zombies are dead —
+     * so the warning arrives just before the burst phase begins to spawn.
+     */
+    private void checkBurstNotification(GameContext context) {
+        if (burstNotificationFired || currentWave == null || currentWave.isDone())
+            return;
+
+        List<WavePhase> phases = currentWave.getPhases();
+        int phaseIndex = currentWave.getCurrentPhaseIndex();
+        if (phaseIndex != lastPhaseIndex) {
+            lastPhaseIndex = phaseIndex;
+            phaseStartKills = context.getGameStats().getZombiesKilled();
+        }
+
+        if (phaseIndex + 1 >= phases.size())
+            return;
+        if (!phases.get(phaseIndex + 1).isBurst())
+            return;
+
+        int killedThisPhase = context.getGameStats().getZombiesKilled() - phaseStartKills;
+        int totalInPhase = phases.get(phaseIndex).getZombieCount();
+        if (totalInPhase <= 0)
+            return;
+
+        // at least 70% dead
+        if (killedThisPhase * 10 >= totalInPhase * 7) {
+            burstNotificationFired = true;
+            context.triggerNotification("A huge wave of zombies is approaching!");
         }
     }
 
