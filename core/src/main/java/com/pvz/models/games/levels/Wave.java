@@ -68,10 +68,6 @@ public class Wave {
         return done;
     }
 
-    public int getCurrentPhaseIndex() {
-        return currentPhase;
-    }
-
     public List<WavePhase> getPhases() {
         return phases;
     }

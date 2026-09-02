@@ -31,8 +31,6 @@ public class NormalMode implements GameMode, PlantPlacer {
     private Wave currentWave;
     private List<Wave> waves;
     private int killsAtWaveStart;
-    private int phaseStartKills;
-    private int lastPhaseIndex;
     private boolean burstNotificationFired;
 
     public NormalMode(Level level) {
@@ -41,8 +39,6 @@ public class NormalMode implements GameMode, PlantPlacer {
         }
         currentWave = waves.getFirst();
         killsAtWaveStart = 0;
-        phaseStartKills = 0;
-        lastPhaseIndex = 0;
         burstNotificationFired = false;
     }
 
@@ -80,8 +76,6 @@ public class NormalMode implements GameMode, PlantPlacer {
 
     private void resetWaveTracking(GameContext context) {
         killsAtWaveStart = context.getGameStats().getZombiesKilled();
-        phaseStartKills = killsAtWaveStart;
-        lastPhaseIndex = currentWave != null ? currentWave.getCurrentPhaseIndex() : 0;
         burstNotificationFired = false;
     }
 
@@ -128,33 +122,29 @@ public class NormalMode implements GameMode, PlantPlacer {
     }
 
     /**
-     * Fires "A huge wave of zombies is approaching!" once per wave when the next
-     * phase is a burst AND at least 70% of the current phase's zombies are dead —
-     * so the warning arrives just before the burst phase begins to spawn.
+     * Fires "A huge wave of zombies is approaching!" once per wave when at least
+     * 70% of the current wave's zombies are dead AND the next wave contains a
+     * burst phase — so the warning arrives just before the burst wave begins.
      */
     private void checkBurstNotification(GameContext context) {
         if (burstNotificationFired || currentWave == null || currentWave.isDone())
             return;
 
-        List<WavePhase> phases = currentWave.getPhases();
-        int phaseIndex = currentWave.getCurrentPhaseIndex();
-        if (phaseIndex != lastPhaseIndex) {
-            lastPhaseIndex = phaseIndex;
-            phaseStartKills = context.getGameStats().getZombiesKilled();
-        }
-
-        if (phaseIndex + 1 >= phases.size())
-            return;
-        if (!phases.get(phaseIndex + 1).isBurst())
+        int waveIndex = waves.indexOf(currentWave);
+        if (waveIndex < 0 || waveIndex + 1 >= waves.size())
             return;
 
-        int killedThisPhase = context.getGameStats().getZombiesKilled() - phaseStartKills;
-        int totalInPhase = phases.get(phaseIndex).getZombieCount();
-        if (totalInPhase <= 0)
+        Wave nextWave = waves.get(waveIndex + 1);
+        if (nextWave.getPhases().stream().noneMatch(WavePhase::isBurst))
+            return;
+
+        int killedThisWave = context.getGameStats().getZombiesKilled() - killsAtWaveStart;
+        int totalInWave = currentWave.getTotalZombieCount();
+        if (totalInWave <= 0)
             return;
 
         // at least 70% dead
-        if (killedThisPhase * 10 >= totalInPhase * 7) {
+        if (killedThisWave * 10 >= totalInWave * 7) {
             burstNotificationFired = true;
             context.triggerNotification("A huge wave of zombies is approaching!");
         }

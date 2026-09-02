@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Align;
 import pvz.skin.PvzSkin;
 
 public class NotificationSystem {
-    private static final float DURATION = 3.0f;
+    private static final float DURATION = 3.5f;
 
     private final Label notificationLabel;
     private final Table notificationTable;
