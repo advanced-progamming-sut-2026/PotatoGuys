@@ -88,6 +88,7 @@ public class DarkAgesEffect implements ChapterEffect {
     private void triggerNecromancy(GameContext ctx, Wave wave) {
         int cols = ctx.getMap().getColumns();
         int lanes = ctx.getMap().getLanes();
+        boolean spawned = false;
 
         for (int l = 0; l < lanes; l++) {
             for (int c = 0; c < cols; c++) {
@@ -101,10 +102,15 @@ public class DarkAgesEffect implements ChapterEffect {
                             l, ctx, wave.getWaveNumber(), difficulty);
                     if (z != null) {
                         ctx.spawnZombie(z);
+                        spawned = true;
                         ctx.log("A zombie dug up and emerged from the necromancy grave at (" + c + "," + l + ")!");
                     }
                 }
             }
+        }
+
+        if (spawned) {
+            ctx.triggerNotification("Necromancy!");
         }
     }
 }

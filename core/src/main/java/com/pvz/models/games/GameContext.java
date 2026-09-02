@@ -55,6 +55,7 @@ public class GameContext implements TickAware {
     private GameStats gameStats;
     private String seasonName;
     private List<ChapterEffect> activeEffects;
+    private com.pvz.controller.game.NotificationSystem notificationSystem;
 
     // ── Deferred mutations ─────────────────────────────────────────────────────
     // spawnX / removeX never touch the live lists directly: they queue here and
@@ -495,6 +496,16 @@ public class GameContext implements TickAware {
 
     public List<ChapterEffect> getActiveEffects() {
         return activeEffects;
+    }
+
+    public void setNotificationSystem(com.pvz.controller.game.NotificationSystem system) {
+        this.notificationSystem = system;
+    }
+
+    public void triggerNotification(String text) {
+        if (notificationSystem != null) {
+            notificationSystem.show(text);
+        }
     }
 
     public int getPlantFoodCount() {

@@ -96,6 +96,7 @@ public class BigWaveBeachEffect implements ChapterEffect {
     private void updateWaterAndTides(Wave wave, GameContext ctx) {
         int cols = ctx.getMap().getColumns();
         int lanes = ctx.getMap().getLanes();
+        boolean lowTideTriggered = false;
 
         for (int col = 0; col < cols; col++) {
             boolean isWaterColumn = (col >= currentWaterCol);
@@ -150,22 +151,30 @@ public class BigWaveBeachEffect implements ChapterEffect {
                     // Low tide zombie emergence
                     if (tile.getTags().contains(TileTags.LOW_TIDE)) {
                         if (rand.nextFloat() < 0.6f) {
-                            spawnLowTideZombie(ctx, col, lane, wave);
+                            if (spawnLowTideZombie(ctx, col, lane, wave)) {
+                                lowTideTriggered = true;
+                            }
                         }
                     }
                 }
             }
         }
+
+        if (lowTideTriggered) {
+            ctx.triggerNotification("Low Tide!");
+        }
     }
 
-    private void spawnLowTideZombie(GameContext ctx, int col, int lane, Wave wave) {
+    private boolean spawnLowTideZombie(GameContext ctx, int col, int lane, Wave wave) {
         ZombieType type = ZombieType.SNORKEL;
         Zombie z = new ZombieFactory().create(type.getAlias(), GameController.colToWorldX(col), lane, ctx,
                 wave.getWaveNumber(), 5);
         if (z != null) {
             ctx.spawnZombie(z);
             ctx.log("A Snorkel Zombie emerged from the low tide at (" + col + "," + lane + ")!");
+            return true;
         }
+        return false;
     }
 
     @Override
