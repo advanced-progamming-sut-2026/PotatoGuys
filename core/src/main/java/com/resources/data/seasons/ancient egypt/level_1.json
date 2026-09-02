@@ -53,7 +53,7 @@
           "zombieCount": 1,
           "intervalSeconds": 13.0,
           "allowedTypes": [
-            "GARGANTUAR"
+            "RA"
           ],
           "isBurst": false
         },

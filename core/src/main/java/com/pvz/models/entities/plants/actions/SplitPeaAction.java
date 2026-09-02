@@ -15,7 +15,6 @@ import com.pvz.models.entities.projectile.Projectile;
 import com.pvz.models.entities.projectile.ProjectileFactory;
 import com.pvz.models.entities.projectile.ProjectileType;
 import com.pvz.models.games.GameContext;
-import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.tile.TileTags;
 
 public class SplitPeaAction extends PlantAction {
@@ -40,18 +39,20 @@ public class SplitPeaAction extends PlantAction {
 
         int plantCol = plant.getCol();
         int plantLane = plant.getLane();
-        float range = GameMap.TILE_WIDTH * 1.6f;
 
         hasFront = false;
         hasBack = false;
 
         float plantX = GameController.colToWorldX(plantCol);
 
+        // The front head fires at any zombie ahead in this lane (to the right),
+        // and the back head fires at any zombie behind (to the left), regardless
+        // of distance — matching normal shooter behaviour.
         for (var z : ctx.getZombiesInLane(plantLane)) {
             float dx = z.getX() - plantX;
-            if (dx > 0 && dx < range) {
+            if (dx >= 0) {
                 hasFront = true;
-            } else if (dx < 0) {
+            } else {
                 hasBack = true;
             }
         }

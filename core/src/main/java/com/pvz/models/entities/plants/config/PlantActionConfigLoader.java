@@ -41,6 +41,7 @@ public final class PlantActionConfigLoader {
         json.addClassTag("SunBeanConfig", SunBeanConfig.class);
         json.addClassTag("WallNutFeedConfig", WallNutFeedConfig.class);
         json.addClassTag("MintActionConfig", MintActionConfig.class);
+        json.addClassTag("TorchwoodConfig", TorchwoodConfig.class);
         return json;
     }
 

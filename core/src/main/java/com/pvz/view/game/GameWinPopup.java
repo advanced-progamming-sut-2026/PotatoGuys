@@ -76,17 +76,19 @@ public class GameWinPopup extends Table {
             }
         });
 
-        TextButton nextBtn = new TextButton(nextText, PvzSkin.get(), "purple");
-        nextBtn.getLabel().setFontScale(0.85f);
-        nextBtn.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (nextAction != null) nextAction.run();
-            }
-        });
+        btnTable.add(exitBtn).size(180, 55);
 
-        btnTable.add(exitBtn).size(180, 55).padRight(30);
-        btnTable.add(nextBtn).size(180, 55);
+        if (nextText != null) {
+            TextButton nextBtn = new TextButton(nextText, PvzSkin.get(), "purple");
+            nextBtn.getLabel().setFontScale(0.85f);
+            nextBtn.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if (nextAction != null) nextAction.run();
+                }
+            });
+            btnTable.add(nextBtn).size(180, 55).padLeft(30);
+        }
 
         content.add(titleLbl).padBottom(15f).row();
         content.add(separatorLine).growX().height(3f).padBottom(20f).row();

@@ -907,9 +907,16 @@ public class GameUiModal extends Table {
     }
 
     protected void updateCardStyles() {
+        Skin skin = PvzSkin.get();
+        Drawable boostBg = skin.newDrawable("white_pixel", new Color(0.25f, 0.25f, 0.25f, 1f));
         for (Map.Entry<PlantCard, Table> entry : slotByCard.entrySet()) {
             PlantCard pc = entry.getKey();
             Table slot = entry.getValue();
+            com.pvz.view.PlantData dataLookup = dataByType.get(pc.getPlant().getType());
+            if (dataLookup != null) {
+                slot.setBackground(PlantData.regionDrawableOr(
+                        dataLookup.isBoosted() ? "IMAGE_UI_PACKETS_BOOST" : "IMAGE_UI_PACKETS_READY", boostBg));
+            }
             if (selectedCard == pc) {
                 slot.setColor(0.8f, 0.5f, 1f, 1f);
             } else {
