@@ -10,21 +10,21 @@ import java.util.Map;
 
 public class AvatarImages {
 
-    private static final Map<String, Texture> cache = new HashMap<>();
-    private static final Map<String, Texture> featheredCache = new HashMap<>();
+    private static final Map<String, Texture> CACHE = new HashMap<>();
+    private static final Map<String, Texture> FEATHERED_CACHE = new HashMap<>();
 
     private AvatarImages() {
     }
 
     public static Texture getTexture(String path) {
-        Texture texture = cache.get(path);
+        Texture texture = CACHE.get(path);
         if (texture == null) {
             if (path == null || !Gdx.files.internal(path).exists()) {
                 return createPlaceholder();
             }
             texture = new Texture(Gdx.files.internal(path));
             texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            cache.put(path, texture);
+            CACHE.put(path, texture);
         }
         return texture;
     }
@@ -49,10 +49,10 @@ public class AvatarImages {
      */
     public static Texture featheredCircle(String path) {
         String key = (path == null || !Gdx.files.internal(path).exists()) ? "__placeholder__" : path;
-        Texture feathered = featheredCache.get(key);
+        Texture feathered = FEATHERED_CACHE.get(key);
         if (feathered == null) {
             feathered = featheredCircle(getTexture(path));
-            featheredCache.put(key, feathered);
+            FEATHERED_CACHE.put(key, feathered);
         }
         return feathered;
     }
@@ -126,13 +126,13 @@ public class AvatarImages {
     }
 
     public static void dispose() {
-        for (Texture texture : cache.values()) {
+        for (Texture texture : CACHE.values()) {
             texture.dispose();
         }
-        cache.clear();
-        for (Texture texture : featheredCache.values()) {
+        CACHE.clear();
+        for (Texture texture : FEATHERED_CACHE.values()) {
             texture.dispose();
         }
-        featheredCache.clear();
+        FEATHERED_CACHE.clear();
     }
 }
