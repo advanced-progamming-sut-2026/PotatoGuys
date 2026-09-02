@@ -28,6 +28,7 @@ public class PlantCard extends Button {
     public final PlantData data;
     private final Image dimLayer;
     private final Image lockImage;
+    private final Image boostLayer;
     private final ProgressBar xpBar;
     private final Label costLabel;
     private final Label levelLabel;
@@ -41,6 +42,14 @@ public class PlantCard extends Button {
 
         Skin skin = PvzSkin.get();
         Drawable fallback = skin.newDrawable("white_pixel", new Color(0.25f, 0.25f, 0.25f, 1f));
+
+        // Gold/blue card background rendered as an explicit Stack layer so it
+        // flips the INSTANT the boost state changes — independent of the Button's
+        // checked/hover style, which otherwise delays the gold until the card is
+        // deselected/peeked away.
+        boostLayer = new Image(PlantData.regionDrawableOr(
+            data.isBoosted() ? "IMAGE_UI_PACKETS_BOOST" : "IMAGE_UI_PACKETS_READY", fallback));
+        boostLayer.setScaling(Scaling.fit);
 
         Drawable packetDrawable = data.cardDrawable();
         if (packetDrawable == null) packetDrawable = PlantData.regionDrawableOr(data.cardImageId(), fallback);
@@ -102,6 +111,7 @@ public class PlantCard extends Button {
         bottomBar.add(xpBar).width(WIDTH - 16f).height(7f);
 
         Stack stack = new Stack();
+        stack.add(boostLayer);
         stack.add(packetLayer);
         stack.add(dimLayer);
         stack.add(lockLayer);
@@ -115,17 +125,24 @@ public class PlantCard extends Button {
     }
 
     private static ButtonStyle styleFor(PlantData data) {
+        // The gold/blue background is rendered by the explicit boostLayer Image,
+        // so the Button style itself stays transparent to avoid the checked/hover
+        // states (SELECTED/SELECT) masking it and delaying the gold.
         ButtonStyle style = new ButtonStyle();
-        style.up = PlantData.regionDrawable(data.isBoosted() ? "IMAGE_UI_PACKETS_BOOST"
-            : "IMAGE_UI_PACKETS_READY");
-        style.over = PlantData.regionDrawable("IMAGE_UI_PACKETS_SELECT");
-        style.checked = PlantData.regionDrawable("IMAGE_UI_PACKETS_SELECTED");
+        style.up = null;
+        style.over = null;
+        style.checked = null;
+        style.down = null;
         return style;
     }
 
-    /** Refreshes lock dimming, lock icon, sun cost, level and seed-packet progress from the save. */
+    /** Refreshes the gold/blue background (instantly on boost), lock dimming, lock icon,
+     *  sun cost, level and seed-packet progress from the save. */
     public void update() {
         boolean unlocked = data.isUnlocked();
+        boostLayer.setDrawable(PlantData.regionDrawableOr(
+            data.isBoosted() ? "IMAGE_UI_PACKETS_BOOST" : "IMAGE_UI_PACKETS_READY",
+            boostLayer.getDrawable()));
         costLabel.setText(String.valueOf(data.sunCost()));
         dimLayer.setVisible(!unlocked);
         lockImage.setVisible(!unlocked);

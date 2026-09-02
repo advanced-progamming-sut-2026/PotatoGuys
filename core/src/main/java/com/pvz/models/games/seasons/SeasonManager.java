@@ -10,6 +10,12 @@ import java.io.File;
 public class SeasonManager {
     private static final String BASE_PATH = "core/src/main/java/com/resources/data/seasons/";
 
+    /** Returns true if the given season/level pair has a JSON data file on disk. */
+    public static boolean hasLevel(String seasonName, int levelNumber) {
+        String subDir = seasonName.equalsIgnoreCase("izombie") ? "izombie" : seasonName.toLowerCase();
+        return new File(BASE_PATH + subDir + "/level_" + levelNumber + ".json").exists();
+    }
+
     public void unlockNextLevel(User user, String currentSeasonName, int currentLevelNumber) {
         Profile profile = user.getProfile();
         List<Season> seasons = profile.getSeasons();

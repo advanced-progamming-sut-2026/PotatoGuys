@@ -24,7 +24,6 @@ import com.badlogic.gdx.utils.Scaling;
 import com.pvz.controller.CollectionController;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.games.levels.Level;
-import com.pvz.models.user.MyPlant;
 import com.pvz.view.MenuUiKit;
 import com.pvz.view.PlantCard;
 import com.pvz.view.PlantData;
@@ -66,6 +65,7 @@ public class PlantSelectModal extends Table {
 
     private final Table selectedSlotsTable;
     private final Table previewContent;
+    private final Table wallet;
     private final TextButton startButton;
     private Label previewMessageLabel;
     private Table waitingOverlay;
@@ -79,7 +79,7 @@ public class PlantSelectModal extends Table {
         content.top().left();
         content.pad(20f);
 
-        Label titleLabel = new Label("Choose Your Plants", PvzSkin.get(), "big");
+        Label titleLabel = new Label("                                            Choose Your Plants", PvzSkin.get(), "big");
         titleLabel.setColor(Color.BLACK);
 
         com.pvz.models.user.Profile profile = com.pvz.models.AppContext.getInstance().getCurrentUser() != null
@@ -87,7 +87,7 @@ public class PlantSelectModal extends Table {
         int coins = profile != null ? profile.getCoins() : 0;
         int diamonds = profile != null ? profile.getDiamonds() : 0;
 
-        Table wallet = new Table();
+        wallet = new Table();
         wallet.add(MenuUiKit.resourceWidget(PvzSkin.get(), "textures/ui/coin_icon.png",
                 new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(coins), 150, 50)).padRight(4);
         wallet.add(MenuUiKit.resourceWidget(PvzSkin.get(), "textures/ui/diamond_icon.png",
@@ -221,7 +221,7 @@ public class PlantSelectModal extends Table {
 
     private void buildPreviewPlaceholder() {
         previewContent.clearChildren();
-        Label label = new Label("Select a plant", PvzSkin.get());
+        Label label = new Label("", PvzSkin.get());
         label.setColor(Color.BLACK);
         previewContent.add(label).left().padLeft(10f);
     }
@@ -263,25 +263,30 @@ public class PlantSelectModal extends Table {
                 showPreviewMessage(data.getName() + " is now Level " + data.getLevel() + "!", true);
             }
         });
-        TextButton boostButton = new TextButton(data.isBoosted() ? "BOOSTED" : "BOOST", PvzSkin.get(), "green");
+        TextButton boostButton = new TextButton(
+            data.isBoosted() ? "BOOSTED" : "BOOST · 2 GEMS", PvzSkin.get(), "green");
         boostButton.setDisabled(data.isBoosted());
         boostButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                MyPlant owned = data.myPlant();
-                if (owned != null && !owned.isBoosted()) {
-                    owned.setBoosted(true);
-                    boostButton.setText("BOOSTED");
-                    boostButton.setDisabled(true);
-                    PlantCard card = gridCardsByType.get(data.type);
-                    if (card != null) {
-                        card.update();
-                    }
+                String error = new CollectionController().boostPlant(data.type);
+                if (error != null) {
+                    showPreviewMessage(error, false);
+                    return;
                 }
+                boostButton.setText("BOOSTED");
+                boostButton.setDisabled(true);
+                PlantCard card = gridCardsByType.get(data.type);
+                if (card != null) {
+                    card.update(); // flips the grid card background blue -> gold
+                }
+                refreshSlotsBar(); // rebuilds the left slot bar so its mini-card also goes gold instantly
+                refreshWallet();
+                showPreviewMessage(data.getName() + " is boosted!", true);
             }
         });
-        buttonsRow.add(upgradeButton).width(400f).height(45f).padRight(10f);
-        buttonsRow.add(boostButton).width(120f).height(45f);
+        buttonsRow.add(upgradeButton).width(380f).height(45f).padRight(10f);
+        buttonsRow.add(boostButton).width(170f).height(45f);
         info.add(buttonsRow).left().padTop(8f);
 
         previewContent.add(plantImage).size(96f, 96f).padRight(15f);
@@ -302,6 +307,20 @@ public class PlantSelectModal extends Table {
             previewMessageLabel.setColor(success ? new Color(0.15f, 0.7f, 0.15f, 1f)
                 : new Color(0.8f, 0.2f, 0.15f, 1f));
         }
+    }
+
+    /** Rebuilds the coin/diamond wallet so spent gems show up immediately. */
+    private void refreshWallet() {
+        if (wallet == null) return;
+        com.pvz.models.user.Profile profile = com.pvz.models.AppContext.getInstance().getCurrentUser() != null
+                ? com.pvz.models.AppContext.getInstance().getCurrentUser().getProfile() : null;
+        int coins = profile != null ? profile.getCoins() : 0;
+        int diamonds = profile != null ? profile.getDiamonds() : 0;
+        wallet.clearChildren();
+        wallet.add(MenuUiKit.resourceWidget(PvzSkin.get(), "textures/ui/coin_icon.png",
+                new Color(0.95f, 0.78f, 0.15f, 1f), String.valueOf(coins), 150, 50)).padRight(4);
+        wallet.add(MenuUiKit.resourceWidget(PvzSkin.get(), "textures/ui/diamond_icon.png",
+                new Color(0.35f, 0.75f, 0.95f, 1f), String.valueOf(diamonds), 150, 50));
     }
 
     private void selectPlantIntoSlot(PlantData data) {

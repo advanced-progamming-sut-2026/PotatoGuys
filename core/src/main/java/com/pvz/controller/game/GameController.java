@@ -54,6 +54,7 @@ import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.levels.Level;
 import com.pvz.models.games.levels.LevelLoader;
 import com.pvz.models.games.levels.Wave;
+import com.pvz.models.games.seasons.SeasonManager;
 import com.pvz.models.games.levels.WavePhase;
 import com.pvz.models.games.map.GameMap;
 import com.pvz.models.games.map.behaviors.WaterBehavior;
@@ -840,6 +841,23 @@ public class GameController {
             recordMiopoints(user, miopoints);
         }
 
+        // --- Story progression (bug #6 + score) ---
+        // Persist what the player just beat so the account actually remembers it.
+        if (user != null && won) {
+            boolean isCampaign = !(ctx.getMode() instanceof IZombieMode)
+                    && !(ctx.getMode() instanceof IZombieLocalMode)
+                    && !(ctx.getMode() instanceof ScoredMode);
+            if (isCampaign) {
+                new SeasonManager().unlockNextLevel(user, seasonName, levelNumber);
+                user.getScore().setLastSeason(seasonIndex());
+                user.getScore().setLastLevel(levelNumber);
+            } else {
+                // Mini-game win (IZombie / IZombieLocal / Scored)
+                user.getScore().setMiniGamesPassed(user.getScore().getMiniGamesPassed() + 1);
+            }
+            user.saveUser();
+        }
+
         if (user != null && user.getQuestLog() != null && ctx.getGameStats() != null) {
             com.pvz.models.quests.QuestEvaluator.evaluateAll(
                     user.getQuestLog(), ctx.getGameStats(), won,
@@ -876,11 +894,12 @@ public class GameController {
                 title = "ALL WAVES CLEARED!";
                 msg = "You earned " + scoredWinMode.getTotalMiopoints() + " miopoints!";
             }
-            Runnable nextAction;
-            if (ctx.getMode() instanceof IZombieLocalMode || ctx.getMode() instanceof ScoredMode) {
-                // Single level: no "next level" — head straight back to the map.
-                nextAction = exitAction;
-            } else {
+            Runnable nextAction = null;
+            String nextBtnLabel = null;
+            boolean isCampaign = !(ctx.getMode() instanceof IZombieLocalMode)
+                    && !(ctx.getMode() instanceof ScoredMode);
+            if (isCampaign && com.pvz.models.games.seasons.SeasonManager.hasLevel(seasonName, levelNumber + 1)) {
+                nextBtnLabel = "NEXT LEVEL";
                 nextAction = () -> Gdx.app.postRunnable(() -> {
                     if (isNetworkedMatch) {
                         AppContext.getInstance().setMatchSession(null);
@@ -891,7 +910,7 @@ public class GameController {
                     }
                 });
             }
-            popup = new GameWinPopup(title, msg, "EXIT TO MAP", exitAction, "NEXT LEVEL", nextAction);
+            popup = new GameWinPopup(title, msg, "EXIT TO MAP", exitAction, nextBtnLabel, nextAction);
         } else {
             String title = "THE ZOMBIES\nATE YOUR\nBRAINS!";
             if (ctx.getMode() instanceof IZombieMode) {
@@ -922,6 +941,18 @@ public class GameController {
             int synced = Math.min(ctx.getProfilePlantFoodOnEntry(), ctx.getPlantFoodCount());
             user.getProfile().setPlantFood(synced);
         }
+    }
+
+    /** Returns the profile-season index (0-based) that matches this session's seasonName. */
+    private int seasonIndex() {
+        var user = com.pvz.models.AppContext.getInstance().getCurrentUser();
+        if (user != null && user.getProfile() != null && user.getProfile().getSeasons() != null) {
+            var seasons = user.getProfile().getSeasons();
+            for (int i = 0; i < seasons.size(); i++) {
+                if (seasons.get(i).getName().equalsIgnoreCase(seasonName)) return i;
+            }
+        }
+        return 0;
     }
 
     /**

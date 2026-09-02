@@ -19,6 +19,9 @@ public class CollectionController {
     /** Flat coin cost to unlock a locked plant. */
     public static final int PURCHASE_COIN_COST = 2000;
 
+    /** Diamond (gem) cost to boost an owned plant before a level starts. */
+    public static final int BOOST_DIAMOND_COST = 2;
+
     /**
      * Seed packets required to advance an owned plant from {@code currentLevel} to the next one.
      * Level 1→2 costs 5, 2→3 costs 10, 3→4 costs 20, then 20 per level beyond that.
@@ -152,5 +155,44 @@ public class CollectionController {
         plant.setLevel(plant.getLevel() + 1);
         user.saveUser();
         return null;
+    }
+
+    /**
+     * Boosts an owned plant before a level by spending {@link #BOOST_DIAMOND_COST}
+     * diamonds (gems). Boosting makes the plant start with its Plant Food effect
+     * already triggered on the next level it is placed in.
+     *
+     * @return {@code null} on success, or an error message explaining what went wrong
+     *         (not logged in, not owned, already boosted, insufficient diamonds).
+     */
+    public String boostPlant(PlantType type) {
+        User user = user();
+        if (user == null) return "No player is logged in.";
+        Profile profile = profile();
+        Collection collection = collection();
+        if (profile == null || collection == null) return "No save data available.";
+
+        MyPlant plant = collection.getPlant(type);
+        if (plant == null) return type + " is not unlocked yet.";
+        if (plant.isBoosted()) return type + " is already boosted.";
+
+        int diamonds = profile.getDiamonds();
+        if (diamonds < BOOST_DIAMOND_COST) {
+            return "Not enough diamonds! Boosting " + type + " costs " + BOOST_DIAMOND_COST
+                    + " diamonds, but you only have " + diamonds + ".";
+        }
+
+        profile.setDiamonds(diamonds - BOOST_DIAMOND_COST);
+        plant.setBoosted(true);
+        user.saveUser();
+        return null;
+    }
+
+    /** True when the plant is owned and not yet boosted (so it can be boosted). */
+    public boolean canBoost(PlantType type) {
+        Collection collection = collection();
+        if (collection == null) return false;
+        MyPlant plant = collection.getPlant(type);
+        return plant != null && !plant.isBoosted();
     }
 }
