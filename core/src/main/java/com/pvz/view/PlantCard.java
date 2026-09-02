@@ -29,6 +29,8 @@ public class PlantCard extends Button {
     private final Image dimLayer;
     private final Image lockImage;
     private final Image boostLayer;
+    private final Image hoverFrame;
+    private final Image selectedFrame;
     private final ProgressBar xpBar;
     private final Label costLabel;
     private final Label levelLabel;
@@ -62,6 +64,17 @@ public class PlantCard extends Button {
         lockImage.setScaling(Scaling.fit);
 
         dimLayer = new Image(skin.newDrawable("white_pixel", new Color(0f, 0f, 0f, 0.55f)));
+
+        // The corner-edge highlight (the "4-corner" SELECT frame) is drawn as its
+        // own Stack layer — not via the Button's over/checked style, which would be
+        // masked by the instant gold/blue boostLayer behind it. Its visibility is
+        // toggled on hover (mouse enter/exit) and on check (selection).
+        hoverFrame = new Image(PlantData.regionDrawable("IMAGE_UI_PACKETS_SELECT"));
+        hoverFrame.setScaling(Scaling.fit);
+        hoverFrame.setVisible(false);
+        selectedFrame = new Image(PlantData.regionDrawable("IMAGE_UI_PACKETS_SELECTED"));
+        selectedFrame.setScaling(Scaling.fit);
+        selectedFrame.setVisible(false);
 
         costLabel = new Label(String.valueOf(data.sunCost()), skin, "medium");
         costLabel.setColor(Color.WHITE);
@@ -112,6 +125,8 @@ public class PlantCard extends Button {
 
         Stack stack = new Stack();
         stack.add(boostLayer);
+        stack.add(hoverFrame);
+        stack.add(selectedFrame);
         stack.add(packetLayer);
         stack.add(dimLayer);
         stack.add(lockLayer);
@@ -120,6 +135,30 @@ public class PlantCard extends Button {
         stack.add(bottomBar);
 
         add(stack).size(WIDTH, HEIGHT);
+
+        // Hover in/out toggles the SELECT corner frame; checking/unchecking toggles
+        // the SELECTED frame. Keeping these as explicit layers restores the original
+        // hover/select highlight without covering the instant gold/blue boostLayer.
+        addListener(new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
+            @Override
+            public void enter(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y,
+                    int pointer, com.badlogic.gdx.scenes.scene2d.Actor fromActor) {
+                updateFrames();
+            }
+
+            @Override
+            public void exit(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y,
+                    int pointer, com.badlogic.gdx.scenes.scene2d.Actor toActor) {
+                updateFrames();
+            }
+        });
+        addListener(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener() {
+            @Override
+            public void changed(com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent event,
+                    com.badlogic.gdx.scenes.scene2d.Actor actor) {
+                updateFrames();
+            }
+        });
 
         update();
     }
@@ -159,5 +198,13 @@ public class PlantCard extends Button {
         } else {
             packetsLabel.setText("");
         }
+        updateFrames();
+    }
+
+    /** Shows the SELECT corner frame on hover and the SELECTED frame while checked. */
+    private void updateFrames() {
+        boolean unlocked = data.isUnlocked();
+        hoverFrame.setVisible(unlocked && isOver() && !isChecked());
+        selectedFrame.setVisible(unlocked && isChecked());
     }
 }
