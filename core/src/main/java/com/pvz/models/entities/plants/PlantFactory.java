@@ -112,6 +112,9 @@ public class PlantFactory {
         if (config instanceof MintActionConfig mintConfig) {
             return new MintAction(mintConfig);
         }
+        if (config instanceof TorchwoodConfig torchwoodConfig) {
+            return new TorchwoodAction(torchwoodConfig);
+        }
         if (config instanceof PassiveConfig passiveConfig) {
             return new PassiveAction(passiveConfig);
         }
@@ -125,6 +128,9 @@ public class PlantFactory {
      * behaviour).
      */
     private PlantAction buildFeedAction(PlantActionConfig config) {
+        if (config instanceof TorchwoodConfig torchwoodConfig) {
+            return new TorchwoodFeedAction(torchwoodConfig);
+        }
         if (config instanceof GrowthSunProducerConfig growthSunConfig) {
             return new GrowthSunProducerAction(growthSunConfig, false);
         }
