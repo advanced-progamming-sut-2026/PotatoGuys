@@ -731,7 +731,7 @@ public class GameController {
             return;
         boolean any = false;
         for (Sun sun : new ArrayList<>(ctx.getSuns())) {
-            if (sun.isDone() || sun.isStealing())
+            if (sun.isDone())
                 continue;
             if (sun.getOwner() == Sun.SunOwner.ZOMBIE) {
                 izMode.addZombieSun(sun.getAmount());
@@ -1333,7 +1333,7 @@ public class GameController {
     private boolean checkSunClick(float worldX, float worldY) {
         if (ctx != null) {
             for (Sun sun : new ArrayList<>(ctx.getSuns())) {
-                if (sun.isDone() || sun.isStealing())
+                if (sun.isDone())
                     continue;
                 float sunX = sun.getX();
                 float sunY = sun.getY();
