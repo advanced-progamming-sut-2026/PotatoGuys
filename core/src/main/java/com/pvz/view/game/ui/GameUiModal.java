@@ -103,6 +103,9 @@ public class GameUiModal extends Table {
     private boolean plantFoodSelected = false;
     private Runnable onPlantFoodRequested = null;
 
+    private Label speedLabel = null;
+    private Image speedImage = null;
+
     protected final Map<PlantCard, Table> slotByCard = new HashMap<>();
     protected final Map<PlantCard, Image> cooldownOverlayByCard = new HashMap<>();
     protected final Map<ZombieCard, Table> zombieSlotByCard = new HashMap<>();
@@ -286,7 +289,8 @@ public class GameUiModal extends Table {
         Table rightControls = new Table();
         rightControls.top().right();
         rightControls.add(walletTable).right().padRight(10);
-        rightControls.add(pauseButton).right().size(58f);
+        rightControls.add(buildSpeedButton()).right().padRight(10).top();
+        rightControls.add(pauseButton).right().size(58f).top();
 
         add(topBar).top().left().expandX().fillX();
         add(rightControls).top().right().padTop(15).padRight(15);
@@ -395,6 +399,65 @@ public class GameUiModal extends Table {
         style.imageOver = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button_down");
         style.imageChecked = PvzSkin.get().getDrawable("image_ui_hud_ingame_shovel_button_down");
         return new ImageButton(style);
+    }
+
+    /**
+     * Game-speed button pinned to the left of the pause button. Cycles the saved
+     * Game Speed setting through 1x -> 2x -> 3x -> 1x on each tap, with the current
+     * multiplier shown in a label just under the {@code images/2x.png} art.
+     */
+    private Table buildSpeedButton() {
+        com.badlogic.gdx.graphics.Texture tex = new com.badlogic.gdx.graphics.Texture(
+                com.badlogic.gdx.Gdx.files.internal("images/2x.png"));
+        speedImage = new Image(tex);
+        speedImage.setScaling(Scaling.fit);
+
+        speedLabel = new Label("", PvzSkin.get(), "medium");
+        speedLabel.setColor(Color.BLACK);
+
+        Table button = new Table();
+        button.add(speedImage).size(58f).row();
+        button.add(speedLabel).padTop(2f);
+        refreshSpeedButton();
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                cycleGameSpeed();
+            }
+        });
+        return button;
+    }
+
+    /** Applies the current Game Speed multiplier to the on-screen label. */
+    private void refreshSpeedButton() {
+        if (speedLabel == null)
+            return;
+        int speed = currentGameSpeed();
+        speedLabel.setText(speed + "x");
+    }
+
+    /** Reads the logged-in user's clamped Game Speed setting (1/2/3). */
+    private int currentGameSpeed() {
+        com.pvz.models.user.User user = AppContext.getInstance().getCurrentUser();
+        int speed = 1;
+        if (user != null && user.getSetting() != null) {
+            speed = user.getSetting().getGameSpeed();
+        }
+        return Math.max(1, Math.min(3, speed));
+    }
+
+    /** Advances 1x -> 2x -> 3x -> 1x and persists the new speed to the save. */
+    private void cycleGameSpeed() {
+        int next = currentGameSpeed() + 1;
+        if (next > 3) {
+            next = 1;
+        }
+        com.pvz.models.user.User user = AppContext.getInstance().getCurrentUser();
+        if (user != null && user.getSetting() != null) {
+            user.getSetting().setGameSpeed(next);
+            user.saveUser();
+        }
+        refreshSpeedButton();
     }
 
     private void buildObjectiveProgress() {
@@ -791,6 +854,7 @@ public class GameUiModal extends Table {
             return;
 
         syncCards();
+        refreshSpeedButton();
 
         // The + buttons only work while Debug Mode is enabled in settings.
         boolean debug = isDebugModeEnabled();
