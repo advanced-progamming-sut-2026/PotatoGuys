@@ -176,8 +176,14 @@ public class Zombie extends Entity {
 
         updateStatusEffects(dt);
         // if (isParalysed()) return;
-        ZombieState next = currentState.update(this, context, dt);
-        if (next != currentState) {
+        ZombieState runningState = currentState;
+        ZombieState next = runningState.update(this, context, dt);
+        // Only apply the returned transition if the FSM wasn't swapped while the
+        // state was running. A state may repaint itself mid-update (e.g. taking
+        // explosive damage — possibly lethal — while chewing a plant whose death
+        // AoE hits the eater), so honouring a stale return value would re-enter
+        // the old state and strand the zombie in it.
+        if (next != runningState && currentState == runningState) {
             currentState.onExit(this, context);
             next.onEnter(this, context);
             currentState = next;

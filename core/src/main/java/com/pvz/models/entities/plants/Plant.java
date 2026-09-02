@@ -12,6 +12,7 @@ import com.pvz.models.entities.Entity;
 import com.pvz.models.entities.effects.PlantFoodFxEffect;
 import com.pvz.models.entities.plants.actions.PlantAction;
 import com.pvz.models.entities.plants.actions.SunBeanAction;
+import com.pvz.models.entities.plants.actions.TorchwoodAction;
 import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.plants.data.GrowthProfile;
 import com.pvz.models.entities.plants.data.PlantPropertySheet;
@@ -258,6 +259,9 @@ public class Plant extends Entity {
         dead = true;
         if (currentState != null)
             currentState.onExit(this, context);
+        if (attackAction instanceof TorchwoodAction torchwood) {
+            torchwood.onDeath(this, context);
+        }
         currentState = new PlantDeadState();
         context.getGameStats().onPlantLost();
         context.removePlant(this);
