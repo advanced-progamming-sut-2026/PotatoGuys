@@ -53,39 +53,7 @@
           "zombieCount": 1,
           "intervalSeconds": 13.0,
           "allowedTypes": [
-            "RA"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 13.0,
-          "allowedTypes": [
-            "EGYPT_GARG"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 13.0,
-          "allowedTypes": [
-            "ICE_AGE_GARG"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 13.0,
-          "allowedTypes": [
-            "BEACH_GARG"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 13.0,
-          "allowedTypes": [
-            "DARK_GARG"
+            "MUMMY"
           ],
           "isBurst": false
         },
@@ -103,7 +71,7 @@
           "intervalSeconds": 10.0,
           "allowedTypes": [
             "MUMMY",
-            "MUMMY_CONE",
+            "RA",
             "MUMMY_BUCKET"
           ],
           "isBurst": false
@@ -115,7 +83,7 @@
             "MUMMY",
             "MUMMY_CONE",
             "MUMMY_BUCKET",
-            "RA"
+            "EGYPT_GARG"
           ],
           "isBurst": true
         }

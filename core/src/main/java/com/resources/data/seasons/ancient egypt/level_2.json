@@ -64,7 +64,7 @@
           "zombieCount": 3,
           "intervalSeconds": 10,
           "allowedTypes": [
-            "MUMMY",
+            "RA",
             "MUMMY_CONE"
           ],
           "isBurst": false
@@ -74,7 +74,7 @@
           "intervalSeconds": 10,
           "allowedTypes": [
             "MUMMY_BUCKET",
-            "RA"
+            "EGYPT_GARG"
           ],
           "isBurst": false
         },
