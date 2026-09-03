@@ -188,7 +188,11 @@ public class ClientHandler implements Runnable {
             SaveManager.getInstance().save(user, "users/" + id + ".json");
         }
 
+        String oldUsername = this.username;
         this.username = user.getUsername();
+        if (oldUsername != null && !oldUsername.equals(this.username)) {
+            MatchmakingRegistry.markOffline(oldUsername, this);
+        }
         MatchmakingRegistry.markOnline(this.username, this);
 
         return NetworkMessage.ok(request, gson.toJson(user));
@@ -365,7 +369,7 @@ public class ClientHandler implements Runnable {
         if (target == null) {
             return NetworkMessage.error(request, "That user is offline or doesn't exist.");
         }
-        if (target == this) {
+        if (this.username.equals(req.targetUsername)) {
             return NetworkMessage.error(request, "You can't invite yourself.");
         }
 
