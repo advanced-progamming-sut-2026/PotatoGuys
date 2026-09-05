@@ -4,9 +4,20 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="for Yousef">
+    <list default="true" id="3561010f-b4d5-49ba-9052-7a072f6bc3a4" name="Changes" comment="completed game speed changing">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/ui/GameUiModal.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/view/game/ui/GameUiModal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/avatars/avatar_brook.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/avatars/avatar_chopper.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/avatars/avatar_franky.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/avatars/avatar_jinbe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/textures/avatars/avatar_jinbe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/avatars/avatar_luffy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/avatars/avatar_nami.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/avatars/avatar_robin.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/avatars/avatar_sanji.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/textures/avatars/avatar_sanji.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/avatars/avatar_usopp.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/textures/avatars/avatar_usopp.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/textures/avatars/avatar_zoro.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/controller/game/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/levels/Wave.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/com/pvz/models/games/levels/Wave.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,6 +127,7 @@
     "Gradle.Download Sources.executor": "Run",
     "Gradle.plantsvszombies2 [:core:com.pvz.ProjectMerger.main()].executor": "Run",
     "Gradle.plantsvszombies2 [:lwjgl3:run].executor": "Run",
+    "Gradle.plantsvszombies2 [lwjgl3:jar].executor": "Run",
     "Gradle.plantsvszombies2.executor": "Run",
     "Gradle.pvz2 [:core:com.pvz.ProjectMerger.main()].executor": "Run",
     "Gradle.pvz2 [:core:com.pvz.server.PvzServer.main()].executor": "Run",
@@ -220,17 +232,19 @@
       <GradleCoverageDisabled>false</GradleCoverageDisabled>
       <method v="2" />
     </configuration>
-    <configuration name="plantsvszombies2" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="plantsvszombies2 [lwjgl3:jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="scriptParameters" value="" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
-          <list />
+          <list>
+            <option value="lwjgl3:jar" />
+          </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
@@ -247,16 +261,16 @@
       <item itemvalue="Application.Lwjgl3Launcher" />
       <item itemvalue="Application.ProjectMerger" />
       <item itemvalue="Application.PvzServer" />
+      <item itemvalue="Gradle.plantsvszombies2 [lwjgl3:jar]" />
       <item itemvalue="Gradle.plantsvszombies2 [:lwjgl3:run]" />
-      <item itemvalue="Gradle.plantsvszombies2" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.plantsvszombies2 [:lwjgl3:run]" />
+        <item itemvalue="Gradle.plantsvszombies2 [lwjgl3:jar]" />
         <item itemvalue="Application.Lwjgl3Launcher" />
         <item itemvalue="Application.PvzServer" />
         <item itemvalue="Application.ProjectMerger" />
-        <item itemvalue="Gradle.plantsvszombies2" />
       </list>
     </recent_temporary>
   </component>
@@ -291,14 +305,6 @@
       <workItem from="1786945016250" duration="3889000" />
       <workItem from="1786959755105" duration="5011000" />
       <workItem from="1787219129016" duration="489000" />
-    </task>
-    <task id="LOCAL-00010" summary="added frostbite_caves chapter menu screen">
-      <option name="closed" value="true" />
-      <created>1786397675843</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1786397675843</updated>
     </task>
     <task id="LOCAL-00011" summary="updated setting menu you can now change the brightness and music vol">
       <option name="closed" value="true" />
@@ -684,7 +690,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788367532205</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="completed game speed changing">
+      <option name="closed" value="true" />
+      <created>1788368839461</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1788368839461</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -737,7 +751,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added zombies description in collectin" />
     <MESSAGE value="updated login,register menu appearance and some bug fixings" />
     <MESSAGE value="wired show grid to setting and added user username in main menu" />
     <MESSAGE value="added shovel" />
@@ -762,7 +775,8 @@
     <MESSAGE value="some fixes to chapters" />
     <MESSAGE value="bug fixes" />
     <MESSAGE value="for Yousef" />
-    <option name="LAST_COMMIT_MESSAGE" value="for Yousef" />
+    <MESSAGE value="completed game speed changing" />
+    <option name="LAST_COMMIT_MESSAGE" value="completed game speed changing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

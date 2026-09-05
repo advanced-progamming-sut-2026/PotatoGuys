@@ -45,10 +45,12 @@ import com.pvz.models.entities.plants.data.PlantStatResolver;
 import com.pvz.models.entities.plants.enums.PlantType;
 import com.pvz.models.entities.plants.enums.PlantTag;
 import com.pvz.models.entities.sun.Sun;
+import com.pvz.models.entities.zombies.Zombie;
 import com.pvz.models.entities.zombies.ZombieType;
 import com.pvz.models.entities.zombies.config.ZombieAnimationConfig;
 import com.pvz.models.entities.zombies.data.ZombiePropertySheet;
 import com.pvz.models.entities.zombies.data.ZombieRegistry;
+import com.pvz.models.entities.zombies.fsm.ZombieState;
 import com.pvz.models.games.GameContext;
 import com.pvz.models.games.card.PlantCard;
 import com.pvz.models.games.levels.Level;
@@ -85,8 +87,13 @@ import com.pvz.view.game.ui.NormalUiModal;
 import pvz.skin.PvzSkin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class GameController {
     private final String seasonName;
@@ -108,6 +115,21 @@ public class GameController {
     private GameRenderer renderer;
 
     private NotificationSystem notificationSystem;
+
+    // --- Gargantuar footstep camera shake -------------------------------------
+    /** World-space distance a Gargantuar must cover before a "step" registers. */
+    private static final float GARGANTUAR_STEP_DISTANCE = 12f;
+    /** Trauma added per Gargantuar step (0..1). */
+    private static final float GARGANTUAR_STEP_TRAUMA = 0.7f;
+    /** Trauma decay per second — controls how quickly the shake dies down. */
+    private static final float CAMERA_SHAKE_DECAY = 5f;
+    /** Max pixel offset (at full trauma) applied to the camera. */
+    private static final float CAMERA_SHAKE_MAX_OFFSET = 12f;
+
+    private final Map<Zombie, Float> gargantuarStepAccum = new HashMap<>();
+    private float cameraShakeTrauma;
+    private float cameraShakeX;
+    private float cameraShakeY;
 
     private TextureRegion[] backgroundTextures;
     private float backgroundYOffset = 0f;
@@ -630,6 +652,8 @@ public class GameController {
                 }
             }
 
+            updateGargantuarStepShake(simDt);
+
             if (!cardsInitialized) {
                 cardsInitialized = true;
                 gameUiModal.initCards();
@@ -640,6 +664,74 @@ public class GameController {
         renderer.update(state instanceof Playing ? simDt : dt);
 
         pollScoredPopups(dt);
+    }
+
+    /**
+     * Monitors walking Gargantuar zombies and shakes the camera once per
+     * footstep. Each frame the distance a Gargantuar moved (same formula the
+     * walk FSM uses) is accumulated per zombie; crossing a step threshold
+     * bumps the shake trauma, which then decays smoothly. The derived offset
+     * is added on top of the base camera position that {@link Playing} sets
+     * every frame, so no drift can accumulate. Guests in networked matches
+     * don't simulate zombies locally, so they simply never accumulate steps.
+     */
+    private void updateGargantuarStepShake(float dt) {
+        if (ctx != null && ctx.getZombies() != null) {
+            Set<Zombie> walking = new HashSet<>();
+            for (Zombie zombie : ctx.getZombies()) {
+                if (zombie.isDead() || !isWalkingGargantuar(zombie)) {
+                    continue;
+                }
+                walking.add(zombie);
+                float distance = Math.max(0f, zombie.getEffectiveSpeedPerTick() * 900f * dt);
+                float accum = gargantuarStepAccum.getOrDefault(zombie, 0f) + distance;
+                if (accum >= GARGANTUAR_STEP_DISTANCE) {
+                    accum -= GARGANTUAR_STEP_DISTANCE;
+                    triggerCameraShake(GARGANTUAR_STEP_TRAUMA);
+                }
+                gargantuarStepAccum.put(zombie, accum);
+            }
+            gargantuarStepAccum.keySet().removeIf(z -> !walking.contains(z));
+        } else {
+            gargantuarStepAccum.clear();
+        }
+
+        // Decay trauma and derive the current screen offset.
+        cameraShakeTrauma = Math.max(0f, cameraShakeTrauma - CAMERA_SHAKE_DECAY * dt);
+        if (cameraShakeTrauma <= 0f) {
+            cameraShakeX = 0f;
+            cameraShakeY = 0f;
+        } else {
+            float magnitude = cameraShakeTrauma * cameraShakeTrauma * CAMERA_SHAKE_MAX_OFFSET;
+            cameraShakeX = MathUtils.random(-magnitude, magnitude);
+            cameraShakeY = MathUtils.random(-magnitude * 0.6f, magnitude * 0.6f);
+        }
+
+        // Offset the camera around the base position set by Playing.update and
+        // bake it into the combined matrix the renderer samples this frame.
+        camera.position.x += cameraShakeX;
+        camera.position.y += cameraShakeY;
+        camera.update();
+    }
+
+    /** True while a Gargantuar (the big one that throws imps) is walking. */
+    private boolean isWalkingGargantuar(Zombie zombie) {
+        ZombieState state = zombie.getCurrentState();
+        if (state == null || state.getLabel() == null || !"Walking".equals(state.getLabel())) {
+            return false;
+        }
+        ZombiePropertySheet sheet = zombie.getSheet();
+        if (sheet == null) {
+            return false;
+        }
+        String alias = sheet.getAlias();
+        return sheet.getImpType() != null
+                || (alias != null && alias.toLowerCase().contains("gargantuar"));
+    }
+
+    /** Adds decay-trauma; clamps to [0, 1] so many steps can't overdrive it. */
+    private void triggerCameraShake(float trauma) {
+        cameraShakeTrauma = Math.min(1f, cameraShakeTrauma + trauma);
     }
 
     /**

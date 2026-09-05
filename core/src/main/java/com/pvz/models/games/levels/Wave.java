@@ -25,6 +25,7 @@ public class Wave {
     private int remainingInPhase;
     private float secondsUntilNextSpawn;
     private boolean done;
+    private boolean announced;
     private static Random rand = new Random();
 
     public Wave(int waveNumber, boolean isFinalWave, int totalWaveCost, List<WavePhase> phases,
@@ -83,14 +84,29 @@ public class Wave {
 
     public void startWave(GameContext context) {
         ensureInitialized();
-        context.log("Wave " + waveNumber + " started" + (isFinalWave ? " — FINAL WAVE!" : ""));
+        announceStart(context);
         if (phases.get(currentPhase).isBurst()) {
             context.log("Wave " + waveNumber + " phase " + (currentPhase + 1) + " [BURST]");
         }
     }
 
+    /** Shows the on-screen "Wave N Started" / "FINAL WAVE!" banner and console
+     *  log exactly once per wave, no matter who calls it (startWave or the first
+     *  spawn tick of updateWave — the latter covers single-player's first wave,
+     *  which never goes through startWave()). */
+    private void announceStart(GameContext context) {
+        if (announced)
+            return;
+        announced = true;
+        context.triggerNotification(isFinalWave
+                ? "FINAL WAVE!"
+                : "Wave " + waveNumber + " Started !");
+        context.log("Wave " + waveNumber + " started !" + (isFinalWave ? " — FINAL WAVE!" : ""));
+    }
+
     public void updateWave(GameContext context, float dt) {
         ensureInitialized();
+        announceStart(context);
         if (done)
             return;
 
