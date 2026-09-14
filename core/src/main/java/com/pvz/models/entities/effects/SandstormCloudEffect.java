@@ -31,14 +31,13 @@ import com.pvz.models.games.GameContext;
  * </ol>
  */
 public class SandstormCloudEffect extends Effect {
-
-    // TODO: replace with the real PAM path once the asset address is known.
     private static final String SAND_STORM_PAM_PATH = "768/INITIAL/EFFECTS/SANDSTORM_TOP/SANDSTORM_TOP.PAM";
 
-    // TODO: replace with the real clip names baked into the PAM above.
     private static final String INTRO_CLIP = "intro";
     private static final String LOOP_CLIP = "loop";
     private static final String OUTRO_CLIP = "outro";
+
+    private static final float MAX_DURATION = 3.75f;
 
     private static final Vector2 SCALE = new Vector2(0.65f, 0.65f);
 
@@ -96,6 +95,10 @@ public class SandstormCloudEffect extends Effect {
     @Override
     public void update(float dt) {
         super.update(dt);
+
+        if (stateTime > MAX_DURATION) {
+            dispose();
+        }
 
         // Stay glued to the rider while forming/traveling; once dissipating,
         // stay put at the drop point instead of trailing the (now-visible,

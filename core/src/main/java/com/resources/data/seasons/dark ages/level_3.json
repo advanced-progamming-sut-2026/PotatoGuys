@@ -3,7 +3,7 @@
   "musicPath": "assets/audio/music/dark_ages/Laura Shigihara - Brainiac Maniac (In-Game).mp3",
   "levelNumber": 3,
   "levelType": "SPECIAL",
-  "initialSun": 300,
+  "initialSun": 500,
   "deadlineColumn": 3,
   "objectives": [
     "Don't let zombies cross Column 4"
@@ -57,7 +57,7 @@
       "difficulty": 3,
       "phases": [
         {
-          "zombieCount": 3,
+          "zombieCount": 2,
           "intervalTicks": 90,
           "allowedTypes": [
             "BASIC"

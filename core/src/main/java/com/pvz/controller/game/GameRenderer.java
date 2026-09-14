@@ -232,8 +232,7 @@ public class GameRenderer {
         }
     }
 
-    private static final String ICE_BLOCK_PAM =
-            "768/FULL/EFFECTS/FROSTBITE_ICE_BLOCK_PLANT/FROSTBITE_ICE_BLOCK_PLANT.PAM";
+    private static final String ICE_BLOCK_PAM = "768/FULL/EFFECTS/FROSTBITE_ICE_BLOCK_PLANT/FROSTBITE_ICE_BLOCK_PLANT.PAM";
     private static final String ICE_BLOCK_CLIP = "freeze_idle";
 
     private void drawZombies(int row) {
@@ -374,10 +373,9 @@ public class GameRenderer {
                 controller.setPreviewZombieCard(zCard);
                 previewStateTime = 0f;
             }
-            com.pvz.models.entities.zombies.data.ZombiePropertySheet sheet =
-                    com.pvz.models.entities.zombies.data.ZombieRegistry
-                            .getInstance().getSheet(
-                                    zCard.getZombieType().getAlias());
+            com.pvz.models.entities.zombies.data.ZombiePropertySheet sheet = com.pvz.models.entities.zombies.data.ZombieRegistry
+                    .getInstance().getSheet(
+                            zCard.getZombieType().getAlias());
             if (sheet != null && sheet.getAnimationConfig() != null) {
                 String pamPath = sheet.getAnimationConfig().pamFilePath;
                 String idleLabel = sheet.getAnimationConfig().idleLabel;
@@ -405,9 +403,8 @@ public class GameRenderer {
             String cleanAlias = armorAlias.contains(":")
                     ? armorAlias.substring(armorAlias.indexOf(':') + 1)
                     : armorAlias;
-            com.pvz.models.entities.zombies.data.ArmorPropertySheet aSheet =
-                    com.pvz.models.entities.zombies.data.ZombieRegistry
-                            .getInstance().getArmorSheet(cleanAlias);
+            com.pvz.models.entities.zombies.data.ArmorPropertySheet aSheet = com.pvz.models.entities.zombies.data.ZombieRegistry
+                    .getInstance().getArmorSheet(cleanAlias);
             if (aSheet == null)
                 continue;
             com.pvz.models.entities.zombies.armor.ArmorType type = com.pvz.models.entities.zombies.armor.ArmorType
@@ -588,11 +585,11 @@ public class GameRenderer {
                 float cx = cursorTile.getX();
                 float cy = cursorTile.getY();
                 ZombieCard armed = controller.getGameUiModal() != null
-                        ? controller.getGameUiModal().getSelectedZombieCard() : null;
+                        ? controller.getGameUiModal().getSelectedZombieCard()
+                        : null;
                 if (armed != null && armed.getZombieType() != null) {
-                    com.pvz.models.entities.zombies.data.ZombiePropertySheet sheet =
-                            com.pvz.models.entities.zombies.data.ZombieRegistry
-                                    .getInstance().getSheet(armed.getZombieType().getAlias());
+                    com.pvz.models.entities.zombies.data.ZombiePropertySheet sheet = com.pvz.models.entities.zombies.data.ZombieRegistry
+                            .getInstance().getSheet(armed.getZombieType().getAlias());
                     String pamPath = null;
                     String idleLabel = null;
                     float scale = 0.65f;
@@ -664,9 +661,13 @@ public class GameRenderer {
         }
         batch.setColor(frameConfig.r, frameConfig.g, frameConfig.b, frameConfig.a);
         if (frameConfig.partsVisibility == null) {
-            PvZ2.pamPlayer.draw(batch, frameConfig.pamPath, frameConfig.label,
-                    frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
-                    frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+            try {
+                PvZ2.pamPlayer.draw(batch, frameConfig.pamPath, frameConfig.label,
+                        frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,
+                        frameConfig.scale.x, frameConfig.scale.y, frameConfig.looping);
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
         } else {
             PamActor.drawWithVisibility(batch, frameConfig.pamPath, frameConfig.label,
                     frameConfig.stateTime, frameConfig.position.x, frameConfig.position.y,

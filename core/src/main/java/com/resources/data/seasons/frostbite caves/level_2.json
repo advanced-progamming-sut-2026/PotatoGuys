@@ -7,7 +7,7 @@
   "effects": [
     {
       "type": "COLD_WIND",
-      "intervalTime": 25,
+      "intervalTime": 35,
       "strength": 1.5
     }
   ],
@@ -118,107 +118,95 @@
     {
       "waveNumber": 1,
       "isFinalWave": false,
-      "baseTotalWaveCost": 120,
+      "baseTotalWaveCost": 150,
       "lanes": 5,
-      "difficulty": 3,
+      "difficulty": 2,
       "phases": [
         {
           "zombieCount": 3,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["ICE_AGE", "ICE_AGE_CONE", "DODO"],
+          "intervalSeconds": 9.0,
+          "allowedTypes": [
+            "ICE_AGE",
+            "ICE_AGE_CONE",
+            "DODO"
+          ],
           "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["ICE_AGE_BUCKET", "ICE_AGE"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 4.5,
-          "allowedTypes": ["TROGLOBITE"],
-          "isBurst": false
+          "zombieCount": 5,
+          "intervalSeconds": 6.0,
+          "allowedTypes": [
+            "ICE_AGE_BUCKET",
+            "ICE_AGE",
+            "TROGLOBITE"
+          ],
+          "isBurst": true
         }
       ]
     },
     {
       "waveNumber": 2,
       "isFinalWave": false,
-      "baseTotalWaveCost": 144,
+      "baseTotalWaveCost": 200,
       "lanes": 5,
-      "difficulty": 4,
+      "difficulty": 2,
       "phases": [
         {
-          "zombieCount": 3,
+          "zombieCount": 5,
           "intervalSeconds": 4.5,
-          "allowedTypes": ["ICE_AGE_CONE", "ICE_AGE_BUCKET", "DODO"],
+          "allowedTypes": [
+            "ICE_AGE_CONE",
+            "ICE_AGE_BUCKET",
+            "DODO"
+          ],
           "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 4.5,
-          "allowedTypes": ["HUNTER", "ICE_AGE"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 2,
+          "zombieCount": 4,
           "intervalSeconds": 4.0,
-          "allowedTypes": ["TROGLOBITE", "ICE_AGE_IMP"],
+          "allowedTypes": [
+            "HUNTER",
+            "ICE_AGE"
+          ],
           "isBurst": false
+        },
+        {
+          "zombieCount": 5,
+          "intervalSeconds": 3.75,
+          "allowedTypes": [
+            "TROGLOBITE",
+            "ICE_AGE_IMP"
+          ],
+          "isBurst": true
         }
       ]
     },
     {
       "waveNumber": 3,
-      "isFinalWave": false,
-      "baseTotalWaveCost": 173,
-      "lanes": 5,
-      "difficulty": 5,
-      "phases": [
-        {
-          "zombieCount": 3,
-          "intervalSeconds": 4.0,
-          "allowedTypes": ["ICE_AGE_BUCKET", "HUNTER"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 4.0,
-          "allowedTypes": ["TROGLOBITE", "DODO"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 4.0,
-          "allowedTypes": ["HUNTER", "ICE_AGE_IMP"],
-          "isBurst": false
-        }
-      ]
-    },
-    {
-      "waveNumber": 4,
       "isFinalWave": true,
-      "baseTotalWaveCost": 346,
+      "baseTotalWaveCost": 300,
       "lanes": 5,
-      "difficulty": 7,
+      "difficulty": 2,
       "phases": [
         {
-          "zombieCount": 3,
+          "zombieCount": 7,
           "intervalSeconds": 3.0,
-          "allowedTypes": ["TROGLOBITE", "ICE_AGE_BUCKET"],
-          "isBurst": true
+          "allowedTypes": [
+            "ICE_AGE_BUCKET",
+            "HUNTER"
+          ],
+          "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 3.0,
-          "allowedTypes": ["HUNTER", "DODO"],
-          "isBurst": true
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 3.0,
-          "allowedTypes": ["ICE_AGE_GARG", "ICE_AGE_IMP"],
+          "zombieCount": 8,
+          "intervalSeconds": 2.75,
+          "allowedTypes": [
+            "TROGLOBITE",
+            "DODO",
+            "HUNTER",
+            "ICE_AGE_IMP",
+            "ICE_AGE_GARG"
+          ],
           "isBurst": true
         }
       ]

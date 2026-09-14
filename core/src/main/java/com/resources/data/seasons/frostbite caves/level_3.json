@@ -13,12 +13,12 @@
     {
       "waveNumber": 1,
       "isFinalWave": false,
-      "baseTotalWaveCost": 200,
+      "baseTotalWaveCost": 280,
       "lanes": 5,
-      "difficulty": 2,
+      "difficulty": 1,
       "phases": [
         {
-          "zombieCount": 2,
+          "zombieCount": 4,
           "intervalTicks": 100,
           "allowedTypes": [
             "BASIC"
@@ -26,7 +26,7 @@
           "isBurst": false
         },
         {
-          "zombieCount": 2,
+          "zombieCount": 6,
           "intervalTicks": 80,
           "allowedTypes": [
             "BASIC",
@@ -39,12 +39,12 @@
     {
       "waveNumber": 2,
       "isFinalWave": false,
-      "baseTotalWaveCost": 500,
+      "baseTotalWaveCost": 700,
       "lanes": 5,
-      "difficulty": 5,
+      "difficulty": 2,
       "phases": [
         {
-          "zombieCount": 3,
+          "zombieCount": 8,
           "intervalTicks": 70,
           "allowedTypes": [
             "BASIC",
@@ -54,7 +54,7 @@
           "isBurst": false
         },
         {
-          "zombieCount": 4,
+          "zombieCount": 6,
           "intervalTicks": 50,
           "allowedTypes": [
             "CONEHEAD",
@@ -67,13 +67,13 @@
     {
       "waveNumber": 3,
       "isFinalWave": false,
-      "baseTotalWaveCost": 900,
+      "baseTotalWaveCost": 1000,
       "lanes": 5,
       "difficulty": 7,
       "phases": [
         {
-          "zombieCount": 4,
-          "intervalTicks": 55,
+          "zombieCount": 7,
+          "intervalTicks": 50,
           "allowedTypes": [
             "CONEHEAD",
             "BUCKETHEAD",
@@ -82,7 +82,7 @@
           "isBurst": false
         },
         {
-          "zombieCount": 5,
+          "zombieCount": 9,
           "intervalTicks": 40,
           "allowedTypes": [
             "BUCKETHEAD",
@@ -95,12 +95,12 @@
     {
       "waveNumber": 4,
       "isFinalWave": true,
-      "baseTotalWaveCost": 1800,
+      "baseTotalWaveCost": 2200,
       "lanes": 5,
-      "difficulty": 10,
+      "difficulty": 2,
       "phases": [
         {
-          "zombieCount": 5,
+          "zombieCount": 12,
           "intervalTicks": 40,
           "allowedTypes": [
             "CONEHEAD",
@@ -111,7 +111,7 @@
           "isBurst": false
         },
         {
-          "zombieCount": 8,
+          "zombieCount": 16,
           "intervalTicks": 25,
           "allowedTypes": [
             "BUCKETHEAD",

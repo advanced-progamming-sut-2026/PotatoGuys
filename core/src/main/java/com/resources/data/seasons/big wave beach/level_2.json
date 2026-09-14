@@ -16,7 +16,7 @@
     "columns": 9,
     "specialTiles": [
       {
-        "x": 5,
+        "x": 6,
         "y": 1,
         "behaviors": [
           {
@@ -36,7 +36,7 @@
         ]
       },
       {
-        "x": 5,
+        "x": 6,
         "y": 3,
         "behaviors": [
           {
@@ -82,19 +82,28 @@
         {
           "zombieCount": 3,
           "intervalSeconds": 5.0,
-          "allowedTypes": ["BEACH", "BEACH_CONE", "SNORKEL"],
+          "allowedTypes": [
+            "BEACH",
+            "BEACH_CONE",
+            "SNORKEL"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 2,
           "intervalSeconds": 5.0,
-          "allowedTypes": ["BEACH_BUCKET", "SNORKEL"],
+          "allowedTypes": [
+            "BEACH_BUCKET",
+            "SNORKEL"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 1,
           "intervalSeconds": 4.5,
-          "allowedTypes": ["FISHERMAN"],
+          "allowedTypes": [
+            "FISHERMAN"
+          ],
           "isBurst": false
         }
       ]
@@ -109,19 +118,29 @@
         {
           "zombieCount": 3,
           "intervalSeconds": 4.5,
-          "allowedTypes": ["BEACH_CONE", "BEACH_BUCKET", "SNORKEL"],
+          "allowedTypes": [
+            "BEACH_CONE",
+            "BEACH_BUCKET",
+            "SNORKEL"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 2,
           "intervalSeconds": 4.5,
-          "allowedTypes": ["OCTOPUS", "BEACH"],
+          "allowedTypes": [
+            "OCTOPUS",
+            "BEACH"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 2,
           "intervalSeconds": 4.0,
-          "allowedTypes": ["FISHERMAN", "BEACH_IMP"],
+          "allowedTypes": [
+            "FISHERMAN",
+            "BEACH_IMP"
+          ],
           "isBurst": false
         }
       ]
@@ -136,19 +155,28 @@
         {
           "zombieCount": 3,
           "intervalSeconds": 4.0,
-          "allowedTypes": ["BEACH_BUCKET", "OCTOPUS"],
+          "allowedTypes": [
+            "BEACH_BUCKET",
+            "OCTOPUS"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 2,
           "intervalSeconds": 4.0,
-          "allowedTypes": ["FISHERMAN", "SNORKEL"],
+          "allowedTypes": [
+            "FISHERMAN",
+            "SNORKEL"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 2,
           "intervalSeconds": 4.0,
-          "allowedTypes": ["BEACH_IMP", "BEACH_BUCKET"],
+          "allowedTypes": [
+            "BEACH_IMP",
+            "BEACH_BUCKET"
+          ],
           "isBurst": false
         }
       ]
@@ -163,19 +191,27 @@
         {
           "zombieCount": 3,
           "intervalSeconds": 3.0,
-          "allowedTypes": ["OCTOPUS"],
+          "allowedTypes": [
+            "OCTOPUS"
+          ],
           "isBurst": true
         },
         {
           "zombieCount": 2,
           "intervalSeconds": 3.0,
-          "allowedTypes": ["FISHERMAN", "SNORKEL"],
+          "allowedTypes": [
+            "FISHERMAN",
+            "SNORKEL"
+          ],
           "isBurst": true
         },
         {
           "zombieCount": 2,
           "intervalSeconds": 3.0,
-          "allowedTypes": ["BEACH_GARG", "BEACH_IMP"],
+          "allowedTypes": [
+            "BEACH_GARG",
+            "BEACH_IMP"
+          ],
           "isBurst": true
         }
       ]

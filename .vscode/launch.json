@@ -6,6 +6,13 @@
             "name": "PvzServer",
             "request": "launch",
             "mainClass": "com.pvz.server.PvzServer",
+            "projectName": "PlantsVsZombies2-core"
+        },
+        {
+            "type": "java",
+            "name": "PvzServer",
+            "request": "launch",
+            "mainClass": "com.pvz.server.PvzServer",
             "projectName": "core"
         },
         {

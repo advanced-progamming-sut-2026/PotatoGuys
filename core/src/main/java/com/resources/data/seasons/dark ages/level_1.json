@@ -3,7 +3,7 @@
   "musicPath": "assets/audio/music/dark_ages/Laura Shigihara - Rigor Mormist (In-Game).mp3",
   "levelNumber": 1,
   "levelType": "NORMAL",
-  "initialSun": 250,
+  "initialSun": 275,
   "effects": [
     {
       "type": "DARK_AGES",
@@ -15,7 +15,7 @@
     "columns": 9,
     "specialTiles": [
       {
-        "x": 5,
+        "x": 6,
         "y": 2,
         "behaviors": [
           {
@@ -55,20 +55,19 @@
       "phases": [
         {
           "zombieCount": 3,
-          "intervalSeconds": 6.0,
-          "allowedTypes": ["DARK", "KNIGHT"],
+          "intervalSeconds": 9.0,
+          "allowedTypes": [
+            "DARK"
+          ],
           "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 6.0,
-          "allowedTypes": ["DARK_CONE"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["KNIGHT"],
+          "zombieCount": 4,
+          "intervalSeconds": 8.0,
+          "allowedTypes": [
+            "DARK_CONE",
+            "KNIGHT"
+          ],
           "isBurst": false
         }
       ]
@@ -83,19 +82,28 @@
         {
           "zombieCount": 3,
           "intervalSeconds": 5.5,
-          "allowedTypes": ["DARK", "DARK_CONE", "KNIGHT"],
+          "allowedTypes": [
+            "DARK",
+            "DARK_CONE",
+            "KNIGHT"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 2,
           "intervalSeconds": 5.5,
-          "allowedTypes": ["DARK_BUCKET"],
+          "allowedTypes": [
+            "DARK_BUCKET"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 2,
           "intervalSeconds": 5.0,
-          "allowedTypes": ["JUGGLER", "DARK_IMP"],
+          "allowedTypes": [
+            "JUGGLER",
+            "DARK_IMP"
+          ],
           "isBurst": false
         }
       ]
@@ -103,26 +111,36 @@
     {
       "waveNumber": 3,
       "isFinalWave": true,
-      "baseTotalWaveCost": 260,
+      "baseTotalWaveCost": 450,
       "lanes": 5,
       "difficulty": 4,
       "phases": [
         {
-          "zombieCount": 3,
-          "intervalSeconds": 4.0,
-          "allowedTypes": ["DARK_BUCKET", "KNIGHT"],
-          "isBurst": true
+          "zombieCount": 8,
+          "intervalSeconds": 3.0,
+          "allowedTypes": [
+            "DARK_BUCKET",
+            "KNIGHT"
+          ],
+          "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 4.0,
-          "allowedTypes": ["JUGGLER", "DARK_IMP"],
-          "isBurst": true
+          "zombieCount": 9,
+          "intervalSeconds": 2.0,
+          "allowedTypes": [
+            "JUGGLER",
+            "DARK_IMP"
+          ],
+          "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 4.0,
-          "allowedTypes": ["DARK_IMP", "DARK_BUCKET"],
+          "zombieCount": 13,
+          "intervalSeconds": 0.8,
+          "allowedTypes": [
+            "DARK_IMP",
+            "DARK_BUCKET",
+            "KNIGHT"
+          ],
           "isBurst": true
         }
       ]

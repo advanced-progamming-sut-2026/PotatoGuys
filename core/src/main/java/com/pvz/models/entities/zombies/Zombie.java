@@ -615,9 +615,11 @@ public class Zombie extends Entity {
             return;
         }
         FrameConfig frameConfig = currentState.draw(this, context);
-        currentState = new ButterStunState(currentState, currentState.getStateTime(),
-                duration, frameConfig.pamPath, frameConfig.label);
-        currentState.onEnter(this, context);
+        if (frameConfig != null) {
+            currentState = new ButterStunState(currentState, currentState.getStateTime(),
+                    duration, frameConfig.pamPath, frameConfig.label);
+            currentState.onEnter(this, context);
+        }
     }
 
     /** Convenience: non-poisonous damage. */

@@ -7,7 +7,7 @@
   "effects": [
     {
       "type": "COLD_WIND",
-      "intervalTime": 20,
+      "intervalTime": 40,
       "strength": 1.0
     }
   ],
@@ -104,22 +104,23 @@
       "difficulty": 2,
       "phases": [
         {
-          "zombieCount": 3,
+          "zombieCount": 5,
           "intervalSeconds": 6.0,
-          "allowedTypes": ["ICE_AGE", "DODO"],
+          "allowedTypes": [
+            "ICE_AGE",
+            "DODO"
+          ],
           "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 6.0,
-          "allowedTypes": ["ICE_AGE_CONE"],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 1,
-          "intervalSeconds": 5.0,
-          "allowedTypes": ["DODO"],
-          "isBurst": false
+          "zombieCount": 8,
+          "intervalSeconds": 5.5,
+          "allowedTypes": [
+            "ICE_AGE",
+            "ICE_AGE_CONE",
+            "DODO"
+          ],
+          "isBurst": true
         }
       ]
     },
@@ -133,19 +134,28 @@
         {
           "zombieCount": 3,
           "intervalSeconds": 5.5,
-          "allowedTypes": ["ICE_AGE", "ICE_AGE_CONE", "DODO"],
+          "allowedTypes": [
+            "ICE_AGE",
+            "ICE_AGE_CONE",
+            "DODO"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 2,
           "intervalSeconds": 5.5,
-          "allowedTypes": ["ICE_AGE_BUCKET"],
+          "allowedTypes": [
+            "ICE_AGE_BUCKET"
+          ],
           "isBurst": false
         },
         {
           "zombieCount": 2,
           "intervalSeconds": 5.0,
-          "allowedTypes": ["HUNTER", "ICE_AGE"],
+          "allowedTypes": [
+            "HUNTER",
+            "ICE_AGE"
+          ],
           "isBurst": false
         }
       ]
@@ -160,19 +170,28 @@
         {
           "zombieCount": 3,
           "intervalSeconds": 4.0,
-          "allowedTypes": ["ICE_AGE_BUCKET", "ICE_AGE_CONE"],
+          "allowedTypes": [
+            "ICE_AGE_BUCKET",
+            "ICE_AGE_CONE"
+          ],
           "isBurst": true
         },
         {
           "zombieCount": 2,
           "intervalSeconds": 4.0,
-          "allowedTypes": ["HUNTER", "DODO"],
+          "allowedTypes": [
+            "HUNTER",
+            "DODO"
+          ],
           "isBurst": true
         },
         {
           "zombieCount": 2,
           "intervalSeconds": 4.0,
-          "allowedTypes": ["ICE_AGE_IMP", "ICE_AGE_BUCKET"],
+          "allowedTypes": [
+            "ICE_AGE_IMP",
+            "ICE_AGE_BUCKET"
+          ],
           "isBurst": true
         }
       ]
