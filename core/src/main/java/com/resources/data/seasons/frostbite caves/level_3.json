@@ -1,6 +1,6 @@
 {
   "gameType": "CONVEYORBELT",
-  "musicPath": "assets/audio/music/frostbite_caves/Laura Shigihara - Loonboon (In-Game).mp3",
+  "musicPath": "assets/audio/music/dark_ages/Laura Shigihara - Brainiac Maniac (In-Game).mp3",
   "levelNumber": 3,
   "levelType": "SPECIAL",
   "initialSun": 0,
@@ -13,21 +13,21 @@
     {
       "waveNumber": 1,
       "isFinalWave": false,
-      "baseTotalWaveCost": 280,
+      "baseTotalWaveCost": 180,
       "lanes": 5,
       "difficulty": 1,
       "phases": [
         {
           "zombieCount": 4,
-          "intervalTicks": 100,
+          "intervalSeconds": 3.75,
           "allowedTypes": [
             "BASIC"
           ],
           "isBurst": false
         },
         {
-          "zombieCount": 6,
-          "intervalTicks": 80,
+          "zombieCount": 7,
+          "intervalSeconds": 2.5,
           "allowedTypes": [
             "BASIC",
             "CONEHEAD"
@@ -39,13 +39,13 @@
     {
       "waveNumber": 2,
       "isFinalWave": false,
-      "baseTotalWaveCost": 700,
+      "baseTotalWaveCost": 200,
       "lanes": 5,
       "difficulty": 2,
       "phases": [
         {
-          "zombieCount": 8,
-          "intervalTicks": 70,
+          "zombieCount": 10,
+          "intervalSeconds": 2.75,
           "allowedTypes": [
             "BASIC",
             "CONEHEAD",
@@ -54,9 +54,10 @@
           "isBurst": false
         },
         {
-          "zombieCount": 6,
-          "intervalTicks": 50,
+          "zombieCount": 14,
+          "intervalSeconds": 1.9,
           "allowedTypes": [
+            "BASIC",
             "CONEHEAD",
             "BUCKETHEAD"
           ],
@@ -67,13 +68,13 @@
     {
       "waveNumber": 3,
       "isFinalWave": false,
-      "baseTotalWaveCost": 1000,
+      "baseTotalWaveCost": 250,
       "lanes": 5,
-      "difficulty": 7,
+      "difficulty": 3,
       "phases": [
         {
-          "zombieCount": 7,
-          "intervalTicks": 50,
+          "zombieCount": 13,
+          "intervalSeconds": 2.0,
           "allowedTypes": [
             "CONEHEAD",
             "BUCKETHEAD",
@@ -82,11 +83,14 @@
           "isBurst": false
         },
         {
-          "zombieCount": 9,
-          "intervalTicks": 40,
+          "zombieCount": 16,
+          "intervalSeconds": 1,
           "allowedTypes": [
+            "CONEHEAD",
             "BUCKETHEAD",
-            "IMP"
+            "IMP",
+            "NEWSPAPER",
+            "GARGANTUAR"
           ],
           "isBurst": true
         }
@@ -95,13 +99,13 @@
     {
       "waveNumber": 4,
       "isFinalWave": true,
-      "baseTotalWaveCost": 2200,
+      "baseTotalWaveCost": 300,
       "lanes": 5,
       "difficulty": 2,
       "phases": [
         {
-          "zombieCount": 12,
-          "intervalTicks": 40,
+          "zombieCount": 19,
+          "intervalSeconds": 2,
           "allowedTypes": [
             "CONEHEAD",
             "BUCKETHEAD",
@@ -111,8 +115,8 @@
           "isBurst": false
         },
         {
-          "zombieCount": 16,
-          "intervalTicks": 25,
+          "zombieCount": 25,
+          "intervalSeconds": 0.8,
           "allowedTypes": [
             "BUCKETHEAD",
             "BRICKHEAD",
@@ -145,6 +149,18 @@
     },
     {
       "Type": "Tallnut",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "Cabbagepult",
+      "level": 1,
+      "seed": 0,
+      "isBoosted": false
+    },
+    {
+      "Type": "Jalapeno",
       "level": 1,
       "seed": 0,
       "isBoosted": false

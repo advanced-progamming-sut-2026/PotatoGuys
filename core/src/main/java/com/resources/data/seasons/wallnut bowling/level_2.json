@@ -19,7 +19,7 @@
       "phases": [
         {
           "zombieCount": 3,
-          "intervalTicks": 100,
+          "intervalSeconds": 10,
           "allowedTypes": ["BASIC", "CONEHEAD"],
           "isBurst": false
         }
@@ -34,13 +34,13 @@
       "phases": [
         {
           "zombieCount": 4,
-          "intervalTicks": 80,
+          "intervalSeconds": 8,
           "allowedTypes": ["CONEHEAD", "NEWSPAPER"],
           "isBurst": false
         },
         {
           "zombieCount": 2,
-          "intervalTicks": 50,
+          "intervalSeconds": 5,
           "allowedTypes": ["IMP"],
           "isBurst": true
         }
@@ -55,13 +55,13 @@
       "phases": [
         {
           "zombieCount": 3,
-          "intervalTicks": 70,
+          "intervalSeconds": 7,
           "allowedTypes": ["BUCKETHEAD"],
           "isBurst": false
         },
         {
           "zombieCount": 5,
-          "intervalTicks": 40,
+          "intervalSeconds": 4,
           "allowedTypes": ["CONEHEAD", "NEWSPAPER", "IMP"],
           "isBurst": true
         }
@@ -76,19 +76,19 @@
       "phases": [
         {
           "zombieCount": 2,
-          "intervalTicks": 90,
+          "intervalSeconds": 9,
           "allowedTypes": ["FOOTBALL"],
           "isBurst": false
         },
         {
           "zombieCount": 4,
-          "intervalTicks": 50,
+          "intervalSeconds": 5,
           "allowedTypes": ["BUCKETHEAD", "CONEHEAD"],
           "isBurst": false
         },
         {
           "zombieCount": 6,
-          "intervalTicks": 25,
+          "intervalSeconds": 2.5,
           "allowedTypes": ["IMP", "NEWSPAPER", "FLAG"],
           "isBurst": true
         }
@@ -103,13 +103,13 @@
       "phases": [
         {
           "zombieCount": 1,
-          "intervalTicks": 100,
+          "intervalSeconds": 10,
           "allowedTypes": ["GARGANTUAR"],
           "isBurst": false
         },
         {
           "zombieCount": 5,
-          "intervalTicks": 40,
+          "intervalSeconds": 4,
           "allowedTypes": ["BUCKETHEAD", "FOOTBALL", "CONEHEAD"],
           "isBurst": false
         }
@@ -124,25 +124,25 @@
       "phases": [
         {
           "zombieCount": 1,
-          "intervalTicks": 80,
+          "intervalSeconds": 8,
           "allowedTypes": ["GARGANTUAR"],
           "isBurst": false
         },
         {
           "zombieCount": 3,
-          "intervalTicks": 60,
+          "intervalSeconds": 6,
           "allowedTypes": ["FOOTBALL", "BUCKETHEAD"],
           "isBurst": false
         },
         {
           "zombieCount": 6,
-          "intervalTicks": 30,
+          "intervalSeconds": 3,
           "allowedTypes": ["CONEHEAD", "NEWSPAPER", "IMP"],
           "isBurst": false
         },
         {
           "zombieCount": 10,
-          "intervalTicks": 15,
+          "intervalSeconds": 1.5,
           "allowedTypes": ["BASIC", "CONEHEAD", "IMP", "FLAG"],
           "isBurst": true
         }

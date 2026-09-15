@@ -37,7 +37,7 @@ public class SaveOurSeedsMode implements GameMode, PlantPlacer {
         if (level.getGameMapDefinition().prePlantedPlants != null) {
             for (var pDef : level.getGameMapDefinition().prePlantedPlants) {
                 if (pDef.endangered) {
-                    endangeredPositions.add(new int[]{pDef.col, pDef.lane});
+                    endangeredPositions.add(new int[] { pDef.col, pDef.lane });
                 }
             }
         }
@@ -140,14 +140,14 @@ public class SaveOurSeedsMode implements GameMode, PlantPlacer {
             return false;
         }
 
-        if (!context.getPlantsAt(col, lane).isEmpty()) {
-            context.log("[Placement Failed] Tile (" + col + ", " + lane + ") is already occupied by another plant.");
-            return false;
-        }
-
         if (!context.getTileAt(col, lane).isPlantable(card)) {
             context.log("[Placement Failed] Tile (" + col + ", " + lane + ") does not support planting "
                     + card.getPlant().getType());
+            return false;
+        }
+
+        if (!card.canUse()) {
+            context.log("[Placement Failed] Card " + card.getPlant().getType() + " is on cooldown or locked.");
             return false;
         }
 
@@ -157,11 +157,6 @@ public class SaveOurSeedsMode implements GameMode, PlantPlacer {
         if (context.getCurrentSun() < stats.getSunCost()) {
             context.log("[Placement Failed] Not enough sun for " + sheet.getName()
                     + "! Required: " + stats.getSunCost() + ", Current: " + context.getCurrentSun());
-            return false;
-        }
-
-        if (!card.canUse()) {
-            context.log("[Placement Failed] Card " + card.getPlant().getType() + " is on cooldown or locked.");
             return false;
         }
 

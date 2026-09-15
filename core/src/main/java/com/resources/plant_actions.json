@@ -23,7 +23,7 @@
     "feedConfig": {
       "class": "SunProducerActionConfig",
       "label": "plantfood",
-      "intervalSeconds": 20.0,
+      "intervalSeconds": 23.0,
       "delaySeconds": 0.3,
       "productionKind": "ONESHOT",
       "amount": 150,
@@ -408,7 +408,7 @@
       "patterns": [
         {
           "projectileType": "PEA",
-          "damage": 35.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 30,
@@ -3203,7 +3203,7 @@
       "patterns": [
         {
           "projectileType": "FIRE_PEA",
-          "damage": 120.0,
+          "damage": 38.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3223,7 +3223,7 @@
       "patterns": [
         {
           "projectileType": "FIRE_PEA",
-          "damage": 120.0,
+          "damage": 40.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3237,7 +3237,7 @@
         },
         {
           "projectileType": "FIRE_PEA",
-          "damage": 120.0,
+          "damage": 40.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3251,7 +3251,7 @@
         },
         {
           "projectileType": "FIRE_PEA",
-          "damage": 120.0,
+          "damage": 40.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3265,7 +3265,7 @@
         },
         {
           "projectileType": "FIRE_PEA",
-          "damage": 120.0,
+          "damage": 40.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3279,7 +3279,7 @@
         },
         {
           "projectileType": "FIRE_PEA",
-          "damage": 120.0,
+          "damage": 40.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3293,7 +3293,7 @@
         },
         {
           "projectileType": "FIRE_PEA",
-          "damage": 120.0,
+          "damage": 40.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3827,7 +3827,7 @@
     "name": "Mega Gatlin Pea",
     "type": "MegaGatlingPea",
     "category": "SHOOTER",
-    "sunCost": 325,
+    "sunCost": 375,
     "baseHp": 400.0,
     "actionIntervalSeconds": 1.5,
     "rechargeSeconds": 4.5,
@@ -3837,7 +3837,7 @@
       "patterns": [
         {
           "projectileType": "PEA",
-          "damage": 35.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3851,7 +3851,7 @@
         },
         {
           "projectileType": "PEA",
-          "damage": 35.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3865,7 +3865,7 @@
         },
         {
           "projectileType": "PEA",
-          "damage": 35.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3879,7 +3879,7 @@
         },
         {
           "projectileType": "PEA",
-          "damage": 35.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -4132,16 +4132,16 @@
     "type": "Seashroom",
     "category": "SHOOTER",
     "sunCost": 0,
-    "baseHp": 500.0,
+    "baseHp": 450.0,
     "actionIntervalSeconds": 1.5,
-    "rechargeSeconds": 4.0,
+    "rechargeSeconds": 4.5,
     "attackConfig": {
       "class": "ShooterActionConfig",
       "label": "attack",
       "patterns": [
         {
           "projectileType": "SEASHROOM_PROJECTILE",
-          "damage": 35.0,
+          "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 35,
@@ -4161,7 +4161,7 @@
       "patterns": [
         {
           "projectileType": "SEASHROOM_PROJECTILE",
-          "damage": 35.0,
+          "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 35,
@@ -4175,7 +4175,7 @@
         },
         {
           "projectileType": "SEASHROOM_PROJECTILE",
-          "damage": 35.0,
+          "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 35,
@@ -4189,7 +4189,7 @@
         },
         {
           "projectileType": "SEASHROOM_PROJECTILE",
-          "damage": 35.0,
+          "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 35,
@@ -4203,7 +4203,7 @@
         },
         {
           "projectileType": "SEASHROOM_PROJECTILE",
-          "damage": 35.0,
+          "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 35,
@@ -4217,7 +4217,7 @@
         },
         {
           "projectileType": "SEASHROOM_PROJECTILE",
-          "damage": 35.0,
+          "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 35,
@@ -4231,7 +4231,7 @@
         },
         {
           "projectileType": "SEASHROOM_PROJECTILE",
-          "damage": 35.0,
+          "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 35,
@@ -4245,7 +4245,7 @@
         },
         {
           "projectileType": "SEASHROOM_PROJECTILE",
-          "damage": 35.0,
+          "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 35,
@@ -4259,7 +4259,7 @@
         },
         {
           "projectileType": "SEASHROOM_PROJECTILE",
-          "damage": 35.0,
+          "damage": 20.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 35,
@@ -4610,7 +4610,7 @@
       "patterns": [
         {
           "projectileType": "CABBAGE",
-          "damage": 35.0,
+          "damage": 33.0,
           "targets": 1,
           "positionOffset": {
             "x": -10,
@@ -6422,7 +6422,7 @@
     "type": "Wallnut",
     "category": "WALL_NUT",
     "sunCost": 50,
-    "baseHp": 4000.0,
+    "baseHp": 3000.0,
     "actionIntervalSeconds": null,
     "rechargeSeconds": 20.0,
     "attackConfig": {
@@ -6497,7 +6497,7 @@
     "type": "Tallnut",
     "category": "WALL_NUT",
     "sunCost": 125,
-    "baseHp": 8000.0,
+    "baseHp": 5600.0,
     "actionIntervalSeconds": null,
     "rechargeSeconds": 20.0,
     "attackConfig": {
@@ -6566,7 +6566,7 @@
     "type": "Endurian",
     "category": "WALL_NUT",
     "sunCost": 100,
-    "baseHp": 3000.0,
+    "baseHp": 2400.0,
     "actionIntervalSeconds": null,
     "rechargeSeconds": 15.0,
     "attackConfig": {
@@ -7425,7 +7425,7 @@
     "sunCost": 25,
     "baseHp": 300.0,
     "actionIntervalSeconds": null,
-    "rechargeSeconds": 5.0,
+    "rechargeSeconds": 4.5,
     "attackConfig": {
       "class": "PassiveConfig"
     },

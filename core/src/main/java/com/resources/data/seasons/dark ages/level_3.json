@@ -1,9 +1,9 @@
 {
   "gameType": "DEADLINE",
-  "musicPath": "assets/audio/music/dark_ages/Laura Shigihara - Brainiac Maniac (In-Game).mp3",
+  "musicPath": "assets/audio/music/frostbite_caves/Laura Shigihara - Loonboon (In-Game).mp3",
   "levelNumber": 3,
   "levelType": "SPECIAL",
-  "initialSun": 500,
+  "initialSun": 450,
   "deadlineColumn": 3,
   "objectives": [
     "Don't let zombies cross Column 4"
@@ -58,7 +58,7 @@
       "phases": [
         {
           "zombieCount": 2,
-          "intervalTicks": 90,
+          "intervalSeconds": 9,
           "allowedTypes": [
             "BASIC"
           ],
@@ -66,7 +66,7 @@
         },
         {
           "zombieCount": 2,
-          "intervalTicks": 60,
+          "intervalSeconds": 6,
           "allowedTypes": [
             "CONEHEAD"
           ],
@@ -83,7 +83,7 @@
       "phases": [
         {
           "zombieCount": 3,
-          "intervalTicks": 50,
+          "intervalSeconds": 5,
           "allowedTypes": [
             "NEWSPAPER"
           ],
@@ -91,7 +91,7 @@
         },
         {
           "zombieCount": 5,
-          "intervalTicks": 20,
+          "intervalSeconds": 2,
           "allowedTypes": [
             "IMP"
           ],
@@ -108,7 +108,7 @@
       "phases": [
         {
           "zombieCount": 4,
-          "intervalTicks": 70,
+          "intervalSeconds": 7,
           "allowedTypes": [
             "BUCKETHEAD"
           ],
@@ -116,7 +116,7 @@
         },
         {
           "zombieCount": 6,
-          "intervalTicks": 30,
+          "intervalSeconds": 3,
           "allowedTypes": [
             "IMP",
             "CONEHEAD",
@@ -134,16 +134,8 @@
       "difficulty": 15,
       "phases": [
         {
-          "zombieCount": 1,
-          "intervalTicks": 100,
-          "allowedTypes": [
-            "GARGANTUAR"
-          ],
-          "isBurst": false
-        },
-        {
           "zombieCount": 4,
-          "intervalTicks": 40,
+          "intervalSeconds": 4,
           "allowedTypes": [
             "BRICKHEAD",
             "BUCKETHEAD"
@@ -152,7 +144,7 @@
         },
         {
           "zombieCount": 10,
-          "intervalTicks": 15,
+          "intervalSeconds": 1.5,
           "allowedTypes": [
             "IMP",
             "NEWSPAPER",

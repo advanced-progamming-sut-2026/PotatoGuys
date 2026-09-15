@@ -49,22 +49,23 @@
     {
       "waveNumber": 1,
       "isFinalWave": false,
-      "baseTotalWaveCost": 100,
+      "baseTotalWaveCost": 120,
       "lanes": 5,
       "difficulty": 2,
       "phases": [
         {
-          "zombieCount": 3,
-          "intervalSeconds": 9.0,
+          "zombieCount": 2,
+          "intervalSeconds": 7.0,
           "allowedTypes": [
             "DARK"
           ],
           "isBurst": false
         },
         {
-          "zombieCount": 4,
-          "intervalSeconds": 8.0,
+          "zombieCount": 6,
+          "intervalSeconds": 4.0,
           "allowedTypes": [
+            "DARK",
             "DARK_CONE",
             "KNIGHT"
           ],
@@ -74,72 +75,32 @@
     },
     {
       "waveNumber": 2,
-      "isFinalWave": false,
-      "baseTotalWaveCost": 130,
+      "isFinalWave": true,
+      "baseTotalWaveCost": 400,
       "lanes": 5,
       "difficulty": 3,
       "phases": [
         {
-          "zombieCount": 3,
-          "intervalSeconds": 5.5,
+          "zombieCount": 7,
+          "intervalSeconds": 3.5,
           "allowedTypes": [
             "DARK",
             "DARK_CONE",
-            "KNIGHT"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 5.5,
-          "allowedTypes": [
+            "KNIGHT",
             "DARK_BUCKET"
           ],
           "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 5.0,
-          "allowedTypes": [
-            "JUGGLER",
-            "DARK_IMP"
-          ],
-          "isBurst": false
-        }
-      ]
-    },
-    {
-      "waveNumber": 3,
-      "isFinalWave": true,
-      "baseTotalWaveCost": 450,
-      "lanes": 5,
-      "difficulty": 4,
-      "phases": [
-        {
-          "zombieCount": 8,
-          "intervalSeconds": 3.0,
-          "allowedTypes": [
-            "DARK_BUCKET",
-            "KNIGHT"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 9,
+          "zombieCount": 15,
           "intervalSeconds": 2.0,
           "allowedTypes": [
+            "DARK",
+            "DARK_CONE",
+            "KNIGHT",
+            "DARK_BUCKET",
             "JUGGLER",
             "DARK_IMP"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 13,
-          "intervalSeconds": 0.8,
-          "allowedTypes": [
-            "DARK_IMP",
-            "DARK_BUCKET",
-            "KNIGHT"
           ],
           "isBurst": true
         }

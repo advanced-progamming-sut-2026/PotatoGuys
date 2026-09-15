@@ -70,7 +70,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
             return;
         }
 
-        if (updateWaves(context)) {
+        if (updateWaves(context, dt)) {
             return;
         }
 
@@ -88,7 +88,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
         return false;
     }
 
-    private boolean updateWaves(GameContext context) {
+    private boolean updateWaves(GameContext context, float dt) {
         if (currentWave.isDone() && context.getZombies().isEmpty()) {
             int nextWaveIndex = waves.indexOf(currentWave) + 1;
             if (nextWaveIndex < waves.size()) {
@@ -103,7 +103,7 @@ public class DeadLineMode implements GameMode, PlantPlacer {
         }
 
         if (!currentWave.isDone()) {
-            currentWave.updateWave(context, 0);
+            currentWave.updateWave(context, dt);
         }
         return false;
     }

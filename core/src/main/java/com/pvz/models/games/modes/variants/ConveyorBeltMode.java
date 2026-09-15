@@ -24,7 +24,7 @@ public class ConveyorBeltMode implements GameMode, PlantPlacer {
     private List<MyPlant> availablePlants;
 
     private float stateTime = 0;
-    private static final float SPAWN_INTERVAL = 5f;
+    private static final float SPAWN_INTERVAL = 7f;
     private static final int MAX_HAND_SIZE = 7;
 
     public ConveyorBeltMode(Level level) {

@@ -19,8 +19,48 @@
     "columns": 9,
     "specialTiles": [
       {
-        "x": 4,
+        "x": 6,
         "y": 2,
+        "behaviors": [
+          {
+            "type": "WATER",
+            "hp": 0,
+            "name": "Water"
+          },
+          {
+            "type": "LOW_TIDE",
+            "hp": 0,
+            "name": "LowTide"
+          }
+        ],
+        "tags": [
+          "WATER",
+          "LOW_TIDE"
+        ]
+      },
+      {
+        "x": 6,
+        "y": 3,
+        "behaviors": [
+          {
+            "type": "WATER",
+            "hp": 0,
+            "name": "Water"
+          },
+          {
+            "type": "LOW_TIDE",
+            "hp": 0,
+            "name": "LowTide"
+          }
+        ],
+        "tags": [
+          "WATER",
+          "LOW_TIDE"
+        ]
+      },
+      {
+        "x": 7,
+        "y": 4,
         "behaviors": [
           {
             "type": "WATER",
@@ -151,7 +191,7 @@
       "difficulty": 2,
       "phases": [
         {
-          "zombieCount": 3,
+          "zombieCount": 2,
           "intervalSeconds": 8.0,
           "allowedTypes": [
             "BASIC",
@@ -160,25 +200,38 @@
           "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 6.0,
+          "zombieCount": 4,
+          "intervalSeconds": 5.0,
           "allowedTypes": [
+            "BASIC",
+            "SNORKEL",
             "CONEHEAD"
           ],
           "isBurst": false
+        },
+        {
+          "zombieCount": 7,
+          "intervalSeconds": 2.0,
+          "allowedTypes": [
+            "BASIC",
+            "SNORKEL",
+            "CONEHEAD",
+            "BUCKETHEAD"
+          ],
+          "isBurst": true
         }
       ]
     },
     {
       "waveNumber": 2,
       "isFinalWave": false,
-      "baseTotalWaveCost": 500,
+      "baseTotalWaveCost": 300,
       "lanes": 5,
-      "difficulty": 4,
+      "difficulty": 3,
       "phases": [
         {
-          "zombieCount": 4,
-          "intervalSeconds": 6.0,
+          "zombieCount": 6,
+          "intervalSeconds": 3.0,
           "allowedTypes": [
             "CONEHEAD",
             "NEWSPAPER",
@@ -187,9 +240,12 @@
           "isBurst": false
         },
         {
-          "zombieCount": 3,
-          "intervalSeconds": 5.0,
+          "zombieCount": 12,
+          "intervalSeconds": 1.75,
           "allowedTypes": [
+            "CONEHEAD",
+            "NEWSPAPER",
+            "SNORKEL",
             "BUCKETHEAD",
             "OCTOPUS"
           ],
@@ -199,14 +255,50 @@
     },
     {
       "waveNumber": 3,
-      "isFinalWave": true,
-      "baseTotalWaveCost": 1200,
+      "isFinalWave": false,
+      "baseTotalWaveCost": 400,
       "lanes": 5,
       "difficulty": 8,
       "phases": [
         {
           "zombieCount": 5,
-          "intervalSeconds": 5.0,
+          "intervalSeconds": 2.75,
+          "allowedTypes": [
+            "CONEHEAD",
+            "NEWSPAPER",
+            "SNORKEL",
+            "BUCKETHEAD",
+            "BRICKHEAD"
+          ],
+          "isBurst": false
+        },
+        {
+          "zombieCount": 15,
+          "intervalSeconds": 1.5,
+          "allowedTypes": [
+            "CONEHEAD",
+            "NEWSPAPER",
+            "SNORKEL",
+            "BUCKETHEAD",
+            "BRICKHEAD",
+            "GARGANTUAR",
+            "IMP",
+            "FLAG"
+          ],
+          "isBurst": true
+        }
+      ]
+    },
+    {
+      "waveNumber": 4,
+      "isFinalWave": true,
+      "baseTotalWaveCost": 500,
+      "lanes": 5,
+      "difficulty": 4,
+      "phases": [
+        {
+          "zombieCount": 9,
+          "intervalSeconds": 3.0,
           "allowedTypes": [
             "BUCKETHEAD",
             "BRICKHEAD",
@@ -215,17 +307,15 @@
           "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 10.0,
+          "zombieCount": 20,
+          "intervalSeconds": 1.5,
           "allowedTypes": [
-            "GARGANTUAR"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 4,
-          "intervalSeconds": 3.0,
-          "allowedTypes": [
+            "CONEHEAD",
+            "NEWSPAPER",
+            "SNORKEL",
+            "BUCKETHEAD",
+            "BRICKHEAD",
+            "GARGANTUAR",
             "IMP",
             "FLAG"
           ],

@@ -29,9 +29,8 @@ public class WallnutBowlingMode implements GameMode, PlantPlacer {
     private List<Wave> waves;
     private final int deadlineColumn;
 
-    private int tickCounter = 0;
-    private static final int TICKS_PER_SECOND = 10;
-    private static final int SPAWN_INTERVAL_TICKS = 6 * TICKS_PER_SECOND;
+    private float stateTime = 0;
+    private static final float SPAWN_INTERVAL = 6f;
 
     private static final List<PlantType> BOWLING_PLANTS = List.of(
             PlantType.Wallnut,
@@ -53,7 +52,7 @@ public class WallnutBowlingMode implements GameMode, PlantPlacer {
     @Override
     public void initMode(GameContext context) {
         addRandomBowlingCard(context);
-        tickCounter = 0;
+        stateTime = 0;
         context.log("=== WALLNUT BOWLING MINI-GAME ===");
         context.log("Place bowling nuts up to the RED LINE (Column " + deadlineColumn + ").");
         context.log("No sun will fall from the sky. Conveyor belt delivers bowling plants!");
@@ -66,10 +65,10 @@ public class WallnutBowlingMode implements GameMode, PlantPlacer {
 
     @Override
     public void updateMode(GameContext context, float dt) {
-        tickCounter++;
-        if (tickCounter >= SPAWN_INTERVAL_TICKS) {
+        stateTime += dt;
+        if (stateTime >= SPAWN_INTERVAL) {
             addRandomBowlingCard(context);
-            tickCounter = 0;
+            stateTime = 0;
         }
 
         if (currentWave != null && currentWave.isDone() && context.getZombies().isEmpty()) {
@@ -86,7 +85,7 @@ public class WallnutBowlingMode implements GameMode, PlantPlacer {
         }
 
         if (currentWave != null && !currentWave.isDone()) {
-            currentWave.updateWave(context, 0);
+            currentWave.updateWave(context, dt);
         }
 
         for (int i = 0; i < context.getZombies().size(); i++) {

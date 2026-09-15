@@ -75,69 +75,69 @@
     {
       "waveNumber": 1,
       "isFinalWave": false,
-      "baseTotalWaveCost": 120,
+      "baseTotalWaveCost": 300,
       "lanes": 5,
-      "difficulty": 3,
+      "difficulty": 2,
       "phases": [
         {
-          "zombieCount": 3,
-          "intervalSeconds": 5.0,
+          "zombieCount": 2,
+          "intervalSeconds": 6.0,
           "allowedTypes": [
             "BEACH",
-            "BEACH_CONE",
             "SNORKEL"
           ],
           "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 5.0,
+          "zombieCount": 5,
+          "intervalSeconds": 4.5,
           "allowedTypes": [
+            "BEACH_CONE",
             "BEACH_BUCKET",
             "SNORKEL"
           ],
           "isBurst": false
         },
         {
-          "zombieCount": 1,
-          "intervalSeconds": 4.5,
+          "zombieCount": 9,
+          "intervalSeconds": 2.75,
           "allowedTypes": [
+            "BEACH",
+            "BEACH_CONE",
+            "BEACH_BUCKET",
+            "SNORKEL",
             "FISHERMAN"
           ],
-          "isBurst": false
+          "isBurst": true
         }
       ]
     },
     {
       "waveNumber": 2,
       "isFinalWave": false,
-      "baseTotalWaveCost": 144,
+      "baseTotalWaveCost": 450,
       "lanes": 5,
-      "difficulty": 4,
+      "difficulty": 3,
       "phases": [
         {
-          "zombieCount": 3,
-          "intervalSeconds": 4.5,
+          "zombieCount": 8,
+          "intervalSeconds": 4.0,
           "allowedTypes": [
             "BEACH_CONE",
             "BEACH_BUCKET",
-            "SNORKEL"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 4.5,
-          "allowedTypes": [
-            "OCTOPUS",
+            "SNORKEL",
             "BEACH"
           ],
           "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 4.0,
+          "zombieCount": 12,
+          "intervalSeconds": 1.5,
           "allowedTypes": [
+            "BEACH_CONE",
+            "BEACH_BUCKET",
+            "OCTOPUS",
+            "BEACH",
             "FISHERMAN",
             "BEACH_IMP"
           ],
@@ -147,72 +147,35 @@
     },
     {
       "waveNumber": 3,
-      "isFinalWave": false,
-      "baseTotalWaveCost": 173,
-      "lanes": 5,
-      "difficulty": 5,
-      "phases": [
-        {
-          "zombieCount": 3,
-          "intervalSeconds": 4.0,
-          "allowedTypes": [
-            "BEACH_BUCKET",
-            "OCTOPUS"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 4.0,
-          "allowedTypes": [
-            "FISHERMAN",
-            "SNORKEL"
-          ],
-          "isBurst": false
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 4.0,
-          "allowedTypes": [
-            "BEACH_IMP",
-            "BEACH_BUCKET"
-          ],
-          "isBurst": false
-        }
-      ]
-    },
-    {
-      "waveNumber": 4,
       "isFinalWave": true,
-      "baseTotalWaveCost": 346,
+      "baseTotalWaveCost": 300,
       "lanes": 5,
-      "difficulty": 7,
+      "difficulty": 4,
       "phases": [
         {
-          "zombieCount": 3,
+          "zombieCount": 12,
           "intervalSeconds": 3.0,
           "allowedTypes": [
-            "OCTOPUS"
-          ],
-          "isBurst": true
-        },
-        {
-          "zombieCount": 2,
-          "intervalSeconds": 3.0,
-          "allowedTypes": [
+            "BEACH",
+            "BEACH_CONE",
+            "BEACH_BUCKET",
             "FISHERMAN",
             "SNORKEL"
           ],
-          "isBurst": true
+          "isBurst": false
         },
         {
-          "zombieCount": 2,
-          "intervalSeconds": 3.0,
+          "zombieCount": 16,
+          "intervalSeconds": 1.0,
           "allowedTypes": [
-            "BEACH_GARG",
-            "BEACH_IMP"
+            "BEACH",
+            "BEACH_CONE",
+            "BEACH_BUCKET",
+            "FISHERMAN",
+            "SNORKEL",
+            "BEACH_GARG"
           ],
-          "isBurst": true
+          "isBurst": false
         }
       ]
     }
