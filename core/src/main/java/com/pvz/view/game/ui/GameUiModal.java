@@ -532,8 +532,8 @@ public class GameUiModal extends Table {
                 .region("IMAGE_UI_HUD_INGAME_PROGRESS_METER_ZOMBIEHEAD");
         if (zombieRegion != null) {
             zombieDrawable = new TextureRegionDrawable(zombieRegion);
-        } else if (Gdx.files.internal("assets/textures/ui/zombie.png").exists()) {
-            Texture zombieTex = new Texture(Gdx.files.internal("assets/textures/ui/zombie.png"));
+        } else if (Gdx.files.internal("textures/ui/zombie.png").exists()) {
+            Texture zombieTex = new Texture(Gdx.files.internal("textures/ui/zombie.png"));
             zombieTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             zombieDrawable = new TextureRegionDrawable(zombieTex);
         }

@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 
 /**
  * Loads {@code zombie_actions.json} using LibGDX's {@link Json} — the zombie
- * counterpart of {@link com.pvz.models.entities.plants.config.PlantActionConfigLoader}.
+ * counterpart of
+ * {@link com.pvz.models.entities.plants.config.PlantActionConfigLoader}.
  *
- * <p>Every concrete {@link ZombieActionConfig}/{@link ZombieSkillConfig} subclass
+ * <p>
+ * Every concrete {@link ZombieActionConfig}/{@link ZombieSkillConfig} subclass
  * is registered with a class tag so the polymorphic {@code walkConfig}/
  * {@code eatConfig}/…/{@code skillConfig} fields deserialize from the JSON
  * {@code "class"} key. The root object holds the scaling presets, the armour
@@ -41,12 +44,12 @@ public final class ZombieActionConfigLoader {
         return json;
     }
 
-    public static ZombieRootConfig loadFromFile(String absolutePath) {
+    public static ZombieRootConfig loadFromFile(String internalPath) {
         try {
-            String content = Files.readString(Paths.get(absolutePath));
+            String content = Gdx.files.internal(internalPath).readString();
             return newJson().fromJson(ZombieRootConfig.class, content);
-        } catch (IOException e) {
-            System.err.println("[ZombieActionConfigLoader] Could not read " + absolutePath + ": " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("[ZombieActionConfigLoader] Could not read " + internalPath + ": " + e.getMessage());
             return null;
         }
     }

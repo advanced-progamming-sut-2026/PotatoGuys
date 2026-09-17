@@ -735,7 +735,7 @@ public class GreenHouseMenu extends ScreenAdapter {
             "768/FULL/PLANT/" + upper + "/" + upper + ".PAM",
         };
         for (String path : candidates) {
-            if (Gdx.files.internal("assets/pvz-assets/IMAGES/" + path).exists()) {
+            if (Gdx.files.internal("pvz-assets/IMAGES/" + path).exists()) {
                 return new String[]{path, "idle"};
             }
         }

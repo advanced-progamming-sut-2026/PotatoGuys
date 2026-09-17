@@ -24,6 +24,7 @@ import com.pvz.view.MainMenu;
 import pvz.libpvz.pam.PamPlayer;
 import pvz.libpvz.textures.TextureBank;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -76,8 +77,8 @@ public class PvZ2 extends Game {
         AnimationCatalog.setInstance(json.fromJson(AnimationCatalog.class, file));
 
         globalAssetManager.finishLoading();
-        textureBank = new TextureBank("768", Gdx.files.internal("./assets/pvz-assets/"));
-        pamPlayer = new PamPlayer(textureBank, Gdx.files.internal("./assets/pvz-assets/"));
+        textureBank = new TextureBank("768", Gdx.files.internal("pvz-assets"));
+        pamPlayer = new PamPlayer(textureBank, Gdx.files.internal("pvz-assets"));
         batch = new SpriteBatch();
         brightnessBatch = new SpriteBatch();
         Pixmap whitePixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -125,7 +126,9 @@ public class PvZ2 extends Game {
         }
     }
 
-    /** Applies the fullscreen preference of the currently logged-in user at startup. */
+    /**
+     * Applies the fullscreen preference of the currently logged-in user at startup.
+     */
     private void applyFullscreenSetting() {
         User user = AppContext.getInstance().getCurrentUser();
         if (user == null)
@@ -133,7 +136,8 @@ public class PvZ2 extends Game {
         applyFullscreen(user.getSetting().isFullscreen());
     }
 
-    /** Sets the window/taskbar icon from textures/ui/zombie_head.png.
+    /**
+     * Sets the window/taskbar icon from textures/ui/zombie_head.png.
      * That PNG is a green-screen sprite (no alpha), so the background green is
      * chroma-keyed
      * out at startup before handing the pixmap to the OS — otherwise the taskbar

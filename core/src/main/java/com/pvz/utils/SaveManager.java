@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import com.badlogic.gdx.Gdx;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -67,6 +68,25 @@ public class SaveManager {
             System.out.println("[GsonManager] Data successfully loaded from " + fullPath);
             return data;
         } catch (IOException e) {
+            System.err.println("[GsonManager] Error loading file: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public <T> T loadInternal(String internalPath, Class<T> classType) {
+        com.badlogic.gdx.files.FileHandle handle = Gdx.files.internal(internalPath);
+
+        if (!handle.exists()) {
+            System.out.println("[GsonManager] File not found at " + internalPath);
+            return null;
+        }
+
+        try (java.io.Reader reader = handle.reader()) {
+            T data = gson.fromJson(reader, classType);
+            System.out.println("[GsonManager] Data successfully loaded from " + internalPath);
+            return data;
+        } catch (Exception e) {
             System.err.println("[GsonManager] Error loading file: " + e.getMessage());
             e.printStackTrace();
             return null;

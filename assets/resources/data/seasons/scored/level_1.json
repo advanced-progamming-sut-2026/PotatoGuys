@@ -1,6 +1,6 @@
 {
   "gameType": "SCORED",
-  "musicPath": "assets/audio/music/ancient_egypt/Ancient Egypt First Wave.mp3",
+  "musicPath": "audio/music/ancient_egypt/Ancient Egypt First Wave.mp3",
   "levelNumber": 1,
   "levelType": "MINIGAME",
   "objectives": [

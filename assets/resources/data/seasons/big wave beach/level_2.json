@@ -1,6 +1,6 @@
 {
   "gameType": "NORMAL",
-  "musicPath": "assets/audio/music/big_wave_beach/Laura Shigihara - Watery Graves (In-Game).mp3",
+  "musicPath": "audio/music/big_wave_beach/Laura Shigihara - Watery Graves (In-Game).mp3",
   "levelNumber": 2,
   "levelType": "NORMAL",
   "initialSun": 200,

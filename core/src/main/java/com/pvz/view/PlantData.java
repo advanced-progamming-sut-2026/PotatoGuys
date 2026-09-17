@@ -225,7 +225,7 @@ public final class PlantData {
             "768/FULL/PLANT/" + upper + "/" + upper + ".PAM",
         };
         for (String path : candidates) {
-            if (Gdx.files.internal("assets/pvz-assets/IMAGES/" + path).exists()) return path;
+            if (Gdx.files.internal("pvz-assets/IMAGES/" + path).exists()) return path;
         }
         return null;
     }

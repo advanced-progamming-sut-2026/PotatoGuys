@@ -1,6 +1,6 @@
 {
   "gameType": "TIMEDWAR",
-  "musicPath": "assets/audio/music/ancient_egypt/Ancient Egypt Demo Game.mp3",
+  "musicPath": "audio/music/ancient_egypt/Ancient Egypt Demo Game.mp3",
   "levelNumber": 3,
   "levelType": "SPECIAL",
   "objectives": [
@@ -53,7 +53,7 @@
       "phases": [
         {
           "zombieCount": 4,
-          "intervalSeconds": 10,
+          "intervalSeconds": 13,
           "allowedTypes": [
             "MUMMY",
             "MUMMY_CONE"

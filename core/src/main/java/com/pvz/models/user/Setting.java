@@ -17,8 +17,8 @@ public class Setting {
 
     // creating a setting with default difficulty
     public Setting(){
-        difficulty = 3;
-        gameSpeed = 2;
+        difficulty = 1;
+        gameSpeed = 1;
         showGrid = false;
         debugMode = false;
         brightness = 1.0f;
@@ -26,7 +26,7 @@ public class Setting {
         sfxVolume = 0.7f;
         musicMuted = false;
         sfxMuted = false;
-        fullscreen = false;
+        fullscreen = true;
     }
 
     public Setting(int difficulty) {

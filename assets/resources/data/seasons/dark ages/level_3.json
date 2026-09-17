@@ -1,6 +1,6 @@
 {
   "gameType": "DEADLINE",
-  "musicPath": "assets/audio/music/frostbite_caves/Laura Shigihara - Loonboon (In-Game).mp3",
+  "musicPath": "audio/music/frostbite_caves/Laura Shigihara - Loonboon (In-Game).mp3",
   "levelNumber": 3,
   "levelType": "SPECIAL",
   "initialSun": 450,

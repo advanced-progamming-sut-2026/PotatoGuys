@@ -1,6 +1,6 @@
 {
   "gameType": "NORMAL",
-  "musicPath": "assets/audio/music/ancient_egypt/Ancient Egypt First Wave.mp3",
+  "musicPath": "audio/music/ancient_egypt/Ancient Egypt First Wave.mp3",
   "levelNumber": 2,
   "levelType": "NORMAL",
   "initialSun": 150,
@@ -56,13 +56,13 @@
     {
       "waveNumber": 1,
       "isFinalWave": false,
-      "baseTotalWaveCost": 140,
+      "baseTotalWaveCost": 100,
       "lanes": 5,
       "difficulty": 1,
       "phases": [
         {
           "zombieCount": 4,
-          "intervalSeconds": 9,
+          "intervalSeconds": 11,
           "allowedTypes": [
             "RA",
             "MUMMY_CONE"
@@ -71,7 +71,7 @@
         },
         {
           "zombieCount": 5,
-          "intervalSeconds": 7,
+          "intervalSeconds": 7.5,
           "allowedTypes": [
             "MUMMY_BUCKET",
             "MUMMY",

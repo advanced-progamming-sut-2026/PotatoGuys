@@ -1,6 +1,6 @@
 {
   "gameType": "NORMAL",
-  "musicPath": "assets/audio/music/dark_ages/Laura Shigihara - Rigor Mormist (In-Game).mp3",
+  "musicPath": "audio/music/dark_ages/Laura Shigihara - Rigor Mormist (In-Game).mp3",
   "levelNumber": 2,
   "levelType": "NORMAL",
   "initialSun": 275,

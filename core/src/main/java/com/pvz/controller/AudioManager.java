@@ -24,7 +24,7 @@ public class AudioManager {
     private final Map<String, Music> sfxMusicCache = new HashMap<>();
 
     /** UI click feedback, played on every menu button press. */
-    public static final String CLICK_SFX_PATH = "assets/audio/music/click.wav";
+    public static final String CLICK_SFX_PATH = "audio/music/click.wav";
 
     private AudioManager() {}
 
@@ -119,7 +119,7 @@ public class AudioManager {
      * backends). The clip is decoded once, cached, and retriggered from the start
      * each call. Respects the user's SFX volume/mute setting.
      *
-     * @param path internal asset path, e.g. {@code "assets/audio/music/typing.mp3"}.
+     * @param path internal asset path, e.g. {@code "audio/music/typing.mp3"}.
      */
     public void playSfxMusic(String path) {
         float volume = getUserSfxVolume();
@@ -143,7 +143,7 @@ public class AudioManager {
      * Music player (e.g. when the user skips/advances a dialogue line mid-type).
      * Safe to call even if the clip is not currently playing.
      *
-     * @param path internal asset path, e.g. {@code "assets/audio/music/typing.mp3"}.
+     * @param path internal asset path, e.g. {@code "audio/music/typing.mp3"}.
      */
     public void stopSfxMusic(String path) {
         if (path == null || path.isEmpty()) return;

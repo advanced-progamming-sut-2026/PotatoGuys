@@ -2,18 +2,20 @@ package com.pvz.models.games.seasons;
 
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.pvz.models.user.Profile;
 import com.pvz.models.user.User;
 
-import java.io.File;
-
 public class SeasonManager {
-    private static final String BASE_PATH = "core/src/main/java/com/resources/data/seasons/";
+    private static final String BASE_PATH = "resources/data/seasons/";
 
-    /** Returns true if the given season/level pair has a JSON data file on disk. */
+    private static String subDir(String seasonName) {
+        return seasonName.equalsIgnoreCase("izombie") ? "izombie" : seasonName.toLowerCase();
+    }
+
+    /** Returns true if the given season/level pair has a JSON data file available. */
     public static boolean hasLevel(String seasonName, int levelNumber) {
-        String subDir = seasonName.equalsIgnoreCase("izombie") ? "izombie" : seasonName.toLowerCase();
-        return new File(BASE_PATH + subDir + "/level_" + levelNumber + ".json").exists();
+        return Gdx.files.internal(BASE_PATH + subDir(seasonName) + "/level_" + levelNumber + ".json").exists();
     }
 
     public void unlockNextLevel(User user, String currentSeasonName, int currentLevelNumber) {
@@ -36,10 +38,7 @@ public class SeasonManager {
 
         // 2. Try to unlock next level in current season
         int nextLevel = currentLevelNumber + 1;
-        String nextLevelPath = BASE_PATH + currentSeasonName.toLowerCase() + "/level_" + nextLevel + ".json";
-        File nextLevelFile = new File(nextLevelPath);
-
-        if (nextLevelFile.exists()) {
+        if (hasLevel(currentSeasonName, nextLevel)) {
             currentSeason.unlockLevel(nextLevel);
         } else {
             // 3. If no next level, try to unlock first level of next season

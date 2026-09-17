@@ -228,7 +228,7 @@ public class BigWaveBeachChapterMenu extends ScreenAdapter {
 
         if (textureBank == null) {
             try {
-                FileHandle rootHandle = Gdx.files.internal("assets/pvz-assets");
+                FileHandle rootHandle = Gdx.files.internal("pvz-assets");
                 textureBank = new TextureBank("768", rootHandle);
                 pamPlayer = new PamPlayer(textureBank, rootHandle);
                 Gdx.app.log("PAM_INIT", "PAM system initialized for the Big Wave Beach stage map.");

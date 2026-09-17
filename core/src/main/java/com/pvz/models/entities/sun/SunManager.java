@@ -7,14 +7,14 @@ import com.pvz.models.games.GameContext;
 
 public class SunManager implements TickAware {
     private final GameContext gameContext;
-    private int ticksSinceLastDrop;
-    private int totalTicks;
+    private float secondsSinceLastDrop;
+    private float stateTime;
     private final Random random = new Random();
 
     public SunManager(GameContext gameContext) {
         this.gameContext = gameContext;
-        this.ticksSinceLastDrop = 0;
-        this.totalTicks = 0;
+        this.secondsSinceLastDrop = 0;
+        this.stateTime = 0;
     }
 
     @Override
@@ -23,8 +23,8 @@ public class SunManager implements TickAware {
 
     @Override
     public void update(float dt) {
-        totalTicks++;
-        ticksSinceLastDrop++;
+        stateTime+=dt;
+        secondsSinceLastDrop+=dt;
 
         if (!gameContext.getMode().supportsFallingSuns()) {
             return;
@@ -33,13 +33,11 @@ public class SunManager implements TickAware {
             return;
         }
 
-        double timeInSeconds = totalTicks / 10.0;
-        double xSeconds = Math.min(80 + 0.05 * timeInSeconds, 65);
-        int xTicks = (int) (xSeconds * 10);
+        double xSeconds = Math.min(4 + 0.05 * stateTime, 6.5);
 
-        if (ticksSinceLastDrop >= xTicks) {
+        if (secondsSinceLastDrop >= xSeconds) {
             spawnSun();
-            ticksSinceLastDrop = 0;
+            secondsSinceLastDrop = 0;
         }
     }
 

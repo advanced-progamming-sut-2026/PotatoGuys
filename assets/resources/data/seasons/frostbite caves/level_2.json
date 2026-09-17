@@ -1,6 +1,6 @@
 {
   "gameType": "NORMAL",
-  "musicPath": "assets/audio/music/frostbite_caves/Frostbite Caves Demo Game.mp3",
+  "musicPath": "audio/music/frostbite_caves/Frostbite Caves Demo Game.mp3",
   "levelNumber": 2,
   "levelType": "NORMAL",
   "initialSun": 200,

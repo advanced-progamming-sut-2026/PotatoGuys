@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.pvz.models.Constants;
@@ -21,22 +22,25 @@ import com.pvz.models.entities.zombies.config.ZombieJsonConfig;
  * Singleton registry holding all {@link ZombiePropertySheet} and
  * {@link ArmorPropertySheet} definitions.
  *
- * <p>Data is loaded at startup from the single data-driven
+ * <p>
+ * Data is loaded at startup from the single data-driven
  * {@code zombie_actions.json} resource (which absorbed the old
  * {@code zombie_profiles.json}: stats, scaling presets and armour definitions)
  * via {@link ZombieConfigRegistry} — the zombie-side counterpart of
- * {@link com.pvz.models.entities.plants.config.PlantConfigRegistry}. Rebalancing or adding
+ * {@link com.pvz.models.entities.plants.config.PlantConfigRegistry}.
+ * Rebalancing or adding
  * a zombie means editing that JSON file only; this class never hard-codes any
  * zombie's stats.
  *
- * <p>Lookup is by <em>alias</em> string, e.g. {@code "ZombieMummyDefault"}.
+ * <p>
+ * Lookup is by <em>alias</em> string, e.g. {@code "ZombieMummyDefault"}.
  */
 public final class ZombieRegistry {
 
     private static final ZombieRegistry INSTANCE = new ZombieRegistry();
 
     private final Map<String, ZombiePropertySheet> zombieSheets = new HashMap<>();
-    private final Map<String, ArmorPropertySheet>  armorSheets  = new HashMap<>();
+    private final Map<String, ArmorPropertySheet> armorSheets = new HashMap<>();
     private final Map<String, String[]> descriptions = new HashMap<>();
 
     private ZombieRegistry() {
@@ -44,18 +48,31 @@ public final class ZombieRegistry {
         loadDescriptions();
     }
 
-    public static ZombieRegistry getInstance() { return INSTANCE; }
+    public static ZombieRegistry getInstance() {
+        return INSTANCE;
+    }
 
     /** @return the sheet for the given alias, or {@code null} if not registered */
-    public ZombiePropertySheet getSheet(String alias) { return zombieSheets.get(alias); }
+    public ZombiePropertySheet getSheet(String alias) {
+        return zombieSheets.get(alias);
+    }
 
-    /** @return the armour sheet for the given alias, or {@code null} if not registered */
-    public ArmorPropertySheet getArmorSheet(String alias) { return armorSheets.get(alias); }
+    /**
+     * @return the armour sheet for the given alias, or {@code null} if not
+     *         registered
+     */
+    public ArmorPropertySheet getArmorSheet(String alias) {
+        return armorSheets.get(alias);
+    }
 
-    public int size() { return zombieSheets.size(); }
+    public int size() {
+        return zombieSheets.size();
+    }
 
     /** @return {overallDisc, funDisc} or null if no descriptions for this alias */
-    public String[] getDescriptions(String alias) { return descriptions.get(alias); }
+    public String[] getDescriptions(String alias) {
+        return descriptions.get(alias);
+    }
 
     // ── Loading (from zombie_actions.json only) ───────────────────────────────
 
@@ -80,7 +97,7 @@ public final class ZombieRegistry {
         return new ArmorPropertySheet(
                 a.alias, a.type, a.baseHealth,
                 a.flags == null ? List.of() : a.flags,
-                a.layerThresholds == null ? new float[]{0.666f, 0.333f} : a.layerThresholds);
+                a.layerThresholds == null ? new float[] { 0.666f, 0.333f } : a.layerThresholds);
     }
 
     private ZombiePropertySheet toSheet(ZombieJsonConfig cfg, ZombieConfigRegistry cfgRegistry) {
@@ -124,7 +141,8 @@ public final class ZombieRegistry {
         if (preset == null) {
             preset = cfgRegistry.getScalingPreset("standard");
         }
-        if (preset == null) return List.of();
+        if (preset == null)
+            return List.of();
         List<ScaledProp> props = new ArrayList<>();
         for (ScaledPropConfig dto : preset) {
             props.add(new ScaledProp(dto.key, dto.formula, dto.arg1, dto.arg2));
@@ -135,15 +153,15 @@ public final class ZombieRegistry {
     private void loadDescriptions() {
         String path = Constants.ZOMBIE_ACTIONS_PATH.replace("zombie_actions.json", "zombie_descriptions.json");
         try {
-            String content = Files.readString(Paths.get(path));
+            String content = Gdx.files.internal(path).readString();
             JsonValue root = new JsonReader().parse(content);
             for (JsonValue entry = root.child; entry != null; entry = entry.next) {
                 String alias = entry.name;
                 String overall = entry.has("overallDisc") ? entry.getString("overallDisc") : "";
                 String fun = entry.has("funDisc") ? entry.getString("funDisc") : "";
-                descriptions.put(alias, new String[]{overall, fun});
+                descriptions.put(alias, new String[] { overall, fun });
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("[ZombieRegistry] Could not load zombie_descriptions.json: " + e.getMessage());
         }
     }

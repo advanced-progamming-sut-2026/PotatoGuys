@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.pvz.models.entities.plants.config.explosive.ExplosiveConfig;
@@ -45,12 +46,12 @@ public final class PlantActionConfigLoader {
         return json;
     }
 
-    public static PlantJsonConfig[] loadFromFile(String absolutePath) {
+    public static PlantJsonConfig[] loadFromFile(String internalPath) {
         try {
-            String content = Files.readString(Paths.get(absolutePath));
+            String content = Gdx.files.internal(internalPath).readString();
             return newJson().fromJson(PlantJsonConfig[].class, content);
-        } catch (IOException e) {
-            System.err.println("[PlantActionConfigLoader] Could not read " + absolutePath + ": " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("[PlantActionConfigLoader] Could not read " + internalPath + ": " + e.getMessage());
             return new PlantJsonConfig[0];
         }
     }

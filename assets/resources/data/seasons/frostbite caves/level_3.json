@@ -1,6 +1,6 @@
 {
   "gameType": "CONVEYORBELT",
-  "musicPath": "assets/audio/music/dark_ages/Laura Shigihara - Brainiac Maniac (In-Game).mp3",
+  "musicPath": "audio/music/dark_ages/Laura Shigihara - Brainiac Maniac (In-Game).mp3",
   "levelNumber": 3,
   "levelType": "SPECIAL",
   "initialSun": 0,
