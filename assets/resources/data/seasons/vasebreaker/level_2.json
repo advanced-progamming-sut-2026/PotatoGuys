@@ -23,12 +23,6 @@
       "isBoosted": false
     },
     {
-      "Type": "CherryBomb",
-      "level": 1,
-      "seed": 0,
-      "isBoosted": false
-    },
-    {
       "Type": "SnowPea",
       "level": 1,
       "seed": 0,
@@ -48,6 +42,12 @@
     "NEWSPAPER",
     "GARGANTUAR"
   ],
+  "defaultPlant": {
+    "Type": "Jalapeno",
+    "level": 1,
+    "seed": 0,
+    "isBoosted": false
+  },
   "cols": 4,
   "xOffset": 1,
   "greenPots": 3,

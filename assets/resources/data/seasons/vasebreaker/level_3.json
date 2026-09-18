@@ -23,12 +23,6 @@
       "isBoosted": false
     },
     {
-      "Type": "Jalapeno",
-      "level": 1,
-      "seed": 0,
-      "isBoosted": false
-    },
-    {
       "Type": "Squash",
       "level": 1,
       "seed": 0,
@@ -49,9 +43,15 @@
     "WIZARD",
     "EGYPT_GARG"
   ],
+  "defaultPlant": {
+    "Type": "CherryBomb",
+    "level": 1,
+    "seed": 0,
+    "isBoosted": false
+  },
   "cols": 5,
   "xOffset": 1,
   "greenPots": 3,
-  "gargantuarPots": 2,
+  "gargantuarPots": 4,
   "effects": []
 }
