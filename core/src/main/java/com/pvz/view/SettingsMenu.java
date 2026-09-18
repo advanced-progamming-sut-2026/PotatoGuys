@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -26,7 +25,6 @@ import com.pvz.controller.AudioManager;
 import com.pvz.models.AppContext;
 import com.pvz.models.user.Setting;
 import com.pvz.models.user.User;
-import com.pvz.utils.SaveManager;
 
 import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;

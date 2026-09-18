@@ -126,6 +126,10 @@ public class GameController {
     /** Max pixel offset (at full trauma) applied to the camera. */
     private static final float CAMERA_SHAKE_MAX_OFFSET = 12f;
 
+    /** Reward granted to the player each time they beat a level. */
+    private static final int WIN_REWARD_COINS = 8000;
+    private static final int WIN_REWARD_DIAMONDS = 10;
+
     private final Map<Zombie, Float> gargantuarStepAccum = new HashMap<>();
     private float cameraShakeTrauma;
     private float cameraShakeX;
@@ -947,6 +951,8 @@ public class GameController {
                 // Mini-game win (IZombie / IZombieLocal / Scored)
                 user.getScore().setMiniGamesPassed(user.getScore().getMiniGamesPassed() + 1);
             }
+            user.getProfile().addCoins(WIN_REWARD_COINS);
+            user.getProfile().addDiamonds(WIN_REWARD_DIAMONDS);
             user.saveUser();
         }
 
@@ -1002,7 +1008,8 @@ public class GameController {
                     }
                 });
             }
-            popup = new GameWinPopup(title, msg, "EXIT TO MAP", exitAction, nextBtnLabel, nextAction);
+            popup = new GameWinPopup(title, msg, "EXIT TO MAP", exitAction, nextBtnLabel, nextAction,
+                    user != null ? WIN_REWARD_COINS : 0, user != null ? WIN_REWARD_DIAMONDS : 0);
         } else {
             String title = "THE ZOMBIES\nATE YOUR\nBRAINS!";
             if (ctx.getMode() instanceof IZombieMode) {

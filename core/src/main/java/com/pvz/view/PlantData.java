@@ -18,7 +18,6 @@ import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.config.PamAnimationConfig;
 import com.pvz.models.entities.plants.config.PlantConfigRegistry;
 import com.pvz.models.entities.plants.config.PlantJsonConfig;
-import com.pvz.models.entities.plants.data.DamageKind;
 import com.pvz.models.entities.plants.data.DamageProfile;
 import com.pvz.models.entities.plants.data.LevelUpgrade;
 import com.pvz.models.entities.plants.data.PlantDescriptions;

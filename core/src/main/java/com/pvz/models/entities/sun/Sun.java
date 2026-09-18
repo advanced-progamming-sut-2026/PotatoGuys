@@ -17,15 +17,38 @@ import com.pvz.view.game.GameScreen;
 public class Sun extends Entity {
     public enum SunOwner { PLANT, ZOMBIE }
 
+    /**
+     * Life cycle of a falling radioactive sun.
+     *
+     * <p>{@code FALLING} → {@code EXPLODING} when the player clicks it; the
+     * {@code attack} clip plays, damage lands 1.5s later and the sun despawns
+     * when the clip finishes.
+     *
+     * <p>{@code FALLING} → {@code TRANSITIONING} → {@code NORMAL} when it hits
+     * the ground untouched; the {@code transition} clip plays, then the normal
+     * sun idle clip loops and the sun becomes collectible like a regular sun.
+     */
+    public enum RadioactiveState {
+        FALLING, EXPLODING, TRANSITIONING, NORMAL
+    }
+
     private static final String SUN_PAM = "768/INITIAL/EFFECTS/SUN/SUN.PAM";
     private static final String SUN_CLIP = "animation";
     private static final String TRANSITION_RED_CLIP = "transition_red";
     private static final String RED_CLIP = "red";
     private static final String RADIOACTIVE_SUN_PAM = "768/FULL/EFFECTS/SUN_BOMB/SUN_BOMB.PAM";
+    private static final String RADIOACTIVE_ATTACK_CLIP = "attack";
+    private static final String RADIOACTIVE_TRANSITION_CLIP = "transition";
+    private static final String RADIOACTIVE_NORMAL_SUN_IDLE_CLIP = "normalSunIdle";
 
     private static final float DEFAULT_LIFESPAN_SECONDS = 50f;
     private static final float DEFAULT_FALL_SPEED = 70f;
     private static final float TRANSITION_RED_FALLBACK_SECONDS = 0.5333f;
+    private static final float EXPLOSION_DAMAGE_DELAY_SECONDS = 1.5f;
+    private static final float EXPLOSION_FALLBACK_SECONDS = 2.3f;
+    private static final float RADIOACTIVE_TRANSITION_FALLBACK_SECONDS = 0.5333f;
+    private static final int EXPLOSION_DAMAGE = 80;
+    private static final int EXPLOSION_RADIUS_TILES = 1;
 
     private final SunType type;
     private final int col;
@@ -50,6 +73,13 @@ public class Sun extends Entity {
     private float stealStateTime;
     private float stealRedHoldSeconds = 2f;
 
+    // ── Radioactive sun state machine ──────────────────────────────────────
+    // Drives the "attack" explosion sequence and the "transition" → normal sun
+    // conversion. Only meaningful when {@code type == SunType.RADIOACTIVE}.
+    private RadioactiveState radioactiveState;
+    private float radioactiveStateTime;
+    private boolean explosionDamageDealt;
+
     /** Backward-compatible constructor (plant-produced suns, no falling). */
     public Sun(SunType type, int col, int lane, int amount) {
         this(type, col, lane, amount, false, null);
@@ -73,6 +103,9 @@ public class Sun extends Entity {
         }
         velocity.set(0f, -fallSpeed);
         setHitbox(52f, 52f);
+        this.radioactiveState = type == SunType.RADIOACTIVE ? RadioactiveState.FALLING : null;
+        this.radioactiveStateTime = 0f;
+        this.explosionDamageDealt = false;
     }
 
     @Override
@@ -96,9 +129,7 @@ public class Sun extends Entity {
             frameConfigs.add(
                     new FrameConfig(SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.75f, 0.75f), null, true));
         } else {
-            frameConfigs.add(
-                    new FrameConfig(RADIOACTIVE_SUN_PAM, SUN_CLIP, stateTime, position, new Vector2(0.75f, 0.75f), null,
-                            true));
+            drawRadioactive(frameConfigs);
         }
         return frameConfigs;
     }
@@ -116,6 +147,11 @@ public class Sun extends Entity {
         if (collected)
             return;
 
+        if (type == SunType.RADIOACTIVE) {
+            updateRadioactive(dt);
+            return;
+        }
+
         if (!fallen) {
             position.add(0, -fallSpeed * dt);
             syncHitbox();
@@ -124,70 +160,159 @@ public class Sun extends Entity {
                 if (context != null) {
                     context.log("Sun reached the ground at position (" + position.x + ", " + position.y + ")");
                 }
-                if (type == SunType.RADIOACTIVE) {
-                    convertToNormal();
-                }
             }
         }
     }
 
     @Override
     public void dispose() {
+        if (context != null) {
+            context.removeSun(this);
+        }
     }
 
     public void collect(GameContext ctx) {
         if (isDone())
             return;
-        collected = true;
-
-        if (type == SunType.RADIOACTIVE && !fallen) {
-            dealExplosionDamage(ctx);
-        } else {
-            ctx.addSun(getAmount());
+        if (type == SunType.RADIOACTIVE) {
+            switch (radioactiveState) {
+                case FALLING -> {
+                    startExplosion();
+                    return;
+                }
+                case NORMAL -> {
+                    collected = true;
+                    ctx.addSun(getAmount());
+                    ctx.removeSun(this);
+                    return;
+                }
+                default -> {
+                    // Exploding or mid-transition: ignore further clicks.
+                    return;
+                }
+            }
         }
+        collected = true;
+        ctx.addSun(getAmount());
         ctx.removeSun(this);
     }
 
-    private void dealExplosionDamage(GameContext ctx) {
-        ctx.log("Radioactive sun exploded at position (" + col + ", " + lane + ")!");
+    // ── Radioactive sun helpers ───────────────────────────────────────────────
+
+    private void drawRadioactive(List<FrameConfig> frameConfigs) {
+        switch (radioactiveState) {
+            case FALLING -> frameConfigs.add(new FrameConfig(RADIOACTIVE_SUN_PAM, SUN_CLIP, stateTime, position,
+                    new Vector2(0.75f, 0.75f), null, true));
+            case EXPLODING -> frameConfigs.add(new FrameConfig(RADIOACTIVE_SUN_PAM, RADIOACTIVE_ATTACK_CLIP,
+                    radioactiveStateTime, position, new Vector2(0.75f, 0.75f), null, false));
+            case TRANSITIONING -> frameConfigs.add(new FrameConfig(RADIOACTIVE_SUN_PAM, RADIOACTIVE_TRANSITION_CLIP,
+                    radioactiveStateTime, position, new Vector2(0.65f, 0.65f), null, false));
+            case NORMAL -> frameConfigs.add(new FrameConfig(RADIOACTIVE_SUN_PAM, RADIOACTIVE_NORMAL_SUN_IDLE_CLIP,
+                    stateTime, position, new Vector2(0.65f, 0.65f), null, true));
+        }
+    }
+
+    private void updateRadioactive(float dt) {
+        switch (radioactiveState) {
+            case FALLING -> {
+                position.add(0, -fallSpeed * dt);
+                syncHitbox();
+                if (position.y < targetPos.y) {
+                    fallen = true;
+                    if (context != null) {
+                        context.log("Sun reached the ground at position (" + position.x + ", " + position.y + ")");
+                    }
+                    beginConvertToNormal();
+                }
+            }
+            case EXPLODING -> {
+                radioactiveStateTime += dt;
+                if (!explosionDamageDealt && radioactiveStateTime >= EXPLOSION_DAMAGE_DELAY_SECONDS) {
+                    explosionDamageDealt = true;
+                    dealExplosionDamage();
+                }
+                if (radioactiveStateTime >= getExplosionDuration()) {
+                    dispose();
+                }
+            }
+            case TRANSITIONING -> {
+                radioactiveStateTime += dt;
+                if (radioactiveStateTime >= getTransitionDuration()) {
+                    setRadioactiveState(RadioactiveState.NORMAL);
+                    if (context != null) {
+                        context.log("Radioactive sun at (" + col + ", " + lane
+                                + ") finished converting to a normal sun.");
+                    }
+                }
+            }
+            case NORMAL -> {
+                // Landed and converted: behaves like a regular sun (collectible,
+                // lifespan expiry handled by isExpired()).
+            }
+        }
+    }
+
+    private void setRadioactiveState(RadioactiveState next) {
+        radioactiveState = next;
+        radioactiveStateTime = 0f;
+    }
+
+    private void startExplosion() {
+        setRadioactiveState(RadioactiveState.EXPLODING);
+        if (context != null) {
+            context.log("Radioactive sun exploded at position (" + col + ", " + lane + ")!");
+        }
+    }
+
+    private void beginConvertToNormal() {
+        if (context != null) {
+            context.log("Radioactive sun at (" + col + ", " + lane
+                    + ") became a normal sun upon reaching the ground.");
+        }
+        setRadioactiveState(RadioactiveState.TRANSITIONING);
+    }
+
+    /**
+     * Deals {@value #EXPLOSION_DAMAGE} damage to every zombie and plant inside
+     * the 3×3 tile area centered on this sun.
+     */
+    private void dealExplosionDamage() {
+        if (context == null)
+            return;
+        context.log("Radioactive sun dealt " + EXPLOSION_DAMAGE
+                + " damage in a 3x3 area around (" + col + ", " + lane + ")!");
 
         List<Zombie> zombiesHit = new ArrayList<>();
         List<Plant> plantsHit = new ArrayList<>();
 
-        for (int c = col - 2; c <= col + 2; c++) {
-            for (int l = lane - 2; l <= lane + 2; l++) {
-                if (c < 0 || c >= ctx.getMap().getColumns() || l < 0 || l >= ctx.getMap().getLanes())
+        for (int c = col - EXPLOSION_RADIUS_TILES; c <= col + EXPLOSION_RADIUS_TILES; c++) {
+            if (c < 0 || c >= context.getMap().getColumns())
+                continue;
+            for (int l = lane - EXPLOSION_RADIUS_TILES; l <= lane + EXPLOSION_RADIUS_TILES; l++) {
+                if (l < 0 || l >= context.getMap().getLanes())
                     continue;
-                zombiesHit.addAll(ctx.getZombiesAt(c, l));
-                plantsHit.addAll(ctx.getPlantsAt(c, l));
+                zombiesHit.addAll(context.getZombiesAt(c, l));
+                plantsHit.addAll(context.getPlantsAt(c, l));
             }
         }
         for (Zombie z : zombiesHit)
-            z.takeDamage(150);
+            z.takeDamage(EXPLOSION_DAMAGE);
         for (Plant p : plantsHit)
-            p.takeDamage(150, DamageKind.FIXED);
-
-        List<Zombie> zombiesCenter = new ArrayList<>();
-        List<Plant> plantsCenter = new ArrayList<>();
-
-        for (int c = col - 1; c <= col + 1; c++) {
-            for (int l = lane - 1; l <= lane + 1; l++) {
-                if (c < 0 || c >= ctx.getMap().getColumns() || l < 0 || l >= ctx.getMap().getLanes())
-                    continue;
-                zombiesCenter.addAll(ctx.getZombiesAt(c, l));
-                plantsCenter.addAll(ctx.getPlantsAt(c, l));
-            }
-        }
-        for (Zombie z : zombiesCenter)
-            z.takeDamage(80);
-        for (Plant p : plantsCenter)
-            p.takeDamage(80, DamageKind.FIXED);
+            p.takeDamage(EXPLOSION_DAMAGE, DamageKind.FIXED);
     }
 
-    private void convertToNormal() {
-        if (context != null) {
-            context.log("Radioactive sun at (" + col + ", " + lane + ") became a normal sun upon reaching the ground.");
-        }
+    /** Duration of the "attack" clip (the whole explosion sequence). */
+    private float getExplosionDuration() {
+        AnimationCatalog catalog = AnimationCatalog.getInstance();
+        float d = catalog != null ? catalog.getClipDuration(RADIOACTIVE_SUN_PAM, RADIOACTIVE_ATTACK_CLIP) : -1f;
+        return d > 0f ? d : EXPLOSION_FALLBACK_SECONDS;
+    }
+
+    /** Duration of the "transition" clip (bomb → normal sun visual). */
+    private float getTransitionDuration() {
+        AnimationCatalog catalog = AnimationCatalog.getInstance();
+        float d = catalog != null ? catalog.getClipDuration(RADIOACTIVE_SUN_PAM, RADIOACTIVE_TRANSITION_CLIP) : -1f;
+        return d > 0f ? d : RADIOACTIVE_TRANSITION_FALLBACK_SECONDS;
     }
 
     // ── Ra steal animation API ────────────────────────────────────────────────
@@ -246,7 +371,10 @@ public class Sun extends Entity {
     }
 
     public boolean isDone() {
-        return collected || isExpired();
+        if (collected || isExpired())
+            return true;
+        return type == SunType.RADIOACTIVE && radioactiveState == RadioactiveState.EXPLODING
+                && radioactiveStateTime >= getExplosionDuration();
     }
 
     public SunType getType() {

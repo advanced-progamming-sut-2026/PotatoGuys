@@ -307,6 +307,9 @@ public class RegisterMenu extends ScreenAdapter {
                 return;
             }
             showStatus("Registration successful! Please login.", SUCCESS_COLOR);
+            if (user.getSetting() != null) {
+                game.applyFullscreen(user.getSetting().isFullscreen());
+            }
             game.setScreen(new LoginMenu(game));
         });
     }
@@ -317,12 +320,15 @@ public class RegisterMenu extends ScreenAdapter {
         user.getProfile().getCollection().unlockPlant(PlantType.Sunflower);
         user.getProfile().getCollection().unlockPlant(PlantType.Cabbagepult);
         user.getProfile().getCollection().unlockPlant(PlantType.BonkChoy);
-        user.getProfile().getCollection().unlockPlant(PlantType.Repeater);
-        user.getProfile().getCollection().unlockPlant(PlantType.TwinSunflower);
+        user.getProfile().getCollection().unlockPlant(PlantType.Kernelpult);
+        user.getProfile().getCollection().unlockPlant(PlantType.PotatoMine);
         user.getProfile().getCollection().unlockPlant(PlantType.Jalapeno);
-        user.getProfile().getCollection().unlockPlant(PlantType.SnowPea);
+        user.getProfile().getCollection().unlockPlant(PlantType.IcebergLettuce);
         user.getProfile().getCollection().unlockPlant(PlantType.CherryBomb);
         user.getProfile().getCollection().unlockPlant(PlantType.Wallnut);
+        user.getProfile().getCollection().unlockPlant(PlantType.LilyPad);
+        user.getProfile().getCollection().unlockPlant(PlantType.HotPotato);
+        user.getProfile().getCollection().unlockPlant(PlantType.GraveBuster);
 
         Season ancientEgypt = new Season("Ancient Egypt");
         ancientEgypt.unlock();

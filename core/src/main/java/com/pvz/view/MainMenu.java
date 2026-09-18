@@ -5,7 +5,6 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -113,6 +112,22 @@ public class MainMenu extends ScreenAdapter {
             userNameLabel.setFontScale(1.8f);
             userInfoWrapper.add(userNameLabel).left();
         }
+
+        //quit button (top-right corner)
+        Table topRightWrapper = new Table();
+        topRightWrapper.top().right();
+        topRightWrapper.pad(20);
+        stack.add(topRightWrapper);
+
+        ImageButton quitBtn = new ImageButton(skin, "generic_close_circle");
+        quitBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Gdx.app.exit();
+            }
+        });
+        topRightWrapper.add(quitBtn).size(70);
 
         //profile & settings buttons wrapper (bottom-right corner)
         Table bottomRightWrapper = new Table();

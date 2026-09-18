@@ -34,7 +34,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.pvz.PvZ2;
 import com.pvz.controller.CollectionController;
-import com.pvz.enums.GameAsset;
 import com.pvz.models.AppContext;
 import com.pvz.models.entities.plants.enums.PlantCategory;
 import com.pvz.models.entities.zombies.ZombieType;

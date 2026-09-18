@@ -19,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pvz.PvZ2;
 import com.pvz.controller.AudioManager;
 import com.pvz.enums.AudioPaths;
@@ -27,7 +26,6 @@ import com.pvz.models.AppContext;
 import com.pvz.models.games.seasons.Season;
 import com.pvz.models.user.User;
 import com.pvz.utils.AvatarImages;
-import com.pvz.utils.SaveManager;
 import pvz.skin.BorderedTable;
 import pvz.skin.PvzSkin;
 

@@ -99,7 +99,7 @@
     {
       "waveNumber": 4,
       "isFinalWave": true,
-      "baseTotalWaveCost": 300,
+      "baseTotalWaveCost": 250,
       "lanes": 5,
       "difficulty": 2,
       "phases": [

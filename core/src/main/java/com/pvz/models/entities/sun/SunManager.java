@@ -33,7 +33,7 @@ public class SunManager implements TickAware {
             return;
         }
 
-        double xSeconds = Math.min(4 + 0.05 * stateTime, 6.5);
+        double xSeconds = Math.min(5 + 0.05 * stateTime, 10.0);
 
         if (secondsSinceLastDrop >= xSeconds) {
             spawnSun();

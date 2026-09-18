@@ -129,9 +129,9 @@ public class PvZ2 extends Game {
     /**
      * Applies the fullscreen preference of the currently logged-in user at startup.
      */
-    private void applyFullscreenSetting() {
+    public void applyFullscreenSetting() {
         User user = AppContext.getInstance().getCurrentUser();
-        if (user == null)
+        if (user == null || user.getSetting() == null)
             return;
         applyFullscreen(user.getSetting().isFullscreen());
     }
