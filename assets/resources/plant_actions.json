@@ -2999,7 +2999,7 @@
       "patterns": [
         {
           "projectileType": "SPIKE",
-          "damage": 70.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3019,7 +3019,7 @@
       "patterns": [
         {
           "projectileType": "SPIKE",
-          "damage": 300.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3033,7 +3033,7 @@
         },
         {
           "projectileType": "SPIKE",
-          "damage": 300.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3047,7 +3047,7 @@
         },
         {
           "projectileType": "SPIKE",
-          "damage": 300.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3061,7 +3061,7 @@
         },
         {
           "projectileType": "SPIKE",
-          "damage": 300.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3075,7 +3075,7 @@
         },
         {
           "projectileType": "SPIKE",
-          "damage": 300.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3089,7 +3089,7 @@
         },
         {
           "projectileType": "SPIKE",
-          "damage": 300.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3103,7 +3103,7 @@
         },
         {
           "projectileType": "SPIKE",
-          "damage": 300.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -3117,7 +3117,7 @@
         },
         {
           "projectileType": "SPIKE",
-          "damage": 300.0,
+          "damage": 33.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 50,
@@ -4141,7 +4141,7 @@
       "patterns": [
         {
           "projectileType": "SEASHROOM_PROJECTILE",
-          "damage": 20.0,
+          "damage": 18.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 35,
@@ -4475,7 +4475,7 @@
     "sunCost": 125,
     "baseHp": 375.0,
     "actionIntervalSeconds": 1.5,
-    "rechargeSeconds": 4.5,
+    "rechargeSeconds": 5.0,
     "attackConfig": {
       "class": "ShooterActionConfig",
       "label": "special",
@@ -4483,7 +4483,7 @@
       "patterns": [
         {
           "projectileType": "FUME",
-          "damage": 8.0,
+          "damage": 2.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 30,
@@ -4503,7 +4503,7 @@
       "patterns": [
         {
           "projectileType": "FUME",
-          "damage": 8.0,
+          "damage": 2.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 30,
@@ -4517,7 +4517,7 @@
         },
         {
           "projectileType": "FUME",
-          "damage": 8.0,
+          "damage": 2.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 30,
@@ -4531,7 +4531,7 @@
         },
         {
           "projectileType": "FUME",
-          "damage": 8.0,
+          "damage": 2.0,
           "laneOffset": 0,
           "positionOffset": {
             "x": 30,

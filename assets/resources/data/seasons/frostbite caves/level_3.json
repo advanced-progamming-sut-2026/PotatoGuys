@@ -13,7 +13,7 @@
     {
       "waveNumber": 1,
       "isFinalWave": false,
-      "baseTotalWaveCost": 180,
+      "baseTotalWaveCost": 140,
       "lanes": 5,
       "difficulty": 1,
       "phases": [
@@ -39,7 +39,7 @@
     {
       "waveNumber": 2,
       "isFinalWave": false,
-      "baseTotalWaveCost": 200,
+      "baseTotalWaveCost": 160,
       "lanes": 5,
       "difficulty": 2,
       "phases": [
@@ -68,7 +68,7 @@
     {
       "waveNumber": 3,
       "isFinalWave": false,
-      "baseTotalWaveCost": 250,
+      "baseTotalWaveCost": 180,
       "lanes": 5,
       "difficulty": 3,
       "phases": [
@@ -99,7 +99,7 @@
     {
       "waveNumber": 4,
       "isFinalWave": true,
-      "baseTotalWaveCost": 250,
+      "baseTotalWaveCost": 200,
       "lanes": 5,
       "difficulty": 2,
       "phases": [

@@ -52,7 +52,7 @@
     {
       "waveNumber": 1,
       "isFinalWave": false,
-      "baseTotalWaveCost": 300,
+      "baseTotalWaveCost": 70,
       "lanes": 5,
       "difficulty": 3,
       "phases": [
@@ -68,7 +68,8 @@
           "zombieCount": 2,
           "intervalSeconds": 6,
           "allowedTypes": [
-            "CONEHEAD"
+            "CONEHEAD",
+            "BASIC"
           ],
           "isBurst": false
         }
@@ -77,7 +78,7 @@
     {
       "waveNumber": 2,
       "isFinalWave": false,
-      "baseTotalWaveCost": 700,
+      "baseTotalWaveCost": 100,
       "lanes": 5,
       "difficulty": 6,
       "phases": [
@@ -102,7 +103,7 @@
     {
       "waveNumber": 3,
       "isFinalWave": false,
-      "baseTotalWaveCost": 1300,
+      "baseTotalWaveCost": 120,
       "lanes": 5,
       "difficulty": 9,
       "phases": [
@@ -129,7 +130,7 @@
     {
       "waveNumber": 4,
       "isFinalWave": true,
-      "baseTotalWaveCost": 2600,
+      "baseTotalWaveCost": 150,
       "lanes": 5,
       "difficulty": 15,
       "phases": [

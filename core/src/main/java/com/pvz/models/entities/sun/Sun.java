@@ -47,7 +47,7 @@ public class Sun extends Entity {
     private static final float EXPLOSION_DAMAGE_DELAY_SECONDS = 1.5f;
     private static final float EXPLOSION_FALLBACK_SECONDS = 2.3f;
     private static final float RADIOACTIVE_TRANSITION_FALLBACK_SECONDS = 0.5333f;
-    private static final int EXPLOSION_DAMAGE = 80;
+    private static final int EXPLOSION_DAMAGE = 120;
     private static final int EXPLOSION_RADIUS_TILES = 1;
 
     private final SunType type;

@@ -127,18 +127,13 @@ public class DeadLineMode implements GameMode, PlantPlacer {
 
     @Override
     public boolean isValidPlacement(GameContext context, int col, int lane, PlantCard card) {
-        if (card == null) {
+if (card == null) {
             context.log("[Placement Failed] Selected card is null.");
             return false;
         }
 
         if (col < 0 || col >= context.getMap().getColumns() || lane < 0 || lane >= context.getMap().getLanes()) {
             context.log("[Placement Failed] Out of bounds: (" + col + ", " + lane + ")");
-            return false;
-        }
-
-        if (!context.getPlantsAt(col, lane).isEmpty()) {
-            context.log("[Placement Failed] Tile (" + col + ", " + lane + ") is already occupied by another plant.");
             return false;
         }
 
