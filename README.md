@@ -121,7 +121,15 @@
 
 ## 🎥 Gameplay Videos
 
-> 🎞️ Full gameplay recordings are being put together and will be embedded here soon.
+> 🎞️ Real gameplay recordings — press play and watch the lawn defend itself.
+
+<div align="center">
+
+| Big Wave Beach 🌊 | Frostbite Caves ❄️ |
+|---|---|
+| <video src="PvZ_Footages/gameplay_big_wave_beach.mp4" poster="PvZ_Footages/gameplay_big_wave_beach.png" controls muted width="420"></video> | <video src="PvZ_Footages/gameplay_frostbite_caves.mp4" poster="PvZ_Footages/gameplay_frostbite_caves_1.png" controls muted width="420"></video> |
+
+</div>
 
 ---
 
