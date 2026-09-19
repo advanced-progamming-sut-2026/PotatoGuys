@@ -23,34 +23,19 @@
 ## 📖 Table of Contents
 
 - [✨ Highlights](#-highlights)
-- [🖼️ Screenshots](#️-screenshots)
+- [🎬 Screenshots](#-screenshots)
+- [🎥 Gameplay Videos](#-gameplay-videos)
 - [🎮 Features](#-features)
 - [🌍 Online Multiplayer](#-online-multiplayer)
 - [🗺️ Chapters & Game Modes](#-chapters--game-modes)
-- [🏗️ Architecture](#️-architecture)
+- [🏗️ Architecture](#-architecture)
 - [🚀 Getting Started](#-getting-started)
 - [🎹 Controls](#-controls)
-- [🛠️ Build for Production](#️-build-for-production)
+- [🛠️ Build for Production](#-build-for-production)
 - [📁 Project Structure](#-project-structure)
 - [👥 Contributors](#-contributors)
 
 ---
-
-## 🖼️ Screenshots
-
-> Drop your gameplay captures in `screenshots/` and reference them here — the section is already wired up. 🎬 Prefer motion? Replace any `<img>` with a `gif`.
-
-<div align="center">
-
-| Battle on the lawn 🏈 | The Zen Garden 🌱 |
-|---|---|
-| <img src="screenshots/lawn.png" width="420" alt="Battle on the lawn"> | <img src="screenshots/greenhouse.png" width="420" alt="The Zen Garden"> |
-
-| Big Wave Beach 🌊 | Online I, Zombie ⚔️ |
-|---|---|
-| <img src="screenshots/big_wave_beach.png" width="420" alt="Big Wave Beach — a world full of game modes"> | <img src="screenshots/online_izombie.png" width="420" alt="Online I, Zombie"> |
-
-</div>
 
 ## ✨ Highlights
 
@@ -60,6 +45,83 @@
 - 💥 **11 game modes** — Standard, I, Zombie, Conveyor Belt, Vasebreaker, Wall-nut Bowling, Beghouled, Timed War, Save Our Seeds, Deadline, Scored and more.
 - 🎫 **Full game economies** — Coins, diamonds, plant food, a daily-offer shop, a season system and a quest log with unlockable rewards.
 - 🕹️ **Real-time online PvP** — a standalone TCP server handles accounts, friend invites and random matchmaking, then pits you against another human in I, Zombie.
+
+---
+
+## 🎬 Screenshots
+
+> Real captures straight from the running game — no mockups, no concept art.
+> All shots were taken in-game from the `PvZ_Footages/` folder.
+
+<div align="center">
+
+### 🏠 Menus & Meta
+
+| The Main Menu 🏡 | Login & Registration 🔐 |
+|---|---|
+| <img src="PvZ_Footages/main_menu.png" width="380" alt="The main menu"> | <img src="PvZ_Footages/login_menu.png" width="380" alt="Login & registration screen"> |
+
+| Your Profile 👤 | In-Game News 📰 |
+|---|---|
+| <img src="PvZ_Footages/profile_menu.png" width="380" alt="Player profile screen"> | <img src="PvZ_Footages/news_menu.png" width="380" alt="In-game news screen"> |
+
+| Daily Offers Shop 🛒 | Travel Log — Quests 🗺️ |
+|---|---|
+| <img src="PvZ_Footages/shop_menu.png" width="380" alt="Shop with daily offers"> | <img src="PvZ_Footages/travellog_menu.png" width="380" alt="Travel Log quest screen"> |
+
+| The Collection — Plants 🌱 | The Collection — Zombies 🧟 |
+|---|---|
+| <img src="PvZ_Footages/collection_menu.png" width="380" alt="Plant collection screen"> | <img src="PvZ_Footages/collection_menu_2.png" width="380" alt="Zombie collection screen"> |
+
+| The Zen Garden (Greenhouse) 🌷 | Ancient Egypt — Level Select 🏺 |
+|---|---|
+| <img src="PvZ_Footages/greenhouse_menu.png" width="380" alt="Zen Garden greenhouse screen"> | <img src="PvZ_Footages/ancient_egypt_level_menu.png" width="380" alt="Ancient Egypt level select"> |
+
+| Ancient Egypt — Meet the NPC 🧙 |
+|---|
+| <img src="PvZ_Footages/npc_ancient_egypt.png" width="380" alt="Ancient Egypt story NPC"> |
+
+</div>
+
+<div align="center">
+
+### ⚔️ Gameplay — The 4 Chapters
+
+| Ancient Egypt — Holding the Line 🏺 | Ancient Egypt — Battle Action 🏺 |
+|---|---|
+| <img src="PvZ_Footages/gameplay_ancient_egypt_1.png" width="380" alt="Gameplay in Ancient Egypt"> | <img src="PvZ_Footages/gameplay_ancient_egypt_2.png" width="380" alt="More gameplay in Ancient Egypt"> |
+
+| Frostbite Caves — Chilly Defense ❄️ | Frostbite Caves — Freezing Front ❄️ |
+|---|---|
+| <img src="PvZ_Footages/gameplay_frostbite_caves_1.png" width="380" alt="Gameplay in Frostbite Caves"> | <img src="PvZ_Footages/gameplay_frostbite_caves_2.png" width="380" alt="More gameplay in Frostbite Caves"> |
+
+| Frostbite Caves — Close Call ❄️ | Big Wave Beach — Riding the Surge 🌊 |
+|---|---|
+| <img src="PvZ_Footages/gameplay_frostbite_caves_3.png" width="380" alt="Third gameplay shot in Frostbite Caves"> | <img src="PvZ_Footages/gameplay_big_wave_beach.png" width="380" alt="Gameplay in Big Wave Beach"> |
+
+| Big Wave Beach — High Tide 🌊 | Big Wave Beach — Deeper Waters 🌊 |
+|---|---|
+| <img src="PvZ_Footages/gameplay_big_wave_beach_2.png" width="380" alt="More gameplay in Big Wave Beach"> | <img src="PvZ_Footages/gameplay_big_wave_beach_3.png" width="380" alt="Third gameplay shot in Big Wave Beach"> |
+
+| Dark Ages — Medieval Madness 🏰 | Dark Ages — Knight's Charge 🏰 |
+|---|---|
+| <img src="PvZ_Footages/gameplay_dark_ages_1.png" width="380" alt="Gameplay in Dark Ages"> | <img src="PvZ_Footages/gameplay_dark_ages_2.png" width="380" alt="More gameplay in Dark Ages"> |
+
+</div>
+
+<div align="center">
+
+### 🎭 Game Modes
+
+| Vasebreaker — Break & Sweat 🎭 |
+|---|
+| <img src="PvZ_Footages/gameplay_vase_breaker_1.png" width="380" alt="Vasebreaker game mode gameplay"> |
+
+</div>
+
+## 🎥 Gameplay Videos
+
+> 🎞️ Full gameplay recordings are being put together and will be embedded here soon.
 
 ---
 
@@ -232,6 +294,7 @@ plantsvszombies2/
  │     └─ utils/         # SaveManager, PasswordUtils, avatars
  ├─ lwjgl3/        # desktop launcher (LWJGL3 backend)
  ├─ assets/        # textures, audio, skins, PAM animation catalogs
+ ├─ PvZ_Footages/  # screenshots & gameplay recordings
  └─ app/           # (placeholder)
 ```
 
