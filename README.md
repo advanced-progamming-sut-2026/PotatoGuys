@@ -121,14 +121,15 @@
 
 ## 🎥 Gameplay Videos
 
-> 🎞️ Real gameplay recordings — play them right here.
+> 🎞️ Real gameplay recordings — now streaming from YouTube.
 
 <div align="center">
 
-| Big Wave Beach 🌊 | Frostbite Caves ❄️ |
-|---|---|
-| <video src="https://rawcdn.githack.com/sedhhn/PlantVsZombies2/refs/heads/main/PvZ_Footages/gameplay_big_wave_beach.mp4" controls width="420" playsinline></video> | <video src="https://rawcdn.githack.com/sedhhn/PlantVsZombies2/refs/heads/main/PvZ_Footages/gameplay_frostbite_caves.mp4" controls width="420" playsinline></video> |
-| [🎬 Watch Big Wave Beach gameplay](https://rawcdn.githack.com/sedhhn/PlantVsZombies2/refs/heads/main/PvZ_Footages/gameplay_big_wave_beach.mp4) | [🎬 Watch Frostbite Caves gameplay](https://rawcdn.githack.com/sedhhn/PlantVsZombies2/refs/heads/main/PvZ_Footages/gameplay_frostbite_caves.mp4) |
+### 🌊 Big Wave Beach — Gameplay
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/UovvqkaO-XM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+*More chapter gameplay coming soon…*
 
 </div>
 
