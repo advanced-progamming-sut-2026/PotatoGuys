@@ -125,15 +125,19 @@
 
 <div align="center">
 
+## 🎥 Gameplay Videos
+
+> 🎞️ Real gameplay recordings — click a thumbnail to watch on YouTube.
+
+<div align="center">
+
 ### 🌊 Big Wave Beach — Gameplay
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/UovvqkaO-XM" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Big Wave Beach Gameplay](https://img.youtube.com/vi/UovvqkaO-XM/maxresdefault.jpg)](https://youtu.be/UovvqkaO-XM)
 
 *More chapter gameplay coming soon…*
 
 </div>
-
----
 
 ## 🎮 Features
 
