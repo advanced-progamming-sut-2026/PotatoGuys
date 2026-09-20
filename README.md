@@ -121,12 +121,6 @@
 
 ## 🎥 Gameplay Videos
 
-> 🎞️ Real gameplay recordings — now streaming from YouTube.
-
-<div align="center">
-
-## 🎥 Gameplay Videos
-
 > 🎞️ Real gameplay recordings — click a thumbnail to watch on YouTube.
 
 <div align="center">
