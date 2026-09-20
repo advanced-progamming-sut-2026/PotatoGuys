@@ -121,13 +121,14 @@
 
 ## 🎥 Gameplay Videos
 
-> 🎞️ Real gameplay recordings — press play and watch the lawn defend itself.
+> 🎞️ Real gameplay recordings — click a thumbnail to play in GitHub's built-in player.
+> *(GitHub strips `<video>` tags with repo-relative or `raw.githubusercontent.com` URLs, so these are thumbnail links that open the clip in the repo's inline video viewer — works on `github.com`, npm, and VS Code.)*
 
 <div align="center">
 
 | Big Wave Beach 🌊 | Frostbite Caves ❄️ |
 |---|---|
-| <video src="PvZ_Footages/gameplay_big_wave_beach.mp4" poster="PvZ_Footages/gameplay_big_wave_beach.png" controls muted width="420"></video> | <video src="PvZ_Footages/gameplay_frostbite_caves.mp4" poster="PvZ_Footages/gameplay_frostbite_caves_1.png" controls muted width="420"></video> |
+| [<img src="PvZ_Footages/gameplay_big_wave_beach.png" width="420" alt="Play Big Wave Beach gameplay">](PvZ_Footages/gameplay_big_wave_beach.mp4) | [<img src="PvZ_Footages/gameplay_frostbite_caves_1.png" width="420" alt="Play Frostbite Caves gameplay">](PvZ_Footages/gameplay_frostbite_caves.mp4) |
 
 </div>
 
