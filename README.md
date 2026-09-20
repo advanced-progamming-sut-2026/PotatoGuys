@@ -121,12 +121,8 @@
 
 ## 🎥 Gameplay Videos
 
-<div align="center">
-
 - 🌊 [Big Wave Beach — Gameplay](https://youtu.be/O8lunh_2jOk)
 - ❄️ [Frostbite Caves — Gameplay](https://youtu.be/UovvqkaO-XM)
-
-</div>
 
 ## 🎮 Features
 
