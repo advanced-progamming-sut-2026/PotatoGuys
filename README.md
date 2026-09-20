@@ -121,15 +121,10 @@
 
 ## 🎥 Gameplay Videos
 
-> 🎞️ Real gameplay recordings — click a thumbnail to watch on YouTube.
-
 <div align="center">
 
-### 🌊 Big Wave Beach — Gameplay
-
-[![Big Wave Beach Gameplay](https://img.youtube.com/vi/UovvqkaO-XM/maxresdefault.jpg)](https://youtu.be/UovvqkaO-XM)
-
-*More chapter gameplay coming soon…*
+- 🌊 [Big Wave Beach — Gameplay](https://youtu.be/O8lunh_2jOk)
+- ❄️ [Frostbite Caves — Gameplay](https://youtu.be/UovvqkaO-XM)
 
 </div>
 
