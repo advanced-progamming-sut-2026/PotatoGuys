@@ -183,7 +183,7 @@ public class Wave {
                 context, waveNumber, effectiveDifficulty());
 
         if (isSandstorm) {
-            int targetCol = context.getMap().getColumns() - 2 - rand.nextInt(3);
+            int targetCol = context.getMap().getColumns() - 1 - rand.nextInt(2);
             float targetX = GameController.colToWorldX(targetCol);
             newZombie.setPendingInitialState(new SandstormCarryState(targetX));
             context.log("A sandstorm carries a " + type.getAlias() + " toward column " + targetCol + "!");
