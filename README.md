@@ -121,14 +121,14 @@
 
 ## 🎥 Gameplay Videos
 
-> 🎞️ Real gameplay recordings — click a thumbnail to play in GitHub's built-in player.
-> *(GitHub strips `<video>` tags with repo-relative or `raw.githubusercontent.com` URLs, so these are thumbnail links that open the clip in the repo's inline video viewer — works on `github.com`, npm, and VS Code.)*
+> 🎞️ Real gameplay recordings — play them right here.
 
 <div align="center">
 
 | Big Wave Beach 🌊 | Frostbite Caves ❄️ |
 |---|---|
-| [<img src="PvZ_Footages/gameplay_big_wave_beach.png" width="420" alt="Play Big Wave Beach gameplay">](PvZ_Footages/gameplay_big_wave_beach.mp4) | [<img src="PvZ_Footages/gameplay_frostbite_caves_1.png" width="420" alt="Play Frostbite Caves gameplay">](PvZ_Footages/gameplay_frostbite_caves.mp4) |
+| <video src="https://rawcdn.githack.com/sedhhn/PlantVsZombies2/refs/heads/main/PvZ_Footages/gameplay_big_wave_beach.mp4" controls width="420" playsinline></video> | <video src="https://rawcdn.githack.com/sedhhn/PlantVsZombies2/refs/heads/main/PvZ_Footages/gameplay_frostbite_caves.mp4" controls width="420" playsinline></video> |
+| [🎬 Watch Big Wave Beach gameplay](https://rawcdn.githack.com/sedhhn/PlantVsZombies2/refs/heads/main/PvZ_Footages/gameplay_big_wave_beach.mp4) | [🎬 Watch Frostbite Caves gameplay](https://rawcdn.githack.com/sedhhn/PlantVsZombies2/refs/heads/main/PvZ_Footages/gameplay_frostbite_caves.mp4) |
 
 </div>
 
