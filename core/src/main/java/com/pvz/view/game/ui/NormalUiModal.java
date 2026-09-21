@@ -122,7 +122,7 @@ public class NormalUiModal extends GameUiModal {
                     continue;
             }
             if (card instanceof PlantCard pc && !slotByCard.containsKey(pc)) {
-                cardsBarTable.add(buildSlot(pc, true)).row();
+                cardsBarTable.add(buildSlot(pc, false)).row();
                 changed = true;
             }
         }
@@ -147,7 +147,7 @@ public class NormalUiModal extends GameUiModal {
                     continue;
             }
             if (card instanceof PlantCard pc) {
-                cardsBarTable.add(buildSlot(pc, true)).row();
+                cardsBarTable.add(buildSlot(pc, false)).row();
             }
         }
         updateCardStyles();

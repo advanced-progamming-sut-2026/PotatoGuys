@@ -5,11 +5,15 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -29,10 +33,12 @@ public class MainMenu extends ScreenAdapter {
     private Stage stage;
     private Skin skin;
     private NewsModal newsModal;
+    private AboutModal aboutModal;
 
     public MainMenu(PvZ2 game) {
         this.game = game;
         newsModal = new NewsModal();
+        aboutModal = new AboutModal();
         controller = new MainController();
     }
 
@@ -163,6 +169,33 @@ public class MainMenu extends ScreenAdapter {
         });
         bottomRightWrapper.add(settingsBtn).size(125);
 
+        //about button: opens the credits/about modal (potato mine icon)
+        TextureRegion potRegion = skin.getAtlas() == null ? null
+            : skin.getAtlas().findRegion("image_ui_packets_potatomine");
+        TextureRegion potatoRegion;
+        if (potRegion != null) {
+            potatoRegion = potRegion;
+        } else {
+            Texture potatoTex = new Texture(Gdx.files.internal("textures/greenhouse/plants/potatomine.png"));
+            potatoTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            potatoRegion = new TextureRegion(potatoTex);
+        }
+        Sprite potatoSprite = new Sprite(potatoRegion);
+        Drawable aboutUp = new TextureRegionDrawable(potatoSprite);
+        Sprite pressed = new Sprite(potatoSprite);
+        pressed.setColor(0.65f, 0.65f, 0.65f, 1f);
+        Drawable aboutDown = new SpriteDrawable(pressed);
+
+        ImageButton aboutBtn = new ImageButton(aboutUp, aboutDown, aboutDown);
+        aboutBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                aboutModal.setVisible(true);
+            }
+        });
+        bottomRightWrapper.add(aboutBtn).size(70).padLeft(15);
+
         //news button wrapper (bottom-left corner)
         Table newsBtnWrapper = new Table();
         newsBtnWrapper.defaults().pad(50);
@@ -170,6 +203,7 @@ public class MainMenu extends ScreenAdapter {
         stack.add(newsBtnWrapper);
 
         stack.add(newsModal);
+        stack.add(aboutModal);
 
         // Stack the button and the badge so the (!) overlays the button's corner
         Stack newsBtnStack = new Stack();

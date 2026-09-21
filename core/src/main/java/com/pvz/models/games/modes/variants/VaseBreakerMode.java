@@ -251,11 +251,20 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
                     + card.getPlant().getType());
             return false;
         }
+        if (card.getCost() > 0 && context.getCurrentSun() < card.getCost()) {
+            context.log("[Placement Failed] Not enough sun for " + card.getPlant().getType()
+                    + "! Required: " + card.getCost() + ", Current: " + context.getCurrentSun());
+            return false;
+        }
         return true;
     }
 
     @Override
     public void handlePlacement(GameContext context, int col, int lane, PlantCard card) {
+        if (card.getCost() > 0 && !context.spendSun(card.getCost())) {
+            context.log("Not enough sun for " + card.getPlant().getType() + ".");
+            return;
+        }
         Plant plant = new PlantFactory().create(card.getPlant().getType(), col, lane,
                 card.getPlant().getLevel(), card.getPlant().isBoosted(), context);
         context.spawnPlant(plant);
