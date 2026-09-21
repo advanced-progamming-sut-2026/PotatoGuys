@@ -40,6 +40,7 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
     private int gargantuarPots;
     private int xOffset;
     private MyPlant defaultPlant;
+    private boolean lost;
 
     public VaseBreakerMode(Level level) {
 
@@ -119,6 +120,11 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
 
     @Override
     public void updateMode(GameContext context, float dt) {
+        if (lost) {
+            context.setGameOver(true);
+            return;
+        }
+
         if (!anyVasesRemain() && context.getZombies().isEmpty()) {
             context.setGameOver(true);
             context.log("VICTORY! All vases cleared and all zombies defeated!");
@@ -128,11 +134,16 @@ public class VaseBreakerMode implements GameMode, VaseBreaker, PlantPlacer {
         for (int i = context.getZombies().size() - 1; i >= 0; i--) {
             Zombie z = context.getZombies().get(i);
             if (z.getX() <= GameController.colToWorldX(-1)) {
+                lost = true;
                 context.setGameOver(true);
                 context.log("The zombie ate your brain; LOOSER!!!");
                 context.removeZombie(z);
             }
         }
+    }
+
+    public boolean hasLost() {
+        return lost;
     }
 
     @Override

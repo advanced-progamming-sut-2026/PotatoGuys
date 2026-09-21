@@ -927,6 +927,8 @@ public class GameController {
             won = (izLocalMode.getOutcome() == IZombieLocalMode.Outcome.ZOMBIES_WIN);
         } else if (ctx.getMode() instanceof com.pvz.models.games.modes.variants.TimedWarMode twMode) {
             won = twMode.getOutcome() == com.pvz.models.games.modes.variants.TimedWarMode.Outcome.VICTORY;
+        } else if (ctx.getMode() instanceof com.pvz.models.games.modes.variants.VaseBreakerMode vbMode) {
+            won = !vbMode.hasLost();
         } else {
             won = ctx.getZombies().isEmpty();
         }

@@ -745,7 +745,7 @@ public class GameUiModal extends Table {
         stack.add(cooldownOverlay);
         cooldownOverlayByCard.put(pc, cooldownOverlay);
 
-        Label costLabel = new Label(isConveyor ? "FREE" : String.valueOf(pc.getCost()), skin, "medium");
+        Label costLabel = new Label(isConveyor || pc.getCost() <= 0 ? "FREE" : String.valueOf(pc.getCost()), skin, "medium");
         costLabel.setFontScale(0.9f);
         costLabel.setColor(Color.WHITE);
         Table costRow = new Table();
