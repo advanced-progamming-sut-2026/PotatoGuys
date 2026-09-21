@@ -1,5 +1,6 @@
 {
   "gameType": "VASEBREAKER",
+  "musicPath": "audio/music/Laura Shigihara - Cerebrawl (In-Game).mp3",
   "levelNumber": 2,
   "levelType": "VASEBREAKER",
   "initialSun": 0,

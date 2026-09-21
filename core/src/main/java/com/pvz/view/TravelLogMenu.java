@@ -483,6 +483,11 @@ private static final String[] MINI_GAME_SEASON_FOLDERS = {
                 }
             });
             levels.add(playBtn).size(140, 55).padLeft(6);
+        } else if (seasonFolder.equals("Wallnut Bowling")) {
+            Label comingSoon = new Label("Coming soon ...",
+                new Label.LabelStyle(skin.getFont("FBUSV8C5EI_1"), Color.valueOf("D8C9A8")));
+            comingSoon.setFontScale(1.3f);
+            levels.add(comingSoon).padLeft(6);
         } else {
             for (int level = 1; level <= 3; level++) {
                 int chosenLevel = level;
